@@ -1,0 +1,23 @@
+# G3-GOI-26 — CHUA_KIEM, 06/11/2026. Chưa có lock Python phát hành.
+# Tệp này chỉ ghi điều kiện chờ; KHÔNG dùng để cài hoặc chứng minh đủ phụ thuộc.
+# pip install -r trên tệp chỉ có chú thích có thể thành công mà không cài gì.
+#
+# Reader XML/ZIP/Decimal dùng stdlib; engine cần kho-tri-thuc-sdk.
+# Không ghim SDK 1.4.1: wheel sau G3-GOI-04 chỉ là candidate (§6.3).
+# Không dùng range, đường máy hoặc version tương lai thay cho pin còn thiếu.
+#
+# Lead hoàn thiện sau G3-GOI-34 và kiểm wheel độc lập:
+# - Chọn exact version SDK đã duyệt, ghi SHA-256 của đúng wheel đã kiểm.
+# - Resolve exact version/hash closure phụ thuộc thực dùng của wheel đó.
+# - Metadata builder hiện có: cryptography==49.0.0, jsonschema>=4.18,<5.
+#   Đây chưa phải closure đã resolve; không lấy pip freeze toàn ứng dụng.
+# - Không cài extra PostgreSQL hoặc thêm XML parser thay reader hiện có.
+# - Xử lý env_con/kiem_tra_tien_trinh ngoài SDK và packages/package-data trước
+#   khi kết luận gói chạy được chỉ với wheel SDK + engine, không repo/src.
+#
+# Python kiểm regression: 3.13.14; yêu cầu pyproject hiện có: >=3.11.
+# Node có lock riêng package-lock.json v3, 102 entry thư viện:
+# exceljs 4.4.0; fast-xml-parser 4.5.7; playwright 1.62.1.
+# Node kiểm: v24.18.0. Chromium metadata: revision 1234, 151.0.7922.34;
+# Chromium/Windows thật chưa kiểm. Không cài npm/postinstall/tải browser ở lát này.
+# Nguồn, quyền dùng, SHA và điều kiện phát hành/rollback: NGUON.md, README.md.

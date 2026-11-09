@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ktt-engine-mask"
+version = "0.1.0.dev1"
+description = "Engine Che dữ liệu (e_mask), mốc chuyển vị trí G3-GOI-27, chưa công bố capability, chưa tự đủ độc lập"
+requires-python = ">=3.11"
+dependencies = []
+
+# Chưa cấu hình packages/package-data: chay.py còn phụ thuộc kho_tri_thuc.{nguon,core,sdk_core}
+# và nguồn Mask bên ngoài (run_privacy.py); chỉ khai khi gói build được độc lập.

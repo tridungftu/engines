@@ -1,0 +1,102 @@
+{
+  "luu_y": "Dữ liệu giả (DEMO) để kiểm thử; không phải dữ liệu thật. Giữ ví dụ v1 bản 1.0.0 cho contract đã ghim. Manifest dùng hoi_ai.v2 và tra_loi_ai.v2 bản 2.0.0, cần ghép schema từ AI-1b-01; nguồn tài liệu do Core xác minh, không lấy danh tính hoặc quyền từ metadata prompt. Bản 1 chỉ dùng Local AI.",
+  "hoi_ai.v1": {
+    "hop_le": [
+      {"loai_viec": "doc_hop_dong", "van_ban": "Văn bản DEMO số 1", "chi_dan": "Tóm tắt nội dung DEMO", "chi_cuc_bo": true}
+    ],
+    "ca_am": [
+      {"mo_ta": "thiếu chi_dan", "du_lieu": {"loai_viec": "doc_hop_dong", "van_ban": "Văn bản DEMO"}},
+      {"mo_ta": "văn bản chỉ khoảng trắng", "du_lieu": {"loai_viec": "doc_hop_dong", "van_ban": "   ", "chi_dan": "x"}},
+      {"mo_ta": "trường lạ", "du_lieu": {"loai_viec": "doc_hop_dong", "van_ban": "DEMO", "chi_dan": "x", "khac": 1}}
+    ]
+  },
+  "hoi_ai.v2": {
+    "hop_le": [
+      {
+        "loai_viec": "BOC_TACH_HOP_DONG",
+        "ma_function": "demo_hoi_hop_dong",
+        "ma_prompt": "demo_hoi_hop_dong",
+        "phien_ban_prompt": "1.0.0",
+        "van_ban": "Hợp đồng DEMO: lãi suất 8%/năm.",
+        "chi_dan": "Trích lãi suất trong hợp đồng DEMO, kèm nguyên văn căn cứ; thiếu căn cứ thì không suy đoán.",
+        "truong": ["lai_suat"],
+        "chi_cuc_bo": true
+      }
+    ],
+    "ca_am": [
+      {"mo_ta": "DEMO thiếu mã function", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_prompt": "demo_hoi_hop_dong", "phien_ban_prompt": "1.0.0", "van_ban": "Hợp đồng DEMO", "chi_dan": "Trích lãi suất DEMO", "chi_cuc_bo": true}},
+      {"mo_ta": "DEMO thiếu mã prompt", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_function": "demo_hoi_hop_dong", "phien_ban_prompt": "1.0.0", "van_ban": "Hợp đồng DEMO", "chi_dan": "Trích lãi suất DEMO", "chi_cuc_bo": true}},
+      {"mo_ta": "DEMO thiếu phiên bản prompt", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_function": "demo_hoi_hop_dong", "ma_prompt": "demo_hoi_hop_dong", "van_ban": "Hợp đồng DEMO", "chi_dan": "Trích lãi suất DEMO", "chi_cuc_bo": true}},
+      {"mo_ta": "DEMO thiếu nội dung prompt", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_function": "demo_hoi_hop_dong", "ma_prompt": "demo_hoi_hop_dong", "phien_ban_prompt": "1.0.0", "van_ban": "Hợp đồng DEMO", "chi_cuc_bo": true}},
+      {"mo_ta": "DEMO mã function trắng", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_function": "   ", "ma_prompt": "demo_hoi_hop_dong", "phien_ban_prompt": "1.0.0", "van_ban": "Hợp đồng DEMO", "chi_dan": "Trích lãi suất DEMO", "chi_cuc_bo": true}},
+      {"mo_ta": "DEMO mã prompt trắng", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_function": "demo_hoi_hop_dong", "ma_prompt": "   ", "phien_ban_prompt": "1.0.0", "van_ban": "Hợp đồng DEMO", "chi_dan": "Trích lãi suất DEMO", "chi_cuc_bo": true}},
+      {"mo_ta": "DEMO phiên bản prompt trắng", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_function": "demo_hoi_hop_dong", "ma_prompt": "demo_hoi_hop_dong", "phien_ban_prompt": "   ", "van_ban": "Hợp đồng DEMO", "chi_dan": "Trích lãi suất DEMO", "chi_cuc_bo": true}},
+      {"mo_ta": "DEMO nội dung prompt trắng", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_function": "demo_hoi_hop_dong", "ma_prompt": "demo_hoi_hop_dong", "phien_ban_prompt": "1.0.0", "van_ban": "Hợp đồng DEMO", "chi_dan": " \t\n ", "chi_cuc_bo": true}},
+      {"mo_ta": "DEMO metadata prompt sai kiểu", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_function": "demo_hoi_hop_dong", "ma_prompt": "demo_hoi_hop_dong", "phien_ban_prompt": 1, "van_ban": "Hợp đồng DEMO", "chi_dan": "Trích lãi suất DEMO", "chi_cuc_bo": true}},
+      {"mo_ta": "DEMO trường ngoài contract", "du_lieu": {"loai_viec": "BOC_TACH_HOP_DONG", "ma_function": "demo_hoi_hop_dong", "ma_prompt": "demo_hoi_hop_dong", "phien_ban_prompt": "1.0.0", "van_ban": "Hợp đồng DEMO", "chi_dan": "Trích lãi suất DEMO", "chi_cuc_bo": true, "khac": "DEMO"}}
+    ]
+  },
+  "tra_loi_ai.v2": {
+    "hop_le": [
+      {
+        "contract": "tra_loi_ai.v2",
+        "phien_ban": "2.0.0",
+        "revision": 1,
+        "nguon_tep_ids": ["00000000-0000-4000-8000-000000000001"],
+        "cau_tra_loi": "Lãi suất DEMO là 8%/năm.",
+        "truong": [
+          {
+            "ten": "lai_suat",
+            "gia_tri": {"kieu": "van_ban", "gia_tri": "8%/năm"},
+            "nguon": "LOCAL",
+            "gia_tri_local": {"kieu": "van_ban", "gia_tri": "8%/năm"},
+            "dan_chung": [{"vi_tri": {"tep_id": "00000000-0000-4000-8000-000000000001", "dinh_vi": "DEMO đoạn 1"}, "trich_dan": "Hợp đồng DEMO: lãi suất 8%/năm."}]
+          }
+        ],
+        "duong": "LOCAL",
+        "mo_hinh": [{"duong": "LOCAL", "ten": "local-DEMO", "phien_ban": null, "can_cu": "cau_hinh"}],
+        "muc": "VANG",
+        "thong_bao": "Đã tìm thấy lãi suất trong hợp đồng DEMO; cần kiểm tra trước khi sử dụng.",
+        "ly_do": [],
+        "truong_bi_loai": [],
+        "ma_yeu_cau_nguon": "DEMO-co-can-cu",
+        "kiem_tra": {"trich_dan": "dat", "mo_che": "khong_ap_dung"}
+      },
+      {
+        "contract": "tra_loi_ai.v2",
+        "phien_ban": "2.0.0",
+        "revision": 1,
+        "nguon_tep_ids": ["00000000-0000-4000-8000-000000000001"],
+        "cau_tra_loi": "Không thấy căn cứ trong tài liệu.",
+        "truong": [],
+        "duong": "LOCAL",
+        "mo_hinh": [{"duong": "LOCAL", "ten": "local-DEMO", "phien_ban": null, "can_cu": "cau_hinh"}],
+        "muc": "VANG",
+        "thong_bao": "Không thấy căn cứ trong tài liệu.",
+        "ly_do": ["KHONG_THAY_CAN_CU"],
+        "truong_bi_loai": [],
+        "ma_yeu_cau_nguon": "DEMO-khong-thay-can-cu",
+        "kiem_tra": {"trich_dan": "chua_kiem", "mo_che": "khong_ap_dung"}
+      },
+      {
+        "contract": "tra_loi_ai.v2",
+        "phien_ban": "2.0.0",
+        "revision": 1,
+        "nguon_tep_ids": ["00000000-0000-4000-8000-000000000001"],
+        "cau_tra_loi": null,
+        "truong": [],
+        "duong": "KHONG",
+        "mo_hinh": [],
+        "muc": "DO",
+        "thong_bao": "Local AI chưa sẵn sàng; có thể thử lại yêu cầu DEMO.",
+        "ly_do": ["LOCAL_KHONG_CHAY"],
+        "truong_bi_loai": [],
+        "ma_yeu_cau_nguon": "DEMO-loi-local",
+        "kiem_tra": {"trich_dan": "chua_kiem", "mo_che": "khong_ap_dung"}
+      }
+    ],
+    "ca_am": [
+      {"mo_ta": "DEMO đầu ra thiếu vỏ contract và nguồn", "du_lieu": {"cau_tra_loi": "Không thấy căn cứ trong tài liệu.", "ly_do": ["KHONG_THAY_CAN_CU"]}}
+    ]
+  }
+}

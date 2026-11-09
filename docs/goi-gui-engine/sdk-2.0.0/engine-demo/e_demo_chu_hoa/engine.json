@@ -1,0 +1,34 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_demo_chu_hoa",
+  "ten": "Đổi văn bản thành chữ hoa (DEMO)",
+  "phien_ban": "1.0.0",
+  "tuong_thich": {"core": ">=2.0.0 <3.0.0", "api": "v1", "sdk": ">=2.0.0 <3.0.0"},
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {"lenh": ["{python}", "-m", "e_demo_chu_hoa.chay"], "thu_muc": "."},
+  "nang_luc": [
+    {
+      "ma": "van_ban.chu_hoa@1",
+      "ten": "Đổi thành chữ hoa",
+      "nhan": ["van_ban"],
+      "tra": "van_ban",
+      "gioi_han": {"ky_tu_toi_da": 1000000, "thoi_han_giay": 30},
+      "huy_duoc": true,
+      "tham_so": []
+    }
+  ],
+  "loai_du_lieu_rieng": [],
+  "tai_nguyen": {"so_viec_dong_thoi": 1},
+  "readiness": {"thoi_han_giay": 30},
+  "chay_thu_demo": [
+    {
+      "nang_luc": "van_ban.chu_hoa@1",
+      "ten": "Chữ hoa đoạn văn DEMO",
+      "dau_vao": {"loai": "van_ban", "van_ban": "Xin chào, đây là văn bản DEMO.\nDòng thứ hai DEMO."},
+      "tham_so": {}
+    }
+  ],
+  "bi_mat": [],
+  "webhook": null
+}

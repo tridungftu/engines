@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ktt-engine-hoi-ai"
+version = "0.1.1.dev1"
+description = "Engine Hỏi AI Local qua cổng AI và SDK do Core cấp"
+requires-python = ">=3.11"
+dependencies = []
+
+# 0.1.1.dev1 là dạng PEP 440 của 0.1.1-demo.1 trong engine.json.
+# Yêu cầu SDK Python >=1.5.0, do Core cấp và kiểm artifact đã duyệt.
+# Không ghim/phát hành wheel 1.4.1 candidate (§6.3); không đổi SDK ở lát này.
+# requirements.lock ghi riêng closure thư viện đang có của SDK.
+[tool.setuptools]
+packages = ["kho_tri_thuc.engines.e_hoi_ai", "kho_tri_thuc.engines.e_hoi_ai.lib"]
+package-dir = {"kho_tri_thuc.engines.e_hoi_ai" = "."}
+include-package-data = false
+
+[tool.setuptools.package-data]
+"kho_tri_thuc.engines.e_hoi_ai" = [
+    "engine.json", "contract/*.json", "tests/*.py",
+    "README.md", "NGUON.md", "CHANGELOG.md", "requirements.lock",
+]

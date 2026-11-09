@@ -1,0 +1,7 @@
+[
+  {"ma": "e_hoi_ai", "ten": "Hỏi đáp AI", "mo_ta": "Hỗ trợ hỏi đáp bằng AI"},
+  {"ma": "e_ocr", "ten": "Nhận dạng văn bản", "mo_ta": "Nhận dạng văn bản từ tài liệu"},
+  {"ma": "e_hoa_don", "ten": "Hóa đơn điện tử", "mo_ta": "Xử lý hóa đơn điện tử mua vào/bán ra"},
+  {"ma": "e_mask", "ten": "Che dữ liệu nhạy cảm", "mo_ta": "Che dữ liệu nhạy cảm trong tài liệu"},
+  {"ma": "e_trich_xuat", "ten": "Trích xuất thông tin hợp đồng", "mo_ta": "Trích xuất thông tin từ hợp đồng"}
+]

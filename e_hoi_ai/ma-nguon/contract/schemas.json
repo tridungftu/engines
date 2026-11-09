@@ -1,0 +1,961 @@
+{
+  "urn:ktt:contract:hoi_ai.v2": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:ktt:contract:hoi_ai.v2",
+    "title": "hoi_ai.v2 — Hỏi AI bản 1 chỉ Local",
+    "$comment": "Phiên bản 2.0.0; AI-1b-01, CD-111. Giữ nguyên hoi_ai.v1 đã ghim. ma_function/ma_prompt/phien_ban_prompt phải khớp khai báo gói module do Core xác minh; không dùng metadata do engine tự khai để cấp quyền. Thiếu chi_dan hoặc prompt trắng: từ chối với THIEU_PROMPT trước khi gọi AI. Không thêm operation gọi AI giữa chừng.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "loai_viec",
+      "van_ban",
+      "chi_dan",
+      "ma_function",
+      "ma_prompt",
+      "phien_ban_prompt"
+    ],
+    "properties": {
+      "loai_viec": {
+        "$ref": "urn:ktt:contract:hoi_ai.v1#/properties/loai_viec"
+      },
+      "van_ban": {
+        "$ref": "urn:ktt:contract:hoi_ai.v1#/properties/van_ban"
+      },
+      "chi_dan": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S",
+        "$comment": "Nội dung prompt của đúng function trong gói module; không có prompt mặc định. Thiếu/rỗng/trắng/sai kiểu đều là THIEU_PROMPT."
+      },
+      "ma_function": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "ma_prompt": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "phien_ban_prompt": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "truong": {
+        "$ref": "urn:ktt:contract:hoi_ai.v1#/properties/truong"
+      },
+      "dinh_danh_da_biet": {
+        "$ref": "urn:ktt:contract:hoi_ai.v1#/properties/dinh_danh_da_biet"
+      },
+      "chi_cuc_bo": {
+        "const": true,
+        "default": true,
+        "$comment": "Có thể bỏ cờ; bản 1 luôn ép Local phía thực thi, không có tùy chọn bật Cloud."
+      }
+    },
+    "$defs": {
+      "nguon_core": {
+        "$comment": "Ngữ cảnh riêng do Core cấp sau xác minh phiên/quyền/pháp nhân, việc/lease, bản ghim của gói module, function/prompt và nguồn tài liệu. KHÔNG phải trường của payload engine/module. Schema chỉ kiểm hình dạng; Core phải đối chiếu metadata với binding và vi_tri.tep_id thuộc nguon_tep_ids; không tin cờ tự khai đã xác minh.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ma_module",
+          "ma_function",
+          "ma_prompt",
+          "phien_ban_prompt",
+          "phap_nhan_id",
+          "viec_id",
+          "revision",
+          "nguon_tep_ids",
+          "vi_tri"
+        ],
+        "properties": {
+          "ma_module": {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/ma"
+          },
+          "ma_function": {
+            "$ref": "#/properties/ma_function"
+          },
+          "ma_prompt": {
+            "$ref": "#/properties/ma_prompt"
+          },
+          "phien_ban_prompt": {
+            "$ref": "#/properties/phien_ban_prompt"
+          },
+          "phap_nhan_id": {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/id"
+          },
+          "viec_id": {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/id"
+          },
+          "revision": {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/vo_noi_dung/properties/revision"
+          },
+          "nguon_tep_ids": {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/vo_noi_dung/properties/nguon_tep_ids"
+          },
+          "vi_tri": {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/vi_tri"
+          }
+        }
+      },
+      "tu_choi_thieu_prompt": {
+        "$comment": "Lý do từ chối cố định, tách mã hỗ trợ khỏi câu hiển thị; không phản chiếu prompt/tài liệu.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ma",
+          "thong_bao"
+        ],
+        "properties": {
+          "ma": {
+            "const": "THIEU_PROMPT"
+          },
+          "thong_bao": {
+            "const": "Chức năng chưa gửi nội dung yêu cầu. Cần bổ sung nội dung yêu cầu trước khi hỏi AI."
+          }
+        }
+      }
+    }
+  },
+  "urn:ktt:contract:tra_loi_ai.v2": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:ktt:contract:tra_loi_ai.v2",
+    "title": "tra_loi_ai.v2 — kết quả Hỏi AI bản 1 chỉ Local",
+    "$comment": "Phiên bản 2.0.0; AI-1b-01, CD-111. Giữ nguyên tra_loi_ai.v1 đã ghim. Vỏ nội dung và nguồn dẫn chứng phải được Core đối chiếu với nguon_core, không dùng payload engine làm nguồn tin cậy. KHONG_THAY_CAN_CU là kết quả Local hợp lệ, không phải lỗi kết nối/model.",
+    "type": "object",
+    "unevaluatedProperties": false,
+    "required": [
+      "cau_tra_loi",
+      "truong",
+      "duong",
+      "mo_hinh",
+      "muc",
+      "thong_bao",
+      "ly_do",
+      "truong_bi_loai",
+      "ma_yeu_cau_nguon",
+      "kiem_tra"
+    ],
+    "properties": {
+      "contract": {
+        "const": "tra_loi_ai.v2"
+      },
+      "phien_ban": {
+        "const": "2.0.0"
+      },
+      "cau_tra_loi": {
+        "$ref": "urn:ktt:contract:tra_loi_ai.v1#/properties/cau_tra_loi"
+      },
+      "duong": {
+        "enum": [
+          "LOCAL",
+          "KHONG"
+        ]
+      },
+      "muc": {
+        "$ref": "urn:ktt:contract:tra_loi_ai.v1#/properties/muc"
+      },
+      "thong_bao": {
+        "$ref": "urn:ktt:contract:tra_loi_ai.v1#/properties/thong_bao"
+      },
+      "ly_do": {
+        "$ref": "urn:ktt:contract:tra_loi_ai.v1#/properties/ly_do"
+      },
+      "truong_bi_loai": {
+        "$ref": "urn:ktt:contract:tra_loi_ai.v1#/properties/truong_bi_loai"
+      },
+      "ma_yeu_cau_nguon": {
+        "$ref": "urn:ktt:contract:tra_loi_ai.v1#/properties/ma_yeu_cau_nguon"
+      },
+      "truong": {
+        "type": "array",
+        "items": {
+          "allOf": [
+            {
+              "$ref": "urn:ktt:contract:tra_loi_ai.v1#/properties/truong/items"
+            },
+            {
+              "properties": {
+                "nguon": {
+                  "const": "LOCAL"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "mo_hinh": {
+        "type": "array",
+        "items": {
+          "allOf": [
+            {
+              "$ref": "urn:ktt:contract:tra_loi_ai.v1#/properties/mo_hinh/items"
+            },
+            {
+              "properties": {
+                "duong": {
+                  "const": "LOCAL"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "kiem_tra": {
+        "allOf": [
+          {
+            "$ref": "urn:ktt:contract:tra_loi_ai.v1#/properties/kiem_tra"
+          },
+          {
+            "properties": {
+              "mo_che": {
+                "const": "khong_ap_dung"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "allOf": [
+      {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/vo_noi_dung"
+      },
+      {
+        "if": {
+          "properties": {
+            "ly_do": {
+              "contains": {
+                "const": "KHONG_THAY_CAN_CU"
+              }
+            }
+          },
+          "required": [
+            "ly_do"
+          ]
+        },
+        "then": {
+          "properties": {
+            "duong": {
+              "const": "LOCAL"
+            },
+            "muc": {
+              "const": "VANG"
+            },
+            "cau_tra_loi": {
+              "const": "Không thấy căn cứ trong tài liệu."
+            },
+            "thong_bao": {
+              "const": "Không thấy căn cứ trong tài liệu."
+            },
+            "ly_do": {
+              "const": [
+                "KHONG_THAY_CAN_CU"
+              ]
+            },
+            "truong": {
+              "maxItems": 0
+            },
+            "truong_bi_loai": {
+              "maxItems": 0
+            },
+            "kiem_tra": {
+              "properties": {
+                "trich_dan": {
+                  "const": "chua_kiem"
+                }
+              }
+            }
+          }
+        },
+        "else": {
+          "if": {
+            "properties": {
+              "duong": {
+                "const": "LOCAL"
+              }
+            },
+            "required": [
+              "duong"
+            ]
+          },
+          "then": {
+            "properties": {
+              "truong": {
+                "minItems": 1
+              },
+              "kiem_tra": {
+                "properties": {
+                  "trich_dan": {
+                    "const": "dat"
+                  }
+                }
+              },
+              "ly_do": {
+                "not": {
+                  "contains": {
+                    "enum": [
+                      "LOCAL_TAT",
+                      "LOCAL_KHONG_CHAY",
+                      "LOCAL_LOI"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "cau_tra_loi": {
+                "const": null
+              },
+              "muc": {
+                "const": "DO"
+              },
+              "truong": {
+                "maxItems": 0
+              },
+              "ly_do": {
+                "minItems": 1
+              },
+              "kiem_tra": {
+                "properties": {
+                  "trich_dan": {
+                    "enum": [
+                      "chua_kiem",
+                      "khong_dat"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "urn:ktt:contract:chung.v1": {
+    "$comment": "Phien ban 1.0.0",
+    "$defs": {
+      "chuoi": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "dan_chung": {
+        "additionalProperties": false,
+        "properties": {
+          "trich_dan": {
+            "$ref": "#/$defs/chuoi"
+          },
+          "vi_tri": {
+            "$ref": "#/$defs/vi_tri"
+          }
+        },
+        "required": [
+          "vi_tri",
+          "trich_dan"
+        ],
+        "type": "object"
+      },
+      "gia_tri": {
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "gia_tri": {
+                "type": "string"
+              },
+              "kieu": {
+                "const": "van_ban"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "don_vi": {
+                "minLength": 1,
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "gia_tri": {
+                "$ref": "#/$defs/thap_phan"
+              },
+              "kieu": {
+                "const": "so"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri",
+              "don_vi"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "don_vi_tien": {
+                "$ref": "#/$defs/tien/properties/don_vi_tien"
+              },
+              "gia_tri": {
+                "$ref": "#/$defs/tien/properties/gia_tri"
+              },
+              "kieu": {
+                "const": "tien"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri",
+              "don_vi_tien"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "gia_tri": {
+                "$ref": "#/$defs/ngay"
+              },
+              "kieu": {
+                "const": "ngay"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "gia_tri": {
+                "type": "boolean"
+              },
+              "kieu": {
+                "const": "logic"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "kieu": {
+                "const": "chua_ro"
+              },
+              "ly_do": {
+                "$ref": "#/$defs/chuoi"
+              }
+            },
+            "required": [
+              "kieu",
+              "ly_do"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "id": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "ma": {
+        "pattern": "^[a-z][a-z0-9_]{0,31}$",
+        "type": "string"
+      },
+      "ngay": {
+        "format": "date",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+        "type": "string"
+      },
+      "sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "thap_phan": {
+        "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+        "type": "string"
+      },
+      "thoi_diem": {
+        "format": "date-time",
+        "pattern": "Z$",
+        "type": "string"
+      },
+      "tien": {
+        "additionalProperties": false,
+        "properties": {
+          "don_vi_tien": {
+            "pattern": "^[A-Z]{3}$",
+            "type": "string"
+          },
+          "gia_tri": {
+            "pattern": "^-?(0|[1-9][0-9]{0,17})(\\.[0-9]{1,6})?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "gia_tri",
+          "don_vi_tien"
+        ],
+        "type": "object"
+      },
+      "vi_tri": {
+        "additionalProperties": false,
+        "dependentRequired": {
+          "bbox": [
+            "khung_toa_do"
+          ]
+        },
+        "properties": {
+          "bbox": {
+            "items": {
+              "minimum": 0,
+              "type": "number"
+            },
+            "maxItems": 4,
+            "minItems": 4,
+            "type": "array"
+          },
+          "dinh_vi": {
+            "$ref": "#/$defs/chuoi"
+          },
+          "khung_toa_do": {
+            "additionalProperties": false,
+            "properties": {
+              "cao": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "don_vi": {
+                "enum": [
+                  "pdf_point",
+                  "pixel"
+                ]
+              },
+              "rong": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              }
+            },
+            "required": [
+              "don_vi",
+              "rong",
+              "cao"
+            ],
+            "type": "object"
+          },
+          "tep_id": {
+            "$ref": "#/$defs/id"
+          },
+          "trang": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tep_id",
+          "dinh_vi"
+        ],
+        "type": "object"
+      },
+      "vo_noi_dung": {
+        "properties": {
+          "contract": {
+            "type": "string"
+          },
+          "nguon_tep_ids": {
+            "items": {
+              "$ref": "#/$defs/id"
+            },
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "phien_ban": {
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+            "type": "string"
+          },
+          "revision": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "contract",
+          "phien_ban",
+          "revision",
+          "nguon_tep_ids"
+        ],
+        "type": "object"
+      }
+    },
+    "$id": "urn:ktt:contract:chung.v1",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "chung.v1"
+  },
+  "urn:ktt:contract:hoi_ai.v1": {
+    "$comment": "Phien ban 1.0.0; Lead chot AI-1b §6 (31/10/2026).",
+    "$defs": {
+      "dinh_danh": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "type": "array"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "gia_tri": {
+                "type": "string"
+              },
+              "nhom": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "gia_tri",
+              "nhom"
+            ],
+            "type": "object"
+          }
+        ]
+      }
+    },
+    "$id": "urn:ktt:contract:hoi_ai.v1",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "chi_cuc_bo": {
+        "$comment": "true: 0 lời gọi Cloud cho request; false không tự bật Cloud.",
+        "default": false,
+        "type": "boolean"
+      },
+      "chi_dan": {
+        "type": "string"
+      },
+      "dinh_danh_da_biet": {
+        "default": [],
+        "items": {
+          "$ref": "#/$defs/dinh_danh"
+        },
+        "type": "array"
+      },
+      "loai_viec": {
+        "$comment": "Kiểm tiếp mã trong LOAI_VIEC hiện có; không bổ sung bảng định tuyến.",
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/chuoi"
+      },
+      "truong": {
+        "default": [],
+        "items": {
+          "$ref": "urn:ktt:contract:chung.v1#/$defs/chuoi"
+        },
+        "type": "array"
+      },
+      "van_ban": {
+        "$comment": "Văn bản gốc không rỗng/không chỉ khoảng trắng; kiểm tiếp theo strip() của Python.",
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/chuoi",
+        "pattern": "\\S"
+      }
+    },
+    "required": [
+      "loai_viec",
+      "van_ban",
+      "chi_dan"
+    ],
+    "title": "hoi_ai.v1 — đầu vào ai.hoi@1",
+    "type": "object"
+  },
+  "urn:ktt:contract:tra_loi_ai.v1": {
+    "$id": "urn:ktt:contract:tra_loi_ai.v1",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "allOf": [
+      {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/vo_noi_dung"
+      },
+      {
+        "if": {
+          "anyOf": [
+            {
+              "properties": {
+                "duong": {
+                  "enum": [
+                    "CLOUD",
+                    "LOCAL+CLOUD"
+                  ]
+                }
+              },
+              "required": [
+                "duong"
+              ]
+            },
+            {
+              "properties": {
+                "truong": {
+                  "contains": {
+                    "properties": {
+                      "nguon": {
+                        "const": "CLOUD"
+                      }
+                    },
+                    "required": [
+                      "nguon"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "truong"
+              ]
+            },
+            {
+              "properties": {
+                "mo_hinh": {
+                  "contains": {
+                    "properties": {
+                      "duong": {
+                        "const": "CLOUD"
+                      }
+                    },
+                    "required": [
+                      "duong"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "mo_hinh"
+              ]
+            }
+          ]
+        },
+        "then": {
+          "properties": {
+            "duong": {
+              "enum": [
+                "CLOUD",
+                "LOCAL+CLOUD"
+              ]
+            },
+            "kiem_tra": {
+              "properties": {
+                "mo_che": {
+                  "enum": [
+                    "dat",
+                    "khong_dat"
+                  ]
+                }
+              }
+            }
+          },
+          "required": [
+            "luot_che_id"
+          ]
+        }
+      }
+    ],
+    "properties": {
+      "cau_tra_loi": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "contract": {
+        "const": "tra_loi_ai.v1"
+      },
+      "duong": {
+        "enum": [
+          "LOCAL",
+          "CLOUD",
+          "LOCAL+CLOUD",
+          "KHONG"
+        ]
+      },
+      "kiem_tra": {
+        "additionalProperties": false,
+        "properties": {
+          "mo_che": {
+            "enum": [
+              "dat",
+              "khong_dat",
+              "chua_kiem",
+              "khong_ap_dung"
+            ]
+          },
+          "trich_dan": {
+            "enum": [
+              "dat",
+              "khong_dat",
+              "chua_kiem"
+            ]
+          }
+        },
+        "required": [
+          "trich_dan",
+          "mo_che"
+        ],
+        "type": "object"
+      },
+      "luot_che_id": {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/id"
+      },
+      "ly_do": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "ma_yeu_cau_nguon": {
+        "type": "string"
+      },
+      "mo_hinh": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "can_cu": {
+              "enum": [
+                "thuc_te",
+                "cau_hinh",
+                "chua_co"
+              ]
+            },
+            "duong": {
+              "enum": [
+                "LOCAL",
+                "CLOUD"
+              ]
+            },
+            "phien_ban": {
+              "minLength": 1,
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "ten": {
+              "minLength": 1,
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "duong",
+            "ten",
+            "phien_ban",
+            "can_cu"
+          ],
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "muc": {
+        "enum": [
+          "VANG",
+          "DO"
+        ]
+      },
+      "phien_ban": {
+        "const": "1.0.0"
+      },
+      "thong_bao": {
+        "type": "string"
+      },
+      "truong": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "dan_chung": {
+              "items": {
+                "$ref": "urn:ktt:contract:chung.v1#/$defs/dan_chung"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "gia_tri": {
+              "$ref": "urn:ktt:contract:chung.v1#/$defs/gia_tri"
+            },
+            "gia_tri_local": {
+              "oneOf": [
+                {
+                  "$ref": "urn:ktt:contract:chung.v1#/$defs/gia_tri"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "nguon": {
+              "enum": [
+                "LOCAL",
+                "CLOUD"
+              ]
+            },
+            "ten": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "ten",
+            "gia_tri",
+            "nguon",
+            "gia_tri_local",
+            "dan_chung"
+          ],
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "truong_bi_loai": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      }
+    },
+    "required": [
+      "cau_tra_loi",
+      "truong",
+      "duong",
+      "mo_hinh",
+      "muc",
+      "thong_bao",
+      "ly_do",
+      "truong_bi_loai",
+      "ma_yeu_cau_nguon",
+      "kiem_tra"
+    ],
+    "title": "tra_loi_ai.v1",
+    "type": "object",
+    "unevaluatedProperties": false
+  }
+}

@@ -1,0 +1,16 @@
+# AI-LAT3 — đo ngày 08/11/2026, CPython 3.13.14 / Windows x64.
+# Engine chỉ import stdlib, mã nội bộ và kho_tri_thuc.sdk_core.
+# SDK do Core cấp riêng, giữ nguyên bản đang ghim; không pin 1.4.1 candidate.
+# Không có openai/anthropic/requests/httpx hay driver CSDL trong closure engine.
+# Bộ kiểm schema do Core tiêm; jsonschema/referencing không là dependency engine.
+# Đây là closure runtime của SDK đang dùng, không phải pip freeze toàn ứng dụng.
+
+# sdk: cryptography | kho_tri_thuc.sdk_core | SDK kiểm chữ ký Ed25519 của ngữ cảnh Core; engine không tự tạo kênh AI khác.
+cryptography==49.0.0
+# bac-cau: cffi | cryptography | Backend runtime CPython của cryptography, theo metadata đang cài.
+cffi==2.0.0
+# bac-cau: pycparser | cffi | Parser C mà cffi yêu cầu trên CPython, theo metadata đang cài.
+pycparser==3.0
+
+# Không có wheel hash: không dùng --require-hashes với tệp này.
+# Không cài/nâng thư viện trong lát này. Môi trường sạch cần SDK được lead duyệt.

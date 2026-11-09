@@ -1,0 +1,947 @@
+{
+  "phien_ban_vector": 1,
+  "mo_ta": "Dữ liệu DEMO. Ghép snapshot_mac_dinh với snapshot của từng ca; các thao_tac nằm trong một giao_dich. So ket_qua từng port và toàn bộ nhat_ky. ket_qua_chot/nhat_ky_chot dành cho bước điều phối sau giao_dich.",
+  "ma_yeu_cau": "00000000-0000-0000-0000-000000000001",
+  "ma_luot": "00000000-0000-0000-0000-000000000002",
+  "uuid_cap": "00000000-0000-0000-0000-000000000003",
+  "snapshot_mac_dinh": {
+    "da_chot": false,
+    "phien_ban": "{ \"cum\": {}, \"bi_danh\": {}, \"yeu_cau\": null }",
+    "danh_muc": [],
+    "yeu_cau": null,
+    "cum_cho_toan_vung": {},
+    "bi_danh_bo_sung": {}
+  },
+  "cac_ca": [
+    {
+      "ma": "nhat_ky_rong",
+      "loai": "che",
+      "snapshot": {},
+      "thao_tac": [
+        {
+          "goi": "tao_yeu_cau",
+          "doi": [],
+          "ket_qua": "00000000-0000-0000-0000-000000000001"
+        },
+        {
+          "goi": "liet_ke_dinh_danh",
+          "doi": [],
+          "ket_qua": []
+        }
+      ],
+      "nhat_ky": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "gui_duoc": true
+      },
+      "nhat_ky_chot": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [],
+        "bi_danh_da_tra": []
+      }
+    },
+    {
+      "ma": "tra_cum_trung_hut_chuan_hoa",
+      "loai": "che",
+      "snapshot": {
+        "danh_muc": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[CONG_TY-DEMO-01]]",
+            "nguon": "chinh_thuc",
+            "so_lan_gap": 1
+          }
+        ]
+      },
+      "thao_tac": [
+        {
+          "goi": "tra_bi_danh",
+          "doi": [
+            " CO\u0302NG \tTY DEMO A\u0301NH DU\u031bO\u031bNG "
+          ],
+          "ket_qua": {
+            "nhom": "CONG_TY",
+            "bi_danh": "[[CONG_TY-DEMO-01]]",
+            "nguon": "chinh_thuc",
+            "so_lan_gap": 1
+          }
+        },
+        {
+          "goi": "tra_bi_danh",
+          "doi": [
+            "công ty demo ánh dương"
+          ],
+          "ket_qua": {
+            "nhom": "CONG_TY",
+            "bi_danh": "[[CONG_TY-DEMO-01]]",
+            "nguon": "chinh_thuc",
+            "so_lan_gap": 1
+          }
+        },
+        {
+          "goi": "tra_bi_danh",
+          "doi": [
+            "Doanh nghiệp DEMO Chưa Có"
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "tra_bi_danh",
+          "doi": [
+            " DOANH NGHIỆP  DEMO CHƯA CÓ "
+          ],
+          "ket_qua": null
+        }
+      ],
+      "nhat_ky": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd",
+          "6d3e80aafb2e1f6b8c9cea94cf0f851dec8225e728a033f2cda22afa8754dea7"
+        ],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "gui_duoc": true
+      },
+      "nhat_ky_chot": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd",
+          "6d3e80aafb2e1f6b8c9cea94cf0f851dec8225e728a033f2cda22afa8754dea7"
+        ],
+        "bi_danh_da_tra": []
+      }
+    },
+    {
+      "ma": "cum_moi_chong_dem_lap",
+      "loai": "che",
+      "snapshot": {},
+      "thao_tac": [
+        {
+          "goi": "cap_bi_danh_tam",
+          "doi": [],
+          "ket_qua": "[[MASKTAM-00000000000000000000000000000003]]"
+        },
+        {
+          "goi": "ghi_cho_duyet",
+          "doi": [
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY",
+            "[[MASKTAM-00000000000000000000000000000003]]",
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": [
+            {
+              "nhom": "CONG_TY",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+              "nguon": "tam",
+              "so_lan_gap": 1
+            },
+            true
+          ]
+        },
+        {
+          "goi": "ghi_nhan_gap_lai",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            "công ty demo ánh dương",
+            "CONG_TY"
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "ghi_nhan_gap_lai",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY"
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "ghi_cho_duyet",
+          "doi": [
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY",
+            "[[MASKTAM-00000000000000000000000000000003]]",
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": [
+            {
+              "nhom": "CONG_TY",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+              "nguon": "tam",
+              "so_lan_gap": 1
+            },
+            false
+          ]
+        },
+        {
+          "goi": "ghi_bi_danh_da_dung",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            [
+              "[[MASKTAM-00000000000000000000000000000003]]",
+              "[[MASKTAM-00000000000000000000000000000003]]"
+            ]
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "ghi_bi_danh_da_dung",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            [
+              "[[MASKTAM-00000000000000000000000000000003]]"
+            ]
+          ],
+          "ket_qua": null
+        }
+      ],
+      "nhat_ky": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+            "chi_gap_lai": false
+          }
+        ],
+        "bi_danh_tam_moi": [
+          "[[MASKTAM-00000000000000000000000000000003]]"
+        ],
+        "bi_danh_da_dung": [
+          "[[MASKTAM-00000000000000000000000000000003]]"
+        ],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "gui_duoc": true
+      },
+      "nhat_ky_chot": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+            "chi_gap_lai": false
+          }
+        ],
+        "bi_danh_tam_moi": [
+          "[[MASKTAM-00000000000000000000000000000003]]"
+        ],
+        "bi_danh_da_dung": [
+          "[[MASKTAM-00000000000000000000000000000003]]"
+        ],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      }
+    },
+    {
+      "ma": "gap_lai_cum_tam_trong_danh_muc",
+      "loai": "che",
+      "snapshot": {
+        "danh_muc": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "nguon": "tam",
+            "so_lan_gap": 7
+          }
+        ]
+      },
+      "thao_tac": [
+        {
+          "goi": "ghi_cho_duyet",
+          "doi": [
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY",
+            "[[MASKTAM-00000000000000000000000000000004]]",
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": [
+            {
+              "nhom": "CONG_TY",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+              "nguon": "tam",
+              "so_lan_gap": 7
+            },
+            false
+          ]
+        },
+        {
+          "goi": "ghi_nhan_gap_lai",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            "công ty demo ánh dương",
+            "CONG_TY"
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "ghi_bi_danh_da_dung",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            [
+              "[[MASKTAM-00000000000000000000000000000004]]"
+            ]
+          ],
+          "ket_qua": null
+        }
+      ],
+      "nhat_ky": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "chi_gap_lai": true
+          }
+        ],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [
+          "[[MASKTAM-00000000000000000000000000000004]]"
+        ],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "gui_duoc": true
+      },
+      "nhat_ky_chot": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "chi_gap_lai": true
+          }
+        ],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [
+          "[[MASKTAM-00000000000000000000000000000004]]"
+        ],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      }
+    },
+    {
+      "ma": "tai_dung_cum_cho_toan_vung",
+      "loai": "che",
+      "snapshot": {
+        "cum_cho_toan_vung": {
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd": {
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "nguon": "tam"
+          }
+        }
+      },
+      "thao_tac": [
+        {
+          "goi": "cap_bi_danh_tam",
+          "doi": [],
+          "ket_qua": "[[MASKTAM-00000000000000000000000000000003]]"
+        },
+        {
+          "goi": "ghi_cho_duyet",
+          "doi": [
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY",
+            "[[MASKTAM-00000000000000000000000000000003]]",
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": [
+            {
+              "nhom": "CONG_TY",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+              "nguon": "tam"
+            },
+            false
+          ]
+        },
+        {
+          "goi": "ghi_cho_duyet",
+          "doi": [
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY",
+            "[[MASKTAM-00000000000000000000000000000003]]",
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": [
+            {
+              "nhom": "CONG_TY",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+              "nguon": "tam"
+            },
+            false
+          ]
+        },
+        {
+          "goi": "ghi_nhan_gap_lai",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY"
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "ghi_bi_danh_da_dung",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            [
+              "[[MASKTAM-00000000000000000000000000000004]]"
+            ]
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "liet_ke_dinh_danh",
+          "doi": [],
+          "ket_qua": [
+            {
+              "gia_tri": "công ty demo ánh dương",
+              "nhom": "CONG_TY",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+              "nguon": "tam"
+            }
+          ]
+        }
+      ],
+      "nhat_ky": {
+        "cum": [
+          {
+            "gia_tri": "công ty demo ánh dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "chi_gap_lai": true
+          }
+        ],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [
+          "[[MASKTAM-00000000000000000000000000000004]]"
+        ],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "gui_duoc": true
+      },
+      "nhat_ky_chot": {
+        "cum": [
+          {
+            "gia_tri": "công ty demo ánh dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "chi_gap_lai": true
+          }
+        ],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [
+          "[[MASKTAM-00000000000000000000000000000004]]"
+        ],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      }
+    },
+    {
+      "ma": "cum_cho_khac_nhom_giu_nhom_cua_core",
+      "loai": "che",
+      "snapshot": {
+        "cum_cho_toan_vung": {
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd": {
+            "nhom": "KHAC",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "nguon": "tam"
+          },
+          "6d3e80aafb2e1f6b8c9cea94cf0f851dec8225e728a033f2cda22afa8754dea7": {
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000005]]",
+            "nguon": "tam"
+          }
+        }
+      },
+      "thao_tac": [
+        {
+          "goi": "liet_ke_dinh_danh",
+          "doi": [],
+          "ket_qua": []
+        },
+        {
+          "goi": "tra_bi_danh",
+          "doi": ["Công ty DEMO Ánh Dương"],
+          "ket_qua": {
+            "nhom": "KHAC",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "nguon": "tam"
+          }
+        },
+        {
+          "goi": "cap_bi_danh_tam",
+          "doi": [],
+          "ket_qua": "[[MASKTAM-00000000000000000000000000000003]]"
+        },
+        {
+          "goi": "ghi_cho_duyet",
+          "doi": [
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY",
+            "[[MASKTAM-00000000000000000000000000000003]]",
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": [
+            {
+              "nhom": "KHAC",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+              "nguon": "tam"
+            },
+            false
+          ]
+        },
+        {
+          "goi": "ghi_nhan_gap_lai",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            "công ty demo ánh dương",
+            "KHAC"
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "ghi_bi_danh_da_dung",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001",
+            ["[[MASKTAM-00000000000000000000000000000004]]"]
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "liet_ke_dinh_danh",
+          "doi": [],
+          "ket_qua": [
+            {
+              "gia_tri": "Công ty DEMO Ánh Dương",
+              "nhom": "KHAC",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+              "nguon": "tam"
+            }
+          ]
+        }
+      ],
+      "nhat_ky": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "KHAC",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "chi_gap_lai": true
+          }
+        ],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": ["[[MASKTAM-00000000000000000000000000000004]]"],
+        "dong_yeu_cau": false,
+        "cum_da_tra": ["91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "gui_duoc": true
+      },
+      "nhat_ky_chot": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "KHAC",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "chi_gap_lai": true
+          }
+        ],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": ["[[MASKTAM-00000000000000000000000000000004]]"],
+        "dong_yeu_cau": false,
+        "cum_da_tra": ["91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"],
+        "bi_danh_da_tra": []
+      }
+    },
+    {
+      "ma": "cum_cho_khac_khong_tai_dung",
+      "loai": "che",
+      "snapshot": {
+        "cum_cho_toan_vung": {
+          "6d3e80aafb2e1f6b8c9cea94cf0f851dec8225e728a033f2cda22afa8754dea7": {
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000004]]",
+            "nguon": "tam"
+          }
+        }
+      },
+      "thao_tac": [
+        {
+          "goi": "cap_bi_danh_tam",
+          "doi": [],
+          "ket_qua": "[[MASKTAM-00000000000000000000000000000003]]"
+        },
+        {
+          "goi": "ghi_cho_duyet",
+          "doi": [
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY",
+            "[[MASKTAM-00000000000000000000000000000003]]",
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": [
+            {
+              "nhom": "CONG_TY",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+              "nguon": "tam",
+              "so_lan_gap": 1
+            },
+            true
+          ]
+        }
+      ],
+      "nhat_ky": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+            "chi_gap_lai": false
+          }
+        ],
+        "bi_danh_tam_moi": [
+          "[[MASKTAM-00000000000000000000000000000003]]"
+        ],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "gui_duoc": true
+      },
+      "nhat_ky_chot": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+            "chi_gap_lai": false
+          }
+        ],
+        "bi_danh_tam_moi": [
+          "[[MASKTAM-00000000000000000000000000000003]]"
+        ],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      }
+    },
+    {
+      "ma": "mo_chinh_thuc_tam_bo_sung_va_hut",
+      "loai": "mo_che",
+      "snapshot": {
+        "danh_muc": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[CONG_TY-DEMO-01]]",
+            "nguon": "chinh_thuc",
+            "so_lan_gap": 1,
+            "bi_danh_tam": "[[MASKTAM-00000000000000000000000000000004]]"
+          }
+        ],
+        "yeu_cau": {
+          "trang_thai": "DANG_XU_LY"
+        },
+        "bi_danh_bo_sung": {
+          "[[masktam-00000000000000000000000000000005]]": "Doanh nghiệp DEMO Bổ Sung"
+        }
+      },
+      "thao_tac": [
+        {
+          "goi": "doc_yeu_cau",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": {
+            "trang_thai": "DANG_XU_LY"
+          }
+        },
+        {
+          "goi": "tra_dinh_danh",
+          "doi": [
+            " [ [ CoNg_Ty-DEMO-01 ] ] "
+          ],
+          "ket_qua": "Công ty DEMO Ánh Dương"
+        },
+        {
+          "goi": "tra_dinh_danh",
+          "doi": [
+            "[[cong_ty-demo-01]]"
+          ],
+          "ket_qua": "Công ty DEMO Ánh Dương"
+        },
+        {
+          "goi": "tra_dinh_danh",
+          "doi": [
+            "[[masktam-00000000000000000000000000000004]]"
+          ],
+          "ket_qua": "Công ty DEMO Ánh Dương"
+        },
+        {
+          "goi": "tra_dinh_danh",
+          "doi": [
+            "[[MASKTAM-00000000000000000000000000000005]]"
+          ],
+          "ket_qua": "Doanh nghiệp DEMO Bổ Sung"
+        },
+        {
+          "goi": "tra_dinh_danh",
+          "doi": [
+            "[[DEMO-LA]]"
+          ],
+          "ket_qua": null
+        },
+        {
+          "goi": "tra_dinh_danh",
+          "doi": [
+            " [ [ demo-la ] ] "
+          ],
+          "ket_qua": null
+        }
+      ],
+      "nhat_ky": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [],
+        "bi_danh_da_tra": [
+          "[[cong_ty-demo-01]]",
+          "[[masktam-00000000000000000000000000000004]]",
+          "[[masktam-00000000000000000000000000000005]]",
+          "[[demo-la]]"
+        ]
+      },
+      "ket_qua_chot": {
+        "mo_day_du": false,
+        "trang_thai_ma_yeu_cau": "DANG_XU_LY"
+      },
+      "nhat_ky_chot": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [],
+        "bi_danh_da_tra": [
+          "[[cong_ty-demo-01]]",
+          "[[masktam-00000000000000000000000000000004]]",
+          "[[masktam-00000000000000000000000000000005]]",
+          "[[demo-la]]"
+        ]
+      }
+    },
+    {
+      "ma": "mo_day_du_dong_ro_rang",
+      "loai": "mo_che",
+      "snapshot": {
+        "yeu_cau": {
+          "trang_thai": "DANG_XU_LY"
+        }
+      },
+      "thao_tac": [
+        {
+          "goi": "doc_yeu_cau",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": {
+            "trang_thai": "DANG_XU_LY"
+          }
+        },
+        {
+          "goi": "dong_yeu_cau",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": null
+        }
+      ],
+      "nhat_ky": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": true,
+        "cum_da_tra": [],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "mo_day_du": true,
+        "trang_thai_ma_yeu_cau": "DA_DONG"
+      },
+      "nhat_ky_chot": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": true,
+        "cum_da_tra": [],
+        "bi_danh_da_tra": []
+      }
+    },
+    {
+      "ma": "mo_day_du_giu_yeu_cau",
+      "loai": "mo_che",
+      "snapshot": {
+        "yeu_cau": {
+          "trang_thai": "DANG_XU_LY"
+        }
+      },
+      "thao_tac": [
+        {
+          "goi": "doc_yeu_cau",
+          "doi": [
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": {
+            "trang_thai": "DANG_XU_LY"
+          }
+        }
+      ],
+      "nhat_ky": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "mo_day_du": true,
+        "trang_thai_ma_yeu_cau": "DANG_XU_LY"
+      },
+      "nhat_ky_chot": {
+        "cum": [],
+        "bi_danh_tam_moi": [],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [],
+        "bi_danh_da_tra": []
+      }
+    },
+    {
+      "ma": "che_khong_gui_duoc_dong_khi_chot",
+      "loai": "che",
+      "snapshot": {},
+      "thao_tac": [
+        {
+          "goi": "cap_bi_danh_tam",
+          "doi": [],
+          "ket_qua": "[[MASKTAM-00000000000000000000000000000003]]"
+        },
+        {
+          "goi": "ghi_cho_duyet",
+          "doi": [
+            "Công ty DEMO Ánh Dương",
+            "CONG_TY",
+            "[[MASKTAM-00000000000000000000000000000003]]",
+            "00000000-0000-0000-0000-000000000001"
+          ],
+          "ket_qua": [
+            {
+              "nhom": "CONG_TY",
+              "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+              "nguon": "tam",
+              "so_lan_gap": 1
+            },
+            true
+          ]
+        }
+      ],
+      "nhat_ky": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+            "chi_gap_lai": false
+          }
+        ],
+        "bi_danh_tam_moi": [
+          "[[MASKTAM-00000000000000000000000000000003]]"
+        ],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": false,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      },
+      "ket_qua_chot": {
+        "gui_duoc": false,
+        "van_ban_da_che": null
+      },
+      "nhat_ky_chot": {
+        "cum": [
+          {
+            "gia_tri": "Công ty DEMO Ánh Dương",
+            "nhom": "CONG_TY",
+            "bi_danh": "[[MASKTAM-00000000000000000000000000000003]]",
+            "chi_gap_lai": false
+          }
+        ],
+        "bi_danh_tam_moi": [
+          "[[MASKTAM-00000000000000000000000000000003]]"
+        ],
+        "bi_danh_da_dung": [],
+        "dong_yeu_cau": true,
+        "cum_da_tra": [
+          "91152e933b01541b3f0fa2d5c5530b33b185362867afd44be40612a6ff3463cd"
+        ],
+        "bi_danh_da_tra": []
+      }
+    }
+  ]
+}

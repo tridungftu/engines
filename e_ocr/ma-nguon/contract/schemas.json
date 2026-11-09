@@ -1,0 +1,703 @@
+{
+  "urn:ktt:contract:chung.v1": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:ktt:contract:chung.v1",
+    "title": "chung.v1",
+    "$comment": "Phien ban 1.0.0",
+    "$defs": {
+      "id": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "chuoi": {
+        "type": "string",
+        "minLength": 1
+      },
+      "ma": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]{0,31}$"
+      },
+      "sha256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "ngay": {
+        "type": "string",
+        "format": "date",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+      },
+      "thoi_diem": {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "Z$"
+      },
+      "thap_phan": {
+        "type": "string",
+        "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+      },
+      "tien": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "gia_tri",
+          "don_vi_tien"
+        ],
+        "properties": {
+          "gia_tri": {
+            "type": "string",
+            "pattern": "^-?(0|[1-9][0-9]{0,17})(\\.[0-9]{1,6})?$"
+          },
+          "don_vi_tien": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          }
+        }
+      },
+      "vo_noi_dung": {
+        "type": "object",
+        "required": [
+          "contract",
+          "phien_ban",
+          "revision",
+          "nguon_tep_ids"
+        ],
+        "properties": {
+          "contract": {
+            "type": "string"
+          },
+          "phien_ban": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "nguon_tep_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        }
+      },
+      "vi_tri": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tep_id",
+          "dinh_vi"
+        ],
+        "properties": {
+          "tep_id": {
+            "$ref": "#/$defs/id"
+          },
+          "dinh_vi": {
+            "$ref": "#/$defs/chuoi"
+          },
+          "trang": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "bbox": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "khung_toa_do": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "don_vi",
+              "rong",
+              "cao"
+            ],
+            "properties": {
+              "don_vi": {
+                "enum": [
+                  "pdf_point",
+                  "pixel"
+                ]
+              },
+              "rong": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "cao": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            }
+          }
+        },
+        "dependentRequired": {
+          "bbox": [
+            "khung_toa_do"
+          ]
+        }
+      },
+      "dan_chung": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "vi_tri",
+          "trich_dan"
+        ],
+        "properties": {
+          "vi_tri": {
+            "$ref": "#/$defs/vi_tri"
+          },
+          "trich_dan": {
+            "$ref": "#/$defs/chuoi"
+          }
+        }
+      },
+      "gia_tri": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kieu",
+              "gia_tri"
+            ],
+            "properties": {
+              "kieu": {
+                "const": "van_ban"
+              },
+              "gia_tri": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kieu",
+              "gia_tri",
+              "don_vi"
+            ],
+            "properties": {
+              "kieu": {
+                "const": "so"
+              },
+              "gia_tri": {
+                "$ref": "#/$defs/thap_phan"
+              },
+              "don_vi": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kieu",
+              "gia_tri",
+              "don_vi_tien"
+            ],
+            "properties": {
+              "kieu": {
+                "const": "tien"
+              },
+              "gia_tri": {
+                "$ref": "#/$defs/tien/properties/gia_tri"
+              },
+              "don_vi_tien": {
+                "$ref": "#/$defs/tien/properties/don_vi_tien"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kieu",
+              "gia_tri"
+            ],
+            "properties": {
+              "kieu": {
+                "const": "ngay"
+              },
+              "gia_tri": {
+                "$ref": "#/$defs/ngay"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kieu",
+              "gia_tri"
+            ],
+            "properties": {
+              "kieu": {
+                "const": "logic"
+              },
+              "gia_tri": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kieu",
+              "ly_do"
+            ],
+            "properties": {
+              "kieu": {
+                "const": "chua_ro"
+              },
+              "ly_do": {
+                "$ref": "#/$defs/chuoi"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "urn:ktt:contract:tham_chieu_tep.v1": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:ktt:contract:tham_chieu_tep.v1",
+    "title": "tham_chieu_tep.v1",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "contract",
+      "phien_ban",
+      "tep_id",
+      "ten_tep",
+      "mime",
+      "kich_thuoc",
+      "sha256",
+      "het_han_luc"
+    ],
+    "properties": {
+      "contract": {
+        "const": "tham_chieu_tep.v1"
+      },
+      "phien_ban": {
+        "const": "1.0.0"
+      },
+      "tep_id": {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/id"
+      },
+      "ten_tep": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255
+      },
+      "mime": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+$"
+      },
+      "kich_thuoc": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      },
+      "sha256": {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/sha256"
+      },
+      "het_han_luc": {
+        "oneOf": [
+          {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/thoi_diem"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    }
+  },
+  "urn:ktt:contract:van_ban_tai_lieu.v1": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:ktt:contract:van_ban_tai_lieu.v1",
+    "title": "van_ban_tai_lieu.v1",
+    "allOf": [
+      {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/vo_noi_dung"
+      }
+    ],
+    "type": "object",
+    "unevaluatedProperties": false,
+    "required": [
+      "van_ban",
+      "trang",
+      "canh_bao",
+      "soat_ocr",
+      "da_doi_chieu",
+      "phan_hoi_nguon_tep_id"
+    ],
+    "properties": {
+      "contract": {
+        "const": "van_ban_tai_lieu.v1"
+      },
+      "phien_ban": {
+        "const": "1.0.0"
+      },
+      "van_ban": {
+        "type": "string"
+      },
+      "trang": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "so_trang",
+            "van_ban",
+            "khoi"
+          ],
+          "properties": {
+            "so_trang": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "van_ban": {
+              "type": "string"
+            },
+            "khoi": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "ma_nguon",
+                  "van_ban",
+                  "vi_tri"
+                ],
+                "properties": {
+                  "ma_nguon": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "van_ban": {
+                    "type": "string"
+                  },
+                  "vi_tri": {
+                    "$ref": "urn:ktt:contract:chung.v1#/$defs/vi_tri"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "canh_bao": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "soat_ocr": {
+        "enum": [
+          "can_soat",
+          "da_soat",
+          "khong_ap_dung"
+        ]
+      },
+      "da_doi_chieu": {
+        "type": "boolean"
+      },
+      "phan_hoi_nguon_tep_id": {
+        "oneOf": [
+          {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/id"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    }
+  },
+  "urn:ktt:contract:vung_anh.v1": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:ktt:contract:vung_anh.v1",
+    "title": "vung_anh.v1 — đầu vào ocr.trich_vung@1",
+    "$comment": "Phiên bản 1.0.0; phạm vi duyệt tại QUYET-DINH-CUOI-e_ocr.md §1; QD-TAM-20261106-13.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "contract",
+      "phien_ban",
+      "tham_chieu_tep",
+      "bon_diem"
+    ],
+    "properties": {
+      "contract": {
+        "const": "vung_anh.v1"
+      },
+      "phien_ban": {
+        "const": "1.0.0"
+      },
+      "tham_chieu_tep": {
+        "allOf": [
+          {
+            "$ref": "urn:ktt:contract:tham_chieu_tep.v1"
+          },
+          {
+            "properties": {
+              "mime": {
+                "enum": [
+                  "image/png",
+                  "image/jpeg"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "bon_diem": {
+        "$ref": "#/$defs/bon_diem"
+      }
+    },
+    "$defs": {
+      "bon_diem": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "$comment": "Tọa độ pixel trên ảnh gốc: trên trái, trên phải, dưới phải, dưới trái. Kiểm biên, tứ giác lồi, tự cắt và diện tích trước cắt.",
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "examples": [
+      {
+        "contract": "vung_anh.v1",
+        "phien_ban": "1.0.0",
+        "tham_chieu_tep": {
+          "contract": "tham_chieu_tep.v1",
+          "phien_ban": "1.0.0",
+          "tep_id": "10000000-0000-4000-8000-000000000001",
+          "ten_tep": "vung-DEMO.png",
+          "mime": "image/png",
+          "kich_thuoc": 100,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "het_han_luc": null
+        },
+        "bon_diem": [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            10
+          ]
+        ]
+      }
+    ]
+  },
+  "urn:ktt:contract:van_ban_vung.v1": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:ktt:contract:van_ban_vung.v1",
+    "title": "van_ban_vung.v1 — đầu ra ocr.trich_vung@1",
+    "$comment": "Phiên bản 1.0.0; image_text hiện chỉ trả chữ, không cung cấp confidence. Không đặt điểm hoặc ngưỡng giả.",
+    "type": "object",
+    "unevaluatedProperties": false,
+    "required": [
+      "van_ban",
+      "bon_diem",
+      "kich_thuoc_vung",
+      "nguon_doc",
+      "do_tin_cay",
+      "nghi_ngo",
+      "vung_rong",
+      "ly_do_nghi_ngo",
+      "canh_bao"
+    ],
+    "properties": {
+      "contract": {
+        "const": "van_ban_vung.v1"
+      },
+      "phien_ban": {
+        "const": "1.0.0"
+      },
+      "nguon_tep_ids": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 1,
+        "items": {
+          "$ref": "urn:ktt:contract:chung.v1#/$defs/id"
+        }
+      },
+      "van_ban": {
+        "type": "string",
+        "maxLength": 500000
+      },
+      "bon_diem": {
+        "$ref": "urn:ktt:contract:vung_anh.v1#/$defs/bon_diem"
+      },
+      "kich_thuoc_vung": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rong",
+          "cao"
+        ],
+        "properties": {
+          "rong": {
+            "type": "integer",
+            "minimum": 2
+          },
+          "cao": {
+            "type": "integer",
+            "minimum": 2
+          }
+        }
+      },
+      "nguon_doc": {
+        "const": "mask_ocr_tesseract"
+      },
+      "do_tin_cay": {
+        "const": null
+      },
+      "nghi_ngo": {
+        "const": true
+      },
+      "vung_rong": {
+        "type": "boolean"
+      },
+      "ly_do_nghi_ngo": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "enum": [
+            "chua_co_do_tin_cay",
+            "vung_rong"
+          ]
+        },
+        "contains": {
+          "const": "chua_co_do_tin_cay"
+        }
+      },
+      "canh_bao": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "allOf": [
+      {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/vo_noi_dung"
+      },
+      {
+        "if": {
+          "properties": {
+            "vung_rong": {
+              "const": true
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "van_ban": {
+              "pattern": "^\\s*$"
+            },
+            "ly_do_nghi_ngo": {
+              "contains": {
+                "const": "vung_rong"
+              }
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "van_ban": {
+              "pattern": "\\S"
+            },
+            "ly_do_nghi_ngo": {
+              "not": {
+                "contains": {
+                  "const": "vung_rong"
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "examples": [
+      {
+        "contract": "van_ban_vung.v1",
+        "phien_ban": "1.0.0",
+        "revision": 1,
+        "nguon_tep_ids": [
+          "10000000-0000-4000-8000-000000000001"
+        ],
+        "van_ban": "DEMO Ánh Dương 06/11/2026",
+        "bon_diem": [
+          [
+            0,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            0,
+            10
+          ]
+        ],
+        "kich_thuoc_vung": {
+          "rong": 10,
+          "cao": 10
+        },
+        "nguon_doc": "mask_ocr_tesseract",
+        "do_tin_cay": null,
+        "nghi_ngo": true,
+        "vung_rong": false,
+        "ly_do_nghi_ngo": [
+          "chua_co_do_tin_cay"
+        ],
+        "canh_bao": [
+          "Chưa có độ tin cậy nhận dạng; cần kiểm tra nội dung đọc được."
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "hoadon-downloader",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Phần nguồn xuất bảng kê hóa đơn nội bộ; Chromium do Core quản lý.",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "exceljs": "4.4.0",
+    "fast-xml-parser": "4.5.7",
+    "playwright": "1.62.1"
+  }
+}

@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ktt-engine-trich-xuat"
+version = "0.1.0.dev1"
+description = "Engine Trích tham số hợp đồng từ DOCX (e_trich_xuat), mốc chuyển vị trí G3-GOI-31, chưa tự đủ độc lập"
+requires-python = ">=3.11"
+dependencies = []
+
+# Chưa cấu hình packages/package-data: các lát GOI-TRICH-NGUON/THUAN/AI-SDK/RUNTIME còn tháo phụ thuộc
+# kho_tri_thuc.{m4.review_goc,sdk_core,tri_thuc}; chỉ khai khi gói build được độc lập.

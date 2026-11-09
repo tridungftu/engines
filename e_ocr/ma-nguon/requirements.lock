@@ -1,0 +1,42 @@
+# G3-GOI-20 · GOI-OCR-GHIM · đo ngày 07/11/2026.
+# Python 3.13.14, Windows x64; phiên bản từ importlib.metadata của môi trường test.
+# Chỉ ghim gói thực có; không cài/nâng gói, không ghim SDK 1.4.1 candidate (§6.3).
+# Đây là lock lớp chữ/cắt vùng, CHƯA là môi trường OCR Tesseract đầy đủ.
+# Các dòng import/bac-cau/chua-cai là danh sách có lý do cho test closure.
+
+# import: pdfplumber | pdfplumber | Đọc lớp chữ PDF ABBYY, đếm trang PDF; QD-TAM-20261106-12.
+pdfplumber==0.11.10
+# import: PIL | Pillow | Đọc PNG/JPEG và cắt vùng tứ giác; QD-TAM-20261106-13; cũng do pdfplumber yêu cầu.
+Pillow==12.3.0
+# import: numpy | numpy | Tọa độ float32, kiểm hình học và kích thước vùng; QD-TAM-20261106-13.
+numpy==2.5.3
+
+# bac-cau: pdfminer.six | pdfplumber | Parser lớp chữ PDF mà pdfplumber yêu cầu đúng phiên bản.
+pdfminer.six==20260107
+# bac-cau: pypdfium2 | pdfplumber | Phụ thuộc bắt buộc của pdfplumber, dù engine chỉ đọc chữ và không gọi render này.
+pypdfium2==5.13.0
+# bac-cau: charset-normalizer | pdfminer.six | Giải mã ký tự cho parser PDF.
+charset-normalizer==3.4.7
+# bac-cau: cryptography | pdfminer.six | Xử lý mã hóa PDF; giữ đúng bản 49.0.0 đang cài, không trộn lock Mask.
+cryptography==49.0.0
+# bac-cau: cffi | cryptography | Phụ thuộc runtime trên CPython của cryptography.
+cffi==2.0.0
+# bac-cau: pycparser | cffi | Phụ thuộc runtime của cffi trên CPython.
+pycparser==3.0
+
+# chua-cai: pymupdf | pymupdf | Khai nhưng chưa cài/chưa dùng thật ở bản 1; vendor import và cần cho image_text/render PDF, chờ lead chốt.
+# chua-cai: defusedxml | defusedxml | Khai nhưng chưa cài/chưa dùng thật ở bản 1; parser DOCX vendor import, chờ lead chốt.
+# Nguồn local-mask-ocr 2.1.0 khai PyMuPDF>=1.28.2,<2 và defusedxml>=0.7.1,<1.
+# Các số trên là ràng buộc nguồn, KHÔNG là phiên bản đã đo/cài; không tạo pin giả.
+# pytesseract: chưa cài, không import/không dùng; image_text gọi OCR Tesseract tích hợp của MuPDF.
+# Tesseract ngoài pip: --version = 5.5.3.20260724; --list-langs có vie, eng, osd.
+# Chỉ đo CLI; chưa xác nhận Tesseract của MuPDF/model vendor hoặc nhận dạng thật.
+# ABBYY là cầu nối ngoài tùy chọn, không phải dependency pip của engine.
+
+# SHA-256 nguồn vendor đã ghi trong NGUON.md: đường dẫn | nguồn gốc | bản trong gói.
+# Đây là hash mã nguồn, KHÔNG là hash wheel pip; không dùng --require-hashes với tệp này.
+# vendor-sha256: vendor/mask_ocr/__init__.py | d7c4302994002b7f2fc4b4986645e83115d7dfd4c0669004d5f0c107c0a0e2e6 | d7c4302994002b7f2fc4b4986645e83115d7dfd4c0669004d5f0c107c0a0e2e6
+# vendor-sha256: vendor/mask_ocr/extraction.py | f573bb79a436fd2e968a4e8376b3128a973e81bed28d8398f1abdf6c092589a8 | d66ddaef8e36b66d77a919993f6703c5d6fbb2dbfeccfd226e651117bffdb0b4
+# vendor-sha256: vendor/mask_ocr/layout.py | ae8f1310dfc4698c559bb15f56aae7d31389a675fa4924235b2b956b2da29a33 | ae8f1310dfc4698c559bb15f56aae7d31389a675fa4924235b2b956b2da29a33
+# vendor-sha256: vendor/mask_ocr/common.py | e7daf60ac470ad47586e25ba5acdd0440246c52d22184bc7c39d5986f48791b7 | e7daf60ac470ad47586e25ba5acdd0440246c52d22184bc7c39d5986f48791b7
+# vendor-sha256: vendor/mask_ocr/runtime.py | add0d540d63c5d01d47f00ae7faafc851d9b3dc13115fd905ca1a9eeb0916558 | add0d540d63c5d01d47f00ae7faafc851d9b3dc13115fd905ca1a9eeb0916558

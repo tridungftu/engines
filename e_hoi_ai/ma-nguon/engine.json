@@ -1,0 +1,105 @@
+{
+  "phien_ban_manifest": 1,
+  "loai": "engine",
+  "ma": "e_hoi_ai",
+  "ten": "Cổng AI dùng chung",
+  "phien_ban": "0.1.1-demo.1",
+  "tuong_thich": {"core": ">=1.0.0 <2.0.0", "api": "v1"},
+  "adapter": {"ma": "cong_ai", "phien_ban": "0.1.0-demo.1"},
+  "capability": [
+    {
+      "ma": "ai.hoi@1",
+      "dau_vao": "hoi_ai.v2",
+      "dau_ra": "tra_loi_ai.v2",
+      "mime": ["application/json"],
+      "tep_toi_da_mib": 20,
+      "trang_toi_da": 1,
+      "thoi_han_giay": 600
+    }
+  ],
+  "ho_so_chay_mau": {
+    "ma_moi_truong": "ai_demo",
+    "diem_vao": "kho_tri_thuc.engines.e_hoi_ai.chay",
+    "headless": true,
+    "cong": {"nguon": "core_cap", "pham_vi": "loopback"},
+    "nhan_listener": ["socket.fromshare"],
+    "tham_so_cong": "--port",
+    "bi_mat": "stdin_hoac_handle",
+    "login_csdl": false,
+    "che_do_mac_dinh": "tu_kich_hoat_tu_dong",
+    "ranh_giay_de_xuat": 300
+  },
+  "readiness": {
+    "kenh": "dieu_khien_noi_bo",
+    "kiem": ["instance", "phien_ban", "capability", "model_san_sang"],
+    "thoi_han_giay": 60
+  },
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1,
+    "ram_toi_da_mib_de_xuat": 512,
+    "cpu_phan_tram_toi_da_de_xuat": 50
+  },
+  "ban_giao_ket_qua": "core_xac_nhan_truoc_giai_phong",
+  "thu_hoi": "drain_va_xac_nhan",
+  "cau_hinh_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["model_phat_hien", "quy_tac_model"],
+    "properties": {
+      "local_ai": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["enabled", "url"],
+        "properties": {
+          "enabled": {"type":"boolean", "default":false},
+          "url": {"type":"string", "minLength":1, "maxLength":255},
+          "model": {"type":"string", "maxLength":200, "pattern":"^[A-Za-z0-9._:/-]{0,200}(?![\\s\\S])"},
+          "timeout_seconds": {"type":"integer", "minimum":1, "maximum":30},
+          "ket_noi": {"type":"boolean"},
+          "kiem_luc": {"type":["string", "null"], "format":"date-time"},
+          "do_tre_ms": {"type":["number", "null"], "minimum":0, "maximum":3600000}
+        }
+      },
+      "model_phat_hien": {
+        "type": "array",
+        "maxItems": 500,
+        "default": [],
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["loai_phan_mem", "id_model", "trang_thai", "phat_hien_luc", "bat"],
+          "properties": {
+            "ten": {"type":"string", "minLength":1, "maxLength":120},
+            "loai_phan_mem": {"type":"string", "enum":["ollama", "lm_studio", "openai_compatible"]},
+            "id_model": {"type":"string", "minLength":1, "maxLength":200, "pattern":"^[A-Za-z0-9._:/-]{1,200}(?![\\s\\S])"},
+            "kich_thuoc_byte": {"type":"integer", "minimum":1},
+            "ngu_canh_toi_da": {"type":"integer", "minimum":1},
+            "trang_thai": {"type":"string", "enum":["san_sang", "da_tai", "chua_ro"]},
+            "phat_hien_luc": {"type":"string", "format":"date-time"},
+            "bat": {"type":"boolean", "default":false}
+          }
+        }
+      },
+      "quy_tac_model": {
+        "type": "array",
+        "maxItems": 200,
+        "default": [{"module":"*", "function":"*", "uu_tien":"", "du_phong":[], "che_do":"tu_chon", "bat":false}],
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["module", "function", "uu_tien", "du_phong", "che_do", "bat"],
+          "properties": {
+            "ten": {"type":"string", "minLength":1, "maxLength":120},
+            "module": {"type":"string", "pattern":"^(\\*|[a-z][a-z0-9_]*)$"},
+            "function": {"type":"string", "pattern":"^(\\*|[a-z][a-z0-9_.]*)$"},
+            "uu_tien": {"type":"string", "maxLength":200, "pattern":"^[A-Za-z0-9._:/-]{0,200}(?![\\s\\S])"},
+            "du_phong": {"type":"array", "uniqueItems":true, "items":{"type":"string", "minLength":1, "maxLength":200, "pattern":"^[A-Za-z0-9._:/-]{1,200}(?![\\s\\S])"}},
+            "che_do": {"type":"string", "enum":["tu_chon", "co_dinh"]},
+            "bat": {"type":"boolean", "default":false}
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_demo_dem_tu",
+  "ten": "Đếm từ và dòng (DEMO)",
+  "phien_ban": "1.0.0",
+  "tuong_thich": {"core": ">=2.0.0 <3.0.0", "api": "v1", "sdk": ">=2.0.0 <3.0.0"},
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {"lenh": ["{python}", "-m", "e_demo_dem_tu.chay"], "thu_muc": "."},
+  "nang_luc": [
+    {
+      "ma": "van_ban.dem_tu@1",
+      "ten": "Đếm từ",
+      "nhan": ["van_ban"],
+      "tra": "truong",
+      "truong_ra": [
+        {"ma": "so_tu", "ten": "Số từ", "kieu": "so"},
+        {"ma": "so_dong", "ten": "Số dòng", "kieu": "so"}
+      ],
+      "gioi_han": {"ky_tu_toi_da": 1000000, "thoi_han_giay": 60},
+      "huy_duoc": true,
+      "tham_so": [
+        {"ma": "bo_dong_trong", "ten": "Bỏ dòng trống khi đếm", "kieu": "co_khong", "mac_dinh": true,
+         "mo_ta": "Bật thì dòng chỉ có khoảng trắng không được tính vào số dòng."}
+      ]
+    }
+  ],
+  "loai_du_lieu_rieng": [],
+  "tai_nguyen": {"so_viec_dong_thoi": 1},
+  "readiness": {"thoi_han_giay": 30},
+  "chay_thu_demo": [
+    {
+      "nang_luc": "van_ban.dem_tu@1",
+      "ten": "Đếm từ đoạn văn DEMO",
+      "dau_vao": {"loai": "van_ban", "van_ban": "Dòng một DEMO\nDòng hai DEMO"},
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "van_ban.dem_tu@1",
+      "ten": "Đếm cả dòng trống (DEMO)",
+      "dau_vao": {"loai": "van_ban", "van_ban": "Dòng một DEMO\n\nDòng ba DEMO"},
+      "tham_so": {"bo_dong_trong": false}
+    }
+  ],
+  "bi_mat": [],
+  "webhook": null
+}

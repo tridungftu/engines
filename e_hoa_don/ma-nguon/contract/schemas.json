@@ -1,0 +1,754 @@
+{
+  "urn:ktt:contract:chung.v1": {
+    "$comment": "Phien ban 1.0.0",
+    "$defs": {
+      "chuoi": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "dan_chung": {
+        "additionalProperties": false,
+        "properties": {
+          "trich_dan": {
+            "$ref": "#/$defs/chuoi"
+          },
+          "vi_tri": {
+            "$ref": "#/$defs/vi_tri"
+          }
+        },
+        "required": [
+          "vi_tri",
+          "trich_dan"
+        ],
+        "type": "object"
+      },
+      "gia_tri": {
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "gia_tri": {
+                "type": "string"
+              },
+              "kieu": {
+                "const": "van_ban"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "don_vi": {
+                "minLength": 1,
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "gia_tri": {
+                "$ref": "#/$defs/thap_phan"
+              },
+              "kieu": {
+                "const": "so"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri",
+              "don_vi"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "don_vi_tien": {
+                "$ref": "#/$defs/tien/properties/don_vi_tien"
+              },
+              "gia_tri": {
+                "$ref": "#/$defs/tien/properties/gia_tri"
+              },
+              "kieu": {
+                "const": "tien"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri",
+              "don_vi_tien"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "gia_tri": {
+                "$ref": "#/$defs/ngay"
+              },
+              "kieu": {
+                "const": "ngay"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "gia_tri": {
+                "type": "boolean"
+              },
+              "kieu": {
+                "const": "logic"
+              }
+            },
+            "required": [
+              "kieu",
+              "gia_tri"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "kieu": {
+                "const": "chua_ro"
+              },
+              "ly_do": {
+                "$ref": "#/$defs/chuoi"
+              }
+            },
+            "required": [
+              "kieu",
+              "ly_do"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "id": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "ma": {
+        "pattern": "^[a-z][a-z0-9_]{0,31}$",
+        "type": "string"
+      },
+      "ngay": {
+        "format": "date",
+        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+        "type": "string"
+      },
+      "sha256": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "thap_phan": {
+        "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+        "type": "string"
+      },
+      "thoi_diem": {
+        "format": "date-time",
+        "pattern": "Z$",
+        "type": "string"
+      },
+      "tien": {
+        "additionalProperties": false,
+        "properties": {
+          "don_vi_tien": {
+            "pattern": "^[A-Z]{3}$",
+            "type": "string"
+          },
+          "gia_tri": {
+            "pattern": "^-?(0|[1-9][0-9]{0,17})(\\.[0-9]{1,6})?$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "gia_tri",
+          "don_vi_tien"
+        ],
+        "type": "object"
+      },
+      "vi_tri": {
+        "additionalProperties": false,
+        "dependentRequired": {
+          "bbox": [
+            "khung_toa_do"
+          ]
+        },
+        "properties": {
+          "bbox": {
+            "items": {
+              "minimum": 0,
+              "type": "number"
+            },
+            "maxItems": 4,
+            "minItems": 4,
+            "type": "array"
+          },
+          "dinh_vi": {
+            "$ref": "#/$defs/chuoi"
+          },
+          "khung_toa_do": {
+            "additionalProperties": false,
+            "properties": {
+              "cao": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              "don_vi": {
+                "enum": [
+                  "pdf_point",
+                  "pixel"
+                ]
+              },
+              "rong": {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              }
+            },
+            "required": [
+              "don_vi",
+              "rong",
+              "cao"
+            ],
+            "type": "object"
+          },
+          "tep_id": {
+            "$ref": "#/$defs/id"
+          },
+          "trang": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tep_id",
+          "dinh_vi"
+        ],
+        "type": "object"
+      },
+      "vo_noi_dung": {
+        "properties": {
+          "contract": {
+            "type": "string"
+          },
+          "nguon_tep_ids": {
+            "items": {
+              "$ref": "#/$defs/id"
+            },
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "phien_ban": {
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+            "type": "string"
+          },
+          "revision": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "contract",
+          "phien_ban",
+          "revision",
+          "nguon_tep_ids"
+        ],
+        "type": "object"
+      }
+    },
+    "$id": "urn:ktt:contract:chung.v1",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "chung.v1"
+  },
+  "urn:ktt:contract:hoa_don.v1": {
+    "$defs": {
+      "thap_phan_nguon": {
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "else": {
+              "properties": {
+                "gia_tri": {
+                  "const": null
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "trang_thai": {
+                  "enum": [
+                    "EXACT",
+                    "PRECISION_UNDECLARED"
+                  ]
+                }
+              },
+              "required": [
+                "trang_thai"
+              ]
+            },
+            "then": {
+              "properties": {
+                "gia_tri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "properties": {
+          "gia_tri": {
+            "oneOf": [
+              {
+                "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "trang_thai": {
+            "enum": [
+              "EXACT",
+              "PRECISION_UNDECLARED",
+              "ABSENT",
+              "EMPTY",
+              "INVALID",
+              "OVER_DOMAIN"
+            ]
+          }
+        },
+        "required": [
+          "trang_thai",
+          "gia_tri"
+        ],
+        "type": "object"
+      }
+    },
+    "$id": "urn:ktt:contract:hoa_don.v1",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "allOf": [
+      {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/vo_noi_dung"
+      }
+    ],
+    "properties": {
+      "chi_tiet_nguon_tep_id": {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/id"
+      },
+      "contract": {
+        "const": "hoa_don.v1"
+      },
+      "dang_cau_truc": {
+        "enum": [
+          "SUPPORTED_SUBSET",
+          "UNSUPPORTED_INPUT",
+          "XML_MALFORMED",
+          "UNSUPPORTED_NAMESPACE",
+          "UNSUPPORTED_PATH",
+          "STRUCTURE_DUPLICATE"
+        ]
+      },
+      "dau_hoa_don": {
+        "additionalProperties": false,
+        "properties": {
+          "don_vi_tien": {
+            "pattern": "^[A-Z]{3}$",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ky_hieu": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ma_so_thue_ban": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ma_so_thue_mua": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mau_so": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ngay_lap": {
+            "oneOf": [
+              {
+                "$ref": "urn:ktt:contract:chung.v1#/$defs/ngay"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "so_hoa_don": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "mau_so",
+          "ky_hieu",
+          "so_hoa_don",
+          "ngay_lap",
+          "don_vi_tien",
+          "ma_so_thue_ban",
+          "ma_so_thue_mua"
+        ],
+        "type": "object"
+      },
+      "dinh_danh_nguon": {
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1,
+        "type": [
+          "array",
+          "null"
+        ]
+      },
+      "dong": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "dinh_vi": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "don_gia": {
+              "$ref": "#/$defs/thap_phan_nguon"
+            },
+            "don_vi": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "so_luong": {
+              "$ref": "#/$defs/thap_phan_nguon"
+            },
+            "thanh_tien": {
+              "$ref": "#/$defs/thap_phan_nguon"
+            },
+            "thu_tu_nguon": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "thue_suat": {
+              "additionalProperties": false,
+              "else": {
+                "properties": {
+                  "gia_tri_nguon": {
+                    "const": null
+                  }
+                }
+              },
+              "if": {
+                "properties": {
+                  "trang_thai": {
+                    "const": "TEXT"
+                  }
+                },
+                "required": [
+                  "trang_thai"
+                ]
+              },
+              "properties": {
+                "gia_tri_nguon": {
+                  "minLength": 1,
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "trang_thai": {
+                  "enum": [
+                    "TEXT",
+                    "ABSENT",
+                    "EMPTY",
+                    "KHONG_HOP_LE"
+                  ]
+                }
+              },
+              "required": [
+                "trang_thai",
+                "gia_tri_nguon"
+              ],
+              "then": {
+                "properties": {
+                  "gia_tri_nguon": {
+                    "type": "string"
+                  }
+                }
+              },
+              "type": "object"
+            },
+            "tien_chuan": {
+              "oneOf": [
+                {
+                  "$ref": "urn:ktt:contract:chung.v1#/$defs/tien"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "tinh_chat": {
+              "enum": [
+                "GOODS",
+                "PROMOTION",
+                "DISCOUNT",
+                "NOTE",
+                "SPECIAL_GOODS",
+                "UNKNOWN"
+              ]
+            }
+          },
+          "required": [
+            "thu_tu_nguon",
+            "dinh_vi",
+            "tinh_chat",
+            "don_vi",
+            "so_luong",
+            "don_gia",
+            "thanh_tien",
+            "tien_chuan",
+            "thue_suat"
+          ],
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "ghi_nhan_nghiep_vu": {
+        "const": "NOT_PERFORMED"
+      },
+      "ly_do_ung_vien": {
+        "items": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "ma_bam_noi_dung": {
+        "oneOf": [
+          {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/sha256"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "phien_ban": {
+        "const": "1.0.0"
+      },
+      "profile_document_sha256": {
+        "oneOf": [
+          {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/sha256"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "profile_payload_sha256": {
+        "oneOf": [
+          {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/sha256"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "profile_ref": {
+        "minLength": 1,
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "tep_xml_id": {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/id"
+      },
+      "tong_tien": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "dinh_vi": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "gia_tri_nguon": {
+              "$ref": "#/$defs/thap_phan_nguon"
+            },
+            "ma": {
+              "enum": [
+                "truoc_thue",
+                "thue",
+                "khong_chiu_thue",
+                "thanh_toan"
+              ]
+            },
+            "tien_chuan": {
+              "oneOf": [
+                {
+                  "$ref": "urn:ktt:contract:chung.v1#/$defs/tien"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "ma",
+            "dinh_vi",
+            "gia_tri_nguon",
+            "tien_chuan"
+          ],
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "trang_thai_thue": {
+        "const": "UNKNOWN"
+      },
+      "van_de": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "dinh_vi": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "ma": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "muc": {
+              "enum": [
+                "ERROR",
+                "WARNING"
+              ]
+            },
+            "thong_diep": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "ma",
+            "thong_diep",
+            "dinh_vi",
+            "muc"
+          ],
+          "type": "object"
+        },
+        "type": "array"
+      }
+    },
+    "required": [
+      "tep_xml_id",
+      "chi_tiet_nguon_tep_id",
+      "profile_ref",
+      "profile_document_sha256",
+      "profile_payload_sha256",
+      "dang_cau_truc",
+      "dinh_danh_nguon",
+      "ma_bam_noi_dung",
+      "dau_hoa_don",
+      "dong",
+      "tong_tien",
+      "van_de",
+      "ly_do_ung_vien",
+      "trang_thai_thue",
+      "ghi_nhan_nghiep_vu"
+    ],
+    "title": "hoa_don.v1",
+    "type": "object",
+    "unevaluatedProperties": false
+  },
+  "urn:ktt:contract:tham_chieu_tep.v1": {
+    "$id": "urn:ktt:contract:tham_chieu_tep.v1",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "contract": {
+        "const": "tham_chieu_tep.v1"
+      },
+      "het_han_luc": {
+        "oneOf": [
+          {
+            "$ref": "urn:ktt:contract:chung.v1#/$defs/thoi_diem"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "kich_thuoc": {
+        "maximum": 9007199254740991,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "mime": {
+        "pattern": "^[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+$",
+        "type": "string"
+      },
+      "phien_ban": {
+        "const": "1.0.0"
+      },
+      "sha256": {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/sha256"
+      },
+      "ten_tep": {
+        "maxLength": 255,
+        "minLength": 1,
+        "type": "string"
+      },
+      "tep_id": {
+        "$ref": "urn:ktt:contract:chung.v1#/$defs/id"
+      }
+    },
+    "required": [
+      "contract",
+      "phien_ban",
+      "tep_id",
+      "ten_tep",
+      "mime",
+      "kich_thuoc",
+      "sha256",
+      "het_han_luc"
+    ],
+    "title": "tham_chieu_tep.v1",
+    "type": "object"
+  }
+}

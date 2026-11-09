@@ -1,0 +1,58 @@
+{
+  "luu_y": "Dữ liệu giả (DEMO) để kiểm thử; không phải dữ liệu thật. Ví dụ đầu ra tham_so.v1 chưa có: bổ sung ở lát GOI-TRICH-RUNTIME cùng ca kiểm trích.",
+  "tham_chieu_tep.v1": {
+    "hop_le": [
+      {
+        "contract": "tham_chieu_tep.v1",
+        "phien_ban": "1.0.0",
+        "tep_id": "00000000-0000-4000-8000-000000000001",
+        "ten_tep": "hop-dong-demo.docx",
+        "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "kich_thuoc": 1024,
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "het_han_luc": null
+      }
+    ],
+    "ca_am": [
+      {
+        "mo_ta": "thiếu sha256",
+        "du_lieu": {
+          "contract": "tham_chieu_tep.v1",
+          "phien_ban": "1.0.0",
+          "tep_id": "00000000-0000-4000-8000-000000000001",
+          "ten_tep": "hop-dong-demo.docx",
+          "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "kich_thuoc": 1024,
+          "het_han_luc": null
+        }
+      },
+      {
+        "mo_ta": "mime sai dạng",
+        "du_lieu": {
+          "contract": "tham_chieu_tep.v1",
+          "phien_ban": "1.0.0",
+          "tep_id": "00000000-0000-4000-8000-000000000001",
+          "ten_tep": "hop-dong-demo.docx",
+          "mime": "docx",
+          "kich_thuoc": 1024,
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "het_han_luc": null
+        }
+      },
+      {
+        "mo_ta": "trường lạ",
+        "du_lieu": {
+          "contract": "tham_chieu_tep.v1",
+          "phien_ban": "1.0.0",
+          "tep_id": "00000000-0000-4000-8000-000000000001",
+          "ten_tep": "hop-dong-demo.docx",
+          "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "kich_thuoc": 1024,
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "het_han_luc": null,
+          "khac": 1
+        }
+      }
+    ]
+  }
+}

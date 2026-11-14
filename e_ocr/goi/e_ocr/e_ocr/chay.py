@@ -1,7 +1,8 @@
-"""Cổng SDK 2.0: hai action đọc dùng chung lõi; xuất Word thuộc OCR-3."""
+"""Cổng SDK 2.0: ba action đọc/xuất Word dùng chung lõi nhận dạng."""
 
-from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
+from kho_tri_thuc_sdk.engine import Engine
 
+from .ban_giao import ban_giao_word
 from .van_ban import trich_van_ban
 
 
@@ -22,9 +23,8 @@ def doc_van_ban(viec):
 
 @app.nang_luc("ocr.xuat_word@1")
 def xuat_word(viec):
-    raise LoiNghiepVu(
-        "CHUA_LAM", "Chức năng xuất Word chưa được triển khai."
-    )
+    du_lieu = trich_van_ban(viec, phien_ban_engine=f"{app.ma} {app.phieu['phien_ban']}")
+    return ban_giao_word(viec, du_lieu)
 
 
 if __name__ == "__main__":

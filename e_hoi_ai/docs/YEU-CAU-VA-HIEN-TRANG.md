@@ -1,6 +1,6 @@
 # e_hoi_ai — Hỏi AI: yêu cầu và hiện trạng
 
-*Lập ngày 08/11/2026.*
+*Lập ngày 08/11/2026; cập nhật AI-4 ngày 14/11/2026.*
 
 **Căn cứ:**
 - `QUYET-DINH-CUOI-e_hoi_ai.md` (06/11) và `PHIEU-ENGINE-e_hoi_ai.md`.
@@ -12,7 +12,7 @@
 - TL 48 (cổng AI).
 - **Yêu cầu chung** của mọi engine nằm ở `..\_chung\docs\YEU-CAU-CHUNG-ENGINE.md`.
 
-**Hiện trạng** đối chiếu `ma-nguon\CHANGELOG.md` (tới 08/11) và mã. Ký hiệu:
+**Hiện trạng** đối chiếu mã cũ tới 08/11 và gói SDK 2.0 `goi/e_hoi_ai/` tới AI-4 ngày 14/11. Ký hiệu:
 - ✅ có, đã kiểm bằng mock/thuần
 - 🟡 một phần, hoặc đang nằm trong Core
 - ❌ chưa có
@@ -22,12 +22,13 @@
 ## 0. Kết luận
 - **Bản 1 = chỉ Local AI.** Module gửi prompt của function cùng tài liệu → engine ghép khung "trả lời có trích dẫn / không thấy căn cứ" → gọi Local → Python kiểm trích dẫn → trả kết quả và ghi nhật ký.
 - **Mã lõi bản 1 đã gộp (08/11)** và kiểm bằng mock. Gồm: contract v2, ghim function và prompt, chọn model theo module/function có dự phòng, nhật ký nguồn gốc.
+- **Gói SDK 2.0 tới AI-4: đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả; hai năng lực Local, khuôn trả lời, phát hiện/chọn model và ba ví dụ DEMO. Test tiến trình thật kiểm `app.chay()` nhận dòng khởi động stdin qua `MayChuGia` HTTP loopback. Chưa kiểm Core thật/model thật.
 - **Còn thiếu để Anh dùng được:**
   1. đường chạy engine thật trên Core (cổng chung K1–K5);
   2. thử 3 model thật (lát 8);
   3. màn Cổng Cloud AI;
   4. bài test cuối 40 phút.
-- Màn Chạy thử và màn Cổng Local **hiện nằm trong mã Core** (vi phạm G14). Phải chuyển thành giao diện của engine, nạp qua Quản lý engine.
+- Màn Chạy thử và màn Cổng Local cũ có bản tham chiếu ở `tu-core-cu/`. Gói mới khai DEMO trong `engine.json` để Core dựng màn chung theo API/SDK 2.0; màn trạng thái/cấu hình chờ cửa chung của Core.
 
 ## 1. Yêu cầu
 
@@ -82,11 +83,11 @@
 | AI-9 | 🟡 | Engine ghim function và prompt. Phía Core đọc prompt từ manifest module (`ham_hoi_ai`) bằng **mã riêng cho Hỏi AI trong Core** (`ho_so_module.doc_hoi_ai`, `dich_vu_engine.nguon_hoi_ai`) → cần cửa chung. Màn sửa prompt trong module: ❌ |
 | AI-10 | 🟡 | Chọn model theo module/function có ưu tiên và dự phòng (✅ mock). **Tự phát hiện model khi kết nối: chưa xác nhận chạy thật** (`KS-AI-MODEL.md`) |
 | AI-11 | 🟡 / ❌ | Màn Local: route `/api/v1/quan-tri/engine/e_hoi_ai/local` và JS **nằm trong Core**. Màn Cloud: ❌ |
-| AI-12 | 🟡 | `chay_thu_hoi_ai.js` và route chạy thử **nằm trong Core** (bản sao ở `tu-core-cu\phia-core\`). Chưa nghiệm thu trên trình duyệt |
+| AI-12 | 🟡 — đã kiểm bằng Core giả | AI-4: ba ví dụ `engine.json` chỉ dùng hợp đồng DEMO-001 của Công ty DEMO Ánh Dương, 1.000.000 VND, 30/10/2026; có câu không có đáp án và yêu cầu có khuôn. Cổng `tests/chay_demo_voi_local_gia.py` gọi `CoreGia().chay_thu_demo(app)`, thay lệnh SDK thu riêng. Chưa nghiệm thu màn chung/phân quyền Admin trên Core thật |
 | AI-13 | 🟡 | AI-LAT3: `requirements.lock`, `NGUON.md` có SHA-256 của 14 tệp. **Chưa build và cài wheel độc lập** |
 | AI-14 | 🟡 | AI-LAT8: công cụ thử 3 model, mặc định chạy khô (`tu-core-cu\tools\thu_local_ai_that.py`, `MO-THU-LOCAL-AI.cmd`). **Chưa chạy thật** |
 | AI-15, AI-16, AI-17 | ❌ | Phụ thuộc hàng việc, quyền và nhật ký bền của Core (K4, K5) |
-| AI-18 | ❌ | Chưa chạy |
+| AI-18 | 🟡 — đã kiểm bằng Core giả | AI-4 kiểm phần engine: đáp án tiền/ngày, không thấy căn cứ, khuôn và chuyển tiếp; tiến trình nhận stdin, HTTP loopback qua MayChuGia, xác thực, nộp/kết thúc, 0 Cloud. Các ca thiếu prompt/Local lỗi/hủy/chống trùng kế thừa AI-1…3. Bài cuối 40 phút, hàng chờ/quyền/lịch sử còn chờ Core thật |
 | AI-21 … AI-26 | ❌ | Bản 2 |
 
 **Phụ thuộc vào Core** (xem `_chung`): đường chạy engine thật K1 → K5, cổng HTTP để engine ở máy khác, màn chạy thử chung, màn cấu hình dựng từ schema.
@@ -98,6 +99,7 @@
 | `ma-nguon\` | Mã engine: `hoi.py`, `chay.py`, `dto.py`, `bi_mat.py`, `nhat_ky.py`, `lib\`, `contract\`, `engine.json`, `tests\` |
 | `shim-kho_tri_thuc\` | Shim đường cũ (chỉ để tham chiếu; gói mới không dùng) |
 | `tests-tu-core\` | 23 test cũ chạy trong Core: cổng AI, chạy thử, model quản trị |
+| `goi/e_hoi_ai/`, `tests/` | Gói SDK 2.0 và bộ kiểm CoreGia/Local HTTP giả; AI-4 có ba DEMO, bộ chạy cấu hình tạm dưới tests và test MayChuGia nhận stdin |
 | `tu-core-cu\src\` | Mã thế hệ cũ: `tri_thuc\cong_ai.py`, `ai_cuc_bo.py` |
 | `tu-core-cu\tools\` | `thu_local_ai_that.py`, `MO-THU-LOCAL-AI.cmd` |
 | `tu-core-cu\phia-core\` | Bản sao mã phía Core riêng Hỏi AI: `chay_thu_hoi_ai.js`, SQL 129, `nhat_ky_ai_legacy.py` (đã chuyển hẳn khỏi Core: không ai dùng, import hỏng) |
@@ -105,7 +107,7 @@
 
 ## 4. Thứ tự đề xuất
 1. Đóng gói theo cổng chung (`_chung`): gói độc lập, bỏ shim, chỉ dùng SDK.
-2. Màn Chạy thử, màn Cổng Local, màn Cổng Cloud (tắt) dưới dạng **giao diện của engine**, nạp qua Quản lý engine.
+2. Core dựng màn Chạy thử chung từ `chay_thu_demo`; màn cấu hình/trạng thái Local/Cloud dùng cửa chung khi Core cung cấp (SDK 2.0, không thêm route riêng cho engine).
 3. Lát 8: thử 3 model thật qua Tailscale; ghi phút thực tế.
 4. Ghép với Core khi có K1–K5 → bài test cuối 40 phút.
 5. Bản 2: AI-21 → AI-26 (sau khi Mask xong).

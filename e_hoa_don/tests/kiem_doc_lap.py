@@ -110,8 +110,12 @@ def kiem_tien_trinh_sach(thu_muc_goi=THU_MUC_GOI):
     ma = r"""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import sys
+import tempfile
+import uuid
+os.environ['KTT_ENGINE_CAU_HINH'] = str(Path(tempfile.gettempdir()) / ('thieu-DEMO-' + uuid.uuid4().hex))
 sys.dont_write_bytecode = True
 sys.path.insert(0, sys.argv[1])
 cho_phep = sys.stdlib_module_names | {'e_hoa_don', 'kho_tri_thuc_sdk'}
@@ -129,9 +133,17 @@ spec.loader.exec_module(sdk)
 assert sdk.__version__ == '2.0.0'
 from e_hoa_don.chay import app
 from e_hoa_don import cau_hinh_may
+from kho_tri_thuc_sdk.engine import LoiNghiepVu
 from e_hoa_don.hoa_don_xml import InvoiceIssue
 from kho_tri_thuc_sdk.engine_legacy import Issue
 from kho_tri_thuc_sdk.thu import CoreGia
+assert cau_hinh_may.doc_cau_hinh() is None
+try:
+    cau_hinh_may.doc_cau_hinh(bat_buoc=True)
+except LoiNghiepVu as loi:
+    assert loi.ma == 'CHUA_CAU_HINH'
+else:
+    raise AssertionError('Thieu cau hinh phai tu choi')
 assert type(InvoiceIssue('DEMO', 'Vấn đề DEMO.', '$', 'WARNING').as_issue()) is Issue
 ket_qua = CoreGia().chay_thu_demo(app, sys.argv[1])
 assert ket_qua and all(k['trang_thai'] == 'XONG' for k in ket_qua)

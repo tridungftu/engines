@@ -1,5 +1,12 @@
 # CHANGELOG — e_hoa_don
 
+## HD-4 — mốc 14/11/2026, kiểm thực tế 15/11/2026
+
+- Đối chiếu SDK 2.0.0 và SHA wheel; xác minh bytes nguồn, lập danh mục SHA gói; chỉ SDK + stdlib. Hai kịch bản cài sạch sao chép gói tách khỏi source, kiểm thiếu cấu hình và nhập độc lập; chưa chạy Linux.
+- Chặn khởi động nếu `Engine._ghi` không callable; test ghim SDK và thiếu hook. Cần SDK hook nhật ký công khai, không in traceback ra stderr.
+- Windows/Python 3.13.14: SDK **3/3 DEMO [ĐẠT]**, pytest **284 passed, 0 skipped**, kiểm độc lập **[ĐẠT]**; cài sạch Windows **3/3 DEMO và kiểm độc lập [ĐẠT]**, các mã thoát 0. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Linux/Core thật.
+- Thời gian thực tế: 02:22–02:29 ngày 15/11/2026 UTC+07, khoảng **0,12 giờ**; phiếu **2 giờ ước tính**. PR: **chờ lead mở**. ZIP/bảng kê/tải chờ Anh; cần Core context tin cậy, quyền tệp và chuyển quy trình @1 → @2, giữ bản cũ.
+
 ## HD-3 — mốc 14/11/2026, kiểm thực tế 15/11/2026
 
 - Ba chay_thu_demo dương tính: tiền nguyên 1000000 VND + 100000 VND = 1100000 VND; tiền lẻ exact 1000000.123456 VND + 100000.012345 VND = 1100000.135801 VND; nguồn thiếu/rỗng/tổng vắng → null/ABSENT/EMPTY/HOLD. Công ty DEMO Ánh Dương chỉ là nhãn mô tả, không thêm Ten ngoài allowlist. Context=None, can_kiem_tra=true, identity/digest null; TToan ngoài envelope V1 vẫn giữ issue.

@@ -17,12 +17,16 @@ Các dòng 0–5 giữ dấu vết phiếu cũ, không tự mở các lát mở 
 | 8 | HD-1 — XML strict, tiền và vấn đề nguồn | HD-1 | Xong — 15/11/2026 | SDK 1/1 DEMO ĐẠT; pytest 157 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia). Lead Claude duyệt doc.py + chay.py; trần 1.000 HHDVu chặn trước DTO/JSON. PR: **chờ lead mở**; xem mục Bàn giao HD-1. |
 | 9 | HD-2 — Bàn giao tệp, hủy, mất lease và gửi lại qua SDK | HD-2 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 1/1 DEMO ĐẠT; pytest 259 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia) và MayChuGia loopback. PR: **chờ lead mở**; xem Bàn giao HD-2 và `PR-HD-2.md`. |
 | 10 | HD-3 — Bộ XML DEMO có đáp án và regression | HD-3 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 3/3 DEMO ĐẠT; pytest 283 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia); 0 tệp runtime sửa. PR: **chờ lead mở**; xem Bàn giao HD-3 và `PR-HD-3.md`. |
+| 11 | HD-4 — Ghim nguồn và cài sạch XML | HD-4 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 3/3 ĐẠT; pytest 284 passed, 0 skipped; kiểm độc lập và cài sạch Windows đạt. Đã kiểm bằng Core giả (CoreGia); Linux/Core thật chưa kiểm. PR: **chờ lead mở**. |
 
 HD-P không thay quyết định cuối của Anh cho phiếu 9 lát/29 giờ cũ. Bản giao mới dùng `hoa_don.doc_xml@2` vì đổi phong bì nhận/trả, không tự chuyển quy trình `@1`. Không cần thêm/đổi loại dữ liệu riêng: dùng `tep` → `truong` + tệp JSON chi tiết. Các câu Q1–Q8 và điều kiện mở lát tiếp theo ở `GIAO-CODEX-e_hoa_don.md` §5.2.
 
 Kiểm HD-P ngày 14/11/2026: regex theo đầu bài trích đủ **5/5 khối lệnh §4**, dòng mở khối là ba backtick trơn; khớp 5 mã lát HD-0…HD-4 và tổng 4 + 3 + 3 + 3 + 2 = **15 giờ ước tính**; `git diff --check` mã 0, phạm vi đúng hai tệp tài liệu. Ba lệnh kiểm engine AGENTS.md §5 **không áp dụng** theo đầu bài chỉ tài liệu. Chưa chạy kiểm chức năng engine hoặc CoreGia trong HD-P; các lệnh kiểm trong phiếu là yêu cầu của lát tương lai.
 
 ## Cần Core (chuyển lead Core qua Anh)
+- HD-4: SDK cần hook nhật ký công khai, không in traceback ra stderr; fail-closed khi thiếu `_ghi` là giải pháp tạm.
+- HD-4 phần cũ không dùng: `ma-nguon/chay.py`, `tai.py`, `phien.py`, `bang_ke.cjs`, `portal.cjs`, `vendor/`, Node lock, contract cũ, shim và test tham chiếu; giữ nguyên, chưa xóa hoặc chuyển `LUU-TRU/`. Cần Core context tin cậy, quyền tệp và lead/Core chuyển `@1` → `@2` giữ bản cũ. ZIP/bảng kê/tải chờ Anh; nếu mở tải cần phiếu riêng.
+- HD-4 kiểm Windows/Python 3.13.14: SDK 3/3 DEMO, pytest 284 passed/0 skipped, kiểm độc lập và cài sạch Windows đạt, các mã thoát 0; đã kiểm bằng Core giả (CoreGia). Chưa kiểm Linux/Core thật. Venv chính dùng pytest có sẵn; venv cài sạch chỉ cài wheel SDK offline. Thời gian thực tế khoảng 0,12 giờ (02:22–02:29, 15/11/2026 UTC+07), phiếu 2 giờ ước tính; PR: chờ lead mở.
 - Cổng engine chung: API HTTP v1, webhook, bộ cài engine từ thư mục/gói riêng (bỏ tiền tố `kho_tri_thuc.engines.`), K1–K5.
 - Màn Chạy thử chung và màn cấu hình dựng từ schema; nạp giao diện quản trị của engine.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).

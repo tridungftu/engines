@@ -6,6 +6,10 @@ from .doc import JSON_TOI_DA_BYTE, doc_xml
 from .hoa_don_xml import MAX_XML_BYTES
 
 
+if not callable(getattr(Engine, "_ghi", None)):
+    raise RuntimeError("SDK không có hook nhật ký cần thiết; không thể khởi động an toàn.")
+
+
 class CongHoaDon(Engine):
     """Bọc nhật ký SDK 2.0.0 tới khi SDK có hook nhật ký an toàn công khai.
 

@@ -16,6 +16,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | AI-2 | Hỏi theo yêu cầu, khuôn JSON, chuyển tiếp nguyên vẹn và trần byte | AI-3, 5; phục vụ TX-3 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 238 passed, 0 skipped (97 ca mới AI-2); kiểm độc lập mã 0; provider Cloud 0 lượt. Chưa kiểm thực tế Linux/Core thật/model thật. PR: **chờ lead mở** |
 | AI-3 | Tự phát hiện API/model, cache 5 phút, chọn ưu tiên và dự phòng theo mã prompt | AI-10 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 176 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. PR: **chờ lead mở** |
 | AI-4 | Ba DEMO, cổng Local giả gọi CoreGia và test tiến trình nhận stdin qua MayChuGia | AI-12, AI-18 (phần engine) | Xong — 14/11/2026; đã kiểm bằng Core giả | Cổng DEMO thay SDK thu: 3/3 ĐẠT; kiểm thêm SDK thu có Local giả 3/3 ĐẠT; pytest 283 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. Chưa kiểm Linux/Core thật/model thật. PR: **chờ lead mở** |
+| AI-5 | Ghim ph? thu?c, ngu?n v? c?i m?y s?ch | AI-13 | ?ang l?m ? 14/11/2026 | Hai k?ch b?n offline ??t 3/3 DEMO tr?n Windows; workflow Linux ?? th?m, ch? lead push ?? CI ch?y. ?? ki?m b?ng Core gi? (CoreGia). PR: **ch? lead m?** |
 
 | Gộp AI-2/AI-3 | Giải xung đột merge origin/main vào nhánh AI-2 | AI-2, AI-3 | Xong — 14/11/2026 | Gói 0.4.0; đã kiểm bằng Core giả (CoreGia); SDK thu 1/1 ĐẠT; pytest 278 passed, 0 skipped; độc lập mã 0. PR: chờ lead; nội dung đã giải xung đột, Git index chờ lead stage do quyền ghi |
 
@@ -329,3 +330,17 @@ Thời gian thực tế: bắt đầu **14/11/2026 23:23** theo lead; kết thú
 Lệch khỏi phiếu / quyết định tạm đã dùng: không đổi phạm vi; tiếp tục cấu hình JSON ngoài gói theo quyết định tạm. Cấu hình sinh dưới thư mục tạm trong tests để dùng cổng động, tránh ghim cổng hoặc chạm cấu hình máy thật. Phiên bản gói giữ 0.4.0; chỉ đổi dữ liệu DEMO, test và tài liệu.
 
 Cần Core / Chờ Anh mới phát sinh: **không**. Các phụ thuộc Core thật giữ như mục Cần Core.
+
+## B?n giao AI-5 ? 14/11/2026
+
+K?t lu?n: **Ch?a ??t ??y ??** ? ?? ki?m b?ng Core gi? (CoreGia); workflow Linux ?? khai b?o nh?ng ch?a ch?y CI th?c t? v? lead s? push v? m? PR.
+
+?? l?m: `requirements.lock` ghi ch? d?ng th? vi?n chu?n, SDK 2.0.0 c?i ri?ng t? wheel; `NGUON.md` ghi ngu?n m? c? v? SHA-256 hi?n t?i c?a c?c t?p c?n l?i trong g?i (kh?ng t? b?m). Hai k?ch b?n ASCII t?o venv m?i, c?i offline r?i ch?y DEMO; workflow CI ch?y b?n `.sh`. Kh?ng c? Cloud AI-6 trong worktree n?y.
+
+K?t qu? ki?m tr?n Windows/Python 3.13: SDK wheel SHA-256 kh?p `SHA256SUMS.txt`; SDK thu v?i Local HTTP gi? 3/3 ??T, m? 0; pytest 283 passed, 0 skipped; `kiem_doc_lap.py` ??T, m? 0. C? `.sh` (Git Bash) v? `.cmd` ??t 3/3 DEMO, m? 0. Ch?a ch?y Linux/CI th?c t?. G?i s?ch bytecode.
+
+Th?i gian: b?t ??u 14/11/2026 23:34 theo lead; k?t th?c kho?ng 23:37 (+07:00), kho?ng 0,05 gi?; phi?u ??c t?nh 2 gi?. PR: **ch? lead m?**.
+
+L?ch kh?i phi?u / quy?t ??nh t?m: `.sh` ?? ki?m b?ng Git Bash tr?n Windows; CI Linux ch? push. Kh?ng commit/push. `NGUON.md` kh?ng t? b?m ?? tr?nh t? tham chi?u; SHA theo byte worktree.
+
+C?n Core / Ch? Anh m?i ph?t sinh: kh?ng.

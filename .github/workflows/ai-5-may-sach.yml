@@ -1,0 +1,15 @@
+name: e_hoi_ai may sach
+on:
+  push:
+    paths: ["e_hoi_ai/**", ".github/workflows/ai-5-may-sach.yml"]
+  pull_request:
+    paths: ["e_hoi_ai/**", ".github/workflows/ai-5-may-sach.yml"]
+jobs:
+  may-sach:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: sh e_hoi_ai/tests/kiem_may_sach.sh

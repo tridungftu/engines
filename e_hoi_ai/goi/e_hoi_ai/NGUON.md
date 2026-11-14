@@ -99,3 +99,29 @@ ab4dc18a48df5f6f7c8e8f08ae10ea87e5a0a43ced3ca0870909e44eece069df  e_hoi_ai/khuon
 6fc057b9f2ce418b49a13bb0987c5ccf4f4c9aadf4e9e3eeb0619d8453f64202  engine.json
 a188fb508caf41e7ae77263205cd5edeb69a7073e9abaa02771ecd21833bee61  README.md
 ```
+
+## AI-5 ? SHA-256 hi?n t?i, 14/11/2026
+
+???ng d?n t??ng ??i t? th? m?c g?i. Bao g?m m?i t?p trong g?i tr? ch?nh `NGUON.md` v? kh?ng th? t? b?m; c?c b?ng tr??c ch? l? l?ch s?. C?c t?p chuy?n t? `ma-nguon/` v? ???ng c? ? m?i ???c li?t k? ? m?c AI-1 b?n tr?n. Kh?ng c? `cloud.py` ho?c `nha_cung_cap.py` t?i th?i ?i?m ki?m.
+
+```text
+a13b2de70da3a42bb9af0aa92a7d3435928a69e8adfccb7a362609603ae48c7e  CHANGELOG.md
+d8c7fb9858e79a722ca30059df90534024ba672e6981486a44da7688c356356a  contract/cau_hinh_may.schema.json
+4c7491e5798f2774965acd49e6834634d26b3b032db8c6f0847fe06e2a0f33ee  contract/tra_loi_ai.schema.json
+d73a80f276eef43536ee14810ef46a1df73d476a9b4f02cc4f3bd163f4d73902  contract/van_ban_tai_lieu.schema.json
+97c909c439defaff1d653d1448c8931495a2f81f14df3e05cf4d915111d11a75  contract/yeu_cau_ai.schema.json
+78ff41b4f92eb3f850507402706b6fdcae9beff86d8dd8897670cde0e71eff12  demo/mau.txt
+58401cc810f7658d796f76ce53ed2671f71f57635e6b93fd9d598cd55115ffab  e_hoi_ai/__init__.py
+c6dce3bcdb427473ae3cc2b8ed4173a05a7b8a3c6a6280b4b1b2889426e4e21c  e_hoi_ai/ai_cuc_bo.py
+8079dfe377ea47552b0b558da0955b5a34834c670395f68aa77a09699203b6f7  e_hoi_ai/cau_hinh_may.py
+8988b503ab2651567c19845af1e386ada217dcd8509f3d41a20634c14eb5bb9d  e_hoi_ai/chay.py
+81380fc3f7335f14cf85c0cd4a2e890d822a16081edbd6e57764596fab88d427  e_hoi_ai/chon_model.py
+428e1bcfc06b2f232d75bd64111cdd7a4e96b1ca9e8df96d848d7c4a3a135b02  e_hoi_ai/cong_ai.py
+f621510b5dc8ea277d05e2449db72b8e9ed0b7ea78efc9c41fbb4b3a0e72a1bc  e_hoi_ai/dto.py
+9c7d2578864b670caf030bf50b8bf1972680fc7e7bbe873bec2345a7e9cad140  e_hoi_ai/hoi.py
+1d4cbc3b0161362e917ff30269e693be907c480b4978ec4e46bd7f2cc8d4239e  e_hoi_ai/hoi_yeu_cau.py
+fd640ab9bf9d5862c0c84d2f21162919cffb5611588b94a797353b1f6141dd61  e_hoi_ai/khuon_json.py
+d61a473daf1aaf97eecce34c12fd98c98aad89ce73df260f9c0bbc9e78251d39  engine.json
+0481f726673bee42721a385844406d7f592def4df200a163abd390bee22b9927  README.md
+ea09cd4619a37d39514a46628fd68d59dcb1bec0cceb0fd40fb4969c3c42225b  requirements.lock
+```

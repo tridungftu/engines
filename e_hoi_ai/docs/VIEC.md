@@ -11,7 +11,8 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 4 | Lát 8: thử thật gpt-oss 20B, Qwen3 8B, Gemma; Local lỗi phải báo rõ, 0 Cloud | AI-14, AI-8 | Chờ làm | Công cụ ở `tu-core-cu\tools\` |
 | 5 | Ghép Core khi có cổng chung K1–K5 → bài test cuối 40 phút | AI-18 | Chờ Core |  |
 | 6 | Bản 2: công tắc Cloud theo module, qua Mask, đo độ chính xác, kiểm xác suất | AI-21…26 | Chờ (bản 2) |  |
-| AI-0 | Khung SDK 2.0, phiếu 2 năng lực, schema chung, cấu hình máy và kiểm độc lập | AI-13 (phần khung) | Xong — 14/11/2026 (tiêu chí riêng AI-0) | Đã kiểm bằng Core giả (CoreGia); pytest 57 passed, 0 skipped; kiểm độc lập mã 0. Cổng DEMO chung chưa đạt. PR: **chờ lead mở** |
+| AI-0 | Khung SDK 2.0, phiếu 2 năng lực, schema chung, cấu hình máy và kiểm độc lập | AI-13 (phần khung) | Xong — 14/11/2026 (tiêu chí riêng AI-0) | Đã kiểm bằng Core giả (CoreGia); pytest 57 passed, 0 skipped; kiểm độc lập mã 0. Tại mốc AI-0 cổng DEMO chưa đạt; đã bổ sung ở AI-1. PR: **chờ lead mở** |
+| AI-1 | Hỏi tài liệu chỉ Local, khung trích dẫn, hậu kiểm Python, lỗi/thử lại, hủy và chống nộp trùng | AI-1…5, 7, 8 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 141 passed, 0 skipped; kiểm độc lập mã 0; provider Cloud 0 lượt. Chưa chạy thực tế trên Linux/Core thật/model thật. PR: **chờ lead mở** |
 
 ## Cần Core (chuyển lead Core qua Anh)
 
@@ -20,6 +21,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
 
 - AI-0 (14/11/2026): vẫn cần kênh `cau_hinh` từ `san-sang` tới hàm năng lực và form cấu hình từ schema theo `_chung/docs/GIAO-CODEX-THU-TU.md` §3. Chưa sửa phiếu/API/SDK đã khóa; tạm đọc JSON ngoài gói bằng `KTT_ENGINE_CAU_HINH`. Không phát sinh điểm chặn Core/SDK mới.
+- AI-1 (14/11/2026): vẫn cần cấu hình và nhật ký kỹ thuật chung từ Core. Ghi nợ SDK chung: cho phép engine xác định mã lỗi khi thiếu tham số bắt buộc; áp trần nội dung văn bản bên trong loại riêng. Tạm giữ `prompt.bat_buoc=true` với sentinel `mac_dinh=""` để engine tự trả `THIEU_PROMPT`, và tự kiểm trần 500.000 ký tự cho `van_ban_tai_lieu.van_ban` cùng prompt. Không sửa hợp đồng SDK/API hoặc mã Core; không có điểm chặn mới.
 
 ## Bàn giao AI-0 — 14/11/2026
 
@@ -70,3 +72,64 @@ QA bổ sung bằng bộ kiểm `jsonschema` có sẵn trên máy phát triển:
 ### Thời gian thực tế
 
 Bắt đầu **14/11/2026 22:18** (theo lead); kết thúc kiểm và ghi bàn giao **14/11/2026 22:33:22 +07:00**: **0.26 giờ** (thời gian đồng hồ, gồm đọc tài liệu, dựng gói và kiểm). Ước tính trong phiếu AI-0: **2 giờ**.
+
+## Bàn giao AI-1 — 14/11/2026
+
+**Kết luận:** Đạt lát AI-1 và ba cổng kiểm trên môi trường Windows hiện có. **Đã kiểm bằng Core giả (CoreGia)** và máy Local HTTP giả trên loopback; chưa xác nhận thực tế trên Linux, Core thật hoặc model thật.
+
+**PR:** chờ lead mở. Nhánh: `codex/e_hoi_ai-ai-1`. Tiêu đề đề nghị: `[e_hoi_ai] AI-1 — Hỏi tài liệu, chỉ Local`. Không chạy git commit/push.
+
+### Đã làm
+
+- Dùng lại khung AI-0. Chuyển phần lõi cần dùng từ `ma-nguon/lib/cong_ai.py`, `lib/ai_cuc_bo.py`, `dto.py`, `hoi.py` sang gói độc lập. Đúng 5 tệp Python chạy được thêm/sửa: `chay.py`, `cong_ai.py`, `ai_cuc_bo.py`, `dto.py`, `hoi.py`; không vượt cỡ lát. Gói phiên bản `0.2.0`.
+- `ai.hoi_tai_lieu@1` nhận hai loại đầu vào đã khai; prompt thuộc module. Ghép khung bắt buộc trích nguyên văn, lấy câu trả lời từ trích dẫn; không có thông tin thì trả `không thấy căn cứ`.
+- Kiểm Python: trích dẫn nằm đúng từng ký tự trong tài liệu, giá trị thuộc trích dẫn tương ứng, token số đầy đủ thuộc nguồn. Một mục không đạt thì hạ toàn bộ `co_can_cu=false`, trả cảnh báo cố định và không đưa câu trả lời bịa vào kết quả. Cảnh báo nằm trong `tra_loi` để giữ nguyên bốn trường đầu ra tĩnh; chỉ giữ câu trích đã kiểm hợp lệ.
+- Local HTTP dùng IP trực tiếp, không DNS/proxy/redirect/HTTPS; chỉ loopback/RFC1918/Tailscale. Đích Tailscale phải có nguồn Tailscale và socket được ghim nguồn. Kiểm `/v1/models` cùng metadata Ollama `/api/tags` nếu có trước khi gửi nội dung; từ chối model từ xa/Cloud.
+- Lấy URL và timeout từ `cau_hinh_may`; chọn model từ tham số ưu tiên hoặc quy tắc đầu tiên khớp mã prompt. Model thiếu/không sẵn sàng, lỗi mạng/HTTP, timeout, phản hồi hỏng hoặc vượt trần đều trả `LOCAL_AI_KHONG_SAN_SANG`, có thể thử lại. Chưa làm discovery/dự phòng thuộc AI-3.
+- Báo tiến độ trước/sau Local, kiểm hủy trước mạng và giữa các lần đọc metadata. Lượt hủy không nộp kết quả. SDK xử lý mất xác nhận kết quả bằng cùng Idempotency-Key, không gọi AI lại, Core chỉ ghi một lần.
+- Mỗi lượt ghi stderr đúng sáu metadata: mã/phiên bản prompt, model, lý do chọn, ms, kết quả kiểm; không ghi prompt, tài liệu, câu trả lời, URL hoặc nội dung lỗi nguồn.
+- Test dùng Local HTTP giả trên `127.0.0.1`, CoreGia, provider Cloud giả có bộ đếm và hàng rào mạng: cấm DNS và mọi kết nối ngoài loopback. Các đường thành công, thiếu căn cứ, bịa dẫn chứng/số liệu, thiếu prompt, Local tắt/lỗi/model thiếu, hủy, gửi lại xác nhận đều có **0 lượt Cloud**.
+- Ghi nguồn cũ → mới và SHA-256 trong `NGUON.md`; cập nhật README, CHANGELOG và phiếu DEMO tối thiểu. Chỉ SDK và thư viện chuẩn, không thêm dependency.
+
+### Kết quả kiểm thật
+
+Môi trường: Windows x64, Python 3.13.14, `.venv` trong worktree; SDK **2.0.0** cài bằng `--no-index --no-deps` từ wheel trong repo. SHA-256 wheel trùng `SHA256SUMS.txt`: `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`. Venv dùng `--system-site-packages` để dùng pytest 9.1.1 sẵn có; không tải mạng.
+
+Đã đặt `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`; pytest thêm `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
+
+```text
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py
+Chạy: python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+Engine e_hoi_ai 0.2.0: mọi ví dụ chạy thử DEMO đều đạt.
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; 1 lượt Local.
+Mã thoát: 0; SDK thu 1/1 ĐẠT.
+
+.venv/Scripts/python -m pytest e_hoi_ai/tests -q
+........................................................................ [ 51%]
+.....................................................................    [100%]
+141 passed in 5.11s
+Mã thoát: 0; 0 skipped.
+
+.venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát: 0.
+```
+
+Lệnh SDK được gọi thật trong tiến trình con với cấu hình DEMO ngoài gói và Local HTTP giả đang chạy; không đổi handler engine thành hàm giả. Các test hủy xác nhận `HUY` và không có kết quả; test `gay_mat_xac_nhan("ket_qua")` xác nhận hai lần gửi cùng khóa, **một lần ghi kết quả**, **một lần gọi Local**.
+
+Giới hạn môi trường: không có WSL/Linux, Docker hoặc Podman; Git Bash không phải Linux. Bộ test không dùng API chỉ dành riêng Windows ở đường Local, nhưng **chưa chạy thực tế trên Linux**. Không chạy model/Local thật hoặc Core thật.
+
+### Lệch khỏi phiếu / quyết định tạm đã dùng
+
+- Đưa lên trước từ AI-4 **một ví dụ DEMO và bộ chạy Local giả tối thiểu** để cổng SDK thu có ca thật chạy và mã thoát 0 ngay ở AI-1. AI-4 vẫn làm bộ DEMO đầy đủ, HTTP Core giả và các phần còn lại theo phiếu.
+- `prompt` có sentinel mặc định rỗng để SDK không chặn trường hợp thiếu bằng mã lỗi chung. Engine vẫn bắt buộc có nội dung prompt; không có prompt nghiệp vụ mặc định.
+- Giữ và siết phép kiểm giá trị thuộc câu trích của mã cũ: không chấp nhận diễn giải ngoài nguyên văn. Đây là kiểm bằng quy tắc bảo thủ, chưa chứng minh suy luận ngữ nghĩa; câu đúng nhưng diễn đạt lại có thể bị hạ.
+- Hủy giữa HTTP không cưỡng bức cắt socket đang chờ; SDK tiếp tục gia hạn/nhận cờ hủy, engine bỏ kết quả khi HTTP trả về hoặc hết timeout. Không chuyển Cloud.
+- `ai.hoi_theo_yeu_cau@1` vẫn `CHUA_LAM`, đúng phạm vi AI-2. Chọn dự phòng/tự phát hiện model thuộc AI-3.
+- Mã cũ `ma-nguon/chay.py`, `bi_mat.py`, phần Mask/Cloud/cấu hình Core cũ và chức năng chọn đối tác không đưa sang AI-1; giữ nguyên để lead quyết định chuyển `LUU-TRU/` sau các lát liên quan. Không sửa/xóa mã nguồn cũ, schema chung, tài liệu SDK hoặc mã Core.
+- Cần Core/SDK đã ghi ở mục trên; không có câu Chờ Anh mới phát sinh. PR: **chờ lead mở**.
+
+### Thời gian thực tế
+
+Bắt đầu **14/11/2026 22:34** (theo lead); kết thúc kiểm và ghi bàn giao **14/11/2026 22:53:49 +07:00**: **0.33 giờ** (thời gian đồng hồ, gồm đọc tài liệu, chuyển lõi, test và bàn giao). Ước tính trong phiếu AI-1: **5 giờ**.

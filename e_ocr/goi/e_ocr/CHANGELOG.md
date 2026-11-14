@@ -1,5 +1,20 @@
 # Thay đổi
 
+## 1.0.2 — 14/11/2026 — OCR-2
+
+- Thêm `chon_nguon.py`, `tesseract.py` riêng; giữ nguyên `chay.py` để ghép
+  OCR-3. ABBYY ưu tiên, chuyển khi hết hạn mức/tắt/lỗi chắc chắn chưa nhận;
+  `chi_abbyy` không chuyển, `chi_tesseract` bỏ ABBYY và sổ.
+- Sổ hạn mức `KhoTam` cập nhật nguyên tử, cửa sổ trượt đúng 30 ngày theo
+  giây; giữ chỗ trước gửi, chỉ ghi trang đã dùng khi nguồn đã nhận. Đã nhận
+  chưa trả → `ChuaRo`, không hoàn trang hoặc chạy Tesseract.
+- Chuyển vendor mask_ocr phần PDF chữ sẵn, DOCX và bảng ô trống/ô gộp;
+  OCR dùng Tesseract CLI + pypdfium2 đã ghim. Không thêm dependency/model.
+- Thiếu executable/ngôn ngữ → `NGUON_DU_PHONG_CHUA_CAI`; có công cụ kiểm
+  ASCII để Anh tự chạy, hướng dẫn ở `VIEC.md` mục **Cần cài**.
+- **Đã kiểm bằng Core giả (CoreGia)**, mock cho CI và Tesseract thật bằng
+  DEMO trên Windows; chưa kiểm Linux, ABBYY/Core thật hoặc cài máy sạch.
+
 ## 1.0.1 — 14/11/2026 — OCR-1
 
 - Chuyển bốn mô-đun lõi từ `ma-nguon/`, bỏ phụ thuộc Core/cổng OCR cũ;

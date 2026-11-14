@@ -1,4 +1,5 @@
-# Runtime OCR-1: giữ đúng phiên bản đã ghim/đo ở ma-nguon/requirements.lock.
+# Runtime OCR-2: giữ đúng phiên bản đã ghim/đo ở ma-nguon/requirements.lock.
+# pypdfium2 render PDF cho Tesseract CLI; không thêm PyMuPDF/defusedxml.
 # SDK cài offline từ wheel repo với --no-index --no-deps; SHA-256:
 # a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
 # Chưa là lock wheel đa nền tảng có --require-hashes; việc đó thuộc OCR-6.

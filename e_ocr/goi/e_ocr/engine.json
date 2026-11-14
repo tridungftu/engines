@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_ocr",
   "ten": "Nhận dạng văn bản",
-  "phien_ban": "1.0.1",
+  "phien_ban": "1.0.2",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",

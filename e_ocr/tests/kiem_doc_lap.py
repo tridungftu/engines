@@ -10,7 +10,7 @@ import sys
 
 THU_MUC_GOI = Path(__file__).resolve().parents[1] / "goi" / "e_ocr"
 _TEN_CAM = {"kenh_engine", "SDKEngine", "Bootstrap", "engine_legacy"}
-_THU_VIEN_NGOAI = {"pdfplumber": "pdfplumber", "PIL": "Pillow"}
+_THU_VIEN_NGOAI = {"pdfplumber": "pdfplumber", "PIL": "Pillow", "pypdfium2": "pypdfium2"}
 
 
 def _import_cam(ten):

@@ -1,4 +1,4 @@
-# Nguồn gói OCR-5 — 15/11/2026
+# Nguồn gói OCR-6 — phiếu 14/11/2026
 
 Giấy phép mã nội bộ: **phần mềm nội bộ, dùng nội bộ tập đoàn** theo quyết
 định cuối của engine OCR.
@@ -36,7 +36,7 @@ dùng của `vendor/mask_ocr` đã có trong repo; không đọc nguồn ngoài 
 | `e_ocr/vendor/mask_ocr/layout.py` | Chép riêng `word_layout` từ tệp cùng tên, giữ ô rỗng/gridSpan/vMerge và thứ tự. Bỏ parser PDF MuPDF, phần review và nhánh append của runtime khác |
 | `e_ocr/xuat_word.py` | Chuyển thể quy tắc ô trống/ô gộp từ ma-nguon/bang.py và vendor/mask_ocr/layout.py; ZIP/XML thư viện chuẩn. OCR-5 đăng ký namespace w/xml chuẩn; không đổi thuật toán bảng. |
 | `engine.json` | Phiếu 2.0, phiên bản 1.0.5; sáu DEMO PDF quét/PNG cho ba năng lực, nguon=chi_tesseract; giữ nguyên hợp đồng kỹ thuật. |
-| `requirements.lock` | Giữ nguyên pin dependency chính thức của OCR-2/OCR-3 trên origin/main; không thêm dependency ở OCR-4. |
+| `requirements.lock` | Ghim phiên bản và SHA-256 wheel Windows x64, Linux x86_64; SDK nội bộ và thư viện PyPI. |
 | `e_ocr/nhat_ky.py` | Viết mới OCR-5, thư viện chuẩn + SDK: ContextVar cách ly số đo, JSON stderr chỉ mã cố định; chuyển lỗi bất ngờ thành LoiNghiepVu an toàn, giữ lỗi transport/hủy/chưa rõ. |
 | `demo/DEMO-1-trang.jpg` | Sinh từ tests/demo/tao_bo_demo.py chuyển từ ma-nguon/tests/demo/tao_bo_demo.py; dữ liệu giả có nhãn DEMO, Pillow đã ghim + PDF thuần Python, Word bằng bộ ghi OOXML gói; giấy phép nội bộ. Bản ABBYY-gia chỉ dùng cho mock, Word/JSON chỉ là đáp án. |
 | `demo/DEMO-1-trang.png` | Sinh từ tests/demo/tao_bo_demo.py chuyển từ ma-nguon/tests/demo/tao_bo_demo.py; dữ liệu giả có nhãn DEMO, Pillow đã ghim + PDF thuần Python, Word bằng bộ ghi OOXML gói; giấy phép nội bộ. Bản ABBYY-gia chỉ dùng cho mock, Word/JSON chỉ là đáp án. |
@@ -81,20 +81,12 @@ chỉ chuyển thể quy tắc biểu diễn ô gộp, không chép cả vendor 
 import PyMuPDF/defusedxml chưa được ghim. Giấy phép phần nguồn chuyển thể:
 **phần mềm nội bộ, dùng nội bộ tập đoàn**, theo quyết định cuối của engine.
 
-Môi trường `.venv --system-site-packages` dùng thư viện sẵn có và pytest;
-chưa là cài máy sạch. Lock hiện chỉ ghim phiên bản, không dùng
-`--require-hashes`; hash wheel Windows/Linux và bài máy sạch thuộc OCR-6.
-SHA-256 wheel SDK phát hành, đã so với
-`docs/goi-gui-engine/sdk-2.0.0/SHA256SUMS.txt`:
+OCR-6 dùng hash SHA-256 từ metadata phát hành PyPI cho wheel Windows x64 CPython 3.13 và Linux x86_64 CPython 3.13; SDK lấy từ wheel trong repo. Pillow được dùng trực tiếp; PyMuPDF và defusedxml không được dùng. Script máy sạch yêu cầu nguồn wheel PyPI hoặc wheelhouse đã chuẩn bị; SDK cài offline.
+
+Băm SHA-256 nguyên byte các tệp trong gói (không tự băm `NGUON.md` để tránh tự tham chiếu):
 
 ```text
-a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892  kho_tri_thuc_sdk-2.0.0-py3-none-any.whl
-```
-
-Băm SHA-256 nguyên byte các tệp trong gói sau OCR-5 (không tự băm `NGUON.md` để tránh tự tham chiếu):
-
-```text
-912d54edbafd2c1657480e5d3a53a2164f77bcda6c8e16ee8d802a3dcb18923a  CHANGELOG.md
+bdf135b35fa154ed5ae1911ef1e6d2f70e725d3c2d6c38b2686c990e89b9fe3c  CHANGELOG.md
 bc1af1f36a1b4de11f47395c56ffe2030e1a6202f4ca21740f36c86166376893  contract/cau_hinh_may.schema.json
 d73a80f276eef43536ee14810ef46a1df73d476a9b4f02cc4f3bd163f4d73902  contract/van_ban_tai_lieu.schema.json
 8521635ce091f072c116ae64a5064b1d3baba70c78dfb6a4fcdffb212e9dfbd9  demo/cau_hinh.demo.json
@@ -104,7 +96,7 @@ a254b5361b26e2eef7b8cf26c1f15e87e4bee008421eec60c8cfb41d1fcec90d  demo/DEMO-ABBY
 79445753d110c93ca5b6e714bd63e990d253ff270478da3c713c71efdea87a59  demo/DEMO-ABBYY-gia-3-trang.pdf
 5e2aa5781c934df99f3289deef68c6397968e625d75febb64374f1ea9918720a  demo/DEMO-bang-3-trang.pdf
 f3726f407bdc2daa24ad646b85ff8a9701ba3bc1eb417f16effe4ffd8cc6049d  demo/DEMO-dap-an.docx
-c5a46dc43d03e3306d2e532c9465cea330e429fa16da62909ef2b6659a5d3259  demo/DEMO-dap-an.json
+22420732b1666a4d1dd2ecd872069bfd6b9cad6028c639e660ac0406145828fc  demo/DEMO-dap-an.json
 9c62de68d53c5433d46378e73b8199c34904c2a6e308ec6616db4243229e5879  demo/DEMO-lop-chu-3-trang.pdf
 2f57eb1431a6bf05ce245dc8aea01ebb8449213e69de83e178f1afc2e1cbeab3  demo/DEMO-quet-3-trang.pdf
 3b4fe5051351530778e101cd857e85d2b0b0804a0bd5655f58708a8f3159c642  demo/DEMO-vung-da-cat.png
@@ -120,7 +112,7 @@ e488040c45310ef0776d3c529e3e0d5586651c39bcb042c82bb728657358dd10  e_ocr/ban_giao
 69045a82652147f76d8e5273ba6bc1c199b20c86282d2483e4600cda1512931a  e_ocr/kho_tam.py
 3f62ce0659ab866444c96d11df4f8e2ad6f1b61ab79394c0635a60cd609203c4  e_ocr/lop_chu.py
 6e6d5c064d21c68aac0ddc5842681167e23aad827f53410ca6ad11a20d3dae80  e_ocr/luot_abbyy.py
-28603912217c0ac6b6d6d5b5c3982ac0a3b436970f26d7a26afc0bc619b6f9b2  e_ocr/nhat_ky.py
+27ef11e06b1e3ed1c54873a2849b9b32951ade738a20c7586ec983ba7b9200e0  e_ocr/nhat_ky.py
 dfbc642c1d0a04115f5ed5894e4622b515a4c6e11a17ce16c9f60e93e40e1254  e_ocr/tesseract.py
 67a6d10e932cda2222827405cc2ac19c2ee15c3d90c7dd6c0671924e4b763422  e_ocr/van_ban.py
 b29f50e2662f897fd771a7cff297cabaf7e74ee4ed9a36bf71f18d7c1fe1edb5  e_ocr/vendor/mask_ocr/__init__.py
@@ -131,5 +123,5 @@ fc31ae693905e1c544204d3be3e706bf4e7f9d1fd9e470dc31b1463491131d9c  e_ocr/vendor/m
 17f282a755ee25d934bcc9157dbc2c14e8b671b10d3dfed22c06553a47eb0494  e_ocr/xuat_word.py
 eb7c84bb4edfb5da1247feea94bb2522ff9618c7d165ea21e2b264c2126448c3  engine.json
 1db69e31fcce6e22ea78c2cb0606aded25ee89b5d2fd96c128dcf01d2e471f6c  README.md
-917a399a315c90024b0385f893f51d2bf4d9595b68888de07bd866beed0fb2b7  requirements.lock
+a6e0b765087fa3707acab44063cb697610f231657a410b88ae1ff6e3bae2107c  requirements.lock
 ```

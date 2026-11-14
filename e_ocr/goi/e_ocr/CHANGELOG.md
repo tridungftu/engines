@@ -1,5 +1,9 @@
 # Thay đổi
 
+## OCR-6 — 14/11/2026
+
+- Ghim hash wheel Windows/Linux, bổ sung kiểm máy sạch và cập nhật nguồn gói.
+
 ## 1.0.5 — 14/11/2026 — OCR-5 (thực hiện 15/11/2026)
 
 - Bộ DEMO hoàn toàn giả: PDF ảnh 3 trang có bảng ô trống/ô gộp, PNG/JPEG,

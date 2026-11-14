@@ -105,3 +105,12 @@ Kết quả AI-3 ngày 14/11/2026: SDK thu **1/1 ĐẠT**, pytest **176 passed, 
 ## Kết quả việc gộp AI-2 và AI-3 — 14/11/2026
 
 Bản gộp `0.4.0`: SDK thu **1/1 ĐẠT** qua `chay_demo_voi_local_gia.py`; pytest **278 passed, 0 skipped**; kiểm độc lập mã **0**. Giữ đủ 97 ca AI-2 và 35 ca AI-3 cùng 141 ca nền, thêm 5 ca giao thoa: bốn kiểu API có khuôn/dự phòng/cache/đếm GET và hủy trong discovery. **Đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả trên Windows/Python 3.13.14; chưa kiểm Linux/Core thật/model thật.
+## Khung Cloud AI-6 — 14/11/2026
+
+`nha_cung_cap.py` tách `NhaCungCapLocal` và `NhaCungCapCloud` (Anthropic Messages / OpenAI Chat Completions). Cloud chỉ nhận khóa qua constructor; không đọc env, tệp hoặc kho bí mật. Transport HTTPS dùng host cố định, không proxy, redirect hoặc tự gửi lại. Đây là khung chưa kiểm với API thật; không bảo đảm tương thích mọi model Cloud. Không chuyển các tùy chọn fallback/beta hay danh sách model Cloud cũ.
+
+`BAT_CLOUD = False` cố định trong mã, không có ô cấu hình bật. Cả `cloud.hoi_cloud` và phương thức provider kiểm cờ; hai năng lực đã đăng ký chỉ gọi provider `local`, kể cả Local lỗi hoặc sai khuôn. `engine.json`, `bi_mat[]`, loại dữ liệu khai báo và `chay_thu_demo` giữ nguyên ở lát này.
+
+`hoi_cloud` chỉ nhận phong bì `van_ban_da_che` phiên bản 1, bắt buộc `con_sot=[]` và `kiem_tien_ngay is True`. Phần văn bản phải chứa yêu cầu cùng dữ liệu đã qua Mask; hàm không có tham số prompt thô. Chỉ trường `van_ban` ra provider ngoài, cùng chỉ dẫn định dạng cố định và tên model. Metadata, mã mở che và `chuyen_tiep` không đi ra Cloud. Mã mở che xuất hiện trong nội dung/model bị từ chối; kết quả chép mã gốc vào `chuyen_tiep.ma_yeu_cau`, ưu tiên mã trên phong bì khi có xung đột. Trần 64 KiB tính sau khi thêm mã; trần văn bản 500.000 ký tự, vượt thì từ chối. Hàm hậu kiểm trích dẫn trên văn bản đã che và trả `tra_loi_ai`; mở che do bước sau qua Core thực hiện.
+
+Test chỉ thay cờ trong bộ nhớ và tiêm Cloud giả; chặn socket/DNS. Không sử dụng khóa thật, không gọi Cloud thật. Đã kiểm bằng Core giả (CoreGia) cho hai năng lực Local; chưa kiểm Core thật hoặc model thật. Bản 2 cần bí mật Core, Mask, chính sách Cloud theo module và ngăn dữ liệu trước khi nối đường vận hành.

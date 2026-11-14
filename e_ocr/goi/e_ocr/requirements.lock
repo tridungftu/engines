@@ -1,0 +1,3 @@
+# Runtime OCR-0: chỉ SDK; không thêm thư viện bên ngoài.
+# Cài offline từ wheel phát hành với --no-index --no-deps.
+kho-tri-thuc-sdk==2.0.0 --hash=sha256:a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892

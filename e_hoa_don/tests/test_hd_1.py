@@ -377,6 +377,9 @@ def test_loi_mo_tep_khac_giu_nguyen(loi):
     class ViecDemo:
         dau_vao = {"tep": {"tep_id": "DEMO"}}
 
+        def kiem_huy(self):
+            pass
+
         def tien_do(self, *args):
             pass
 

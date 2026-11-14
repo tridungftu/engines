@@ -15,6 +15,7 @@ Các dòng 0–5 giữ dấu vết phiếu cũ, không tự mở các lát mở 
 | 6 | HD-P — Lập phiếu giao Codex SDK 2.0 cho phần đọc XML đã rõ | HD-P | Xong — 14/11/2026 | `GIAO-CODEX-e_hoa_don.md`: 5 lát HD-0…HD-4, tổng 15 giờ **ước tính**, chưa triển khai; ZIP/bảng kê/tải và thử máy thật **chờ Anh chốt**. Chỉ tài liệu, không tạo `goi/`, không sửa `ma-nguon/`. PR: **chờ lead mở**. |
 | 7 | HD-0 — Khung SDK 2.0 + XML DEMO thật + kiểm độc lập | HD-0 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 1/1 DEMO ĐẠT, pytest 63 passed/0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật. PR: **chờ lead mở**. |
 | 8 | HD-1 — XML strict, tiền và vấn đề nguồn | HD-1 | Xong — 15/11/2026 | SDK 1/1 DEMO ĐẠT; pytest 157 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia). Lead Claude duyệt doc.py + chay.py; trần 1.000 HHDVu chặn trước DTO/JSON. PR: **chờ lead mở**; xem mục Bàn giao HD-1. |
+| 9 | HD-2 — Bàn giao tệp, hủy, mất lease và gửi lại qua SDK | HD-2 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 1/1 DEMO ĐẠT; pytest 259 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia) và MayChuGia loopback. PR: **chờ lead mở**; xem Bàn giao HD-2 và `PR-HD-2.md`. |
 
 HD-P không thay quyết định cuối của Anh cho phiếu 9 lát/29 giờ cũ. Bản giao mới dùng `hoa_don.doc_xml@2` vì đổi phong bì nhận/trả, không tự chuyển quy trình `@1`. Không cần thêm/đổi loại dữ liệu riêng: dùng `tep` → `truong` + tệp JSON chi tiết. Các câu Q1–Q8 và điều kiện mở lát tiếp theo ở `GIAO-CODEX-e_hoa_don.md` §5.2.
 
@@ -33,6 +34,12 @@ Kiểm HD-P ngày 14/11/2026: regex theo đầu bài trích đủ **5/5 khối l
 - Kho tệp và chuyển bản: SDK không cam kết `tep_id` là UUID. Gói XML dùng tham chiếu SDK; lead/Core giữ bản/quy trình `@1`, chuyển sang `@2` bằng khai báo khi được giao. Cần kiểm quyền tệp đầu vào/ra và lưu theo pháp nhân trên Core thật; CoreGia không thay bằng chứng này.
 - Bí mật theo tên, ngăn engine/CAS, lượt bền #10 và trạng thái chờ nhập: chỉ chặn phần tải sau khi Anh chốt; không cần cho XML thuần. Không tự dựng pipe bí mật/socket/SQL để bù SDK, không lưu nội dung XML/cookie/profile vào sổ JSON tạm.
 - Test cũ tham chiếu corpus/golden XML không nằm trong bộ mã nguồn hiện tại: cần lead bàn giao fixture DEMO có hash nếu yêu cầu chứng minh tương thích toàn bộ corpus. Đợt XML tự dựng DEMO có đáp án độc lập, không tuyên bố đã chạy golden cũ khi thiếu dữ liệu.
+
+### Bổ sung HD-2 — 14/11/2026, kiểm thực tế 15/11/2026
+
+- **SDK cần hook nhật ký an toàn công khai:** test canary chứng minh `Engine._lam` của wheel 2.0.0 ghi traceback, đường dẫn và nội dung exception qua `_ghi`. Lớp bọc tạm `CongHoaDon(Engine)` trong `chay.py` chỉ thay câu ghi thành mã cố định `HD_SDK_THONG_BAO`, không đổi luồng lỗi/hủy/lease hoặc sửa SDK. Lỗi invariant vẫn thành `ENGINE_LOI_XU_LY` do SDK. Đây là phụ thuộc vào phương thức nội bộ `_ghi` của bản SDK đã ghim; thay lớp bọc khi SDK có hook chính thức, không khôi phục in traceback nguyên văn.
+- **SDK cần seam test công khai để mất lease/giao lại:** CoreGia 2.0.0 có `huy`/`gay_mat_xac_nhan` nhưng chưa có thao tác công khai giả lập 409/404/410, hết lease hoặc xếp lại cùng việc. Test dùng monkeypatch các phương thức CoreGia, riêng giao lại dùng `_lock`/`_viec`/`_hang`; chờ cờ `_huy` để đồng bộ ca gia hạn thật của SDK, không sửa bản cài SDK hoặc tạo server thay MayChuGia. Đề nghị SDK cung cấp seam lỗi/giao lại công khai; không chặn kiểm HD-2 hiện tại.
+- Hủy ở mốc sau upload có một JSON đã lưu nhưng **không nộp kết quả**; vòng đời/dọn tệp không còn được kết quả tham chiếu thuộc Core. Chưa kiểm cơ chế dọn tệp và quyền kho tệp trên Core thật. Kiểm hai pháp nhân chỉ chứng minh handler đọc riêng, không cache/dedupe hay nhận nghiệp vụ, không chứng minh quyền truy cập chéo pháp nhân của kho thật.
 
 ### Bàn giao HD-0 — mốc 14/11/2026, kiểm thực tế 15/11/2026
 
@@ -137,3 +144,25 @@ Cần Core / Chờ Anh mới phát sinh: cần chốt cặp tệp runtime `doc.p
 ````
 
 </details>
+
+### Bàn giao HD-2 — mốc 14/11/2026, kiểm thực tế 15/11/2026
+
+Kết luận: **Đạt phạm vi HD-2 — đã kiểm bằng Core giả (CoreGia)** và MayChuGia loopback. PR: **chờ lead mở**; bản nháp đầy đủ tại `PR-HD-2.md`, tiêu đề `[e_hoa_don] HD-2 — Bàn giao tệp, hủy và gửi lại qua SDK`. Chưa nghiệm thu quyền kho tệp hoặc Core thật; không commit/push.
+
+Đã làm: chỉ sửa runtime `chay.py` (1/2 tệp được phép), giữ nguyên `doc.py`/parser và phép chiếu HD-1. Kiểm hủy/tiến độ ở bốn mốc bằng câu cố định; mở theo `tep_id`, giữ nguyên `tep_xml`, bàn giao JSON qua Core trước khi trả đủ 18 trường. Không thêm kho tạm/cache/dedupe, ID, vòng retry/heartbeat, HTTP server hoặc ghi nhận nghiệp vụ. Lớp bọc nhật ký SDK chỉ in mã `HD_SDK_THONG_BAO`, giữ xử lý hủy/mất lease/lỗi invariant của SDK. Context vẫn `None`, kết quả cần kiểm tra, identity/digest null.
+
+Kiểm thực tế trên Windows, Python 3.13.14, SDK wheel 2.0.0 cài offline đúng SHA; pytest 9.1.1 chép offline vào venv. Cả ba lệnh dùng `-B`:
+
+| Lệnh | Kết quả | Mã thoát |
+|---|---|---:|
+| `.venv\Scripts\python -B -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_hoa_don` | 1/1 DEMO [ĐẠT] | 0 |
+| `.venv\Scripts\python -B -m pytest e_hoa_don/tests -q` | **259 passed in 37.53s, 0 skipped** | 0 |
+| `.venv\Scripts\python -B e_hoa_don/tests/kiem_doc_lap.py` | [ĐẠT] AST/import, cây gói và tiến trình sạch | 0 |
+
+Thêm 102 ca HD-2: đường bộ nhớ + HTTP loopback kiểm bytes/hash/ID opaque; tên tệp chỉ metadata; upload lỗi/thiếu tham chiếu không XONG; mất 1 hoặc 3 ACK ở `tep`/`ket_qua`/`ket_thuc` giữ cùng Idempotency-Key và đúng một lần ghi mỗi thao tác; hủy bốn mốc; mất lease 409/404/410 tại đọc/tiến độ/upload và luồng gia hạn SDK; giao lại cùng việc không ghi nhận; hai pháp nhân DEMO cùng XML xử lý riêng; canary không vào stderr/lỗi/tiến độ. Hai ca tiến trình kiểm `app.chay` và module entry point nhận một dòng JSON stdin qua MayChuGia, stdin vẫn mở khi việc đã bàn giao. Hủy sau upload không nộp kết quả, tệp đã upload vẫn thuộc kho Core giả.
+
+Thời gian thực tế: **0.195 giờ** (01:55:00–02:06:41, 15/11/2026, UTC+07) (ước tính trong phiếu: **3 giờ**).
+
+Lệch khỏi phiếu / quyết định tạm: chỉ lớp bọc nhật ký `_ghi` và seam test CoreGia nội bộ được mô tả tại mục Cần Core; không sửa SDK/Core/ma-nguon hoặc hợp đồng đã khóa, không thay phiên bản gói. Test double HD-1 thêm `kiem_huy`; fixture test chỉ cho kết nối đúng cổng MayChuGia đã đăng ký. Không có skip/xfail. Chưa chạy Linux, máy sạch HD-4 hoặc bài Core thật 120 phút.
+
+Cần Core / Chờ Anh mới phát sinh: hook nhật ký an toàn công khai và seam lease/giao lại cho SDK; quyền kho tệp/thu hồi tệp đã upload chưa kiểm trên Core thật. Không cần Anh chốt thêm để bàn giao HD-2; phần mở rộng ZIP/bảng kê/tải giữ nguyên trạng thái chờ.

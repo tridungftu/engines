@@ -1,5 +1,14 @@
 # CHANGELOG — e_hoa_don
 
+## HD-2 — mốc 14/11/2026, kiểm thực tế 15/11/2026
+
+- Chỉ sửa runtime `chay.py` (1/2 tệp cho phép); giữ nguyên parser/phép chiếu/lỗi HD-1, `hoa_don.doc_xml@2` và phiên bản gói. Kiểm hủy trước đọc, sau parse, trước upload và trước return; bốn câu tiến độ cố định, không chứa định danh/dữ liệu tài liệu.
+- Giữ mở theo `tep_id` qua SDK, nguyên tham chiếu XML/bytes/hash và bàn giao JSON trước khi trả trường. Không ID tự cấp, kho tạm/cache/dedupe, nhận nghiệp vụ, heartbeat/retry/server riêng. SDK quản lý lease và Idempotency-Key.
+- Test canary chứng minh SDK 2.0.0 in traceback/nội dung exception; lớp bọc `CongHoaDon._ghi` chỉ in mã cố định `HD_SDK_THONG_BAO`, không đổi xử lý lỗi/hủy/lease. Ghi Cần Core/SDK: hook nhật ký an toàn và seam lease/giao lại công khai; không sửa SDK. Hủy sau upload không nộp kết quả, vòng đời tệp đã upload thuộc Core.
+- Thêm **102 test HD-2** qua CoreGia trong bộ nhớ và MayChuGia loopback: đọc/upload, ID opaque, bytes/hash, metadata tên không mở đường dẫn, mất 1/3 ACK ở ba thao tác không ghi trùng, upload lỗi/thiếu ID, hủy bốn mốc, mất lease 409/404/410 và gia hạn SDK, giao lại thuần, hai pháp nhân cùng XML không cache, canary stderr/lỗi/tiến độ. Thêm hai ca tiến trình `app.chay`/module nhận một dòng JSON stdin, giữ stdin mở lúc việc đã bàn giao.
+- Ba lệnh nghiệm thu Windows/Python 3.13.14/SDK 2.0.0 với `-B`: SDK **1/1 DEMO [ĐẠT]**; pytest **259 passed in 37.53s, 0 skipped**; kiểm độc lập **[ĐẠT]**; cả ba mã thoát 0. **Đã kiểm bằng Core giả (CoreGia)**; chưa kiểm quyền kho tệp/Core thật, Linux hoặc máy sạch HD-4. Chỉ DEMO, không thuế/Cloud/Node.
+- Thời gian thực tế: **0.195 giờ** (01:55:00–02:06:41, 15/11/2026, UTC+07) (phiếu **3 giờ ước tính**). PR: **chờ lead mở**; bản nháp `docs/PR-HD-2.md`, chi tiết `docs/VIEC.md`. Không commit/push, không mở phần ZIP/bảng kê/tải.
+
 ## HD-1 — 15/11/2026
 
 - Phân biệt XML hỏng và encoding/DOCTYPE/namespace/path ngoài profile bằng lỗi cố định; không phản chiếu nguồn hoặc bắt tràn DataError. Nhiều TToan không chiếu scalar mơ hồ; giữ exact text/occurrence, money/relations/thuế, issue ngoài envelope V1 và context=None.

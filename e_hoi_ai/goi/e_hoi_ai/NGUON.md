@@ -99,3 +99,19 @@ ab4dc18a48df5f6f7c8e8f08ae10ea87e5a0a43ced3ca0870909e44eece069df  e_hoi_ai/khuon
 6fc057b9f2ce418b49a13bb0987c5ccf4f4c9aadf4e9e3eeb0619d8453f64202  engine.json
 a188fb508caf41e7ae77263205cd5edeb69a7073e9abaa02771ecd21833bee61  README.md
 ```
+## AI-6 — Khung Cloud, 14/11/2026
+
+- `e_hoi_ai/nha_cung_cap.py`: chuyển `NhaCungCapLocal` từ `e_hoi_ai/cong_ai.py`; chuyển cấu trúc payload, xác thực và đọc phản hồi của `NhaCungCapAnthropic`/`NhaCungCapOpenAI` tại `ma-nguon/lib/cong_ai.py` §7. Giữ mốc API Anthropic từ nguồn cũ, chưa kiểm Cloud thật. Thay khóa theo lượt/env bằng tham số constructor, host HTTPS cố định, không proxy/redirect/retry; bỏ Mask HTTP, cấu hình bí mật, CSDL, danh sách model và fallback/beta cũ. Thêm kiểm phong bì, cờ tắt cứng, giới hạn và lỗi SDK an toàn.
+- `e_hoi_ai/cloud.py`: lớp bọc mới theo `LOAI-DU-LIEU-RIENG.md` §2.4; tái dùng hậu kiểm từ `cong_ai.py`, DTO và JSON chuẩn hóa có sẵn. Chỉ chuyển văn bản đã che ra nhà cung cấp; kết quả giữ mã mở che nội bộ.
+- `e_hoi_ai/cong_ai.py`: chỉ chuyển lớp Local sang import từ mô-đun provider; không sửa đường gọi Local/chọn model/hậu kiểm.
+- Chỉ thư viện chuẩn Python + SDK 2.0.0; không thêm dependency. Không sửa `ma-nguon/`, manifest hoặc bộ DEMO. Các bảng băm trước AI-6 là mốc lịch sử; bảng băm AI-6 cuối tệp ghi các tệp gói thay đổi/thêm (không tự băm NGUON).
+
+### SHA-256 tại mốc AI-6 (theo byte worktree)
+
+```text
+bc107fd4a0e931fb3fa11f8cb4895488489eaba5ec48f7b26810e5a6ecde7a4c  e_hoi_ai/cong_ai.py
+00fd471634ba19b8d9a3183273a5c411685a037abf9985ef346b197f6d086164  e_hoi_ai/nha_cung_cap.py
+9f55354b7641ce4a6d6c48fb7b8ed2fb6b7409ac0e0797af79b70f33a3ee8074  e_hoi_ai/cloud.py
+cb18105a16b248a10ccd6e1652944d811c7f5f9fdb91031206fb92737b28c601  README.md
+becfb5409ce617a7f62279df88fc23bcccae8c2be7aa952dcea6d871cd240057  CHANGELOG.md
+```

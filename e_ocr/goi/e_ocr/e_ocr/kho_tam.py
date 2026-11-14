@@ -1,7 +1,7 @@
 """Kho JSON tạm cho mã, băm, số đếm; không nhận nội dung tài liệu.
 
-Mỗi ghi khóa cả chu kỳ đọc–sửa–thay tệp. doc/ghi là các thao tác riêng lẻ,
-không cung cấp CAS hay giao dịch nhiều lời gọi.
+Mỗi ghi khóa cả chu kỳ đọc–sửa–thay tệp. cap_nhat cho phép cập nhật một
+khóa trong cùng khóa tệp; không cung cấp giao dịch nhiều lời gọi.
 """
 
 from __future__ import annotations
@@ -175,6 +175,12 @@ class KhoTam:
             return self._doc_toan_bo().get(khoa, mac_dinh)
 
     def ghi(self, khoa, gia_tri):
+        # Kiểm trước khi mở kho để giữ hành vi từ chối dữ liệu không hợp lệ.
+        self._kiem_gia_tri(khoa, gia_tri)
+        self.cap_nhat(khoa, lambda cu: gia_tri)
+
+    @staticmethod
+    def _kiem_gia_tri(khoa, gia_tri):
         try:
             _kiem_ma(khoa)
             _kiem_du_lieu(gia_tri)
@@ -184,8 +190,21 @@ class KhoTam:
             raise LoiNghiepVu(
                 "KHO_TAM_DU_LIEU_SAI", "Kho tạm chỉ nhận mã, băm và số đếm; không nhận nội dung tài liệu."
             ) from None
+
+    def cap_nhat(self, khoa, sua):
+        """Đọc–sửa–ghi một khóa nguyên tử; callback chỉ xử lý metadata.
+
+        Callback không được gọi lại kho hay thực hiện I/O. Ngoại lệ của
+        callback giữ nguyên bản cũ và nhả khóa. Trả giá trị đã ghi.
+        """
+        try:
+            _kiem_ma(khoa)
+        except ValueError:
+            raise LoiNghiepVu("KHO_TAM_KHOA_SAI", "Mã tra cứu dữ liệu tạm không hợp lệ.") from None
         with self._khoa_tep():
             du_lieu = self._doc_toan_bo()
+            gia_tri = sua(du_lieu.get(khoa))
+            self._kiem_gia_tri(khoa, gia_tri)
             du_lieu[khoa] = gia_tri
             noi_dung = _thanh_json(du_lieu)
             if len(noi_dung) > _KHO_TOI_DA_BYTE:
@@ -210,3 +229,4 @@ class KhoTam:
                 # Chỉ dọn tệp tạm do chính lượt ghi này vừa tạo.
                 if tep_tam is not None:
                     tep_tam.unlink(missing_ok=True)
+            return gia_tri

@@ -29,10 +29,10 @@ def _anh_demo():
     return bytes(0 if c == "1" else 255 for y in range(7) for c in "0".join(m[y] for m in mau))
 
 
-def pdf_demo(*pages, rotate=0, text_matrices=None, bang=False):
+def pdf_demo(*pages, rotate=0, text_matrices=None, bang=False, chu_bang=True):
     """Mỗi phần tử là tuple dòng; tuple rỗng tạo trang chỉ có ảnh DEMO."""
     table_lines = ((60, 632, "BANG DEMO"), (60, 602, "DEMO"), (190, 602, TIEN),
-                   (60, 572, "DEMO"), (190, 572, NGAY)) if bang else ()
+                   (60, 572, "DEMO"), (190, 572, NGAY)) if bang and chu_bang else ()
     chars = sorted(set("".join(text for lines in pages for text in lines)
                        + "".join(text for _, _, text in table_lines)))
     mapping = "\n".join(f"<{ord(c):04X}> <{c.encode('utf-16-be').hex()}>" for c in chars)

@@ -17,6 +17,8 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 MIME_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 XML = "{http://www.w3.org/XML/1998/namespace}"
+ET.register_namespace("w", W[1:-1])
+ET.register_namespace("xml", XML[1:-1])
 _KY_TU_CAM = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\ud800-\udfff\ufffe\uffff]")
 
 

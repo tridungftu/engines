@@ -1,6 +1,6 @@
-# Engine nhận dạng văn bản — OCR-4
+# Engine nhận dạng văn bản — OCR-5
 
-Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.4. Ba năng lực
+Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.5. Ba năng lực
 `ocr.doc_tai_lieu@1`, `ocr.doc_van_ban@1` và `ocr.xuat_word@1` dùng chung
 lõi đọc lớp chữ PDF hoặc ABBYY Hot Folder cục bộ, dự phòng Tesseract.
 Xuất Word dựng DOCX và gửi qua `viec.tai_tep_ra`. **Đã kiểm bằng Core giả
@@ -29,6 +29,8 @@ Trong thư mục gốc repo, sau khi cài SDK vào `.venv`:
 ```powershell
 $env:PYTHONDONTWRITEBYTECODE = '1'
 $env:PYTHONUTF8 = '1'
+$env:KTT_ENGINE_DU_LIEU = Join-Path (Get-Location) '.venv/du-lieu-DEMO'
+$env:KTT_ENGINE_CAU_HINH = Join-Path (Get-Location) '.venv/khong-co-cau-hinh-DEMO.json'
 .venv\Scripts\python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
 .venv\Scripts\python -m pytest e_ocr/tests -q
 .venv\Scripts\python e_ocr/tests/kiem_doc_lap.py
@@ -37,12 +39,37 @@ $env:PYTHONUTF8 = '1'
 Trên Linux dùng `.venv/bin/python`, đặt `PYTHONDONTWRITEBYTECODE=1` trước khi
 nạp gói. Không đóng gói bytecode, test, môi trường ảo hoặc dữ liệu máy.
 
-`chay_thu_demo` có ba ví dụ đọc/xuất Word từ PDF DEMO lớp chữ 3 trang, chạy
-được không cần cấu hình máy hoặc ABBYY. Bộ PDF được sinh bằng thư viện
-chuẩn ở `tests/demo/tao_pdf.py`; có nhãn ảnh DEMO và chữ ẩn ToUnicode,
-không cần font máy. Bộ kiểm Hot Folder dùng luồng nền nhận tệp DEMO rồi
-ghi PDF cùng mã tương quan. Test dùng filesystem Python trên Windows/Linux;
-lượt kiểm OCR-1 chạy thực tế trên Windows, chưa có Linux/WSL trong máy này.
+`chay_thu_demo` có **6 ví dụ**: PDF quét 3 trang và PNG 1 trang cho cả ba
+năng lực, đều `nguon=chi_tesseract`; không cần ABBYY. CLI SDK dùng Tesseract
+thật với `vie+eng`. Máy thiếu bộ đọc chạy công cụ test từ repo:
+`.venv\Scripts\python e_ocr/tests/chay_demo.py`; công cụ tự dùng Tesseract
+giả và ghi rõ khi thiếu executable/ngôn ngữ. `--gia` ép dùng giả cho CI.
+Nguồn giả chỉ ở ngoài gói, không tự thay nguồn trong engine. Công cụ cách
+ly cấu hình/kho DEMO bằng thư mục tạm; không đọc cấu hình máy thật.
+
+Bộ sinh `tests/demo/tao_bo_demo.py` chuyển từ mã cũ, dùng Pillow đã ghim,
+font Arial/DejaVu Sans sẵn trên máy, PDF thuần Python và bộ ghi Word của
+gói; không thêm dependency. `tao_bo_demo(thu_muc, ca_loi=False)` sinh tệp
+nhỏ để đưa vào `demo/`; mặc định còn sinh PDF 61 trang, >20 MiB và tệp
+hỏng **chỉ trong thư mục tạm của test**, không đưa vào gói/git. Chỉ tạo
+tệp mới, không ghi đè. Word đáp án có nhãn riêng, không là kết quả OCR.
+PDF quét chỉ có ảnh, không có chữ/vector đáp án ẩn; bản ABBYY giả riêng
+có lớp chữ và đường kẻ bảng. Hai PDF lớp chữ cũ vẫn giữ làm tham chiếu.
+
+OCR-MAY ca 2/3/4/5/7/9 đã kiểm bằng Core giả (CoreGia), ABBYY giả ở thư
+mục DEMO tạm. Ca 3 quan sát hàng chờ 3→2→1→0 bằng trạng thái CoreGia,
+chống gửi lại lượt dở, không là kiểm màn hình thật. Ca 1 chờ thẻ trạng
+thái Core, ca 6 chờ thiết kế trích vùng với Đối chiếu, ca 8 chờ bí mật và
+cầu nối có khóa. Chưa chạy Linux hoặc ABBYY/Core thật.
+
+Nhật ký JSON stderr ghi năng lực, trạng thái, nguồn đọc và
+`cho_nguon_giay`/`chay_giay`/`tong_giay`. Chờ là thời gian đợi ABBYY,
+kết thúc trước đọc lớp chữ trả về; chạy gồm phần nội bộ/Tesseract và
+xuất Word. SDK chưa cấp mốc vào hàng chờ Core nên chưa đo được thời gian
+chờ ở Core. Chỉ log action đã được gọi; tệp >20 MiB bị SDK chặn trước
+action. Lỗi bất ngờ trong action đổi thành câu cố định, tránh traceback
+SDK lộ nội dung/đường dẫn. Không ghi tên tệp, đường dẫn, nội dung hoặc khóa.
+Thời gian chạy xong action chưa bao gồm nộp kết quả/kết thúc phía SDK.
 
 ## Đọc lớp chữ và giao thức Hot Folder
 

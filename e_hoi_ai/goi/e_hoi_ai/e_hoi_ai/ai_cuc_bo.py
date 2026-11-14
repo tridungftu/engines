@@ -163,10 +163,11 @@ def _kiem_model(bo_mo, goc, model, thoi_han, kiem_huy):
         for k in ("name", "model"))), None)
     if muc is None or model_tu_xa(muc):
         raise LocalAIKhongSanSang("Không xác minh được model chạy cục bộ trên máy AI.")
+    return "ollama"
 
 
-def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None):
-    """Một lượt OpenAI-compatible; không thử lại POST hay chuyển nhà cung cấp."""
+def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None, khuon=None):
+    """Một lượt Local; có khuôn thì dùng API cấu trúc đúng loại máy đã xác minh."""
     try:
         parsed = kiem_url(cau_hinh["url"])
         if not MA_MODEL.fullmatch(model) or model_tu_xa({"model": model}):
@@ -178,14 +179,26 @@ def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None):
         goc = parsed._replace(path="").geturl()
         thoi_han = cau_hinh["timeout_giay"]
         kiem_huy()
-        _kiem_model(bo_mo, goc, model, thoi_han, kiem_huy)
+        loai_api = _kiem_model(bo_mo, goc, model, thoi_han, kiem_huy)
         kiem_huy()  # Hủy trong lúc đọc metadata thì không gửi prompt/tài liệu.
-        than = json.dumps({"model": model, "temperature": 0, "stream": False, "messages": [
+        du_lieu = {"model": model, "temperature": 0, "stream": False, "messages": [
             {"role": "system", "content": "Bạn là trợ lý kế toán. Chỉ trả lời đúng định dạng được yêu cầu."},
             {"role": "user", "content": prompt},
-        ]}, ensure_ascii=False).encode("utf-8")
-        phan_hoi = _doc_json(bo_mo, parsed.geturl(), thoi_han, than)
-        noi_dung = phan_hoi["choices"][0]["message"]["content"]
+        ]}
+        url = parsed.geturl()
+        if khuon is not None:
+            if loai_api == "ollama":
+                url = goc + "/api/chat"
+                du_lieu.pop("temperature")
+                du_lieu.update(format=khuon, options={"temperature": 0})
+            else:
+                du_lieu["response_format"] = {"type": "json_schema", "json_schema": {
+                    "name": "tra_loi_ai", "schema": khuon,
+                }}
+        than = json.dumps(du_lieu, ensure_ascii=False, allow_nan=False).encode("utf-8")
+        phan_hoi = _doc_json(bo_mo, url, thoi_han, than)
+        noi_dung = (phan_hoi["message"]["content"] if khuon is not None and loai_api == "ollama"
+                    else phan_hoi["choices"][0]["message"]["content"])
         if not isinstance(noi_dung, str) or not noi_dung.strip():
             raise LocalAIKhongSanSang("Máy Local AI chưa trả được câu trả lời.")
         return noi_dung

@@ -19,6 +19,7 @@ TRA_LOI = {"truong": [
 class LocalGia:
     def __init__(self, tra_loi=None):
         self.tra_loi = TRA_LOI if tra_loi is None else tra_loi
+        self.tra_loi_tung_luot = []
         self.models = [{"id": "model-demo", "owned_by": "local-demo"}]
         self.tags = None
         self.yeu_cau = []
@@ -55,7 +56,7 @@ class LocalGia:
                 self.end_headers()
                 try:
                     self.wfile.write(raw)
-                except (BrokenPipeError, ConnectionResetError):
+                except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
                     pass
 
             def chuyen(self):
@@ -89,8 +90,10 @@ class LocalGia:
                 if chu.phan_hoi_tho is not None:
                     self.tra_tho(chu.ma_http, chu.phan_hoi_tho)
                     return
-                noi_dung = chu.tra_loi if isinstance(chu.tra_loi, str) else json.dumps(chu.tra_loi, ensure_ascii=False)
-                self.tra(chu.ma_http, {"choices": [{"message": {"content": noi_dung}}]})
+                tra_loi = chu.tra_loi_tung_luot.pop(0) if chu.tra_loi_tung_luot else chu.tra_loi
+                noi_dung = tra_loi if isinstance(tra_loi, str) else json.dumps(tra_loi, ensure_ascii=False)
+                self.tra(chu.ma_http, {"message": {"content": noi_dung}} if self.path == "/api/chat"
+                         else {"choices": [{"message": {"content": noi_dung}}]})
 
         self.may_chu = ThreadingHTTPServer(("127.0.0.1", 0), XuLy)
         self.luong = threading.Thread(target=self.may_chu.serve_forever,

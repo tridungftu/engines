@@ -77,8 +77,8 @@ def danh_gia(data, yeu_cau):
 
 
 class NhaCungCapLocal:
-    def hoi(self, cau_hinh, model, prompt, *, kiem_huy):
-        return ai_cuc_bo.hoi_local(cau_hinh, model, prompt, kiem_huy=kiem_huy)
+    def hoi(self, cau_hinh, model, prompt, *, kiem_huy, khuon=None):
+        return ai_cuc_bo.hoi_local(cau_hinh, model, prompt, kiem_huy=kiem_huy, khuon=khuon)
 
 
 class CongAI:

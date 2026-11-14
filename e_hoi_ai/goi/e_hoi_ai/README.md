@@ -1,4 +1,4 @@
-# e_hoi_ai — Hỏi AI (AI-1, AI-2, AI-3)
+# e_hoi_ai — Hỏi AI (AI-1, AI-2, AI-3, AI-4)
 
 Gói SDK 2.0.0, phiên bản 0.4.0, dùng lại khung AI-0 và lõi AI-1. Chỉ dùng thư viện chuẩn Python (Python ≥ 3.11) và `kho_tri_thuc_sdk` 2.0.0. Gọi Local theo API OpenAI-compatible hoặc Ollama native khi có khuôn; mọi đường bản 1 chỉ dùng provider Local.
 
@@ -78,29 +78,31 @@ Ba schema `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai` trong `contract/` là b
 
 Các schema dùng Draft 2020-12, cho phép thêm trường tùy chọn để giữ tương thích phiên bản 1. `dong`, `tu`, `nghi_ngo` không bắt buộc; ô bảng trống và ô gộp được giữ lại. Giới hạn dung lượng JSON UTF-8 của `khuon_tra_loi` (32 KiB) và `chuyen_tiep` (64 KiB) được AI-2 kiểm khi xử lý.
 
-## Kiểm AI-1, AI-2 và AI-3
+## Cổng kiểm AI-4
 
 Chạy trong worktree, đặt `PYTHONDONTWRITEBYTECODE=1` để không sinh bytecode trong gói. Với PowerShell:
 
 ```powershell
 $env:PYTHONUTF8 = '1'
 $env:PYTHONDONTWRITEBYTECODE = '1'
-.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py
 .venv/Scripts/python -m pytest e_hoi_ai/tests -q
 .venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
 ```
 
-Lệnh SDK cần Local AI được cấu hình bên ngoài gói. Để chạy không cần máy AI thật hoặc mạng ngoài:
+`chay_demo_voi_local_gia.py` là **cổng đạt thay cho** `python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai` của engine này: lệnh SDK riêng không cung cấp máy AI. Bộ chạy bật Local giả ở `127.0.0.1` trên cổng do hệ điều hành chọn, ghi `cau_hinh_DEMO.json` vào thư mục tạm `tests/ktt-ai-4-demo-*/`, đặt `KTT_ENGINE_CAU_HINH` trỏ tệp đó, rồi gọi trực tiếp `CoreGia().chay_thu_demo(app)` với các handler thật. Mọi ví dụ phải `XONG`, bộ ví dụ phải khác rỗng và số lượt Local phải khớp thì mã thoát mới bằng 0. Server và cấu hình tạm được dọn sau kiểm, biến cấu hình ban đầu được khôi phục. Không cần máy AI thật hoặc mạng ngoài.
 
-```powershell
-.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py
-```
+Phiếu có ba ví dụ chỉ dùng hợp đồng GIẢ DEMO của Công ty DEMO Ánh Dương, mã DEMO-001: hỏi 1.000.000 VND và 30/10/2026 có trích dẫn; hỏi người bảo lãnh không có trong tài liệu → `không thấy căn cứ`; `ai.hoi_theo_yeu_cau@1` có khuôn tiền `{"so": 1000000, "tien_te": "VND"}` và ngày `2026-10-30`. Ngày DD/MM/YYYY chỉ nằm trong văn bản nguồn/trích dẫn, dữ liệu có kiểu dùng YYYY-MM-DD.
 
-Bộ chạy bật Local giả ở `127.0.0.1` trên cổng do hệ điều hành chọn, ghi cấu hình DEMO vào thư mục tạm ngoài gói, rồi gọi **nguyên lệnh** `python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai` bằng tiến trình con. Đóng server và dọn cấu hình tạm sau kiểm. Ví dụ DEMO tối thiểu và bộ chạy được đưa lên AI-1 để kiểm đủ cổng chung; AI-4 sẽ mở rộng.
+`tests/test_demo_va_khoi_dong.py` đối chiếu đáp án, khuôn, vị trí trích dẫn và chuyển tiếp; kiểm mã thoát khi DEMO lỗi/rỗng. Test HTTP bật `MayChuGia`, chạy tiến trình Python thật, cấp dòng khởi động JSON qua stdin và gọi `app.chay()` không truyền đường truyền. Kiểm nhận việc, đọc đầu vào qua HTTP, xác thực, nộp kết quả trước kết thúc, khóa chống trùng và 0 lượt Cloud; mọi kết nối chỉ loopback.
 
 Kết quả AI-2 ngày 14/11/2026: SDK thu **1/1 ĐẠT** (DEMO hỏi tài liệu kế thừa AI-1), pytest **238 passed, 0 skipped**, kiểm độc lập mã **0**. Trong đó 97 ca mới AI-2 kiểm Local giả + CoreGia và bộ kiểm khuôn, gồm hai kiểu API, đúng/sai khuôn, một lần hỏi lại, không khuôn, chuyển tiếp nguyên vẹn, đúng/vượt ngưỡng byte UTF-8, hủy và mất xác nhận. Các test Local HTTP đếm provider Cloud **0 lượt**, chặn mạng ngoài và phân giải DNS. **Đã kiểm bằng Core giả (CoreGia)** trên Windows/Python 3.13.14; chưa chạy thực tế trên Linux. Chưa kiểm Core thật hoặc model thật. Nguồn lõi và QA đối chiếu độc lập được ghi ở `NGUON.md`.
 
 Kết quả AI-3 ngày 14/11/2026: SDK thu **1/1 ĐẠT**, pytest **176 passed, 0 skipped**, kiểm độc lập mã **0**. Các test Local HTTP đếm provider Cloud **0 lượt**, chặn mạng ngoài và phân giải DNS. **Đã kiểm bằng Core giả (CoreGia)** trên Windows/Python 3.13.14; chưa chạy thực tế trên Linux, Core thật hoặc model thật. Nguồn lõi chuyển sang và thay đổi AI-3 được ghi ở `NGUON.md`.
+
+## Kết quả AI-4 — 14/11/2026
+
+Cổng DEMO Local giả **3/3 ĐẠT** (mã 0); pytest **283 passed, 0 skipped** trong 39.12 giây; kiểm độc lập mã **0**. Kiểm thêm lệnh SDK thu với Local giả/cấu hình DEMO cấp trước: **3/3 ĐẠT**. **Đã kiểm bằng Core giả (CoreGia)** và HTTP loopback qua MayChuGia trên Windows/Python 3.13.14; chưa kiểm Linux/Core thật/model thật. Bản bàn giao và kết quả lệnh thật nằm ở `e_hoi_ai/docs/VIEC.md` trong repo.
 
 ## Kết quả việc gộp AI-2 và AI-3 — 14/11/2026
 

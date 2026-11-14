@@ -1,5 +1,12 @@
 # Thay đổi
 
+## AI-4 — 14/11/2026 — DEMO và kiểm khởi động (trên gói 0.4.0)
+
+- Mở rộng `chay_thu_demo` thành ba ca DEMO: tiền/ngày có căn cứ, câu không có đáp án, yêu cầu có khuôn tiền kèm VND/ngày ISO.
+- Bộ chạy Local giả gọi trực tiếp `CoreGia().chay_thu_demo(app)`; cấu hình tạm nằm dưới `tests/`. Đây là cổng đạt thay lệnh SDK thu riêng cần máy AI.
+- Thêm kiểm đáp án và cổng lỗi/rỗng; chạy tiến trình thật nhận stdin qua `MayChuGia` HTTP loopback cho cả hai năng lực, xác thực và nộp kết quả trước kết thúc; 0 lượt Cloud.
+- Đã kiểm bằng Core giả (CoreGia); kết quả kiểm AI-4 ghi ở `e_hoi_ai/docs/VIEC.md`. Không sửa lõi Local/Cloud hoặc hợp đồng SDK/API.
+
 ## 0.4.0 — 14/11/2026 — Gộp AI-2 và AI-3
 
 - Giữ phát hiện/chọn model, cache, lý do chọn và bảo vệ mạng AI-3 cùng toàn bộ xử lý khuôn AI-2.

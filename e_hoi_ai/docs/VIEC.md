@@ -6,7 +6,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 |---|---|---|---|---|
 | 0 | Đọc tài liệu bắt buộc; đối chiếu kế hoạch lát AI-0 đã giao | — | Xong — 14/11/2026 | Phạm vi, kiến trúc và cách triển khai theo `GIAO-CODEX-e_hoi_ai.md` và lệnh giao của Anh |
 | 1 | Đóng gói độc lập theo cổng chung: bỏ shim, chỉ import SDK, build/cài wheel trên máy sạch | AI-13 | Đang làm — 14/11/2026 | Khung AI-0 xong; ghim đầy đủ và kiểm máy sạch thuộc AI-5 |
-| 2 | Màn Chạy thử DEMO, Cổng Local AI, Cổng Cloud AI (tắt ở bản 1) thành **giao diện của engine** (không đặt trong Core) | AI-10, 11, 12 | Chờ làm | Bản cũ trong `tu-core-cu\phia-core\` |
+| 2 | Chạy thử DEMO khai trong phiếu; màn cấu hình/trạng thái Local/Cloud dùng cửa chung của Core | AI-10, 11, 12 | Đang làm — 14/11/2026 | AI-4 xong phần engine: ba DEMO đã kiểm bằng Core giả (CoreGia); màn chung/phân quyền Admin chờ nghiệm thu Core thật. Bản cũ chỉ tham chiếu ở `tu-core-cu\phia-core\` |
 | 3 | Tự phát hiện model trên máy AI qua Tailscale, chọn theo module/function | AI-10 | Đang làm — 14/11/2026 | Lõi AI-3 xong, đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; thử máy AI/Tailscale thật thuộc AI-7, màn quản trị chờ Core |
 | 4 | Lát 8: thử thật gpt-oss 20B, Qwen3 8B, Gemma; Local lỗi phải báo rõ, 0 Cloud | AI-14, AI-8 | Chờ làm | Công cụ ở `tu-core-cu\tools\` |
 | 5 | Ghép Core khi có cổng chung K1–K5 → bài test cuối 40 phút | AI-18 | Chờ Core |  |
@@ -16,6 +16,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | AI-2 | Hỏi theo yêu cầu, khuôn JSON, chuyển tiếp nguyên vẹn và trần byte | AI-3, 5; phục vụ TX-3 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 238 passed, 0 skipped (97 ca mới AI-2); kiểm độc lập mã 0; provider Cloud 0 lượt. Chưa kiểm thực tế Linux/Core thật/model thật. PR: **chờ lead mở** |
 | AI-3 | Tự phát hiện API/model, cache 5 phút, chọn ưu tiên và dự phòng theo mã prompt | AI-10 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 176 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. PR: **chờ lead mở** |
 | AI-6 | Tách provider và khung Cloud chưa khai phiếu | AI-21…24 (khung) | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia); SDK thu 1/1 ĐẠT, pytest 334 passed, 0 skipped, độc lập mã 0. Cloud chỉ giả trong RAM, manifest giữ nguyên. PR: **chờ lead mở** |
+| AI-4 | Ba DEMO, cổng Local giả gọi CoreGia và test tiến trình nhận stdin qua MayChuGia | AI-12, AI-18 (phần engine) | Xong — 14/11/2026; đã kiểm bằng Core giả | Cổng DEMO thay SDK thu: 3/3 ĐẠT; kiểm thêm SDK thu có Local giả 3/3 ĐẠT; pytest 283 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. Chưa kiểm Linux/Core thật/model thật. PR: **chờ lead mở** |
 
 | Gộp AI-2/AI-3 | Giải xung đột merge origin/main vào nhánh AI-2 | AI-2, AI-3 | Xong — 14/11/2026 | Gói 0.4.0; đã kiểm bằng Core giả (CoreGia); SDK thu 1/1 ĐẠT; pytest 278 passed, 0 skipped; độc lập mã 0. PR: chờ lead; nội dung đã giải xung đột, Git index chờ lead stage do quyền ghi |
 
@@ -32,6 +33,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - AI-1 (14/11/2026): vẫn cần cấu hình và nhật ký kỹ thuật chung từ Core. Ghi nợ SDK chung: cho phép engine xác định mã lỗi khi thiếu tham số bắt buộc; áp trần nội dung văn bản bên trong loại riêng. Tạm giữ `prompt.bat_buoc=true` với sentinel `mac_dinh=""` để engine tự trả `THIEU_PROMPT`, và tự kiểm trần 500.000 ký tự cho `van_ban_tai_lieu.van_ban` cùng prompt. Không sửa hợp đồng SDK/API hoặc mã Core; không có điểm chặn mới.
 - AI-2 (14/11/2026): không phát sinh yêu cầu Core/SDK mới. Tiếp tục tự kiểm phong bì loại riêng, trần byte khuôn/chuyển tiếp và trần prompt/tài liệu do SDK chưa kiểm sâu loại riêng. Tạm dùng cấu hình JSON ngoài gói như AI-1; không đổi schema chung hay API/SDK đã khóa.
 - AI-3 (14/11/2026): không phát sinh yêu cầu Core/SDK mới. Tiếp tục dùng cấu hình JSON ngoài gói và nhật ký metadata như AI-0/AI-1. Catalog chỉ ở bộ nhớ; màn quản trị/catalog dùng chung chờ kênh cấu hình và thẻ trạng thái của Core. Phiếu gói bổ sung `ly_do_chon_model` trong `truong_ra` theo mẫu 2.0 hiện có, không thay hợp đồng SDK/API.
+- AI-4 (14/11/2026): không phát sinh yêu cầu Core/SDK mới. Màn Chạy thử chung, quyền Admin, hàng việc/quyền pháp nhân/lịch sử và bài cuối 40 phút tiếp tục chờ Core thật. Cổng đạt riêng dùng `chay_demo_voi_local_gia.py` theo phiếu; `MayChuGia` chỉ kiểm HTTP loopback của SDK, không xác nhận vận hành Core thật.
 
 ## Bàn giao AI-0 — 14/11/2026
 
@@ -320,3 +322,53 @@ Lệch khỏi phiếu / quyết định tạm đã dùng: không đổi phạm v
 Cần Core / Chờ Anh mới phát sinh: không có điểm chặn mới. Đã ghi rõ nợ bản 2 ở mục Cần Core: bi_mat[], công tắc module mặc định tắt (M9 và nhóm 07 luôn Local), Mask/mở che và ngăn dữ liệu để đo độ chính xác theo function + lịch kiểm 20%→10%→5%, dưới 90% trở lại 20%. Không có câu Chờ Anh mới.
 
 Thời gian thực tế: bắt đầu **14/11/2026 23:23** (theo lead), kết thúc **14/11/2026 23:32:37 +0700**, **0.16 giờ** thời gian đồng hồ; ước tính trong phiếu AI-6: **3 giờ**.
+## Bàn giao AI-4 — 14/11/2026
+
+Kết luận: **Đạt** — đã kiểm bằng Core giả (CoreGia), Local HTTP giả và MayChuGia trên Windows/Python 3.13.14. Chưa kiểm thực tế Linux/Core thật/model thật.
+
+Đã làm:
+
+- Mở rộng một DEMO AI-1 thành ba ví dụ `chay_thu_demo`: hỏi tiền/ngày có trích dẫn; hỏi người bảo lãnh không có đáp án; hỏi theo yêu cầu có khuôn. Tất cả dùng hợp đồng GIẢ DEMO-001 của Công ty DEMO Ánh Dương, 1.000.000 VND, 30/10/2026. Dữ liệu có kiểu tiền kèm `VND`, ngày `2026-10-30`.
+- Bộ chạy bật Local giả trên cổng loopback động, tạo cấu hình DEMO dưới `tests/ktt-ai-4-demo-*/`, đặt `KTT_ENGINE_CAU_HINH`, gọi trực tiếp `CoreGia().chay_thu_demo(app)` bằng handler thật. Mã 0 chỉ khi bộ ví dụ khác rỗng, mọi ví dụ XONG và số lượt Local khớp. Dọn cấu hình tạm, khôi phục biến môi trường sau kiểm. README nêu đây là cổng đạt thay lệnh SDK thu riêng không cấp máy AI.
+- Thêm 5 ca pytest: đối chiếu toàn bộ đáp án/khuôn/trích dẫn/chuyển tiếp; ba ca cổng đạt/lỗi/rỗng và cấu hình tạm; một ca tiến trình thật nhận dòng JSON stdin qua MayChuGia HTTP loopback cho cả hai năng lực. Kiểm xác thực/instance, đọc đầu vào HTTP, nộp kết quả trước kết thúc, khóa chống trùng và 0 Cloud. Khóa test sinh ngẫu nhiên lúc chạy, không ghi vào mã/phiếu/log.
+- Chỉ sửa `engine.json.chay_thu_demo`, tests, README, CHANGELOG và tài liệu. Không sửa lõi AI/Cloud, Core/SDK hoặc mã nguồn cũ; không thêm thư viện. PR: **chờ lead mở**; nhánh `codex/e_hoi_ai-ai-4`; không commit/push.
+
+Kết quả kiểm thật:
+
+`.venv` trong worktree, tạo bằng `--system-site-packages` để dùng pytest 9.1.1 có sẵn. SDK 2.0.0 cài bằng `--no-index --no-deps` từ wheel trong repo, SHA-256 khớp `SHA256SUMS.txt`. Đặt `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`; pytest thêm `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
+
+```text
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+[ĐẠT] Hỏi người bảo lãnh không có trong tài liệu DEMO
+[ĐẠT] Trích tiền và ngày theo khuôn DEMO
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia); 3/3 DEMO, 3 lượt Local HTTP giả.
+Mã thoát: 0.
+
+.venv/Scripts/python -m pytest e_hoi_ai/tests -q
+283 passed in 39.12s
+Mã thoát: 0; 0 skipped (278 ca nền + 5 ca AI-4).
+
+.venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát: 0.
+```
+
+Kiểm thêm đúng lệnh gốc AGENTS.md §5 trong tiến trình con với LocalGia, ba phản hồi DEMO và cấu hình tạm dưới tests được cấp trước:
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+[ĐẠT] Hỏi người bảo lãnh không có trong tài liệu DEMO
+[ĐẠT] Trích tiền và ngày theo khuôn DEMO
+Engine e_hoi_ai 0.4.0: mọi ví dụ chạy thử DEMO đều đạt.
+Mã thoát: 0; 3 lượt Local HTTP giả.
+```
+
+`git diff --check` không lỗi. Gói không có bytecode/liên kết; mọi dữ liệu kiểm là DEMO.
+
+Thời gian thực tế: bắt đầu **14/11/2026 23:23** theo lead; kết thúc **14/11/2026 23:31 +07:00** (đến phút): **0.13 giờ** thời gian đồng hồ. Ước tính trong phiếu AI-4: **3 giờ**.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: không đổi phạm vi; tiếp tục cấu hình JSON ngoài gói theo quyết định tạm. Cấu hình sinh dưới thư mục tạm trong tests để dùng cổng động, tránh ghim cổng hoặc chạm cấu hình máy thật. Phiên bản gói giữ 0.4.0; chỉ đổi dữ liệu DEMO, test và tài liệu.
+
+Cần Core / Chờ Anh mới phát sinh: **không**. Các phụ thuộc Core thật giữ như mục Cần Core.

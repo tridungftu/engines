@@ -40,8 +40,13 @@ Các SHA dưới đây tính trên bytes thực; cột LF chỉ đổi CRLF thà
 | `README.md` | `659f894abf2d7c35a2f643d3369b1e268a5f336b0eac68a7b719144ede97c636` | `659f894abf2d7c35a2f643d3369b1e268a5f336b0eac68a7b719144ede97c636` |
 | `requirements.lock` | `9d44717d3f5fdb8196eeb57b46a80436370a220289b88fc1e0f9deda7be90ab4` | `9d44717d3f5fdb8196eeb57b46a80436370a220289b88fc1e0f9deda7be90ab4` |
 
-## HD-1 đang làm — 15/11/2026
+## HD-1 — 15/11/2026
 
-Chỉ thay runtime `e_hoa_don/doc.py`: phân loại lỗi nguồn cố định, tiền nhiều mục TToan không chiếu scalar mơ hồ. Parser `hoa_don_xml.py` vẫn nguyên bản HD-0, test so nội dung với nguồn cộng đúng hai thay đổi import vẫn đạt. Chưa sửa `chay.py`, đang chờ chốt cặp tệp runtime. Không đổi nguồn, giấy phép hoặc phụ thuộc.
+Hai tệp runtime thay đổi: `e_hoa_don/doc.py` (lỗi nguồn/phép chiếu và tiền kiểm trần 1.000 HHDVu bằng XMLParser stdlib không dựng cây), `e_hoa_don/chay.py` (hợp đồng lỗi vượt trần và ánh xạ hẹp lỗi kích thước mở/đọc tệp). Cặp tệp do lead Claude duyệt; parser `hoa_don_xml.py` giữ nguyên HD-0, test đối chiếu nguồn cộng hai thay đổi import vẫn đạt. Không đổi nguồn, giấy phép hoặc dependency.
 
-SHA-256 bytes thực của `e_hoa_don/doc.py` tại lần kiểm HD-1: `7040509c8a56a31bf1a0ae4f397a5e1c2e17228f942ef60f37ad8cb14c641591`. Bảng HD-0 ở trên giữ lịch sử, không dùng làm hash của tài liệu CHANGELOG/NGUON đã cập nhật HD-1; danh mục cuối toàn gói thuộc HD-4.
+| Tệp runtime HD-1 | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `e_hoa_don/doc.py` | `4114d0d293438572f5293a69395d6a53a5300aacf4a2c94f3530e999b5fbcd89` | `bee080710b417a81f5b0d88a9d41474dcf2fe44635f55b8dd028b7c58714da93` |
+| `e_hoa_don/chay.py` | `71dc63fe70d6260b5ead8578f20a2a4d467ade1fe7430bc1e44e6446fe409e92` | `49e70e7af6f14637ebcb174c6f7326136d2be6bca76ded9dd5bcda6d766ffde6` |
+
+Bảng HD-0 giữ lịch sử; không dùng làm hash tệp HD-1 đã thay đổi. Danh mục cuối toàn gói thuộc HD-4.

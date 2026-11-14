@@ -1,13 +1,13 @@
 # CHANGELOG — e_hoa_don
 
-## HD-1 — đang làm, 15/11/2026
+## HD-1 — 15/11/2026
 
-- Lớp bọc phân biệt `HD_XML_KHONG_DOC_DUOC` (XML hỏng) và `HD_XML_NGOAI_PROFILE` (encoding/DOCTYPE/namespace/path), câu cố định không phản chiếu nguồn. Kiểm UTF-8 và trần bytes khi gọi hàm thuần; giữ lỗi invariant cho SDK xử lý chung.
-- Không chiếu scalar tiền từ nhiều mục `TToan`; giữ exact text, occurrence và `MONEY_SECTION_AMBIGUOUS` trong JSON. Không đổi parser lõi hoặc thuật toán Decimal/identity/digest.
-- Thêm 74 test DEMO có đáp án literal về tiền/ngày/occurrence/context/thuế/quan hệ và giới hạn thực. Không ghi tệp lớn vào gói.
-- Kết quả Windows: SDK 1/1 DEMO [ĐẠT], pytest **132 passed, 5 failed, 0 skipped** (4.01s), kiểm độc lập [ĐẠT]; **đã kiểm bằng Core giả (CoreGia)**, chưa nghiệm thu Core thật, chưa chạy Linux.
-- **Chưa đạt HD-1**: năm ca vượt trần còn thất bại vì mã/câu lỗi cũ nằm trong `chay.py`. Chờ Anh cho phép dùng hai tệp runtime `doc.py` + `chay.py` thay cặp đã nêu `doc.py/hoa_don_xml.py`; lõi giữ nguyên. Bản sửa đề nghị và kết quả thật ở `docs/PR-HD-1.md` ngoài gói.
-- SDK/CoreGia chặn bytes quá trần ngay khi mở tệp bằng lỗi 413; cần lớp bọc riêng lỗi kích thước để trả đúng `HD_XML_QUA_LON`, không bọc lỗi khác. Đã ghi Cần Core/SDK trong VIEC. Không sửa SDK/Core/ma-nguon, không commit/push. PR: **chờ lead mở**.
+- Phân biệt XML hỏng và encoding/DOCTYPE/namespace/path ngoài profile bằng lỗi cố định; không phản chiếu nguồn hoặc bắt tràn DataError. Nhiều TToan không chiếu scalar mơ hồ; giữ exact text/occurrence, money/relations/thuế, issue ngoài envelope V1 và context=None.
+- Lead Claude duyệt cặp runtime `doc.py` + `chay.py` (hai tệp, trong trần ≤5), không phải quyết định của Anh. Parser `hoa_don_xml.py` giữ nguyên. Sửa `HD_XML_QUA_LON`/`HD_KET_QUA_QUA_LON`; chỉ bọc đúng lỗi kích thước trong khối mở/đọc tệp, giữ lỗi khác/hủy/mất lease/invariant.
+- Thêm trần vận hành 1.000 HHDVu/XML, XML parser tiền kiểm không dựng cây, dừng ở dòng 1.001 trước DTO/JSON bằng `HD_QUA_NHIEU_DONG_HANG`. Không cắt dòng/occurrence; comment/CDATA không bị đếm nhầm. README/VIEC ghi giá trị, lý do và giới hạn bằng chứng; trần JSON 32 MiB vẫn áp dụng trước upload.
+- Thêm 20 test DEMO lượt bổ sung (HD-1 tổng 94 test mới trên nền HD-0 63 test). Năm ca đỏ lượt trước đã xanh. Ca 200.000 HHDVu chứng minh chặn trước parser lõi/JSON; đúng 1.000 dòng vẫn giữ đủ thứ tự/occurrence.
+- Windows, Python 3.13.14, SDK 2.0.0, `PYTHONDONTWRITEBYTECODE=1`: SDK 1/1 DEMO [ĐẠT]; pytest `-q -p no:cacheprovider` **157 passed in 5.57s, 0 skipped**; kiểm độc lập [ĐẠT]; cả ba mã thoát 0. **Đã kiểm bằng Core giả (CoreGia)**, chưa nghiệm thu Core thật, chưa chạy Linux/máy sạch HD-4.
+- Bàn giao và bản nháp PR cũ chuyển vào VIEC mục Bàn giao HD-1; giữ và cập nhật `docs/PR-HD-1.md` để lead dùng. Lượt bổ sung khoảng 0.2 giờ, tổng HD-1 khoảng 0.37 giờ gồm mốc trước 0.17 giờ; phiếu 3 giờ ước tính. Không git add/commit/push. PR: chờ lead mở. Không phát sinh Cần Core/Chờ Anh mới; giữ nợ SDK ánh xạ lỗi 413 đã được engine bọc hẹp.
 
 ## 1.0.0 — HD-0, 15/11/2026
 

@@ -8,7 +8,7 @@ import json
 import re
 
 import pytest
-from kho_tri_thuc_sdk.engine import LoiNghiepVu, Viec
+from kho_tri_thuc_sdk.engine import LoiDuongTruyen, LoiNghiepVu, Viec, ViecDaHuy
 from kho_tri_thuc_sdk.primitives import DataError
 from kho_tri_thuc_sdk.thu import CoreGia
 
@@ -337,3 +337,144 @@ def test_bao_cao_thuc_vuot_32_mib_khong_upload(xml_demo):
     assert kq["loi"]["ma"] == "HD_KET_QUA_QUA_LON"
     assert kq["loi"]["thong_diep"] == "Kết quả đọc hóa đơn vượt giới hạn. Anh hãy chia nhỏ dữ liệu đầu vào."
     assert core.so_lan_ghi["tep"] == core.so_lan_ghi["ket_qua"] == 0
+
+
+@pytest.mark.parametrize("loi", [
+    LoiDuongTruyen("VUOT_GIOI_HAN_KICH_THUOC", "DEMO-CANARY", http_status=413),
+    LoiNghiepVu("VUOT_GIOI_HAN", "DEMO-CANARY"),
+])
+@pytest.mark.parametrize("luc_doc", [False, True])
+def test_boc_dung_loi_kich_thuoc_mo_doc_tep(loi, luc_doc, xml_demo, monkeypatch):
+    class Luong(io.BytesIO):
+        def read(self, n=-1):
+            raise loi
+
+    def mo(self, tep_id):
+        if luc_doc:
+            return Luong(xml_demo)
+        raise loi
+
+    monkeypatch.setattr(Viec, "mo_tep", mo)
+    core, kq = qua_core(xml_demo)
+    assert kq["trang_thai"] == "LOI" and kq["ket_qua"] is None
+    assert (kq["loi"]["ma"], kq["loi"]["thong_diep"]) == (
+        "HD_XML_QUA_LON", "Tệp XML vượt giới hạn 16 MiB. Anh hãy gửi tệp nhỏ hơn.")
+    assert core.so_lan_ghi["tep"] == core.so_lan_ghi["ket_qua"] == 0
+
+
+@pytest.mark.parametrize("loi", [
+    LoiDuongTruyen("DEMO_KHONG_CO_QUYEN", http_status=403),
+    LoiDuongTruyen("DEMO_MAT_LEASE", http_status=409),
+    LoiDuongTruyen("DEMO_KHONG_CON_VIEC", http_status=404),
+    LoiDuongTruyen("DEMO_HET_HAN", http_status=410),
+    LoiDuongTruyen("VUOT_GIOI_HAN", http_status=413),
+    LoiNghiepVu("VUOT_GIOI_HAN_KICH_THUOC", "Lỗi DEMO khác kiểu."),
+    LoiNghiepVu("DEMO_KHONG_DOC_DUOC", "Không đọc được tệp DEMO."),
+    ViecDaHuy(),
+    DataError("DEMO_INVARIANT", "Bất biến DEMO."),
+])
+def test_loi_mo_tep_khac_giu_nguyen(loi):
+    class ViecDemo:
+        dau_vao = {"tep": {"tep_id": "DEMO"}}
+
+        def tien_do(self, *args):
+            pass
+
+        def mo_tep(self, tep_id):
+            raise loi
+
+    with pytest.raises(type(loi)) as exc:
+        doc_hoa_don(ViecDemo())
+    assert exc.value is loi
+
+
+def test_bytes_dung_tran_16_mib_duoc_doc(xml_demo):
+    raw = xml_demo + b" " * (MAX_XML_BYTES - len(xml_demo))
+    core, kq = qua_core(raw)
+    assert kq["trang_thai"] == "XONG", kq
+    assert core.so_lan_ghi["tep"] == 1
+
+
+def test_json_dung_tran_duoc_upload(xml_demo, monkeypatch):
+    import e_hoa_don.chay as chay_module
+    _, bao_cao = doc_xml(xml_demo, tep_xml={})
+    monkeypatch.setattr(chay_module, "doc_xml", lambda *args, **kwargs: ({}, bao_cao))
+    monkeypatch.setattr(chay_module, "JSON_TOI_DA_BYTE", len(bao_cao))
+
+    class ViecDemo:
+        dau_vao = {"tep": {"tep_id": "DEMO"}}
+
+        def tien_do(self, *args):
+            pass
+
+        def mo_tep(self, tep_id):
+            return io.BytesIO(xml_demo)
+
+        def kiem_huy(self):
+            pass
+
+        def tai_tep_ra(self, ten, du_lieu, mime):
+            assert du_lieu == bao_cao
+            return {"tep_id": "DEMO-BAO-CAO"}
+
+    kq = doc_hoa_don(ViecDemo())
+    assert kq["truong"]["chi_tiet_nguon"] == {"tep_id": "DEMO-BAO-CAO"}
+
+
+@pytest.mark.parametrize("so_dong", [1001, 200000])
+def test_vuot_tran_dong_hang_chan_truoc_dto_json(xml_demo, monkeypatch, so_dong, capsys):
+    import e_hoa_don.doc as doc
+    raw = re.sub(
+        b"<DSHHDVu>.*?</DSHHDVu>",
+        b"<DSHHDVu>" + b"<HHDVu/>" * so_dong + b"</DSHHDVu>",
+        xml_demo, flags=re.S,
+    )
+    assert len(raw) < MAX_XML_BYTES
+
+    def cam_dung_dto(*args, **kwargs):
+        raise AssertionError("Phải chặn trước parser lõi và trước dựng JSON.")
+
+    monkeypatch.setattr(doc, "doc_hoa_don_xml", cam_dung_dto)
+    core, kq = qua_core(raw)
+    assert kq["trang_thai"] == "LOI" and kq["ket_qua"] is None
+    assert (kq["loi"]["ma"], kq["loi"]["thong_diep"]) == (
+        "HD_QUA_NHIEU_DONG_HANG",
+        "Tệp XML vượt giới hạn 1.000 dòng hàng hóa. Anh hãy gửi tệp ít dòng hơn.",
+    )
+    assert core.so_lan_ghi["tep"] == core.so_lan_ghi["ket_qua"] == 0
+    output = capsys.readouterr()
+    assert "0100000001" not in output.out + output.err + json.dumps(kq["loi"])
+
+
+def test_dung_tran_1000_dong_giu_du_thu_tu_va_occurrence(xml_demo):
+    raw = re.sub(
+        b"<DSHHDVu>.*?</DSHHDVu>",
+        b"<DSHHDVu>" + b"<HHDVu><STT>0001</STT><MHHDVu>DEMO</MHHDVu></HHDVu>" * 1000 + b"</DSHHDVu>",
+        xml_demo, flags=re.S,
+    )
+    t, d, _ = thanh_cong(raw)
+    assert t["so_dong"] == len(d["lines"]) == 1000
+    assert d["lines"][0]["source_locator"].endswith("HHDVu[1]")
+    assert d["lines"][-1]["source_locator"].endswith("HHDVu[1000]")
+    for dong in d["lines"]:
+        stt = next(f for f in dong["fields"] if f["name"] == "STT")
+        assert stt["occurrences"][0]["lexeme"] == "0001"
+
+
+def test_tien_kiem_khong_dem_hhdvu_trong_comment_cdata(xml_demo):
+    raw = xml_demo.replace(
+        b"</DSHHDVu>", b"<!--" + b"<HHDVu/>" * 1001 + b"--></DSHHDVu>"
+    )
+    raw = re.sub(
+        b"<THHDVu>.*?</THHDVu>",
+        b"<THHDVu><![CDATA[DEMO " + b"<HHDVu/>" * 1001 + b"]]></THHDVu>", raw, flags=re.S,
+    )
+    t, d, _ = thanh_cong(raw)
+    assert t["so_dong"] == len(d["lines"]) == 1
+
+
+def test_tien_kiem_dung_ngay_o_dong_1001_truoc_duoi_xml_hong():
+    raw = b"<HDon>" + b"<HHDVu/>" * 1001 + b"<DEMO-DUOI-HONG"
+    with pytest.raises(LoiNghiepVu) as exc:
+        doc_xml(raw, tep_xml={})
+    assert exc.value.ma == "HD_QUA_NHIEU_DONG_HANG"

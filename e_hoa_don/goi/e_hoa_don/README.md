@@ -1,10 +1,12 @@
-# Đọc XML hóa đơn — HD-0
+# Đọc XML hóa đơn — HD-1
 
 Gói SDK 2.0.0, phiên bản 1.0.0; một năng lực `hoa_don.doc_xml@2` nhận `tep` XML và trả `truong`. Bộ đọc strict chỉ hỗ trợ profile `DEMO_M2_XML_QD1271_FIELDS_V1`. Đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật.
 
 ## Dữ liệu vào và ra
 
 Đầu vào là tham chiếu tệp của Core, MIME `application/xml` hoặc `text/xml`, tối đa 16 MiB; handler đọc tối đa 16 MiB + 1 trước parse. Thời hạn bước 600 giây, hỗ trợ hủy qua SDK. Không nhận đường dẫn máy hoặc context từ tham số; `tham_so` và `loai_du_lieu_rieng` đều rỗng.
+
+Trần vận hành **1.000 dòng hàng hóa (`HHDVu`) trên một XML**. Lý do: mỗi dòng sinh nhiều DTO/occurrence/locator trong JSON; kiểm HD-0 đã ghi nhận ca 200.000 dòng mất 66 giây và giới hạn 32 MiB chỉ chặn sau khi dựng JSON. Chọn 1.000 để giới hạn sớm mức khuếch đại theo số dòng trong đợt DEMO, chưa có corpus thật để hiệu chỉnh; đây không phải giới hạn pháp lý của hóa đơn. XML parser tiền kiểm chỉ đếm sự kiện mở phần tử, không dựng cây/DTO/JSON, dừng ngay ở dòng 1.001 bằng `LoiNghiepVu("HD_QUA_NHIEU_DONG_HANG", "Tệp XML vượt giới hạn 1.000 dòng hàng hóa. Anh hãy gửi tệp ít dòng hơn.")`. Đếm mọi phần tử `HHDVu` không namespace, gồm dòng rỗng hoặc trùng STT/mã hàng; không đếm chuỗi trong comment/CDATA, không cắt dòng. Bộ đọc strict vẫn kiểm path/namespace và bảo toàn occurrence cho đầu vào trong trần.
 
 18 trường trả về đúng phiếu giao §2.2:
 
@@ -25,7 +27,7 @@ Số hóa đơn giữ chuỗi và số 0 đầu. Tiền lấy đúng nguồn, v�
 
 SDK hiện chưa có cửa context nghiệp vụ được kiểm quyền. Handler luôn truyền `context=None`: đọc nguồn có thể `XONG` nhưng `can_kiem_tra=true`, giữ `CONTEXT_ABSENT`, `IDENTITY_UNRESOLVED`, định danh và semantic digest `null`. Thuế luôn `UNKNOWN`, ghi nhận nghiệp vụ `NOT_PERFORMED`. Đây là bước đọc kỹ thuật; không chứng nhận chữ ký số, hợp lệ thuế hoặc đủ điều kiện hạch toán.
 
-XML hỏng/ngoài cấu trúc hỗ trợ trả `LoiNghiepVu` mã `HD_XML_KHONG_DOC_DUOC`, câu tiếng Việt cố định không chứa nội dung/đường nguồn. Cảnh báo chỉ gồm mã do lõi sinh và câu cố định; chi tiết kỹ thuật được lưu trong kho tệp Core.
+XML hỏng trả `HD_XML_KHONG_DOC_DUOC`; encoding/DOCTYPE/namespace/path ngoài profile trả `HD_XML_NGOAI_PROFILE`. Bytes thực vượt 16 MiB trả `HD_XML_QUA_LON`; JSON vượt 32 MiB trả `HD_KET_QUA_QUA_LON` trước upload. Trần dòng không thay trần bytes/JSON: nhiều occurrence hoặc nội dung dài vẫn có thể vượt 32 MiB dù ít dòng. Các lỗi dùng `LoiNghiepVu`, câu tiếng Việt cố định không chứa nội dung/đường nguồn. Cảnh báo chỉ gồm mã do lõi sinh và câu cố định; chi tiết kỹ thuật được lưu trong kho tệp Core.
 
 ## Cấu hình máy
 
@@ -51,4 +53,4 @@ Fixture nhỏ `demo/hoa-don-DEMO.xml` hoàn toàn giả: hóa đơn `0000123`, n
 
 ## Phạm vi bàn giao
 
-Chỉ đăng ký `hoa_don.doc_xml@2`. Lead/Core quản lý phiên bản và chuyển quy trình `@1` sang `@2`; giữ bản cũ tại `ma-nguon/`. Mã ZIP đi cùng lõi là phần nội bộ chưa kích hoạt, không có handler hay DEMO ZIP. ZIP/bảng kê/tải/Node/Cloud/cổng thuế còn chờ quyết định riêng. Không sửa hoặc lưu trữ lại mã tham chiếu trong HD-0. Các lát HD-1…HD-4 vẫn theo phiếu; kiểm Windows hiện tại không thay kiểm máy sạch Linux hoặc nghiệm thu Core thật.
+Chỉ đăng ký `hoa_don.doc_xml@2`. Lead/Core quản lý phiên bản và chuyển quy trình `@1` sang `@2`; giữ bản cũ tại `ma-nguon/`. Mã ZIP đi cùng lõi là phần nội bộ chưa kích hoạt, không có handler hay DEMO ZIP. ZIP/bảng kê/tải/Node/Cloud/cổng thuế còn chờ quyết định riêng. Không sửa hoặc lưu trữ lại mã tham chiếu. HD-1 đã kiểm bằng Core giả (CoreGia); các lát HD-2…HD-4 vẫn theo phiếu. Kiểm Windows hiện tại không thay kiểm máy sạch Linux hoặc nghiệm thu Core thật.

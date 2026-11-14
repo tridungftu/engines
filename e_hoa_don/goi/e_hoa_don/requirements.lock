@@ -1,0 +1,3 @@
+# Runtime: chỉ SDK 2.0.0 và thư viện chuẩn; cài wheel offline trong repo.
+kho_tri_thuc_sdk==2.0.0 \
+    --hash=sha256:a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892

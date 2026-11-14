@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ktt:e_hoi_ai:cau_hinh_may:1",
+  "title": "Cấu hình máy Hỏi AI — không chứa bí mật",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "local_ai"
+  ],
+  "properties": {
+    "local_ai": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "timeout_giay"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "pattern": "^https?://\\S+$",
+          "description": "Địa chỉ Local AI; không chứa tài khoản, truy vấn hay fragment. Kiểm mạng nội bộ ở AI-1."
+        },
+        "timeout_giay": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "quy_tac_model": {
+      "type": "array",
+      "description": "Không khai tương đương chưa đặt quy tắc chọn model.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "mau_ma_prompt",
+          "uu_tien",
+          "du_phong"
+        ],
+        "properties": {
+          "mau_ma_prompt": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uu_tien": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "du_phong": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          }
+        }
+      }
+    }
+  }
+}

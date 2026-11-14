@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_hoi_ai",
   "ten": "Hỏi AI",
-  "phien_ban": "0.3.0",
+  "phien_ban": "0.4.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -137,6 +137,54 @@
         "phien_ban_prompt": "1",
         "prompt": "DEMO: Số tiền và ngày thanh toán là bao nhiêu?"
       }
+    },
+    {
+      "nang_luc": "ai.hoi_tai_lieu@1",
+      "ten": "Hỏi người bảo lãnh không có trong tài liệu DEMO",
+      "dau_vao": {
+        "loai": "van_ban",
+        "van_ban": "DEMO — Hợp đồng DEMO-001 của Công ty DEMO Ánh Dương. Số tiền thanh toán là 1.000.000 VND. Ngày thanh toán là 30/10/2026."
+      },
+      "tham_so": {
+        "ma_prompt": "demo.hoi_nguoi_bao_lanh",
+        "phien_ban_prompt": "1",
+        "prompt": "DEMO: Ai là người bảo lãnh hợp đồng?"
+      }
+    },
+    {
+      "nang_luc": "ai.hoi_theo_yeu_cau@1",
+      "ten": "Trích tiền và ngày theo khuôn DEMO",
+      "dau_vao": {
+        "loai": "yeu_cau_ai",
+        "yeu_cau_ai": {
+          "phien_ban": 1,
+          "ma_prompt": "demo.trich_tien_ngay",
+          "phien_ban_prompt": "1",
+          "prompt": "DEMO: Trích số tiền kèm mã tiền tệ và ngày thanh toán YYYY-MM-DD, có trích dẫn nguyên văn.",
+          "tai_lieu": "DEMO — Hợp đồng DEMO-001 của Công ty DEMO Ánh Dương. Số tiền thanh toán là 1.000.000 VND. Ngày thanh toán là 30/10/2026.",
+          "khuon_tra_loi": {
+            "type": "object",
+            "required": ["so_tien", "ngay"],
+            "additionalProperties": false,
+            "properties": {
+              "so_tien": {
+                "type": "object",
+                "required": ["so", "tien_te"],
+                "additionalProperties": false,
+                "properties": {
+                  "so": {"type": "integer", "minimum": 0},
+                  "tien_te": {"const": "VND"}
+                }
+              },
+              "ngay": {"type": "string", "enum": ["2026-10-30"]}
+            }
+          },
+          "bat_buoc_trich_dan": true,
+          "model_uu_tien": null,
+          "chuyen_tiep": {"nhan": "DEMO", "ma_hop_dong": "DEMO-001"}
+        }
+      },
+      "tham_so": {}
     }
   ],
   "bi_mat": [],

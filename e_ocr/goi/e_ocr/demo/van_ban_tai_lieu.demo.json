@@ -1,0 +1,40 @@
+{
+  "loai": "van_ban_tai_lieu",
+  "van_ban_tai_lieu": {
+    "phien_ban": 1,
+    "van_ban": "Công ty DEMO Ánh Dương — 1.000.000 VND — 2026-10-30",
+    "trang": [
+      {
+        "so": 1,
+        "rong": 595.0,
+        "cao": 842.0,
+        "don_vi": "pt",
+        "khoi": [
+          {
+            "loai": "doan",
+            "van_ban": "Công ty DEMO Ánh Dương — 1.000.000 VND — 2026-10-30",
+            "hop": [10, 10, 500, 30],
+            "dong": [
+              {
+                "van_ban": "Công ty DEMO Ánh Dương — 1.000.000 VND — 2026-10-30",
+                "hop": [10, 10, 500, 30],
+                "tu": [{"van_ban": "DEMO", "hop": [50, 10, 90, 30], "nghi_ngo": false}]
+              }
+            ]
+          },
+          {
+            "loai": "bang",
+            "hop": [10, 50, 500, 100],
+            "o": [{"hang": 0, "cot": 0, "gop_hang": 1, "gop_cot": 2, "van_ban": ""}]
+          }
+        ]
+      }
+    ],
+    "nguon_doc": "lop_chu_san",
+    "ly_do_chuyen_nguon": null,
+    "so_trang": 1,
+    "phien_ban_engine": "e_ocr 1.0.0",
+    "bam_dau_vao": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "canh_bao": []
+  }
+}

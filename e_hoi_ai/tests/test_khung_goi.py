@@ -45,8 +45,9 @@ def test_doc_phieu_va_khai_bao_dung_hop_dong():
                and nl["huy_duoc"] for nl in engine.phieu["nang_luc"])
     assert engine.phieu["tai_nguyen"]["so_viec_dong_thoi"] == 1
     assert engine.phieu["bi_mat"] == []
-    assert len(engine.phieu["chay_thu_demo"]) == 1
+    assert len(engine.phieu["chay_thu_demo"]) == 3
     assert engine.phieu["chay_thu_demo"][0]["nang_luc"] == "ai.hoi_tai_lieu@1"
+    assert {vd["nang_luc"] for vd in engine.phieu["chay_thu_demo"]} == set(engine.cac_nang_luc)
 
 
 @pytest.mark.parametrize("ma", ["van_ban_tai_lieu", "yeu_cau_ai", "tra_loi_ai"])
@@ -62,7 +63,7 @@ def test_schema_trong_goi_trung_bam_nguon_chung(ma):
 
 
 @pytest.mark.parametrize("loai", ["van_ban", "van_ban_tai_lieu", "yeu_cau_ai"])
-def test_core_gia_thieu_cau_hinh_hoac_nang_luc_chua_lam_khong_co_ket_qua(loai, monkeypatch, tmp_path):
+def test_core_gia_thieu_cau_hinh_khong_co_ket_qua(loai, monkeypatch, tmp_path):
     monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tmp_path / "chua-co-demo.json"))
     if loai == "van_ban":
         du_lieu = "Công ty DEMO Ánh Dương, hợp đồng DEMO-001."
@@ -79,7 +80,7 @@ def test_core_gia_thieu_cau_hinh_hoac_nang_luc_chua_lam_khong_co_ket_qua(loai, m
                                {"ma_prompt": "demo.hoi", "phien_ban_prompt": "1", "prompt": "Câu hỏi DEMO"}
                                if loai != "yeu_cau_ai" else {})
     assert ket_qua["trang_thai"] == "LOI"
-    assert ket_qua["loi"]["ma"] == ("CHUA_LAM" if loai == "yeu_cau_ai" else "CHUA_CAU_HINH")
+    assert ket_qua["loi"]["ma"] == "CHUA_CAU_HINH"
     assert ket_qua["ket_qua"] is None
     assert not ket_qua["loi"]["thu_lai_duoc"]
 

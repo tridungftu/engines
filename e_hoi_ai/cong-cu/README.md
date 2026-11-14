@@ -1,7 +1,6 @@
 ﻿# Thử Local AI bằng DEMO
-
-1. Cài Python 3.11+, tạo `.venv` tại gốc worktree và cài SDK 2.0.0 từ wheel trong repo.
-2. Chạy `e_hoi_ai\cong-cu\THU-LOCAL-AI-THAT.cmd` để kiểm tra chế độ khô, không gọi mạng.
-3. Trên máy có Tailscale, chạy trong Command Prompt: `e_hoi_ai\cong-cu\THU-LOCAL-AI-THAT.cmd --that --url http://<IP-LOCAL>:<PORT>`.
-4. Xem bảng từng model và tệp `ket-qua-local-demo-*.json` trong thư mục chạy; ca Local tắt là giả lập, Cloud phải bằng 0.
-5. Ca hiện dùng DEMO trong manifest trên nhánh AI-3; bộ AI-4 chưa có trên nhánh này và cần đối chiếu sau khi gộp.
+1. Cài Python 3.11+ và Python Launcher (`py`) trên Windows.
+2. Chạy `e_hoi_ai\cong-cu\THU-LOCAL-AI-THAT.cmd`; nếu thiếu `.venv`, công cụ tự tạo và cài SDK từ wheel trong repo.
+3. Mặc định là chạy khô, không gọi mạng; chạy thật từ Command Prompt với `e_hoi_ai\cong-cu\THU-LOCAL-AI-THAT.cmd --that --url http://<IP Tailscale máy AI>:<cổng>`.
+4. Công cụ thử từng model với ba ca `chay_thu_demo` trong `engine.json`, hiển thị đáp án, trích dẫn và thời gian.
+5. Xem tệp `ket-qua-local-demo-*.json` trong thư mục chạy; ca Local tắt là giả lập, số lượt Cloud phải bằng 0.

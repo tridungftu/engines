@@ -1,0 +1,10 @@
+{
+  "abbyy": {
+    "bat": false,
+    "thu_muc_vao": "",
+    "thu_muc_ra": "",
+    "thoi_han_giay": 900,
+    "han_muc_trang_30_ngay": 5000
+  },
+  "tesseract": {"duong_dan": "", "ngon_ngu": "vie+eng"}
+}

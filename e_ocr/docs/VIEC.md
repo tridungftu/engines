@@ -8,6 +8,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | OCR-0 | Khung SDK 2.0, cấu hình máy, kho tạm, schema chung và kiểm độc lập | OCR-6 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã đạt tiêu chí riêng của OCR-0; kết quả DEMO chung và giới hạn xem bên dưới |
 | OCR-1 | Đọc lớp chữ PDF và ABBYY Hot Folder cục bộ; hai action đọc dùng chung lõi | OCR-2, 3, 4, 7, 15 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 2/2, pytest 119 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
 | OCR-2 | Chọn nguồn, hạn mức 30 ngày và dự phòng Tesseract; vendor PDF/DOCX/bảng | OCR-8 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), mock CI và Tesseract thật bằng DEMO; bằng chứng OCR-2 bên dưới |
+| OCR-3 | Xuất Word từ cấu trúc tài liệu, giữ ô trống/ô gộp, vị trí bảng và thứ tự trang | OCR-4, 5 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 3/3, pytest 145 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
 | 1 | Đóng gói độc lập theo cổng chung; thay hàm SDK riêng `ocr_*_luot` bằng lượt bền chung khi Core có | OCR-6, 13 | Đang làm 14/11/2026 | Có khung OCR-0; chuyển lõi ở OCR-1…OCR-4, không sửa `ma-nguon/` |
 | 2 | Bổ sung nguồn dự phòng mask_ocr/Tesseract | OCR-8 | Xong 14/11/2026 | OCR-2 dùng CLI và pypdfium2 đã ghim, không thêm dependency. Máy đích xem **Cần cài** |
 | 3 | Màn hạn mức ABBYY / trạng thái máy (giao diện của engine) | OCR-8 | Chờ làm |  |
@@ -21,6 +22,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Lượt bền chung #10 giữ/chốt/đọc (đợt 2): thay phần lưu lượt tạm ở OCR-4 khi Core có. Không dùng hàm `ocr_*_luot` cũ.
 - Bí mật theo tên, nhật ký kỹ thuật và thẻ trạng thái chung để thay phần trạng thái/hạn mức ABBYY; đợt 1 không làm giao diện riêng hay cầu nối có khóa.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
+- OCR-3 không phát sinh thiếu hụt Core/SDK: tải DOCX ra bằng API chung `viec.tai_tep_ra`, không cần kênh ACK hoặc sổ bàn giao riêng.
 
 ## Cần cài — nguồn Tesseract trên máy đích (14/11/2026)
 
@@ -255,6 +257,62 @@ Mã thoát: 0; 2/2 ĐẠT.
 Mã thoát: 0; 0 skipped, có test Tesseract thật.
 
 > .venv\Scripts\python -B e_ocr/tests/kiem_doc_lap.py
+## Bằng chứng OCR-3 — 14/11/2026
+
+- Nhánh: `codex/e_ocr-ocr-3`; PR: **chờ lead mở**. Không chạy commit/push.
+  Tiêu đề đề xuất: `[e_ocr] OCR-3 — Xuất Word giữ bảng, ô trống và ô gộp`.
+- Thời gian thực tế: **14/11/2026, 23:02–23:14** (12 phút, khoảng
+  **0,20 giờ**), so với **3 giờ ước tính** trong phiếu; giờ Việt Nam.
+- `ocr.xuat_word@1` nhận `tep`, gọi `trich_van_ban` như hai action đọc,
+  rồi dựng DOCX từ `van_ban_tai_lieu`; trả phong bì `tep` bằng
+  `viec.tai_tep_ra(ten, bytes, mime)`, tên `<tên gốc không phần mở rộng>-OCR.docx`.
+  Không đọc lại/OCR lại nguồn để xuất Word; không giữ nội dung trên đĩa.
+- Logic tách trong `xuat_word.py` và `ban_giao.py`; `chay.py` sửa tối thiểu,
+  giữ điểm nối chung cho OCR-2. Tổng cộng **4 tệp mã** thêm/sửa, gồm
+  `__init__.py` đồng bộ phiên bản 1.0.2; không sửa `van_ban.py`, `bang.py`
+  hoặc mã nguồn cũ. Khi gộp OCR-2, lead hợp nhất phiên bản/DEMO trong phiếu.
+- Giữ ô trống và ô gộp ngang/dọc bằng `gridSpan`/`vMerge`, kể cả ô gộp
+  hai chiều và ô gộp rỗng; nội dung ô gốc chỉ xuất một lần. Kiểm lưới đủ
+  và không chồng ô; thiếu ô thì từ chối, không tự thêm ô trống.
+- Ghi tọa độ bảng `pt` bằng `tblpPr` neo theo trang, độ rộng cột từ tọa độ
+  ô nếu có; không có tọa độ từng ô thì chia đều khoảng chưa có mốc. Giữ
+  khổ trang, hướng ngang/dọc, thứ tự trang theo `so` và thứ tự khối; mỗi
+  trang nguồn thành một section. Có đoạn ngăn giữa hai bảng liên tiếp.
+- Không chuẩn hóa tiền/ngày; giữ nguyên dấu tiếng Việt, dấu XML, khoảng
+  trắng, tab và xuống dòng. Từ chối dữ liệu không hợp lệ, bảng quá trần,
+  quá trang/ký tự và tên tệp ra quá dài; hủy/chưa rõ không nộp kết quả giả.
+- Thêm PDF DEMO có bảng 3 trang từ bộ sinh sẵn có và ví dụ chạy thử Word
+  trong phiếu. Test mở lại ZIP/XML để đếm đủ lưới 4×4, 11 `tc`, 5 `gridSpan`,
+  `vMerge restart/continue`, 4 ô gốc rỗng; kiểm cả bảng từ parser PDF thật,
+  tiền/ngày nguyên văn, tọa độ, thứ tự trang và tên/MIME/tệp tải từ CoreGia.
+- **Đã kiểm bằng Core giả (CoreGia)** trên Windows x64, Python 3.13.14;
+  không chạy ABBYY/Core/Word thật hoặc Linux. Test dùng thư viện chuẩn và
+  seam nguồn đọc, không phụ thuộc Windows. Kiểm thêm bằng `python-docx`
+  sẵn có: mở được DOCX, 2 section, bảng 4×4, nhận đúng ô gộp 2×2 và ô rỗng;
+  công cụ này không là dependency runtime hoặc điều kiện chạy pytest.
+
+### Kết quả ba lệnh bắt buộc OCR-3
+
+Lượt kiểm cuối đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`; cả ba lệnh
+có mã thoát **0**. Đầu ra SDK dưới đây chỉ lược phần payload hai DEMO đọc
+đã có ở OCR-1; dòng Word và tổng kết giữ nguyên:
+
+```text
+> .venv\Scripts\python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+[ĐẠT] Đọc PDF DEMO có lớp chữ và vị trí, 3 trang: …
+[ĐẠT] Đọc văn bản thuần từ PDF DEMO có lớp chữ, 3 trang: …
+[ĐẠT] Xuất Word giữ bảng từ PDF DEMO có lớp chữ, 3 trang: {"loai": "tep", "tep": {"tep_id": "tep-7", "ten": "DEMO-bang-3-trang-OCR.docx", "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "kich_thuoc": 1598}}
+Engine e_ocr 1.0.2: mọi ví dụ chạy thử DEMO đều đạt.
+Kết quả: 3/3 ĐẠT; mã thoát 0.
+
+> .venv\Scripts\python -m pytest e_ocr/tests -q
+........................................................................ [ 49%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+145 passed in 8.43s
+Mã thoát: 0; 0 skipped.
+
+> .venv\Scripts\python e_ocr/tests/kiem_doc_lap.py
 [ĐẠT] Gói e_ocr độc lập; không import Core/kênh cũ, không có tệp biên dịch sẵn.
 Mã thoát: 0.
 ```
@@ -294,3 +352,21 @@ không báo lỗi.
 - Không phát sinh yêu cầu Core/câu hỏi mới cho Anh. Giữ các mục **Cần Core**
   hiện có; máy đích cài/kiểm Tesseract theo mục **Cần cài**. Bộ DEMO chung
   cho scan/Word vẫn thuộc OCR-5, khóa hash wheel/máy sạch thuộc OCR-6.
+### Lệch, quyết định tạm và giới hạn OCR-3
+
+- Bản `ma-nguon/vendor/mask_ocr` trong repo chỉ chứa parser/layout, không
+  có bộ ghi Word để chép nguyên. Chuyển thể quy tắc ô gộp từ `bang.py` và
+  `word_layout` sang chiều xuất; dựng ZIP/XML bằng thư viện chuẩn. Không
+  thêm thư viện hoặc chép import PyMuPDF/defusedxml chưa được ghim.
+- `ban_giao.py` cũ phụ thuộc `CongOCR`/SDK/ACK cũ: chỉ chuyển vai trò bàn
+  giao sang SDK 2.0 như phiếu yêu cầu. Không mang sổ ACK/lease/nội dung cũ
+  vào gói. Phần cũ giữ nguyên để chuyển `LUU-TRU/` sau, không xóa.
+- Tọa độ hỗ trợ `pt` như đầu ra OCR-1. Đơn vị khác bị từ chối, không đoán
+  DPI. Row height dùng `atLeast` để tránh cắt chữ; Word có thể dàn lại theo
+  font máy. Đã kiểm tọa độ trong XML, chưa kiểm hình thức bằng Word thật;
+  không cam kết khớp từng pixel với bản gốc hoặc nhận ra bảng chỉ có trong ảnh.
+- SDK wheel 2.0.0 cài offline trong `.venv --system-site-packages`, SHA-256
+  khớp `SHA256SUMS.txt`; dùng dependency/pytest sẵn có, chưa là kiểm máy sạch
+  OCR-6. Đã cập nhật README/CHANGELOG/NGUON và băm mọi tệp gói.
+- Cần Core / Chờ Anh mới: **không phát sinh**. Không thay đổi các mục chờ
+  có sẵn; không tự mở kết nối ABBYY hoặc cài phần mềm hệ thống.

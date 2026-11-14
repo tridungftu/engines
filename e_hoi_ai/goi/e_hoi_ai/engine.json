@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_hoi_ai",
   "ten": "Hỏi AI",
-  "phien_ban": "0.1.0",
+  "phien_ban": "0.4.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -47,6 +47,11 @@
           "ma": "model",
           "ten": "Model",
           "kieu": "van_ban"
+        },
+        {
+          "ma": "ly_do_chon_model",
+          "ten": "Lý do chọn model",
+          "kieu": "van_ban"
         }
       ],
       "gioi_han": {
@@ -73,7 +78,8 @@
           "ten": "Yêu cầu của chức năng",
           "kieu": "van_ban",
           "bat_buoc": true,
-          "mo_ta": "Module cung cấp yêu cầu; engine không có prompt mặc định chung."
+          "mac_dinh": "",
+          "mo_ta": "Module bắt buộc cung cấp yêu cầu. Chuỗi rỗng chỉ để engine trả mã THIEU_PROMPT, không dùng để hỏi AI."
         },
         {
           "ma": "model_uu_tien",
@@ -118,7 +124,21 @@
   "readiness": {
     "thoi_han_giay": 30
   },
-  "chay_thu_demo": [],
+  "chay_thu_demo": [
+    {
+      "nang_luc": "ai.hoi_tai_lieu@1",
+      "ten": "Hỏi số tiền và ngày thanh toán DEMO",
+      "dau_vao": {
+        "loai": "van_ban",
+        "van_ban": "DEMO — Hợp đồng DEMO-001 của Công ty DEMO Ánh Dương. Số tiền thanh toán là 1.000.000 VND. Ngày thanh toán là 30/10/2026."
+      },
+      "tham_so": {
+        "ma_prompt": "demo.hoi",
+        "phien_ban_prompt": "1",
+        "prompt": "DEMO: Số tiền và ngày thanh toán là bao nhiêu?"
+      }
+    }
+  ],
   "bi_mat": [],
   "webhook": null
 }

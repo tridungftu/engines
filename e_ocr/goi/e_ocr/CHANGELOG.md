@@ -1,5 +1,9 @@
 # Thay đổi
 
+## 1.0.3 — 14/11/2026 — Gộp OCR-2 và OCR-3
+
+- Hợp nhất chọn nguồn và xuất Word qua cùng lõi nhận dạng.
+
 ## 1.0.2 — 14/11/2026 — OCR-2
 
 - Thêm `chon_nguon.py`, `tesseract.py` riêng; giữ nguyên `chay.py` để ghép
@@ -14,6 +18,20 @@
   ASCII để Anh tự chạy, hướng dẫn ở `VIEC.md` mục **Cần cài**.
 - **Đã kiểm bằng Core giả (CoreGia)**, mock cho CI và Tesseract thật bằng
   DEMO trên Windows; chưa kiểm Linux, ABBYY/Core thật hoặc cài máy sạch.
+## 1.0.2 — 14/11/2026 — OCR-3
+
+- Nối `ocr.xuat_word@1` vào lõi đọc chung, dựng DOCX trong bộ nhớ và gửi
+  bằng `viec.tai_tep_ra`; tên `<tên gốc không phần mở rộng>-OCR.docx`.
+- Giữ văn bản, ô trống, `gridSpan`/`vMerge` kể cả gộp hai chiều; kiểm đủ
+  lưới ô, không tự thêm ô thiếu. Bảng giữ tọa độ point và kích thước lưới;
+  mỗi trang nguồn là một section Word, giữ thứ tự và khổ trang.
+- Tách `xuat_word.py`/`ban_giao.py`, không phụ thuộc kênh Core cũ, không
+  ghi nội dung ra đĩa hoặc thêm dependency. Bản mask_ocr trong repo không
+  có bộ ghi Word; chuyển quy tắc cấu trúc từ parser sang OOXML thư viện chuẩn.
+- Thêm DEMO PDF có bảng 3 trang và test mở lại DOCX bằng zipfile/XML:
+  đủ ô trống, gộp ngang/dọc, tọa độ, phân trang, tiền/ngày nguyên văn.
+- Đã kiểm bằng Core giả (CoreGia); chưa kiểm Word/Core/ABBYY thật. Word
+  có thể dàn lại chữ theo font; không cam kết hình thức khớp từng pixel.
 
 ## 1.0.1 — 14/11/2026 — OCR-1
 

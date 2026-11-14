@@ -48,7 +48,7 @@ def test_tu_khai_bao_va_nap_goi_khi_thieu_cau_hinh():
 
 @pytest.mark.parametrize("nang_luc", ["ocr.xuat_word@1"])
 @pytest.mark.parametrize("nguon", [None, "chi_abbyy", "chi_tesseract"])
-def test_ham_tam_bao_chua_lam_qua_core_gia(nang_luc, nguon):
+def test_xuat_word_tu_choi_tep_hong_qua_core_gia(nang_luc, nguon):
     core = CoreGia()
     tep = core.them_tep("DEMO.png", b"DEMO", "image/png")
     kq = core.chay_thu(
@@ -56,7 +56,7 @@ def test_ham_tam_bao_chua_lam_qua_core_gia(nang_luc, nguon):
         {} if nguon is None else {"nguon": nguon},
     )
     assert kq["trang_thai"] == "LOI"
-    assert kq["loi"]["ma"] == "CHUA_LAM"
+    assert kq["loi"]["ma"] == "TEP_HONG"
     assert kq["loi"]["thu_lai_duoc"] is False
     assert kq["ket_qua"] is None
     assert core.so_lan_ghi["ket_qua"] == 0

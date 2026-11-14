@@ -1,4 +1,4 @@
-"""Đã kiểm bằng Core giả (CoreGia); AI-0 luôn từ chối xử lý nghiệp vụ."""
+"""Đã kiểm bằng Core giả (CoreGia); giữ các kiểm độc lập của AI-0."""
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -25,7 +25,8 @@ def test_doc_phieu_va_khai_bao_dung_hop_dong():
     assert tai_lieu["nhan"] == ["van_ban", "van_ban_tai_lieu"]
     assert tai_lieu["tra"] == "truong"
     assert {v["ma"]: v["kieu"] for v in tai_lieu["truong_ra"]} == {
-        "tra_loi": "van_ban", "co_can_cu": "co_khong", "trich_dan": "van_ban", "model": "van_ban"}
+        "tra_loi": "van_ban", "co_can_cu": "co_khong", "trich_dan": "van_ban", "model": "van_ban",
+        "ly_do_chon_model": "van_ban"}
     assert yeu_cau["nhan"] == ["yeu_cau_ai"]
     assert yeu_cau["tra"] == "tra_loi_ai"
     assert "truong_ra" not in yeu_cau
@@ -37,13 +38,15 @@ def test_doc_phieu_va_khai_bao_dung_hop_dong():
     assert set(tham_so) == {"ma_prompt", "phien_ban_prompt", "prompt", "model_uu_tien"}
     assert all(tham_so[k]["bat_buoc"] for k in ("ma_prompt", "phien_ban_prompt", "prompt"))
     assert not tham_so["model_uu_tien"]["bat_buoc"]
-    assert all("mac_dinh" not in tham_so[k] for k in ("ma_prompt", "phien_ban_prompt", "prompt"))
+    assert all("mac_dinh" not in tham_so[k] for k in ("ma_prompt", "phien_ban_prompt"))
+    # Sentinel rỗng giúp engine trả THIEU_PROMPT thay lỗi kiểm tham số chung của SDK.
+    assert tham_so["prompt"]["mac_dinh"] == ""
     assert all(nl["gioi_han"] == {"ky_tu_toi_da": 500000, "thoi_han_giay": 600}
                and nl["huy_duoc"] for nl in engine.phieu["nang_luc"])
     assert engine.phieu["tai_nguyen"]["so_viec_dong_thoi"] == 1
     assert engine.phieu["bi_mat"] == []
-    # AI-4 mới bổ sung các ví dụ hỏi AI hoàn chỉnh.
-    assert engine.phieu["chay_thu_demo"] == []
+    assert len(engine.phieu["chay_thu_demo"]) == 1
+    assert engine.phieu["chay_thu_demo"][0]["nang_luc"] == "ai.hoi_tai_lieu@1"
 
 
 @pytest.mark.parametrize("ma", ["van_ban_tai_lieu", "yeu_cau_ai", "tra_loi_ai"])
@@ -59,7 +62,7 @@ def test_schema_trong_goi_trung_bam_nguon_chung(ma):
 
 
 @pytest.mark.parametrize("loai", ["van_ban", "van_ban_tai_lieu", "yeu_cau_ai"])
-def test_core_gia_nhan_loi_chua_lam_khong_co_ket_qua(loai, monkeypatch, tmp_path):
+def test_core_gia_thieu_cau_hinh_khong_co_ket_qua(loai, monkeypatch, tmp_path):
     monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tmp_path / "chua-co-demo.json"))
     if loai == "van_ban":
         du_lieu = "Công ty DEMO Ánh Dương, hợp đồng DEMO-001."
@@ -76,7 +79,7 @@ def test_core_gia_nhan_loi_chua_lam_khong_co_ket_qua(loai, monkeypatch, tmp_path
                                {"ma_prompt": "demo.hoi", "phien_ban_prompt": "1", "prompt": "Câu hỏi DEMO"}
                                if loai != "yeu_cau_ai" else {})
     assert ket_qua["trang_thai"] == "LOI"
-    assert ket_qua["loi"]["ma"] == "CHUA_LAM"
+    assert ket_qua["loi"]["ma"] == "CHUA_CAU_HINH"
     assert ket_qua["ket_qua"] is None
     assert not ket_qua["loi"]["thu_lai_duoc"]
 

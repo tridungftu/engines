@@ -381,3 +381,17 @@ def test_tesseract_that_neu_co_tren_may():
     assert "DEMO" in data["van_ban"] and "1.000.000 VND" in data["van_ban"]
     assert "30/10/2026" in data["van_ban"]
     assert data["nguon_doc"] == "tesseract" and data["trang"][0]["khoi"]
+
+
+def test_xuat_word_chon_tesseract(hot_folder, tess_gia):
+    vao, _, _ = hot_folder
+    core, kq = chay(pdf_demo(()), nang_luc="ocr.xuat_word@1", tham_so={"nguon": "chi_tesseract"})
+    assert kq["trang_thai"] == "XONG", kq
+    assert len(tess_gia) == 1 and not list(vao.iterdir())
+    assert core.doc_tep(kq["ket_qua"]["tep"]["tep_id"]).startswith(b"PK")
+
+
+def test_xuat_word_chi_abbyy_khong_du_phong(tess_gia):
+    core, kq = chay(pdf_demo(()), nang_luc="ocr.xuat_word@1", tham_so={"nguon": "chi_abbyy"})
+    assert kq["trang_thai"] == "LOI", kq
+    assert not tess_gia and core.so_lan_ghi["ket_qua"] == 0

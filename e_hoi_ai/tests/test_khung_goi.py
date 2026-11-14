@@ -45,8 +45,9 @@ def test_doc_phieu_va_khai_bao_dung_hop_dong():
                and nl["huy_duoc"] for nl in engine.phieu["nang_luc"])
     assert engine.phieu["tai_nguyen"]["so_viec_dong_thoi"] == 1
     assert engine.phieu["bi_mat"] == []
-    assert len(engine.phieu["chay_thu_demo"]) == 1
+    assert len(engine.phieu["chay_thu_demo"]) == 3
     assert engine.phieu["chay_thu_demo"][0]["nang_luc"] == "ai.hoi_tai_lieu@1"
+    assert {vd["nang_luc"] for vd in engine.phieu["chay_thu_demo"]} == set(engine.cac_nang_luc)
 
 
 @pytest.mark.parametrize("ma", ["van_ban_tai_lieu", "yeu_cau_ai", "tra_loi_ai"])

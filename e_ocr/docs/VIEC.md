@@ -10,10 +10,11 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | OCR-2 | Chọn nguồn, hạn mức 30 ngày và dự phòng Tesseract; vendor PDF/DOCX/bảng | OCR-8 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), mock CI và Tesseract thật bằng DEMO; bằng chứng OCR-2 bên dưới |
 | OCR-3 | Xuất Word từ cấu trúc tài liệu, giữ ô trống/ô gộp, vị trí bảng và thứ tự trang | OCR-4, 5 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 3/3, pytest 145 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
 | OCR-4 | Lượt chưa rõ theo phương án B, chống trùng bền và đối chiếu hạn mức sau khởi động lại | OCR-13, 14, 15 | Xong 15/11/2026 | Phiếu 14/11/2026; PR: **chờ lead mở**. SDK DEMO 3/3, pytest 218 passed, 0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia) |
+| OCR-5 | Bộ DEMO, sáu ví dụ chạy thử và OCR-MAY ca 2/3/4/5/7/9; sửa namespace Word | OCR-11, 15, 16 | Xong — phiếu 14/11/2026 | Thực hiện 15/11/2026; PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); SDK 6/6, pytest 239 passed, 0 skipped; bằng chứng bên dưới |
 | 1 | Đóng gói độc lập theo cổng chung; thay hàm SDK riêng `ocr_*_luot` bằng lượt bền chung khi Core có | OCR-6, 13 | Đang làm 14/11/2026 | Có khung OCR-0; chuyển lõi ở OCR-1…OCR-4, không sửa `ma-nguon/` |
 | 2 | Bổ sung nguồn dự phòng mask_ocr/Tesseract | OCR-8 | Xong 14/11/2026 | OCR-2 dùng CLI và pypdfium2 đã ghim, không thêm dependency. Máy đích xem **Cần cài** |
 | 3 | Màn hạn mức ABBYY / trạng thái máy (giao diện của engine) | OCR-8 | Chờ làm |  |
-| 4 | Bài máy test ca 1, 3, 8 | OCR-11 | Chờ làm |  |
+| 4 | Bài máy test còn lại ca 1, 6, 8 | OCR-11 | Chờ Core / thiết kế | Ca 3 đã kiểm bằng Core giả ở OCR-5; ca 1 chờ thẻ trạng thái, ca 6 chờ Đối chiếu, ca 8 chờ bí mật/cầu nối có khóa |
 | 5 | Lát 9: ABBYY thật trên máy hiện tại bằng PDF DEMO (Anh đã cho phép mở kết nối tạm) | OCR-12 | Chờ làm | Không chép `in\ out\ jobs\ state\` |
 | 6 | Ghép Core (K1–K6) → nghiệm thu tổng thể | — | Chờ Core |  |
 
@@ -24,6 +25,22 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Bí mật theo tên, nhật ký kỹ thuật và thẻ trạng thái chung để thay phần trạng thái/hạn mức ABBYY; đợt 1 không làm giao diện riêng hay cầu nối có khóa.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
 - OCR-3 không phát sinh thiếu hụt Core/SDK: tải DOCX ra bằng API chung `viec.tai_tep_ra`, không cần kênh ACK hoặc sổ bàn giao riêng.
+- OCR-5: cần mốc vào hàng chờ/nhận việc và số việc đang chờ qua cổng chung
+  để đo/hiện hàng chờ thật. SDK 2.0 chưa cấp mốc đó; hiện chỉ đo chờ nguồn
+  ABBYY trong action, test đếm trạng thái `CHO` của CoreGia. Không sửa API.
+- SDK 2.0 in traceback khi action ném ngoại lệ bất ngờ, có thể lộ nội dung
+  và đường dẫn. OCR-5 đã đổi lỗi bất ngờ tại cổng engine thành lỗi cố định;
+  cần cơ chế nhật ký an toàn chung của SDK/Core cho cả lỗi ngoài action.
+
+## Nợ — giữ nguyên ngoài phạm vi OCR-5
+
+Ba nợ OCR-4 do lead chuyển, **chưa vá trong lát này**:
+
+1. Khe đua giữa đọc trạng thái/`giu()` và lấy khóa lượt ở `chon_nguon.py`
+   (dòng 170–176 của nền OCR-4; OCR-5 chỉ thêm đo thời gian/nguồn tại đây).
+2. Lượt treo nếu tiến trình chết giữa `giu()` và thả tệp; chưa có bằng
+   chứng phân biệt trước/sau công bố thì không tự nhả hạn mức.
+3. PDF mồ côi sau biên nhận `.loi.json`; cần xử lý ở lát riêng.
 
 ## Cần cài — nguồn Tesseract trên máy đích (14/11/2026)
 
@@ -496,3 +513,101 @@ Mã thoát 0.
   do merge tự động không bị chỉnh sửa trong lượt giải gộp này.
 - Lệch mới / Cần Core / Chờ Anh mới: **không phát sinh**. Giữ lớp bọc tạm
   và quy ước biên nhận đã ghi; chưa kiểm Linux, ABBYY thật hoặc Core thật.
+
+
+## Bằng chứng OCR-5 — phiếu 14/11/2026, thực hiện 15/11/2026
+
+- Kết luận: **Đạt trong phạm vi OCR-5 — đã kiểm bằng Core giả (CoreGia)**.
+  Gói **1.0.5**, nhánh `codex/e_ocr-ocr-5`; PR: **chờ lead mở**.
+  Không commit/push. Tiêu đề đề xuất:
+  `[e_ocr] OCR-5 — Bộ DEMO và bài OCR-MAY trên Core giả`.
+- Thời gian thực tế: **15/11/2026, 00:17:00–00:33:50**, khoảng
+  **0.28 giờ**, so với **4 giờ ước tính** trong phiếu; giờ Việt Nam.
+- Đã chuyển bộ sinh từ `ma-nguon/tests/demo/tao_bo_demo.py` sang
+  `tests/demo/tao_bo_demo.py`. Không sửa mã cũ. PDF quét 3 trang chỉ có
+  ảnh bảng, PNG/JPEG 1 trang, Word/JSON đáp án có nhãn DEMO; bản ABBYY
+  giả riêng có lớp chữ và hình học bảng. Giữ tệp DEMO cũ làm tham chiếu.
+  Chỉ tệp nhỏ vào gói; PDF 61 trang, >20 MiB, tệp hỏng sinh ở tmp_path.
+  Tệp lớn nhất trong gói **366.400 bytes**; không thêm dependency.
+- Word đáp án luôn sinh bằng bộ ghi OOXML của gói, bỏ phụ thuộc tùy chọn
+  python-docx của mã cũ; không coi đáp án là kết quả nhận dạng. Đã mở lại
+  ZIP/XML để kiểm tên công ty/tiền/ngày, 3 bảng 4×3, mỗi bảng 10 ô gốc,
+  một ô trống và ô đầu gộp 3 cột; bản Word từ ABBYY giả kiểm tương tự.
+  Đã xem ảnh render trang PDF thật để xác nhận nhãn/chữ/bảng không cắt.
+- Sáu ví dụ SDK: PDF quét/PNG × ba năng lực, `nguon=chi_tesseract`.
+  `tests/chay_demo.py` gọi `CoreGia().chay_thu_demo`, cách ly cấu hình/kho
+  bằng thư mục DEMO tạm, tự dùng Tesseract giả nếu thiếu executable hoặc
+  vie+eng; `--gia` ép mock. Nguồn giả ở ngoài gói, không đổi engine thật.
+- `tests/test_ocr_may.py`: ca 2, 3, 4, 5, 7, 9 đã kiểm bằng Core giả.
+  Ca 3 thấy số chờ 3→2→1→0, PNG/JPEG đúng thứ tự; ảnh trùng nhận lại mã
+  lượt dở, chỉ gửi hai lần/tính hai trang; giao lại lấy đúng PDF trả muộn.
+  Chưa kiểm màn hình hàng chờ Core thật. Ca 1/6/8 ngoài đợt này: lần lượt
+  chờ thẻ trạng thái Core, thiết kế trích vùng cùng Đối chiếu, bí mật và
+  cầu nối có khóa; ghi rõ trong bài kiểm và YEU-CAU-VA-HIEN-TRANG.md.
+- Ca 4: Tesseract thật có đủ vie+eng, **9 đúng/0 sai/9 phép đối chiếu**
+  tên công ty/tiền/ngày trên 3 trang. Test lưu JSON số đo trong tmp_path,
+  có property trong JUnit. Nguồn giả 9/9 chỉ kiểm luồng, không đo OCR.
+  Không suy độ chính xác toàn văn/bảng ảnh hoặc áp ngưỡng Anh chưa chốt.
+- Ca 9: log JSON stderr có năng lực, trạng thái, nguồn và thời gian
+  chờ nguồn/chạy/tổng; kiểm thành công, Word, văn bản thuần, lớp chữ sẵn,
+  lỗi/hủy/CHUA_RO. Ca ngoại lệ bất ngờ có chứa nội dung/đường dẫn DEMO
+  vẫn không lộ: cổng đổi sang lỗi cố định trước khi SDK in traceback.
+  Giữ ngoại lệ transport/hủy/chưa rõ. Chờ là chờ ABBYY, không giả mốc
+  hàng chờ Core; action đã trả chưa bao gồm nộp kết quả/kết thúc SDK.
+- Sửa nợ OCR-3: đăng ký namespace `w`/`xml`; test kiểm document.xml dùng
+  `w:document`, có `xmlns:w`, không có `ns0:`. Ba nợ OCR-4 đã ghi ở mục
+  **Nợ**, không vá. Chỉ **5 tệp mã gói** thêm/sửa: chay, chon_nguon,
+  nhat_ky, xuat_word và metadata __init__; engine.json là phiếu.
+- Môi trường Windows x64, Python 3.13.14; `.venv --system-site-packages`,
+  SDK 2.0.0 cài offline từ wheel, SHA-256 khớp SHA256SUMS.txt. Dùng thư
+  viện đã ghim/sẵn có; chưa là cài máy sạch OCR-6. Chưa chạy Linux,
+  ABBYY hoặc Core thật. Không đọc hồ sơ thật hoặc Hot Folder thật.
+
+### Kết quả ba lệnh bắt buộc OCR-5
+
+Đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`. CLI SDK dùng cấu hình
+không tồn tại ở `.venv/khong-co-cau-hinh-DEMO.json` và dữ liệu tạm ở
+`.venv/kiem-ocr5-du-lieu-DEMO` qua hai biến KTT_ENGINE_*; không đọc cấu
+hình máy. Lượt CLI đầu dùng đích mặc định bị chặn quyền sandbox; đã chạy
+lại với đích DEMO trong worktree. Không thay mã để bỏ kiểm quyền.
+
+Đầu ra cuối thực tế, chỉ lược payload sáu dòng SDK cho ngắn:
+
+```text
+> .venv\Scripts\python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+[ĐẠT] Đọc tài liệu có vị trí — PDF quét 3 trang DEMO, chỉ Tesseract: …
+[ĐẠT] Đọc tài liệu có vị trí — ảnh PNG 1 trang DEMO, chỉ Tesseract: …
+[ĐẠT] Đọc văn bản thuần — PDF quét 3 trang DEMO, chỉ Tesseract: …
+[ĐẠT] Đọc văn bản thuần — ảnh PNG 1 trang DEMO, chỉ Tesseract: …
+[ĐẠT] Xuất Word giữ bảng — PDF quét 3 trang DEMO, chỉ Tesseract: …
+[ĐẠT] Xuất Word giữ bảng — ảnh PNG 1 trang DEMO, chỉ Tesseract: …
+Engine e_ocr 1.0.5: mọi ví dụ chạy thử DEMO đều đạt.
+Mã thoát 0; 6/6 ĐẠT, dùng Tesseract thật.
+
+> .venv\Scripts\python -m pytest e_ocr/tests -q -p no:cacheprovider -o junit_family=legacy --junitxml=.venv/kiem-ocr5-tat-ca.xml
+239 passed in 61.97s (0:01:01)
+Mã thoát 0; 0 skipped, có test Tesseract thật.
+
+> .venv\Scripts\python e_ocr/tests/kiem_doc_lap.py
+[ĐẠT] Gói e_ocr độc lập; không import Core/kênh cũ, không có tệp biên dịch sẵn.
+Mã thoát 0.
+```
+
+Kiểm bổ sung: `tests/chay_demo.py --gia` → **6/6 ĐẠT**, thông báo rõ
+“Đã kiểm bằng Core giả (CoreGia) + Tesseract giả; không đo độ chính xác
+OCR.” Test tự chuyển khi thiếu executable/ngôn ngữ cũng đạt. `NGUON.md`
+có **38 SHA-256 khớp**, trừ chính NGUON.md; `git diff --check` không lỗi.
+Đầu ra đầy đủ/JUnit/ảnh kiểm nằm trong `.venv/kiem-ocr5-*`, không đưa vào
+gói hoặc git. Toàn bộ 218 test nền còn nguyên, thêm 21 test OCR-5.
+
+### Lệch / quyết định tạm / Cần Core / Chờ Anh
+
+- Không đổi API/SDK, không thêm dependency hoặc import Core. Giữ cấu hình
+  JSON/kho tạm theo quyết định của lead; nhật ký stderr theo phiếu chung.
+  Ngoài bộ DEMO/bài kiểm, bổ sung số đo tại cổng/chọn nguồn để đáp ứng
+  ca 9; sửa namespace Word theo nợ lead giao. Không mở giao diện riêng.
+- Cần Core mới: mốc/đếm hàng chờ chung và nhật ký SDK an toàn cho lỗi
+  ngoài action; đã ghi mục Cần Core phía trên. Tệp quá cỡ bị SDK chặn
+  trước action nên không có log action, không tạo bản ghi thời gian giả.
+- Chờ Anh mới: **không phát sinh**. Giữ các mục giấy phép/hồ sơ thật/ngưỡng
+  Tesseract đã có; ba nợ OCR-4 giữ nguyên để làm lát riêng.

@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_ocr",
   "ten": "Nhận dạng văn bản",
-  "phien_ban": "1.0.4",
+  "phien_ban": "1.0.5",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -11,18 +11,28 @@
   },
   "che_do_chay": "cuc_bo",
   "diem_vao": {
-    "lenh": ["{python}", "-m", "e_ocr.chay"],
+    "lenh": [
+      "{python}",
+      "-m",
+      "e_ocr.chay"
+    ],
     "thu_muc": "."
   },
   "nang_luc": [
     {
       "ma": "ocr.doc_tai_lieu@1",
       "ten": "Đọc tài liệu có vị trí",
-      "nhan": ["tep"],
+      "nhan": [
+        "tep"
+      ],
       "tra": "van_ban_tai_lieu",
       "gioi_han": {
         "tep_toi_da_mib": 20,
-        "mime": ["application/pdf", "image/png", "image/jpeg"],
+        "mime": [
+          "application/pdf",
+          "image/png",
+          "image/jpeg"
+        ],
         "thoi_han_giay": 900
       },
       "huy_duoc": true,
@@ -33,9 +43,18 @@
           "kieu": "chon",
           "mac_dinh": "tu_dong",
           "lua_chon": [
-            {"ma": "tu_dong", "ten": "Tự động"},
-            {"ma": "chi_abbyy", "ten": "Chỉ ABBYY"},
-            {"ma": "chi_tesseract", "ten": "Chỉ Tesseract"}
+            {
+              "ma": "tu_dong",
+              "ten": "Tự động"
+            },
+            {
+              "ma": "chi_abbyy",
+              "ten": "Chỉ ABBYY"
+            },
+            {
+              "ma": "chi_tesseract",
+              "ten": "Chỉ Tesseract"
+            }
           ]
         }
       ]
@@ -43,11 +62,17 @@
     {
       "ma": "ocr.doc_van_ban@1",
       "ten": "Đọc văn bản thuần",
-      "nhan": ["tep"],
+      "nhan": [
+        "tep"
+      ],
       "tra": "van_ban",
       "gioi_han": {
         "tep_toi_da_mib": 20,
-        "mime": ["application/pdf", "image/png", "image/jpeg"],
+        "mime": [
+          "application/pdf",
+          "image/png",
+          "image/jpeg"
+        ],
         "thoi_han_giay": 900
       },
       "huy_duoc": true,
@@ -58,9 +83,18 @@
           "kieu": "chon",
           "mac_dinh": "tu_dong",
           "lua_chon": [
-            {"ma": "tu_dong", "ten": "Tự động"},
-            {"ma": "chi_abbyy", "ten": "Chỉ ABBYY"},
-            {"ma": "chi_tesseract", "ten": "Chỉ Tesseract"}
+            {
+              "ma": "tu_dong",
+              "ten": "Tự động"
+            },
+            {
+              "ma": "chi_abbyy",
+              "ten": "Chỉ ABBYY"
+            },
+            {
+              "ma": "chi_tesseract",
+              "ten": "Chỉ Tesseract"
+            }
           ]
         }
       ]
@@ -68,11 +102,17 @@
     {
       "ma": "ocr.xuat_word@1",
       "ten": "Xuất Word giữ bảng",
-      "nhan": ["tep"],
+      "nhan": [
+        "tep"
+      ],
       "tra": "tep",
       "gioi_han": {
         "tep_toi_da_mib": 20,
-        "mime": ["application/pdf", "image/png", "image/jpeg"],
+        "mime": [
+          "application/pdf",
+          "image/png",
+          "image/jpeg"
+        ],
         "thoi_han_giay": 900
       },
       "huy_duoc": true,
@@ -83,37 +123,101 @@
           "kieu": "chon",
           "mac_dinh": "tu_dong",
           "lua_chon": [
-            {"ma": "tu_dong", "ten": "Tự động"},
-            {"ma": "chi_abbyy", "ten": "Chỉ ABBYY"},
-            {"ma": "chi_tesseract", "ten": "Chỉ Tesseract"}
+            {
+              "ma": "tu_dong",
+              "ten": "Tự động"
+            },
+            {
+              "ma": "chi_abbyy",
+              "ten": "Chỉ ABBYY"
+            },
+            {
+              "ma": "chi_tesseract",
+              "ten": "Chỉ Tesseract"
+            }
           ]
         }
       ]
     }
   ],
   "loai_du_lieu_rieng": [
-    {"ma": "van_ban_tai_lieu", "ten": "Văn bản tài liệu có vị trí"}
+    {
+      "ma": "van_ban_tai_lieu",
+      "ten": "Văn bản tài liệu có vị trí"
+    }
   ],
-  "tai_nguyen": {"so_viec_dong_thoi": 1},
-  "readiness": {"thoi_han_giay": 30},
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
   "chay_thu_demo": [
     {
       "nang_luc": "ocr.doc_tai_lieu@1",
-      "ten": "Đọc PDF DEMO có lớp chữ và vị trí, 3 trang",
-      "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-lop-chu-3-trang.pdf"},
-      "tham_so": {"nguon": "tu_dong"}
+      "ten": "Đọc tài liệu có vị trí — PDF quét 3 trang DEMO, chỉ Tesseract",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/DEMO-quet-3-trang.pdf"
+      },
+      "tham_so": {
+        "nguon": "chi_tesseract"
+      }
+    },
+    {
+      "nang_luc": "ocr.doc_tai_lieu@1",
+      "ten": "Đọc tài liệu có vị trí — ảnh PNG 1 trang DEMO, chỉ Tesseract",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/DEMO-1-trang.png"
+      },
+      "tham_so": {
+        "nguon": "chi_tesseract"
+      }
     },
     {
       "nang_luc": "ocr.doc_van_ban@1",
-      "ten": "Đọc văn bản thuần từ PDF DEMO có lớp chữ, 3 trang",
-      "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-lop-chu-3-trang.pdf"},
-      "tham_so": {"nguon": "tu_dong"}
+      "ten": "Đọc văn bản thuần — PDF quét 3 trang DEMO, chỉ Tesseract",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/DEMO-quet-3-trang.pdf"
+      },
+      "tham_so": {
+        "nguon": "chi_tesseract"
+      }
+    },
+    {
+      "nang_luc": "ocr.doc_van_ban@1",
+      "ten": "Đọc văn bản thuần — ảnh PNG 1 trang DEMO, chỉ Tesseract",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/DEMO-1-trang.png"
+      },
+      "tham_so": {
+        "nguon": "chi_tesseract"
+      }
     },
     {
       "nang_luc": "ocr.xuat_word@1",
-      "ten": "Xuất Word giữ bảng từ PDF DEMO có lớp chữ, 3 trang",
-      "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-bang-3-trang.pdf"},
-      "tham_so": {"nguon": "tu_dong"}
+      "ten": "Xuất Word giữ bảng — PDF quét 3 trang DEMO, chỉ Tesseract",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/DEMO-quet-3-trang.pdf"
+      },
+      "tham_so": {
+        "nguon": "chi_tesseract"
+      }
+    },
+    {
+      "nang_luc": "ocr.xuat_word@1",
+      "ten": "Xuất Word giữ bảng — ảnh PNG 1 trang DEMO, chỉ Tesseract",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/DEMO-1-trang.png"
+      },
+      "tham_so": {
+        "nguon": "chi_tesseract"
+      }
     }
   ],
   "bi_mat": [],

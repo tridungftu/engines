@@ -1,5 +1,19 @@
 # Thay đổi
 
+## 1.0.5 — 14/11/2026 — OCR-5 (thực hiện 15/11/2026)
+
+- Bộ DEMO hoàn toàn giả: PDF ảnh 3 trang có bảng ô trống/ô gộp, PNG/JPEG,
+  Word/JSON đáp án; bộ sinh ở tests, ca lỗi/quá cỡ chỉ sinh lúc test.
+- Sáu ví dụ SDK cho PDF quét/PNG và cả ba năng lực, chỉ Tesseract.
+  Công cụ CoreGia ngoài gói tự dùng Tesseract giả khi thiếu bộ đọc.
+- OCR-MAY ca 2/3/4/5/7/9: ABBYY giả, hàng chờ/gửi trùng, đo tiền/ngày,
+  chuyển nguồn, lỗi/hủy và nhật ký stderr; ca 1/6/8 ghi rõ ngoài đợt này.
+- Nhật ký chỉ chứa mã cố định, nguồn và thời gian chờ nguồn/chạy; chặn
+  traceback ngoại lệ bất ngờ tại action, giữ ngoại lệ hủy/chưa rõ/transport.
+- Đăng ký namespace `w`/`xml` chuẩn cho Word; kiểm document.xml có `w:`.
+- Đã kiểm bằng Core giả (CoreGia); giữ nguyên ba nợ OCR-4 trong VIEC.md,
+  không thay giao thức Hot Folder hoặc thư viện.
+
 ## 1.0.4 — 14/11/2026 — OCR-4
 
 - Giải gộp 15/11/2026 trên nền OCR-2/OCR-3 chính thức (1.0.3); giữ xuất

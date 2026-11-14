@@ -16,6 +16,7 @@ from .abbyy import BackendABBYY, LoiABBYYChuaNhan, LoiABBYYTuChoi
 from .kho_tam import KhoTam
 from .luot_abbyy import DA_CHOT, DANG_DO, NhatKyLuot, khoa_nhat_ky
 from .lop_chu import KetQuaLopChu, LoiLopChu, doc_lop_chu
+from .nhat_ky import cho_nguon, ghi_nguon, het_cho
 from . import tesseract
 
 
@@ -132,6 +133,7 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh):
         cu = KhoTam().doc(khoa_nhat_ky(viec.ngu_canh.get("phap_nhan_id"), bam))
     if nguon == "chi_tesseract" and (cu is None or (
             type(cu) is dict and isinstance(cu.get("trang_thai"), str) and cu["trang_thai"] in DA_CHOT)):
+        ghi_nguon("tesseract")
         return KetQuaChonNguon(
             tesseract.doc_tesseract(raw, mime, cau_hinh.get("tesseract", {}), viec=viec), "tesseract"
         )
@@ -147,6 +149,7 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh):
         nhat_ky.cap_nhat(nhan=True)
 
     def doc_ket_qua(pdf):
+        het_cho()
         viec.tien_do(75, "Đã nhận kết quả ABBYY; đang đọc lớp chữ.")
         try:
             ket_qua = doc_lop_chu(pdf, kiem_huy=viec.kiem_huy)
@@ -172,7 +175,8 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh):
         # Hai tiến trình có cùng dấu bền: bên không lấy được khóa chỉ báo
         # ChuaRo; không được đọc/dọn PDF mà bên kia đang xử lý.
         try:
-            with so.kho.khoa_luot(nhat_ky.ma):
+            ghi_nguon("abbyy")
+            with so.kho.khoa_luot(nhat_ky.ma), cho_nguon():
                 return backend.doc_pdf(
                     raw, {"application/pdf": "pdf", "image/png": "png", "image/jpeg": "jpg"}[mime],
                     viec=viec, khi_da_nhan=khi_da_nhan,
@@ -201,6 +205,7 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh):
         }.get(loi.ma, "loi_nhan_dang")
     viec.kiem_huy()
     viec.tien_do(55, "Đang chuyển sang nguồn Tesseract.")
+    ghi_nguon("tesseract")
     return KetQuaChonNguon(
         tesseract.doc_tesseract(raw, mime, cau_hinh.get("tesseract", {}), viec=viec),
         "tesseract", LY_DO[ly_do],

@@ -1,14 +1,31 @@
-# Runtime OCR-2: giữ đúng phiên bản đã ghim/đo ở ma-nguon/requirements.lock.
-# pypdfium2 render PDF cho Tesseract CLI; không thêm PyMuPDF/defusedxml.
-# SDK cài offline từ wheel repo với --no-index --no-deps; SHA-256:
-# a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
-# Chưa là lock wheel đa nền tảng có --require-hashes; việc đó thuộc OCR-6.
-kho-tri-thuc-sdk==2.0.0
-pdfplumber==0.11.10
-Pillow==12.3.0
-pdfminer.six==20260107
-pypdfium2==5.13.0
-charset-normalizer==3.4.7
-cryptography==49.0.0
-cffi==2.0.0
-pycparser==3.0
+# Wheels: CPython 3.13, Windows x64 va Linux x86_64; PyPI SHA-256.
+# SDK wheel trong repo cai rieng bang --no-index --no-deps.
+# SHA-256 SDK: a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
+pdfplumber==0.11.10 \
+    --hash=sha256:7741ea81bf165b474b153e6789d10d18e06b6ddcf3ec84289c3ef2fed6802580
+Pillow==12.3.0 \
+    --hash=sha256:0847a763afefb695bc912d7c131e7e0632d4edc1d8698f58ddabec8e46b8b6d3 \
+    --hash=sha256:1cca606cd25738df4ed873d5ad46bbdb3d83b5cbca291f6b4ff13a4df6b0bbe8
+pdfminer.six==20260107 \
+    --hash=sha256:366585ba97e80dffa8f00cebe303d2f381884d8637af4ce422f1df3ef38111a9
+pypdfium2==5.13.0 \
+    --hash=sha256:81df25c1ab4c13ff773102d3cbea1967511d079123b067fc077bd0c4d57d91d8 \
+    --hash=sha256:47dcca2a8d507b5fd24f94c3c9d48fb379430f097bc20f01beff6c963ffbcedb
+charset-normalizer==3.4.7 \
+    --hash=sha256:e044c39e41b92c845bc815e5ae4230804e8e7bc29e399b0437d64222d92809dd \
+    --hash=sha256:3946fa46a0cf3e4c8cb1cc52f56bb536310d34f25f01ca9b6c16afa767dab110 \
+    --hash=sha256:3dce51d0f5e7951f8bb4900c257dad282f49190fdbebecd4ba99bcc41fef404d
+cryptography==49.0.0 \
+    --hash=sha256:0e959b578856a3924bc0cbb710fc12c387b9412a951389f3ca61704a9e25f325 \
+    --hash=sha256:2afe9051da7ae7bd5905da5a949280c7d2bb75682e188f650a9d0f2756b834c6 \
+    --hash=sha256:cbc77da8c523d5abd028635ba850a6966fcee2c82e2bf65a41d1d8afe0f98be9 \
+    --hash=sha256:e5dfc1e64de5677cec922ffa8da89c546d0415bf6efdf081842e5d44c84e1f0e \
+    --hash=sha256:35b151772baff2c74cba7fa290ceaff4c3b11c0c881eb93eb5dbc05a7cfbba18 \
+    --hash=sha256:6f2debedf9ca60cf1d5bd466475638af5130f89965605cd818484d19987d3a21 \
+    --hash=sha256:2400ef9c9e2299a25614eb1dea3db54a69b1349efd043bfac9c67630d136df36 \
+    --hash=sha256:026ac7423e6fa66872d3bf889be5974507da3944f866f704fa200eadacd00001
+cffi==2.0.0 \
+    --hash=sha256:c8d3b5532fc71b7a77c09192b4a5a200ea992702734a2e9279a37f2478236f26 \
+    --hash=sha256:19f705ada2530c1167abacb171925dd886168931e0a7b78f5bffcae5c6b5be75
+pycparser==3.0 \
+    --hash=sha256:b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992

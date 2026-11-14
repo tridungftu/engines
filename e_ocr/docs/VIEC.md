@@ -11,6 +11,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | OCR-3 | Xuất Word từ cấu trúc tài liệu, giữ ô trống/ô gộp, vị trí bảng và thứ tự trang | OCR-4, 5 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 3/3, pytest 145 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
 | OCR-4 | Lượt chưa rõ theo phương án B, chống trùng bền và đối chiếu hạn mức sau khởi động lại | OCR-13, 14, 15 | Xong 15/11/2026 | Phiếu 14/11/2026; PR: **chờ lead mở**. SDK DEMO 3/3, pytest 218 passed, 0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia) |
 | OCR-5 | Bộ DEMO, sáu ví dụ chạy thử và OCR-MAY ca 2/3/4/5/7/9; sửa namespace Word | OCR-11, 15, 16 | Xong — phiếu 14/11/2026 | Thực hiện 15/11/2026; PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); SDK 6/6, pytest 239 passed, 0 skipped; bằng chứng bên dưới |
+| OCR-6 | Ghim thư viện, nguồn và kiểm máy sạch | OCR-6 | Chưa đạt — phiếu 14/11/2026 | PR: **chờ lead mở**; chờ kiểm cài sạch và SDK DEMO theo bằng chứng bên dưới |
 | 1 | Đóng gói độc lập theo cổng chung; thay hàm SDK riêng `ocr_*_luot` bằng lượt bền chung khi Core có | OCR-6, 13 | Đang làm 14/11/2026 | Có khung OCR-0; chuyển lõi ở OCR-1…OCR-4, không sửa `ma-nguon/` |
 | 2 | Bổ sung nguồn dự phòng mask_ocr/Tesseract | OCR-8 | Xong 14/11/2026 | OCR-2 dùng CLI và pypdfium2 đã ghim, không thêm dependency. Máy đích xem **Cần cài** |
 | 3 | Màn hạn mức ABBYY / trạng thái máy (giao diện của engine) | OCR-8 | Chờ làm |  |
@@ -620,3 +621,13 @@ gói hoặc git. Toàn bộ 218 test nền còn nguyên, thêm 21 test OCR-5.
 - ABBYY thật và việc ABBYY/script tích hợp có sinh `<ma>.loi.json` đúng OCR-4 **chưa được kiểm**. Một lượt thành công hoặc quá hạn không chứng minh nguồn hỗ trợ biên nhận; cần lượt từ chối thực tế để kiểm. Quá hạn giữ trạng thái chưa rõ, không tự gửi lại.
 - Kết quả lượt kiểm trước: SDK DEMO 6/6 ĐẠT, pytest 241 passed, 0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia), ABBYY giả. Chưa kiểm Linux, Core thật hay ABBYY thật.
 - Không phát sinh yêu cầu Core/SDK mới. Các dependency của gói cần có sẵn theo hướng dẫn cài máy sạch; `.cmd` cài SDK offline và mặc định chạy khô. Ngày 15/11/2026: sửa mã hóa và làm rõ hướng dẫn cài dependency; PR chờ lead mở.
+## Bằng chứng OCR-6 — phiếu 14/11/2026
+
+- Nhánh `codex/e_ocr-ocr-6`; PR: **chờ lead mở**. Không commit/push.
+- Thời gian thực tế: 00:37–00:43 ngày 15/11/2026, khoảng 0,10 giờ; phiếu ước tính 2 giờ.
+- Ghim SDK và các wheel PyPI Windows x64 CPython 3.13/Linux x86_64 bằng SHA-256. Pillow dùng trực tiếp; PyMuPDF và defusedxml không dùng. SDK wheel khớp SHA256SUMS.txt. `NGUON.md` cập nhật nguồn, giấy phép và hash tệp gói; không tự băm.
+- Đã kiểm bằng Core giả (CoreGia): `tests/chay_demo.py --gia` đạt 6/6 với Tesseract giả, không đo độ chính xác OCR.
+- Windows máy sạch: venv mới cài SDK thành công, tải pdfplumber thất bại do kết nối `files.pythonhosted.org` bị reset; chưa kiểm được cài lock/DEMO máy sạch. Script cho phép cấu hình pip wheelhouse, SDK cài offline. Linux: chưa chạy vì máy không có WSL; đã thêm workflow CI, chưa có kết quả CI.
+- SDK CLI trực tiếp: 0/6, lỗi không truy cập dữ liệu tạm OCR trong môi trường hiện tại; không suy diễn thành lỗi nghiệp vụ. Pytest: 239 passed, 0 skipped; kiểm độc lập: đạt.
+- `vendor/mask_ocr/extraction.py` và `layout.py` được import gián tiếp qua `__init__.py`, có test vendor, nhưng parser DOCX/layout không được action hiện tại gọi; OCR-3 chuyển thể quy tắc sang `xuat_word.py`, không gọi parser. Giữ nguyên để tránh phá import/test; rà tách phần không dùng và chuyển `LUU-TRU/` sau, không xóa.
+- Cần Core: không phát sinh; giữ các mục hiện có.

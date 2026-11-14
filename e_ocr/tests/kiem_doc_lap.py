@@ -23,7 +23,7 @@ def kiem_doc_lap(thu_muc_goi=THU_MUC_GOI):
     if not goc.is_dir() or goc.is_symlink():
         return ["Không tìm thấy thư mục gói độc lập hợp lệ."]
     lock = goc / "requirements.lock"
-    cac_pin = set(re.findall(r"^([A-Za-z0-9_.-]+)==[^\s]+$", lock.read_text(encoding="utf-8"), re.M)) if lock.is_file() else set()
+    cac_pin = set(re.findall(r"^([A-Za-z0-9_.-]+)==[^\s]+(?:\s+\\)?$", lock.read_text(encoding="utf-8"), re.M)) if lock.is_file() else set()
     duoc_import = sys.stdlib_module_names | {"e_ocr", "kho_tri_thuc_sdk"} | {
         ten for ten, goi in _THU_VIEN_NGOAI.items() if goi in cac_pin
     }

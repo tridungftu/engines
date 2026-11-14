@@ -136,34 +136,17 @@ def _doc_json(bo_mo, url, thoi_han, than=None):
     return json.loads(text)
 
 
-def _kiem_model(bo_mo, goc, model, thoi_han, kiem_huy):
-    metadata = _doc_json(bo_mo, goc + "/v1/models", thoi_han)
-    cac_model = metadata.get("data") if isinstance(metadata, dict) else None
-    if not isinstance(cac_model, list):
-        raise LocalAIKhongSanSang("Chưa đọc được danh sách model Local AI.")
-    muc = next((m for m in cac_model if isinstance(m, dict)
-                and str(m.get("id") or "").removesuffix(":latest") == model.removesuffix(":latest")), None)
-    if (muc is None or model_tu_xa(muc) or muc.get("state") == "not-loaded"
-            or ("loaded_instances" in muc and not muc["loaded_instances"])):
+def _kiem_model(goc, model, thoi_han, kiem_huy):
+    # Dùng API đã nhận diện, không bắt Ollama/LM Studio có /v1/models.
+    from .chon_model import bo_phat_hien
+
+    catalog = bo_phat_hien.kha_dung_hien_tai(
+        {"url": goc, "timeout_giay": thoi_han}, kiem_huy=kiem_huy
+    )
+    if catalog is None or not any(m.ma == model and m.kha_dung for m in catalog.models):
         raise LocalAIKhongSanSang("Model đã chọn chưa sẵn sàng trên máy Local AI.")
-    kiem_huy()
-    # Ollama có thể giấu remote_host ở /v1/models; kiểm thêm /api/tags như mã cũ.
-    try:
-        tags = _doc_json(bo_mo, goc + "/api/tags", thoi_han)
-    except urllib.error.HTTPError as exc:
-        exc.close()
-        if exc.code in (404, 405):
-            return
-        raise
-    cac_model = tags.get("models") if isinstance(tags, dict) else None
-    if not isinstance(cac_model, list):
-        return
-    muc = next((m for m in cac_model if isinstance(m, dict) and any(
-        str(m.get(k) or "").removesuffix(":latest") == model.removesuffix(":latest")
-        for k in ("name", "model"))), None)
-    if muc is None or model_tu_xa(muc):
-        raise LocalAIKhongSanSang("Không xác minh được model chạy cục bộ trên máy AI.")
-    return "ollama"
+    # Dùng cùng kết quả kiểm khả dụng để chọn cách gửi khuôn, không dò API thêm.
+    return catalog.loai
 
 
 def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None, khuon=None):
@@ -179,7 +162,7 @@ def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None, khuon=None):
         goc = parsed._replace(path="").geturl()
         thoi_han = cau_hinh["timeout_giay"]
         kiem_huy()
-        loai_api = _kiem_model(bo_mo, goc, model, thoi_han, kiem_huy)
+        loai_api = _kiem_model(goc, model, thoi_han, kiem_huy)
         kiem_huy()  # Hủy trong lúc đọc metadata thì không gửi prompt/tài liệu.
         du_lieu = {"model": model, "temperature": 0, "stream": False, "messages": [
             {"role": "system", "content": "Bạn là trợ lý kế toán. Chỉ trả lời đúng định dạng được yêu cầu."},

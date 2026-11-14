@@ -22,6 +22,9 @@ class LocalGia:
         self.tra_loi_tung_luot = []
         self.models = [{"id": "model-demo", "owned_by": "local-demo"}]
         self.tags = None
+        self.native_v1 = None
+        self.native_v0 = None
+        self.phan_hoi_get = {}
         self.yeu_cau = []
         self.luot = []
         self.khi_nhan = lambda phuong_thuc, duong: None
@@ -73,7 +76,14 @@ class LocalGia:
                 chu.khi_nhan("GET", self.path)
                 if self.chuyen():
                     return
-                if self.path == "/v1/models":
+                if self.path in chu.phan_hoi_get:
+                    ma, raw = chu.phan_hoi_get[self.path]
+                    self.tra_tho(ma, raw)
+                elif self.path == "/api/v1/models" and chu.native_v1 is not None:
+                    self.tra(200, {"models": chu.native_v1})
+                elif self.path == "/api/v0/models" and chu.native_v0 is not None:
+                    self.tra(200, {"data": chu.native_v0})
+                elif self.path == "/v1/models":
                     self.tra(200, {"data": chu.models})
                 elif self.path == "/api/tags" and chu.tags is not None:
                     self.tra(200, {"models": chu.tags})

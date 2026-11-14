@@ -5,9 +5,10 @@ import json
 
 import pytest
 from kho_tri_thuc_sdk.thu import CoreGia
-from kho_tri_thuc_sdk.engine import LoiNghiepVu
+from kho_tri_thuc_sdk.engine import LoiNghiepVu, Viec, ViecDaHuy
 
 from e_hoi_ai import chay
+from e_hoi_ai import chon_model
 from e_hoi_ai.khuon_json import boc_khuon, doc_json, json_chuan, khop, kiem_khuon
 from local_gia import LocalGia, TAI_LIEU, TRA_LOI, ghi_cau_hinh
 from test_hoi_tai_lieu import khong_mang_ngoai_va_khong_cloud, local
@@ -63,6 +64,64 @@ def test_co_khuon_du_lieu_dung_schema_va_api_cau_truc(local, ollama):
         assert "format" not in request
     assert khop(PHAN_HOI, khuon_gui)
     assert not khop({**PHAN_HOI, "du_lieu": {}}, khuon_gui)
+
+
+@pytest.mark.parametrize("loai,api,truong,khoa", chon_model.CAC_API)
+def test_gop_ai2_ai3_khuon_dung_catalog_va_du_phong_khong_do_api_them(
+        local, tmp_path, monkeypatch, loai, api, truong, khoa):
+    monkeypatch.setattr(chon_model, "bo_phat_hien", chon_model.BoPhatHienModel())
+    # Cùng ID gợi tên Ollama trên mọi API: cách gửi khuôn phải theo metadata.
+    ma = "ollama/model-demo-du-phong"
+    muc = [{khoa: "model-demo-tu-xa", "remote_host": "cloud.demo.invalid"}, {khoa: ma}]
+    local.models = []
+    if api == "/api/tags":
+        local.tags = muc
+    elif api == "/api/v1/models":
+        local.native_v1 = muc
+    elif api == "/api/v0/models":
+        local.native_v0 = muc
+    else:
+        local.models = muc
+    tep = ghi_cau_hinh(tmp_path, local.url, quy_tac=[{
+        "mau_ma_prompt": "demo.*", "uu_tien": "model-demo-tu-xa", "du_phong": [ma],
+    }])
+    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
+    local.tra_loi = PHAN_HOI
+    for lan in range(2):
+        kq = hoi(model_uu_tien="model-demo-khong-co")
+        assert kq["trang_thai"] == "XONG", kq
+        ra = kq["ket_qua"]["tra_loi_ai"]
+        assert (ra["model"], ra["ly_do_chon_model"]) == (ma, "du_phong_quy_tac_ma_prompt")
+        assert ra["du_lieu"] == DU_LIEU and ra["kiem_trich_dan"]["dat"]
+        request = local.yeu_cau[-1]
+        if loai == "ollama":
+            assert local.luot[-1] == ("POST", "/api/chat")
+            assert khop(PHAN_HOI, request["format"]) and "response_format" not in request
+        else:
+            assert local.luot[-1] == ("POST", "/v1/chat/completions")
+            assert khop(PHAN_HOI, request["response_format"]["json_schema"]["schema"])
+            assert "format" not in request
+        probes = [duong for _, duong, _, _ in chon_model.CAC_API]
+        # Discovery một lần; mỗi lượt kiểm để chọn và ngay trước POST, không GET chọn khuôn.
+        assert [p for m, p in local.luot if m == "GET"] == (
+            probes[:probes.index(api) + 1] + [api] * (2 * (lan + 1))
+        )
+
+
+def test_gop_ai2_ai3_huy_trong_phat_hien_khong_gui_noi_dung(local, monkeypatch):
+    monkeypatch.setattr(chon_model, "bo_phat_hien", chon_model.BoPhatHienModel())
+    kiem_goc = Viec.kiem_huy
+
+    def kiem_huy(viec):
+        kiem_goc(viec)
+        # Giả tín hiệu SDK đã nhận, tránh phụ thuộc lịch luồng gia hạn của CoreGia.
+        if local.luot:
+            raise ViecDaHuy()
+
+    monkeypatch.setattr(Viec, "kiem_huy", kiem_huy)
+    kq = hoi()
+    assert kq["trang_thai"] == "HUY" and kq["ket_qua"] is None
+    assert local.so_luot_hoi == 0 and len(local.luot) == 1
 
 
 @pytest.mark.parametrize("sai", [

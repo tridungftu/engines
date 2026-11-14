@@ -108,7 +108,8 @@ def goi_theo_yeu_cau(viec, cong, *, phien_ban):
     try:
         yeu_cau, vao, bam = _doc_yeu_cau(viec)
         cau_hinh = yeu_cau_cau_hinh()
-        model, ly_do = cong.chon_model(yeu_cau, cau_hinh)
+        viec.kiem_huy()
+        model, ly_do = cong.chon_model(yeu_cau, cau_hinh, kiem_huy=viec.kiem_huy)
         khuon = vao["khuon_tra_loi"]
         khuon_gui = boc_khuon(khuon) if khuon is not None else None
         prompt = ghep_khung(yeu_cau)

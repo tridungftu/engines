@@ -25,7 +25,8 @@ def test_doc_phieu_va_khai_bao_dung_hop_dong():
     assert tai_lieu["nhan"] == ["van_ban", "van_ban_tai_lieu"]
     assert tai_lieu["tra"] == "truong"
     assert {v["ma"]: v["kieu"] for v in tai_lieu["truong_ra"]} == {
-        "tra_loi": "van_ban", "co_can_cu": "co_khong", "trich_dan": "van_ban", "model": "van_ban"}
+        "tra_loi": "van_ban", "co_can_cu": "co_khong", "trich_dan": "van_ban", "model": "van_ban",
+        "ly_do_chon_model": "van_ban"}
     assert yeu_cau["nhan"] == ["yeu_cau_ai"]
     assert yeu_cau["tra"] == "tra_loi_ai"
     assert "truong_ra" not in yeu_cau

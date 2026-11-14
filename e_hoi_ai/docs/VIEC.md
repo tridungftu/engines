@@ -15,6 +15,8 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | AI-1 | Hỏi tài liệu chỉ Local, khung trích dẫn, hậu kiểm Python, lỗi/thử lại, hủy và chống nộp trùng | AI-1…5, 7, 8 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 141 passed, 0 skipped; kiểm độc lập mã 0; provider Cloud 0 lượt. Chưa chạy thực tế trên Linux/Core thật/model thật. PR: **chờ lead mở** |
 | AI-3 | Tự phát hiện API/model, cache 5 phút, chọn ưu tiên và dự phòng theo mã prompt | AI-10 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 176 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. PR: **chờ lead mở** |
 
+| AI-7 | Công cụ thử Local thật bằng DEMO | AI-14, AI-8 | Đang làm — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia), Local giả và mock; chưa có AI-4 trên nhánh, tạm dùng ca manifest AI-1; Anh tự chạy máy thật. PR: **chờ lead mở** |
+
 ## Cần Core (chuyển lead Core qua Anh)
 
 - Cổng engine chung: API HTTP v1, webhook, bộ cài engine từ thư mục/gói riêng (bỏ tiền tố `kho_tri_thuc.engines.`), K1–K5.
@@ -190,3 +192,12 @@ Lệnh SDK thu chạy thật trong tiến trình con với Local HTTP giả và 
 ### Thời gian thực tế
 
 Bắt đầu **14/11/2026 22:55** (theo lead); kết thúc kiểm và ghi bàn giao **14/11/2026 23:06:29 +07:00**: **0.19 giờ** (11 phút 29 giây, thời gian đồng hồ). Ước tính trong phiếu AI-3: **3 giờ**.
+
+## Bàn giao AI-7 — 14/11/2026
+
+**Kết luận: Chưa đạt đầy đủ:** công cụ đã có và được kiểm giả lập; ca DEMO AI-4 chưa có trên nhánh AI-3 nên tạm dùng ca hiện có trong manifest. Chưa chạy Local thật. PR: **chờ lead mở**.
+
+- Đã làm: công cụ mặc định chạy khô; `--that --url` mới kết nối Local, thử từng model phát hiện, so đáp án, kiểm trích dẫn, ghi thời gian và JSON vào thư mục chạy. Ca Local tắt được giả lập qua provider; đếm Cloud bằng provider khóa. Có CMD ASCII và hướng dẫn 5 dòng. Không sửa gói hoặc chạy model thật.
+- Kiểm: SDK thu trực tiếp thiếu cấu hình → 0/1 ĐẠT, mã 1; cùng lệnh qua bộ chạy Core giả (CoreGia) và Local HTTP giả → 1/1 ĐẠT, mã 0. Pytest 176 passed, 0 skipped; kiểm độc lập mã 0. Công cụ: 4 test mock đạt, không gọi mạng.
+- Lệch phiếu: bộ AI-4 chưa hiện diện; phải đối chiếu/chuyển sang ca AI-4 sau khi gộp. Ca Local tắt hiện là giả lập, không chứng minh tình huống máy thật ngừng hoạt động. Không phát sinh yêu cầu Core/SDK mới.
+- Ước tính AI-7: 2 giờ; bắt đầu 14/11/2026 23:07 theo lead. Kết thúc 14/11/2026 23:11:30; thời gian thực tế 0,075 giờ (4 phút 30 giây).

@@ -7,12 +7,13 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 0 | Đọc tài liệu bắt buộc; đối chiếu kế hoạch lát AI-0 đã giao | — | Xong — 14/11/2026 | Phạm vi, kiến trúc và cách triển khai theo `GIAO-CODEX-e_hoi_ai.md` và lệnh giao của Anh |
 | 1 | Đóng gói độc lập theo cổng chung: bỏ shim, chỉ import SDK, build/cài wheel trên máy sạch | AI-13 | Đang làm — 14/11/2026 | Khung AI-0 xong; ghim đầy đủ và kiểm máy sạch thuộc AI-5 |
 | 2 | Màn Chạy thử DEMO, Cổng Local AI, Cổng Cloud AI (tắt ở bản 1) thành **giao diện của engine** (không đặt trong Core) | AI-10, 11, 12 | Chờ làm | Bản cũ trong `tu-core-cu\phia-core\` |
-| 3 | Tự phát hiện model trên máy AI qua Tailscale, chọn theo module/function | AI-10 | Chờ làm |  |
+| 3 | Tự phát hiện model trên máy AI qua Tailscale, chọn theo module/function | AI-10 | Đang làm — 14/11/2026 | Lõi AI-3 xong, đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; thử máy AI/Tailscale thật thuộc AI-7, màn quản trị chờ Core |
 | 4 | Lát 8: thử thật gpt-oss 20B, Qwen3 8B, Gemma; Local lỗi phải báo rõ, 0 Cloud | AI-14, AI-8 | Chờ làm | Công cụ ở `tu-core-cu\tools\` |
 | 5 | Ghép Core khi có cổng chung K1–K5 → bài test cuối 40 phút | AI-18 | Chờ Core |  |
 | 6 | Bản 2: công tắc Cloud theo module, qua Mask, đo độ chính xác, kiểm xác suất | AI-21…26 | Chờ (bản 2) |  |
 | AI-0 | Khung SDK 2.0, phiếu 2 năng lực, schema chung, cấu hình máy và kiểm độc lập | AI-13 (phần khung) | Xong — 14/11/2026 (tiêu chí riêng AI-0) | Đã kiểm bằng Core giả (CoreGia); pytest 57 passed, 0 skipped; kiểm độc lập mã 0. Tại mốc AI-0 cổng DEMO chưa đạt; đã bổ sung ở AI-1. PR: **chờ lead mở** |
 | AI-1 | Hỏi tài liệu chỉ Local, khung trích dẫn, hậu kiểm Python, lỗi/thử lại, hủy và chống nộp trùng | AI-1…5, 7, 8 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 141 passed, 0 skipped; kiểm độc lập mã 0; provider Cloud 0 lượt. Chưa chạy thực tế trên Linux/Core thật/model thật. PR: **chờ lead mở** |
+| AI-3 | Tự phát hiện API/model, cache 5 phút, chọn ưu tiên và dự phòng theo mã prompt | AI-10 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 176 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. PR: **chờ lead mở** |
 
 ## Cần Core (chuyển lead Core qua Anh)
 
@@ -22,6 +23,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 - AI-0 (14/11/2026): vẫn cần kênh `cau_hinh` từ `san-sang` tới hàm năng lực và form cấu hình từ schema theo `_chung/docs/GIAO-CODEX-THU-TU.md` §3. Chưa sửa phiếu/API/SDK đã khóa; tạm đọc JSON ngoài gói bằng `KTT_ENGINE_CAU_HINH`. Không phát sinh điểm chặn Core/SDK mới.
 - AI-1 (14/11/2026): vẫn cần cấu hình và nhật ký kỹ thuật chung từ Core. Ghi nợ SDK chung: cho phép engine xác định mã lỗi khi thiếu tham số bắt buộc; áp trần nội dung văn bản bên trong loại riêng. Tạm giữ `prompt.bat_buoc=true` với sentinel `mac_dinh=""` để engine tự trả `THIEU_PROMPT`, và tự kiểm trần 500.000 ký tự cho `van_ban_tai_lieu.van_ban` cùng prompt. Không sửa hợp đồng SDK/API hoặc mã Core; không có điểm chặn mới.
+- AI-3 (14/11/2026): không phát sinh yêu cầu Core/SDK mới. Tiếp tục dùng cấu hình JSON ngoài gói và nhật ký metadata như AI-0/AI-1. Catalog chỉ ở bộ nhớ; màn quản trị/catalog dùng chung chờ kênh cấu hình và thẻ trạng thái của Core. Phiếu gói bổ sung `ly_do_chon_model` trong `truong_ra` theo mẫu 2.0 hiện có, không thay hợp đồng SDK/API.
 
 ## Bàn giao AI-0 — 14/11/2026
 
@@ -133,3 +135,58 @@ Giới hạn môi trường: không có WSL/Linux, Docker hoặc Podman; Git Bas
 ### Thời gian thực tế
 
 Bắt đầu **14/11/2026 22:34** (theo lead); kết thúc kiểm và ghi bàn giao **14/11/2026 22:53:49 +07:00**: **0.33 giờ** (thời gian đồng hồ, gồm đọc tài liệu, chuyển lõi, test và bàn giao). Ước tính trong phiếu AI-1: **5 giờ**.
+
+## Bàn giao AI-3 — 14/11/2026
+
+**Kết luận: Đạt** lát AI-3 và ba cổng kiểm trên Windows. **Đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả trên loopback; chưa kiểm Linux, Core thật hoặc model thật.
+
+**PR:** chờ lead mở. Nhánh `codex/e_hoi_ai-ai-3`, dựng trên AI-1. Tiêu đề đề nghị: `[e_hoi_ai] AI-3 — Tự phát hiện và chọn model Local`. Không chạy git commit/push.
+
+### Đã làm
+
+- Viết `chon_model.py` riêng: probe cùng IP/cổng theo thứ tự `/api/tags` → `/api/v1/models` → `/api/v0/models` → `/v1/models`, kiểm cấu trúc và giữ nguyên ID/thứ tự nguồn. Loại phần mềm tương ứng `ollama`, `lm_studio`, `openai_compatible`; không suy loại từ tên/cổng, không ghim tên hoặc xếp hạng chất lượng model.
+- Catalog bất biến trong bộ nhớ 300 giây theo URL gốc, tối đa 64 endpoint, không lưu đĩa. Lỗi discovery trả `None`, không cache lỗi; lượt hỏi không có model nhận `LOCAL_AI_KHONG_SAN_SANG`, `thu_lai_duoc=true`. Không gọi discovery lúc khởi động.
+- Chọn mỗi lượt: tham số `model_uu_tien` khả dụng → duyệt các quy tắc khớp `ma_prompt` theo thứ tự cấu hình, xét `uu_tien` rồi `du_phong` → model khả dụng đầu tiên theo danh sách nguồn. Kết quả và log có lý do chọn.
+- Metadata mới được đọc từ API đã nhận diện trước chọn và trước POST; không kéo dài TTL discovery. Model biến mất giữa hai lượt được bỏ qua ngay khi cache còn hạn; biến mất sau khi chọn thì từ chối trước gửi nội dung, không tự gửi lại POST. API cũ lỗi thì phát hiện lại. Catalog rỗng hợp lệ không rơi xuống API khác. Loại model từ xa, không phải LLM hoặc metadata chỉ rõ chưa tải.
+- Dùng lại toàn bộ rào IP/LAN/Tailscale, chặn DNS/proxy/redirect, trần phản hồi và kiểm hủy từ AI-1. Không đổi cấu hình chung theo model được chọn; không thêm thư viện.
+- Đúng 5 tệp Python chạy được thêm/sửa: `chon_model.py`, `ai_cuc_bo.py`, `cong_ai.py`, `dto.py`, `hoi.py`. `chay.py` không sửa, `hoi.py` chỉ thay hai dòng để báo tiến độ trước discovery và truyền kiểm hủy. AI-2 dùng lại `CongAI.chon_model(..., kiem_huy=...)`; lớp `KetQuaAI` vốn đã có `ly_do_chon_model`.
+- Bổ sung `ly_do_chon_model` vào đầu ra hỏi tài liệu và `truong_ra` của phiếu gói; phiên bản `0.3.0`. Cập nhật README, CHANGELOG, nguồn và SHA-256. Không sửa mã cũ, Core, schema chung hoặc bộ SDK tham chiếu.
+
+### Kết quả kiểm thật
+
+Môi trường: `.venv` trong worktree, Windows/Python 3.13.14; SDK 2.0.0 cài từ wheel trong repo bằng `--no-index --no-deps`. SHA-256 wheel trùng `SHA256SUMS.txt`: `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`. Venv dùng `--system-site-packages` để dùng pytest 9.1.1 có sẵn; không tải mạng.
+
+Đặt `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`, pytest thêm `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
+
+```text
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py
+Chạy: python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+Engine e_hoi_ai 0.3.0: mọi ví dụ chạy thử DEMO đều đạt.
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; 1 lượt Local.
+Mã thoát: 0; SDK thu 1/1 ĐẠT.
+
+.venv/Scripts/python -m pytest e_hoi_ai/tests -q
+........................................................................ [ 40%]
+........................................................................ [ 81%]
+................................                                         [100%]
+176 passed in 29.50s
+Mã thoát: 0; 0 skipped.
+
+.venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát: 0.
+```
+
+Lệnh SDK thu chạy thật trong tiến trình con với Local HTTP giả và cấu hình DEMO ngoài gói, giữ nguyên handler engine. 35 test mới (AI-1 có 141 → AI-3 có 176): từng kiểu API/native v0, cache và TTL, cách ly endpoint, lỗi metadata/trần phản hồi và phục hồi, ưu tiên/dự phòng/wildcard/không khớp, model biến mất giữa lượt và trước POST, đổi API, remote/embedding/chưa tải, metadata trùng, hủy, không DNS/redirect và 0 lượt Cloud. Các test AI-1 tiếp tục đạt. `git diff --check` không lỗi.
+
+### Lệch khỏi phiếu / quyết định tạm đã dùng
+
+- Cache catalog/loại API 5 phút nhưng vẫn đọc metadata mới mỗi lượt và trước POST. Trade-off: thêm GET để xác nhận khả dụng, tránh dùng model đã biến mất trong cửa sổ cache; không gửi tài liệu ở các GET.
+- Thêm trường tĩnh `ly_do_chon_model` vào phiếu gói để Core nhận được lý do chọn theo yêu cầu AI-3; bốn trường cũ giữ nguyên. Không sửa hợp đồng API/SDK 2.0 đã khóa. Lead lưu ý khi gộp phiếu phiên bản với AI-2.
+- Cấu hình JSON ngoài gói và nhật ký stderr theo quyết định tạm hiện có. Không mở rộng `ai.hoi_theo_yeu_cau@1` ở nhánh này (thuộc AI-2).
+- Cần Core / Chờ Anh mới phát sinh: không có. Chưa chạy model thật, Tailscale thật, Linux hoặc Core thật; việc thử máy thật thuộc AI-7.
+
+### Thời gian thực tế
+
+Bắt đầu **14/11/2026 22:55** (theo lead); kết thúc kiểm và ghi bàn giao **14/11/2026 23:06:29 +07:00**: **0.19 giờ** (11 phút 29 giây, thời gian đồng hồ). Ước tính trong phiếu AI-3: **3 giờ**.

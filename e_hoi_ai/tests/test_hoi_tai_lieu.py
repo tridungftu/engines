@@ -69,7 +69,8 @@ def test_hoi_dung_tien_ngay_co_trich_dan_va_tien_do(local, loai):
     assert kq["trang_thai"] == "XONG"
     truong = kq["ket_qua"]["truong"]
     assert truong == {"tra_loi": "1.000.000 VND\n30/10/2026", "co_can_cu": True,
-                      "trich_dan": TRICH_TIEN + "\n" + TRICH_NGAY, "model": "model-demo"}
+                      "trich_dan": TRICH_TIEN + "\n" + TRICH_NGAY, "model": "model-demo",
+                      "ly_do_chon_model": "quy_tac_ma_prompt"}
     assert [m[0] for m in kq["tien_do"]] == [10, 90]
     assert local.so_luot_hoi == 1
     request = local.yeu_cau[0]
@@ -235,7 +236,7 @@ def test_goi_kiem_huy_ngay_truoc_goi_ai(local, monkeypatch):
     monkeypatch.setattr(Viec, "kiem_huy", kiem)
     assert hoi()["trang_thai"] == "XONG"
     # Có kiểm trước mạng và sau metadata, trước POST chứa tài liệu.
-    assert 0 in so_lan and 2 in so_lan
+    assert 0 in so_lan and len(local.luot) - 1 in so_lan
 
 
 def test_mat_xac_nhan_ket_qua_khong_goi_lai_ai_khong_nop_trung(local):
@@ -286,12 +287,12 @@ def test_model_uu_tien_tham_so_thang_quy_tac(local):
     assert kq["ket_qua"]["truong"]["model"] == "model-demo-uu-tien"
 
 
-def test_chua_chon_model_khong_mac_dinh_ten_model(local, tmp_path, monkeypatch):
+def test_khong_co_quy_tac_chon_model_dau_tien_kha_dung(local, tmp_path, monkeypatch):
     tep = ghi_cau_hinh(tmp_path, local.url, quy_tac=[])
     monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
     kq = hoi()
-    assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and kq["loi"]["thu_lai_duoc"]
-    assert not local.luot
+    assert kq["ket_qua"]["truong"]["model"] == "model-demo"
+    assert kq["ket_qua"]["truong"]["ly_do_chon_model"] == "model_dau_tien_kha_dung"
 
 
 @pytest.mark.parametrize("loai", ["van_ban", "van_ban_tai_lieu"])
@@ -337,7 +338,8 @@ def test_khong_theo_redirect_ke_ca_post(local, ma_http, duong):
     kq = hoi()
     assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and kq["loi"]["thu_lai_duoc"]
     assert local.so_luot_hoi == (1 if duong.endswith("completions") else 0)
-    assert all(p in ("/v1/models", "/api/tags", "/v1/chat/completions") for _, p in local.luot)
+    assert all(p in ("/v1/models", "/api/tags", "/api/v1/models", "/api/v0/models",
+                     "/v1/chat/completions") for _, p in local.luot)
 
 
 def test_dich_tailscale_phai_co_nguon_tailscale(monkeypatch):

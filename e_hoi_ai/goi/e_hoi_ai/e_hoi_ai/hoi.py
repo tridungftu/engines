@@ -27,8 +27,8 @@ class AdapterHoiAI:
         try:
             yeu_cau = YeuCauAI.tu_viec(viec)
             cau_hinh = yeu_cau_cau_hinh()
-            model, ly_do_chon = self.cong_ai.chon_model(yeu_cau, cau_hinh)
             viec.tien_do(10, "Đang gửi yêu cầu tới Local AI.")
+            model, ly_do_chon = self.cong_ai.chon_model(yeu_cau, cau_hinh, kiem_huy=viec.kiem_huy)
             viec.kiem_huy()
             ket_qua = self.cong_ai.goi(
                 yeu_cau, cau_hinh, model=model, ly_do_chon=ly_do_chon, kiem_huy=viec.kiem_huy

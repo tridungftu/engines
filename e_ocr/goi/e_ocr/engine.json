@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_ocr",
   "ten": "Nhận dạng văn bản",
-  "phien_ban": "1.0.1",
+  "phien_ban": "1.0.2",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -107,6 +107,12 @@
       "nang_luc": "ocr.doc_van_ban@1",
       "ten": "Đọc văn bản thuần từ PDF DEMO có lớp chữ, 3 trang",
       "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-lop-chu-3-trang.pdf"},
+      "tham_so": {"nguon": "tu_dong"}
+    },
+    {
+      "nang_luc": "ocr.xuat_word@1",
+      "ten": "Xuất Word giữ bảng từ PDF DEMO có lớp chữ, 3 trang",
+      "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-bang-3-trang.pdf"},
       "tham_so": {"nguon": "tu_dong"}
     }
   ],

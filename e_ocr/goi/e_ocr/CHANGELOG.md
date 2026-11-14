@@ -1,5 +1,20 @@
 # Thay đổi
 
+## 1.0.2 — 14/11/2026 — OCR-3
+
+- Nối `ocr.xuat_word@1` vào lõi đọc chung, dựng DOCX trong bộ nhớ và gửi
+  bằng `viec.tai_tep_ra`; tên `<tên gốc không phần mở rộng>-OCR.docx`.
+- Giữ văn bản, ô trống, `gridSpan`/`vMerge` kể cả gộp hai chiều; kiểm đủ
+  lưới ô, không tự thêm ô thiếu. Bảng giữ tọa độ point và kích thước lưới;
+  mỗi trang nguồn là một section Word, giữ thứ tự và khổ trang.
+- Tách `xuat_word.py`/`ban_giao.py`, không phụ thuộc kênh Core cũ, không
+  ghi nội dung ra đĩa hoặc thêm dependency. Bản mask_ocr trong repo không
+  có bộ ghi Word; chuyển quy tắc cấu trúc từ parser sang OOXML thư viện chuẩn.
+- Thêm DEMO PDF có bảng 3 trang và test mở lại DOCX bằng zipfile/XML:
+  đủ ô trống, gộp ngang/dọc, tọa độ, phân trang, tiền/ngày nguyên văn.
+- Đã kiểm bằng Core giả (CoreGia); chưa kiểm Word/Core/ABBYY thật. Word
+  có thể dàn lại chữ theo font; không cam kết hình thức khớp từng pixel.
+
 ## 1.0.1 — 14/11/2026 — OCR-1
 
 - Chuyển bốn mô-đun lõi từ `ma-nguon/`, bỏ phụ thuộc Core/cổng OCR cũ;

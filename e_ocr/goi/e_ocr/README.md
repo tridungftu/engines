@@ -1,9 +1,9 @@
-# Engine nhận dạng văn bản — OCR-1
+# Engine nhận dạng văn bản — OCR-3
 
-Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.1. Hai năng lực
+Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.2. Hai năng lực
 `ocr.doc_tai_lieu@1` và `ocr.doc_van_ban@1` dùng chung lõi đọc lớp chữ PDF
-hoặc nhận PDF lớp chữ từ ABBYY Hot Folder cục bộ. `ocr.xuat_word@1` vẫn trả
-`CHUA_LAM` tới OCR-3. **Đã kiểm bằng Core giả (CoreGia)** và ABBYY giả;
+hoặc nhận PDF lớp chữ từ ABBYY Hot Folder cục bộ. `ocr.xuat_word@1` dùng
+cùng lõi, dựng DOCX và gửi qua `viec.tai_tep_ra`. **Đã kiểm bằng Core giả (CoreGia)** và ABBYY giả;
 chưa kiểm ABBYY hoặc Core thật.
 
 Mỗi năng lực nhận PDF/PNG/JPEG tối đa 20 MiB, thời hạn 900 giây, có lựa chọn
@@ -35,7 +35,7 @@ $env:PYTHONUTF8 = '1'
 Trên Linux dùng `.venv/bin/python`, đặt `PYTHONDONTWRITEBYTECODE=1` trước khi
 nạp gói. Không đóng gói bytecode, test, môi trường ảo hoặc dữ liệu máy.
 
-`chay_thu_demo` có hai ví dụ dùng chung PDF DEMO lớp chữ 3 trang, chạy
+`chay_thu_demo` có ba ví dụ đọc/xuất Word từ PDF DEMO lớp chữ 3 trang, chạy
 được không cần cấu hình máy hoặc ABBYY. Bộ PDF được sinh bằng thư viện
 chuẩn ở `tests/demo/tao_pdf.py`; có nhãn ảnh DEMO và chữ ẩn ToUnicode,
 không cần font máy. Bộ kiểm Hot Folder dùng luồng nền nhận tệp DEMO rồi
@@ -72,7 +72,27 @@ lượt kiểm OCR-1 chạy thực tế trên Windows, chưa có Linux/WSL trong
   Toàn văn nối trang bằng `\f`; khối/dòng/từ có tọa độ point theo trang.
   Giữ nguyên tiền/ngày trong văn bản, không tự hiệu đính hay suy giá trị.
   Bảng có đường kẻ PDF giữ ô trống/ô gộp; bảng chỉ có trong ảnh nền chưa
-  được tái tạo và có cảnh báo. Xuất Word, fallback và sổ hạn mức thuộc lát sau.
+  được tái tạo và có cảnh báo. Fallback và sổ hạn mức thuộc OCR-2.
+
+## Xuất Word giữ bảng
+
+`ocr.xuat_word@1` nhận tệp PDF/PNG/JPEG như hai action đọc. Kết quả là
+phong bì `tep` chứa DOCX, MIME chuẩn Word và tên
+`<tên gốc không phần mở rộng>-OCR.docx`; giữ dấu tiếng Việt và dấu chấm
+trong tên gốc. Không ghi nội dung DOCX ra đĩa, không nhận dạng lại để xuất.
+
+`xuat_word.dung_docx` dùng cấu trúc `van_ban_tai_lieu`: mỗi trang theo số
+thứ tự thành một section, giữ khổ ngang/dọc; đoạn và bảng neo theo tọa độ
+`pt` trên trang. Bảng dựng từ ô gốc, gộp ngang bằng `gridSpan`, gộp dọc
+bằng `vMerge` và giữ cả ô trống. Có tọa độ từng ô thì giữ độ rộng cột;
+nếu nguồn chỉ có khung bảng, chia đều khoảng chưa có mốc. Hai bảng liên
+tiếp có đoạn ngăn để Word không nhập chúng thành một bảng.
+
+Từ chối lưới thiếu/chồng ô, vị trí không hợp lệ hoặc đơn vị khác `pt`,
+bảng trên 100 hàng/40 cột, hơn 60 trang hoặc hơn 500.000 ký tự; không
+cắt ngầm hay tự thêm ô. Hủy/chưa rõ của nguồn đọc được giữ nguyên, không
+tạo kết quả thành công giả. Word có thể dàn lại dòng/chiều cao theo font
+trên máy; tọa độ bảng được ghi trong XML, chưa kiểm hiển thị trên Word thật.
 
 ## Cấu hình máy ngoài gói
 

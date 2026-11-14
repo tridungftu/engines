@@ -23,7 +23,7 @@ Các SHA dưới đây tính trên bytes thực; cột LF chỉ đổi CRLF thà
 | `e_hoa_don/ma-nguon/doc.py` | `a66dea667d2690f790c42e7684548d4015299a4dcb86f318bd36854df59dd5a9` | `4ce7dcb5ec02a62c4bc762c2ffa8a52359cbb9bd65f9ad2bb8e7313a74bd0d8b` |
 | `e_hoa_don/ma-nguon/lib/trang_thai.py` | `d1cacb693a5b74c987605f08f9c8f2f89978cb4b8e4a1a6cb4ed73807f59ae82` | `66a24f1afe6a8771713c1ed1344e2f5b86f33aa4ce88f0952b037f068209b3f8` |
 
-## Gói HD-0 hiện tại
+## Gói HD-0 tại mốc bàn giao (lịch sử)
 
 | Tệp trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
 |---|---|---|
@@ -39,3 +39,14 @@ Các SHA dưới đây tính trên bytes thực; cột LF chỉ đổi CRLF thà
 | `engine.json` | `bb1d48c0c641ff54aa8809eccf60074d1a7b47f3087358cc67521618d3d71629` | `bb1d48c0c641ff54aa8809eccf60074d1a7b47f3087358cc67521618d3d71629` |
 | `README.md` | `659f894abf2d7c35a2f643d3369b1e268a5f336b0eac68a7b719144ede97c636` | `659f894abf2d7c35a2f643d3369b1e268a5f336b0eac68a7b719144ede97c636` |
 | `requirements.lock` | `9d44717d3f5fdb8196eeb57b46a80436370a220289b88fc1e0f9deda7be90ab4` | `9d44717d3f5fdb8196eeb57b46a80436370a220289b88fc1e0f9deda7be90ab4` |
+
+## HD-1 — 15/11/2026
+
+Hai tệp runtime thay đổi: `e_hoa_don/doc.py` (lỗi nguồn/phép chiếu và tiền kiểm trần 1.000 HHDVu bằng XMLParser stdlib không dựng cây), `e_hoa_don/chay.py` (hợp đồng lỗi vượt trần và ánh xạ hẹp lỗi kích thước mở/đọc tệp). Cặp tệp do lead Claude duyệt; parser `hoa_don_xml.py` giữ nguyên HD-0, test đối chiếu nguồn cộng hai thay đổi import vẫn đạt. Không đổi nguồn, giấy phép hoặc dependency.
+
+| Tệp runtime HD-1 | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `e_hoa_don/doc.py` | `4114d0d293438572f5293a69395d6a53a5300aacf4a2c94f3530e999b5fbcd89` | `bee080710b417a81f5b0d88a9d41474dcf2fe44635f55b8dd028b7c58714da93` |
+| `e_hoa_don/chay.py` | `71dc63fe70d6260b5ead8578f20a2a4d467ade1fe7430bc1e44e6446fe409e92` | `49e70e7af6f14637ebcb174c6f7326136d2be6bca76ded9dd5bcda6d766ffde6` |
+
+Bảng HD-0 giữ lịch sử; không dùng làm hash tệp HD-1 đã thay đổi. Danh mục cuối toàn gói thuộc HD-4.

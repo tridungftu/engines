@@ -1,5 +1,14 @@
 # CHANGELOG — e_hoa_don
 
+## HD-1 — 15/11/2026
+
+- Phân biệt XML hỏng và encoding/DOCTYPE/namespace/path ngoài profile bằng lỗi cố định; không phản chiếu nguồn hoặc bắt tràn DataError. Nhiều TToan không chiếu scalar mơ hồ; giữ exact text/occurrence, money/relations/thuế, issue ngoài envelope V1 và context=None.
+- Lead Claude duyệt cặp runtime `doc.py` + `chay.py` (hai tệp, trong trần ≤5), không phải quyết định của Anh. Parser `hoa_don_xml.py` giữ nguyên. Sửa `HD_XML_QUA_LON`/`HD_KET_QUA_QUA_LON`; chỉ bọc đúng lỗi kích thước trong khối mở/đọc tệp, giữ lỗi khác/hủy/mất lease/invariant.
+- Thêm trần vận hành 1.000 HHDVu/XML, XML parser tiền kiểm không dựng cây, dừng ở dòng 1.001 trước DTO/JSON bằng `HD_QUA_NHIEU_DONG_HANG`. Không cắt dòng/occurrence; comment/CDATA không bị đếm nhầm. README/VIEC ghi giá trị, lý do và giới hạn bằng chứng; trần JSON 32 MiB vẫn áp dụng trước upload.
+- Thêm 20 test DEMO lượt bổ sung (HD-1 tổng 94 test mới trên nền HD-0 63 test). Năm ca đỏ lượt trước đã xanh. Ca 200.000 HHDVu chứng minh chặn trước parser lõi/JSON; đúng 1.000 dòng vẫn giữ đủ thứ tự/occurrence.
+- Windows, Python 3.13.14, SDK 2.0.0, `PYTHONDONTWRITEBYTECODE=1`: SDK 1/1 DEMO [ĐẠT]; pytest `-q -p no:cacheprovider` **157 passed in 5.57s, 0 skipped**; kiểm độc lập [ĐẠT]; cả ba mã thoát 0. **Đã kiểm bằng Core giả (CoreGia)**, chưa nghiệm thu Core thật, chưa chạy Linux/máy sạch HD-4.
+- Bàn giao và bản nháp PR cũ chuyển vào VIEC mục Bàn giao HD-1; giữ và cập nhật `docs/PR-HD-1.md` để lead dùng. Lượt bổ sung khoảng 0.2 giờ, tổng HD-1 khoảng 0.37 giờ gồm mốc trước 0.17 giờ; phiếu 3 giờ ước tính. Không git add/commit/push. PR: chờ lead mở. Không phát sinh Cần Core/Chờ Anh mới; giữ nợ SDK ánh xạ lỗi 413 đã được engine bọc hẹp.
+
 ## 1.0.0 — HD-0, 15/11/2026
 
 - Tạo gói SDK 2.0 với đúng một năng lực `hoa_don.doc_xml@2`, `tep` → `truong`, đủ 18 trường phiếu §2.2; 16 MiB/XML/600 giây, cho phép hủy.

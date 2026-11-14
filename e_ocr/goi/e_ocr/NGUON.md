@@ -86,7 +86,7 @@ OCR-6 dùng hash SHA-256 từ metadata phát hành PyPI cho wheel Windows x64 CP
 Băm SHA-256 nguyên byte các tệp trong gói (không tự băm `NGUON.md` để tránh tự tham chiếu):
 
 ```text
-af5fe5fe6f574396795178ee08eb4d1ce39016f408e61ce96ff772bbe095828a  CHANGELOG.md
+bdf135b35fa154ed5ae1911ef1e6d2f70e725d3c2d6c38b2686c990e89b9fe3c  CHANGELOG.md
 bc1af1f36a1b4de11f47395c56ffe2030e1a6202f4ca21740f36c86166376893  contract/cau_hinh_may.schema.json
 d73a80f276eef43536ee14810ef46a1df73d476a9b4f02cc4f3bd163f4d73902  contract/van_ban_tai_lieu.schema.json
 8521635ce091f072c116ae64a5064b1d3baba70c78dfb6a4fcdffb212e9dfbd9  demo/cau_hinh.demo.json
@@ -123,5 +123,5 @@ fc31ae693905e1c544204d3be3e706bf4e7f9d1fd9e470dc31b1463491131d9c  e_ocr/vendor/m
 17f282a755ee25d934bcc9157dbc2c14e8b671b10d3dfed22c06553a47eb0494  e_ocr/xuat_word.py
 eb7c84bb4edfb5da1247feea94bb2522ff9618c7d165ea21e2b264c2126448c3  engine.json
 1db69e31fcce6e22ea78c2cb0606aded25ee89b5d2fd96c128dcf01d2e471f6c  README.md
-e62cb187401d048011d1176259e89afd173415e7031eb144e8843566f14ee2a2  requirements.lock
+a6e0b765087fa3707acab44063cb697610f231657a410b88ae1ff6e3bae2107c  requirements.lock
 ```

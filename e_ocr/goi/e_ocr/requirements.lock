@@ -1,7 +1,6 @@
 # Wheels: CPython 3.13, Windows x64 va Linux x86_64; PyPI SHA-256.
-# SDK wheel trong repo duoc cai truoc bang --no-index --no-deps.
-kho-tri-thuc-sdk==2.0.0 \
-    --hash=sha256:a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
+# SDK wheel trong repo cai rieng bang --no-index --no-deps.
+# SHA-256 SDK: a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
 pdfplumber==0.11.10 \
     --hash=sha256:7741ea81bf165b474b153e6789d10d18e06b6ddcf3ec84289c3ef2fed6802580
 Pillow==12.3.0 \

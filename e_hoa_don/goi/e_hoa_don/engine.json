@@ -140,10 +140,28 @@
   "chay_thu_demo": [
     {
       "nang_luc": "hoa_don.doc_xml@2",
-      "ten": "Đọc XML hóa đơn DEMO 0000123",
+      "ten": "DEMO 0000123 — tiền nguyên",
       "dau_vao": {
         "loai": "tep",
         "tep_demo": "demo/hoa-don-DEMO.xml"
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "hoa_don.doc_xml@2",
+      "ten": "DEMO 0000123 — tiền lẻ exact",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/hoa-don-le-DEMO.xml"
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "hoa_don.doc_xml@2",
+      "ten": "DEMO thiếu nguồn — null và cảnh báo",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/hoa-don-thieu-DEMO.xml"
       },
       "tham_so": {}
     }

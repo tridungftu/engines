@@ -1,5 +1,13 @@
 # CHANGELOG — e_hoa_don
 
+## HD-3 — mốc 14/11/2026, kiểm thực tế 15/11/2026
+
+- Ba chay_thu_demo dương tính: tiền nguyên 1000000 VND + 100000 VND = 1100000 VND; tiền lẻ exact 1000000.123456 VND + 100000.012345 VND = 1100000.135801 VND; nguồn thiếu/rỗng/tổng vắng → null/ABSENT/EMPTY/HOLD. Công ty DEMO Ánh Dương chỉ là nhãn mô tả, không thêm Ten ngoài allowlist. Context=None, can_kiem_tra=true, identity/digest null; TToan ngoài envelope V1 vẫn giữ issue.
+- Thêm ba fixture XML nhỏ + oracle literal và pin bytes/SHA-256 độc lập trong tests/demo; pytest đối chiếu đủ 18 trường, báo cáo qua CoreGia.doc_tep, header/dòng/occurrence/locator, Decimal/tiền/thuế, bytes/hash và trạng thái nguồn. Không lấy output parser làm expected hoặc nhận golden cũ đã kiểm khi thiếu bytes gốc. Giữ XML UTF-8/LF bằng .gitattributes; bản checkout fixture tiền nguyên khớp LF đã ghim HD-0.
+- Thêm **24 test HD-3**, gồm MIME sai, lỗi đúng LoiNghiepVu/mã/câu HD-1, DTO bất biến/Issue SDK, thiếu TToan và biên 1.000 dòng (qua)/1.001 dòng (từ chối). Tệp nhiều dòng chỉ sinh trong DEMO tạm. Chạy tiếp regression âm HD-1/HD-2: dữ liệu sai/thiếu/mơ hồ, giới hạn, hủy, upload/retry/lease và canary. Không skip/xfail, không cắt ngầm. 0 tệp runtime sửa, không đổi phiên bản/hợp đồng.
+- Kiểm thật Windows/Python 3.13.14/SDK 2.0.0, đúng ba lệnh -B: SDK **3/3 DEMO [ĐẠT]**; pytest **283 passed in 38.65s, 0 skipped**; kiem_doc_lap **[ĐẠT]**, cả ba mã thoát 0. SDK wheel cài/đối chiếu SHA offline; pytest có sẵn chép offline. **Đã kiểm bằng Core giả (CoreGia)**; chưa chạy Linux, máy sạch HD-4, quyền kho tệp/Core thật hoặc bài Core thật 120 phút.
+- Thời gian thực tế: **0.208 giờ** (02:08:00–02:20:27, 15/11/2026, UTC+07); phiếu **3 giờ ước tính**. Không mở rộng phạm vi hoặc phát sinh Cần Core/Chờ Anh mới; giữ context tin cậy/quyền tệp/hook log/seam lease/corpus cũ. ZIP/bảng kê/tải/Cloud/Node còn ngoài phạm vi và chờ Anh/Core. PR: **chờ lead mở**; bản nháp docs/PR-HD-3.md. Không commit/push.
+
 ## HD-2 — mốc 14/11/2026, kiểm thực tế 15/11/2026
 
 - Chỉ sửa runtime `chay.py` (1/2 tệp cho phép); giữ nguyên parser/phép chiếu/lỗi HD-1, `hoa_don.doc_xml@2` và phiên bản gói. Kiểm hủy trước đọc, sau parse, trước upload và trước return; bốn câu tiến độ cố định, không chứa định danh/dữ liệu tài liệu.

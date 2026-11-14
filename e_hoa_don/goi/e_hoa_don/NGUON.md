@@ -23,7 +23,7 @@ Các SHA dưới đây tính trên bytes thực; cột LF chỉ đổi CRLF thà
 | `e_hoa_don/ma-nguon/doc.py` | `a66dea667d2690f790c42e7684548d4015299a4dcb86f318bd36854df59dd5a9` | `4ce7dcb5ec02a62c4bc762c2ffa8a52359cbb9bd65f9ad2bb8e7313a74bd0d8b` |
 | `e_hoa_don/ma-nguon/lib/trang_thai.py` | `d1cacb693a5b74c987605f08f9c8f2f89978cb4b8e4a1a6cb4ed73807f59ae82` | `66a24f1afe6a8771713c1ed1344e2f5b86f33aa4ce88f0952b037f068209b3f8` |
 
-## Gói HD-0 hiện tại
+## Gói HD-0 tại mốc bàn giao (lịch sử)
 
 | Tệp trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
 |---|---|---|
@@ -39,3 +39,9 @@ Các SHA dưới đây tính trên bytes thực; cột LF chỉ đổi CRLF thà
 | `engine.json` | `bb1d48c0c641ff54aa8809eccf60074d1a7b47f3087358cc67521618d3d71629` | `bb1d48c0c641ff54aa8809eccf60074d1a7b47f3087358cc67521618d3d71629` |
 | `README.md` | `659f894abf2d7c35a2f643d3369b1e268a5f336b0eac68a7b719144ede97c636` | `659f894abf2d7c35a2f643d3369b1e268a5f336b0eac68a7b719144ede97c636` |
 | `requirements.lock` | `9d44717d3f5fdb8196eeb57b46a80436370a220289b88fc1e0f9deda7be90ab4` | `9d44717d3f5fdb8196eeb57b46a80436370a220289b88fc1e0f9deda7be90ab4` |
+
+## HD-1 đang làm — 15/11/2026
+
+Chỉ thay runtime `e_hoa_don/doc.py`: phân loại lỗi nguồn cố định, tiền nhiều mục TToan không chiếu scalar mơ hồ. Parser `hoa_don_xml.py` vẫn nguyên bản HD-0, test so nội dung với nguồn cộng đúng hai thay đổi import vẫn đạt. Chưa sửa `chay.py`, đang chờ chốt cặp tệp runtime. Không đổi nguồn, giấy phép hoặc phụ thuộc.
+
+SHA-256 bytes thực của `e_hoa_don/doc.py` tại lần kiểm HD-1: `7040509c8a56a31bf1a0ae4f397a5e1c2e17228f942ef60f37ad8cb14c641591`. Bảng HD-0 ở trên giữ lịch sử, không dùng làm hash của tài liệu CHANGELOG/NGUON đã cập nhật HD-1; danh mục cuối toàn gói thuộc HD-4.

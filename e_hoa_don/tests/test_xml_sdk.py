@@ -87,14 +87,18 @@ def test_tien_le_exact_qua_sdk(xml_demo):
     assert fact["exact_text"] == fact["exact_value"] == "1000000.123456"
 
 
-@pytest.mark.parametrize("raw", [b"<HDon>DEMO-khong-lo-nguon", b"<x/>", b'<HDon xmlns="urn:DEMO"/>'])
-def test_xml_hong_va_ngoai_profile_loi_co_dinh(raw):
+@pytest.mark.parametrize("raw,ma,cau", [
+    (b"<HDon>DEMO-khong-lo-nguon", "HD_XML_KHONG_DOC_DUOC", "Không đọc được cấu trúc tệp XML hóa đơn."),
+    (b"<x/>", "HD_XML_NGOAI_PROFILE", "Tệp XML chưa thuộc phạm vi bộ đọc đang hỗ trợ."),
+    (b'<HDon xmlns="urn:DEMO"/>', "HD_XML_NGOAI_PROFILE", "Tệp XML chưa thuộc phạm vi bộ đọc đang hỗ trợ."),
+])
+def test_xml_hong_va_ngoai_profile_loi_co_dinh(raw, ma, cau):
     core, _, kq = chay(raw)
     assert kq["trang_thai"] == "LOI" and kq["ket_qua"] is None
-    assert kq["loi"]["ma"] == "HD_XML_KHONG_DOC_DUOC"
-    assert kq["loi"]["thong_diep"] == "Không đọc được tệp XML hóa đơn trong phạm vi hỗ trợ."
+    assert kq["loi"]["ma"] == ma
+    assert kq["loi"]["thong_diep"] == cau
     assert core.so_lan_ghi["tep"] == core.so_lan_ghi["ket_qua"] == 0
-    with pytest.raises(LoiNghiepVu, match="HD_XML_KHONG_DOC_DUOC"):
+    with pytest.raises(LoiNghiepVu, match=ma):
         doc_xml(raw, tep_xml={"tep_id": "DEMO-khong-uuid"})
 
 
@@ -174,7 +178,7 @@ def test_vuot_16_mib_kiem_bytes_thuc_metadata_khai_thieu():
     viec = ViecDemo(b" " * (MAX_XML_BYTES + 2))
     with pytest.raises(LoiNghiepVu) as exc:
         doc_hoa_don(viec)
-    assert exc.value.ma == "HD_XML_VUOT_GIOI_HAN" and not viec.da_tai
+    assert exc.value.ma == "HD_XML_QUA_LON" and not viec.da_tai
 
 
 def test_json_vuot_tran_tu_choi_truoc_upload(xml_demo, monkeypatch):
@@ -183,7 +187,7 @@ def test_json_vuot_tran_tu_choi_truoc_upload(xml_demo, monkeypatch):
     viec = ViecDemo(xml_demo)
     with pytest.raises(LoiNghiepVu) as exc:
         doc_hoa_don(viec)
-    assert exc.value.ma == "HD_JSON_VUOT_GIOI_HAN" and not viec.da_tai
+    assert exc.value.ma == "HD_KET_QUA_QUA_LON" and not viec.da_tai
 
 
 def test_upload_that_bai_khong_xong(xml_demo, monkeypatch):

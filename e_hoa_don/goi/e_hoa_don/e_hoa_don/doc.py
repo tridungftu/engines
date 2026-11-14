@@ -10,7 +10,7 @@ from kho_tri_thuc_sdk.primitives import DataError, date_iso
 
 from . import __version__
 from .hoa_don_xml import (
-    InvoiceField, InvoiceIssue, InvoiceReadResult, _identity_text,
+    MAX_XML_BYTES, InvoiceField, InvoiceIssue, InvoiceReadResult, _identity_text,
     doc_hoa_don_xml, ra_json,
 )
 
@@ -82,7 +82,7 @@ def chieu_truong(result: InvoiceReadResult, tep_xml: dict) -> tuple[dict, list]:
         dau[name] = text
 
     def tien(fact, locator):
-        if fact.exact_value is None:
+        if fact.exact_value is None or "MONEY_SECTION_AMBIGUOUS" in result.money.reasons:
             return None
         text = format(fact.exact_value, "f")
         if not _TIEN.fullmatch(text):
@@ -122,15 +122,37 @@ def chieu_truong(result: InvoiceReadResult, tep_xml: dict) -> tuple[dict, list]:
 
 
 def doc_xml(raw: bytes, *, tep_xml: dict) -> tuple[dict, bytes]:
+    if len(raw) > MAX_XML_BYTES:
+        raise LoiNghiepVu(
+            "HD_XML_QUA_LON",
+            "Tệp XML vượt giới hạn 16 MiB. Anh hãy gửi tệp nhỏ hơn.",
+        )
+    # Profile chỉ nhận UTF-8; không phản chiếu byte lỗi hoặc exception.
+    try:
+        raw.decode("utf-8")
+    except UnicodeDecodeError:
+        raise LoiNghiepVu(
+            "HD_XML_NGOAI_PROFILE",
+            "Tệp XML chưa thuộc phạm vi bộ đọc đang hỗ trợ.",
+        ) from None
     # SDK chưa có context được kiểm quyền: không lấy MST/profile từ ngu_canh.
     result = doc_hoa_don_xml(raw, context=None)
     # Tái dùng gate cấu trúc của trang_thai._trang_thai_xml. Thiếu context là
     # cảnh báo dữ liệu, không phải nguồn ngoài đã nhận việc nên không ChuaRo.
-    if result.shape != "SUPPORTED_SUBSET":
+    if result.shape == "XML_MALFORMED":
         raise LoiNghiepVu(
             "HD_XML_KHONG_DOC_DUOC",
-            "Không đọc được tệp XML hóa đơn trong phạm vi hỗ trợ.",
+            "Không đọc được cấu trúc tệp XML hóa đơn.",
         )
+    if result.shape in {
+        "UNSUPPORTED_INPUT", "UNSUPPORTED_NAMESPACE", "UNSUPPORTED_PATH", "STRUCTURE_DUPLICATE",
+    }:
+        raise LoiNghiepVu(
+            "HD_XML_NGOAI_PROFILE",
+            "Tệp XML chưa thuộc phạm vi bộ đọc đang hỗ trợ.",
+        )
+    if result.shape != "SUPPORTED_SUBSET":
+        raise RuntimeError("Trạng thái bộ đọc XML ngoài invariant.")
     truong, van_de = chieu_truong(result, tep_xml)
     bao_cao = {
         "phien_ban": 1, "nguon_doc": "xml_strict",

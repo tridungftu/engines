@@ -1,5 +1,14 @@
 # CHANGELOG — e_hoa_don
 
+## HD-1 — đang làm, 15/11/2026
+
+- Lớp bọc phân biệt `HD_XML_KHONG_DOC_DUOC` (XML hỏng) và `HD_XML_NGOAI_PROFILE` (encoding/DOCTYPE/namespace/path), câu cố định không phản chiếu nguồn. Kiểm UTF-8 và trần bytes khi gọi hàm thuần; giữ lỗi invariant cho SDK xử lý chung.
+- Không chiếu scalar tiền từ nhiều mục `TToan`; giữ exact text, occurrence và `MONEY_SECTION_AMBIGUOUS` trong JSON. Không đổi parser lõi hoặc thuật toán Decimal/identity/digest.
+- Thêm 74 test DEMO có đáp án literal về tiền/ngày/occurrence/context/thuế/quan hệ và giới hạn thực. Không ghi tệp lớn vào gói.
+- Kết quả Windows: SDK 1/1 DEMO [ĐẠT], pytest **132 passed, 5 failed, 0 skipped** (4.01s), kiểm độc lập [ĐẠT]; **đã kiểm bằng Core giả (CoreGia)**, chưa nghiệm thu Core thật, chưa chạy Linux.
+- **Chưa đạt HD-1**: năm ca vượt trần còn thất bại vì mã/câu lỗi cũ nằm trong `chay.py`. Chờ Anh cho phép dùng hai tệp runtime `doc.py` + `chay.py` thay cặp đã nêu `doc.py/hoa_don_xml.py`; lõi giữ nguyên. Bản sửa đề nghị và kết quả thật ở `docs/PR-HD-1.md` ngoài gói.
+- SDK/CoreGia chặn bytes quá trần ngay khi mở tệp bằng lỗi 413; cần lớp bọc riêng lỗi kích thước để trả đúng `HD_XML_QUA_LON`, không bọc lỗi khác. Đã ghi Cần Core/SDK trong VIEC. Không sửa SDK/Core/ma-nguon, không commit/push. PR: **chờ lead mở**.
+
 ## 1.0.0 — HD-0, 15/11/2026
 
 - Tạo gói SDK 2.0 với đúng một năng lực `hoa_don.doc_xml@2`, `tep` → `truong`, đủ 18 trường phiếu §2.2; 16 MiB/XML/600 giây, cho phép hủy.

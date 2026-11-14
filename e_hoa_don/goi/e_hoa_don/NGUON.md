@@ -50,3 +50,34 @@ Hai tệp runtime thay đổi: `e_hoa_don/doc.py` (lỗi nguồn/phép chiếu v
 | `e_hoa_don/chay.py` | `71dc63fe70d6260b5ead8578f20a2a4d467ade1fe7430bc1e44e6446fe409e92` | `49e70e7af6f14637ebcb174c6f7326136d2be6bca76ded9dd5bcda6d766ffde6` |
 
 Bảng HD-0 giữ lịch sử; không dùng làm hash tệp HD-1 đã thay đổi. Danh mục cuối toàn gói thuộc HD-4.
+
+## HD-4 — danh mục thực tế 15/11/2026
+
+Ba tệp nguồn `ma-nguon` ở trên đã được đối chiếu SHA bytes và LF, khớp bảng lịch sử; không sửa metadata nguồn. Parser giữ thuật toán nguồn, chỉ đổi hai import như đã nêu; `doc.py` là phép chiếu viết lại từ các quy tắc nguồn, `chay.py` là vỏ SDK mới có chốt fail-closed; `cau_hinh_may.py` và `__init__.py` viết mới theo phiếu/mẫu. Manifest, hai schema, ba XML DEMO, README, CHANGELOG và lock viết mới theo phiếu; không lấy Node hay portal. Phiên bản gói 1.0.0 theo engine.json; SDK 2.0.0 theo wheel. Nguồn nội bộ Python không có căn cứ giấy phép riêng trong hồ sơ đã xét: không tự gán license. Quyền nội bộ CD-096 A1 ghi cho nguồn Node cũ không suy rộng sang gói XML.
+
+Bảng dưới ghi SHA bytes thực tại mốc HD-4 và SHA sau thay CRLF bằng LF; không chuẩn hóa Unicode. Khác biệt checkout phải đối chiếu cả LF và thay đổi nội dung; không sửa hash lịch sử để bỏ qua thay đổi. Không tự băm NGUON.md để tránh tự tham chiếu.
+
+| Tệp trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `CHANGELOG.md` | `cada241a82a76898b96a0ed062dd6106ee137de7ca3ac40e2df6e14a1c12a8d3` | `cada241a82a76898b96a0ed062dd6106ee137de7ca3ac40e2df6e14a1c12a8d3` |
+| `contract/bao_cao_xml.schema.json` | `66c615f95550dad54fd84a89aa153b91fa1a39a5ae89091173ed281ebc817d4b` | `480c43d9ad9226922e28da3d94c56056df70d7318146fd812dbd0dede8368d12` |
+| `contract/cau_hinh_may.schema.json` | `6556c8f200d7a082af390590b95ba2a1b1ec536cf971e1a654b618f5bf9461af` | `195eb425011f09b51bd0890689156f0fa4b07660ebd6dc01f54769176abea2b4` |
+| `demo/hoa-don-DEMO.xml` | `06fe9986063ee65483c7d91880b948a1ab65856d05767508face98695c8d07fe` | `06fe9986063ee65483c7d91880b948a1ab65856d05767508face98695c8d07fe` |
+| `demo/hoa-don-le-DEMO.xml` | `6ef712c06b870cfa7cd478a463ba1349689ca283bcf79f2a1fd8f64bfba6225b` | `6ef712c06b870cfa7cd478a463ba1349689ca283bcf79f2a1fd8f64bfba6225b` |
+| `demo/hoa-don-thieu-DEMO.xml` | `fb45b967fcc1fe6fb7f0896a3235889a3a9623a997694460443e8ee3bafe516a` | `fb45b967fcc1fe6fb7f0896a3235889a3a9623a997694460443e8ee3bafe516a` |
+| `e_hoa_don/__init__.py` | `ed1b55a64dbdd460297394371d44be45872cb34a1f854bffda9ff8564b00e2f7` | `168c1ace3c34e2faed85d57f601633d46d492896f56b4f2acd8fcb727f03f78c` |
+| `e_hoa_don/cau_hinh_may.py` | `703bca0f04ade53a9b723d25e9cfbd6b7d1659ccb87dcb6462603a5fdb58e719` | `94528ad3f5d7feb06cb912eddd5e8a2a47b53443d0538bf65d7b93dbdfa2a17b` |
+| `e_hoa_don/chay.py` | `9739bcc5fd3cbfd07b3cc9609686331ab0ecadaf9fbba44646e1a4eb37e04e06` | `9739bcc5fd3cbfd07b3cc9609686331ab0ecadaf9fbba44646e1a4eb37e04e06` |
+| `e_hoa_don/doc.py` | `4114d0d293438572f5293a69395d6a53a5300aacf4a2c94f3530e999b5fbcd89` | `bee080710b417a81f5b0d88a9d41474dcf2fe44635f55b8dd028b7c58714da93` |
+| `e_hoa_don/hoa_don_xml.py` | `4153585d413117c97563e215c9da1cfd1548e17119c2651ffea4763aaba53d88` | `86f1dce600818e4f27cf26e7d4f2fa590f0722334fa766ef2e3ed43af2a7ebba` |
+| `engine.json` | `0f26a4de8318a97a569089bf870a1b1a47da3e209592a6f2fd7f0acd251fdbb6` | `e356a102f2a9bfbafa072964548b661ef611bf17376e1885237fdb0a4b17229a` |
+| `README.md` | `884bab27c527849bd358dc31cf91e2341f39d7c64b83047402e66aef0ace6213` | `884bab27c527849bd358dc31cf91e2341f39d7c64b83047402e66aef0ace6213` |
+| `requirements.lock` | `b8352099070d06ed79794796878efcf4f245f6bae8732ad61b0552e8e6dd8f50` | `9d44717d3f5fdb8196eeb57b46a80436370a220289b88fc1e0f9deda7be90ab4` |
+
+## Sửa HD-4 — CI Linux/Python 3.11, 15/11/2026
+
+Chỉ CHANGELOG trong gói được bổ sung bằng chứng sửa công cụ kiểm ngoài gói; năm tệp runtime, manifest, schema, DEMO, README và lock không đổi. Không thay hash nguồn hoặc bảng lịch sử HD-4 ở trên để bỏ qua thay đổi. Bản sửa `tests/kiem_doc_lap.py` và test hồi quy nằm ngoài gói; không có nguồn/phụ thuộc runtime mới.
+
+| Tệp đổi trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `CHANGELOG.md` | `a4e08324b4f21865b36351f3dee137ae7ccc3523f84734c3f60904e552f6d00e` | `a4e08324b4f21865b36351f3dee137ae7ccc3523f84734c3f60904e552f6d00e` |

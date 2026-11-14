@@ -1,5 +1,19 @@
 # CHANGELOG — e_hoa_don
 
+## Sửa HD-4 — CI Linux/Python 3.11, 15/11/2026
+
+- Sửa audit hook trong công cụ kiểm ngoài gói: từ chối import bằng `ModuleNotFoundError` để phép dò Jython tùy chọn của `copy.py` CPython 3.11 bắt được `ImportError`. Hook cũ ném `RuntimeError` khiến tiến trình sạch thất bại; Python 3.13 đã bỏ phép dò này. Giữ allowlist, `-I -B -S`, SDK nạp theo tệp cụ thể và chặn mạng/tiến trình; không thêm Core/shim/site-packages. Runtime, SDK, API và dependency không đổi.
+- Chẩn đoán lỗi chỉ in mã thoát/tên ngoại lệ đã giới hạn hoặc mã cố định cho lỗi lạ, thiếu xác nhận, khởi chạy/quá hạn; không phản chiếu nội dung hóa đơn, đường dẫn hay traceback. Thêm 14 test hồi quy gồm probe Jython, import cấm có tệp hiện hữu, sự kiện mạng/tiến trình và canary chẩn đoán.
+- Windows/Python 3.13.14/SDK 2.0.0, `PYTHONDONTWRITEBYTECODE=1`: SDK **3/3 DEMO**, pytest **298 passed in 39.46s, 0 skipped**, kiểm độc lập và cài sạch Windows **[ĐẠT]**, mã thoát 0. Đã kiểm bằng Core giả (CoreGia). Nguyên mã copy.py CPython 3.11.18 chạy trong tiến trình cô lập trên 3.13: hook cũ mã 1/RuntimeError, hook mới mã 0/đủ DEMO. Chưa có interpreter 3.11/Linux tại máy, **chờ CI Linux xác nhận**, không coi mô phỏng là chạy Linux.
+- Không git add/commit/push; mã PR chưa tra. Không có yêu cầu Core/Chờ Anh mới. Không đo mốc bắt đầu lượt sửa; phiếu HD-4 **2 giờ ước tính**.
+
+## HD-4 — mốc 14/11/2026, kiểm thực tế 15/11/2026
+
+- Đối chiếu SDK 2.0.0 và SHA wheel; xác minh bytes nguồn, lập danh mục SHA gói; chỉ SDK + stdlib. Hai kịch bản cài sạch sao chép gói tách khỏi source, kiểm thiếu cấu hình và nhập độc lập; chưa chạy Linux.
+- Chặn khởi động nếu `Engine._ghi` không callable; test ghim SDK và thiếu hook. Cần SDK hook nhật ký công khai, không in traceback ra stderr.
+- Windows/Python 3.13.14: SDK **3/3 DEMO [ĐẠT]**, pytest **284 passed, 0 skipped**, kiểm độc lập **[ĐẠT]**; cài sạch Windows **3/3 DEMO và kiểm độc lập [ĐẠT]**, các mã thoát 0. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Linux/Core thật.
+- Thời gian thực tế: 02:22–02:29 ngày 15/11/2026 UTC+07, khoảng **0,12 giờ**; phiếu **2 giờ ước tính**. PR: **chờ lead mở**. ZIP/bảng kê/tải chờ Anh; cần Core context tin cậy, quyền tệp và chuyển quy trình @1 → @2, giữ bản cũ.
+
 ## HD-3 — mốc 14/11/2026, kiểm thực tế 15/11/2026
 
 - Ba chay_thu_demo dương tính: tiền nguyên 1000000 VND + 100000 VND = 1100000 VND; tiền lẻ exact 1000000.123456 VND + 100000.012345 VND = 1100000.135801 VND; nguồn thiếu/rỗng/tổng vắng → null/ABSENT/EMPTY/HOLD. Công ty DEMO Ánh Dương chỉ là nhãn mô tả, không thêm Ten ngoài allowlist. Context=None, can_kiem_tra=true, identity/digest null; TToan ngoài envelope V1 vẫn giữ issue.

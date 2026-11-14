@@ -1,4 +1,4 @@
-# Đọc XML hóa đơn — HD-1
+# Đọc XML hóa đơn — HD-4
 
 Gói SDK 2.0.0, phiên bản 1.0.0; một năng lực `hoa_don.doc_xml@2` nhận `tep` XML và trả `truong`. Bộ đọc strict chỉ hỗ trợ profile `DEMO_M2_XML_QD1271_FIELDS_V1`. Đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật.
 
@@ -53,6 +53,10 @@ Fixture nhỏ `demo/hoa-don-DEMO.xml` hoàn toàn giả: hóa đơn `0000123`, n
 
 ## Phạm vi bàn giao
 
-Chỉ đăng ký `hoa_don.doc_xml@2`. Lead/Core quản lý phiên bản và chuyển quy trình `@1` sang `@2`; giữ bản cũ tại `ma-nguon/`. Mã ZIP đi cùng lõi là phần nội bộ chưa kích hoạt, không có handler hay DEMO ZIP. ZIP/bảng kê/tải/Node/Cloud/cổng thuế còn chờ quyết định riêng. Không sửa hoặc lưu trữ lại mã tham chiếu. HD-0…HD-3 đã kiểm bằng Core giả (CoreGia); HD-4 ghim nguồn/cài máy sạch còn theo phiếu. Kiểm Windows hiện tại không thay kiểm máy sạch Linux hoặc nghiệm thu Core thật.
+Chỉ đăng ký `hoa_don.doc_xml@2`. Lead/Core quản lý phiên bản và chuyển quy trình `@1` sang `@2`; giữ bản cũ tại `ma-nguon/`. Mã ZIP đi cùng lõi là phần nội bộ chưa kích hoạt, không có handler hay DEMO ZIP. ZIP/bảng kê/tải/Node/Cloud/cổng thuế còn chờ quyết định riêng. Không sửa hoặc lưu trữ lại mã tham chiếu. HD-0…HD-4 đã kiểm bằng Core giả (CoreGia); cài sạch đã kiểm trên Windows, chưa kiểm Linux hoặc nghiệm thu Core thật.
 
 Bộ DEMO HD-3 có ba ca trong `chay_thu_demo`: `hoa-don-DEMO.xml` (1000000 VND + 100000 VND = 1100000 VND), `hoa-don-le-DEMO.xml` (1000000.123456 VND + 100000.012345 VND = 1100000.135801 VND), `hoa-don-thieu-DEMO.xml` (thiếu ký hiệu/tổng, MST mua rỗng → null/cảnh báo). Công ty DEMO Ánh Dương là nhãn mô tả, không thêm trường Ten ngoài allowlist. Cả ba đọc kỹ thuật thành công nhưng cần kiểm tra vì context=None; TToan ngoài semantic envelope V1 vẫn giữ issue. Oracle literal và pin bytes mới nằm ngoài gói ở `tests/demo/`; pytest kiểm đầy đủ trường/JSON qua CoreGia.doc_tep. Ca âm và 1.000/1.001 dòng ở pytest; tệp lớn chỉ sinh trong DEMO tạm. Không xác nhận golden cũ khi thiếu bytes fixture gốc.
+
+## Kiểm cài sạch HD-4
+
+Tại gốc repo chạy `e_hoa_don\tests\KIEM-MAY-SACH.cmd` trên Windows, hoặc `sh e_hoa_don/tests/kiem_may_sach.sh` trên Linux. Kịch bản đối chiếu SHA wheel SDK, cài offline vào venv mới và sao chép gói cùng bộ kiểm ra vị trí DEMO riêng. Windows giữ thư mục DEMO tạm trong `.venv/` của workspace; Linux dùng thư mục tạm hệ thống. Kiểm cấu hình thiếu, XML và nhập độc lập bằng CoreGia. Không tự chuyển quy trình `@1` sang `@2`; lead/Core giữ bản cũ và quản lý việc chuyển. Trạng thái HOLD và `canh_bao` là lý do cần kiểm tra, không phải xác nhận nghiệp vụ.

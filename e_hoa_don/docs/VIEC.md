@@ -17,15 +17,42 @@ Các dòng 0–5 giữ dấu vết phiếu cũ, không tự mở các lát mở 
 | 8 | HD-1 — XML strict, tiền và vấn đề nguồn | HD-1 | Xong — 15/11/2026 | SDK 1/1 DEMO ĐẠT; pytest 157 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia). Lead Claude duyệt doc.py + chay.py; trần 1.000 HHDVu chặn trước DTO/JSON. PR: **chờ lead mở**; xem mục Bàn giao HD-1. |
 | 9 | HD-2 — Bàn giao tệp, hủy, mất lease và gửi lại qua SDK | HD-2 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 1/1 DEMO ĐẠT; pytest 259 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia) và MayChuGia loopback. PR: **chờ lead mở**; xem Bàn giao HD-2 và `PR-HD-2.md`. |
 | 10 | HD-3 — Bộ XML DEMO có đáp án và regression | HD-3 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 3/3 DEMO ĐẠT; pytest 283 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia); 0 tệp runtime sửa. PR: **chờ lead mở**; xem Bàn giao HD-3 và `PR-HD-3.md`. |
+| 11 | HD-4 — Ghim nguồn và cài sạch XML | HD-4 | Đang làm — 15/11/2026 (sửa CI Linux) | Mốc đầu: Windows đạt, 284 test. Lượt sửa: SDK 3/3 ĐẠT; pytest 298 passed, 0 skipped; kiểm độc lập và cài sạch Windows đạt. Đã kiểm bằng Core giả (CoreGia); chờ CI Linux/Python 3.11 xác nhận, Core thật chưa kiểm. PR: **chờ lead cập nhật mã**. |
 
 HD-P không thay quyết định cuối của Anh cho phiếu 9 lát/29 giờ cũ. Bản giao mới dùng `hoa_don.doc_xml@2` vì đổi phong bì nhận/trả, không tự chuyển quy trình `@1`. Không cần thêm/đổi loại dữ liệu riêng: dùng `tep` → `truong` + tệp JSON chi tiết. Các câu Q1–Q8 và điều kiện mở lát tiếp theo ở `GIAO-CODEX-e_hoa_don.md` §5.2.
 
 Kiểm HD-P ngày 14/11/2026: regex theo đầu bài trích đủ **5/5 khối lệnh §4**, dòng mở khối là ba backtick trơn; khớp 5 mã lát HD-0…HD-4 và tổng 4 + 3 + 3 + 3 + 2 = **15 giờ ước tính**; `git diff --check` mã 0, phạm vi đúng hai tệp tài liệu. Ba lệnh kiểm engine AGENTS.md §5 **không áp dụng** theo đầu bài chỉ tài liệu. Chưa chạy kiểm chức năng engine hoặc CoreGia trong HD-P; các lệnh kiểm trong phiếu là yêu cầu của lát tương lai.
 
 ## Cần Core (chuyển lead Core qua Anh)
+- HD-4: SDK cần hook nhật ký công khai, không in traceback ra stderr; fail-closed khi thiếu `_ghi` là giải pháp tạm.
+- HD-4 phần cũ không dùng: `ma-nguon/chay.py`, `tai.py`, `phien.py`, `bang_ke.cjs`, `portal.cjs`, `vendor/`, Node lock, contract cũ, shim và test tham chiếu; giữ nguyên, chưa xóa hoặc chuyển `LUU-TRU/`. Cần Core context tin cậy, quyền tệp và lead/Core chuyển `@1` → `@2` giữ bản cũ. ZIP/bảng kê/tải chờ Anh; nếu mở tải cần phiếu riêng.
+- HD-4 kiểm Windows/Python 3.13.14: SDK 3/3 DEMO, pytest 284 passed/0 skipped, kiểm độc lập và cài sạch Windows đạt, các mã thoát 0; đã kiểm bằng Core giả (CoreGia). Chưa kiểm Linux/Core thật. Venv chính dùng pytest có sẵn; venv cài sạch chỉ cài wheel SDK offline. Thời gian thực tế khoảng 0,12 giờ (02:22–02:29, 15/11/2026 UTC+07), phiếu 2 giờ ước tính; PR: chờ lead mở.
 - Cổng engine chung: API HTTP v1, webhook, bộ cài engine từ thư mục/gói riêng (bỏ tiền tố `kho_tri_thuc.engines.`), K1–K5.
 - Màn Chạy thử chung và màn cấu hình dựng từ schema; nạp giao diện quản trị của engine.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
+
+### Sửa HD-4 — CI Linux/Python 3.11, 15/11/2026
+
+Kết luận: **Đạt các kiểm tra tại Windows/Python 3.13.14; chờ CI xác nhận Linux/Python 3.11.18**. Đã kiểm bằng Core giả (CoreGia). Nhánh `codex/e_hoa_don-hd-4`; mã PR chưa được cung cấp, chờ lead cập nhật; không git add/commit/push.
+
+Nguyên nhân: `Lib/copy.py` của CPython 3.11.18 dò tùy chọn `org.python.core.PyStringMap` cho Jython, bắt `ImportError` khi không có. Audit hook của kiểm độc lập lại ném `RuntimeError` cho import ngoài allowlist, làm phép dò này trở thành lỗi chí mạng. CPython 3.13 đã bỏ nhánh dò Jython nên Windows 3.13 không gặp. Đối chiếu nguồn chính thức: <https://github.com/python/cpython/blob/v3.11.18/Lib/copy.py>. Chạy nguyên mã copy.py 3.11.18 trong tiến trình `-I -B -S` trên Python 3.13: hook cũ mã 1/RuntimeError; hook mới mã 0 và đủ DEMO. Đây là tái hiện nhánh stdlib, **không phải bằng chứng đã chạy Linux hoặc interpreter 3.11**. Cú pháp cả năm tệp runtime đã qua AST với `feature_version=(3, 11)`; không cần sửa cú pháp, đường dẫn hoặc shell.
+
+Đã làm: chỉ đổi bộ kiểm ngoài gói để từ chối import bằng `ModuleNotFoundError` (thuộc `ImportError`); giữ nguyên allowlist, audit chặn mạng/tiến trình, nạp SDK theo tệp cụ thể, `-I -B -S`, không thêm site-packages/Core/shim hoặc nạp trước copy để né kiểm. Khi tiến trình lỗi, chỉ in mã thoát và tên ngoại lệ trong danh sách cố định; lỗi lạ/thiếu xác nhận/không khởi chạy/quá hạn có mã cố định, không phản chiếu stdout/stderr hay traceback. Thêm 14 ca hồi quy: dò Jython, từ chối org/Core/thư viện chưa ghim dù tệp hiện hữu, chặn bốn sự kiện mạng/tiến trình, chẩn đoán an toàn và lỗi khởi chạy/quá hạn. **0 tệp runtime thay đổi**, không đổi API/SDK/phụ thuộc/CI/kịch bản shell.
+
+Kết quả thật, `PYTHONDONTWRITEBYTECODE=1` và `-B`, SDK 2.0.0:
+
+| Lệnh | Kết quả | Mã thoát |
+|---|---|---:|
+| `.venv\Scripts\python -B -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_hoa_don` | 3/3 DEMO [ĐẠT] | 0 |
+| `.venv\Scripts\python -B -m pytest e_hoa_don/tests -q -p no:cacheprovider` | 298 passed in 39.46s, 0 skipped | 0 |
+| `.venv\Scripts\python -B e_hoa_don/tests/kiem_doc_lap.py` | [ĐẠT] AST/import/cây gói/tiến trình sạch | 0 |
+| `e_hoa_don\tests\KIEM-MAY-SACH.cmd` | Cài SDK offline trong venv mới, gói sao chép riêng; 3/3 DEMO và kiểm độc lập [ĐẠT] | 0 |
+
+Không tìm thấy interpreter Python 3.11/launcher `py`; WSL chưa cài, không có Docker trên PATH. Chưa chạy `sh e_hoa_don/tests/kiem_may_sach.sh` bằng Linux thật hoặc chạy lại CI từ bản sửa chưa commit. Không thay đổi hệ thống Windows để bổ sung môi trường.
+
+Thời gian thực tế: không ghi nhận mốc bắt đầu nên không báo giờ đo giả; pytest 39.46 giây, cài sạch Windows khoảng 6.60 giây. Phiếu HD-4: **2 giờ ước tính** (không có ước tính riêng lượt sửa).
+
+Lệch khỏi phiếu / quyết định tạm: không mở rộng nghiệp vụ; chỉ sửa công cụ kiểm và bổ sung bằng chứng. Cần Core / Chờ Anh mới phát sinh: **không có**; giữ nợ context/quyền tệp/hook nhật ký cũ. Linux/Python 3.11 còn chờ CI xác nhận.
 
 ### Bổ sung HD-P — 14/11/2026
 

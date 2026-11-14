@@ -45,7 +45,7 @@ def chay(config, ket_qua_dir):
     tep_cau_hinh = Path(config).resolve(strict=True)
     cam = {'.env', 'cau_hinh.that.toml', 'abbyy-hotfolder', 'plhn-that', 'web-that', 'bi-mat'}
     if any(x.casefold() in cam for x in tep_cau_hinh.parts):
-        raise ValueError('Kh?ng d?ng t?p c?u h?nh thu?c khu v?c b? c?m.')
+        raise ValueError('Không dùng tệp cấu hình thuộc khu vực bị cấm.')
     cfg = json.loads(tep_cau_hinh.read_text(encoding='utf-8-sig'))['abbyy']
     if cfg.get('bat') is not True:
         raise ValueError('Cấu hình ABBYY chưa bật.')

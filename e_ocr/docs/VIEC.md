@@ -613,10 +613,10 @@ gói hoặc git. Toàn bộ 218 test nền còn nguyên, thêm 21 test OCR-5.
   Tesseract đã có; ba nợ OCR-4 giữ nguyên để làm lát riêng.
 
 
-## B?ng ch?ng OCR-7 ? phi?u 14/11/2026
+## Bằng chứng OCR-7 — phiếu 14/11/2026
 
-- PR: **ch? lead m?**. C?ng c? m?c ??nh ch?y kh?; ch? `--that` m?i g?i PDF qu?t DEMO v?o c?c th? m?c ri?ng do c?u h?nh ch? ??nh. Kh?ng truy c?p Hot Folder th?t trong l??t tri?n khai.
-- ABBYY gi?: ?? ki?m lu?ng PDF, so ti?n/ng?y t?ng trang, xu?t v? ki?m c?u tr?c Word; JSON ghi bi?n nh?n ch?a ki?m ch?ng khi kh?ng c? t? ch?i. Th?i gian JSON t?nh t? ??u sinh DEMO ??n k?t th?c x? l?, g?m c? th?i gian ch?.
-- ABBYY th?t v? vi?c ABBYY/script t?ch h?p c? sinh `<ma>.loi.json` ??ng OCR-4 **ch?a ???c ki?m**. M?t l??t th?nh c?ng ho?c qu? h?n kh?ng ch?ng minh ngu?n h? tr? bi?n nh?n; c?n l??t t? ch?i th?c t? ?? ki?m. Qu? h?n gi? tr?ng th?i ch?a r?, kh?ng t? g?i l?i.
-- SDK DEMO 6/6 ??T, pytest 241 passed, 0 skipped, ki?m ??c l?p m? 0; ?? ki?m b?ng Core gi? (CoreGia), ABBYY gi?. Ch?a ki?m Linux, Core th?t hay ABBYY th?t.
-- Kh?ng ph?t sinh y?u c?u Core/SDK m?i. C?c dependency c?a g?i c?n c? s?n theo h??ng d?n c?i m?y s?ch; `.cmd` c?i SDK offline v? m?c ??nh ch?y kh?.
+- PR: **chờ lead mở**. Công cụ mặc định chạy khô; chỉ `--that` mới gửi PDF quét DEMO vào các thư mục riêng do cấu hình chỉ định. Không truy cập Hot Folder thật trong lượt triển khai.
+- ABBYY giả: đã kiểm luồng PDF, so tiền/ngày từng trang, xuất và kiểm cấu trúc Word; JSON ghi biên nhận chưa kiểm chứng khi không có từ chối. Thời gian JSON tính từ đầu sinh DEMO đến kết thúc xử lý, gồm cả thời gian chờ.
+- ABBYY thật và việc ABBYY/script tích hợp có sinh `<ma>.loi.json` đúng OCR-4 **chưa được kiểm**. Một lượt thành công hoặc quá hạn không chứng minh nguồn hỗ trợ biên nhận; cần lượt từ chối thực tế để kiểm. Quá hạn giữ trạng thái chưa rõ, không tự gửi lại.
+- Kết quả lượt kiểm trước: SDK DEMO 6/6 ĐẠT, pytest 241 passed, 0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia), ABBYY giả. Chưa kiểm Linux, Core thật hay ABBYY thật.
+- Không phát sinh yêu cầu Core/SDK mới. Các dependency của gói cần có sẵn theo hướng dẫn cài máy sạch; `.cmd` cài SDK offline và mặc định chạy khô. Ngày 15/11/2026: sửa mã hóa và làm rõ hướng dẫn cài dependency; PR chờ lead mở.

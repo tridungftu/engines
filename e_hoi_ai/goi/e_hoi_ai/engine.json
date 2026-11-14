@@ -1,0 +1,124 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_hoi_ai",
+  "ten": "Hỏi AI",
+  "phien_ban": "0.1.0",
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "api": "v1",
+    "sdk": ">=2.0.0 <3.0.0"
+  },
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {
+    "lenh": [
+      "{python}",
+      "-m",
+      "e_hoi_ai.chay"
+    ],
+    "thu_muc": "."
+  },
+  "nang_luc": [
+    {
+      "ma": "ai.hoi_tai_lieu@1",
+      "ten": "Hỏi tài liệu",
+      "nhan": [
+        "van_ban",
+        "van_ban_tai_lieu"
+      ],
+      "tra": "truong",
+      "truong_ra": [
+        {
+          "ma": "tra_loi",
+          "ten": "Trả lời",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "co_can_cu",
+          "ten": "Có căn cứ",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "trich_dan",
+          "ten": "Trích dẫn (mỗi câu một dòng)",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "model",
+          "ten": "Model",
+          "kieu": "van_ban"
+        }
+      ],
+      "gioi_han": {
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 600
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "ma_prompt",
+          "ten": "Mã prompt của chức năng",
+          "kieu": "van_ban",
+          "bat_buoc": true,
+          "mo_ta": "Mã do module khai báo, ví dụ m4.hoi_dieu_khoan."
+        },
+        {
+          "ma": "phien_ban_prompt",
+          "ten": "Phiên bản prompt",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "prompt",
+          "ten": "Yêu cầu của chức năng",
+          "kieu": "van_ban",
+          "bat_buoc": true,
+          "mo_ta": "Module cung cấp yêu cầu; engine không có prompt mặc định chung."
+        },
+        {
+          "ma": "model_uu_tien",
+          "ten": "Model ưu tiên",
+          "kieu": "van_ban",
+          "bat_buoc": false
+        }
+      ]
+    },
+    {
+      "ma": "ai.hoi_theo_yeu_cau@1",
+      "ten": "Hỏi theo yêu cầu",
+      "nhan": [
+        "yeu_cau_ai"
+      ],
+      "tra": "tra_loi_ai",
+      "gioi_han": {
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 600
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    }
+  ],
+  "loai_du_lieu_rieng": [
+    {
+      "ma": "van_ban_tai_lieu",
+      "ten": "Văn bản tài liệu có vị trí"
+    },
+    {
+      "ma": "yeu_cau_ai",
+      "ten": "Yêu cầu hỏi AI"
+    },
+    {
+      "ma": "tra_loi_ai",
+      "ten": "Trả lời AI có trích dẫn"
+    }
+  ],
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
+  "chay_thu_demo": [],
+  "bi_mat": [],
+  "webhook": null
+}

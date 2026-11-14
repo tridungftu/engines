@@ -20,6 +20,14 @@ _DUONG_CAM = re.compile(
     r"kho_tri_thuc(?:[./\\]|$)|shim[-_]kho_tri_thuc|ma-nguon|tu-core-cu|tests-tu-core|"
     r"tham-chieu-cong-hien-tai|(?:^|[/\\])core(?:[/\\]|$)", re.I,
 )
+# Chỉ lấy tên ngoại lệ chuẩn, không phản chiếu thông điệp/traceback của gói.
+_LOAI_LOI_SACH = re.compile(
+    r"^(AssertionError|ModuleNotFoundError|ImportError|SyntaxError|IndentationError|"
+    r"TabError|RuntimeError|TypeError|ValueError|AttributeError|NameError|KeyError|"
+    r"IndexError|OSError|FileNotFoundError|PermissionError|UnicodeEncodeError|"
+    r"UnicodeDecodeError|MemoryError|RecursionError|TimeoutError|SystemExit)(?=:|$)",
+    re.M,
+)
 
 
 def _import_cam(ten):
@@ -121,7 +129,10 @@ sys.path.insert(0, sys.argv[1])
 cho_phep = sys.stdlib_module_names | {'e_hoa_don', 'kho_tri_thuc_sdk'}
 def audit(su_kien, args):
     if su_kien == 'import' and args[0].split('.')[0] not in cho_phep:
-        raise RuntimeError('Import ngoài SDK/stdlib/gói XML.')
+        # copy.py của CPython 3.11 dò org.python.core rồi bắt ImportError.
+        # Từ chối import bằng đúng họ lỗi này để stdlib dùng nhánh dự phòng;
+        # không cho phép org/Core/thư viện ngoài và không thêm đường tìm kiếm.
+        raise ModuleNotFoundError('Import ngoài SDK/stdlib/gói XML.', name=args[0])
     if su_kien in {'socket.connect', 'socket.bind', 'subprocess.Popen', 'os.system'}:
         raise RuntimeError('Gói XML không được gọi mạng hay tiến trình ngoài.')
 sys.addaudithook(audit)
@@ -157,10 +168,19 @@ print('DA_KIEM_DOC_LAP')
             capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=30,
             cwd=Path(thu_muc_goi).resolve(),
         )
-    except (OSError, subprocess.TimeoutExpired):
-        return ["Không chạy được phép kiểm trong tiến trình sạch."]
+    except subprocess.TimeoutExpired:
+        return ["Không chạy được phép kiểm trong tiến trình sạch (HD_SACH_QUA_HAN; TimeoutExpired)."]
+    except OSError:
+        return ["Không chạy được phép kiểm trong tiến trình sạch (HD_SACH_KHONG_CHAY_DUOC; OSError)."]
     if kq.returncode != 0 or "DA_KIEM_DOC_LAP" not in kq.stdout:
-        return ["Import/DEMO trong tiến trình sạch không đạt; không dùng Core/shim để bù."]
+        loai = _LOAI_LOI_SACH.findall(kq.stderr)
+        ly_do = loai[-1] if loai else "HD_SACH_KHONG_RO_LOI"
+        if kq.returncode == 0:
+            ly_do = "HD_SACH_THIEU_XAC_NHAN"
+        return [
+            "Import/DEMO trong tiến trình sạch không đạt; không dùng Core/shim để bù "
+            f"(mã thoát {kq.returncode}; {ly_do})."
+        ]
     return []
 
 

@@ -73,3 +73,11 @@ Bảng dưới ghi SHA bytes thực tại mốc HD-4 và SHA sau thay CRLF bằn
 | `engine.json` | `0f26a4de8318a97a569089bf870a1b1a47da3e209592a6f2fd7f0acd251fdbb6` | `e356a102f2a9bfbafa072964548b661ef611bf17376e1885237fdb0a4b17229a` |
 | `README.md` | `884bab27c527849bd358dc31cf91e2341f39d7c64b83047402e66aef0ace6213` | `884bab27c527849bd358dc31cf91e2341f39d7c64b83047402e66aef0ace6213` |
 | `requirements.lock` | `b8352099070d06ed79794796878efcf4f245f6bae8732ad61b0552e8e6dd8f50` | `9d44717d3f5fdb8196eeb57b46a80436370a220289b88fc1e0f9deda7be90ab4` |
+
+## Sửa HD-4 — CI Linux/Python 3.11, 15/11/2026
+
+Chỉ CHANGELOG trong gói được bổ sung bằng chứng sửa công cụ kiểm ngoài gói; năm tệp runtime, manifest, schema, DEMO, README và lock không đổi. Không thay hash nguồn hoặc bảng lịch sử HD-4 ở trên để bỏ qua thay đổi. Bản sửa `tests/kiem_doc_lap.py` và test hồi quy nằm ngoài gói; không có nguồn/phụ thuộc runtime mới.
+
+| Tệp đổi trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `CHANGELOG.md` | `a4e08324b4f21865b36351f3dee137ae7ccc3523f84734c3f60904e552f6d00e` | `a4e08324b4f21865b36351f3dee137ae7ccc3523f84734c3f60904e552f6d00e` |

@@ -13,7 +13,10 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 6 | Bản 2: công tắc Cloud theo module, qua Mask, đo độ chính xác, kiểm xác suất | AI-21…26 | Chờ (bản 2) |  |
 | AI-0 | Khung SDK 2.0, phiếu 2 năng lực, schema chung, cấu hình máy và kiểm độc lập | AI-13 (phần khung) | Xong — 14/11/2026 (tiêu chí riêng AI-0) | Đã kiểm bằng Core giả (CoreGia); pytest 57 passed, 0 skipped; kiểm độc lập mã 0. Tại mốc AI-0 cổng DEMO chưa đạt; đã bổ sung ở AI-1. PR: **chờ lead mở** |
 | AI-1 | Hỏi tài liệu chỉ Local, khung trích dẫn, hậu kiểm Python, lỗi/thử lại, hủy và chống nộp trùng | AI-1…5, 7, 8 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 141 passed, 0 skipped; kiểm độc lập mã 0; provider Cloud 0 lượt. Chưa chạy thực tế trên Linux/Core thật/model thật. PR: **chờ lead mở** |
+| AI-2 | Hỏi theo yêu cầu, khuôn JSON, chuyển tiếp nguyên vẹn và trần byte | AI-3, 5; phục vụ TX-3 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 238 passed, 0 skipped (97 ca mới AI-2); kiểm độc lập mã 0; provider Cloud 0 lượt. Chưa kiểm thực tế Linux/Core thật/model thật. PR: **chờ lead mở** |
 | AI-3 | Tự phát hiện API/model, cache 5 phút, chọn ưu tiên và dự phòng theo mã prompt | AI-10 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 176 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. PR: **chờ lead mở** |
+
+| Gộp AI-2/AI-3 | Giải xung đột merge origin/main vào nhánh AI-2 | AI-2, AI-3 | Xong — 14/11/2026 | Gói 0.4.0; đã kiểm bằng Core giả (CoreGia); SDK thu 1/1 ĐẠT; pytest 278 passed, 0 skipped; độc lập mã 0. PR: chờ lead; nội dung đã giải xung đột, Git index chờ lead stage do quyền ghi |
 
 ## Cần Core (chuyển lead Core qua Anh)
 
@@ -23,6 +26,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 - AI-0 (14/11/2026): vẫn cần kênh `cau_hinh` từ `san-sang` tới hàm năng lực và form cấu hình từ schema theo `_chung/docs/GIAO-CODEX-THU-TU.md` §3. Chưa sửa phiếu/API/SDK đã khóa; tạm đọc JSON ngoài gói bằng `KTT_ENGINE_CAU_HINH`. Không phát sinh điểm chặn Core/SDK mới.
 - AI-1 (14/11/2026): vẫn cần cấu hình và nhật ký kỹ thuật chung từ Core. Ghi nợ SDK chung: cho phép engine xác định mã lỗi khi thiếu tham số bắt buộc; áp trần nội dung văn bản bên trong loại riêng. Tạm giữ `prompt.bat_buoc=true` với sentinel `mac_dinh=""` để engine tự trả `THIEU_PROMPT`, và tự kiểm trần 500.000 ký tự cho `van_ban_tai_lieu.van_ban` cùng prompt. Không sửa hợp đồng SDK/API hoặc mã Core; không có điểm chặn mới.
+- AI-2 (14/11/2026): không phát sinh yêu cầu Core/SDK mới. Tiếp tục tự kiểm phong bì loại riêng, trần byte khuôn/chuyển tiếp và trần prompt/tài liệu do SDK chưa kiểm sâu loại riêng. Tạm dùng cấu hình JSON ngoài gói như AI-1; không đổi schema chung hay API/SDK đã khóa.
 - AI-3 (14/11/2026): không phát sinh yêu cầu Core/SDK mới. Tiếp tục dùng cấu hình JSON ngoài gói và nhật ký metadata như AI-0/AI-1. Catalog chỉ ở bộ nhớ; màn quản trị/catalog dùng chung chờ kênh cấu hình và thẻ trạng thái của Core. Phiếu gói bổ sung `ly_do_chon_model` trong `truong_ra` theo mẫu 2.0 hiện có, không thay hợp đồng SDK/API.
 
 ## Bàn giao AI-0 — 14/11/2026
@@ -136,6 +140,58 @@ Giới hạn môi trường: không có WSL/Linux, Docker hoặc Podman; Git Bas
 
 Bắt đầu **14/11/2026 22:34** (theo lead); kết thúc kiểm và ghi bàn giao **14/11/2026 22:53:49 +07:00**: **0.33 giờ** (thời gian đồng hồ, gồm đọc tài liệu, chuyển lõi, test và bàn giao). Ước tính trong phiếu AI-1: **5 giờ**.
 
+## Bàn giao AI-2 — 14/11/2026
+
+**Kết luận:** Đạt lát AI-2 và ba cổng kiểm trên Windows/Python 3.13.14. **Đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả; chưa kiểm Core thật, model thật hoặc thực tế trên Linux.
+
+**PR:** chờ lead mở. Nhánh: `codex/e_hoi_ai-ai-2`. Tiêu đề đề nghị: `[e_hoi_ai] AI-2 — Hỏi theo yêu cầu và khuôn trả lời`. Không chạy git commit/push.
+
+### Đã làm
+
+- Nối `ai.hoi_theo_yeu_cau@1`, nhận `yeu_cau_ai` và trả đủ `tra_loi_ai` theo schema chung; prompt thuộc yêu cầu, metadata nguồn gốc, băm phong bì đầu vào, vị trí trích dẫn và cảnh báo. Không sửa ba schema chung hoặc bản sao trong gói.
+- Khi có khuôn, gửi schema phản hồi chung chứa `du_lieu` đúng khuôn module và `truong` chứa dẫn chứng AI-1. Ollama dùng `/api/chat` với `format`; OpenAI-compatible dùng `response_format` kiểu `json_schema`. `$ref` nội bộ được chuyển gốc khi bọc, không thay khuôn gốc. Không khuôn thì `du_lieu=null`.
+- Bộ kiểm JSON Schema tối thiểu tự viết, offline, chỉ dùng thư viện chuẩn; hỗ trợ cấu trúc lồng, kiểu, required, enum/const, giới hạn object/array/string/number, tổ hợp và `$ref` nội bộ không vòng. Từ khóa chưa hỗ trợ (`pattern`, `format`, `unevaluatedProperties`...), reference ngoài và vòng tham chiếu bị từ chối trước mạng; tập hỗ trợ và giới hạn ghi rõ trong README. Sai khuôn hỏi lại đúng một lần, vẫn sai trả `AI_TRA_SAI_KHUON`.
+- Giữ nguyên `chuyen_tiep` bằng so byte JSON chuẩn hóa; không gửi trường này sang Local hoặc nhật ký. Kiểm biên UTF-8 đúng 64 KiB/32 KiB và vượt một byte; vượt trần từ chối, không cắt ngầm.
+- Giữ hậu kiểm trích dẫn/số từ AI-1, thêm kiểm giá trị trong `du_lieu` có căn cứ. Dữ liệu đúng khuôn nhưng sai dẫn chứng bị hạ trạng thái kèm cảnh báo; dữ liệu giữ khuôn để bước sau xét `kiem_trich_dan` và `trang_thai`.
+- Thiếu prompt, Local lỗi, hủy, gửi lại kết quả và nhật ký metadata theo AI-1; 0 lượt provider Cloud ở mọi ca Local HTTP của AI-2. Test chặn DNS/mạng ngoài, model remote và redirect native Ollama.
+- Đúng **5 tệp Python chạy** thêm/sửa: `chay.py`, `cong_ai.py`, `ai_cuc_bo.py`, `hoi_yeu_cau.py`, `khuon_json.py`. `chay.py` chỉ thêm import và nối handler; `engine.json` chỉ tăng phiên bản gói `0.2.0` → `0.3.0`. Không sửa mã nguồn cũ, cấu hình/model lựa chọn của AI-3 hoặc Core.
+
+### Kết quả kiểm thật
+
+Môi trường `.venv` trong worktree, Python 3.13.14; SDK 2.0.0 cài từ wheel bằng `--no-index --no-deps`, SHA-256 khớp `SHA256SUMS.txt`. Venv dùng `--system-site-packages` cho pytest 9.1.1 đã có sẵn; không tải mạng. Đặt `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`, pytest thêm `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
+
+```text
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py
+Chạy nguyên lệnh trong tiến trình con:
+  python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+Engine e_hoi_ai 0.3.0: mọi ví dụ chạy thử DEMO đều đạt.
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; 1 lượt Local.
+Mã thoát: 0; 1/1 ĐẠT.
+
+.venv/Scripts/python -m pytest e_hoi_ai/tests -q
+238 passed in 11.65s
+Mã thoát: 0; 0 skipped.
+
+.venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát: 0.
+```
+
+97 ca mới AI-2; SDK DEMO 1 ca kế thừa AI-1, không thay handler bằng hàm giả. QA riêng bằng `Draft202012Validator` sẵn trên máy phát triển: 656 cặp schema/dữ liệu khớp bộ kiểm độc lập; hai kết quả thực có/không khuôn qua Local giả + CoreGia hợp lệ contract `_chung/contract/tra_loi_ai.schema.json`. Công cụ QA không phải phụ thuộc của gói hoặc pytest lưu trong repo. `git diff --check` không lỗi.
+
+### Lệch khỏi phiếu / quyết định tạm đã dùng
+
+- Không đổi phạm vi AI-2. Chọn bộ kiểm tối thiểu tự viết theo phương án được phiếu cho phép; không công bố hỗ trợ toàn bộ Draft 2020-12. Khuôn chỉ nhận kiểu ngoài object không thể tạo `du_lieu` hợp lệ với contract chung; vẫn kiểm và báo `AI_TRA_SAI_KHUON` sau một lần hỏi lại.
+- Bọc khuôn module trong phản hồi có dẫn chứng để giữ quy tắc AI-1; chỉ dữ liệu ở `du_lieu` phải đúng khuôn module. Trích dẫn luôn được kiểm kể cả khi `bat_buoc_trich_dan=false`, theo quyết định bản 1. Kiểm giá trị có kiểu chỉ chuẩn hóa tiền nhóm nghìn và ngày; phép kiểm bảo thủ có thể hạ kết quả diễn giải đúng về nghĩa.
+- Tiếp tục dùng JSON cấu hình ngoài gói như quyết định tạm AI-1. Không thêm thư viện runtime; nguồn và SHA-256 đã cập nhật trong `NGUON.md`.
+- Điểm cần giữ khi gộp AI-3: `CongAI.chon_model` không bị sửa; provider Local có thêm tham số tùy chọn `khuon`; `_kiem_model` trả `"ollama"` khi xác minh được metadata Ollama để chọn endpoint structured output. AI-3 có thể dùng kết quả discovery thay giá trị trả này khi gộp.
+- Cần Core / Chờ Anh mới phát sinh: **không**. Không xóa hoặc chuyển lưu trữ tệp nào.
+
+### Thời gian thực tế
+
+Bắt đầu **14/11/2026 22:55** (theo lead); kết thúc kiểm và ghi bàn giao **14/11/2026 23:12:09 +0700**: **0.29 giờ** (thời gian đồng hồ). Ước tính trong phiếu AI-2: **4 giờ**.
+
 ## Bàn giao AI-3 — 14/11/2026
 
 **Kết luận: Đạt** lát AI-3 và ba cổng kiểm trên Windows. **Đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả trên loopback; chưa kiểm Linux, Core thật hoặc model thật.
@@ -190,3 +246,33 @@ Lệnh SDK thu chạy thật trong tiến trình con với Local HTTP giả và 
 ### Thời gian thực tế
 
 Bắt đầu **14/11/2026 22:55** (theo lead); kết thúc kiểm và ghi bàn giao **14/11/2026 23:06:29 +07:00**: **0.19 giờ** (11 phút 29 giây, thời gian đồng hồ). Ước tính trong phiếu AI-3: **3 giờ**.
+
+## Bàn giao việc gộp AI-2/AI-3 — 14/11/2026
+
+Kết luận: **Đạt** — đã giải năm tệp xung đột, giữ đủ hành vi và test hai lát. **Đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả trên Windows/Python 3.13.14; chưa kiểm Linux/Core thật/model thật.
+
+Đã làm: giữ `chon_model.py`, catalog/cache 300 giây, ưu tiên/dự phòng, lý do chọn và bảo vệ mạng AI-3; giữ toàn bộ khuôn, hỏi lại một lần, hậu kiểm và chuyển tiếp AI-2. `_kiem_model` trả `catalog.loai` từ lần kiểm khả dụng trước POST, không thêm GET để chọn khuôn. Truyền kiểm hủy vào discovery của luồng AI-2. Hợp nhất đầy đủ hai bản bàn giao, README/CHANGELOG/NGUON; tăng minor từ hai bản 0.3.0 lên 0.4.0; bổ sung SHA-256 hiện tại và giữ các mốc băm cũ làm lịch sử.
+
+Kết quả kiểm (đặt PATH dùng `.venv/Scripts`, `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`):
+
+```text
+python e_hoi_ai/tests/chay_demo_voi_local_gia.py
+SDK thu: 1/1 ĐẠT, engine e_hoi_ai 0.4.0; 1 lượt Local; mã thoát 0.
+
+python -m pytest e_hoi_ai/tests -q
+278 passed in 34.16s; 0 skipped; mã thoát 0.
+
+python e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát 0.
+```
+
+Giữ mọi hàm test AI-2/AI-3, xác minh bằng đối chiếu AST với HEAD/MERGE_HEAD; giữ nguyên byte nội dung hai bản bàn giao trong VIEC. Năm ca mới kiểm đủ bốn API (Ollama, LM Studio v1/v0, OpenAI-compatible), khuôn và dự phòng/lý do chọn, cache không dò thêm API chọn khuôn, hủy discovery trước gửi nội dung; hàng rào mạng/DNS và bộ đếm Cloud tiếp tục có hiệu lực. Không có test bị bỏ qua.
+
+Thời gian thực tế: khoảng **0.13 giờ (8 phút)** thời gian đồng hồ cho việc gộp và kiểm; không có ước tính riêng cho việc gộp (phiếu gốc: AI-2 4 giờ, AI-3 3 giờ).
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: không đổi phạm vi nghiệp vụ; tiếp tục cấu hình JSON ngoài gói. Test hủy mới giả tín hiệu SDK đã nhận để tránh phụ thuộc lịch luồng gia hạn của CoreGia. Không thêm thư viện, không sửa Core/SDK hay các thay đổi OCR đi kèm merge. PR: **chờ lead**; nhánh `codex/e_hoi_ai-ai-2`. Không chạy git commit, merge --continue hoặc push; lead hoàn tất merge.
+
+Cần Core / Chờ Anh mới phát sinh: **không**.
+
+Lưu ý Git index: `git add` bị từ chối quyền ghi vì index worktree nằm ngoài writable root; năm tệp vẫn hiện `UU` trong index dù nội dung đã sạch dấu merge. Lead cần stage năm tệp xung đột cùng `hoi_yeu_cau.py`, `engine.json`, `tests/test_hoi_yeu_cau.py`, rồi tự hoàn tất merge. Không dùng index thay thế hoặc thay đổi quyền.

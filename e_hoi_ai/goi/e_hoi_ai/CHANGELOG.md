@@ -1,5 +1,21 @@
 # Thay đổi
 
+## 0.4.0 — 14/11/2026 — Gộp AI-2 và AI-3
+
+- Giữ phát hiện/chọn model, cache, lý do chọn và bảo vệ mạng AI-3 cùng toàn bộ xử lý khuôn AI-2.
+- `_kiem_model` trả loại API từ catalog đã kiểm khả dụng; không thêm GET để chọn cách gửi khuôn.
+- Luồng hỏi theo yêu cầu truyền kiểm hủy vào bộ chọn model trước khi gọi mạng.
+- Hợp nhất tài liệu hai lát, cập nhật SHA-256; kết quả kiểm việc gộp ghi trong `e_hoi_ai/docs/VIEC.md`.
+
+## 0.3.0 — 14/11/2026 — AI-2
+
+- Nối `ai.hoi_theo_yeu_cau@1`: nhận `yeu_cau_ai`, trả đủ phong bì `tra_loi_ai`, nguồn gốc và vị trí trích dẫn.
+- Truyền khuôn phản hồi chứa `du_lieu` và trích dẫn qua Ollama `/api/chat` (`format`) hoặc OpenAI-compatible (`response_format.json_schema`).
+- Kiểm tập con JSON Schema 2020-12 offline bằng thư viện chuẩn, từ chối từ khóa chưa hỗ trợ; sai khuôn chỉ hỏi lại một lần rồi trả `AI_TRA_SAI_KHUON`.
+- Giữ nguyên `chuyen_tiep` theo byte JSON chuẩn hóa, không gửi Local; từ chối vượt trần 64 KiB/32 KiB trước mạng.
+- Giữ hậu kiểm trích dẫn AI-1, bổ sung đối chiếu dữ liệu có kiểu; kiểm lỗi Local, hủy và chống nộp trùng với 0 lượt Cloud.
+- Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; kết quả kiểm cuối ghi trong `e_hoi_ai/docs/VIEC.md` của repo. Chưa kiểm Core thật hoặc model thật.
+
 ## 0.3.0 — 14/11/2026 — AI-3
 
 - Thêm mô-đun `chon_model.py`: phát hiện Ollama, LM Studio native v1/v0, OpenAI-compatible từ API; giữ ID và thứ tự nguồn, không xếp hạng model.

@@ -156,14 +156,14 @@ def test_numeric_review_bat_sua_mat_them_so(thay):
     assert core.numeric_review(before, "[[KH-DEMO-00123]]: " + thay, rules)["changed"]
 
 
-def test_doi_ten_va_goi_y_thu_cong_chua_co_detector():
+def test_doi_ten_va_goi_y_thu_cong_thieu_tai_nguyen():
     assert company_spans(TEN + " ký hợp đồng DEMO.")[0].source == TEN
     assert person_names("Ông DEMO Nguyễn An; chức vụ: DEMO") == ["DEMO Nguyễn An"]
-    with pytest.raises(PrivacyError, match="Chưa có bộ nhận diện"):
+    with pytest.raises(PrivacyError, match="Chưa có đủ tài nguyên"):
         core.suggest([TEN])
-    with pytest.raises(PrivacyError, match="Chưa có bộ nhận diện"):
+    with pytest.raises(PrivacyError, match="Chưa có đủ tài nguyên"):
         core.dau_vet("DEMO")
-    with pytest.raises(PrivacyError, match="Chưa có bộ nhận diện"):
+    with pytest.raises(PrivacyError, match="Chưa có đủ tài nguyên"):
         core.verify("DEMO", [], known=[])
 
 
@@ -204,7 +204,7 @@ assert not any(hasattr(core, name) for name in ('encrypt_mapping', 'decrypt_mapp
 
 def test_gioi_han_dung_nam_tep_va_phu_thuoc():
     folder = GOI / "e_mask" / "nguon" / "privacy"
-    assert {p.name for p in folder.iterdir()} == TEP
+    assert {p.name for p in folder.iterdir()} == TEP | {"detectors.py", "leftovers.py"}
     for p in folder.glob("*.py"):
         tree = ast.parse(p.read_text("utf-8"))
         for node in ast.walk(tree):
@@ -218,7 +218,7 @@ def test_nguon_sha_truoc_sau_va_nguon_cu_nguyen_ven():
     doc = (GOI / "NGUON.md").read_text("utf-8")
     root = GOI.parents[2]
     rows = [line for line in doc.splitlines() if line.startswith("| `e_mask/ma-nguon/nguon/privacy/")]
-    assert len(rows) == 5
+    assert len(rows) == 7
     def sha_lf(p):
         return hashlib.sha256(p.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
     for row in rows:

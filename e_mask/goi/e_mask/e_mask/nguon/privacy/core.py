@@ -560,6 +560,6 @@ def numeric_review(before: str, after: str, rules: list[dict]) -> dict:
     # Compare the unchanged numbers after approved identifiers have been removed.
     expected, _ = replace(before, rules)
     def numbers(t):
-        return re.findall(r"[-+]?\d+(?:[.,:/%-]\d+)*%?", TOKEN.sub("", t))
+        return re.findall(r"[-+]?\d+(?:[.,:/%-]\d+)*%?", TOKEN.sub(lambda m: "\x00" * len(m.group()), t))
     left, right = numbers(expected), numbers(after)
     return {"changed": left != right, "before_count": len(left), "after_count": len(right)}

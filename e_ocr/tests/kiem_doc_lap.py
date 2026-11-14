@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import ast
 from pathlib import Path
+import re
 import sys
 
 
 THU_MUC_GOI = Path(__file__).resolve().parents[1] / "goi" / "e_ocr"
 _TEN_CAM = {"kenh_engine", "SDKEngine", "Bootstrap", "engine_legacy"}
+_THU_VIEN_NGOAI = {"pdfplumber": "pdfplumber", "PIL": "Pillow"}
 
 
 def _import_cam(ten):
@@ -20,6 +22,11 @@ def kiem_doc_lap(thu_muc_goi=THU_MUC_GOI):
     loi = []
     if not goc.is_dir() or goc.is_symlink():
         return ["Không tìm thấy thư mục gói độc lập hợp lệ."]
+    lock = goc / "requirements.lock"
+    cac_pin = set(re.findall(r"^([A-Za-z0-9_.-]+)==[^\s]+$", lock.read_text(encoding="utf-8"), re.M)) if lock.is_file() else set()
+    duoc_import = sys.stdlib_module_names | {"e_ocr", "kho_tri_thuc_sdk"} | {
+        ten for ten, goi in _THU_VIEN_NGOAI.items() if goi in cac_pin
+    }
     for tep in sorted(goc.rglob("*")):
         ten = tep.relative_to(goc).as_posix()
         if tep.is_symlink():
@@ -60,8 +67,8 @@ def kiem_doc_lap(thu_muc_goi=THU_MUC_GOI):
                     isinstance(nut, ast.ImportFrom) and nut.level == 0 and muc == nut.module
                 ):
                     goc_import = muc.split(".")[0]
-                    if goc_import not in sys.stdlib_module_names | {"e_ocr", "kho_tri_thuc_sdk"}:
-                        loi.append(f"{ten}:{nut.lineno}: có thư viện ngoài phạm vi OCR-0.")
+                    if goc_import not in duoc_import:
+                        loi.append(f"{ten}:{nut.lineno}: có thư viện ngoài phạm vi đã ghim.")
     return loi
 
 

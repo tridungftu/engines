@@ -1,20 +1,26 @@
-# Engine nhận dạng văn bản — OCR-0
+# Engine nhận dạng văn bản — OCR-1
 
-Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.0. Lát OCR-0 chỉ có khung:
-`ocr.doc_tai_lieu@1`, `ocr.doc_van_ban@1`, `ocr.xuat_word@1` đều trả lỗi
-`CHUA_LAM`. Chưa xử lý OCR, chưa nối ABBYY hoặc Tesseract. Các kiểm tra cổng
-**đã kiểm bằng Core giả (CoreGia)**; chưa kiểm trên Core thật.
+Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.1. Hai năng lực
+`ocr.doc_tai_lieu@1` và `ocr.doc_van_ban@1` dùng chung lõi đọc lớp chữ PDF
+hoặc nhận PDF lớp chữ từ ABBYY Hot Folder cục bộ. `ocr.xuat_word@1` vẫn trả
+`CHUA_LAM` tới OCR-3. **Đã kiểm bằng Core giả (CoreGia)** và ABBYY giả;
+chưa kiểm ABBYY hoặc Core thật.
 
 Mỗi năng lực nhận PDF/PNG/JPEG tối đa 20 MiB, thời hạn 900 giây, có lựa chọn
-nguồn `tu_dong` / `chi_abbyy` / `chi_tesseract`. Trần 60 trang được triển khai
-ở OCR-1, trước bước giữ hạn mức. Loại `van_ban_tai_lieu` dùng schema sao chép
+nguồn `tu_dong` / `chi_abbyy` / `chi_tesseract`. Tệp được đọc bằng `viec.mo_tep`,
+kiểm định dạng thực và đếm trang trước khi gửi nguồn ngoài. Vượt 60 trang
+trả `QUA_SO_TRANG`, tệp hỏng/mật khẩu trả `TEP_HONG`, không gửi ABBYY.
+Loại `van_ban_tai_lieu` dùng schema sao chép
 nguyên tệp từ `_chung/contract/van_ban_tai_lieu.schema.json`.
 
 ## Cài và kiểm
 
-Python >= 3.11. Runtime chỉ dùng thư viện chuẩn và SDK 2.0.0 đã ghim trong
-`requirements.lock`; cài SDK từ wheel phát hành, không cần mạng. Nguồn và
-băm các tệp xem `NGUON.md`.
+Python >= 3.11. Dùng SDK 2.0.0, pdfplumber, Pillow và dependency đã ghim
+trong `requirements.lock`; tất cả phiên bản thư viện ngoài SDK giữ như
+lock cũ. Không dùng PyMuPDF, numpy hay vendor/mask_ocr trong OCR-1. Môi
+trường kiểm dùng `.venv --system-site-packages` và thư viện có sẵn, SDK cài
+offline từ wheel repo với `--no-index --no-deps`. Đây chưa là kiểm máy sạch
+của OCR-6; lock hiện chưa có hash wheel đa nền tảng. Nguồn/băm xem `NGUON.md`.
 
 Trong thư mục gốc repo, sau khi cài SDK vào `.venv`:
 
@@ -29,10 +35,44 @@ $env:PYTHONUTF8 = '1'
 Trên Linux dùng `.venv/bin/python`, đặt `PYTHONDONTWRITEBYTECODE=1` trước khi
 nạp gói. Không đóng gói bytecode, test, môi trường ảo hoặc dữ liệu máy.
 
-`chay_thu_demo` hiện rỗng, vì bộ DEMO xử lý OCR thuộc OCR-5. Lệnh SDK trên
-trả mã **1**, câu `Phiếu chưa có ví dụ chay_thu_demo.`; chưa đạt điều kiện
-DEMO chung của AGENTS.md §5. Pytest kiểm riêng cả ba hàm tạm qua CoreGia,
-yêu cầu kết thúc `LOI/CHUA_LAM` và không nộp kết quả. Không báo DEMO đã đạt.
+`chay_thu_demo` có hai ví dụ dùng chung PDF DEMO lớp chữ 3 trang, chạy
+được không cần cấu hình máy hoặc ABBYY. Bộ PDF được sinh bằng thư viện
+chuẩn ở `tests/demo/tao_pdf.py`; có nhãn ảnh DEMO và chữ ẩn ToUnicode,
+không cần font máy. Bộ kiểm Hot Folder dùng luồng nền nhận tệp DEMO rồi
+ghi PDF cùng mã tương quan. Test dùng filesystem Python trên Windows/Linux;
+lượt kiểm OCR-1 chạy thực tế trên Windows, chưa có Linux/WSL trong máy này.
+
+## Đọc lớp chữ và giao thức Hot Folder
+
+- PDF có lớp chữ đọc được ở **mọi trang** được đọc trực tiếp, nguồn
+  `lop_chu_san`; không đọc cấu hình, gửi ABBYY hoặc OCR lại ảnh nền.
+  Trang thiếu lớp chữ/hướng chữ chưa hỗ trợ khiến cả tệp gửi ABBYY, không
+  trả kết quả thiếu trang. `chi_tesseract` vẫn cho phép đọc lớp chữ sẵn;
+  khi cần OCR ảnh thì trả `CHUA_LAM` tới OCR-2, không gửi ABBYY.
+- Cấu hình ABBYY bật, hai thư mục vào/ra phải là đường dẫn tuyệt đối tới
+  hai thư mục đã có, tách biệt. Engine chỉ dùng đúng tên ngẫu nhiên
+  `<ma_tuong_quan>.pdf|png|jpg`, không dùng tên người dùng hoặc quét thư mục.
+- Tác vụ Hot Folder phải **rời/xóa tệp vào khi nhận** và xuất một PDF có
+  lớp chữ đầy đủ tên `<ma_tuong_quan>.pdf` vào thư mục ra, giữ số trang.
+  Đây là quy ước cần kiểm trên ABBYY thật ở OCR-7; quan sát tệp biến mất
+  được dùng làm tín hiệu đã nhận, chưa có ACK riêng từ ABBYY.
+- Tệp đệm được ghi/`fsync` trong thư mục tạm riêng của lượt, nằm **cạnh**
+  thư mục vào, rồi đổi tên nguyên tử trên cùng filesystem. Tài khoản engine
+  cần quyền tạo/dọn thư mục đệm tại đó. Thư mục đệm được dọn ở `finally`.
+  Khi hủy, engine gọi `kiem_huy()` trong vòng chờ và rút đúng tệp còn chờ;
+  không ép dừng ABBYY khi tệp đã được nhận.
+- Chỉ đọc kết quả đúng mã sau khi kích thước/mtime ổn định qua hai lượt,
+  có EOF và không thay đổi trong lúc đọc. Trần kết quả 20 MiB, 60 trang,
+  500.000 ký tự; vượt thì từ chối, không cắt. Tệp kết quả đã đọc và tệp vào
+  còn chờ được dọn sau lượt; không đụng kết quả thuộc mã khác.
+- Hết hạn mà còn rút được tệp chờ: `ABBYY_QUA_THOI_HAN`. Tệp đã biến mất
+  hoặc không rút được: `ChuaRo(ma_tuong_quan)`, không trả thành công hoặc
+  chuyển nguồn. Chống trùng/lưu lượt bền và chốt kết quả trả muộn thuộc OCR-4.
+- Kết quả có băm SHA-256 **tệp đầu vào**, phiên bản engine và cảnh báo.
+  Toàn văn nối trang bằng `\f`; khối/dòng/từ có tọa độ point theo trang.
+  Giữ nguyên tiền/ngày trong văn bản, không tự hiệu đính hay suy giá trị.
+  Bảng có đường kẻ PDF giữ ô trống/ô gộp; bảng chỉ có trong ảnh nền chưa
+  được tái tạo và có cảnh báo. Xuất Word, fallback và sổ hạn mức thuộc lát sau.
 
 ## Cấu hình máy ngoài gói
 

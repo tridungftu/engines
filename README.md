@@ -2,6 +2,8 @@
 
 *Tách khỏi Core ngày 08/11/2026.* Mỗi engine nằm trong một thư mục riêng và là **một project riêng**. Mọi engine dùng chung **một cổng gắn vào Core: API, SDK và webhook thống nhất**.
 
+**Giao Codex (14/11/2026):** đọc `AGENTS.md` → `_chung\docs\GIAO-CODEX-THU-TU.md` → `<engine>\docs\GIAO-CODEX-<engine>.md`. Thứ tự: Hỏi AI và OCR (song song) → Trích xuất. Hợp đồng cổng: `docs\goi-gui-engine\API-ENGINE-v1.md` + SDK 2.0.0 (`docs\goi-gui-engine\sdk-2.0.0\`), thay cho SDK 1.5.x ghi ở mục Lưu ý.
+
 **Đọc theo thứ tự:**
 1. `_chung\docs\YEU-CAU-CHUNG-ENGINE.md`: yêu cầu bắt buộc cho mọi engine, và lý do engine từng nằm trong Core.
 2. `<engine>\CLAUDE.md`

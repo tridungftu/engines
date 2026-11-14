@@ -34,7 +34,7 @@ Người đặt yêu cầu: **Anh Dũng** (CFO).
 - `docs\`: tài liệu.
 
 ## 3. Cách làm
-- **Chỉ dùng Claude Code.**
+- **Code bằng Codex** theo `..\AGENTS.md` và `docs\GIAO-CODEX-e_ocr.md` (Anh chỉ đạo 14/11/2026); Claude điều phối và review.
 - Tận dụng tối đa mã đã có. Phần không dùng thì chuyển `LUU-TRU\`, không xóa.
 - **SẴN SÀNG = bấm trên trình duyệt thật trong khung Core, có ảnh từng bước.** Trước mốc đó, ghi rõ "đã kiểm bằng mock".
 - Giao diện ẩn hẳn thông tin kỹ thuật:

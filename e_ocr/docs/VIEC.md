@@ -7,9 +7,10 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 0 | Đọc tài liệu cổng và engine; nhận kế hoạch các lát theo `GIAO-CODEX-e_ocr.md` | — | Xong 14/11/2026 | Thực hiện OCR-0 theo phiếu Anh giao; ước tính 2 giờ |
 | OCR-0 | Khung SDK 2.0, cấu hình máy, kho tạm, schema chung và kiểm độc lập | OCR-6 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã đạt tiêu chí riêng của OCR-0; kết quả DEMO chung và giới hạn xem bên dưới |
 | OCR-1 | Đọc lớp chữ PDF và ABBYY Hot Folder cục bộ; hai action đọc dùng chung lõi | OCR-2, 3, 4, 7, 15 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 2/2, pytest 119 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
+| OCR-2 | Chọn nguồn, hạn mức 30 ngày và dự phòng Tesseract; vendor PDF/DOCX/bảng | OCR-8 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), mock CI và Tesseract thật bằng DEMO; bằng chứng OCR-2 bên dưới |
 | OCR-3 | Xuất Word từ cấu trúc tài liệu, giữ ô trống/ô gộp, vị trí bảng và thứ tự trang | OCR-4, 5 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 3/3, pytest 145 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
 | 1 | Đóng gói độc lập theo cổng chung; thay hàm SDK riêng `ocr_*_luot` bằng lượt bền chung khi Core có | OCR-6, 13 | Đang làm 14/11/2026 | Có khung OCR-0; chuyển lõi ở OCR-1…OCR-4, không sửa `ma-nguon/` |
-| 2 | Bổ sung dependency cho nguồn dự phòng mask_ocr | OCR-8 | Chờ làm |  |
+| 2 | Bổ sung nguồn dự phòng mask_ocr/Tesseract | OCR-8 | Xong 14/11/2026 | OCR-2 dùng CLI và pypdfium2 đã ghim, không thêm dependency. Máy đích xem **Cần cài** |
 | 3 | Màn hạn mức ABBYY / trạng thái máy (giao diện của engine) | OCR-8 | Chờ làm |  |
 | 4 | Bài máy test ca 1, 3, 8 | OCR-11 | Chờ làm |  |
 | 5 | Lát 9: ABBYY thật trên máy hiện tại bằng PDF DEMO (Anh đã cho phép mở kết nối tạm) | OCR-12 | Chờ làm | Không chép `in\ out\ jobs\ state\` |
@@ -17,11 +18,27 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 ## Cần Core (chuyển lead Core qua Anh)
 - Theo SDK 2.0.0 và `GIAO-CODEX-THU-TU.md` §3: đưa cấu hình từ `san-sang` tới engine, kèm schema để Core dựng form. Tạm đọc JSON ngoài gói bằng `KTT_ENGINE_CAU_HINH`.
-- Ngăn dữ liệu engine: ghi theo lô nguyên tử, CAS/`row_version`, ràng buộc duy nhất/lấy hoặc tạo. Tạm dùng `KTT_ENGINE_DU_LIEU`; `doc` và `ghi` là các thao tác riêng lẻ, không có giao dịch đọc–sửa nhiều lời gọi.
+- Ngăn dữ liệu engine: ghi theo lô nguyên tử, CAS/`row_version`, ràng buộc duy nhất/lấy hoặc tạo. Tạm dùng `KTT_ENGINE_DU_LIEU`; OCR-2 thêm `cap_nhat` đọc–sửa–ghi một khóa nguyên tử. `doc` rồi `ghi` vẫn không phải giao dịch/CAS nhiều lời gọi.
 - Lượt bền chung #10 giữ/chốt/đọc (đợt 2): thay phần lưu lượt tạm ở OCR-4 khi Core có. Không dùng hàm `ocr_*_luot` cũ.
 - Bí mật theo tên, nhật ký kỹ thuật và thẻ trạng thái chung để thay phần trạng thái/hạn mức ABBYY; đợt 1 không làm giao diện riêng hay cầu nối có khóa.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
 - OCR-3 không phát sinh thiếu hụt Core/SDK: tải DOCX ra bằng API chung `viec.tai_tep_ra`, không cần kênh ACK hoặc sổ bàn giao riêng.
+
+## Cần cài — nguồn Tesseract trên máy đích (14/11/2026)
+
+- Cần Tesseract Windows x64 và ngôn ngữ `vie`, `eng` để dùng dự phòng;
+  executable/traineddata không nằm trong gói. Máy làm OCR-2 **đã có** và đã
+  chạy test thật bằng DEMO, không cài/nâng cấp phần mềm trong lượt này.
+- Anh tự chạy từ thư mục repo: `e_ocr\cong-cu\KIEM-TESSERACT.cmd`.
+  Nếu dùng chỗ cài khác, truyền đường dẫn tới executable làm đối số thứ
+  nhất, có dấu ngoặc kép khi có khoảng trắng. Công cụ ASCII chỉ kiểm;
+  mã 0 = đủ bộ đọc và `vie+eng`, mã 1 = cần cài, mã 2 = thiếu ngôn ngữ.
+- Nếu thiếu, Anh tự cài bộ Tesseract Windows x64 offline đã được duyệt,
+  chọn cả tiếng Việt/Anh (hoặc bổ sung `vie.traineddata`, `eng.traineddata`
+  từ bộ cài). Chạy lại `.cmd`, đặt `tesseract.duong_dan` trong JSON ngoài
+  gói nếu không dùng PATH/vị trí mặc định; `ngon_ngu` là `vie+eng`.
+- Thiếu khi cần dùng → `LoiNghiepVu("NGUON_DU_PHONG_CHUA_CAI", ...)`.
+  Không chặn khởi động engine, PDF có lớp chữ hoặc việc ABBYY đọc được.
 
 ## Bằng chứng OCR-0 — 14/11/2026
 
@@ -179,6 +196,67 @@ runtime hoặc điều kiện chạy pytest. Băm tệp gói cập nhật trong 
 - Vỏ/cổng OCR cũ không dùng trong gói mới; vẫn giữ nguyên để chuyển
   `LUU-TRU/` sau theo kế hoạch, không xóa.
 
+## Bằng chứng OCR-2 — 14/11/2026
+
+- Nhánh: `codex/e_ocr-ocr-2`; PR: **chờ lead mở**. Lead commit/mở PR;
+  Codex không commit/push. Tiêu đề đề xuất:
+  `[e_ocr] OCR-2 — Tesseract dự phòng, chọn nguồn và hạn mức 30 ngày`.
+- Thời gian thực tế: **14/11/2026, 23:02–23:30** (28 phút, khoảng
+  **0,48 giờ**), so với **5 giờ ước tính** trong phiếu; giờ Việt Nam.
+- Bộ chọn nguồn và Tesseract ở `chon_nguon.py`, `tesseract.py`, `vendor/`;
+  `van_ban.py` chỉ nối bộ chọn và metadata kết quả. **Không sửa `chay.py`**
+  để thuận tiện ghép nhánh OCR-3. Phiên bản gói tăng 1.0.2, API/MIME giữ
+  theo phiếu đã khóa; DOCX chỉ có trong lõi vendor, chưa thêm MIME mới.
+- Tách phần thực hiện vì tổng vượt khoảng 5 tệp mã: **OCR-2A** gồm bốn
+  tệp vendor và công cụ `.cmd`; **OCR-2B** gồm năm tệp nghiệp vụ
+  (`chon_nguon.py`, `tesseract.py`, `abbyy.py`, `kho_tam.py`, `van_ban.py`).
+  Ngoài ra chỉ đổi dòng metadata phiên bản trong `__init__.py`; test,
+  phiếu, lock và tài liệu đi cùng gói. Bàn giao chung lát OCR-2 trên nhánh
+  lead chỉ định, không tạo thêm nhánh/PR hoặc mở rộng OCR-3/OCR-4.
+- Chuyển từ `ma-nguon/chon_nguon.py`: giữ ABBYY trước, lý do chuyển và
+  bằng chứng chắc chắn chưa nhận; bỏ cổng/lượt bền cũ. `chi_abbyy` trả lỗi
+  ABBYY/hạn mức, `chi_tesseract` bỏ ABBYY và sổ. Lớp chữ sẵn được đọc trực
+  tiếp ở mọi chế độ. Kết quả tài liệu ghi `nguon_doc`, `ly_do_chuyen_nguon`;
+  kết quả văn bản thuần vẫn đúng hợp đồng chỉ trả chuỗi.
+- Sổ `han_muc_abbyy` trong `KhoTam`: cửa sổ trượt **30 × 86.400 giây**,
+  nhóm ngày UTC/giây, không reset đầu tháng. `cap_nhat` giữ khóa xuyên
+  đọc–sửa–ghi để hai tiến trình không cùng vượt hạn mức. Chỗ giữ dùng cùng
+  mã tương quan với ABBYY; chỉ ghi `da_nhan` khi thấy tệp biến mất hoặc
+  có kết quả đúng mã. Không trừ khi bị từ chối/rút tệp trước khi nhận.
+- Đã nhận mà chưa trả → `ChuaRo`, không chuyển/hoàn trang. Không rút được
+  do lỗi quyền nhưng chưa chắc đã nhận → giữ chỗ, chưa ghi trang đã dùng.
+  Hủy trước nhận bỏ giữ; hủy sau nhận vẫn tính trang đã nhận. Kết quả thiếu
+  chữ/sai trang hoặc lỗi dọn sau nhận không kích hoạt fallback.
+- Chuyển vendor phần PDF chữ sẵn, DOCX và giữ bảng; giấy phép **phần mềm
+  nội bộ, dùng nội bộ tập đoàn** trong `NGUON.md`/`LICENSE`. Không chép
+  runtime dual, VietOCR/model, worker hoặc dữ liệu ABBYY; nguồn cũ giữ nguyên.
+- Tesseract CLI dùng pypdfium2/Pillow đã ghim, không thêm dependency/mạng.
+  Giữ nguyên trang đã có lớp chữ trong PDF trộn; render trang thiếu chữ,
+  TSV trả tọa độ từ, bảng vector được điền chữ mà giữ ô trống/ô gộp.
+  PNG/TSV ở thư mục tạm riêng, có hủy/quá hạn và dọn tệp; stderr chương
+  trình ngoài không được in. Thiếu executable/ngôn ngữ trả đúng
+  `NGUON_DU_PHONG_CHUA_CAI`; hướng dẫn ở mục **Cần cài** phía trên.
+- **Đã kiểm bằng Core giả (CoreGia)** trên Windows x64, Python 3.13.14.
+  Mock Tesseract cho CI; test thật trên máy có đủ `vie+eng` nhận đúng
+  `1.000.000 VND`, `30/10/2026` và chữ DEMO. Không đọc hồ sơ/cấu hình
+  thật, không chạy ABBYY/Core thật. Chưa có bằng chứng chạy Linux hoặc
+  cài máy sạch; test dùng filesystem/khóa chuẩn và `spawn` cho cả hai OS.
+
+### Kết quả ba lệnh bắt buộc — OCR-2
+
+Trích các dòng tổng kết thật của lượt kiểm cuối, dùng `-B` để không sinh
+bytecode. SDK có đủ hai dòng `[ĐẠT]` cho hai ví dụ lớp chữ DEMO của OCR-1:
+
+```text
+> .venv\Scripts\python -B -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+Engine e_ocr 1.0.2: mọi ví dụ chạy thử DEMO đều đạt.
+Mã thoát: 0; 2/2 ĐẠT.
+
+> .venv\Scripts\python -B -m pytest e_ocr/tests -q -rs
+153 passed in 16.07s
+Mã thoát: 0; 0 skipped, có test Tesseract thật.
+
+> .venv\Scripts\python -B e_ocr/tests/kiem_doc_lap.py
 ## Bằng chứng OCR-3 — 14/11/2026
 
 - Nhánh: `codex/e_ocr-ocr-3`; PR: **chờ lead mở**. Không chạy commit/push.
@@ -239,6 +317,41 @@ Mã thoát: 0; 0 skipped.
 Mã thoát: 0.
 ```
 
+34 ca mới kiểm hết hạn mức/trần bằng đúng, ABBYY tắt/mất thư mục, lỗi gửi,
+timeout trước/sau nhận, quyền rút tệp chưa rõ, chỉ ABBYY/chỉ Tesseract,
+thiếu executable/ngôn ngữ, kho hỏng, cửa sổ qua đầu tháng/biên 30 ngày,
+hai tiến trình cùng giành trang cuối, CLI mock ảnh/PDF trộn, bảng vector,
+TSV hỏng, chữ chú thích cạnh bảng trên cùng dòng OCR, hủy tiến trình,
+DOCX ô trống/gridSpan/vMerge, XML DTD/entity,
+giấy phép/cây vendor và một ca nhận dạng thật. Cập nhật ba ca OCR-1 theo
+chế độ chỉ ABBYY; bổ sung kiểm hạn mức khi hủy trước/sau nhận.
+
+Kiểm bổ sung: `.cmd` chạy trên máy → `[DAT] Da co Tesseract va du ngon
+ngu vie+eng.`, mã 0; truyền executable DEMO không tồn tại → hướng dẫn
+`[CAN CAI]`, mã 1. Tệp `.cmd` là ASCII. SHA-256 24 tệp gói cập nhật ở
+`NGUON.md`; wheel SDK khớp `SHA256SUMS.txt`. Không thay pin dependency,
+không có thay đổi ở `ma-nguon/`, SDK hoặc `_chung/`. `git diff --check`
+không báo lỗi.
+
+### Quyết định tạm và phần còn lại OCR-2
+
+- Thay vận chuyển OCR MuPDF/worker của vendor cũ bằng Tesseract CLI và
+  pypdfium2 đã ghim để chạy offline với môi trường có sẵn; không cài
+  PyMuPDF/defusedxml hoặc mang runtime dual vào gói. DOCX dùng XML chuẩn,
+  từ chối DTD/entity và XML khác UTF-8 trước parse. Nguồn/tệp đã chuyển
+  thể được ghi trong `NGUON.md`, mã gốc giữ nguyên để lưu trữ sau.
+- Giữ quyết định tạm cấu hình JSON/kho tạm ngoài gói của lead. Giữ chỗ
+  trước gửi là cơ chế cạnh tranh, **không phải trang đã dùng**; sau crash
+  không tự bỏ chỗ giữ hoặc gửi lại. Lượt bền/chống trùng/đọc trả muộn và
+  đối chiếu chỗ giữ thuộc OCR-4, rồi thay bằng ngăn/lượt bền chung của Core.
+- Quy ước rời/xóa tệp vào khi nhận vẫn kế thừa OCR-1, cần kiểm trên ABBYY
+  thật ở OCR-7. Không suy việc đã nhận chỉ từ lỗi quyền hoặc sự im lặng.
+- Giữ được bảng DOCX và bảng có đường kẻ vector; bảng chỉ có trong ảnh
+  chưa được suy cấu trúc, có cảnh báo. Chưa đo độ chính xác tiếng Việt,
+  chưa chốt ngưỡng đạt và chưa xuất Word (OCR-3).
+- Không phát sinh yêu cầu Core/câu hỏi mới cho Anh. Giữ các mục **Cần Core**
+  hiện có; máy đích cài/kiểm Tesseract theo mục **Cần cài**. Bộ DEMO chung
+  cho scan/Word vẫn thuộc OCR-5, khóa hash wheel/máy sạch thuộc OCR-6.
 ### Lệch, quyết định tạm và giới hạn OCR-3
 
 - Bản `ma-nguon/vendor/mask_ocr` trong repo chỉ chứa parser/layout, không

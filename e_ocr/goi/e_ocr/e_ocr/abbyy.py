@@ -6,6 +6,7 @@ ngẫu nhiên; chỉ thao tác đúng tệp của lượt, không quét nội du
 
 from pathlib import Path
 import os
+import re
 from tempfile import TemporaryDirectory
 import time
 from uuid import uuid4
@@ -16,6 +17,10 @@ from .lop_chu import MAX_BYTES
 
 
 KHOANG_CHO_GIAY = 0.1
+
+
+class LoiABBYYChuaNhan(LoiNghiepVu):
+    """Bằng chứng nguồn chưa nhận: chưa gửi hoặc đã rút được tệp vào."""
 
 
 def _rut_tep(tep):
@@ -45,7 +50,7 @@ class BackendABBYY:
 
     def __init__(self, cau_hinh):
         if not cau_hinh["bat"]:
-            raise LoiNghiepVu("ABBYY_DANG_TAT", "Nguồn ABBYY đang tắt. Hãy liên hệ quản trị viên.")
+            raise LoiABBYYChuaNhan("ABBYY_DANG_TAT", "Nguồn ABBYY đang tắt. Hãy liên hệ quản trị viên.")
         try:
             vao, ra = (Path(cau_hinh[k]) for k in ("thu_muc_vao", "thu_muc_ra"))
             if not vao.is_absolute() or not ra.is_absolute():
@@ -55,18 +60,41 @@ class BackendABBYY:
                     or vao.is_relative_to(ra) or ra.is_relative_to(vao)):
                 raise ValueError
         except (OSError, ValueError):
-            raise LoiNghiepVu(
+            raise LoiABBYYChuaNhan(
                 "ABBYY_CHUA_CAU_HINH", "Chưa truy cập được thư mục nhận và trả của ABBYY. Hãy kiểm tra cấu hình."
             ) from None
         self._vao, self._ra = vao, ra
         self._thoi_han = cau_hinh["thoi_han_giay"]
 
-    def doc_pdf(self, raw, duoi, *, viec):
-        ma_tuong_quan = uuid4().hex
+    def doc_pdf(self, raw, duoi, *, viec, khi_da_nhan=None, khi_chua_ro=None, ma_tuong_quan=None):
+        ma_tuong_quan = uuid4().hex if ma_tuong_quan is None else ma_tuong_quan
+        if not isinstance(ma_tuong_quan, str) or re.fullmatch(r"[a-f0-9]{32}", ma_tuong_quan) is None:
+            raise LoiABBYYChuaNhan("MA_LUOT_KHONG_HOP_LE", "Mã lượt nhận dạng không hợp lệ.")
         vao = self._vao / f"{ma_tuong_quan}.{duoi}"
         ra = self._ra / f"{ma_tuong_quan}.pdf"
         da_gui, da_nhan, da_doc = False, False, False
         thu_muc_tam = None
+
+        def xac_nhan():
+            nonlocal da_nhan
+            if not da_nhan:
+                da_nhan = True
+                if khi_da_nhan is not None:
+                    khi_da_nhan()
+
+        def cho_doi_chieu():
+            # Không rút được do lỗi quyền chưa chứng minh là nguồn đã nhận.
+            # Giữ chỗ nhưng chỉ ghi trang đã dùng khi thấy tệp thực sự biến mất.
+            if not da_nhan:
+                try:
+                    vao.stat()
+                except FileNotFoundError:
+                    xac_nhan()
+                except OSError:
+                    pass
+            if not da_nhan and khi_chua_ro is not None:
+                khi_chua_ro()
+
         try:
             viec.kiem_huy()
             # Không chép dở vào nơi ABBYY đang Watching. Chỉ công bố sau fsync.
@@ -85,8 +113,10 @@ class BackendABBYY:
             viec.tien_do(35, "Đã gửi tài liệu; đang chờ ABBYY nhận dạng.")
             while True:
                 viec.kiem_huy()
-                if not vao.exists():
-                    da_nhan = True
+                try:
+                    vao.stat()
+                except FileNotFoundError:
+                    xac_nhan()
                 # Chỉ đọc đúng mã tương quan. Hai lượt ổn định + EOF + stat sau đọc
                 # tránh PDF đang ghi dở; lỗi sharing Windows được chờ tới hạn.
                 try:
@@ -104,6 +134,8 @@ class BackendABBYY:
                                 and dau == (sau.st_size, sau.st_mtime_ns)
                                 and b"%%EOF" in ket_qua[-1024:]):
                             viec.kiem_huy()
+                            # Có kết quả đúng mã cũng là bằng chứng nguồn đã nhận.
+                            xac_nhan()
                             da_doc = True
                             return ket_qua
                     dau_truoc = dau
@@ -112,8 +144,10 @@ class BackendABBYY:
                 con_lai = han - time.monotonic()
                 if con_lai <= 0:
                     if da_nhan or not _rut_tep(vao):
+                        cho_doi_chieu()
                         raise ChuaRo(ma_tuong_quan)
-                    raise LoiNghiepVu(
+                    da_gui = False
+                    raise LoiABBYYChuaNhan(
                         "ABBYY_QUA_THOI_HAN", "ABBYY chưa nhận tài liệu trong thời hạn; đã rút tệp đang chờ. Hãy thử lại sau.",
                         thu_lai_duoc=True,
                     )
@@ -123,8 +157,10 @@ class BackendABBYY:
                 time.sleep(min(KHOANG_CHO_GIAY, con_lai))
         except OSError:
             if da_gui and (da_nhan or not _rut_tep(vao)):
+                cho_doi_chieu()
                 raise ChuaRo(ma_tuong_quan) from None
-            raise LoiNghiepVu(
+            da_gui = False
+            raise LoiABBYYChuaNhan(
                 "ABBYY_KHONG_TRUY_CAP_DUOC", "Không gửi được tài liệu tới ABBYY. Hãy kiểm tra nguồn nhận dạng.",
                 thu_lai_duoc=True,
             ) from None
@@ -134,7 +170,9 @@ class BackendABBYY:
                 if da_doc:
                     da_don = _don_tep(vao)
                 else:
-                    _rut_tep(vao)
+                    # Hủy/lỗi có thể xảy ra ngay sau khi nguồn nhận, trước poll.
+                    if not _rut_tep(vao):
+                        cho_doi_chieu()
             if da_doc:
                 da_don = _don_tep(ra) and da_don
             if thu_muc_tam is not None:

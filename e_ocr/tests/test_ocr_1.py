@@ -293,7 +293,7 @@ def test_ket_qua_abbyy_khong_day_du_khong_bao_xong(hot_folder, tra_ve, ma):
 def test_abbyy_khong_nhan_qua_han_thi_rut_tep(hot_folder):
     vao, ra, _ = hot_folder
     with ABBYYGia(vao, ra, b"", nhan=False):
-        core, kq = chay(pdf_demo(()))
+        core, kq = chay(pdf_demo(()), tham_so={"nguon": "chi_abbyy"})
     kiem_loi(core, kq, "ABBYY_QUA_THOI_HAN")
     assert kq["loi"]["thu_lai_duoc"] is True
 
@@ -326,6 +326,8 @@ def test_huy_viec_dang_cho_va_don_tep_tam(hot_folder, da_nhan):
     assert kq["trang_thai"] == "HUY", kq
     assert kq["ket_qua"] is None and core.so_lan_ghi["ket_qua"] == 0
     assert len(cac_tam) == 1
+    from e_ocr.chon_nguon import SoHanMuc
+    assert SoHanMuc().da_dung() == (1 if da_nhan else 0)
 
 
 def test_khong_doc_pdf_abbyy_dang_ghi_do_va_khong_lay_nham_ma(hot_folder):
@@ -356,12 +358,15 @@ def test_khong_doc_pdf_abbyy_dang_ghi_do_va_khong_lay_nham_ma(hot_folder):
 
 def test_loi_gui_don_dem_va_khong_lo_duong_dan(hot_folder, monkeypatch):
     vao, ra, _ = hot_folder
+    thay_goc = abbyy.os.replace
 
-    def loi(*args):
-        raise OSError(f"DEMO duong dan khong duoc lo: {vao}")
+    def loi(nguon, dich):
+        if Path(dich).parent == vao:
+            raise OSError(f"DEMO duong dan khong duoc lo: {vao}")
+        return thay_goc(nguon, dich)
 
     monkeypatch.setattr(abbyy.os, "replace", loi)
-    core, kq = chay(pdf_demo(()))
+    core, kq = chay(pdf_demo(()), tham_so={"nguon": "chi_abbyy"})
     kiem_loi(core, kq, "ABBYY_KHONG_TRUY_CAP_DUOC")
     assert str(vao) not in json.dumps(kq, ensure_ascii=False)
     assert not list(ra.iterdir())
@@ -384,11 +389,9 @@ def test_loi_don_ket_qua_khong_bao_thanh_cong_gia(hot_folder, monkeypatch):
     assert len(list(ra.iterdir())) == 1
 
 
-def test_thieu_cau_hinh_va_tesseract_chua_lam_deu_khong_gui():
-    core, kq = chay(pdf_demo(()))
+def test_chi_abbyy_thieu_cau_hinh_khong_gui():
+    core, kq = chay(pdf_demo(()), tham_so={"nguon": "chi_abbyy"})
     kiem_loi(core, kq, "CHUA_CAU_HINH")
-    core, kq = chay(pdf_demo(()), tham_so={"nguon": "chi_tesseract"})
-    kiem_loi(core, kq, "CHUA_LAM")
 
 
 def test_bang_pdf_giu_o_rong_va_o_gop_tu_duong_ke():

@@ -1,0 +1,153 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_hoa_don",
+  "ten": "Đọc XML hóa đơn",
+  "phien_ban": "1.0.0",
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "api": "v1",
+    "sdk": ">=2.0.0 <3.0.0"
+  },
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {
+    "lenh": [
+      "{python}",
+      "-m",
+      "e_hoa_don.chay"
+    ],
+    "thu_muc": "."
+  },
+  "nang_luc": [
+    {
+      "ma": "hoa_don.doc_xml@2",
+      "ten": "Đọc XML hóa đơn",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "truong",
+      "truong_ra": [
+        {
+          "ma": "mau_so",
+          "ten": "Mẫu số",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ky_hieu",
+          "ten": "Ký hiệu",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so_hoa_don",
+          "ten": "Số hóa đơn",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ngay_lap",
+          "ten": "Ngày lập",
+          "kieu": "ngay"
+        },
+        {
+          "ma": "ma_so_thue_ban",
+          "ten": "Mã số thuế bên bán",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ma_so_thue_mua",
+          "ten": "Mã số thuế bên mua",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "don_vi_tien",
+          "ten": "Đơn vị tiền",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "tien_truoc_thue",
+          "ten": "Tiền trước thuế",
+          "kieu": "so_tien"
+        },
+        {
+          "ma": "tien_thue",
+          "ten": "Tiền thuế",
+          "kieu": "so_tien"
+        },
+        {
+          "ma": "tong_thanh_toan",
+          "ten": "Tổng thanh toán",
+          "kieu": "so_tien"
+        },
+        {
+          "ma": "so_dong",
+          "ten": "Số dòng nguồn",
+          "kieu": "so"
+        },
+        {
+          "ma": "can_kiem_tra",
+          "ten": "Cần kiểm tra",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "canh_bao",
+          "ten": "Cảnh báo",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "tep_xml",
+          "ten": "Tệp XML nguồn",
+          "kieu": "tep"
+        },
+        {
+          "ma": "chi_tiet_nguon",
+          "ten": "Chi tiết nguồn",
+          "kieu": "tep"
+        },
+        {
+          "ma": "nguon_doc",
+          "ten": "Nguồn đọc",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "ten": "Phiên bản engine",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bam_dau_vao",
+          "ten": "Băm đầu vào",
+          "kieu": "van_ban"
+        }
+      ],
+      "gioi_han": {
+        "tep_toi_da_mib": 16,
+        "mime": [
+          "application/xml",
+          "text/xml"
+        ],
+        "thoi_han_giay": 600
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    }
+  ],
+  "loai_du_lieu_rieng": [],
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
+  "chay_thu_demo": [
+    {
+      "nang_luc": "hoa_don.doc_xml@2",
+      "ten": "Đọc XML hóa đơn DEMO 0000123",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/hoa-don-DEMO.xml"
+      },
+      "tham_so": {}
+    }
+  ],
+  "bi_mat": [],
+  "webhook": null
+}

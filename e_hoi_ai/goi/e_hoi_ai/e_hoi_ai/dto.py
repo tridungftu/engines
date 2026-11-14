@@ -73,11 +73,12 @@ class KetQuaAI:
     canh_bao: tuple[str, ...] = ()
 
     def phong_bi(self):
-        # Phiếu có bốn trường tĩnh; cảnh báo nằm trong trường trả lời để hiện được ở Core.
+        # Cảnh báo nằm trong trường trả lời để hiện được ở Core.
         tra_loi = self.tra_loi
         if self.canh_bao:
             tra_loi += "\nCảnh báo: " + " ".join(self.canh_bao)
         return {"loai": "truong", "truong": {
             "tra_loi": tra_loi, "co_can_cu": self.co_can_cu,
             "trich_dan": "\n".join(self.trich_dan), "model": self.model,
+            "ly_do_chon_model": self.ly_do_chon_model,
         }}

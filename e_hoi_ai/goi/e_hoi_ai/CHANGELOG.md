@@ -1,5 +1,13 @@
 # Thay đổi
 
+## 0.3.0 — 14/11/2026 — AI-3
+
+- Thêm mô-đun `chon_model.py`: phát hiện Ollama, LM Studio native v1/v0, OpenAI-compatible từ API; giữ ID và thứ tự nguồn, không xếp hạng model.
+- Catalog trong bộ nhớ 300 giây; kiểm khả dụng mới mỗi lượt và trước POST, không dùng model đã biến mất hoặc metadata chỉ rõ từ xa/chưa tải/không phải LLM.
+- Chọn theo tham số ưu tiên, quy tắc prompt và dự phòng có thứ tự, rồi model khả dụng đầu tiên; không có model trả lỗi có thể thử lại.
+- Thêm trường `ly_do_chon_model` vào kết quả hỏi tài liệu và phiếu gói. Không thay SDK/API/Core; giữ điểm nối để AI-2 dùng chung.
+- Đã kiểm bằng Core giả (CoreGia): SDK thu 1/1 ĐẠT; pytest 176 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. Chưa kiểm Linux/Core thật/model thật.
+
 ## 0.2.0 — 14/11/2026 — AI-1
 
 - Chuyển lõi Local, DTO và adapter từ mã cũ; nối `ai.hoi_tai_lieu@1` qua SDK 2.0.

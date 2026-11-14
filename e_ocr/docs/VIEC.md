@@ -457,12 +457,42 @@ Mã thoát 0.
 - SDK 2.0.0 cài offline trong `.venv --system-site-packages`, SHA-256 wheel
   khớp `SHA256SUMS.txt`. Dependency/pytest dùng bản có sẵn; chưa là cài
   máy sạch OCR-6. Đã cập nhật README/CHANGELOG/NGUON và băm tệp gói.
-- Vướng môi trường Git: worktree ban đầu còn nền 1.0.2 (`5b987fd`), thiếu
-  OCR-2; `main` tại `469515c` có nền 1.0.3. `git merge --ff-only main` bị
-  từ chối ghi ref do metadata Git ở ngoài vùng được phép ghi. Đã lấy
-  riêng nền `e_ocr/goi`, `e_ocr/tests`, `e_ocr/cong-cu`, `e_ocr/docs/VIEC.md`
-  từ main vào worktree bằng archive, không đổi ref/index. Lead cần đồng
-  bộ ref/index lên nền main trước khi commit, giữ thay đổi OCR-4. Vì vậy
-  `git status` hiện còn hiển thị cả tệp nền OCR-2; so nội dung bỏ khác biệt
-  xuống dòng với main sẽ thấy đúng phạm vi OCR-4 ở trên. Không commit/push.
+- Lịch sử trước giải gộp: nhánh dựng trên `5b987fd` (chưa có OCR-2),
+  lần triển khai trước tự lấy nền qua archive do không ghi được metadata Git.
+  Việc đồng bộ nền chính thức được xử lý ở mục giải gộp bên dưới; số liệu
+  kiểm 218 test phía trên thuộc lần triển khai trước.
 - Cần Core / Chờ Anh mới: **không phát sinh**. Giữ các mục chờ Anh có sẵn.
+
+
+## Giải xung đột gộp OCR-4 — 15/11/2026
+
+- Đã đối chiếu `5b987fd...HEAD` và `origin/main`: giữ nền OCR-2/OCR-3
+  chính thức (1.0.3), áp riêng phần OCR-4; phiên bản kết quả **1.0.4**.
+  Giữ cổng `ocr.xuat_word@1` qua `trich_van_ban`/bộ chọn nguồn và hai test
+  Word `chi_tesseract`/`chi_abbyy`. Không thay Tesseract/vendor, parser PDF,
+  cổng SDK hoặc bộ ghi Word của main.
+- Giữ nguyên toàn bộ **181 test của main** (so nội dung từng tệp; riêng
+  `test_kho_tam.py` chỉ nối thêm); bổ sung **37 test OCR-4**: 35 ca nhật ký/
+  ABBYY và 2 ca cập nhật nhiều khóa. Tổng **218 test**, không bỏ/đổi test main.
+- Đã bỏ dấu xung đột trong 10 tệp; `NGUON.md` có một hàng nguồn mỗi tệp,
+  28 SHA-256 tính lại trên bytes cuối cùng (trừ chính `NGUON.md`).
+- **Đã kiểm bằng Core giả (CoreGia)**, ABBYY giả và dữ liệu DEMO trên Windows;
+  đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1` cho cả ba lệnh:
+
+```text
+> .venv\Scripts\python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+3/3 ĐẠT; Engine e_ocr 1.0.4; mã thoát 0.
+> .venv\Scripts\python -m pytest e_ocr/tests -q -p no:cacheprovider
+218 passed in 53.66s; 0 skipped; mã thoát 0.
+> .venv\Scripts\python e_ocr/tests/kiem_doc_lap.py
+[ĐẠT] Gói e_ocr độc lập; không import Core/kênh cũ, không có tệp biên dịch sẵn.
+Mã thoát 0.
+```
+
+- Thời gian giải gộp thực tế: khoảng **4 phút (0,07 giờ)**; tách khỏi 31 phút
+  triển khai OCR-4 đã ghi phía trên (phiếu OCR-4 ước tính 4 giờ).
+- PR: **lead xử lý**. Không `git add`, commit hoặc push; index còn các mục
+  unmerged để lead đánh dấu đã giải và hoàn tất merge. Các tệp ngoài OCR
+  do merge tự động không bị chỉnh sửa trong lượt giải gộp này.
+- Lệch mới / Cần Core / Chờ Anh mới: **không phát sinh**. Giữ lớp bọc tạm
+  và quy ước biên nhận đã ghi; chưa kiểm Linux, ABBYY thật hoặc Core thật.

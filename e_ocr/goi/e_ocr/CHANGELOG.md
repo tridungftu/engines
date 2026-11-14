@@ -2,6 +2,9 @@
 
 ## 1.0.4 — 14/11/2026 — OCR-4
 
+- Giải gộp 15/11/2026 trên nền OCR-2/OCR-3 chính thức (1.0.3); giữ xuất
+  Word qua bộ chọn nguồn và toàn bộ 181 test main, thêm 37 test OCR-4.
+
 - Lưu lượt ABBYY bền theo pháp nhân + băm + lần gửi; ghi `dang_gui` và
   giữ hạn mức trong một giao dịch nhiều khóa trước khi công bố tệp.
 - Giao lại/việc mới cùng nội dung đối chiếu kết quả đúng mã trước; lượt

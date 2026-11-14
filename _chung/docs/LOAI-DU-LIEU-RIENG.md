@@ -85,3 +85,43 @@
 }}
 ```
 - `e_hoi_ai` từ chối nếu `con_sot` khác rỗng hoặc `kiem_tien_ngay` khác `true`; **không gửi `ma_yeu_cau` ra Cloud**; chép `ma_yeu_cau` vào `chuyen_tiep` của `tra_loi_ai` để bước mở che dùng.
+
+## 3. ĐỀ XUẤT MASK-P, chờ Anh — chi tiết `van_ban_da_che`
+
+*Lập 14/11/2026 khi soạn `e_mask/docs/GIAO-CODEX-e_mask.md`. Đây là đề xuất bổ sung cho khung §2.4, chưa thay định nghĩa đang có, chưa tạo schema hoặc sửa engine. Không thêm mã loại mới; giữ tên “Văn bản đã che định danh” và `phien_ban: 1`. Chỉ thêm trường tùy chọn tương thích; nếu cần đổi trường bắt buộc/nghĩa cũ phải trình mã loại mới theo §1.*
+
+### 3.1 Sáu trường gốc và điều kiện tạo kết quả
+
+| Trường trong `van_ban_da_che` | Ngữ nghĩa đề xuất |
+|---|---|
+| `phien_ban` | Số nguyên `1`. |
+| `van_ban` | Chuỗi đã che, không rỗng; chỉ xuất sau hậu kiểm. Trần đầu vào Mask 500.000 ký tự không tự trở thành trần đầu ra; bí danh có thể làm chuỗi dài hơn. Bước nhận phải kiểm trần riêng, không cắt ngầm. |
+| `ma_yeu_cau` | Mã opaque do Core cấp và quản, gắn module/người gửi/tài liệu từ nguồn tin cậy. Không dùng quy tắc mã lượt cũ (hết hạn/64 ký tự) để tự đổi hợp đồng. Không gửi Cloud. |
+| `con_sot` | Mảng rỗng khi trả thành công; kết quả chưa kiểm hết không được tạo loại này. Các dấu vết nội bộ chỉ có nhóm/vị trí/lý do chung, không cụm gốc. |
+| `kiem_tien_ngay` | Phải là boolean `true` từ đối chiếu thực tế trước/sau che; cờ tự khai hoặc schema đúng không chứng minh đã bảo toàn. |
+| `chuyen_tiep` | Đối tượng nội bộ, mặc định `{}`, tối đa 64 KiB JSON UTF-8. Không chép nguyên trang/khối OCR, văn bản nguồn, danh mục hoặc cụm gốc mới vào đây. Không dùng nó để tự khai danh tính/quyền. |
+
+Mask còn sót, thiếu tài nguyên detector, kiểm tiền/ngày không đạt hoặc chưa chốt kho → `LoiNghiepVu`, **không trả thành công với `van_ban: null`, bản che dở hoặc cờ an toàn giả**. Không công bố bảng đối chiếu. Kho bí danh/quyền tin cậy là phụ thuộc riêng; kết quả test bằng fixture DEMO không chứng nhận kho thật.
+
+### 3.2 Trường tùy chọn đề xuất
+
+| Trường | Kiểu / nội dung |
+|---|---|
+| `so_cho_thay` | Số nguyên không âm; bằng 0 không tự chứng minh không sót. |
+| `bi_danh` | Mảng `{bi_danh, nhom, nguon}`; `nguon` là `chinh_thuc` hoặc `tam`. Chỉ bí danh, không giá trị gốc hoặc bảng tra ngược. |
+| `cho_duyet` | `{so_cum_vua_them: <số nguyên không âm>}`; không trả cụm gốc mới. |
+| `vung_da_quet` | Mảng mã vùng/chỉ số vị trí đã kiểm (thân, đầu/chân, bình luận, lịch sử sửa, thuộc tính, sheet/ô ẩn…). Không đưa tên sheet/nhãn/path chứa định danh chưa che vào báo cáo. Chỉ liệt kê vùng thực sự đã kiểm; không mặc nhiên khẳng định đủ mọi vùng tệp. |
+| `phien_ban_engine` | Chuỗi phiên bản engine tạo kết quả. |
+| `bam_dau_vao` | Chuỗi `sha256:<64 chữ số hệ 16>`, tính trên bytes đầu vào hoặc UTF-8 của chuỗi gốc; không đưa lên Cloud. |
+| `canh_bao` | Mảng câu tiếng Việt cố định, không chứa cụm gốc, đoạn trích chưa che, đường máy hoặc bí mật. |
+
+Schema dự kiến `_chung/contract/van_ban_da_che.schema.json` được tạo tại MASK-4 **sau khi phần đề xuất được chốt**, rồi chép vào gói Mask, test so SHA. Engine dùng loại này kiểm ngữ nghĩa bên trong vì SDK chỉ kiểm khớp mã loại. Không sửa các schema `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai` đang có trong MASK-P.
+
+### 3.3 Nối Hỏi AI và mở che
+
+- Core phải bảo đảm loại này thực sự do bước Mask tạo; so khớp chuỗi `loai` hoặc tin hai cờ từ caller chưa đủ chống giả mạo kết quả đã che. Việc này thuộc cửa chung, không route riêng Mask.
+- Khi Hỏi AI bản 2 được bật: chỉ nội dung `van_ban` đã che được dùng làm căn cứ gửi Cloud; prompt và phần khác có nội dung nhạy cảm cũng phải đi qua kiểm tương ứng, không tự được miễn vì nhận loại này. **Không tuần tự hóa cả payload** gửi ra ngoài: loại `ma_yeu_cau`, `chuyen_tiep`, báo cáo/băm và mọi dữ liệu kho khỏi request nhà cung cấp.
+- `ma_yeu_cau` chỉ chép nội bộ vào `tra_loi_ai.chuyen_tiep.ma_yeu_cau`, không cho model tạo lại. Mask lấy mã này khi mở che, Core vẫn kiểm đúng module/người gửi/tài liệu; biết mã không thay quyền. Vị trí OCR/trích dẫn trước che không mặc nhiên đúng sau thay thế; không giữ kết luận kiểm nguyên văn cho câu trích đã đổi chữ khi mở che.
+- DOCX/XLSX giữ định dạng được Mask trả bằng loại gốc `truong` với trường `tep` và báo cáo tĩnh (phiếu Mask §2); **không giả `van_ban_da_che` để mang tệp ra Cloud**. Luồng AI sửa tệp chỉ giả lập trong đợt này; Cloud vẫn tắt theo phiếu Hỏi AI.
+
+Chờ Anh chốt bổ sung này cùng Q3/Q4 của `GIAO-CODEX-THU-TU.md`; không coi nhãn đề xuất là bằng chứng contract đã đăng ký/kích hoạt hoặc engine đủ điều kiện gửi Cloud.

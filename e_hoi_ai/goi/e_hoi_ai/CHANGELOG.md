@@ -46,3 +46,8 @@
 - Thêm ba contract dữ liệu dùng chung và schema cấu hình máy.
 - Đọc JSON ngoài gói, cho phép khởi động khi thiếu cấu hình.
 - Đã kiểm bằng Core giả (CoreGia); chưa có DEMO hỏi AI thành công (AI-4).
+## AI-6 — 14/11/2026 (khung, giữ nguyên manifest 0.4.0)
+
+- Tách provider Local sang `nha_cung_cap.py`; giữ import tương thích tại `cong_ai.py`. Thêm provider Cloud Anthropic/OpenAI nhận khóa qua constructor, không đọc env/tệp/đĩa.
+- Thêm `cloud.hoi_cloud` chỉ nhận phong bì đã che, fail-closed khi còn sót hoặc chưa kiểm tiền/ngày; giữ mã mở che trong kết quả nội bộ. Cloud bị khóa cứng `BAT_CLOUD = False` ở cả hàm và provider.
+- Không sửa `engine.json`, không đăng ký năng lực Cloud. Mọi kiểm Cloud bằng giả trong RAM; hai năng lực bản 1 được chặn cả khởi tạo/gọi provider Cloud. Đã kiểm bằng Core giả (CoreGia).

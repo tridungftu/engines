@@ -9,6 +9,7 @@ from kho_tri_thuc_sdk.engine import Viec
 from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_hoi_ai import ai_cuc_bo, chay
+from e_hoi_ai.nha_cung_cap import NhaCungCapCloud
 from e_hoi_ai.cong_ai import CongAI, NhaCungCapLocal, danh_gia
 from e_hoi_ai.dto import YeuCauAI
 from local_gia import LocalGia, TAI_LIEU, TRA_LOI, TRICH_TIEN, TRICH_NGAY, ghi_cau_hinh
@@ -30,6 +31,14 @@ class CloudGia:
 def khong_mang_ngoai_va_khong_cloud(monkeypatch):
     """Provider Cloud có mặt ở seam, được đếm ở mọi đường; chặn cả mạng ngoài/DNS."""
     cloud = CloudGia()
+    cham_cloud = []
+
+    def cam_provider_cloud(*args, **kwargs):
+        cham_cloud.append(1)
+        raise AssertionError("Hai năng lực bản 1 không được chạm NhaCungCapCloud.")
+
+    monkeypatch.setattr(NhaCungCapCloud, "__init__", cam_provider_cloud)
+    monkeypatch.setattr(NhaCungCapCloud, "hoi", cam_provider_cloud)
     cong = CongAI(nha_cung_cap={"local": NhaCungCapLocal(), "cloud": cloud})
     monkeypatch.setattr(chay.bo_hoi, "cong_ai", cong)
     ket_noi_goc = socket.socket.connect
@@ -45,6 +54,7 @@ def khong_mang_ngoai_va_khong_cloud(monkeypatch):
     monkeypatch.setattr(socket, "getaddrinfo", cam_dns)
     yield cloud
     assert cloud.so_luot == 0
+    assert cham_cloud == []
 
 
 @pytest.fixture

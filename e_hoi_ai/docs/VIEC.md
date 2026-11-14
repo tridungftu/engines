@@ -15,11 +15,18 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | AI-1 | Hỏi tài liệu chỉ Local, khung trích dẫn, hậu kiểm Python, lỗi/thử lại, hủy và chống nộp trùng | AI-1…5, 7, 8 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 141 passed, 0 skipped; kiểm độc lập mã 0; provider Cloud 0 lượt. Chưa chạy thực tế trên Linux/Core thật/model thật. PR: **chờ lead mở** |
 | AI-2 | Hỏi theo yêu cầu, khuôn JSON, chuyển tiếp nguyên vẹn và trần byte | AI-3, 5; phục vụ TX-3 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 238 passed, 0 skipped (97 ca mới AI-2); kiểm độc lập mã 0; provider Cloud 0 lượt. Chưa kiểm thực tế Linux/Core thật/model thật. PR: **chờ lead mở** |
 | AI-3 | Tự phát hiện API/model, cache 5 phút, chọn ưu tiên và dự phòng theo mã prompt | AI-10 | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; SDK thu 1/1 ĐẠT; pytest 176 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. PR: **chờ lead mở** |
+| AI-6 | Tách provider và khung Cloud chưa khai phiếu | AI-21…24 (khung) | Xong — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia); SDK thu 1/1 ĐẠT, pytest 334 passed, 0 skipped, độc lập mã 0. Cloud chỉ giả trong RAM, manifest giữ nguyên. PR: **chờ lead mở** |
 | AI-4 | Ba DEMO, cổng Local giả gọi CoreGia và test tiến trình nhận stdin qua MayChuGia | AI-12, AI-18 (phần engine) | Xong — 14/11/2026; đã kiểm bằng Core giả | Cổng DEMO thay SDK thu: 3/3 ĐẠT; kiểm thêm SDK thu có Local giả 3/3 ĐẠT; pytest 283 passed, 0 skipped; kiểm độc lập mã 0; Cloud 0 lượt. Chưa kiểm Linux/Core thật/model thật. PR: **chờ lead mở** |
+| AI-5 | Ghim ph? thu?c, ngu?n v? c?i m?y s?ch | AI-13 | ?ang l?m ? 14/11/2026 | Hai k?ch b?n offline ??t 3/3 DEMO tr?n Windows; workflow Linux ?? th?m, ch? lead push ?? CI ch?y. ?? ki?m b?ng Core gi? (CoreGia). PR: **ch? lead m?** |
 
 | Gộp AI-2/AI-3 | Giải xung đột merge origin/main vào nhánh AI-2 | AI-2, AI-3 | Xong — 14/11/2026 | Gói 0.4.0; đã kiểm bằng Core giả (CoreGia); SDK thu 1/1 ĐẠT; pytest 278 passed, 0 skipped; độc lập mã 0. PR: chờ lead; nội dung đã giải xung đột, Git index chờ lead stage do quyền ghi |
 
+| AI-7 | Công cụ thử Local thật bằng DEMO | AI-14, AI-8 | Đang làm — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia), Local giả và mock; chưa có AI-4 trên nhánh, tạm dùng ca manifest AI-1; Anh tự chạy máy thật. PR: **chờ lead mở** |
+
 ## Cần Core (chuyển lead Core qua Anh)
+
+- AI-6 (14/11/2026), bản 2: Core cần cấp bí mật theo tên trong `bi_mat[]` qua kênh bộ nhớ SDK; engine không tự đọc khóa từ env/tệp/đĩa. Cần công tắc Cloud theo từng module, mặc định tắt; **M9 và nhóm 07-Nhân sự luôn chỉ Local**. Cần điều phối Mask → Cloud → mở che, bảo đảm chỉ nội dung đã che ra ngoài. Không thêm năng lực/loại Cloud hoặc tên bí mật vào manifest ở AI-6.
+- AI-6, bản 2: cần **ngăn dữ liệu engine** để giữ số đếm/độ chính xác Local theo function, lịch kiểm xác suất **20% → 10% → 5%**, không về 0; dưới 90% quay lại 20%. Chưa làm định tuyến hoặc đo thật ở lát khung này; giữ Cloud tắt đến khi có các cửa chung của Core và Mask.
 
 - Cổng engine chung: API HTTP v1, webhook, bộ cài engine từ thư mục/gói riêng (bỏ tiền tố `kho_tri_thuc.engines.`), K1–K5.
 - Màn Chạy thử chung và màn cấu hình dựng từ schema; nạp giao diện quản trị của engine.
@@ -249,6 +256,14 @@ Lệnh SDK thu chạy thật trong tiến trình con với Local HTTP giả và 
 
 Bắt đầu **14/11/2026 22:55** (theo lead); kết thúc kiểm và ghi bàn giao **14/11/2026 23:06:29 +07:00**: **0.19 giờ** (11 phút 29 giây, thời gian đồng hồ). Ước tính trong phiếu AI-3: **3 giờ**.
 
+## Bàn giao AI-7 — 14/11/2026
+
+**Kết luận: Chưa đạt đầy đủ:** công cụ đã có và được kiểm giả lập; ca DEMO AI-4 chưa có trên nhánh AI-3 nên tạm dùng ca hiện có trong manifest. Chưa chạy Local thật. PR: **chờ lead mở**.
+
+- Đã làm: công cụ mặc định chạy khô; `--that --url` mới kết nối Local, thử từng model phát hiện, so đáp án, kiểm trích dẫn, ghi thời gian và JSON vào thư mục chạy. Ca Local tắt được giả lập qua provider; đếm Cloud bằng provider khóa. Có CMD ASCII và hướng dẫn 5 dòng. Không sửa gói hoặc chạy model thật.
+- Kiểm: SDK thu trực tiếp thiếu cấu hình → 0/1 ĐẠT, mã 1; cùng lệnh qua bộ chạy Core giả (CoreGia) và Local HTTP giả → 1/1 ĐẠT, mã 0. Pytest 176 passed, 0 skipped; kiểm độc lập mã 0. Công cụ: 4 test mock đạt, không gọi mạng.
+- Lệch phiếu: bộ AI-4 chưa hiện diện; phải đối chiếu/chuyển sang ca AI-4 sau khi gộp. Ca Local tắt hiện là giả lập, không chứng minh tình huống máy thật ngừng hoạt động. Không phát sinh yêu cầu Core/SDK mới.
+- Ước tính AI-7: 2 giờ; bắt đầu 14/11/2026 23:07 theo lead. Kết thúc 14/11/2026 23:11:30; thời gian thực tế 0,075 giờ (4 phút 30 giây).
 ## Bàn giao việc gộp AI-2/AI-3 — 14/11/2026
 
 Kết luận: **Đạt** — đã giải năm tệp xung đột, giữ đủ hành vi và test hai lát. **Đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả trên Windows/Python 3.13.14; chưa kiểm Linux/Core thật/model thật.
@@ -279,6 +294,45 @@ Cần Core / Chờ Anh mới phát sinh: **không**.
 
 Lưu ý Git index: `git add` bị từ chối quyền ghi vì index worktree nằm ngoài writable root; năm tệp vẫn hiện `UU` trong index dù nội dung đã sạch dấu merge. Lead cần stage năm tệp xung đột cùng `hoi_yeu_cau.py`, `engine.json`, `tests/test_hoi_yeu_cau.py`, rồi tự hoàn tất merge. Không dùng index thay thế hoặc thay đổi quyền.
 
+
+## Bàn giao AI-6 — 14/11/2026
+
+Kết luận: **Đạt** lát khung Cloud; đã kiểm bằng Core giả (CoreGia), Local HTTP giả và Cloud giả trong bộ nhớ trên Windows/Python 3.13.14. Chưa kiểm Linux, Core thật hoặc model/API Cloud thật.
+
+PR: **chờ lead mở**. Nhánh `codex/e_hoi_ai-ai-6`; tiêu đề đề nghị: `[e_hoi_ai] AI-6 — Khung Cloud và seam nhà cung cấp`. Không chạy git commit/push.
+
+Đã làm:
+- Đúng 3 tệp mã chạy thêm/sửa: `nha_cung_cap.py`, `cloud.py`, `cong_ai.py`. Chuyển Local sang mô-đun provider, giữ import tương thích; hai năng lực chỉ dùng khóa provider `local`. Cloud Anthropic/OpenAI nhận khóa qua constructor, không đọc env/tệp/đĩa để lấy khóa; HTTPS host cố định, không proxy/redirect/retry.
+- `BAT_CLOUD = False` cố định; cả `hoi_cloud` và provider chặn khi tắt. Test kiểm literal cờ, env không bật được Cloud, và chặn cả khởi tạo/gọi NhaCungCapCloud trong bộ test hai năng lực (kể cả sai khuôn/hỏi lại, thiếu prompt, lỗi Local, hủy, gửi lại kết quả).
+- Chỉ phong bì đã che phiên bản 1, con_sot phải là list rỗng, kiem_tien_ngay phải đúng boolean true; thiếu/sai trường từ chối. Văn bản/model chứa mã mở che bị từ chối; trần 500.000 ký tự, chuyển tiếp 64 KiB tính cả mã mở che, vượt thì không cắt ngầm. Chỉ văn bản đã che đi ra ngoài; ma_yeu_cau và metadata không ra payload. Kết quả chép ma_yeu_cau vào chuyen_tiep, không sửa đầu vào, hậu kiểm trích dẫn bằng lõi hiện có.
+- 56 test mới chỉ Cloud giả trong RAM, chặn socket/DNS; kiểm payload hai API, không đọc env/tệp, metadata/chuyển tiếp, mã xung đột, biên 64 KiB, không căn cứ/trích dẫn bịa, cắt token/từ chối, hủy, mất phản hồi/202 thành ChuaRo, HTTP/redirect/trần phản hồi. Transport HTTPS cũng kiểm bằng đối tượng giả trong bộ nhớ, không dựng Cloud server hoặc gọi mạng ngoài.
+- Giữ nguyên byte engine.json và chay_thu_demo; không thêm thư viện, không sửa ma-nguon/Core/SDK, không xóa tệp. README/CHANGELOG/NGUON ghi nguồn và băm các tệp gói đổi/thêm.
+
+Kết quả kiểm thật: SDK 2.0.0 cài từ wheel repo bằng --no-index --no-deps, SHA-256 khớp SHA256SUMS.txt. Venv trong worktree dùng --system-site-packages cho pytest 9.1.1 có sẵn, không tải mạng. Đặt PYTHONUTF8=1, PYTHONDONTWRITEBYTECODE=1, PYTEST_DISABLE_PLUGIN_AUTOLOAD=1.
+
+```text
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py
+Chạy nguyên lệnh trong tiến trình con:
+  python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+Engine e_hoi_ai 0.4.0: mọi ví dụ chạy thử DEMO đều đạt.
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; 1 lượt Local.
+Mã thoát 0; 1/1 ĐẠT.
+
+.venv/Scripts/python -m pytest e_hoi_ai/tests -q
+334 passed in 34.75s
+Mã thoát 0; 0 skipped.
+
+.venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát 0.
+```
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: không đổi phạm vi; giữ manifest 0.4.0 theo chỉ đạo không sửa engine.json khi AI-4 đang chạy song song. SDK thu được chạy nguyên lệnh qua runner Local giả kế thừa AI-1, không thay handler. Khung Cloud không nhận prompt thô riêng: yêu cầu và dữ liệu phải nằm trong văn bản đã qua Mask. Chưa nối khuôn động/định tuyến/đo độ chính xác Cloud, chưa bật Cloud vận hành. Giữ mốc API Anthropic từ nguồn cũ, bỏ tùy chọn beta/fallback và danh sách model cũ; tương thích API/model thật cần xác minh ở bản 2.
+
+Cần Core / Chờ Anh mới phát sinh: không có điểm chặn mới. Đã ghi rõ nợ bản 2 ở mục Cần Core: bi_mat[], công tắc module mặc định tắt (M9 và nhóm 07 luôn Local), Mask/mở che và ngăn dữ liệu để đo độ chính xác theo function + lịch kiểm 20%→10%→5%, dưới 90% trở lại 20%. Không có câu Chờ Anh mới.
+
+Thời gian thực tế: bắt đầu **14/11/2026 23:23** (theo lead), kết thúc **14/11/2026 23:32:37 +0700**, **0.16 giờ** thời gian đồng hồ; ước tính trong phiếu AI-6: **3 giờ**.
 ## Bàn giao AI-4 — 14/11/2026
 
 Kết luận: **Đạt** — đã kiểm bằng Core giả (CoreGia), Local HTTP giả và MayChuGia trên Windows/Python 3.13.14. Chưa kiểm thực tế Linux/Core thật/model thật.
@@ -329,3 +383,30 @@ Thời gian thực tế: bắt đầu **14/11/2026 23:23** theo lead; kết thú
 Lệch khỏi phiếu / quyết định tạm đã dùng: không đổi phạm vi; tiếp tục cấu hình JSON ngoài gói theo quyết định tạm. Cấu hình sinh dưới thư mục tạm trong tests để dùng cổng động, tránh ghim cổng hoặc chạm cấu hình máy thật. Phiên bản gói giữ 0.4.0; chỉ đổi dữ liệu DEMO, test và tài liệu.
 
 Cần Core / Chờ Anh mới phát sinh: **không**. Các phụ thuộc Core thật giữ như mục Cần Core.
+
+## B?n giao AI-5 ? 14/11/2026
+
+K?t lu?n: **Ch?a ??t ??y ??** ? ?? ki?m b?ng Core gi? (CoreGia); workflow Linux ?? khai b?o nh?ng ch?a ch?y CI th?c t? v? lead s? push v? m? PR.
+
+?? l?m: `requirements.lock` ghi ch? d?ng th? vi?n chu?n, SDK 2.0.0 c?i ri?ng t? wheel; `NGUON.md` ghi ngu?n m? c? v? SHA-256 hi?n t?i c?a c?c t?p c?n l?i trong g?i (kh?ng t? b?m). Hai k?ch b?n ASCII t?o venv m?i, c?i offline r?i ch?y DEMO; workflow CI ch?y b?n `.sh`. Kh?ng c? Cloud AI-6 trong worktree n?y.
+
+K?t qu? ki?m tr?n Windows/Python 3.13: SDK wheel SHA-256 kh?p `SHA256SUMS.txt`; SDK thu v?i Local HTTP gi? 3/3 ??T, m? 0; pytest 283 passed, 0 skipped; `kiem_doc_lap.py` ??T, m? 0. C? `.sh` (Git Bash) v? `.cmd` ??t 3/3 DEMO, m? 0. Ch?a ch?y Linux/CI th?c t?. G?i s?ch bytecode.
+
+Th?i gian: b?t ??u 14/11/2026 23:34 theo lead; k?t th?c kho?ng 23:37 (+07:00), kho?ng 0,05 gi?; phi?u ??c t?nh 2 gi?. PR: **ch? lead m?**.
+
+L?ch kh?i phi?u / quy?t ??nh t?m: `.sh` ?? ki?m b?ng Git Bash tr?n Windows; CI Linux ch? push. Kh?ng commit/push. `NGUON.md` kh?ng t? b?m ?? tr?nh t? tham chi?u; SHA theo byte worktree.
+
+C?n Core / Ch? Anh m?i ph?t sinh: kh?ng.
+## Lich su truoc khi gop
+
+| 2 | Màn Chạy thử DEMO, Cổng Local AI, Cổng Cloud AI (tắt ở bản 1) thành **giao diện của engine** (không đặt trong Core) | AI-10, 11, 12 | Chờ làm | Bản cũ trong `tu-core-cu\phia-core\` |
+
+## Hoàn thiện AI-7 sau khi gộp AI-4 — 14/11/2026
+
+Kết luận: Đạt phạm vi công cụ; đã kiểm bằng Core giả (CoreGia) và Local HTTP giả, chưa chạy model thật. PR: **chờ lead mở**.
+
+Đã hợp nhất nội dung hai phía VIEC, giữ dòng lịch sử của cả hai; công cụ đọc ba ca DEMO từ `engine.json`, đánh giá riêng từng ca cho từng model; CMD tự tạo venv và cài SDK khi thiếu, mặc định chạy khô. Local tắt vẫn là giả lập; không có lượt Cloud.
+
+Kiểm: chạy khô mã 0; cổng DEMO Core giả 3/3 ĐẠT; pytest 284 passed, 0 skipped; kiểm độc lập mã 0. Codex không chạy Local thật. Git index vẫn chờ lead stage và hoàn tất merge.
+
+Thời gian bổ sung: khoảng 0,07 giờ; ước tính AI-7 trong phiếu 2 giờ. Lệch phiếu / quyết định tạm: không; Cần Core / Chờ Anh mới phát sinh: không.

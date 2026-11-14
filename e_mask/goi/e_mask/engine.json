@@ -1,0 +1,141 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_mask",
+  "ten": "Che định danh",
+  "phien_ban": "1.0.0",
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "api": "v1",
+    "sdk": ">=2.0.0 <3.0.0"
+  },
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {
+    "lenh": [
+      "{python}",
+      "-m",
+      "e_mask.chay"
+    ],
+    "thu_muc": "."
+  },
+  "nang_luc": [
+    {
+      "ma": "mask.che_van_ban@1",
+      "ten": "Che văn bản",
+      "nhan": [
+        "van_ban",
+        "van_ban_tai_lieu",
+        "tep"
+      ],
+      "tra": "van_ban_da_che",
+      "gioi_han": {
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 60
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    },
+    {
+      "ma": "mask.mo_che_van_ban@1",
+      "ten": "Mở che văn bản",
+      "nhan": [
+        "tra_loi_ai",
+        "tep"
+      ],
+      "tra": "truong",
+      "gioi_han": {
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 60
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "dong_viec",
+          "ten": "Đóng việc sau khi mở",
+          "kieu": "co_khong",
+          "mac_dinh": false
+        }
+      ],
+      "truong_ra": [
+        {
+          "ma": "van_ban_da_mo_che",
+          "ten": "Văn bản đã mở che",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so_cho_mo",
+          "ten": "Số chỗ mở",
+          "kieu": "so"
+        },
+        {
+          "ma": "bi_danh_khong_ro_json",
+          "ten": "Bí danh chưa mở JSON",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "mo_day_du",
+          "ten": "Mở đầy đủ",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "trang_thai_ma_yeu_cau",
+          "ten": "Trạng thái yêu cầu",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "tra_loi_ai_da_mo_json",
+          "ten": "Trả lời AI đã mở JSON",
+          "kieu": "van_ban"
+        }
+      ]
+    }
+  ],
+  "loai_du_lieu_rieng": [
+    {
+      "ma": "van_ban_tai_lieu",
+      "ten": "Văn bản tài liệu có vị trí"
+    },
+    {
+      "ma": "tra_loi_ai",
+      "ten": "Trả lời AI có trích dẫn"
+    },
+    {
+      "ma": "van_ban_da_che",
+      "ten": "Văn bản đã che định danh"
+    }
+  ],
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
+  "chay_thu_demo": [
+    {
+      "nang_luc": "mask.che_van_ban@1",
+      "ten": "Che văn bản DEMO",
+      "dau_vao": {
+        "loai": "van_ban",
+        "van_ban": "Dữ liệu giả DEMO."
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "mask.mo_che_van_ban@1",
+      "ten": "Mở che DEMO",
+      "dau_vao": {
+        "loai": "tra_loi_ai",
+        "tra_loi_ai": {
+          "phien_ban": 1,
+          "tra_loi": "DEMO [[CT-0001]]",
+          "chuyen_tiep": {
+            "ma_yeu_cau": "DEMO"
+          }
+        }
+      },
+      "tham_so": {}
+    }
+  ],
+  "bi_mat": [],
+  "webhook": null
+}

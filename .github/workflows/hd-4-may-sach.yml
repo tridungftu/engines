@@ -1,0 +1,15 @@
+name: e_hoa_don may sach
+on:
+  push:
+    paths: ["e_hoa_don/**", ".github/workflows/hd-4-may-sach.yml"]
+  pull_request:
+    paths: ["e_hoa_don/**", ".github/workflows/hd-4-may-sach.yml"]
+jobs:
+  may-sach:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: sh e_hoa_don/tests/kiem_may_sach.sh

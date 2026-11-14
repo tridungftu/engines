@@ -614,6 +614,13 @@ gói hoặc git. Toàn bộ 218 test nền còn nguyên, thêm 21 test OCR-5.
   Tesseract đã có; ba nợ OCR-4 giữ nguyên để làm lát riêng.
 
 
+## Bằng chứng OCR-7 — phiếu 14/11/2026
+
+- PR: **chờ lead mở**. Công cụ mặc định chạy khô; chỉ `--that` mới gửi PDF quét DEMO vào các thư mục riêng do cấu hình chỉ định. Không truy cập Hot Folder thật trong lượt triển khai.
+- ABBYY giả: đã kiểm luồng PDF, so tiền/ngày từng trang, xuất và kiểm cấu trúc Word; JSON ghi biên nhận chưa kiểm chứng khi không có từ chối. Thời gian JSON tính từ đầu sinh DEMO đến kết thúc xử lý, gồm cả thời gian chờ.
+- ABBYY thật và việc ABBYY/script tích hợp có sinh `<ma>.loi.json` đúng OCR-4 **chưa được kiểm**. Một lượt thành công hoặc quá hạn không chứng minh nguồn hỗ trợ biên nhận; cần lượt từ chối thực tế để kiểm. Quá hạn giữ trạng thái chưa rõ, không tự gửi lại.
+- Kết quả lượt kiểm trước: SDK DEMO 6/6 ĐẠT, pytest 241 passed, 0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia), ABBYY giả. Chưa kiểm Linux, Core thật hay ABBYY thật.
+- Không phát sinh yêu cầu Core/SDK mới. Các dependency của gói cần có sẵn theo hướng dẫn cài máy sạch; `.cmd` cài SDK offline và mặc định chạy khô. Ngày 15/11/2026: sửa mã hóa và làm rõ hướng dẫn cài dependency; PR chờ lead mở.
 ## Bằng chứng OCR-6 — phiếu 14/11/2026
 
 - Nhánh `codex/e_ocr-ocr-6`; PR: **chờ lead mở**. Không commit/push.

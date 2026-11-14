@@ -22,8 +22,11 @@ CAC_NANG_LUC = {
 
 
 def test_tu_khai_bao_va_nap_goi_khi_thieu_cau_hinh():
+    from e_ocr import PHIEN_BAN
+
     app = Engine.tu_khai_bao(GOI / "engine.json")
     assert app.ma == "e_ocr"
+    assert app.phieu["phien_ban"] == PHIEN_BAN
     assert app.phieu["phien_ban_manifest"] == 2
     assert nap_engine_tu_goi(GOI).ma == app.ma
     assert app.phieu["loai_du_lieu_rieng"] == [
@@ -43,7 +46,7 @@ def test_tu_khai_bao_va_nap_goi_khi_thieu_cau_hinh():
         assert [chon["ma"] for chon in tham_so["lua_chon"]] == ["tu_dong", "chi_abbyy", "chi_tesseract"]
 
 
-@pytest.mark.parametrize("nang_luc", CAC_NANG_LUC)
+@pytest.mark.parametrize("nang_luc", ["ocr.xuat_word@1"])
 @pytest.mark.parametrize("nguon", [None, "chi_abbyy", "chi_tesseract"])
 def test_ham_tam_bao_chua_lam_qua_core_gia(nang_luc, nguon):
     core = CoreGia()

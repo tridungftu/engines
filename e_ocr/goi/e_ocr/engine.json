@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_ocr",
   "ten": "Nhận dạng văn bản",
-  "phien_ban": "1.0.0",
+  "phien_ban": "1.0.1",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -96,7 +96,20 @@
   ],
   "tai_nguyen": {"so_viec_dong_thoi": 1},
   "readiness": {"thoi_han_giay": 30},
-  "chay_thu_demo": [],
+  "chay_thu_demo": [
+    {
+      "nang_luc": "ocr.doc_tai_lieu@1",
+      "ten": "Đọc PDF DEMO có lớp chữ và vị trí, 3 trang",
+      "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-lop-chu-3-trang.pdf"},
+      "tham_so": {"nguon": "tu_dong"}
+    },
+    {
+      "nang_luc": "ocr.doc_van_ban@1",
+      "ten": "Đọc văn bản thuần từ PDF DEMO có lớp chữ, 3 trang",
+      "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-lop-chu-3-trang.pdf"},
+      "tham_so": {"nguon": "tu_dong"}
+    }
+  ],
   "bi_mat": [],
   "webhook": null
 }

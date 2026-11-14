@@ -1,10 +1,11 @@
-# Engine nhận dạng văn bản — OCR-3
+# Engine nhận dạng văn bản — OCR-2 và OCR-3
 
-Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.2. Hai năng lực
-`ocr.doc_tai_lieu@1` và `ocr.doc_van_ban@1` dùng chung lõi đọc lớp chữ PDF
-hoặc nhận PDF lớp chữ từ ABBYY Hot Folder cục bộ. `ocr.xuat_word@1` dùng
-cùng lõi, dựng DOCX và gửi qua `viec.tai_tep_ra`. **Đã kiểm bằng Core giả (CoreGia)** và ABBYY giả;
-chưa kiểm ABBYY hoặc Core thật.
+Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.3. Ba năng lực
+`ocr.doc_tai_lieu@1`, `ocr.doc_van_ban@1` và `ocr.xuat_word@1` dùng chung
+lõi đọc lớp chữ PDF hoặc ABBYY Hot Folder cục bộ, dự phòng Tesseract.
+Xuất Word dựng DOCX và gửi qua `viec.tai_tep_ra`. **Đã kiểm bằng Core giả
+(CoreGia)**, ABBYY/Tesseract mock và một ca Tesseract thật bằng DEMO trên
+Windows; chưa kiểm Linux, ABBYY hoặc Core thật.
 
 Mỗi năng lực nhận PDF/PNG/JPEG tối đa 20 MiB, thời hạn 900 giây, có lựa chọn
 nguồn `tu_dong` / `chi_abbyy` / `chi_tesseract`. Tệp được đọc bằng `viec.mo_tep`,
@@ -17,7 +18,8 @@ nguyên tệp từ `_chung/contract/van_ban_tai_lieu.schema.json`.
 
 Python >= 3.11. Dùng SDK 2.0.0, pdfplumber, Pillow và dependency đã ghim
 trong `requirements.lock`; tất cả phiên bản thư viện ngoài SDK giữ như
-lock cũ. Không dùng PyMuPDF, numpy hay vendor/mask_ocr trong OCR-1. Môi
+lock cũ. Bộ render là pypdfium2 đã ghim; vendor mask_ocr chỉ giữ phần cần
+dùng, không thêm PyMuPDF, defusedxml, numpy hoặc model. Môi
 trường kiểm dùng `.venv --system-site-packages` và thư viện có sẵn, SDK cài
 offline từ wheel repo với `--no-index --no-deps`. Đây chưa là kiểm máy sạch
 của OCR-6; lock hiện chưa có hash wheel đa nền tảng. Nguồn/băm xem `NGUON.md`.
@@ -48,7 +50,8 @@ lượt kiểm OCR-1 chạy thực tế trên Windows, chưa có Linux/WSL trong
   `lop_chu_san`; không đọc cấu hình, gửi ABBYY hoặc OCR lại ảnh nền.
   Trang thiếu lớp chữ/hướng chữ chưa hỗ trợ khiến cả tệp gửi ABBYY, không
   trả kết quả thiếu trang. `chi_tesseract` vẫn cho phép đọc lớp chữ sẵn;
-  khi cần OCR ảnh thì trả `CHUA_LAM` tới OCR-2, không gửi ABBYY.
+  khi cần OCR ảnh thì bỏ ABBYY. PDF trộn chữ/ảnh qua Tesseract giữ nguyên
+  trang có chữ, chỉ render/nhận dạng trang thiếu chữ.
 - Cấu hình ABBYY bật, hai thư mục vào/ra phải là đường dẫn tuyệt đối tới
   hai thư mục đã có, tách biệt. Engine chỉ dùng đúng tên ngẫu nhiên
   `<ma_tuong_quan>.pdf|png|jpg`, không dùng tên người dùng hoặc quét thư mục.
@@ -65,14 +68,46 @@ lượt kiểm OCR-1 chạy thực tế trên Windows, chưa có Linux/WSL trong
   có EOF và không thay đổi trong lúc đọc. Trần kết quả 20 MiB, 60 trang,
   500.000 ký tự; vượt thì từ chối, không cắt. Tệp kết quả đã đọc và tệp vào
   còn chờ được dọn sau lượt; không đụng kết quả thuộc mã khác.
-- Hết hạn mà còn rút được tệp chờ: `ABBYY_QUA_THOI_HAN`. Tệp đã biến mất
+- Hết hạn mà còn rút được tệp chờ: `ABBYY_QUA_THOI_HAN` trong chế độ chỉ
+  ABBYY, hoặc chuyển Tesseract trong chế độ tự động. Tệp đã biến mất
   hoặc không rút được: `ChuaRo(ma_tuong_quan)`, không trả thành công hoặc
   chuyển nguồn. Chống trùng/lưu lượt bền và chốt kết quả trả muộn thuộc OCR-4.
 - Kết quả có băm SHA-256 **tệp đầu vào**, phiên bản engine và cảnh báo.
   Toàn văn nối trang bằng `\f`; khối/dòng/từ có tọa độ point theo trang.
   Giữ nguyên tiền/ngày trong văn bản, không tự hiệu đính hay suy giá trị.
   Bảng có đường kẻ PDF giữ ô trống/ô gộp; bảng chỉ có trong ảnh nền chưa
-  được tái tạo và có cảnh báo. Fallback và sổ hạn mức thuộc OCR-2.
+  được tái tạo và có cảnh báo. Tesseract giữ bảng có đường kẻ vector và
+  điền chữ vào đúng ô; chưa suy cấu trúc bảng chỉ có trong ảnh.
+
+## Chọn nguồn và Tesseract
+
+- `tu_dong`: ưu tiên ABBYY. Chuyển khi không đủ hạn mức, ABBYY tắt/không
+  truy cập được, hoặc lỗi/quá hạn mà **chắc chắn chưa nhận** (chưa công bố
+  hoặc đã rút được tệp vào). Đã nhận, lỗi dọn kết quả hoặc chưa rõ việc
+  nhận → không chuyển. `ChuaRo` không nộp kết quả giả.
+- `chi_abbyy`: trả lỗi ABBYY/hạn mức rõ ràng, không dùng Tesseract.
+  `chi_tesseract`: bỏ ABBYY và sổ, lý do chuyển là `null` vì Anh chọn nguồn.
+  Đọc lớp chữ sẵn vẫn áp dụng cho cả ba chế độ.
+- `nguon_doc` là `abbyy`, `tesseract` hoặc `lop_chu_san`;
+  `ly_do_chuyen_nguon` có câu tiếng Việt khi tự chuyển. Năng lực văn bản
+  thuần vẫn chỉ trả chuỗi theo hợp đồng đã khóa.
+- Tesseract tìm `tesseract.duong_dan`, rồi PATH/vị trí cài mặc định Windows;
+  kiểm đủ `tesseract.ngon_ngu` (mặc định `vie+eng`). Thiếu executable hoặc
+  model ngôn ngữ khi cần dùng → `NGUON_DU_PHONG_CHUA_CAI`. Khởi động engine,
+  PDF có chữ và việc ABBYY đọc được không cần cài Tesseract.
+- CLI chạy từng trang, có hủy/quá hạn và không in stderr chương trình
+  ngoài. PNG/TSV ở thư mục tạm riêng, dọn khi xong/lỗi/hủy. PDF render
+  150 dpi, tối đa 20 triệu pixel/trang; giữ tọa độ từ TSV, không tạo điểm
+  tin cậy giả. Cần đối chiếu tiền/ngày và bảng với bản gốc.
+- Vendor có parser DOCX giữ thứ tự, ô trống, `gridSpan` và `vMerge`; ảnh
+  nhúng nhận bộ đọc qua `image_reader`. DOCX chưa thêm vào MIME của ba
+  năng lực; phần này dành cho lõi nội bộ/OCR-3, không đổi hợp đồng API.
+  OOXML dùng parser chuẩn, chặn DTD/entity trước parse; chỉ nhận XML UTF-8.
+
+Máy đích cần Tesseract Windows x64 và ngôn ngữ `vie`, `eng`. Anh tự chạy
+`e_ocr/cong-cu/KIEM-TESSERACT.cmd` từ repo (hoặc truyền đường dẫn executable
+làm đối số thứ nhất). Công cụ ASCII chỉ kiểm/hiện hướng dẫn cài offline,
+không tải hoặc cài phần mềm. Chi tiết ở `e_ocr/docs/VIEC.md`, mục **Cần cài**.
 
 ## Xuất Word giữ bảng
 
@@ -103,8 +138,9 @@ có `PROGRAMDATA`, gốc thay thế là `/var/lib`. Cấu hình nằm trong gói
 
 Schema: `contract/cau_hinh_may.schema.json`. Mẫu **DEMO**:
 `demo/cau_hinh.demo.json`; chép ra ngoài gói rồi cấu hình bằng biến môi trường.
-Thiếu tệp trả `None`, engine vẫn khởi động; việc cần nguồn đọc phải gọi
-`doc_cau_hinh(bat_buoc=True)` để nhận `CHUA_CAU_HINH` khi thiếu tệp.
+Thiếu tệp trả `None`, engine vẫn khởi động; `chi_abbyy` nhận `CHUA_CAU_HINH`.
+Chế độ tự động khi chưa cấu hình ABBYY thử Tesseract theo PATH/vị trí mặc
+định; `chi_tesseract` cũng có thể chạy không cần tệp cấu hình.
 
 Trường bỏ trống trong JSON được điền mặc định theo schema: ABBYY tắt,
 thời hạn 900 giây, hạn mức 5.000 trang/30 ngày, ngôn ngữ `vie+eng`.
@@ -115,7 +151,8 @@ Loader không mở Hot Folder và không kiểm tra/chạy tệp thực thi.
 
 ## Kho tạm
 
-`e_ocr.kho_tam.KhoTam` có `doc(khoa, mac_dinh=None)` và `ghi(khoa, gia_tri)`.
+`e_ocr.kho_tam.KhoTam` có `doc(khoa, mac_dinh=None)`, `ghi(khoa, gia_tri)`
+và `cap_nhat(khoa, sua)` để đọc–sửa–ghi một khóa trong cùng khóa tệp.
 Nguồn thư mục: `KTT_ENGINE_DU_LIEU`; mặc định
 `%PROGRAMDATA%\KhoTriThuc\engines\e_ocr\du-lieu`. Trên Linux dùng cùng gốc
 thay thế như cấu hình máy. Khởi tạo đối tượng chưa tạo thư mục.
@@ -134,11 +171,16 @@ mục, `flush` + `fsync`, đóng tệp rồi `os.replace` sang `kho.json`; Linux
 Kho hỏng bị từ chối, không tự đặt lại thành kho rỗng. Hết hạn chờ khóa trả
 `KHO_TAM_DANG_BAN`, cho phép thử lại.
 
-Tính nguyên tử áp dụng cho **từng** lệnh `doc` hoặc `ghi`. Chuỗi `doc` rồi
-`ghi` không phải giao dịch/CAS; không dùng nó để cộng hạn mức hoặc giữ lượt
-có điều kiện giữa nhiều tiến trình. Các thao tác đó thuộc lát nghiệp vụ sau
-và ngăn dữ liệu engine của Core. Kho là lớp bọc tạm theo phiếu giao, sẽ thay
-bằng ngăn engine và lượt bền #10 khi Core cung cấp.
+Chuỗi `doc` rồi `ghi` không phải giao dịch/CAS. Sổ dùng `cap_nhat`, kiểm và
+giữ trang trong cùng khóa tệp để hai tiến trình không cùng vượt trần. Khóa
+`han_muc_abbyy` nhóm theo ngày UTC và giây trong ngày, tính **30 × 86.400
+giây** trượt; không đặt lại đầu tháng. `dang_giu` là chỗ giữ cạnh tranh;
+chỉ chuyển sang `da_nhan` khi thấy tệp vào biến mất hoặc có kết quả đúng mã.
+Lỗi trước nhận rút được tệp thì bỏ giữ; đã nhận thì không hoàn. Không rút
+được nhưng chưa đủ bằng chứng đã nhận thì giữ chỗ và `ChuaRo`, chưa tính
+trang đã dùng. Không tự xóa chỗ giữ khi tiến trình gián đoạn; đối chiếu và
+chống gửi trùng bền thuộc OCR-4. Kho sẽ thay bằng ngăn engine/lượt bền #10
+khi Core cung cấp.
 
 `demo/van_ban_tai_lieu.demo.json` chỉ minh họa hợp đồng bằng dữ liệu giả có
 nhãn DEMO, gồm vị trí, ô trống và ô gộp; băm toàn số 0 là băm minh họa.

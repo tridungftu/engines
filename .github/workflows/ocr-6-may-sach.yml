@@ -1,0 +1,17 @@
+name: OCR-6 may sach Linux
+on:
+  pull_request:
+    paths:
+      - 'e_ocr/**'
+      - 'docs/goi-gui-engine/sdk-2.0.0/**'
+      - '.github/workflows/ocr-6-may-sach.yml'
+  workflow_dispatch:
+jobs:
+  may-sach:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: bash e_ocr/tests/kiem_may_sach.sh

@@ -62,8 +62,8 @@
 | OCR-10 | ✅ mock | OCR-VUNG. **Chưa có điểm tin cậy** từ nguồn nhận dạng; chưa đo độ chính xác |
 | OCR-11 | 🟡 | OCR-MAY-1: đã có bài cho ca 2, 4, 5, 6, 7, 9. **Ca 1, 3, 8 chưa** |
 | OCR-12 | ❌ | Chưa chạy ABBYY thật |
-| OCR-13 | 🟡 | CR-4: giữ lượt và hạn mức khi "chưa rõ". Phía Core dùng **mã riêng OCR** (`ocr_doi_chieu.py`, SQL 126/130/131, SDK `ocr_giu_luot` / `ocr_chot_luot` / `ocr_doc_luot`) → cần "lượt bền" chung |
-| OCR-14 | 🟡 | KN4: chống trùng theo băm. Dấu chống trùng chỉ trong bộ nhớ, **mất khi khởi động lại** |
+| OCR-13 | ✅ CoreGia | OCR-4 (phiếu 14/11, hoàn tất 15/11/2026): đã kiểm bằng Core giả (CoreGia), giữ/chốt/hoàn đúng một lần sau App mới hoặc tiến trình chết thật. Tạm dùng `kho_tam`; thay bằng lượt bền chung #10 khi Core có. Không dùng SDK riêng OCR |
+| OCR-14 | ✅ CoreGia | OCR-4: chống trùng bền theo pháp nhân + băm trong `kho_tam`, không mất khi khởi động lại; ghi nguyên tử trước gửi, khóa đa tiến trình. Đã kiểm bằng Core giả (CoreGia), gồm hai tiến trình gửi trùng/cùng lấy kết quả muộn; chưa ABBYY/Core thật |
 | OCR-15, OCR-16 | 🟡 | Có trong bài máy test; chưa nghiệm thu trên màn hình |
 
 ## 3. Bài máy test cuối (OCR-MAY, 9 ca, chỉ DEMO)

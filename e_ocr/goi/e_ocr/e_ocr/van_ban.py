@@ -6,14 +6,9 @@ Bỏ tham chiếu/UUID, parser DOCX và cổng lib.cong_ocr cũ. PDF có chữ �
 
 import hashlib
 
-from kho_tri_thuc_sdk.engine import LoiNghiepVu
-
-from .abbyy import BackendABBYY
 from .cau_hinh_may import doc_cau_hinh
+from .chon_nguon import doc_theo_nguon
 from .lop_chu import MAX_BYTES, LoiLopChu, dem_trang, doc_lop_chu
-
-
-MIME_DUOI = {"application/pdf": "pdf", "image/png": "png", "image/jpeg": "jpg"}
 
 
 def trich_van_ban(viec, *, phien_ban_engine):
@@ -33,28 +28,15 @@ def trich_van_ban(viec, *, phien_ban_engine):
             if exc.ma != "KHONG_CO_LOP_CHU":
                 raise
     nguon_doc = "lop_chu_san"
+    ly_do = None
     if ket_qua is None:
-        if viec.tham_so.get("nguon") == "chi_tesseract":
-            raise LoiNghiepVu("CHUA_LAM", "Nguồn Tesseract chưa được triển khai ở phiên bản này.")
-        cau_hinh = doc_cau_hinh(bat_buoc=True)
-        backend = BackendABBYY(cau_hinh["abbyy"])
-        pdf = backend.doc_pdf(raw, MIME_DUOI[tep["mime"]], viec=viec)
-        viec.tien_do(75, "Đã nhận kết quả ABBYY; đang đọc lớp chữ.")
-        try:
-            ket_qua = doc_lop_chu(pdf, kiem_huy=viec.kiem_huy)
-        except LoiLopChu:
-            raise LoiNghiepVu(
-                "ABBYY_THIEU_LOP_CHU", "Kết quả ABBYY chưa có lớp chữ đầy đủ. Hãy kiểm tra cấu hình xuất PDF."
-            ) from None
-        if len(ket_qua.pages) != so_trang:
-            raise LoiNghiepVu(
-                "KET_QUA_KHONG_KHOP", "Số trang kết quả ABBYY không khớp tài liệu gốc. Hãy kiểm tra lại nguồn nhận dạng."
-            )
-        nguon_doc = "abbyy"
+        cau_hinh = doc_cau_hinh(bat_buoc=False) or {}
+        chon = doc_theo_nguon(raw, tep["mime"], so_trang, viec=viec, cau_hinh=cau_hinh)
+        ket_qua, nguon_doc, ly_do = chon.ket_qua, chon.nguon_doc, chon.ly_do_chuyen_nguon
     viec.tien_do(95, "Đang hoàn tất văn bản và vị trí trang.")
     du_lieu = {
         "phien_ban": 1, "van_ban": ket_qua.text, "trang": ket_qua.pages,
-        "nguon_doc": nguon_doc, "ly_do_chuyen_nguon": None, "so_trang": so_trang,
+        "nguon_doc": nguon_doc, "ly_do_chuyen_nguon": ly_do, "so_trang": so_trang,
         "phien_ban_engine": phien_ban_engine, "bam_dau_vao": bam,
         "canh_bao": ket_qua.warnings,
     }

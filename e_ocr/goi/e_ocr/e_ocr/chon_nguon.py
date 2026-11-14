@@ -1,18 +1,20 @@
 """Chuyển OCR-CHON từ ma-nguon/chon_nguon.py sang SDK 2.0.
 
 Giữ thứ tự ABBYY trước, bằng chứng chưa nhận và lý do chuyển; bỏ toàn bộ
-lượt bền/cổng/SDK riêng cũ. Sổ chỉ chứa ngày, giây, mã và số trang.
+cổng/SDK riêng cũ. Sổ và nhật ký lượt chỉ chứa mã, băm và số đếm.
 """
 
 from dataclasses import dataclass
+from hashlib import sha256
 from datetime import date, datetime, timezone
 import time
 from uuid import uuid4
 
-from kho_tri_thuc_sdk.engine import LoiNghiepVu
+from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu
 
-from .abbyy import BackendABBYY, LoiABBYYChuaNhan
+from .abbyy import BackendABBYY, LoiABBYYChuaNhan, LoiABBYYTuChoi
 from .kho_tam import KhoTam
+from .luot_abbyy import DA_CHOT, DANG_DO, NhatKyLuot, khoa_nhat_ky
 from .lop_chu import KetQuaLopChu, LoiLopChu, doc_lop_chu
 from . import tesseract
 
@@ -21,7 +23,7 @@ LY_DO = {
     "het_han_muc": "Không đủ hạn mức ABBYY trong cửa sổ 30 ngày gần nhất.",
     "khong_ket_noi": "Nguồn ABBYY đang tắt hoặc không truy cập được.",
     "qua_thoi_gian": "ABBYY quá thời hạn trước khi nhận; đã rút tệp đang chờ.",
-    "loi_nhan_dang": "Gửi ABBYY bị lỗi; đã xác nhận nguồn chưa nhận tài liệu.",
+    "loi_nhan_dang": "ABBYY báo lỗi với căn cứ cho phép chuyển nguồn.",
 }
 KHOA_HAN_MUC = "han_muc_abbyy"
 CUA_SO_GIAY = 30 * 86400
@@ -122,32 +124,29 @@ class KetQuaChonNguon:
 
 def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh):
     nguon = viec.tham_so.get("nguon", "tu_dong")
+    bam = "sha256:" + sha256(raw).hexdigest()
+    # Lựa chọn nguồn mới không được bỏ qua lượt ABBYY còn dở. Khi không
+    # có lượt dở, chi_tesseract vẫn bỏ backend và sổ hạn mức ABBYY.
+    cu = None
     if nguon == "chi_tesseract":
+        cu = KhoTam().doc(khoa_nhat_ky(viec.ngu_canh.get("phap_nhan_id"), bam))
+    if nguon == "chi_tesseract" and (cu is None or (
+            type(cu) is dict and isinstance(cu.get("trang_thai"), str) and cu["trang_thai"] in DA_CHOT)):
         return KetQuaChonNguon(
             tesseract.doc_tesseract(raw, mime, cau_hinh.get("tesseract", {}), viec=viec), "tesseract"
         )
-    so, ma, da_nhan, chua_ro = None, None, False, False
+    so = SoHanMuc()
+    nhat_ky = NhatKyLuot(so, viec.ngu_canh.get("phap_nhan_id"), bam, so_trang)
+    luot = nhat_ky.doc()
+    doc_lai = luot is not None and luot["trang_thai"] in DANG_DO
+    da_nhan = False
 
     def khi_da_nhan():
         nonlocal da_nhan
-        # Nếu ghi sổ lỗi, vẫn giữ chỗ và không chuyển sang nguồn khác.
         da_nhan = True
-        so.ghi_nhan(ma)
+        nhat_ky.cap_nhat(nhan=True)
 
-    def khi_chua_ro():
-        nonlocal chua_ro
-        chua_ro = True
-
-    try:
-        viec.kiem_huy()
-        abbyy = cau_hinh.get("abbyy", {"bat": False})
-        backend = BackendABBYY(abbyy)
-        so = SoHanMuc()
-        ma = so.giu(so_trang, abbyy["han_muc_trang_30_ngay"])
-        pdf = backend.doc_pdf(
-            raw, {"application/pdf": "pdf", "image/png": "png", "image/jpeg": "jpg"}[mime],
-            viec=viec, khi_da_nhan=khi_da_nhan, khi_chua_ro=khi_chua_ro, ma_tuong_quan=ma,
-        )
+    def doc_ket_qua(pdf):
         viec.tien_do(75, "Đã nhận kết quả ABBYY; đang đọc lớp chữ.")
         try:
             ket_qua = doc_lop_chu(pdf, kiem_huy=viec.kiem_huy)
@@ -160,7 +159,39 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh):
                 "KET_QUA_KHONG_KHOP", "Số trang kết quả ABBYY không khớp tài liệu gốc. Hãy kiểm tra lại nguồn nhận dạng."
             )
         return KetQuaChonNguon(ket_qua, "abbyy")
+
+    try:
+        viec.kiem_huy()
+        if not cau_hinh and nguon == "chi_abbyy" and not doc_lai:
+            raise LoiNghiepVu("CHUA_CAU_HINH", "Chưa cấu hình nguồn ABBYY. Hãy liên hệ quản trị viên.")
+        abbyy = cau_hinh.get("abbyy", {"bat": False})
+        backend = BackendABBYY(abbyy, chi_doc=doc_lai)
+        if not doc_lai:
+            luot, moi = nhat_ky.giu(abbyy["han_muc_trang_30_ngay"])
+            doc_lai = not moi
+        # Hai tiến trình có cùng dấu bền: bên không lấy được khóa chỉ báo
+        # ChuaRo; không được đọc/dọn PDF mà bên kia đang xử lý.
+        try:
+            with so.kho.khoa_luot(nhat_ky.ma):
+                return backend.doc_pdf(
+                    raw, {"application/pdf": "pdf", "image/png": "png", "image/jpeg": "jpg"}[mime],
+                    viec=viec, khi_da_nhan=khi_da_nhan,
+                    khi_chua_ro=lambda: nhat_ky.cap_nhat("chua_ro"),
+                    ma_tuong_quan=nhat_ky.ma, doc_lai=doc_lai,
+                    xu_ly_ket_qua=doc_ket_qua, khi_ket_thuc=nhat_ky.cap_nhat,
+                )
+        except LoiNghiepVu as loi:
+            if loi.ma == "KHO_TAM_DANG_BAN":
+                raise ChuaRo(nhat_ky.ma) from None
+            raise
+    except LoiABBYYTuChoi:
+        if nguon == "chi_abbyy":
+            raise
+        ly_do = "loi_nhan_dang"
     except LoiABBYYChuaNhan as loi:
+        if doc_lai:
+            # Nguồn hiện tắt/đổi quyền không phủ định lượt đã gửi trước đó.
+            raise ChuaRo(nhat_ky.ma) from None
         if da_nhan or nguon == "chi_abbyy":
             raise
         ly_do = {
@@ -168,9 +199,6 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh):
             "ABBYY_CHUA_CAU_HINH": "khong_ket_noi", "ABBYY_QUA_THOI_HAN": "qua_thoi_gian",
             "ABBYY_KHONG_TRUY_CAP_DUOC": "loi_nhan_dang",
         }.get(loi.ma, "loi_nhan_dang")
-    finally:
-        if ma is not None and not da_nhan and not chua_ro:
-            so.bo_giu(ma)
     viec.kiem_huy()
     viec.tien_do(55, "Đang chuyển sang nguồn Tesseract.")
     return KetQuaChonNguon(

@@ -30,7 +30,7 @@ def trich_van_ban(viec, *, phien_ban_engine):
     nguon_doc = "lop_chu_san"
     ly_do = None
     if ket_qua is None:
-        cau_hinh = doc_cau_hinh(bat_buoc=viec.tham_so.get("nguon") == "chi_abbyy") or {}
+        cau_hinh = doc_cau_hinh(bat_buoc=False) or {}
         chon = doc_theo_nguon(raw, tep["mime"], so_trang, viec=viec, cau_hinh=cau_hinh)
         ket_qua, nguon_doc, ly_do = chon.ket_qua, chon.nguon_doc, chon.ly_do_chuyen_nguon
     viec.tien_do(95, "Đang hoàn tất văn bản và vị trí trang.")

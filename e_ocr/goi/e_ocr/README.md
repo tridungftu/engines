@@ -1,6 +1,6 @@
-# Engine nhận dạng văn bản — OCR-2 và OCR-3
+# Engine nhận dạng văn bản — OCR-4
 
-Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.3. Ba năng lực
+Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.4. Ba năng lực
 `ocr.doc_tai_lieu@1`, `ocr.doc_van_ban@1` và `ocr.xuat_word@1` dùng chung
 lõi đọc lớp chữ PDF hoặc ABBYY Hot Folder cục bộ, dự phòng Tesseract.
 Xuất Word dựng DOCX và gửi qua `viec.tai_tep_ra`. **Đã kiểm bằng Core giả
@@ -50,10 +50,10 @@ lượt kiểm OCR-1 chạy thực tế trên Windows, chưa có Linux/WSL trong
   `lop_chu_san`; không đọc cấu hình, gửi ABBYY hoặc OCR lại ảnh nền.
   Trang thiếu lớp chữ/hướng chữ chưa hỗ trợ khiến cả tệp gửi ABBYY, không
   trả kết quả thiếu trang. `chi_tesseract` vẫn cho phép đọc lớp chữ sẵn;
-  khi cần OCR ảnh thì bỏ ABBYY. PDF trộn chữ/ảnh qua Tesseract giữ nguyên
+  khi cần OCR ảnh thì bỏ ABBYY nếu không còn lượt ABBYY dở. PDF trộn chữ/ảnh qua Tesseract giữ nguyên
   trang có chữ, chỉ render/nhận dạng trang thiếu chữ.
 - Cấu hình ABBYY bật, hai thư mục vào/ra phải là đường dẫn tuyệt đối tới
-  hai thư mục đã có, tách biệt. Engine chỉ dùng đúng tên ngẫu nhiên
+  hai thư mục đã có, tách biệt. Engine chỉ dùng tên tất định theo pháp nhân, băm và lần gửi
   `<ma_tuong_quan>.pdf|png|jpg`, không dùng tên người dùng hoặc quét thư mục.
 - Tác vụ Hot Folder phải **rời/xóa tệp vào khi nhận** và xuất một PDF có
   lớp chữ đầy đủ tên `<ma_tuong_quan>.pdf` vào thư mục ra, giữ số trang.
@@ -66,12 +66,14 @@ lượt kiểm OCR-1 chạy thực tế trên Windows, chưa có Linux/WSL trong
   không ép dừng ABBYY khi tệp đã được nhận.
 - Chỉ đọc kết quả đúng mã sau khi kích thước/mtime ổn định qua hai lượt,
   có EOF và không thay đổi trong lúc đọc. Trần kết quả 20 MiB, 60 trang,
-  500.000 ký tự; vượt thì từ chối, không cắt. Tệp kết quả đã đọc và tệp vào
-  còn chờ được dọn sau lượt; không đụng kết quả thuộc mã khác.
+  500.000 ký tự; vượt thì từ chối, không cắt. Tệp kết quả sau thành công,
+  hủy hoặc lỗi được dọn kể cả chưa đọc bytes; chỉ `ChuaRo` giữ kết quả
+  để đối chiếu. Tệp vào còn chờ được rút nếu chưa nhận; không đụng kết quả
+  thuộc mã khác.
 - Hết hạn mà còn rút được tệp chờ: `ABBYY_QUA_THOI_HAN` trong chế độ chỉ
   ABBYY, hoặc chuyển Tesseract trong chế độ tự động. Tệp đã biến mất
   hoặc không rút được: `ChuaRo(ma_tuong_quan)`, không trả thành công hoặc
-  chuyển nguồn. Chống trùng/lưu lượt bền và chốt kết quả trả muộn thuộc OCR-4.
+  chuyển nguồn. OCR-4 đã có chống trùng/lượt bền và chốt kết quả trả muộn.
 - Kết quả có băm SHA-256 **tệp đầu vào**, phiên bản engine và cảnh báo.
   Toàn văn nối trang bằng `\f`; khối/dòng/từ có tọa độ point theo trang.
   Giữ nguyên tiền/ngày trong văn bản, không tự hiệu đính hay suy giá trị.
@@ -83,10 +85,12 @@ lượt kiểm OCR-1 chạy thực tế trên Windows, chưa có Linux/WSL trong
 
 - `tu_dong`: ưu tiên ABBYY. Chuyển khi không đủ hạn mức, ABBYY tắt/không
   truy cập được, hoặc lỗi/quá hạn mà **chắc chắn chưa nhận** (chưa công bố
-  hoặc đã rút được tệp vào). Đã nhận, lỗi dọn kết quả hoặc chưa rõ việc
-  nhận → không chuyển. `ChuaRo` không nộp kết quả giả.
+  hoặc đã rút được tệp vào), hoặc có biên nhận nguồn từ chối không tiêu
+  trang. Đã nhận nhưng chưa có căn cứ hoàn, lỗi dọn kết quả hoặc chưa rõ
+  việc nhận → không chuyển. `ChuaRo` không nộp kết quả giả.
 - `chi_abbyy`: trả lỗi ABBYY/hạn mức rõ ràng, không dùng Tesseract.
-  `chi_tesseract`: bỏ ABBYY và sổ, lý do chuyển là `null` vì Anh chọn nguồn.
+  `chi_tesseract`: nếu không có lượt ABBYY dở thì bỏ backend/sổ, lý do
+  chuyển là `null` vì Anh chọn nguồn; còn lượt dở thì đối chiếu lượt đó trước.
   Đọc lớp chữ sẵn vẫn áp dụng cho cả ba chế độ.
 - `nguon_doc` là `abbyy`, `tesseract` hoặc `lop_chu_san`;
   `ly_do_chuyen_nguon` có câu tiếng Việt khi tự chuyển. Năng lực văn bản
@@ -152,7 +156,7 @@ Loader không mở Hot Folder và không kiểm tra/chạy tệp thực thi.
 ## Kho tạm
 
 `e_ocr.kho_tam.KhoTam` có `doc(khoa, mac_dinh=None)`, `ghi(khoa, gia_tri)`
-và `cap_nhat(khoa, sua)` để đọc–sửa–ghi một khóa trong cùng khóa tệp.
+và `cap_nhat(khoa, sua)` / `cap_nhat_nhieu(cac_khoa, sua)` để đọc–sửa–ghi một hoặc nhiều khóa trong cùng khóa tệp và một lần thay tệp.
 Nguồn thư mục: `KTT_ENGINE_DU_LIEU`; mặc định
 `%PROGRAMDATA%\KhoTriThuc\engines\e_ocr\du-lieu`. Trên Linux dùng cùng gốc
 thay thế như cấu hình máy. Khởi tạo đối tượng chưa tạo thư mục.
@@ -171,16 +175,53 @@ mục, `flush` + `fsync`, đóng tệp rồi `os.replace` sang `kho.json`; Linux
 Kho hỏng bị từ chối, không tự đặt lại thành kho rỗng. Hết hạn chờ khóa trả
 `KHO_TAM_DANG_BAN`, cho phép thử lại.
 
-Chuỗi `doc` rồi `ghi` không phải giao dịch/CAS. Sổ dùng `cap_nhat`, kiểm và
-giữ trang trong cùng khóa tệp để hai tiến trình không cùng vượt trần. Khóa
-`han_muc_abbyy` nhóm theo ngày UTC và giây trong ngày, tính **30 × 86.400
-giây** trượt; không đặt lại đầu tháng. `dang_giu` là chỗ giữ cạnh tranh;
-chỉ chuyển sang `da_nhan` khi thấy tệp vào biến mất hoặc có kết quả đúng mã.
-Lỗi trước nhận rút được tệp thì bỏ giữ; đã nhận thì không hoàn. Không rút
-được nhưng chưa đủ bằng chứng đã nhận thì giữ chỗ và `ChuaRo`, chưa tính
-trang đã dùng. Không tự xóa chỗ giữ khi tiến trình gián đoạn; đối chiếu và
-chống gửi trùng bền thuộc OCR-4. Kho sẽ thay bằng ngăn engine/lượt bền #10
-khi Core cung cấp.
+Chuỗi `doc` rồi `ghi` không phải giao dịch/CAS. Sổ và nhật ký dùng
+`cap_nhat_nhieu`: kiểm lượt dở, giữ trang và ghi dấu `dang_gui` **trong cùng
+lần thay tệp trước khi công bố**. Khóa `han_muc_abbyy` giữ sổ theo ngày UTC
+và giây trong ngày, cửa sổ **30 × 86.400 giây** trượt. Mỗi pháp nhân + băm
+có khóa `luot_abbyy.<sha256>` riêng, nên không dồn nhật ký vào một giá trị
+64 KiB. Kho chỉ lưu mã pháp nhân, băm, số trang, lần gửi, thời điểm và trạng thái.
+
+`ma_tuong_quan` là UUID5 từ pháp nhân + băm nội dung + `lan_gui` bền; Core
+đổi `viec_id`, `lan_thu` hoặc năng lực đọc/xuất Word vẫn tra cùng lượt dở.
+Khóa tệp riêng theo mã lượt ngăn hai tiến trình cùng đọc/dọn kết quả; tiến
+trình không lấy được khóa trả `ChuaRo` ngay. Hệ điều hành tự nhả khóa khi
+chết; **dấu chống trùng vẫn nằm trong kho**. Không dùng lease/timeout để xóa dấu.
+
+Lượt `dang_gui`/`chua_ro` luôn tìm PDF đúng mã trong thư mục ra trước; không
+có kết quả hợp lệ thì tiếp tục `ChuaRo`, không gửi lần hai, không chạy
+Tesseract và không tự hoàn trang. Áp dụng cả khi chọn nguồn mới là
+`chi_tesseract`, ABBYY vừa tắt hoặc thiếu cấu hình. Có PDF thì đối chiếu,
+chuyển chỗ giữ sang trang đã dùng đúng một lần, kiểm đủ lớp chữ/số trang,
+chốt `xong` bền rồi mới dọn PDF. Nếu chốt bền lỗi, giữ PDF bằng `ChuaRo`.
+`xong` không là cache nội dung: việc mới sau lượt đã chốt tạo lần gửi tiếp.
+
+Trước nhận, rút được tệp hoặc gửi chưa thành công là căn cứ bỏ chỗ giữ.
+Sau crash, chỉ không thấy tệp vào **không đủ** để kết luận đã công bố hay
+đã nhận: giữ chỗ tới khi có kết quả hoặc bằng chứng từ chối. Vì vậy khi
+khởi động lại, nhật ký được dùng để chốt/nhả `dang_giu`; không tự hết hạn.
+PDF hỏng, thiếu chữ, sai số trang hoặc sự im lặng không là căn cứ hoàn trang.
+
+Quy ước tạm cho bằng chứng từ chối rõ là `<ma_tuong_quan>.loi.json`, UTF-8,
+tối đa 2 KiB, đúng ba trường dưới đây; nguồn chỉ tạo khi xác nhận **không
+tiêu trang**. Không diễn giải tệp log/thông báo lỗi tùy ý thành bằng chứng:
+
+```json
+{"ma_tuong_quan":"<đúng mã lượt>","trang_thai":"tu_choi","da_tieu_trang":false}
+```
+
+Biên nhận hợp lệ cho phép nhả chỗ giữ hoặc hoàn đúng lượt đã tính, một lần,
+sau khi rút/dọn được tệp vào còn chờ. Không rút được thì giữ biên nhận,
+hạn mức và `ChuaRo` để tránh nguồn nhận tệp sau khi đã hoàn;
+`chi_abbyy` báo `ABBYY_TU_CHOI`, chế độ tự động có thể dùng Tesseract. Biên
+nhận khác mã, thiếu trường, báo đã tiêu trang hoặc xung đột với PDF vẫn
+`ChuaRo`. Nếu ghi chốt lỗi thì giữ biên nhận để lần sau đối chiếu. Quy ước
+này **chưa kiểm ABBYY thật**, cần xác nhận khi nối nguồn ở OCR-7; không có
+biên nhận xác nhận thì tiếp tục giữ hạn mức.
+
+Khi Core có thao tác #10 `luot-ben` giữ/chốt/đọc, thay phần nhật ký lượt
+trong `kho_tam` bằng cửa đó. Ngăn engine có CAS sẽ thay sổ tạm. Không dùng
+hàm `ocr_*_luot` hoặc cổng riêng cũ.
 
 `demo/van_ban_tai_lieu.demo.json` chỉ minh họa hợp đồng bằng dữ liệu giả có
 nhãn DEMO, gồm vị trí, ô trống và ô gộp; băm toàn số 0 là băm minh họa.

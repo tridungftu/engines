@@ -9,6 +9,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | OCR-1 | Đọc lớp chữ PDF và ABBYY Hot Folder cục bộ; hai action đọc dùng chung lõi | OCR-2, 3, 4, 7, 15 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 2/2, pytest 119 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
 | OCR-2 | Chọn nguồn, hạn mức 30 ngày và dự phòng Tesseract; vendor PDF/DOCX/bảng | OCR-8 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), mock CI và Tesseract thật bằng DEMO; bằng chứng OCR-2 bên dưới |
 | OCR-3 | Xuất Word từ cấu trúc tài liệu, giữ ô trống/ô gộp, vị trí bảng và thứ tự trang | OCR-4, 5 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 3/3, pytest 145 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
+| OCR-4 | Lượt chưa rõ theo phương án B, chống trùng bền và đối chiếu hạn mức sau khởi động lại | OCR-13, 14, 15 | Xong 15/11/2026 | Phiếu 14/11/2026; PR: **chờ lead mở**. SDK DEMO 3/3, pytest 218 passed, 0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia) |
 | 1 | Đóng gói độc lập theo cổng chung; thay hàm SDK riêng `ocr_*_luot` bằng lượt bền chung khi Core có | OCR-6, 13 | Đang làm 14/11/2026 | Có khung OCR-0; chuyển lõi ở OCR-1…OCR-4, không sửa `ma-nguon/` |
 | 2 | Bổ sung nguồn dự phòng mask_ocr/Tesseract | OCR-8 | Xong 14/11/2026 | OCR-2 dùng CLI và pypdfium2 đã ghim, không thêm dependency. Máy đích xem **Cần cài** |
 | 3 | Màn hạn mức ABBYY / trạng thái máy (giao diện của engine) | OCR-8 | Chờ làm |  |
@@ -19,7 +20,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 ## Cần Core (chuyển lead Core qua Anh)
 - Theo SDK 2.0.0 và `GIAO-CODEX-THU-TU.md` §3: đưa cấu hình từ `san-sang` tới engine, kèm schema để Core dựng form. Tạm đọc JSON ngoài gói bằng `KTT_ENGINE_CAU_HINH`.
 - Ngăn dữ liệu engine: ghi theo lô nguyên tử, CAS/`row_version`, ràng buộc duy nhất/lấy hoặc tạo. Tạm dùng `KTT_ENGINE_DU_LIEU`; OCR-2 thêm `cap_nhat` đọc–sửa–ghi một khóa nguyên tử. `doc` rồi `ghi` vẫn không phải giao dịch/CAS nhiều lời gọi.
-- Lượt bền chung #10 giữ/chốt/đọc (đợt 2): thay phần lưu lượt tạm ở OCR-4 khi Core có. Không dùng hàm `ocr_*_luot` cũ.
+- Lượt bền chung #10 `luot-ben` giữ/chốt/đọc (đợt 2): **khi Core có thao tác #10 thì thay `kho_tam` phần lượt của OCR-4**; cần giữ điều kiện duy nhất/nguyên tử theo pháp nhân + băm. Không dùng hàm `ocr_*_luot` cũ.
 - Bí mật theo tên, nhật ký kỹ thuật và thẻ trạng thái chung để thay phần trạng thái/hạn mức ABBYY; đợt 1 không làm giao diện riêng hay cầu nối có khóa.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
 - OCR-3 không phát sinh thiếu hụt Core/SDK: tải DOCX ra bằng API chung `viec.tai_tep_ra`, không cần kênh ACK hoặc sổ bàn giao riêng.
@@ -370,3 +371,128 @@ không báo lỗi.
   OCR-6. Đã cập nhật README/CHANGELOG/NGUON và băm mọi tệp gói.
 - Cần Core / Chờ Anh mới: **không phát sinh**. Không thay đổi các mục chờ
   có sẵn; không tự mở kết nối ABBYY hoặc cài phần mềm hệ thống.
+
+
+## Bằng chứng OCR-4 — phiếu 14/11/2026, hoàn tất 15/11/2026
+
+- Nhánh: `codex/e_ocr-ocr-4`; PR: **chờ lead mở**. Không chạy commit/push.
+  Tiêu đề đề xuất: `[e_ocr] OCR-4 — Lượt chưa rõ và chống trùng bền`.
+- Thời gian thực tế: **23:37 ngày 14/11/2026 – 00:08 ngày 15/11/2026**
+  (31 phút, khoảng **0,52 giờ**), so với **4 giờ ước tính** trong phiếu;
+  giờ Việt Nam. Ngày lát/phiếu giữ 14/11/2026, ghi đúng ngày kết thúc sau nửa đêm.
+- `luot_abbyy.py` lưu metadata theo pháp nhân + băm; mã tương quan UUID5
+  tất định theo hai giá trị đó và lần gửi bền. `viec_id`, `lan_thu`, năng
+  lực đọc/xuất Word không tạo lượt ABBYY thứ hai khi còn lượt dở.
+- `KhoTam.cap_nhat_nhieu` ghi sổ hạn mức và lượt `dang_gui` cùng commit,
+  trước khi công bố tệp. Không lưu tên/đường dẫn hoặc nội dung tài liệu.
+  Khóa hệ điều hành riêng theo mã lượt ngăn tranh đọc/dọn cùng PDF; khi
+  tiến trình chết chỉ khóa được nhả, dấu bền vẫn còn.
+- Lượt `dang_gui`/`chua_ro` tra thư mục ra đúng mã trước. Có PDF hợp lệ:
+  chốt trang đã nhận đúng một lần, kiểm lớp chữ/số trang, chốt `xong` bền
+  rồi dọn. Chưa có: `ChuaRo`, không gửi lại, không chuyển Tesseract, không
+  hoàn. Lựa chọn nguồn mới, ABBYY tắt hoặc mất cấu hình không bỏ qua lượt dở.
+- Nợ OCR-1 đã xử lý: hủy/lỗi sau khi ABBYY trả PDF cũng dọn tệp kết quả,
+  kể cả chưa đọc bytes; test dùng `tra=True`. Chỉ `ChuaRo` giữ kết quả.
+- Nợ OCR-2 đã xử lý: sau chết tiến trình, nhật ký đối chiếu `dang_giu` với
+  kết quả/biên nhận để chốt hoặc nhả nguyên tử, không tính/hoàn hai lần.
+  Không thấy tệp sau crash chưa đủ chứng minh chết trước hay sau công bố;
+  tiếp tục giữ chỗ khi chưa có bằng chứng. Không tự hết hạn theo lease/tuổi lượt.
+- Chỉ nhả khi chưa gửi/rút được tệp, hoặc nguồn xác nhận từ chối không
+  tiêu trang; rút/dọn tệp vào còn chờ trước khi hoàn để tránh nhận muộn
+  sau hoàn. Không rút được thì `ChuaRo`, giữ biên nhận và chỗ giữ. Có test
+  giao lại cho cả nhánh rút được/không rút được. PDF lỗi, thiếu lớp chữ/sai
+  số trang và sự im lặng không hoàn.
+- **Đã kiểm bằng Core giả (CoreGia)** trên Windows x64, Python 3.13.14;
+  ABBYY giả, dữ liệu DEMO. Test gồm App mới, `lan_thu` 2/3, tiến trình
+  `spawn` chết thật ngay trước/sau công bố (`os._exit`, không finally), hai
+  tiến trình gửi trùng và cùng lấy PDF muộn, cách ly pháp nhân, hủy/lỗi,
+  ghi kho lỗi, PDF ghi dở, biên nhận sai và giữ lượt qua 60 ngày giả lập.
+  Chưa chạy Linux, ABBYY/Core thật; test dùng API Python đa nền tảng,
+  `msvcrt`/`fcntl` và `spawn`, không phụ thuộc fork.
+
+### Kết quả ba lệnh bắt buộc OCR-4
+
+Đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`. Đầu ra SDK dưới đây chỉ
+lược payload hai DEMO đọc; cả ba lệnh thực chạy riêng, mã thoát **0**:
+
+```text
+> .venv\Scripts\python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+[ĐẠT] Đọc PDF DEMO có lớp chữ và vị trí, 3 trang: …
+[ĐẠT] Đọc văn bản thuần từ PDF DEMO có lớp chữ, 3 trang: …
+[ĐẠT] Xuất Word giữ bảng từ PDF DEMO có lớp chữ, 3 trang: {"loai": "tep", "tep": {"tep_id": "tep-7", "ten": "DEMO-bang-3-trang-OCR.docx", "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "kich_thuoc": 1598}}
+Engine e_ocr 1.0.4: mọi ví dụ chạy thử DEMO đều đạt.
+Kết quả: 3/3 ĐẠT; mã thoát 0.
+
+> .venv\Scripts\python -m pytest e_ocr/tests -q
+........................................................................ [ 33%]
+........................................................................ [ 66%]
+........................................................................ [ 99%]
+..                                                                       [100%]
+218 passed in 53.00s
+Mã thoát 0; 0 skipped.
+
+> .venv\Scripts\python e_ocr/tests/kiem_doc_lap.py
+[ĐẠT] Gói e_ocr độc lập; không import Core/kênh cũ, không có tệp biên dịch sẵn.
+Mã thoát 0.
+```
+
+### Quyết định tạm, lệch và phần còn lại OCR-4
+
+- Giữ lớp bọc tạm `kho_tam` theo phương án B; khi Core có #10 `luot-ben`
+  phải thay phần lượt. Các mục cấu hình/ngăn/CAS của Core vẫn như trên.
+  Không thêm dependency, không đổi API/SDK, không sửa mã cũ hoặc Core.
+- Quy ước tạm biên nhận lỗi rõ: `<ma>.loi.json`, tối đa 2 KiB, đúng ba
+  trường `ma_tuong_quan`, `trang_thai="tu_choi"`, `da_tieu_trang=false`.
+  Chỉ nguồn xác nhận không tiêu trang mới được tạo biên nhận; không lấy
+  lỗi parser/log hoặc tệp khác mã làm bằng chứng hoàn. Chốt lỗi giữ biên
+  nhận bằng `ChuaRo` để lần sau đối chiếu. Quy ước được mô tả trong README;
+  chưa kiểm nguồn ABBYY thật, xác nhận tiếp ở OCR-7. Không có bằng chứng
+  thì giữ hạn mức. Đây không phải thay đổi hợp đồng API Core đã khóa.
+- Lượt đã chốt `xong` không là cache nội dung. Việc mới sau lượt đã chốt
+  tạo lần gửi tiếp; lát này chặn gửi trùng các lượt còn dở.
+- Phạm vi: **5 tệp mã nghiệp vụ** (`abbyy`, `chon_nguon`, `kho_tam`,
+  `luot_abbyy`, một dòng gọi cấu hình ở `van_ban`); thêm dòng metadata
+  `__init__.py` và `engine.json` để đồng bộ phiên bản 1.0.4. `chay.py`,
+  parser PDF, Tesseract/vendor và xuất Word không đổi so với nền OCR-2/3.
+- SDK 2.0.0 cài offline trong `.venv --system-site-packages`, SHA-256 wheel
+  khớp `SHA256SUMS.txt`. Dependency/pytest dùng bản có sẵn; chưa là cài
+  máy sạch OCR-6. Đã cập nhật README/CHANGELOG/NGUON và băm tệp gói.
+- Lịch sử trước giải gộp: nhánh dựng trên `5b987fd` (chưa có OCR-2),
+  lần triển khai trước tự lấy nền qua archive do không ghi được metadata Git.
+  Việc đồng bộ nền chính thức được xử lý ở mục giải gộp bên dưới; số liệu
+  kiểm 218 test phía trên thuộc lần triển khai trước.
+- Cần Core / Chờ Anh mới: **không phát sinh**. Giữ các mục chờ Anh có sẵn.
+
+
+## Giải xung đột gộp OCR-4 — 15/11/2026
+
+- Đã đối chiếu `5b987fd...HEAD` và `origin/main`: giữ nền OCR-2/OCR-3
+  chính thức (1.0.3), áp riêng phần OCR-4; phiên bản kết quả **1.0.4**.
+  Giữ cổng `ocr.xuat_word@1` qua `trich_van_ban`/bộ chọn nguồn và hai test
+  Word `chi_tesseract`/`chi_abbyy`. Không thay Tesseract/vendor, parser PDF,
+  cổng SDK hoặc bộ ghi Word của main.
+- Giữ nguyên toàn bộ **181 test của main** (so nội dung từng tệp; riêng
+  `test_kho_tam.py` chỉ nối thêm); bổ sung **37 test OCR-4**: 35 ca nhật ký/
+  ABBYY và 2 ca cập nhật nhiều khóa. Tổng **218 test**, không bỏ/đổi test main.
+- Đã bỏ dấu xung đột trong 10 tệp; `NGUON.md` có một hàng nguồn mỗi tệp,
+  28 SHA-256 tính lại trên bytes cuối cùng (trừ chính `NGUON.md`).
+- **Đã kiểm bằng Core giả (CoreGia)**, ABBYY giả và dữ liệu DEMO trên Windows;
+  đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1` cho cả ba lệnh:
+
+```text
+> .venv\Scripts\python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+3/3 ĐẠT; Engine e_ocr 1.0.4; mã thoát 0.
+> .venv\Scripts\python -m pytest e_ocr/tests -q -p no:cacheprovider
+218 passed in 53.66s; 0 skipped; mã thoát 0.
+> .venv\Scripts\python e_ocr/tests/kiem_doc_lap.py
+[ĐẠT] Gói e_ocr độc lập; không import Core/kênh cũ, không có tệp biên dịch sẵn.
+Mã thoát 0.
+```
+
+- Thời gian giải gộp thực tế: khoảng **4 phút (0,07 giờ)**; tách khỏi 31 phút
+  triển khai OCR-4 đã ghi phía trên (phiếu OCR-4 ước tính 4 giờ).
+- PR: **lead xử lý**. Không `git add`, commit hoặc push; index còn các mục
+  unmerged để lead đánh dấu đã giải và hoàn tất merge. Các tệp ngoài OCR
+  do merge tự động không bị chỉnh sửa trong lượt giải gộp này.
+- Lệch mới / Cần Core / Chờ Anh mới: **không phát sinh**. Giữ lớp bọc tạm
+  và quy ước biên nhận đã ghi; chưa kiểm Linux, ABBYY thật hoặc Core thật.

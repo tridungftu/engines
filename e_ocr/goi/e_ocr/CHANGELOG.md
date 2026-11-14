@@ -1,5 +1,25 @@
 # Thay đổi
 
+## 1.0.4 — 14/11/2026 — OCR-4
+
+- Giải gộp 15/11/2026 trên nền OCR-2/OCR-3 chính thức (1.0.3); giữ xuất
+  Word qua bộ chọn nguồn và toàn bộ 181 test main, thêm 37 test OCR-4.
+
+- Lưu lượt ABBYY bền theo pháp nhân + băm + lần gửi; ghi `dang_gui` và
+  giữ hạn mức trong một giao dịch nhiều khóa trước khi công bố tệp.
+- Giao lại/việc mới cùng nội dung đối chiếu kết quả đúng mã trước; lượt
+  chưa rõ không gửi lại, không chuyển Tesseract hoặc tự hoàn hạn mức.
+- Khóa theo mã lượt đa tiến trình; khởi động lại chốt kết quả muộn và sổ
+  đúng một lần. Thao tác #10 `luot-ben` sẽ thay nhật ký tạm khi Core có.
+- Hủy/lỗi sau khi ABBYY đã trả PDF phải dọn kết quả kể cả chưa đọc bytes;
+  chỉ `ChuaRo` giữ PDF/biên nhận để đối chiếu. Chốt bền lỗi không làm mất PDF.
+- Biên nhận từ chối rõ, đúng mã và không tiêu trang mới cho phép hoàn,
+  sau khi đã rút/dọn tệp vào còn chờ. Không rút được thì tiếp tục ChuaRo;
+  lỗi parser hoặc không có kết quả không được tự hoàn. Quy ước Hot Folder
+  tạm được ghi trong README, chưa kiểm trên ABBYY thật.
+- Test CoreGia/ABBYY giả gồm tiến trình chết thật, App mới, giao lại,
+  hai tiến trình trùng tệp/cùng lấy kết quả muộn, hủy và lỗi ghi bền.
+
 ## 1.0.3 — 14/11/2026 — Gộp OCR-2 và OCR-3
 
 - Hợp nhất chọn nguồn và xuất Word qua cùng lõi nhận dạng.

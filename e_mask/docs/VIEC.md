@@ -49,6 +49,39 @@ python e_mask/tests/kiem_doc_lap.py
 Mã thoát: 0.
 ```
 
+## MASK-2 — 14/11/2026
+
+- **Xong phạm vi lõi detector/hậu kiểm**, chỉ DEMO; PR: **chờ lead mở**. Bắt đầu **00:06 ngày 15/11/2026**, kết thúc **00:19:10 ngày 15/11/2026** (UTC+07), **0.22 giờ thực tế**, so với **3 giờ ước tính** trong phiếu. Giữ ngày giao 14/11 theo handoff.
+- Đúng năm tệp mã chạy: chép `nguon/privacy/detectors.py`, `leftovers.py`, `che_van_ban.py`; sửa `core.py`; thêm `tai_nguyen.py`. Tận dụng toàn bộ test_che_van_ban và kho RAM DEMO chuyển vào `tests/ho_tro_kho_demo.py`, bỏ import tests/tools/Core cũ. Chỉ sửa `e_mask/`, giữ nguyên `ma-nguon/` và các bản tham chiếu; không commit/push.
+- Giữ trần 500.000/500/300/20, KnownText/NFD/vị trí, nhãn nhiều dòng, hậu kiểm regex độc lập detector, Counter tiền/ngày của bản gốc đầy đủ, số bắt đầu 0/MST/tài khoản theo ngữ cảnh. Ca 501 email DEMO che đủ 501. Chuỗi bệnh lý chưa kiểm hết chặn văn bản; bí danh hỏng không che khuất dấu vết tên/tiền/ngày. numeric_review dùng NUL giữ ranh giới số, mở che giữ mã chữ thường/dấu chấm/gạch nối, không bắt mã nằm dính trong chữ khác.
+- Bốn nguồn sạch chưa có: mặc định `MASK_THIEU_TAI_NGUYEN`. `nap_cau_hinh` chỉ nạp whitelist tin cậy (đường tuyệt đối ngoài gói + SHA-256), đủ bốn tệp, snapshot nguyên bộ; lỗi/thu hồi cấu hình xóa cache cũ. Không có nguồn tải, từ điển thay thế hoặc fallback vận hành. Từ vựng DEMO được mock tường minh ngoài gói, xóa cache mỗi ca. Hàm nạp là cấu hình nội bộ dành cho adapter sau; chưa mở schema cấu hình máy MASK-0 hoặc cho payload tự cấp whitelist/quyền.
+- Còn sót/lỗi detector/chưa kiểm đủ/tiền-ngày thay đổi → không công bố văn bản. Mở che thêm kết quả kiểm nội bộ, không đóng yêu cầu nếu kiểm tiền/ngày thất bại; không thay mẫu 1–4 hoặc manifest. Adapter MASK-5 phải đổi kết quả chặn sang `LoiNghiepVu` mã `MASK_DINH_DANH_CHUA_DAT` hoặc `MASK_TIEN_NGAY_THAY_DOI`, câu cố định, không dùng nội dung gốc/str(lỗi). Kho/quyền chỉ là port được bên tin cậy tiêm, không tự cấp mã yêu cầu hoặc xác thực.
+- **Đã kiểm bằng Core giả (CoreGia)** ở đường stub; lõi kiểm bằng fixture kho/từ vựng DEMO ngoài gói. Pytest **149 passed, 190 subtests passed, 0 skipped**, mã 0, **15,69 giây**. Bao gồm đúng/vượt trần, 501 cụm, NFD/vị trí, nhãn nhiều dòng, mất/thêm/đổi tiền-ngày, thiếu từng tài nguyên, whitelist/SHA/cache, lỗi detector, bí danh hỏng. Ba chuỗi 500.000 ký tự `1; `, `1, `, `1 ` đo **1,685 / 1,737 / 2,433 giây**; giữ ngưỡng cũ **≤5 giây xử lý, timeout tiến trình con 12 giây**. Đo trên Windows/Python 3.13.14; chưa chạy Linux thực tế, test dùng API đa nền tảng.
+- CLI SDK vẫn **0/2 ĐẠT, mã 1** do hai stub `CHUA_LAM` theo phiếu. Kiểm độc lập **ĐẠT, mã 0**, không tệp biên dịch/tham chiếu bị cấm. `git diff --check` mã 0. SDK **2.0.0**, cài offline wheel `--no-index --no-deps`, SHA-256 `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892` khớp SHA256SUMS. Dùng venv riêng với công cụ pytest sẵn có qua system-site-packages, không thêm dependency chạy.
+- **Giới hạn:** heuristic có thể bỏ lọt tên người viết thường không nhãn; có test ghi nhận giới hạn, không coi kết quả “không tìm thấy” là bằng chứng đủ điều kiện Cloud. Nguồn sạch/quyền/kho Core thật chưa có, cổng DEMO nghiệp vụ chưa đạt; 0 lượt Cloud và không gọi engine khác.
+- Lệch phiếu: không mở rộng phạm vi; thêm kiểm tiền/ngày nội bộ khi mở để chặn dữ liệu kho bất thường. Chờ lead whitelist bốn tài nguyên. Không phát sinh yêu cầu Core mới; kênh cấu hình/ngăn/quyền đã nằm trong mục **Cần Core**.
+
+Ba lệnh kiểm bắt buộc đã chạy bằng `.venv/Scripts/python`, với `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1` (pytest thêm `-s` để ghi số đo hiệu năng):
+
+```text
+python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chức năng này chưa được hoàn tất."
+[LỖI] Mở che DEMO: "Chức năng này chưa được hoàn tất."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát: 1; 0/2 ĐẠT, đường stub theo phiếu MASK-2.
+
+python -m pytest e_mask/tests -q -s
+Hiệu năng '1; ': 1.685 giây
+Hiệu năng '1, ': 1.737 giây
+Hiệu năng '1 ': 2.433 giây
+149 passed, 190 subtests passed in 15.69s
+Mã thoát: 0; 0 skipped.
+
+python e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát: 0.
+```
+
 ## Cần Core (chuyển lead Core qua Anh)
 - Cổng engine chung: API HTTP v1, webhook, bộ cài engine từ thư mục/gói riêng (bỏ tiền tố `kho_tri_thuc.engines.`), K1–K5.
 - Màn Chạy thử chung và màn cấu hình dựng từ schema; nạp giao diện quản trị của engine.

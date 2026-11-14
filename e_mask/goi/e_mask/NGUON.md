@@ -1,4 +1,4 @@
-# NGUỒN — gói e_mask, MASK-1 và MASK-2
+# NGUỒN — gói e_mask, MASK-1, MASK-2 và MASK-3
 
 Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Cổng của MASK-0 vẫn trả `CHUA_LAM`; chưa hoàn tất nghiệp vụ che/mở che, chưa kích hoạt vận hành. Đã kiểm bằng Core giả (CoreGia).
 
@@ -58,3 +58,18 @@ Giới hạn được giữ: 500.000 ký tự đầu vào, 500 định danh đã
 Khi còn sót/lỗi detector/chưa kiểm đủ/đổi tiền-ngày, kết quả nội bộ chặn văn bản. ThieuTaiNguyen mang mã cố định `MASK_THIEU_TAI_NGUYEN`; adapter sau ánh xạ cờ hậu kiểm sang `LoiNghiepVu` mã `MASK_DINH_DANH_CHUA_DAT` hoặc `MASK_TIEN_NGAY_THAY_DOI`, dùng câu cố định và không dùng str(lỗi)/cụm gốc. Chưa thay mẫu 1–4 hay phong bì Core.
 
 Heuristic không bảo đảm phát hiện tên người viết thường không nhãn. Ca DEMO minh họa giới hạn được giữ trong test; từ vựng DEMO ít và test đạt không chứng minh đủ điều kiện Cloud. Bốn tài nguyên sạch vẫn chờ lead whitelist, Cloud chưa bật. Những mô tả “chưa có detector” ở phần MASK-1 là lịch sử; MASK-2 đã có mã detector nhưng chưa có nguồn vận hành sạch.
+
+## Bổ sung MASK-3 — 14/11/2026
+
+Chỉ bốn tệp mã chạy mới. Không thêm dependency ngoài thư viện chuẩn và SDK 2.0.0; hai handler vẫn là stub, việc nối nghiệp vụ thuộc MASK-5. Chỉ DEMO, đã kiểm bằng Core giả (CoreGia) và port kho/quyền giả. Không có transport kho/danh tính mặc định, không có kho tên gốc trên đĩa hoặc kho RAM vận hành.
+
+| Tệp trong gói Python | Nguồn / điều chỉnh | SHA-256 đích (byte và LF giống nhau tại bàn giao) |
+|---|---|---|
+| `e_mask/kho_qua_core.py` | Chuyển nguyên tắc snapshot/nhật ký/chốt từ `e_mask/ma-nguon/kho_qua_core.py`; giữ hai thao tác port nội bộ và toàn bộ 11 vector cũ. Bỏ phụ thuộc cổng thế hệ trước, thêm nguồn quyền tin cậy, mã opaque, dấu chống trùng và đối soát chốt chưa rõ. | `5914a2818f0ff8bad6aa217dcd7e9ef466c116d51670fa35a7cd3cb017f0d86e` |
+| `e_mask/kho_tam.py` | Viết mới theo phiếu §2.4: thư mục dữ liệu ngoài gói, khóa tệp đa tiến trình, ghi tạm/fsync/replace, schema đóng chỉ băm/mã trạng thái; lỗi thì dừng. | `f59171f0094a6093a338a9894a0695f6ce8d2a2d66f4acd1769714c1555714f5` |
+| `e_mask/kho_dinh_danh.py` | Viết lớp ghép port/quyền cho protocol Kho có sẵn; kiểm kết quả trước chốt và sau đọc lại, không có vòng gửi kết quả riêng. | `c23be50fd1d64a32f142a1a9eb5b870f624e667f4640387cb8f05fd76e5766a4` |
+| `e_mask/quyen_yeu_cau.py` | Viết port danh tính/quyền; thiếu nguồn xác minh thì từ chối, không suy từ tham số/đầu vào/pháp nhân. | `4f44b32ec0c89ee40023dbd38502e9615f3522aaf648b9b15bb4b3c00cd17a4c` |
+
+Nguồn `ma-nguon/kho_qua_core.py` giữ nguyên: SHA byte `2dd5c5f3ea64711a31f17265ba4e3b75a17e136258ae94c157cf2e6bb91dee15`; SHA LF `3608e50f82c76cde036afcc309bc4f01656e1a0cb4a17679ba9c7e106a547c78`. KhoBoNho từ nguồn cũ đã được MASK-2 chép ra helper test, nay tập trung tại `tests/ho_tro_core_gia.py`; helper `ho_tro_kho_demo.py` chỉ chuyển tiếp import. Fixture quyền/kho, máy chia sẻ RAM cho hai tiến trình và adapter SDK thử nghiệm đều ngoài gói chạy. Mã nguồn gốc giữ nguyên, không xóa/di chuyển.
+
+Port này chưa công bố API ngăn mới. Core cần cấp mã ổn định theo việc/bước, kiểm phiên/module/người/tài liệu/vùng, quyền và lease tại snapshot/chốt/đọc lại, cùng CAS/duy nhất/ghi lô nguyên tử phía kho. Kho tạm chỉ băm mã và nội dung, không lưu nhật ký chứa cụm gốc hay kết quả; `ChuaRo` chỉ khi bên kho đã nhận chốt chưa trả, giao lại hỏi nguồn trước. Phần gửi lại kết quả thuộc SDK. Tiền tố cấp alias tại MASK-3 tập trung trong `TIEN_TO_TU_SINH`; còn chờ xác nhận họ MASK không trùng Junsky thật. Không đổi helper/matcher thuộc các lát lõi trước.

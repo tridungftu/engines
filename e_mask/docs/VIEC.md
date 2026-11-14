@@ -12,6 +12,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 5 | Lát 8: che/mở che Word/Excel (mẫu 5–8) | §1.3 | Chờ làm |  |
 | 6 | Lát 6: 8 contract (Anh duyệt tên) → lát 7: bài 11 bước | — | Chờ làm |  |
 | MASK-P | Lập phiếu giao Codex theo SDK 2.0; chỉ tài liệu, không tạo gói/không sửa nguồn | MK-1…6, 10…22 | Xong — 14/11/2026 | [Phiếu giao](GIAO-CODEX-e_mask.md): 14 lát, 52–62 giờ ước tính có điều kiện. Regex 14/14 khối đạt; 5 mục/bảng lát/tổng giờ khớp; UTF-8/NFC và kiểm khoảng trắng đạt, `git diff --check` mã 0. Ba lệnh kiểm gói AGENTS.md §5 không áp dụng theo ngoại lệ lát chỉ tài liệu; không chạy hoặc nhận là đã kiểm bằng CoreGia. Đề xuất `van_ban_da_che` ở cuối sổ chung mang nhãn **ĐỀ XUẤT MASK-P, chờ Anh**. Không commit/push; PR: **chờ lead mở** |
+| MASK-3 | Port kho/quyền, kho tạm và chống trùng sau MASK-2 | MK-10…13, 16…19 | Xong phạm vi port/CoreGia — 14/11/2026 | Chỉ DEMO; đúng bốn tệp mã. Pytest 225 passed, 190 subtests passed; kiểm độc lập ĐẠT. CLI SDK 0/2 ĐẠT do handler MASK-5 còn stub; chưa đạt nghiệm thu chung. PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
 
@@ -82,6 +83,45 @@ python e_mask/tests/kiem_doc_lap.py
 Mã thoát: 0.
 ```
 
+## MASK-3 — 14/11/2026
+
+- **Xong phạm vi port/kho tạm/chống trùng**, chỉ DEMO; PR: **chờ lead mở**. Giữ ngày giao 14/11 theo handoff. Bắt đầu **00:22 ngày 15/11/2026** (UTC+07); mốc kết thúc và giờ thực tế ghi tại đoạn cuối mục này. Phiếu ước tính **5 giờ**, chưa phải số đo. **Chưa đạt điều kiện nghiệm thu chung** vì hai DEMO ở CLI SDK vẫn là stub thuộc MASK-5.
+- Đúng bốn tệp mã chạy: `kho_tam.py`, `kho_dinh_danh.py`, `kho_qua_core.py`, `quyen_yeu_cau.py`. Tái dùng protocol `Kho` của MASK-2 và snapshot/nhật ký/chốt của `ma-nguon/kho_qua_core.py`; không phục hồi cổng cũ hoặc tự đặt API ngăn. `ma-nguon/`, các bản tham chiếu, SDK và Core giữ nguyên; không commit/push.
+- `KhoTam` dùng `KTT_ENGINE_DU_LIEU`, mặc định `%PROGRAMDATA%\KhoTriThuc\engines\e_mask\du-lieu\` trên Windows; Linux cần đường DEMO tuyệt đối tường minh. Khóa tệp riêng bằng khóa đa tiến trình của hệ điều hành, JSON đọc/đổi/ghi trong cùng khóa; ghi tạm, flush/fsync, `os.replace` cùng thư mục. Từ chối tệp hỏng, đường trong gói/liên kết và lỗi đọc/ghi/khóa bằng `MASK_KHO_TAM_LOI`, không tự tạo kho RAM thay thế. Mã opaque cũng băm trước khi lưu; schema đóng chỉ có băm và mã trạng thái số. Không lưu tên gốc, danh mục, bảng ánh xạ, toàn văn, nội dung che hay kết quả mở che.
+- Kho lâu dài và quyền là port nội bộ **chưa có transport SDK 2.0**. Mặc định thiếu kho → `MASK_KHO_CHUA_NOI`; thiếu danh tính tin cậy → `MASK_NGU_CANH_CHUA_XAC_MINH`. Không nhận danh tính từ đầu vào/tham số/pháp nhân. `NguCanhTinCay` do bên cấp quyền tiêm, gắn phiên/module/người/tài liệu/vùng; Core giả cấp mã yêu cầu/lượt ổn định theo việc/bước. Không ép mã opaque thành UUID/64 ký tự, không đưa `lan_thu` vào khóa. Mã yêu cầu mở thiếu/sai/đã đóng hoặc sai chủ bị từ chối.
+- Giữ hai thao tác port cũ `snapshot_luot`, `chot_luot`; `chot_luot` với nhật ký rỗng là cửa đọc lại lượt đã chốt, vẫn kiểm quyền. Bên cấp quyền được gọi lại tại snapshot/chốt/đọc lại; port kho phải tự kiểm quyền/lease trong giao dịch. Bảng chung toàn tập đoàn, tách vùng DEMO/thật; không chia theo pháp nhân hoặc giới hạn bảng tra vào bí danh đã tham chiếu của một yêu cầu.
+- Nhật ký trong RAM chỉ gửi về kho được phép. Bên kho giả chốt nguyên tử alias/hàng chờ/đếm gặp/tham chiếu/yêu cầu/kết quả, CAS xung đột → `MASK_XUNG_DOT`, `thu_lai_duoc=True`. Lượt đã chốt chỉ đọc từ port, không chạy lại callback/cấp alias/đếm mới. Kết quả đọc lại vẫn qua chặn an toàn. Tiền tố cấp bí danh MASK-3 nằm một chỗ tại `TIEN_TO_TU_SINH = 'MASK'`; chỉ DEMO, còn chờ Anh xác nhận không trùng Junsky thật. Không đổi matcher/tiền tố của lõi MASK-1…2 ngoài phạm vi lát.
+- Trước chốt ghi dấu mã/băm. Bên lưu trữ đã nhận chốt mà chưa trả → lưu mã trạng thái chưa rõ, băm chốt và mã tương quan suy từ mã lượt đã băm, rồi `raise ChuaRo`. Khởi động lại/giao lại luôn hỏi snapshot port trước; nếu kho còn đang chờ thì tiếp tục `ChuaRo`, không chạy nghiệp vụ lại. Không phục hồi kết quả từ JSON. Dấu cục bộ nói đã chốt nhưng port mất trạng thái → từ chối xung đột. Mất ACK kết quả SDK do chính SDK gửi lại; không có vòng gửi cũ.
+- `KhoBoNho` chuyển từ helper MASK-2 vào `tests/ho_tro_core_gia.py`, ngoài gói chạy; helper cũ chỉ chuyển tiếp import để giữ test. Fixture kho/quyền gắn phiên/module/người/tài liệu và cấp mã, không nhận cờ tự khai từ payload. Hai vùng trong test đều là dữ liệu giả; nhãn `THAT` chỉ để kiểm tách vùng, không có hồ sơ thật. Không thêm dependency chạy ngoài SDK/thư viện chuẩn.
+- **Đã kiểm bằng Core giả (CoreGia)** và port kho/quyền giả: **225 passed, 190 subtests passed, 0 skipped**, mã 0, **19,91 giây**. Đủ **11/11 vector_kho_luot.json nguyên bản**; snapshot/nhật ký/bản sao; hai tiến trình tranh ghi JSON và hai tiến trình engine chốt cùng bên kho giả (một chốt, một xung đột, sau retry dùng cùng alias); rollback tại sáu mốc; gặp lại/chống đếm lặp; sai module/người/tài liệu/vùng/mã và thu hồi quyền ở từng cửa; bảng chung; `ChuaRo` sau commit hoặc nguồn còn chờ; mất 1 và cả 4 ACK kết quả SDK, giao lại cùng việc/bước và khởi tạo lại engine. Kiểm byte mọi tệp kho tạm không chứa tên/toàn văn DEMO, kể cả sau mở che.
+- Chạy trên **Windows/Python 3.13.14**, chưa chạy Linux thực tế; mã/test có nhánh Windows/Linux và multiprocessing `spawn`. Các kiểm này **không phải bằng chứng bền PostgreSQL, RLS, CAS hoặc quyền Core thật**. Bốn tài nguyên sạch và kho/quyền thật vẫn chờ; 0 lượt Cloud, không gọi engine khác. Duyệt/từ chối/dọn thuộc MASK-6, handler nghiệp vụ thuộc MASK-5; chưa tự nối vào manifest.
+
+Ba lệnh kiểm bắt buộc chạy bằng `.venv/Scripts/python`, với `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`; venv cài SDK offline từ wheel đã so SHA256SUMS, phiên bản 2.0.0. Công cụ pytest dùng bản có sẵn qua system-site-packages:
+
+```text
+python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chức năng này chưa được hoàn tất."
+[LỖI] Mở che DEMO: "Chức năng này chưa được hoàn tất."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát: 1; 0/2 ĐẠT, hai stub chưa nối thuộc MASK-5.
+
+python -m pytest e_mask/tests -q
+225 passed, 190 subtests passed in 19.91s
+Mã thoát: 0; 0 skipped.
+
+python e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát: 0.
+```
+
+Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã; giữ adapter tạm chỉ trong tests để kiểm port qua CoreGia, hai handler sản phẩm vẫn stub. Không tự đặt API ngăn khi SDK thiếu transport; Cần Core được cụ thể hóa bên dưới. **Thời gian thực tế:** bắt đầu 00:22, kết thúc **00:50:53 ngày 15/11/2026** (UTC+07), **0.48 giờ**, so với **5 giờ ước tính** trong phiếu.
+
+## Nợ từ kiểm MASK-2 — ghi nhận 14/11/2026, không vá trong MASK-3
+
+- **CAO cho Cloud:** tên người viết thường không nhãn có thể lọt hậu kiểm; test heuristic đạt không chứng minh văn bản đã hết định danh. Cần bổ sung ở lát riêng trước xét bật Cloud.
+- Tên viết tắt dạng **N.V. An**: còn nợ kiểm nhận diện/hậu kiểm; không coi MASK-3 là đã xử lý.
+- Khác biệt **numeric_review với NUL**: cần đối chiếu riêng với nguồn, giữ ranh giới số và chứng minh tiền/ngày; không sửa trong lát kho/quyền.
+
 ## Cần Core (chuyển lead Core qua Anh)
 - Cổng engine chung: API HTTP v1, webhook, bộ cài engine từ thư mục/gói riêng (bỏ tiền tố `kho_tri_thuc.engines.`), K1–K5.
 - Màn Chạy thử chung và màn cấu hình dựng từ schema; nạp giao diện quản trị của engine.
@@ -95,6 +135,13 @@ Mã thoát: 0.
 - **Chốt và mất ACK (J8b):** đối soát ghi kho/kết quả, giao lại không cấp/đếm/đóng trùng; lượt bền #10 khi bên lưu trữ đã nhận chốt mà chưa trả. Chưa có API ngăn/giữ-chốt-đọc thì chỉ kiểm bằng port giả; không tự khai API mới.
 - Kênh cấu hình tới `Engine`, nhật ký/thẻ trạng thái, UI ngăn/màn thử chung chỉ Admin; màn duyệt/lọc kiểu Excel còn thiếu, không tự nối màn riêng cũ. Core kiểm nguồn sinh `van_ban_da_che` và chuỗi Mask → Cloud, kiểm quyền cả đọc kết quả/tệp, không chỉ tin mã loại/cờ caller. Hỏi AI bản 1 vẫn tắt Cloud.
 - Tên tám contract lịch sử/`noi_dung_da_che.v1` cần lead đối chiếu cổng mới; không đổi nghĩa lượt/hạn/danh mục của bản đã công bố. Bộ kết quả mở che `truong` không tự nối vào Trích xuất đang nhận `tra_loi_ai`; cần thiết kế riêng nếu có chuỗi đó.
+
+### Cụ thể hóa MASK-3 — 14/11/2026
+
+- **Ngăn/transport chung:** triển khai cổng SDK đọc snapshot, CAS/duy nhất và ghi lô nguyên tử bao trùm định danh/alias mới, hàng chờ, dấu gặp theo yêu cầu, tham chiếu tạm, trạng thái yêu cầu và kết quả. Bốn tệp MASK-3 chỉ định nghĩa port nội bộ, không thêm route/thao tác ngăn công bố. Chuyển bảng lâu dài vào ngăn hạn chế quyền, không lưu tên gốc vào kho tạm.
+- **Danh tính và mã ổn định:** Core cấp từ phiên đã xác minh module/người gửi/tài liệu/vùng, gắn việc/bước/lease và mã yêu cầu/lượt; cùng việc/bước giữ nguyên mã qua `lan_thu` và khởi động lại. Kiểm quyền trong cùng giao dịch tại snapshot/chốt/đọc lại, kể cả kết quả/tệp của lượt mở che đã đóng. Mã đã đóng chỉ đọc lại đúng lượt đã chốt, không mở lượt mới. `phap_nhan_id` không làm phạm vi bảng hoặc quyền mở che.
+- **Chốt chưa rõ:** port phải phân biệt đã chốt, xác nhận chưa chốt/không còn chốt đang chờ, và đang chờ/chưa biết; trạng thái cuối phải `ChuaRo`. Đối soát theo mã ổn định trước khi xử lý lại, giữ dấu/băm và kết quả ở kho được phép. Bổ sung lượt bền chung #10 khi SDK có; không đổi cơ chế nộp kết quả/ACK vốn do SDK quản.
+- **Chứng minh trên hệ lưu trữ thật:** cần kiểm nguyên tử/CAS/rollback/khởi động lại, độ bền và kiểm quyền trong ngăn thật trước nối vận hành. Hai tiến trình với port RAM giả và JSON khóa tệp không thay cho nghiệm thu PostgreSQL/Core thật.
 
 ## Chờ Anh / lead — MASK-P
 

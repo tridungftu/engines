@@ -1,15 +1,18 @@
-"""Kiểm kê ZIP trong RAM; chưa đăng ký năng lực SDK ở HD-5."""
+"""Kiểm kê ZIP trong RAM, bàn giao báo cáo qua cổng SDK."""
 
 from __future__ import annotations
 
 import json
+import warnings as canh_bao_python
+import zipfile
 
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
 from kho_tri_thuc_sdk.primitives import DataError
 
 from .doc import PHIEN_BAN_ENGINE, _kiem_tran_dong_hang, chieu_truong
-from .hoa_don_xml import doc_goi_hoa_don_zip, ra_json
+from .hoa_don_xml import MAX_ZIP_BYTES, doc_goi_hoa_don_zip, ra_json
 
+ZIP_TOI_DA_BYTE = MAX_ZIP_BYTES
 JSON_TOI_DA_BYTE = 32 * 1024 * 1024
 CAU_VUOT_TRAN = "Gói ZIP vượt giới hạn xử lý. Anh hãy gửi gói nhỏ hơn."
 CAU_KHONG_DOC = "Không kiểm kê được gói ZIP. Anh hãy kiểm tra lại tệp."
@@ -31,6 +34,12 @@ _BO_QUA = {
 }
 
 
+def _canh_bao_zip_hong(*args, **kwargs):
+    # zipfile ở một số bản Python cảnh báo thay vì từ chối overlap.
+    # Lõi bắt BadZipFile tại thao tác mở/đọc và giữ entry lỗi, không lộ tên.
+    raise zipfile.BadZipFile("Entry ZIP không đọc được.")
+
+
 def _kiem_xml(raw):
     try:
         _kiem_tran_dong_hang(raw)
@@ -49,7 +58,10 @@ def doc_zip(raw: bytes, *, tep_zip: dict, kiem_huy=None) -> tuple[dict, bytes]:
     Callback hủy được truyền xuyên suốt; ngoại lệ hủy/lease không bị bọc.
     """
     try:
-        goi = doc_goi_hoa_don_zip(raw, contexts=(), kiem_xml=_kiem_xml, kiem_huy=kiem_huy)
+        with canh_bao_python.catch_warnings():
+            canh_bao_python.simplefilter("always", UserWarning)
+            canh_bao_python.showwarning = _canh_bao_zip_hong
+            goi = doc_goi_hoa_don_zip(raw, contexts=(), kiem_xml=_kiem_xml, kiem_huy=kiem_huy)
     except DataError as loi:
         if loi.code != "ZIP_LIMIT":
             raise

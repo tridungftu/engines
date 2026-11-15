@@ -6,6 +6,8 @@ nguồn Local đủ mọi vùng và quyền bàn giao. Không nhận cờ đã k
 Nguồn/symbol/quyền/băm trước và sau được ghi trong NGUON.md.
 """
 from dataclasses import dataclass
+from datetime import date
+from decimal import Decimal
 from functools import wraps
 from hashlib import sha256
 from time import monotonic
@@ -21,6 +23,7 @@ from .hau_kiem_ai import _bien_thuc_the
 from .ho_so_ai import json_chuan
 from .kho_anh_xa_ram import _BuocRAM, _bo_tham_chieu
 from .kho_dinh_danh import KhoDinhDanh
+from .khoi_tao_ngan import PHIEN_BAN_CHUAN_HOA
 from .mo_che_ram import _don_ngoai_le
 from .nguon.privacy.types import bo_ky_tu_vo_hinh
 from .quyen_yeu_cau import loi_kho, loi_ram
@@ -231,29 +234,106 @@ def _kiem_vung(goc, phep, buoc):
     return m
 
 
+_FORMAT_SAN = {
+    5: '"$"#,##0_);("$"#,##0)', 6: '"$"#,##0_);[Red]("$"#,##0)',
+    7: '"$"#,##0.00_);("$"#,##0.00)', 8: '"$"#,##0.00_);[Red]("$"#,##0.00)',
+    14: 'mm-dd-yy', 15: 'd-mmm-yy', 16: 'd-mmm', 17: 'mmm-yy',
+    18: 'h:mm AM/PM', 19: 'h:mm:ss AM/PM', 20: 'h:mm', 21: 'h:mm:ss',
+    22: 'm/d/yy h:mm',
+    41: '_(* #,##0_);_(* (#,##0);_(* "-"_);_(@_)',
+    42: '_("$"* #,##0_);_("$"* (#,##0);_("$"* "-"_);_(@_)',
+    43: '_(* #,##0.00_);_(* (#,##0.00);_(* "-"??_);_(@_)',
+    44: '_("$"* #,##0.00_);_("$"* (#,##0.00);_("$"* "-"??_);_(@_)',
+    45: 'mm:ss', 46: '[h]:mm:ss', 47: 'mmss.0',
+}
+_FORMAT_NGAY = frozenset((
+    'dd/mm/yyyy', 'yyyy-mm-dd', 'dd/mm/yyyy hh:mm', 'yyyy-mm-dd hh:mm:ss',
+    'hh:mm', 'hh:mm:ss', *(_FORMAT_SAN[i] for i in (*range(14, 23), 45, 46, 47)),
+))
+_FORMAT_TIEN = frozenset((
+    '#,##0" VND"', '#,##0 "VND"', '#,##0.00" VND"', '#,##0 [$VND-42A]',
+    *(_FORMAT_SAN[i] for i in (*range(5, 9), *range(41, 45))),
+))
+
+
+def _format_so(style):
+    # B3 đã gắn formatCode khai báo vào style hiệu lực (hoặc từ chối khai
+    # lại ID builtin). Chỉ dùng mặc định builtin khi không có khai báo.
+    code = style.get('formatCode')
+    return code if code is not None else _FORMAT_SAN.get(int(style.get('numFmtId', '0')), 'General')
+
+
 def _kiem_so_bat_bien(tai_lieu, buoc):
     """Ô số/metadata không có miền sửa chữ: cần che thì chặn cả tệp.
 
-    Không biến MST/tài khoản dạng số thành chuỗi để đặt alias. Số tiền
-    và serial ngày có định dạng đã qua whitelist được giữ nguyên. Khai
+    Không biến MST/tài khoản dạng số thành chuỗi để đặt alias. Ô tiền có
+    phần lẻ khác 0 hoặc tối đa 12 chữ số nguyên được giữ theo lead 16/11.
+    Chỉ serial ngày trong miền hợp lệ được miễn. Khai
     báo số làm định danh đã bị lớp kiểm đầu vào từ chối. B7 kiểm Local đúng
     ngữ cảnh cho cả các ô/thuộc tính bất biến này, không tự chứng nhận.
     """
-    def kiem(chu, co_dinh_dang=False):
+    def kiem(chu):
         buoc.kiem()
-        if not co_dinh_dang:
-            con_sot, day_du = che._kiem_con_sot(chu, [])
-            if con_sot or not day_du:
+        con_sot, day_du = che._kiem_con_sot(chu, [])
+        if con_sot or not day_du:
+            raise _loi('MASK_TEP_CHUA_HO_TRO')
+
+    da_tim = set()
+    def kiem_da_khai(*gia_tri):
+        # Tra đúng giá trị qua ngăn bí mật, không dò hình dạng định danh,
+        # không đọc bản rõ/danh mục. Phạm vi lấy từ quyền R4 đã xác minh.
+        for chu in gia_tri:
+            buoc.kiem()
+            khoa = che.chuan_hoa(chu)
+            if khoa in da_tim:
+                continue
+            if len(da_tim) >= TRAN_UNG_VIEN:
+                raise loi_ung_vien('MASK_UNG_VIEN_QUA_TRAN')
+            trang = buoc._viec.ngan.tim('dinh_danh', loc={
+                'gia_tri_chuan': khoa, 'vung_du_lieu': buoc._ctx.quyen.vung,
+                'phien_ban_chuan_hoa': PHIEN_BAN_CHUAN_HOA}, gioi_han=2)
+            buoc.kiem()
+            if trang.danh_sach or trang.tiep is not None:
                 raise _loi('MASK_TEP_CHUA_HO_TRO')
+            da_tim.add(khoa)
+
     for o in tai_lieu.o:
         buoc.kiem()
         if o.vung is None and o.gia_tri is not None and o.kieu in (None, 'n'):
-            st = tai_lieu.styles[o.style_hieu_luc]
-            fmt = int(st.get('numFmtId', '0'))
-            rieng = st.get('formatCode') or ''
-            tien_ngay = (fmt in set(range(5, 9)) | set(range(14, 23)) | set(range(41, 48))
-                         or 'VND' in rieng or any(c in rieng for c in ('y', 'd', 'h', 's')))
-            kiem(o.gia_tri, tien_ngay)
+            code = _format_so(tai_lieu.styles[o.style_hieu_luc])
+            so = Decimal(o.gia_tri)
+            if code in _FORMAT_NGAY:
+                # Epoch 1900 có ngày nhuận giả của Excel trước tháng 3;
+                # cận trên là 01/01/2101, không nhận phần giờ của ngày đó.
+                epoch = date(1904, 1, 1) if tai_lieu.epoch1904 else date(1899, 12, 30)
+                duoi = 0 if tai_lieu.epoch1904 else 1
+                tren = (date(2101, 1, 1) - epoch).days
+                if not duoi <= so < tren:
+                    raise _loi('MASK_TEP_CHUA_HO_TRO')
+                kiem_da_khai(o.gia_tri)
+                continue
+            # Chuẩn hóa chỉ để kiểm trong RAM: chặn định danh giấu bằng
+            # exponent/.0/dấu; không sửa lexical hoặc bytes của ô nguồn.
+            if not -128 <= so.as_tuple().exponent <= 308:
+                raise _loi('MASK_TEP_CHUA_HO_TRO')
+            chuan = format(so.copy_abs(), 'f')
+            nguyen = chuan.partition('.')[0]
+            la_nguyen = so == so.to_integral_value()
+            if code in _FORMAT_TIEN and (not la_nguyen or len(nguyen) <= 12):
+                # .00/exponent/dấu được xét theo giá trị, không số ký tự
+                # lexical. Khai báo định danh vẫn thắng format tiền.
+                chuan_gon = nguyen if la_nguyen else chuan.rstrip('0')
+                kiem_da_khai(o.gia_tri, chuan_gon,
+                             '-' + chuan_gon if so < 0 else chuan_gon)
+                continue
+            if la_nguyen and len(nguyen) >= 9:
+                raise _loi('MASK_TEP_CHUA_HO_TRO')
+            con_sot, day_du = che._kiem_con_sot(o.gia_tri, [])
+            if not day_du:
+                raise _loi('MASK_TEP_CHUA_HO_TRO')
+            if con_sot:
+                raise _loi('MASK_TEP_CHUA_HO_TRO')
+            kiem(chuan)
     # Thuộc tính có kiểu số không nằm trong các vùng chuỗi có thể patch.
     root = tai_lieu.goi.goi.cay.get('docProps/custom.xml')
     if root is not None:

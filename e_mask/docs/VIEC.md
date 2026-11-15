@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-B6b | Chặn ô số định danh giả tiền/ngày, xét format và giá trị thực | Phiếu lead 16/11/2026; sau B6 | Chờ Anh — 16/11/2026; xong mã, chưa đạt full xanh | 216 regression mới đạt; full 3318 passed, 1 failed ở test B6 cũ trái yêu cầu mới, 4 xfailed cũ, 190 subtests. Độc lập/diff mã 0, kiểm kê 55/55; CLI 0/2 thiếu quyền cũ. Đã đề nghị sửa đúng một test ngoài closure, chờ trả lời. PR: **chờ lead mở**. |
 | MASK-B6 | Che Excel giữ format, shared/rich/inline/metadata, map chỉ RAM | Sau B3/B4 và R3…R6; MASK-P4; C-P4-01…05 | Xong mã/kiểm nội bộ / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Một runtime mới; B6 122/122. Full 2923 passed, 4 xfailed cũ, 190 subtests, 0 lỗi/skip; độc lập/diff mã 0, CLI 0/2 thiếu quyền. Nguồn 19/19, kiểm kê 55/55; PR: **chờ lead mở**. |
 
 | MASK-B5b | Chặn số tài khoản/giấy tờ bị coi là ngày | Phiếu lead 16/11/2026; sau B5 | Chờ Anh — 16/11/2026; đã sửa mã, chưa đạt full xanh | Hai runtime Word/văn bản; 180 ca mới. Full: 2980 passed, 1 failed do assertion cũ buộc chặn nhầm ngày thật, 4 xfailed cũ. Cần duyệt sửa một assertion ngoài phạm vi; báo cáo §6 ở cuối sổ; PR: **chờ lead mở**. |
@@ -1003,3 +1004,86 @@ Lượt full trước chốt bảo vệ nhãn R5 ở xa: **2976 passed, 1 failed
 Không phát sinh cổng Core/SDK hoặc câu nghiệp vụ mới. Kế thừa **C-MS22-01** (quyền/ngữ cảnh CLI DEMO) và các cửa P4/B5 về ghim chuỗi, vòng đời RAM, nguồn Local và bàn giao; B5b không chứng nhận các cửa này.
 
 **Chờ Anh/lead về phạm vi test cũ:** `test_mask_2b.py::test_do_lap_lai_co_nguon_khong_bia_mau` bắt buộc `vi_tri_chan_nham == [15]`, tức câu ngày thật ISO “Đáo hạn khoản vay vào ngày 2026-10-30.” phải bị chặn nhầm. B5b giữ đúng ngày thật làm kết quả thành `[]`. Đã trình thay đúng một assertion `[15] → []`, không skip/xfail/đổi ngưỡng bảo mật; chưa sửa vì tệp nằm ngoài danh sách cho phép của phiếu. Đo lại riêng đã xác minh failure này, không phải lỗi giữ tiền/ngày hoặc lọt định danh.
+
+## MASK-B6b — 16/11/2026, ô số Excel giả tiền/ngày
+
+**Phạm vi:** sửa duy nhất runtime `goi/e_mask/e_mask/tep_excel.py`; thêm `tests/test_mask_b6b.py`; cập nhật VIEC/CHANGELOG/NGUON/kiểm kê. `xml_excel.py` không cần sửa: reader B3 đã chuyển `formatCode` khai báo sang style hiệu lực và từ chối khai lại ID builtin dưới 164. Không mở rộng profile, API v1, ngăn/RAM hoặc sửa các tệp B7/Core/e_hoi_ai. Không commit/push; PR: **chờ lead mở**.
+
+- Phân loại theo tập `formatCode` chính xác; builtin chỉ tra mặc định khi không có khai báo. Bỏ miễn kiểm theo ID hoặc tìm y/d/h/s đơn lẻ. Chặn cả tệp khi ngày ngoài miền 1900–2100; xét epoch 1900 `[1,73416)` và 1904 `[0,71954)`, phần lẻ là giờ.
+- Tiền vẫn qua detector số; số nguyên từ 9 chữ số, kể cả exponent/.0/dấu, bị chặn. Với phần lẻ, chỉ dung sai cảnh báo nhóm số phủ toàn giá trị sau khi hai vế thập phân riêng qua detector; nghi vấn khác hoặc chưa quét đủ đều chặn. Decimal chỉ dùng để kiểm trong RAM, không sửa số/format/bytes đầu ra. Chặn exponent cực đoan trước mở rộng chuỗi.
+- **216 test B6b đạt (10,59 giây, mã 0):** các ID 5–8, 14, 22, 41–47, format riêng, khai lại ID bị reader từ chối, style kế thừa hàng/cột, ngày ngoài miền/biên hai epoch, detector chưa quét đủ và dọn RAM khi lỗi. Tiền `1500000`, `1234567.89`, tiền âm/.00 và ngày `46325` giữ nguyên bytes/số/format.
+- Chạy cùng **12 workbook DEMO** trên module HEAD trước sửa và module sau: **12/12 → 0/12** trả số `123456789012` nguyên văn; sau sửa **12/12** từ chối an toàn. Không dùng kết quả này làm chứng nhận Local/Office/Core thật.
+- Held-out MASK-2c **190 ca, 115 có gold, 75 câu thường**; SHA nội dung vẫn `sha256:b720fb2d9a330110ed5c4d5fd777b9728887f863651a2b0c46dc395dc45c95ad`. Nhánh quy tắc lịch sử vẫn **28** ca còn nguyên gold, **12/75** câu thường bị chặn, bằng baseline hiện tại sau B5b. Không đổi detector văn bản/gold/ngưỡng, không tuyên bố 0 lọt Local/hai lớp. Byte LF của fixture 2c và R3 khớp đúng blob Git/SHA khóa sau khi trả CRLF checkout về LF.
+- Môi trường `.venv` Python 3.13.14 với thư viện test hệ thống đã có; SDK 2.2.0 cài offline wheel SHA `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`, không thêm dependency. Lệnh Python dùng `-B`; lệnh xuất tiếng Việt dùng `PYTHONIOENCODING=utf-8`. Đã kiểm bằng Core giả (CoreGia), Cloud tắt, chưa Core/Local/Office/Linux thật.
+
+### Chờ Anh/lead — kỳ vọng test B6 cũ trái phiếu B6b
+
+`test_mask_b6.py::test_so_tien_lon_format_tien_giu_nguyen_bytes` bắt buộc `1000000000` (10 chữ số nguyên) được cho qua chỉ vì style tiền, trái yêu cầu mới “độ dài chữ số ≥9 không có phần thập phân … giống ô General”. Focused B6+B6b trước bổ sung ca biên: **315 passed, 1 failed** duy nhất ở test này; không giữ bypass trong runtime để làm xanh.
+
+Đã gửi đề nghị mở rộng phạm vi đúng một test: giữ nguyên workbook/số nguồn, đổi tên thành `test_so_tien_lon_format_tien_nghi_dinh_danh_bi_chan`; thay ba dòng `che`/lấy trạng thái/khẳng định giữ số bằng `chan(b, goi_office(p), ds=[], ma='MASK_TEP_CHUA_HO_TRO')`. Không bỏ test, skip/xfail hoặc giảm ngưỡng. Tệp cũ chưa sửa vì ngoài danh sách được giao; bộ mới đã có regression chặn `1000000000` độc lập.
+
+### Cần Core — MASK-B6b
+
+Không phát sinh cổng Core/SDK mới. Kế thừa **C-MS22-01** (CLI DEMO thiếu phiên/quyền tin cậy: 0/2 ĐẠT, mã 1) và C-P4-01…05 của B6/B7; không nới gate hoặc đổi manifest để né lỗi. Kiểm độc lập **ĐẠT, mã 0**; kiểm kê bao đủ **55/55** tệp gói theo bytes LF/SHA, trừ chính kiểm kê.
+
+### Báo cáo §6 — MASK-B6b
+
+**Kết luận: Chưa đạt — đã chặn 12/12 ca bypass và 216 test mới xanh; full còn duy nhất một test B6 cũ yêu cầu hành vi trái phiếu mới.**
+
+**Đã làm:** sửa một runtime đúng phạm vi, ưu tiên formatCode thực tế và kiểm miền serial ngày theo epoch; tiền vẫn dò số định danh, giữ tiền/ngày thật nguyên bytes/format. Bổ sung test B6b, CHANGELOG/NGUON và kiểm kê 55/55. Không đổi API v1, reader, Core/e_hoi_ai hoặc tệp B7; map chỉ RAM. Đã kiểm bằng Core giả (CoreGia), Cloud tắt; chưa Core/Local/Office/Linux thật.
+
+**Kết quả kiểm thật trên mã cuối:**
+
+| Lệnh / phép kiểm | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**. Hai DEMO: “Chưa xác minh được phiên và quyền xử lý yêu cầu.” Nợ C-MS22-01 cũ; không đổi gate/manifest/DEMO. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **3318 passed, 1 failed, 4 xfailed cũ, 190 subtests passed, 0 skipped; 477,77 giây; mã 1**. Duy nhất `test_mask_b6.py::test_so_tien_lon_format_tien_giu_nguyen_bytes`, dòng 565. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**; không tham chiếu bị cấm hoặc bytecode trong gói. |
+| `pytest e_mask/tests/test_mask_b6b.py -q` qua Python `.venv`, `-B -m` | **216 passed, 10,59 giây, mã 0**; không skip/xfail. |
+| Kiểm kê / nguồn / tệp B7 | **55/55 tệp LF khớp bytes/SHA-256**, trừ chính kiểm kê; runtime sau đúng SHA tại NGUON. `engine.json`, `xml_excel.py` và các tệp B7 có trong worktree giữ nguyên bytes HEAD. |
+| `git diff --check` | **Mã 0**; chỉ cảnh báo checkout LF→CRLF ở hai fixture đã trả về blob LF đúng SHA khóa. |
+
+**Thời gian thực tế:** **05:06–05:23 ngày 16/11/2026 (UTC+07), khoảng 0,28 giờ** tại mốc chốt kiểm/báo cáo; phiếu **2–3 giờ ƯỚC TÍNH**, độ khó vừa. Không cộng thời gian chờ duyệt sửa test cũ sau bàn giao.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** giữ đúng danh sách tệp cho phép; không sửa `test_mask_b6.py` ngoài closure khi chưa được trả lời. Do đó chưa đạt yêu cầu full xanh; không bỏ test, thêm skip/xfail hoặc nới runtime để giữ bypass. Miền ngày dùng cận lịch chính xác đến hết năm 2100 theo epoch, thay vì khoảng ví dụ 73050. Chuẩn hóa hai fixture CRLF checkout về nguyên blob Git LF để giữ SHA, không đổi gold/ngưỡng. Không thêm dependency, commit hoặc push.
+
+**Cần Core / Chờ Anh mới phát sinh:** không có cổng Core/SDK mới; C-MS22-01 và C-P4-01…05 giữ nguyên. Chờ Anh/lead cho phép đổi đúng test B6 cũ theo bản thay cụ thể ở mục trên, rồi chạy lại full suite. PR: **chờ lead mở**.
+
+## MASK-B6b l??t 2 ? 16/11/2026, ch?nh quy t?c ? ti?n theo lead
+
+**Tr?ng th?i: ??t ?i?u ki?n MASK-B6b l??t 2** ? full pytest xanh, ki?m ??c l?p m? 0, ki?m k? kh?p; CLI SDK c?n n? quy?n C-MS22-01 c?. PR: **ch? lead m?**. B?t ??u **05:46 ng?y 16/11/2026 (UTC+07)** theo lead; **1 gi? ??C T?NH**, ?? kh? v?a. Quy?t ??nh d??i ??y thay quy t?c ? ti?n v? y?u c?u ??i test B6 ? l??t 1; k?t qu? l?ch s? l??t 1 kh?ng l? k?t qu? m? hi?n t?i.
+
+Quy?t ??nh lead 16/11: ? ti?n ?12 ch? s? nguy?n gi? nguy?n; r?i ro c?n l?i: s? ??nh danh ?12 ch? s? c? ? ??nh d?ng ti?n s? kh?ng b? d? ? ch? Anh x?c nh?n.
+
+- FormatCode th?c t? TI?N/K? TO?N: ph?n l? kh?c 0 ho?c s? nguy?n ?12 ch? s? kh?ng t?nh d?u gi? nguy?n bytes/format, b? d? h?nh d?ng ??nh danh; s? nguy?n ?13 ch? s? qua c?ng c?a General. Decimal ch? d?ng trong RAM ?? ph?n lo?i, kh?ng s?a lexical c?a ?. Gi? quy t?c serial ng?y l??t 1, General/0 v? ch?t exponent c?c ?oan tr??c m? r?ng chu?i.
+- Khai b?o ds v?n ch?n nh? tr??c; b? sung t?m ch?nh x?c gi? tr? ? ti?n/serial ng?y trong ng?n b? m?t, c?ng v?ng/quy?n R4 qua SDK, kh?ng ??c b?n r? ho?c li?t k? kho. ? ti?n ki?m c? raw value v? d?ng s? g?n/d?u/tr? tuy?t ??i ?? exponent/.00 kh?ng n? ???c gi? tr? ?? khai. Cache RAM ?2.000 ?ng vi?n; v??t t? ch?i, ki?m h?n/quy?n tr??c/sau truy v?n, kh?ng ghi ng?n ho?c map ra ngo?i RAM.
+- Ch? s?a m?t runtime `tep_excel.py`; gi? nguy?n test B6 `test_so_tien_lon_format_tien_giu_nguyen_bytes` v?i `1000000000`. C?p nh?t test B6b, CHANGELOG/NGUON/ki?m k?; kh?ng s?a reader/Core/SDK/t?p B7, kh?ng th?m dependency, kh?ng commit/push. Gi? c?c thay ??i B6b l??t 1 c? s?n trong worktree v? d? li?u DEMO/SHA ?? kh?a.
+- Focused sau s?a m? cu?i: **414 passed, 20,71 gi?y, m? 0** ? `test_mask_b6b.py`; l??t B6+B6b tr??c b? sung ca bi?n/ng?y/ng?n cu?i **505 passed, 39,58 gi?y, m? 0**. Full sau c?ng m?i l? k?t qu? ch?t.
+- M?i tr??ng `.venv` Python **3.13.14**, SDK **2.2.0**, wheel offline SHA-256 **0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984** kh?p SHA256SUMS. Python ch?y `-B`, `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`. ?? ki?m b?ng Core gi? (CoreGia); ch?a Core/Local/Office/Linux th?t, Cloud t?t.
+
+### C?n Core / Ch? Anh ? MASK-B6b l??t 2
+
+Kh?ng ph?t sinh c?ng Core/SDK m?i. K? th?a **C-MS22-01**: CLI DEMO chu?n thi?u quy?n/ng? c?nh tin c?y; gi? gate/manifest/DEMO. C-P4-01?05 c?a B6/B7 gi? nguy?n. Ch? Anh x?c nh?n r?i ro ? ti?n ?12 ch? s? ?? n?u; vi?c ?p d?ng quy?t ??nh lead trong l?t n?y ?? ???c giao, kh?ng ch? m?i s?a.
+
+### B?o c?o ?6 ? MASK-B6b l??t 2
+
+**K?t lu?n: ??t ?i?u ki?n l??t 2** ? ti?n ??ng quy?t ??nh lead, pytest to?n b? xanh v?i ??ng b?n xfailed c?, ki?m ??c l?p m? 0 v? ki?m k? kh?p. Nghi?m thu chung qua CLI SDK v?n ch?a ??t do n? quy?n C-MS22-01 ?? c?; kh?ng nh?n l? ?? n?i Core th?t.
+
+**?? l?m:** gi? m? B6b l??t 1, ch? ch?nh runtime `tep_excel.py` theo formatCode th?c t?: ? TI?N/K? TO?N c? ph?n l? kh?c 0 ho?c s? nguy?n ?12 ch? s? gi? nguy?n bytes/format; s? nguy?n ?13 ch? s? ?p gate General. ??nh danh khai trong ds/ng?n b? m?t v?n ch?n; ng?y gi? mi?n serial l??t 1. C?p nh?t B6b, CHANGELOG/NGUON v? ki?m k?; test B6 c? v?i `1000000000` gi? nguy?n v? qua trong full suite. ?? ki?m b?ng Core gi? (CoreGia), ch? DEMO; ch?a Core/Local/Office/Linux th?t, Cloud t?t.
+
+**K?t qu? ki?m th?t tr?n m? cu?i:**
+
+| L?nh / ph?p ki?m | K?t qu? |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ??T, m? 1**; c? hai DEMO: ?Ch?a x?c minh ???c phi?n v? quy?n x? l? y?u c?u.? N? C-MS22-01 c?, gi? nguy?n gate/manifest/DEMO. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **3517 passed, 4 xfailed c?, 190 subtests passed, 0 failed, 0 skipped; 474,98 gi?y (7 ph?t 54,98 gi?y), m? 0**. B?n xfailed strict MASK-2b ?gi?i h?n quy t?c, n? CAO? gi? nguy?n; kh?ng th?m skip/xfail. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **??T, m? 0**; kh?ng tham chi?u c?m ho?c bytecode trong g?i. |
+| Focused B6b sau s?a cu?i | **414 passed, 20,71 gi?y, m? 0**, kh?ng skip/xfail. |
+| ??i chi?u ki?m k? | **55/55** ???ng d?n/bytes LF/SHA-256 kh?p, tr? ch?nh ki?m k?; SHA runtime hi?n t?i ??ng NGUON. |
+| Ph?m vi / diff | Test B6 c?, manifest, reader `xml_excel.py`, `chay.py` gi? nguy?n n?i dung HEAD; kh?ng s?a t?p B7. `git diff --check` **m? 0** sau b? d?ng tr?ng cu?i VIEC; ch? c?n c?nh b?o LF?CRLF do c?u h?nh checkout. |
+
+**Th?i gian th?c t?:** **05:46:00?06:01:37 ng?y 16/11/2026 (UTC+07), 0.26 gi?** t?i m?c ch?t ki?m/b?o c?o, so v?i **1 gi? ??C T?NH**, ?? kh? v?a. M?c b?t ??u theo lead; kh?ng c?ng gi? l??t 1 ho?c th?i gian ch? gi?a hai l??t.
+
+**L?ch kh?i phi?u / quy?t ??nh t?m ?? d?ng:** kh?ng c? l?ch nghi?p v?; ?p ??ng quy?t ??nh lead l??t 2 thay ?i?m 2 l??t 1. Kh?ng c?n s?a `test_mask_b6.py` v? k? v?ng nguy?n tr?ng ?? ph? h?p. B? sung ki?m kh?p ch?nh x?c ng?n b? m?t cho c?c ? ???c mi?n detector ?? b?o ??m khai b?o ??nh danh th?ng format; gi? gi?i h?n exponent k? thu?t l??t 1 v? t? ch?i v??t budget, kh?ng c?t ng?m. Kh?ng s?a Core/SDK/reader/API v1, th?m dependency, commit ho?c push.
+
+**C?n Core / Ch? Anh m?i ph?t sinh:** kh?ng c?ng Core/SDK m?i; k? th?a C-MS22-01 v? C-P4-01?05. Quy?t ??nh lead 16/11: ? ti?n ?12 ch? s? nguy?n gi? nguy?n; r?i ro c?n l?i: s? ??nh danh ?12 ch? s? c? ? ??nh d?ng ti?n s? kh?ng b? d? ? ch? Anh x?c nh?n. Tr??ng h?p ?? khai trong ds/ng?n b? m?t v?n ch?n. PR: **ch? lead m?**.

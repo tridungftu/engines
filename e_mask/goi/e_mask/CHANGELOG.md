@@ -1,3 +1,11 @@
+## Chưa phát hành — 15/11/2026, MASK-R7
+
+- Admin chỉ liệt kê ID/alias/nhóm/trạng thái/số gặp; UI dùng `KttCore.engine("e_mask")`, không tên hay lọc tên một phần. Chỉ nhận biên nhận ID/phiên bản opaque từ cửa Xem dữ liệu Core; không callback/export bản rõ, không mạng ngoài/HTML chưa lọc/log.
+- Duyệt/từ chối qua port quyền tin cậy kiểm cả quyền xem và duyệt, phiên/vùng/ID/phiên bản và vé một lần, giữ quyền trong lô CAS. Thiếu cửa hoặc phiên bản đổi thì giữ chờ, không tự khai đã xem hoặc ghi ngăn trực tiếp từ UI. C-P4-06 chưa có trong SDK; giao thức adapter chỉ kiểm ngoài gói, chưa đăng ký/nối thao tác Admin Core thật.
+- Dùng primitive R2 sửa trạng thái tại cùng ID; chỉ thêm alias metadata duy nhất theo vùng, không sao tên sang bảng khác, không ghi null/cờ đè bí mật, không xóa. Junsky không trùng tiền tố MASK; alias tự sinh đúng nhóm. Không chạm kho RAM R4 của chuỗi đang chạy; mất ACK trả ChuaRo, không tự duyệt lại.
+- Logic Admin RAM lịch sử chuyển sang fixture ngoài gói để giữ hồi quy cũ; runtime không còn nhập danh mục RAM/đóng/dọn theo thiết kế cũ. Công cụ `cong-cu/chuyen_danh_muc_demo.py` lịch sử chưa chuyển trong closure R7, không dùng để migration dữ liệu thật. Core/lead quản migration cũ theo C-P4-06.
+- Đã kiểm bằng Core giả (CoreGia) và KttCore giả; chưa UI Core thật. Chỉ hai runtime theo phiếu, kèm test/tài liệu và kiểm kê bytes LF tự sinh; không sửa Core/SDK/dependency, không commit/push. Kết quả thật và thời gian ghi ở VIEC/báo cáo R7; PR: chờ lead mở.
+
 ## Chưa phát hành — 15/11/2026, MASK-R3 kết thúc khảo sát ứng viên
 
 - Thêm lõi khảo sát RAM `tra_cuu_dinh_danh.py` và đầu dò trong `che_van_ban.py`: ứng viên từ detector/quy tắc/trường/danh sách của đầu vào hiện tại; gọi `tim_ung_vien` R2 bằng đúng giá trị, nhận metadata/null+cờ. Không liệt kê ngăn/dựng matcher danh mục, không fuzzy/prefix hoặc thử mọi chuỗi con trong nhánh mới. Không giải mã, ghi ngăn, cấp alias tạm hoặc phát hành từ đầu dò.

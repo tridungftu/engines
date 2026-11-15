@@ -1,5 +1,85 @@
 # Tra cứu tài liệu — SDK 2.2.0
 
+## TC-10 — DEMO toàn tuyến, 15/11/2026
+
+**Chưa đạt cổng nghiệm thu chung:** CLI chuẩn **0/12, mã 1**: năm ca nhận
+trả `CHUA_CAU_HINH`, bảy ca có tệp con trả `TC_CHUA_CO_CUA_CORE`. Giữ nguyên
+năm ca nhận, bổ sung bảy ví dụ bao phủ đủ tám năng lực đã làm. Không có default
+DEMO hoặc cấu hình tự tạo trong runtime. Các số 0/5 của TC-S22 bên dưới là
+lịch sử trước khi bổ sung ví dụ TC-10.
+
+Đã kiểm bằng Core giả (CoreGia): harness **55/55** hồi quy, bộ đáp án
+**38/38** ca (31 lượt Local giả qua consumer Hỏi AI AI-12, 0 Cloud). Đơn vị
+chấm là **một ca**, khẳng định/trích dẫn phải đúng toàn bộ mới tính đạt.
+Pytest **1330 passed, 0 skipped**; kiểm độc lập mã **0**, kiểm kê **141/141**
+tệp (trừ chính kiểm kê) khớp bytes/SHA-256. Đây là số ca kiểm cơ chế:
+
+| Chỉ số DEMO | Tất cả nhóm | Riêng nhóm 02 |
+|---|---:|---:|
+| Trả lời đúng giá trị/thực thể/tiền/ngày/nhãn | 12/12 | 11/11 |
+| Trích dẫn đúng nguồn/phiên bản/băm/offset | 12/12 | 11/11 |
+| Từ chối đúng khi không đủ căn cứ hoặc AI sai | 6/6 | 6/6 |
+| Phân loại đúng nhóm/loại hoặc hàng chờ có lý do | 20/20 | 2/2 |
+
+Không gộp trung bình. Mỗi chỉ số có `tu_so`, `mau_so`, `so_ca_du_kien`,
+`chua_do`, `skip`, `loi_chay`; lỗi chạy tính không đạt, skip/chưa đo tách riêng,
+mẫu số 0 cho `ty_le=null`. Không biến số ca hồi quy thành chỉ số chất lượng.
+Bộ DEMO **chưa được nghiệp vụ duyệt**; `accuracy_model_that=null`, chưa có
+ngưỡng tin cậy thật, không kích hoạt nhóm. TC-Q15 đã duyệt nguyên tắc duyệt
+bộ câu hỏi/ngưỡng trước áp dụng, nhóm 02 trước; chưa duyệt bộ fixture này.
+
+`demo/tc-10/bo-ca-DEMO.json` giữ ca đầu vào/Local giả, `dap-an-DEMO.json` giữ
+đáp án độc lập. Băm bytes chính xác ở `bam-DEMO.json`; không chuẩn hóa dữ liệu
+lúc kiểm. Bộ có đủ tám nhóm, 03/04, CP/TNHH, nhựa/điện chờ kích hoạt,
+VAY-A/B, đổi bản/hết hiệu lực, nhân sự 07, mâu thuẫn, thời điểm và từ chối
+tiền/ngày/quote/offset bịa. `tao_bo_demo_tc_10.py` chỉ tạo dữ liệu từ các
+giá trị đặt trước, không lấy đáp án từ runtime; không chạy generator lúc chấm.
+
+`demo/tc-10/cong-chuan/` chứa snapshot, tệp con, phản hồi AI Local và giấy
+cấp giả đã đóng băng từ CoreGia, cùng băm thật cho bảy ví dụ mới. Loader trong
+tests nạp bytes qua `them_tep`, kiểm metadata/băm và cấp quyền ngoài payload.
+Các vị trí mã việc xen giữa mã tệp được tái lập bằng tệp DEMO không tham chiếu;
+không có ID được coi là có thật khi chưa tải bytes. CLI chưa có cửa nạp những
+fixture này; harness là cổng bổ sung để lead review C-TC-01/02/05.
+
+SDK 2.2.0 đã thay `NganBoNho` tạm: harness dùng `dat_cau_hinh` và `viec.ngan`
+thật trên CoreGia. Bài `DEMO-TC10` ghi đúng bốn cặp số đo và tham chiếu báo cáo
+vào `dot_kiem`, gửi lại không nhân số đếm. Hai mẫu NGAN-0 giữ nguyên trong
+`LUU-TRU/TC-S22`, so băm LF với nguồn; không đưa trở lại runtime.
+
+Adapter `tests/core_hop_dong_tc_10.py` chỉ kiểm hợp đồng điều phối ba tầng và
+cache/quyền: thiếu/chưa duyệt/hết hiệu lực/thấp ngưỡng/ngoài trường mới xuống
+tầng 2, tầng 3 chờ 202 rồi chạy nền; kiểm quyền mọi nguồn và làm hết hiệu lực
+theo phiên bản/nhóm/duyệt/công bố/thu quyền; `bo_qua_cache` và thực thể/pháp nhân
+phải khớp. M9/07 mọi nhánh Local, nguồn không quyền bị loại trước dựng AI.
+Đây **không phải** triển khai/chứng nhận cache, RLS, runner hoặc HTTP nghiệp vụ
+trên Core thật. Hai test MayChuGia chạy bootstrap stdin/HTTP loopback thật,
+kiểm lỗi thiếu cấu hình/cửa nguồn đúng và không nộp XONG giả.
+
+Chạy tại gốc repo (Windows dùng Python venv, Linux đổi `Scripts` thành `bin`):
+
+```powershell
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_tra_cuu/goi/e_tra_cuu
+.venv/Scripts/python -B -m pytest e_tra_cuu/tests -q
+.venv/Scripts/python -B e_tra_cuu/tests/kiem_doc_lap.py
+.venv/Scripts/python -B e_tra_cuu/tests/chay_demo_voi_core_gia.py --bao-cao e_tra_cuu/docs/TC-10-KET-QUA-DEMO.json
+node --test e_tra_cuu/tests/ui/*.test.js
+e_tra_cuu/tests/KIEM-MAY-SACH.cmd --bao-cao e_tra_cuu/docs/TC-10-MAY-SACH-WINDOWS.json
+```
+
+`KIEM-MAY-SACH.cmd` / `kiem_may_sach.sh` là ASCII, dùng cùng công cụ Python:
+tạo venv tạm tách biệt, chỉ cài SDK wheel repo offline theo lock/băm, import
+gói chép riêng bằng `-I -B`, chạy CLI chuẩn và kiểm không có bytecode. Tạm dọn
+trong `finally`; công cụ giữ mã 1 khi CLI chưa đạt. Windows đã chạy import/cài
+SDK/không bytecode đạt, CLI vẫn 0/12; venv máy sạch không cài dependency test
+nên harness/pytest chạy riêng. `.sh` mới kiểm cú pháp qua Git Bash; **Linux
+chưa kiểm** vì không có WSL/Linux. Node **30/30**, chỉ KttCore giả; chưa kiểm
+trình duyệt Core thật, RLS, lưu bền, tải 20/150 người hoặc model thật.
+
+Biên bản và Cần Core hiện hành ở `e_tra_cuu/docs/TC-10-KIEM-CHUNG.md` và
+`VIEC.md`. `requirements.lock` tiếp tục chỉ SDK 2.2.0 + thư viện chuẩn;
+không thêm/cài thư viện mới. Phần TC-S22 dưới đây giữ để tra lịch sử.
+
 Phiên bản **0.2.0**, lát **TC-S22**, ngày **15/11/2026**. Engine chỉ tính toán;
 Core cất tệp, ngăn dữ liệu, cấu hình và điều phối các engine. Chỉ DEMO trong gói.
 **Chưa đạt cổng nghiệm thu chung:** CLI chuẩn vẫn 0/5 `CHUA_CAU_HINH` vì wheel

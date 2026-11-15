@@ -1,0 +1,725 @@
+{
+  "phien_ban": 1,
+  "nhan": "DEMO",
+  "moi_truong": "CoreGia SDK 2.2.0 / Local giả",
+  "da_duyet_nghiep_vu": false,
+  "nhom_duoc_kich_hoat": [],
+  "accuracy_model_that": null,
+  "nguong_tin_cay_that": null,
+  "core_that": "chua_kiem",
+  "ly_do_chua_do_that": "Chưa có phép đo Core/model thật và bộ câu hỏi nghiệp vụ được duyệt.",
+  "bam_bo_ca": "sha256:6dfaf12b1c34e0235e391aa88762641a4e2409287d2693dc8f586c1f399d3faa",
+  "bam_dap_an": "sha256:bb2420c17bca5965675e875e2a97d8b12a6b47bd734ed6ac69305f5992f06b02",
+  "cau_hinh_da_ghim": {
+    "PL-phap_ly_du_an": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-vay": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-mua_hang": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-thue_may": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-cong_trinh": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-thiet_bi_lap_dat": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-vat_tu_cdt_cap": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-sua_chua_bao_tri": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-ban_nha": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-kcn": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-ban_nhua": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-ban_dien_doc_lap": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-cp": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-tnhh": "sha256:32116fb6186aa63d42bbcd30ec76b9babfacfd06d7629cb4531f2637883da728",
+    "PL-quy_che_lao_dong": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-nhan_su": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-quy_che_khac": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+    "PL-vat-tu-thieu-cong-trinh": "sha256:89a2f0b03ca078d2d660b8efa1d778240162b9334fd625ab908de0607626c62a",
+    "PL-sua-chua-thieu-cong-trinh": "sha256:89a2f0b03ca078d2d660b8efa1d778240162b9334fd625ab908de0607626c62a",
+    "PL-vay-chua-do": "sha256:fe545e1841feaa11ca3e7ed6808d95a4d281d642b149a4a104b221480dfe7a30",
+    "TL-Python-A": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-Python-B": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-Local-A": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-Local-B": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-Local-tang-1": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-Local-tang-3": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-khong-dap-an": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-het-hieu-luc": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-phien-ban-moi": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-van-ban-cho-duyet": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-nhan-su-Local": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-mau-thuan-Python": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-mau-thuan-Local": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-phu-thuoc-thoi-diem": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-tu-choi-gia_tri": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-tu-choi-offset": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-tu-choi-ngay": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+    "TL-tu-choi-quote": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa"
+  },
+  "bam_cau_hinh_toan_dot": "sha256:5fc3f2b6299fbbe2c387ce10d06832c52c98eb8387017b1f89e535094121e707",
+  "chi_so": {
+    "tra_loi_dung": {
+      "tu_so": 12,
+      "mau_so": 12,
+      "so_ca_du_kien": 12,
+      "chua_do": 0,
+      "skip": 0,
+      "loi_chay": 0,
+      "ty_le": 1.0
+    },
+    "trich_dan_dung": {
+      "tu_so": 12,
+      "mau_so": 12,
+      "so_ca_du_kien": 12,
+      "chua_do": 0,
+      "skip": 0,
+      "loi_chay": 0,
+      "ty_le": 1.0
+    },
+    "tu_choi_dung": {
+      "tu_so": 6,
+      "mau_so": 6,
+      "so_ca_du_kien": 6,
+      "chua_do": 0,
+      "skip": 0,
+      "loi_chay": 0,
+      "ty_le": 1.0
+    },
+    "phan_loai_dung": {
+      "tu_so": 20,
+      "mau_so": 20,
+      "so_ca_du_kien": 20,
+      "chua_do": 0,
+      "skip": 0,
+      "loi_chay": 0,
+      "ty_le": 1.0
+    }
+  },
+  "theo_nhom": {
+    "01": {
+      "tra_loi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "trich_dan_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "tu_choi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "phan_loai_dung": {
+        "tu_so": 1,
+        "mau_so": 1,
+        "so_ca_du_kien": 1,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      }
+    },
+    "02": {
+      "tra_loi_dung": {
+        "tu_so": 11,
+        "mau_so": 11,
+        "so_ca_du_kien": 11,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      },
+      "trich_dan_dung": {
+        "tu_so": 11,
+        "mau_so": 11,
+        "so_ca_du_kien": 11,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      },
+      "tu_choi_dung": {
+        "tu_so": 6,
+        "mau_so": 6,
+        "so_ca_du_kien": 6,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      },
+      "phan_loai_dung": {
+        "tu_so": 2,
+        "mau_so": 2,
+        "so_ca_du_kien": 2,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      }
+    },
+    "03": {
+      "tra_loi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "trich_dan_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "tu_choi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "phan_loai_dung": {
+        "tu_so": 2,
+        "mau_so": 2,
+        "so_ca_du_kien": 2,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      }
+    },
+    "04": {
+      "tra_loi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "trich_dan_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "tu_choi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "phan_loai_dung": {
+        "tu_so": 6,
+        "mau_so": 6,
+        "so_ca_du_kien": 6,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      }
+    },
+    "05": {
+      "tra_loi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "trich_dan_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "tu_choi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "phan_loai_dung": {
+        "tu_so": 4,
+        "mau_so": 4,
+        "so_ca_du_kien": 4,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      }
+    },
+    "06": {
+      "tra_loi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "trich_dan_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "tu_choi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "phan_loai_dung": {
+        "tu_so": 2,
+        "mau_so": 2,
+        "so_ca_du_kien": 2,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      }
+    },
+    "07": {
+      "tra_loi_dung": {
+        "tu_so": 1,
+        "mau_so": 1,
+        "so_ca_du_kien": 1,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      },
+      "trich_dan_dung": {
+        "tu_so": 1,
+        "mau_so": 1,
+        "so_ca_du_kien": 1,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      },
+      "tu_choi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "phan_loai_dung": {
+        "tu_so": 2,
+        "mau_so": 2,
+        "so_ca_du_kien": 2,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      }
+    },
+    "08": {
+      "tra_loi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "trich_dan_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "tu_choi_dung": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_du_kien": 0,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": null
+      },
+      "phan_loai_dung": {
+        "tu_so": 1,
+        "mau_so": 1,
+        "so_ca_du_kien": 1,
+        "chua_do": 0,
+        "skip": 0,
+        "loi_chay": 0,
+        "ty_le": 1.0
+      }
+    }
+  },
+  "cac_ca": [
+    {
+      "ma": "PL-phap_ly_du_an",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-vay",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-mua_hang",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-thue_may",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-cong_trinh",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-thiet_bi_lap_dat",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-vat_tu_cdt_cap",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-sua_chua_bao_tri",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-ban_nha",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-kcn",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-ban_nhua",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-ban_dien_doc_lap",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-cp",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-tnhh",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-quy_che_lao_dong",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-nhan_su",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-quy_che_khac",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-vat-tu-thieu-cong-trinh",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-sua-chua-thieu-cong-trinh",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "PL-vay-chua-do",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "phan_loai_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-Python-A",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 0
+    },
+    {
+      "ma": "TL-Python-B",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 0
+    },
+    {
+      "ma": "TL-Local-A",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-Local-B",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-Local-tang-1",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-Local-tang-3",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-khong-dap-an",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tu_choi_dung": true
+      },
+      "so_luot_local_gia": 0
+    },
+    {
+      "ma": "TL-het-hieu-luc",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tu_choi_dung": true
+      },
+      "so_luot_local_gia": 0
+    },
+    {
+      "ma": "TL-phien-ban-moi",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 0
+    },
+    {
+      "ma": "TL-van-ban-cho-duyet",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 0
+    },
+    {
+      "ma": "TL-nhan-su-Local",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-mau-thuan-Python",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 0
+    },
+    {
+      "ma": "TL-mau-thuan-Local",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-phu-thuoc-thoi-diem",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tra_loi_dung": true,
+        "trich_dan_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-tu-choi-gia_tri",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tu_choi_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-tu-choi-offset",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tu_choi_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-tu-choi-ngay",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tu_choi_dung": true
+      },
+      "so_luot_local_gia": 1
+    },
+    {
+      "ma": "TL-tu-choi-quote",
+      "trang_thai_do": "da_do",
+      "chi_so": {
+        "tu_choi_dung": true
+      },
+      "so_luot_local_gia": 1
+    }
+  ],
+  "so_luot_local_gia": 31,
+  "so_luot_cloud": 0,
+  "so_ca": 38,
+  "so_ca_dat": 38,
+  "hoi_quy_harness": {
+    "tu_so": 55,
+    "mau_so": 55
+  },
+  "mang_ngoai": 0
+}

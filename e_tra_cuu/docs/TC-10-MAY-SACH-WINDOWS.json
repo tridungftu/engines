@@ -1,0 +1,27 @@
+{
+  "nhan": "DEMO",
+  "he_dieu_hanh": "Windows",
+  "python": "3.13.14",
+  "sdk": "2.2.0",
+  "bam_wheel": "0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984",
+  "offline": true,
+  "moi_truong_tach_biet": true,
+  "harness_may_sach": {
+    "trang_thai": "chua_kiem",
+    "ly_do": "Máy sạch chỉ cài SDK. Harness/pytest dùng dependency test đã ghim và được chạy riêng."
+  },
+  "core_that": "chua_kiem",
+  "linux": "chua_kiem",
+  "cai_sdk_ma_thoat": 0,
+  "import_ma_thoat": 0,
+  "so_bytecode_trong_goi": 0,
+  "cli_chuan": {
+    "ma_thoat": 1,
+    "tu_so": 0,
+    "mau_so": 12,
+    "so_loi_chua_cau_hinh": 5,
+    "so_loi_chua_co_cua_core": 7,
+    "can_cu_ma_loi": "Đếm thông điệp CLI; test CoreGia/HTTP đối chiếu mã CHUA_CAU_HINH và TC_CHUA_CO_CUA_CORE."
+  },
+  "da_don_tam": true
+}

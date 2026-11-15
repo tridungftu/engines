@@ -1,9 +1,11 @@
-"""Cổng bổ sung §2.5: cùng chay_thu_demo, Ngan RAM và quyền/tệp con giả.
+"""Cổng bổ sung §2.5: cùng chay_thu_demo, ngăn SDK và quyền/tệp con giả.
 
 Chỉ tests được nạp DEMO. Không thay SDK/CLI, không chứng nhận quyền Core thật.
 """
 
 from copy import deepcopy
+import argparse
+import json
 from pathlib import Path
 import socket
 import sys
@@ -18,12 +20,17 @@ from ho_tro_tc_4 import chay_demo_ai
 from ho_tro_tc_6 import chay_demo_hau_kiem
 from ho_tro_tc_5 import chay_demo_phan_loai
 from ho_tro_tc_7 import chay_demo_tra_loi
+from ho_tro_tc_10 import chay_bo_do, chay_nam_tac_vu, ghi_dot_kiem_core_gia
+from vi_du_cong_chuan_tc_10 import chay_vi_du
 
 
 def chay_demo():
     bo = BoDemo(thu_muc_demo=GOI / "demo")
     kq = []
     for vd in bo.app.phieu["chay_thu_demo"]:
+        if vd["nang_luc"] != "tra_cuu.nhan_yeu_cau@1":
+            kq.append(chay_vi_du(vd))
+            continue
         b = (GOI / vd["dau_vao"]["tep_demo"]).read_bytes()
         yc = doc_json(b)
         assert yc == bo.yeu_cau(yc["tac_vu"]), "DEMO phải khớp nguồn/tệp đã nạp thật."
@@ -79,7 +86,10 @@ def chay_demo_xuat():
     return kq
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--bao-cao", type=Path, help="Xuất biên bản DEMO, ngoài runtime engine.")
+    args = parser.parse_args(argv)
     dem_mang = 0
 
     def cam_mang(*args, **kwargs):
@@ -90,14 +100,27 @@ def main():
     with patch.object(socket.socket, "connect", cam_mang), patch.object(socket.socket, "connect_ex", cam_mang), \
             patch.object(socket, "create_connection", cam_mang), patch.object(socket, "getaddrinfo", cam_mang):
         kq = (chay_demo() + chay_demo_cat_doan() + chay_demo_ai()
-              + chay_demo_phan_loai() + chay_demo_hau_kiem() + chay_demo_tra_loi() + chay_demo_xuat())
+              + chay_demo_phan_loai() + chay_demo_hau_kiem() + chay_demo_tra_loi() + chay_demo_xuat()
+              + chay_nam_tac_vu())
+        report, _ = chay_bo_do()
     for k in kq:
         dat = k["trang_thai"] == "XONG"
         print(f'[{"ĐẠT" if dat else "LỖI"}] {k["ten"]}' + ("" if dat else ": " + str(k["loi"]["ma"])))
     dat = sum(k["trang_thai"] == "XONG" for k in kq)
-    print(f"{dat}/{len(kq)} DEMO ĐẠT; mạng ngoài/lượt provider/Cloud={dem_mang} (không có provider trong harness).")
+    print(f"{dat}/{len(kq)} DEMO ĐẠT; mạng ngoài/provider thật/Cloud={dem_mang}.")
+    print(f'TC-10: {report["so_ca_dat"]}/{report["so_ca"]} ca theo đáp án DEMO; '
+          f'{report["so_luot_local_gia"]} lượt Local giả qua consumer Hỏi AI; Cloud=0.')
+    for ma, c in report["chi_so"].items():
+        print(f'{ma}: {c["tu_so"]}/{c["mau_so"]}; chưa đo={c["chua_do"]}; skip={c["skip"]}; lỗi chạy={c["loi_chay"]}.')
+    report["hoi_quy_harness"] = {"tu_so": dat, "mau_so": len(kq)}
+    report["mang_ngoai"] = dem_mang
+    rows, _ = ghi_dot_kiem_core_gia(report)
+    print(f'Ngăn SDK trên CoreGia: {len(rows)} bài DEMO-TC10, gửi lại không nhân số đếm.')
+    if args.bao_cao:
+        args.bao_cao.write_bytes((json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode("utf-8"))
     print("Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật; ngăn SDK được kiểm trong bộ nhớ CoreGia, chưa kiểm lưu bền thật.")
-    return 0 if kq and dat == len(kq) and dem_mang == 0 else 1
+    print("Bộ đáp án chưa được nghiệp vụ duyệt; accuracy model thật chưa đo; không kích hoạt nhóm.")
+    return 0 if kq and dat == len(kq) and dem_mang == 0 and report["so_ca_dat"] == report["so_ca"] > 0 else 1
 
 
 if __name__ == "__main__":

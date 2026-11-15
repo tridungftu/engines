@@ -1,0 +1,216 @@
+{
+  "nhan": "DEMO",
+  "vi_du": {
+    "nang_luc": "tra_cuu.cat_doan@1",
+    "ten": "TC10 DEMO tệp con — cat-doan",
+    "dau_vao": {
+      "loai": "ho_so_tra_cuu",
+      "ho_so_tra_cuu": {
+        "phien_ban": 1,
+        "ma_yeu_cau": "DEMO-YC-cat_doan",
+        "tac_vu": "cat_doan",
+        "giai_doan": "da_nhan",
+        "ho_so": {
+          "tep_id": "tep-6",
+          "ten": "ho-so-tra-cuu.json",
+          "mime": "application/json",
+          "kich_thuoc": 2458
+        },
+        "bam_ho_so": "sha256:3c83d66338e75e3ff8a42e47ff21801179a36df7900c25b20a70473e2d041c37",
+        "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+        "bam_danh_muc": null,
+        "phien_ban_engine": "e_tra_cuu 0.2.0",
+        "tom_tat": {
+          "trang_thai": null,
+          "so_doan": null,
+          "so_ung_vien": null,
+          "tang": null,
+          "co_can_cu": null,
+          "co_mau_thuan": null,
+          "can_duyet": null,
+          "nhan": null
+        },
+        "canh_bao": []
+      }
+    },
+    "tham_so": {
+      "do_dai_muc_tieu": 200
+    }
+  },
+  "cau_hinh": {
+    "phien_ban": 1,
+    "quy_tac_nhom": {
+      "tep_id": "tep-3",
+      "bam": "sha256:f9d4e2e697ff78b3d90f221ecb1363f06d552950abbbdc0aad18a9a832865735"
+    }
+  },
+  "giay_cap": {
+    "ma_yeu_cau": "DEMO-YC-cat_doan",
+    "tac_vu": "cat_doan",
+    "dau_vao": {
+      "loai": "ho_so_tra_cuu",
+      "ho_so_tra_cuu": {
+        "phien_ban": 1,
+        "ma_yeu_cau": "DEMO-YC-cat_doan",
+        "tac_vu": "cat_doan",
+        "giai_doan": "da_nhan",
+        "ho_so": {
+          "tep_id": "tep-6",
+          "ten": "ho-so-tra-cuu.json",
+          "mime": "application/json",
+          "kich_thuoc": 2458
+        },
+        "bam_ho_so": "sha256:3c83d66338e75e3ff8a42e47ff21801179a36df7900c25b20a70473e2d041c37",
+        "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+        "bam_danh_muc": null,
+        "phien_ban_engine": "e_tra_cuu 0.2.0",
+        "tom_tat": {
+          "trang_thai": null,
+          "so_doan": null,
+          "so_ung_vien": null,
+          "tang": null,
+          "co_can_cu": null,
+          "co_mau_thuan": null,
+          "can_duyet": null,
+          "nhan": null
+        },
+        "canh_bao": []
+      }
+    },
+    "ngu_canh_core": {
+      "phap_nhan_id": "DEMO-P",
+      "module": "M9",
+      "nhom": [
+        "02"
+      ],
+      "nguoi_hoi_id": "DEMO-N",
+      "ma_pham_vi": "DEMO-PV",
+      "thoi_diem": "2026-11-15T12:51:00+07:00"
+    },
+    "metadata_core": {
+      "con_hieu_luc": true,
+      "loai": "DEMO-LOAI",
+      "nhom": "02",
+      "trang_thai_duyet": "cho_duyet"
+    },
+    "tep": {
+      "tep-1": {
+        "tep": {
+          "tep_id": "tep-1",
+          "ten": "nguon-DEMO.txt",
+          "mime": "text/plain",
+          "kich_thuoc": 96
+        },
+        "bam": "sha256:c04d57101fd906afef0cbbce1c806168662d41fadeb7191a74410f696ba21778"
+      },
+      "tep-2": {
+        "tep": {
+          "tep_id": "tep-2",
+          "ten": "van-ban-DEMO.json",
+          "mime": "application/json",
+          "kich_thuoc": 377
+        },
+        "bam": "sha256:8b748f6b501d41a0e02a258ddfd0b9c88f733420bafb8aeeab799c43f257316c"
+      },
+      "tep-3": {
+        "tep": {
+          "tep_id": "tep-3",
+          "ten": "danh-muc-DEMO.json",
+          "mime": "application/json",
+          "kich_thuoc": 513
+        },
+        "bam": "sha256:f9d4e2e697ff78b3d90f221ecb1363f06d552950abbbdc0aad18a9a832865735"
+      },
+      "tep-4": {
+        "tep": {
+          "tep_id": "tep-4",
+          "ten": "yeu-cau-DEMO.json",
+          "mime": "application/json",
+          "kich_thuoc": 755
+        },
+        "bam": "sha256:7b73b3da2a44e5a97f7b39e739d39fb1b200fbeecdd4159a1bac90f7bcd5beb2"
+      },
+      "tep-6": {
+        "tep": {
+          "tep_id": "tep-6",
+          "ten": "ho-so-tra-cuu.json",
+          "mime": "application/json",
+          "kich_thuoc": 2458
+        },
+        "bam": "sha256:3c83d66338e75e3ff8a42e47ff21801179a36df7900c25b20a70473e2d041c37"
+      }
+    },
+    "nguon": {
+      "DEMO-NGUON-1": {
+        "ma_nguon": "DEMO-NGUON-1",
+        "phien_ban_nguon": "1",
+        "tep_id": "tep-1",
+        "bam_goc": "sha256:c04d57101fd906afef0cbbce1c806168662d41fadeb7191a74410f696ba21778",
+        "bam_van_ban": "sha256:c04d57101fd906afef0cbbce1c806168662d41fadeb7191a74410f696ba21778"
+      }
+    }
+  },
+  "tep": [
+    {
+      "tep": {
+        "tep_id": "tep-1",
+        "ten": "nguon-DEMO.txt",
+        "mime": "text/plain",
+        "kich_thuoc": 96
+      },
+      "bam": "sha256:c04d57101fd906afef0cbbce1c806168662d41fadeb7191a74410f696ba21778",
+      "duong_dan": "demo/tc-10/cong-chuan/cat-doan/tep-1.txt"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-2",
+        "ten": "van-ban-DEMO.json",
+        "mime": "application/json",
+        "kich_thuoc": 377
+      },
+      "bam": "sha256:8b748f6b501d41a0e02a258ddfd0b9c88f733420bafb8aeeab799c43f257316c",
+      "duong_dan": "demo/tc-10/cong-chuan/cat-doan/tep-2.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-3",
+        "ten": "danh-muc-DEMO.json",
+        "mime": "application/json",
+        "kich_thuoc": 513
+      },
+      "bam": "sha256:f9d4e2e697ff78b3d90f221ecb1363f06d552950abbbdc0aad18a9a832865735",
+      "duong_dan": "demo/tc-10/cong-chuan/cat-doan/tep-3.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-4",
+        "ten": "yeu-cau-DEMO.json",
+        "mime": "application/json",
+        "kich_thuoc": 755
+      },
+      "bam": "sha256:7b73b3da2a44e5a97f7b39e739d39fb1b200fbeecdd4159a1bac90f7bcd5beb2",
+      "duong_dan": "demo/tc-10/cong-chuan/cat-doan/tep-4.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-5",
+        "ten": "vi-tri-ma-viec-DEMO.json",
+        "mime": "application/json",
+        "kich_thuoc": 87
+      },
+      "bam": "sha256:9386898a8d2daae704af2e99f9521365d93a90eec1a4c484ec333c77834f25d4",
+      "duong_dan": "demo/tc-10/cong-chuan/cat-doan/tep-5.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-6",
+        "ten": "ho-so-tra-cuu.json",
+        "mime": "application/json",
+        "kich_thuoc": 2458
+      },
+      "bam": "sha256:3c83d66338e75e3ff8a42e47ff21801179a36df7900c25b20a70473e2d041c37",
+      "duong_dan": "demo/tc-10/cong-chuan/cat-doan/tep-6.json"
+    }
+  ],
+  "da_duyet_nghiep_vu": false
+}

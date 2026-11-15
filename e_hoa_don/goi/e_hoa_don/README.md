@@ -89,3 +89,5 @@ XLSX có hai sheet `Hoa don`, `Kiem ke tep`, inline string/format text `@`, styl
 Trần: JSON 32 MiB (metadata và bytes thực), 1.000 dòng hóa đơn/1.000 entry gồm thư mục, 16.000 ký tự/cell, XLSX 32 MiB, 600 giây; vượt trả `HD_BANG_KE_VUOT_GIOI_HAN`, không upload phần cắt. Xử lý và upload bytes hoàn toàn RAM, không JSON/XLSX/cấu hình/sổ/cache trên máy, không cần ngăn/màn riêng.
 
 SDK 2.0.0 chưa cấp fixture tệp lồng trong `truong`: bốn Chạy thử DEMO đang khai chỉ phủ XML/ZIP. XLSX kiểm qua pytest với CoreGia.them_tep và kết quả đọc thật; không ID giả. Đã kiểm bằng Core giả (CoreGia); chưa kiểm Core thật, quyền kho tệp hoặc Excel app; chưa chạy Linux. Nguồn/quyền CD-096 A1, SHA thực và khác biệt cột tại NGUON.md HD-7.
+
+K? t? kh?ng h?p l? trong XML c?a XLSX ???c m? h?a d?ng `_xHHHH_`: Excel gi?i m?; b? ??c kh?c c? th? th?y nguy?n chu?i. Tr?n 16.000 k? t? t?nh tr?n chu?i g?c tr??c m? h?a.

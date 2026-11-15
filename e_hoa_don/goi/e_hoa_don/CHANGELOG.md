@@ -101,3 +101,9 @@ Thời gian thực tế: 0.243 giờ (00:55:00–01:09:33, 15/11/2026, UTC+07; �
 - 105 ca HD-6 đối chiếu toàn JSON với oracle literal, không sinh expected từ reader; từng băm/ordinal/đếm, SDK bộ nhớ + HTTP loopback, ACK/Idempotency-Key, hủy/gia hạn/mất lease/upload lỗi, canary và không filesystem. Điều chỉnh ba assertion chỉ-XML theo năng lực mới; không bỏ test hồi quy.
 - Ba lệnh AGENTS.md §5 bằng `.venv\Scripts\python -B`: SDK **4/4 DEMO ĐẠT**, pytest `e_hoa_don/tests -q --basetemp=.pytest-tmp` **472 passed in 79.93s, 0 skipped**, kiểm độc lập **ĐẠT**, đều mã 0. Windows/Python 3.13.14/SDK 2.0.0 offline đúng SHA; đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật/quyền kho tệp, chưa chạy Linux/Excel app. Chi tiết lệnh và lần kiểm ban đầu được sửa tại VIEC.md.
 - Thời gian thực tế **0.230 giờ** (08:21:00–08:34:48, UTC+07), phiếu 3 giờ ước tính. Không Cần Core/Chờ Anh mới; giữ nợ hook nhật ký/context/quyền tệp thật. Không sửa Core/SDK/ma-nguon, không dependency runtime mới, không xóa/commit/push; PR chờ lead mở.
+
+## HD-8 ? 15/11/2026
+
+M? r?ng ki?m ??c l?p v? c?i s?ch b?n sao g?i cho chu?i ZIP ? XLSX; th?m oracle VND/USD, entry l?i v? ki?m kh?ng ghi ??a. Kh?ng ??i runtime/dependency. ?? ki?m b?ng Core gi? (CoreGia); Linux, Core th?t, quy?n kho t?p v? Excel app ch?a ki?m. SDK ch?a c? fixture t?p l?ng trong `truong` cho Ch?y th? XLSX.
+
+Windows/Python 3.13.14: SDK 4/4 ??T; pytest 653 passed, 0 skipped; ki?m ??c l?p v? c?i s?ch ??t. PR: ch? lead m?.

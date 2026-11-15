@@ -147,9 +147,8 @@ def test_khong_doc_cau_hinh_may_ke_ca_bien_tro_tep_demo(monkeypatch, tmp_path):
         assert kq["loi"]["ma"] == "CHUA_CAU_HINH"
 
 
-@pytest.mark.skip(reason="chờ NGAN-0 gộp")
 @pytest.mark.parametrize("ten", ["ngan.py", "cau_hinh.py"])
 def test_bam_mau_chung_ngan_0(ten):
     goc = Path(__file__).resolve().parents[2]
-    assert sha256((goc / "_chung" / "mau-ma" / ten).read_bytes()).digest() == sha256(
-        (GOI / "e_hoi_ai" / ten).read_bytes()).digest()
+    lf = lambda p: p.read_bytes().replace(b"\r\n", b"\n")
+    assert sha256(lf(goc / "_chung" / "mau-ma" / ten)).digest() == sha256(lf(GOI / "e_hoi_ai" / ten)).digest()

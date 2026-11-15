@@ -1,15 +1,18 @@
-# Tra cứu tài liệu — TC-3: nhận và cắt cấu trúc
+# Tra cứu tài liệu — TC-5, TC-6: hậu kiểm phân loại, câu hỏi và xếp hạng
 
 Phiên bản 0.1.0, SDK 2.0.0, chưa phát hành. TC-Q13 đã duyệt chiều 15/11/2026.
 Manifest đăng ký tám năng lực và bốn loại đúng phiếu §2.1; stub nội bộ
 `kiem_khung` đã bỏ. `tra_cuu.nhan_yeu_cau@1` nhận tệp JSON, kiểm và ghim dữ liệu
 thành `ho_so_tra_cuu` ở giai đoạn `da_nhan`. `tra_cuu.cat_doan@1` chuyển hồ sơ
-`cat_doan/da_nhan` sang `da_cat_doan`. Sáu năng lực còn lại luôn báo `CHUA_LAM`,
-chờ TC-4…8. Nhận/cắt thành công không có nghĩa đã phân loại hoặc trả lời.
+`cat_doan/da_nhan` sang `da_cat_doan`. TC-4 chuẩn bị bốn tác vụ Local AI;
+TC-5 hậu kiểm phân loại; TC-6 hậu kiểm câu hỏi/hàm và xếp hạng. Soạn trả lời
+và xuất còn `CHUA_LAM`, chờ TC-7/8. Mọi phân loại máy chỉ là đề xuất cho Core.
+Các trạng thái trung gian không xác nhận đã có câu trả lời tầng 1.
 
 Có **5 ví dụ chay_thu_demo**, tệp và băm thật trong `demo/`. Cổng bổ sung ở
 `tests/chay_demo_voi_core_gia.py` nạp ngăn/cấu hình, nguồn, giấy cấp quyền giả
-rồi chạy đúng các ví dụ và bốn ca nhận → cắt (9/9). **Đã kiểm bằng Core giả (CoreGia)**; chưa chứng nhận
+rồi chạy 28 DEMO (5 nhận, 4 cắt, 4 chuẩn bị, 11 phân loại/hàng chờ TC-5,
+4 hậu kiểm TC-6). **Đã kiểm bằng Core giả (CoreGia)**; chưa chứng nhận
 quyền Core thật. CLI SDK gốc thiếu cấu hình vẫn lỗi `CHUA_CAU_HINH`, không tự
 khởi tạo dữ liệu DEMO hoặc đọc cấu hình từ môi trường để vượt cổng.
 
@@ -96,6 +99,86 @@ Handler tự kiểm đúng `THIEU_PROMPT`/`TC_SAI_GIAI_DOAN`/ngân sách; prompt
 manifest/SDK. Không lưu bền/tệp tạm; adapter CoreGia/Local giả chỉ trong tests.
 Fixture injection kiểm dữ liệu bất hoạt, chưa chứng nhận model thật. CLI còn
 thiếu cấu hình; harness bổ sung không thay cổng chuẩn.
+
+## Hậu kiểm Local — TC-6
+
+`phan_tich_cau_hoi@1` và `xep_hang_lai@1` chỉ nhận `tra_loi_ai` Local, khôi
+phục snapshot `cho_ai` bằng `mo_tep`, kiểm metadata/băm bytes/quyền/cấu hình
+đã ghim và toàn bộ nguồn. Tái dựng ngữ cảnh/map/khuôn/ngân sách TC-4; so
+prompt/phiên bản/tác vụ/chuyển tiếp và `bam_dau_vao` trên **toàn phong bì
+yeu_cau_ai canonical**. Không tin `kiem_trich_dan.dat`: quote phải khớp nguyên
+văn/offset trong vùng map; nhãn kỹ thuật không là chứng cứ. Lỗi/sai khuôn
+không trả XONG rỗng; Cloud `TC_CHI_LOCAL`, nguồn lệch `TC_SAI_NGUON`.
+
+Seam `doc_quyen(viec_id)` cần cấp lại `dau_vao` nguyên phản hồi và quyền
+snapshot/gốc/OCR. Riêng TC-6 bổ sung metadata **ngoài payload người gửi**:
+
+```json
+{"phan_giai_cau_hoi": {
+  "bam_cau_hoi": "sha256:<băm UTF-8 câu hỏi>",
+  "thuc_the": [{"loai":"khoan_vay","ma":"0007","gia_tri":"0007"}],
+  "y_dinh": [{"ma":"gia_tri","cum_tu":["Giá trị","Số tiền"],"phu_thuoc_thoi_diem":false}],
+  "can_lam_ro": false,
+  "ham": {"m9.gia_tri": {
+    "phien_ban":"1", "y_dinh":["gia_tri"], "trang_thai":"chua_chay", "moc_cong_bo":null,
+    "rang_buoc":{"ma_khoan_vay":{"loai":"thuc_the","loai_thuc_the":"khoan_vay","truong":"ma"}}
+  }}
+}}
+```
+
+Ví dụ trên là mô tả cấu trúc, không phải fixture băm/tệp hợp lệ. Metadata
+phân giải ≤64 KiB, mỗi danh sách thực thể/ý định ≤1000. Đây là **quy ước tạm
+cho adapter CoreGia**, chưa phải API C-TC-03/SDK đã phát hành; runtime không
+có cửa/thiếu metadata phải từ chối `TC_CHUA_CO_CUA_CORE`. Core phải cấp danh
+mục thực thể đúng quyền/đủ cho câu hỏi, bộ ý định đã duyệt và cờ cần làm rõ
+khi gặp tham chiếu chưa phân giải. Không lấy model tự khai danh mục này.
+
+- Thực thể khớp **nguyên chuỗi với ranh giới mã** trong câu hỏi; giữ Unicode,
+  kiểu chuỗi và số 0 đầu. Căn cứ thực thể/ý định là offset câu hỏi được quote
+  thực sự bao phủ. Phản hồi phải có đúng tập thực thể, không thêm/bớt/trùng.
+- Ý định chỉ xác nhận khi đúng một bộ cụm từ Core cấp khớp câu hỏi. Không
+  khớp/nhiều ý định → `y_dinh=can_lam_ro`; chưa có thực thể, nhiều thực thể
+  cùng loại, cùng span trỏ nhiều đối tượng hoặc Core yêu cầu làm rõ thì
+  `can_lam_ro=true`, bỏ mọi đề xuất hàm. Đây là kiểm literal bảo thủ; chưa
+  chứng minh hiểu ngữ nghĩa tổng quát hoặc chất lượng model thật.
+- Cờ thời điểm = cụm thời gian tương đối trong câu hỏi hoặc chính sách ý định
+  Core cấp; model không được sửa. “Tháng này” dùng năm/tháng/múi giờ của
+  `ngu_canh_core.thoi_diem`, có ngày đầu/cuối tháng thực, không giờ máy.
+- Hàm phải đúng allowlist tên/phiên bản và ý định; tham số theo khuôn đã ghim
+  và schema Core, kín cả object con/ref nội bộ. Kiểm kiểu/range/enum/const,
+  composition/array và phạm vi pháp nhân/nhóm/module/người/ma_pham_vi.
+  Mỗi tham số phải có binding Core: `thuc_the` như ví dụ; `ngu_canh` gồm
+  `{loai,truong}`; hoặc `gia_tri` gồm `{loai,cho_phep:[...giá trị chính xác...]}`.
+  Binding thực thể/ngữ cảnh luôn phải được truyền, không bỏ để mở rộng phạm vi.
+  SQL/code/URL/hàm lạ/khóa thừa → `TC_HAM_KHONG_DUOC_PHEP` hoặc `TC_AI_SAI_KHUON`.
+- `ham.trang_thai` Core cấp: `chua_chay` → `cho`, `khong_kha_dung` giữ nguyên,
+  `kha_dung` → `de_xuat_cho_core`. `tang_1` chỉ có trạng thái/lý do, không giá
+  trị nghiệp vụ giả; hàm chưa chạy/không khả dụng đề nghị Core chọn tầng 2.
+  Không hàm/truy vấn/module nào được thực thi trong engine.
+
+Xếp hạng bắt buộc đủ đúng tập mã ứng viên, mỗi mã một lần; điểm số hữu hạn
+đúng thang đã ghim. Kết quả sắp điểm giảm, bằng điểm giữ **thứ tự gốc Core**,
+không theo thứ tự model gửi. Mỗi hàng kết quả chép nguyên ứng viên gốc, chỉ
+thêm `diem_xep_hang`; không nhận model viết lại nguồn/phiên bản/nội dung.
+Điểm chỉ thứ tự, không là độ tin cậy đã duyệt. Quá 50 từ chối tại nhận;
+quá ngân sách đã ghim từ chối `TC_QUA_NGAN_SACH_AI`, không top-k ngầm.
+**0 ứng viên:** Core rẽ nhánh từ `da_nhan`; handler chuẩn bị từ chối nhánh AI
+rỗng sau kiểm nguồn, không upload snapshot AI/phản hồi giả.
+
+Với xếp hạng, giấy cấp có `phu_thuoc_thoi_diem` boolean từ Core; kết hợp
+cụm thời điểm trong câu hỏi để cấm dùng lại cache cho câu thời điểm. Cả hai
+kết quả giữ `phu_thuoc_cache` gồm **nguyên tập nguồn**, thực thể, ngữ cảnh
+Core, hàm/phiên bản/mốc công bố và cờ thời điểm. `duoc_tai_dung_cache` chỉ
+false khi phụ thuộc thời điểm, còn lại null vì Core chưa kiểm quyền/cache.
+Phân tích còn lưu băm metadata phân giải Core để truy vết.
+
+Kết quả/snapshot chỉ tải Core và kiểm ACK trước trả hồ sơ `da_phan_tich` /
+`da_xep_hang`; tóm tắt `co_can_cu,nhan` tiếp tục null. Hủy kiểm theo cụm;
+ChuaRo/mất lease/ACK sai không báo XONG. Không tạo tệp tạm, cache, chỉ mục,
+nhật ký câu hỏi hay tệp cấu hình trên máy. Cấu hình lấy snapshot Ngan đã ghim.
+RLS phải lọc **trước khi ứng viên vào engine/AI**, Core giả không chứng minh
+RLS thật. TC-6 dùng phản hồi Local giả theo protocol do CoreGia điều phối;
+0 model/provider thật. Chưa kiểm nối thật C-TC-02/03 hoặc chất lượng AI.
 
 ## Đầu vào và cửa nguồn tin cậy
 
@@ -210,6 +293,82 @@ Kiểm hủy theo cụm và báo tiến độ câu cố định không nội dun
 tệp tạm, cấu hình bền, chỉ mục hoặc gọi AI/tìm kiếm. DEMO cố định LF bằng
 `e_tra_cuu/.gitattributes` vì băm tệp luôn tính trên bytes, không chữa băm khi đọc.
 
+## Hậu kiểm phân loại — TC-5
+
+`tra_cuu.phan_loai_tai_lieu@1`: `tra_loi_ai` → `ho_so_tra_cuu`, trạng thái
+`da_phan_loai` hoặc `cho_phan_loai`. Không tham số thay nguồn/ngưỡng giữa lượt.
+Hàng chờ có lý do là kết quả nghiệp vụ, không có nghĩa đã xếp hoặc tạo K5.
+Không tạo danh mục/thư mục, chuyển hồ sơ hoặc ghi ngăn từ handler này.
+
+Cửa nguồn tin cậy **chưa có trong SDK 2.0** vẫn là dependency
+`app.cua_nguon.doc_quyen(viec_id)`, chỉ tests gắn CoreGia. Ngoài request/task,
+`ngu_canh_core`, các ref và nguồn đã cấp, bước này cần:
+
+- `yeu_cau_ai`: nguyên phong bì yêu cầu do Core nhận từ TC-4, độc lập phản hồi;
+- `nguon_ai={nha_cung_cap,model,phien_ban_engine}`: provenance bước Hỏi AI do
+  Core cấp. Không lấy từ JSON caller/model rồi tự coi đã xác thực.
+
+Thiếu cửa/provenance/quyền tệp con trả `TC_CHUA_CO_CUA_CORE`. Chuyển tiếp,
+prompt/version/model/nguồn/băm lệch trả `TC_SAI_NGUON`; Cloud trả `TC_CHI_LOCAL`
+trước khi mở tệp. Khuôn phân loại đóng đúng bảy trường TC-4, mã chỉ trong danh
+mục và loại hoạt động, điểm hữu hạn 0…1, bool không là số; sai trả
+`TC_AI_SAI_KHUON`. Loại không hoạt động phải để null theo khuôn; Python nhận
+diện nhánh đó và trả hàng chờ. Model cố trả mã loại đã bị loại khỏi enum bị
+từ chối sai khuôn, không giả là đã chọn loại hợp lệ.
+
+Snapshot/gốc/OCR mở qua Core, kiểm lại bytes/băm/phiên bản, ngữ cảnh/cấu hình
+đã ghim. Dựng lại toàn bộ ngữ cảnh/khuôn/map/mã đoạn và yêu cầu canonical;
+so băm yêu cầu AI-2. Tự kiểm cả trích dẫn ngoài và `du_lieu.can_cu`: nguyên văn,
+offset Unicode/map/vùng nguồn đúng; nhãn kỹ thuật/danh mục không là chứng cứ.
+Đổi mã nguồn/đoạn trả `TC_SAI_NGUON`, quote/offset sai trả `TC_AI_SAI_KHUON`.
+Không phụ thuộc riêng `kiem_trich_dan.dat`. Phản hồi báo không căn cứ vẫn chờ;
+không dùng việc tự kiểm quote để giả rằng upstream đã xác nhận đầy đủ.
+
+Bộ quy tắc nghiệp vụ là tài nguyên JSON Core cấp theo
+`cau_hinh.gia_tri.quy_tac_nhom={tep_id,bam}` đã ghim, không có bộ mặc định
+trong runtime. Bộ miền phiên bản 1 (không phải loại dữ liệu/API SDK mới):
+
+| Trường | Nội dung Core phải ghim và cấp quyền |
+|---|---|
+| `phien_ban` | Integer 1 |
+| `phap_nhan[]` | `{ma,loai_hinh,dau_hieu_ben_ky[]}`; CP/TNHH trong danh mục; dấu hiệu là cả dòng bên ký, không tên được nhắc trong câu kể |
+| `loai[]` | `{ma,quy_tac,loai_hinh[],dau_hieu[]}`; mã loại phải thuộc snapshot và nhóm đúng quy tắc cố định Python; `loai_hinh=[]` nghĩa dùng chung |
+| `doi_tuong[]` | `{ma,nhom[],loai[],dau_hieu[],thong_tin_cong_trinh}`; mã trong danh mục, liên kết đúng nhóm/loại; dấu hiệu nguồn phải chứng minh công trình/tài sản cụ thể, không chỉ cờ |
+| `quy_che_khac[]` | Dấu hiệu cho đề xuất ở gốc 08, không phải mã loại/thư mục mới |
+| `phep_do` | null, hoặc `{bam_bo_do,ma_prompt,phien_ban_prompt,model,phien_ban_engine_ai}` khớp bản ngưỡng đã đo và provenance AI |
+
+`quy_tac` chỉ nhận `cong_trinh,thiet_bi_lap_dat,vat_tu_cdt_cap,sua_chua_bao_tri,
+thue_may,mua_hang,quy_che_lao_dong,quy_che_khac,nhan_su,phap_ly_du_an,vay,
+ban_nha,kcn,ban_nhua,ban_dien_doc_lap,phap_ly_cong_ty`. Bộ có mã/quy tắc/quan
+hệ sai bị từ chối, không nhận quy tắc thực thi hoặc import bộ từ repo chung.
+
+Python ưu tiên 04 cho công trình/thiết bị lắp/vật tư cấp/sửa chữa có thông tin
+công trình; thuê máy thi công vẫn 03; quy chế người lao động 07, quy chế khác
+08. Không lấy thiếu BOQ để suy 03. Thiếu công trình/đối tượng/bên ký, CP/TNHH
+không phù hợp, hỗn hợp, nhánh chưa bật/ngừng, ngoài phạm vi hoặc chưa có
+ngưỡng đo đúng model/prompt đều chờ. Dấu hiệu phải có trong một câu trích đã
+kiểm; toàn văn dùng phát hiện bản chất bị model bỏ sót. Không nối các lát xa
+nhau làm câu mới. So khớp dấu hiệu dùng NFC/casefold trên bản tạm; không đổi
+văn bản hoặc offset nguyên bản. Đây là quy tắc đề xuất có giới hạn, chưa là
+số đo chất lượng hay bảo đảm hiểu mọi phủ định/ngữ nghĩa tài liệu thật.
+
+Điểm giữ ở `diem`, `kiem_tra.diem_la_xac_suat=false`, xác suất hiệu chỉnh null.
+`da_phan_loai` vẫn `can_duyet=true`, không phải lệnh tự xếp. Nhóm 08 có thể đề
+xuất gốc với loại/đối tượng null; không tích lũy tài liệu tạo loại. Phụ lục đổi
+nhóm hoặc bản chất loại chỉ đề nghị chuyển cả bộ khi có quan hệ Core/mã bộ và
+căn cứ; trạng thái luôn chờ. Core duyệt/chuyển/ghi nhật ký, engine chỉ xuất
+tham chiếu và đề nghị. `can_cu` sau kiểm chứa offset nguồn, offset AI và
+descriptor nguồn/băm/phiên bản; `kiem_tra` giữ lý do cố định, không phản chiếu
+chuỗi tự do của model vào cảnh báo.
+
+**Giới hạn nối Hỏi AI:** consumer AI-2 0.5.0 hiện kiểm mọi lá `du_lieu`
+(kể cả mã/điểm/offset/boolean) như giá trị phải xuất hiện nguyên văn trong
+trích dẫn. Test nối consumer có thật với Local giả nhận `XONG` ở Hỏi AI nhưng
+`khong_thay_can_cu`/`DU_LIEU_NGOAI_TRICH_DAN`; TC-5 trả hàng chờ đúng lý do,
+không sửa response để làm xanh. Lead Hỏi AI/Core cần rà cách kiểm metadata
+và giá trị nghiệp vụ (Cần Core/L-TC-01 trong VIEC). Các ca đề xuất tám nhóm
+dùng phản hồi fixture DEMO hợp lệ độc lập; không chứng nhận nối model thật.
+
 ## Bản khai dự kiến SDK 2.1
 
 `KHAI-SDK-2.1.json` tách khỏi manifest 2.0:
@@ -241,13 +400,13 @@ $env:PYTHONDONTWRITEBYTECODE='1'
 ```
 
 Linux đổi `Scripts/python` thành `bin/python`, đặt hai biến môi trường tương ứng.
-Test chặn mạng, chỉ DEMO. Handler nhận/cắt, stub và cổng cấu hình
+Test chặn mạng, chỉ DEMO. Handler nhận/cắt/chuẩn bị/hậu kiểm TC-5 và TC-6, stub và cổng cấu hình
 **đã kiểm bằng Core giả (CoreGia)**; adapter quyền/tệp con chỉ trong tests.
 CAS/unique/rollback/pháp nhân/cursor kiểm trực tiếp trên `NganBoNho`.
 Symlink của bộ quét kiểm bằng giả lập cờ, không yêu cầu Windows cấp quyền tạo symlink.
 Chưa kiểm Core thật, lưu bền, UI thật hoặc Linux.
 
 **Cổng CLI chuẩn chưa đạt:** SDK 2.0.0 chạy cả 5 demo và trả mã 1 vì thiếu
-ngăn/cấu hình (`CHUA_CAU_HINH`). Harness bổ sung có 9/9 ĐẠT (5 nhận, 4 nhận → cắt), không
+ngăn/cấu hình (`CHUA_CAU_HINH`). Harness bổ sung có 28/28 ĐẠT, không
 thay kết quả CLI chuẩn. Cần Core C-TC-01/02/03/05; số kiểm thật ở VIEC.md ngoài
 gói. Chưa nối Core thật, chưa kiểm RLS/AI/UI/Linux hoặc chất lượng tra cứu.

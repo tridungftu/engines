@@ -1,5 +1,28 @@
 # Thay đổi
 
+## DC-4 — 15/11/2026 · 0.4.0 chưa phát hành
+
+- Thêm `doi_chieu.so_van_ban@1`, đúng ba tệp runtime `can_chinh.py`,
+  `so_chu.py`, `chay.py`; nhận `da_nhan`, trả `da_so`, ghim nguồn/bộ và
+  snapshot tiền nhiệm, tải snapshot mới lên Core; chỉ mục/lượt qua Ngan.
+- Căn Điều/Khoản/câu, bảng/dòng/ô và bảng lồng; giữ ô trống/gộp, đoạn lặp,
+  chèn/xóa nguyên khoản và đuôi. Neo theo lần xuất hiện/LIS; so ký tự chỉ
+  trong cụm nhỏ, cụm chưa có neo được giữ toàn bộ. Không căn được thì lỗi.
+- Edit script tái dựng đủ nguyên văn lẫn chuẩn hóa hai bên; biên Unicode
+  không tách phần NFC co/giãn dùng chung nguồn. Mã điểm ổn định, nguyên
+  văn/offset/vị trí/căn cứ; lượt bỏ dấu chỉ gắn `chi_lech_dau`, không xóa.
+- Giữ ứng viên chưa phân loại, không kết luận sạch. Kiểm Điều/Khoản kể cả
+  trong Điều bị đảo. Bằng chứng trang cần liên kết Core tin cậy và ảnh có
+  băm trùng; thiếu bằng chứng/đổi dàn trang giữ `chua_kiem` (C-DC-05).
+- Trần điểm/ký tự/bytes/snapshot/300 giây, hủy theo cụm và tiến độ không
+  nội dung. CAS/chủ lượt/chống trùng, tái dùng có quyền và phục hồi tệp
+  Core thiếu; không đĩa bền, Cloud hay gọi engine khác.
+- Đã kiểm bằng Core giả (CoreGia): SDK DEMO **1/1 ĐẠT**; pytest **407 passed,
+  0 skipped** (110 ca DC-4); kiểm độc lập mã 0. Đo riêng lõi: 450.000 ký tự
+  lặp **1,1848 giây**, 500 bảng **0,1856 giây**; không là số đo OCR/Core thật.
+  PR: **chờ lead mở**. Không sửa API/schema chung/mẫu NGAN-0/ma-nguon;
+  không commit/push. Chi tiết nguồn gốc phân trang tạm ở README/VIEC.
+
 ## DC-3 — 15/11/2026 · 0.3.0 chưa phát hành
 
 Sửa theo kiểm độc lập lead, cùng phạm vi DC-3:

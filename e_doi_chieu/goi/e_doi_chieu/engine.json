@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_doi_chieu",
   "ten": "Đối chiếu bản ký",
-  "phien_ban": "0.3.0",
+  "phien_ban": "0.4.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -51,6 +51,18 @@
         "ma": "bam_yeu_cau", "ten": "Băm yêu cầu đã ghim",
         "kieu": "van_ban", "bat_buoc": true, "toi_da": 71
       }]
+    },
+    {
+      "ma": "doi_chieu.so_van_ban@1",
+      "ten": "So văn bản hai bên",
+      "nhan": ["ho_so_doi_chieu"],
+      "tra": "ho_so_doi_chieu",
+      "gioi_han": {"tep_toi_da_mib": 20, "mime": ["application/json"], "ky_tu_toi_da": 500000, "thoi_han_giay": 300},
+      "huy_duoc": true,
+      "tham_so": [
+        {"ma": "bo_quy_tac_json", "ten": "Bộ quy tắc đã ghim", "kieu": "van_ban", "bat_buoc": true, "toi_da": 65536},
+        {"ma": "bam_bo_quy_tac", "ten": "Băm bộ quy tắc", "kieu": "van_ban", "bat_buoc": true, "toi_da": 71}
+      ]
     }
   ],
   "loai_du_lieu_rieng": [

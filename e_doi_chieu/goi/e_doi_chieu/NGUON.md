@@ -1,5 +1,29 @@
 # Nguồn của gói Đối chiếu
 
+## DC-4 — 15/11/2026
+
+`can_chinh.py`, `so_chu.py` viết mới trong lát DC-4; dùng cấu trúc/ánh xạ
+DC-2/DC-3 của chính gói. Thuật toán LIS bằng `bisect`, so cụm nhỏ bằng
+`difflib.SequenceMatcher` của Python, tắt autojunk; Unicode bằng
+`unicodedata`. Không chép mã/thư viện/từ điển/font ngoài workspace,
+không thêm dependency hoặc tải mạng. Ba tệp runtime của lát gồm thêm/sửa
+`can_chinh.py`, `so_chu.py`, `chay.py`; manifest là metadata SDK 2.0.
+
+Fixture PDF/PNG/Word trong test đều sinh bằng thư viện chuẩn từ nội dung
+DEMO, không phải hồ sơ khách hàng hoặc phép đo OCR/render thật. Adapter
+Core cấp tệp con và liên kết phân trang chỉ ở tests; runtime không có
+cờ DEMO/bỏ quyền. Quy ước C-DC-05 đang chờ Core, ghi ở README/VIEC.
+
+Băm hiện hành DC-4 dưới đây là SHA-256 UTF-8 sau CRLF→LF; các bảng DC-2/
+DC-3 bên dưới là lịch sử của những lát đó. Mẫu NGAN-0 và schema giữ nguyên.
+
+| Tệp trong gói | SHA-256 LF |
+|---|---|
+| `e_doi_chieu/can_chinh.py` | `39b084ae09adc8785051fbbb95238281b0f305e4a5370f5856c65263f0ada76e` |
+| `e_doi_chieu/so_chu.py` | `c3e0661cae053cfba6bcee6b1be910d8ae3c465ab700620f57d7953bb64ad5b5` |
+| `e_doi_chieu/chay.py` | `32a19143c20539cbc05831329571b7ba8e41931d8d1831df6e34c30683aaafb7` |
+| `engine.json` | `8dcdce863ff77b726b8a2fc48b3ae8a4c6f0e84f43e0942c1469be3cdc9057e1` |
+
 - SDK runtime: `kho_tri_thuc_sdk` 2.0.0, wheel nội bộ tại
   `docs/goi-gui-engine/sdk-2.0.0/`; API v1 giữ nguyên.
 - `e_doi_chieu/ngan.py`, `cau_hinh.py`: chép nguyên mẫu NGAN-0 tại

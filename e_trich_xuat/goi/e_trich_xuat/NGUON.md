@@ -250,9 +250,9 @@ Chi tiết review tại `../../docs/TX-3-REVIEW.md`; bằng chứng/lệnh/giờ
 |---|---|
 | `e_trich_xuat/ma-nguon/do_chinh_xac.py` | `bb37f8c8313706f7ed9c65bfc2afffe4f7946b4986f028f93da5230ce442c3e3` |
 | `e_trich_xuat/docs/TX-0-THIET-KE.md` | `95826b1cfa0cd0fa17dcef4245b7f444f642d0ddcdaf301ddec7c34690d921e9` |
-| `e_hoi_ai/cong-cu/thu_local_ai_that.py` | `41bf0d57c1dc77d36b8a31e4f845b0464686fc2fafe7fc6a58d798374e47439e` |
+| `e_hoi_ai/cong-cu/thu_local_ai_that.py` | `b08e462ecdef7590d6a338b254b1f83c9ff4aaa358c055237ecd1b60dddcb395` |
 | `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/ai_cuc_bo.py` | `8051a15ec015acd7bfec9c34bfc35a903746ff990bb15f2f27e172b2ed580ae1` |
-| `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/chon_model.py` | `cd9775d479966873f9529e419c0c296c2bec02ae57a1b90773572d3131ea3481` |
+| `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/chon_model.py` | `ace9854285187c6dfd6543cd297f306ef45ddd29b9168dabe917749bdd5a3f66` |
 | `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/cong_ai.py` | `99bef752985200e2a40760a55ecd33422e844b40fb7361fd63bba070bce16ae8` |
 | `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/hoi_yeu_cau.py` | `4130ccafd39b070db959a0b6b3832f740d0cc694ff1e7747ff72089c2c705962` |
 | `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/khuon_json.py` | `ab4dc18a48df5f6f7c8e8f08ae10ea87e5a0a43ced3ca0870909e44eece069df` |

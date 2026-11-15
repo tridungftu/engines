@@ -295,3 +295,31 @@ Trong phần **đã cho phép mở** `yeu_cau_ai.chuyen_tiep`, dùng khóa `doi_
 API v1 mỗi bước chỉ nhận một phong bì. Đầu vào cặp đề xuất là `tep` JSON do Core/module lập chứa tham chiếu+băm các tệp được cấp cho việc, **không phải** phong bì hai đầu vào mới. Cần Core chốt cửa chung ghép nguồn/quyền mở tệp con và vòng đời giữa các bước (C-DC-02); SDK có `mo_tep` không chứng minh tệp bất kỳ đều được mở. Test CoreGia không chứng nhận quyền thật. Chưa có cửa thì runtime từ chối; không đọc đường máy, gọi engine khác hoặc truy cập CSDL.
 
 Snapshot/kết quả/ảnh lưu qua kho tệp Core, chỉ mục/cấu hình qua `Ngan`; RAM tạm khi chưa có SDK 2.1, không đệm bền. Nhật ký xác nhận thuộc ngăn/cửa Core chỉ-thêm có danh tính/quyền/CAS, **không** đặt trong hồ sơ máy rồi coi là đã xác nhận hợp đồng. Module sở hữu chặn/mở hiệu lực và sự kiện nghiệp vụ.
+
+## 6. MASK-2c-P — profile Local nhận diện thực thể (lead duyệt 15/11/2026 là quy ước kỹ thuật trong trường mở chuyen_tiep; không thêm loại/trường bắt buộc)
+
+*15/11/2026; chỉ tài liệu. Nhãn lịch sử ở đầu sổ không áp dụng mục này: **đây là đề xuất mới, chưa duyệt/kích hoạt**. Quyết định của Anh (nguyên văn): "Thêm AI cục bộ". Quyết định về mục tiêu không được hiểu là đã duyệt mọi chi tiết payload sau đây.*
+
+Dùng nguyên ba loại đã có: `yeu_cau_ai` cho văn bản **gốc chỉ Local**, `tra_loi_ai` cho kết quả Local, `van_ban_da_che` cho đầu ra cuối Mask. Không tạo mã loại mới, không sửa schema chung hoặc thêm trường bắt buộc cấp payload trong MASK-2c-P. Chi tiết chuỗi/kiểm/offset/lát ở `e_mask/docs/GIAO-CODEX-e_mask.md` §6 và AI-9 trong phiếu Hỏi AI.
+
+Đề xuất khóa mới trong phần **đã mở** `yeu_cau_ai.chuyen_tiep.mask_2c`, được Hỏi AI trả nguyên trong `tra_loi_ai.chuyen_tiep.mask_2c`:
+
+| Khóa | Nội dung / nguồn tạo |
+|---|---|
+| `phien_ban` | Integer 1, phiên bản profile, không thay phiên bản loại chung |
+| `ma_yeu_cau` | Mã opaque Core cấp, cùng yêu cầu/quyền xuyên ba bước, không đưa vào model |
+| `nha_cung_cap_bat_buoc` | Hằng `local`; thiếu/khác thì AI-9 và bước Mask hậu kiểm từ chối |
+| `ho_so`, `bam_ho_so` | Tham chiếu tệp snapshot ở kho Core (`tep_id,ten,mime,kich_thuoc`) + SHA bytes; tên kỹ thuật an toàn, không path/URL/tên gốc. Snapshot gồm gốc, bản quy tắc, edit map và kế hoạch đoạn |
+| `bam_goc`, `bam_da_che_quy_tac`, `phien_ban_map` | SHA UTF-8 từng chuỗi bất biến và phiên bản quan hệ offset; không nhầm băm tệp nguồn với băm chuỗi |
+| `chi_so_doan`, `so_doan`, `bat_dau_doan`, `ket_thuc_doan`, `bam_doan` | Chỉ số 0-based, số đoạn, khoảng Unicode code point trong gốc, SHA UTF-8 đoạn. Core lập kế hoạch phủ đủ và ghim, Mask hậu kiểm kiểm lại |
+| `he_offset` | Hằng `unicode_code_point`, khoảng nửa mở `[bat_dau,ket_thuc)`; offset AI tương đối đoạn, cộng `bat_dau_doan` để về gốc |
+| `bam_prompt`, `bam_khuon`, `bam_profile` | SHA của prompt UTF-8, schema và profile JSON chuẩn hóa; profile là cấu hình cố định của tác vụ (loại/mức/span/trần/đoạn), không tự chứa băm chính nó. Snapshot giữ bản chuẩn để tái tính, cùng mã/phiên bản prompt sẵn có |
+| `tap_phan_hoi`, `bam_tap_phan_hoi` (tùy chọn) | Tham chiếu+băm tệp tổng hợp do Core tạo, chỉ có trên lượt giao cuối cho bước 3. Chứa nguyên mọi yeu_cau_ai/tra_loi_ai đã được cấp quyền, dấu nguồn Core và kế hoạch đoạn, không được model tạo |
+
+Mỗi yêu cầu/đáp AI-9 giữ nguyên `chuyen_tiep`; **Core** tạo bản giao cuối bổ sung tham chiếu tập phản hồi vào bản sao của phản hồi cuối, lưu cả bản gốc để kiểm chuyển tiếp nguyên vẹn và provenance. Phần bổ sung này phải do cửa tin cậy Core chứng thực; không là quyền cho caller tự thay chuyen_tiep. Không đòi e_hoi_ai đọc ngăn/tệp riêng của Mask. `bam_dau_vao` của `tra_loi_ai` vẫn theo mã hiện tại: SHA JSON chuẩn hóa **toàn phong bì yêu cầu**, không đổi sang `bam_goc`/`bam_doan`. Core lưu bytes chuẩn để Mask kiểm lại.
+
+Mục tiêu metadata ≤4 KiB, trần toàn `chuyen_tiep` vẫn 64 KiB JSON UTF-8, khuôn ≤32 KiB. Không đưa gốc, alias mapping hoặc danh sách thực thể vào phần chuyển tiếp. Quy ước JSON chuẩn hóa: UTF-8, `ensure_ascii=False,sort_keys=True,separators=(",",":"),allow_nan=False`, từ chối khóa trùng; SHA runtime `sha256:<64 hex>`. Mỗi tham chiếu phải có bytes/kích thước/băm thực ở Core, có quyền mở giữa các bước; ví dụ placeholder không dùng để nhận đạt.
+
+**Không thêm trường mới vào `tra_loi_ai`:** `du_lieu` (phần đã cho mang schema của yêu cầu) dùng `{da_quet_het,thuc_the[]}`; mỗi thực thể có `loai,nguyen_van,bat_dau,ket_thuc,muc`, khuôn chặt theo phiếu Mask §6.3. Đây là nội dung nhạy cảm **nội bộ Local/Core/Mask**, không đầu vào Cloud. AI-9 kiểm từng span chứ không bắt metadata nằm trong câu trích, giữ trích dẫn từng vị trí lặp. Rỗng hợp lệ có `trang_thai=khong_thay_can_cu`, `kiem_trich_dan.dat=true`; không tự chứng minh an toàn khi thiếu nguồn/đủ đoạn/hoàn tất. Sai khuôn, timeout/ChuaRo, nguồn khác Local, thiếu map/đoạn → không phát hành.
+
+**Không thêm cờ an toàn caller tự khai vào `van_ban_da_che`:** dùng contract hiện có khi hậu kiểm cả hai lớp thực sự đạt. Chứng cứ lớp 2 gắn băm bản cuối/nguồn bước 3 lưu do Core quản, cửa Cloud kiểm chứng cứ này và từ chối đầu ra lớp 1 cũ thiếu chứng cứ. Không gửi ma_yeu_cau/chuyen_tiep/snapshot/băm/trích dẫn gốc ra Cloud; chỉ nội dung cuối đã che, prompt chứa dữ liệu cũng phải che. BAT_CLOUD vẫn False. Mục này chờ duyệt chi tiết profile và cửa Core; không đổi hợp đồng kỹ thuật API v1/SDK 2.0 đã khóa.

@@ -279,12 +279,12 @@ def test_khong_mo_duong_may_khong_ghi_cau_hinh_noi_dung(xml_demo, monkeypatch, c
     assert capsys.readouterr() == ("", "")
 
 
-def test_chay_py_van_chi_xml_khong_nap_cau_hinh():
+def test_chay_py_xml_zip_khong_nap_cau_hinh():
     import ast
     import e_hoa_don.chay as chay
     tree = ast.parse((GOI / "e_hoa_don/chay.py").read_text(encoding="utf-8"))
     assert not any(isinstance(n, ast.ImportFrom) and n.module == "cau_hinh_may" for n in ast.walk(tree))
-    assert [n["ma"] for n in chay.app.phieu["nang_luc"]] == ["hoa_don.doc_xml@2"]
+    assert [n["ma"] for n in chay.app.phieu["nang_luc"]] == ["hoa_don.doc_xml@2", "hoa_don.doc_zip@1"]
 
 
 def test_huy_khong_boc_thanh_loi_entry(xml_demo):

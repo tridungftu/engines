@@ -128,6 +128,91 @@
       },
       "huy_duoc": true,
       "tham_so": []
+    },
+    {
+      "ma": "hoa_don.doc_zip@1",
+      "ten": "Đọc gói ZIP hóa đơn",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "truong",
+      "truong_ra": [
+        {
+          "ma": "tep_zip",
+          "ten": "Tệp ZIP nguồn",
+          "kieu": "tep"
+        },
+        {
+          "ma": "chi_tiet_nguon",
+          "ten": "Báo cáo kiểm kê",
+          "kieu": "tep"
+        },
+        {
+          "ma": "so_tep",
+          "ten": "Số tệp",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_doc_duoc",
+          "ten": "Số tệp đọc được",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_loi",
+          "ten": "Số tệp lỗi",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_khong_ho_tro",
+          "ten": "Số tệp chưa hỗ trợ",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_trung_noi_dung",
+          "ten": "Số tệp trùng nội dung",
+          "kieu": "so"
+        },
+        {
+          "ma": "da_doc_het",
+          "ten": "Đã đọc hết tệp trong gói",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "can_kiem_tra",
+          "ten": "Cần kiểm tra",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "canh_bao",
+          "ten": "Cảnh báo",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bam_dau_vao",
+          "ten": "Băm đầu vào",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nguon_doc",
+          "ten": "Nguồn đọc",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "ten": "Phiên bản engine",
+          "kieu": "van_ban"
+        }
+      ],
+      "gioi_han": {
+        "tep_toi_da_mib": 64,
+        "mime": [
+          "application/zip",
+          "application/x-zip-compressed"
+        ],
+        "thoi_han_giay": 600
+      },
+      "huy_duoc": true,
+      "tham_so": []
     }
   ],
   "loai_du_lieu_rieng": [],
@@ -162,6 +247,15 @@
       "dau_vao": {
         "loai": "tep",
         "tep_demo": "demo/hoa-don-thieu-DEMO.xml"
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "hoa_don.doc_zip@1",
+      "ten": "DEMO ZIP hỗn hợp — giữ tệp lỗi và trùng",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/goi-hon-hop-DEMO.zip"
       },
       "tham_so": {}
     }

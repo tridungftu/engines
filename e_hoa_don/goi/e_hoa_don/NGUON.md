@@ -105,3 +105,25 @@ Các bảng lịch sử giữ nguyên. SHA bytes thực/LF của các tệp thay
 | `contract/bao_cao_zip.schema.json` | `3585b86eb1f8d9210d54d42042fc73b4cfa36c39ccbf4e8bfaf21a391d78f27b` | `fb320d2310fb3651e8fe8c487c4e83a4f464df53d7736cc3de943bb3f8aa8443` |
 | `README.md` | `d1c4959a102df6de300193f1905f857de1aa099107dd26bb6c0cc1d027593b35` | `70302865c2f4357df4fdb8af51d596faf4cf27346329da1d6b36bea327114c98` |
 | `CHANGELOG.md` | `12d96bfd0d55201516790a24c2320af2997ed8b1d207f2e4685e5a7b2950d08a` | `12d96bfd0d55201516790a24c2320af2997ed8b1d207f2e4685e5a7b2950d08a` |
+
+
+## HD-6 — cổng SDK ZIP và phụ thuộc stdlib, 15/11/2026
+
+Chỉ hai tệp runtime đổi: `e_hoa_don/chay.py` (handler SDK ZIP) và `e_hoa_don/zip.py` (bọc cảnh báo stdlib). Tái dùng trực tiếp lõi HD-5; `hoa_don_xml.py`, `doc.py`, Core/SDK/ma-nguon không đổi trong lát này. Không nguồn bên ngoài hoặc dependency mới; chỉ SDK 2.0.0 + Python stdlib, giữ quyền nội bộ đã ghi ở trên. Giữ phiên bản gói hiện có 1.0.0 và hợp đồng XML; việc ghim phát hành cuối ZIP/XLSX thuộc HD-8/lead.
+
+Phụ thuộc riêng của CPython cần kiểm khi nâng Python: `ZipExtFile._left`, `_update_crc`, `_eof`, `_compress_left`, `_decompressor` (và `eof` của DEFLATE); `zipfile._EndRecData`, `_ECD_DISK_NUMBER`, `_ECD_DISK_START`, `_ECD_ENTRIES_TOTAL`, `_ECD_ENTRIES_THIS_DISK`. Đây không phải API công khai ổn định. `tests/test_hd_6.py::test_chot_api_rieng_zipfile_va_crc` chốt sự tồn tại và hành vi: số đếm EOCD, ghi được `_left`/hook CRC, bytes giải nén đủ, EOF/compressed-left, DEFLATE EOF và CRC sai phải từ chối. Hồi quy HD-5 kiểm metadata giả/bytes thật/tổng/trần/CRC trên cả STORED và DEFLATE. Cần chạy lại các ca này khi nâng Python; không bỏ test để hợp thức hóa thay đổi stdlib.
+
+Một số bản Python phát UserWarning có tên entry cho central directory overlap. `zip.py` dùng `warnings.catch_warnings`, bộ lọc UserWarning và hook `showwarning` ném `BadZipFile` với câu cố định. Hook chỉ có hiệu lực trong lời gọi lõi; lõi bắt ngay tại mở/đọc entry, giữ bản ghi lỗi với băm/kích thước null, tiếp tục kiểm kê. Không đổi `zipfile.ZipFile.open` toàn cục; khôi phục hook/filter cả khi lỗi/hủy. Phiếu chỉ cho 1 việc đồng thời; khi đổi mô hình đồng thời phải kiểm lại phạm vi bộ lọc warnings của bản Python đang dùng. Test overlap bytes thật và test cảnh báo cưỡng bức (chạy cả trên Python từ chối overlap trực tiếp) kiểm canary, không có stderr và không mất entry.
+
+DEMO ZIP được dựng từ bytes `demo/hoa-don-DEMO.xml` đã pin ở HD-3, XML hỏng literal `<HDon`, PDF giả `%PDF-DEMO`, bản trùng bytes và bản đổi số `0000123` thành `0000124`; timestamp ZIP cố định 30/10/2026, STORED. Chỉ dữ liệu DEMO, không tệp thật. Oracle trong `tests/test_hd_6.py` dựng toàn JSON từ literal trường/DTO/cảnh báo, không gọi bộ đọc để tạo expected; chỉ ghép tham chiếu Core/băm bytes bằng hashlib. So toàn JSON, từng ordinal/băm/đếm qua CoreGia và HTTP giả; không dùng output writer/reader làm đáp án.
+
+Các bảng hash lịch sử giữ nguyên; bảng HD-6 bên dưới là bytes thực và chuẩn LF sau thay đổi, không tự băm NGUON.md.
+
+| Tệp HD-6 trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `e_hoa_don/chay.py` | `f99ce16f45c731fe6e4d333f625da2206d866acaf6518103425f1ba1d6a46882` | `703668d9be7eb296d69bd294b708366e4820814143cf612fad1660595ef5c69e` |
+| `e_hoa_don/zip.py` | `6212ab75f8f1e0cb8cc2103d11ce4a5d4ea08ab213d5191745c3721ecc215149` | `3be2a2156de2ba8f63c5a9679b8c4d344a6d7e5a8d12f838d5d440b2d4b3e733` |
+| `engine.json` | `00f42154f2350dc071c4ad8b96356d41daf381ffa867d45983c72752107ef400` | `b84b1cf197a8131aed30c2f54ec6cad90cae1030e38b710a241546b0a568864c` |
+| `demo/goi-hon-hop-DEMO.zip` | `91106609ac23affecdb2be9592f7a708a0b816700c5370eb234bbc913a5cedc8` | `91106609ac23affecdb2be9592f7a708a0b816700c5370eb234bbc913a5cedc8` |
+| `README.md` | `e672c541977e41c20e6c90b782f6a72deb124ec6f7ad85af16699a66b2df7665` | `e672c541977e41c20e6c90b782f6a72deb124ec6f7ad85af16699a66b2df7665` |
+| `CHANGELOG.md` | `45a2079d3a84af74fdbf1ae0cbf71203082a43d750b9cb303df879780ef633c1` | `91f695b387181154f9d4d8138e039119537975d01039566366bf1cbeab1da845` |

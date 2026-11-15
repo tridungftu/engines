@@ -1,8 +1,7 @@
-"""Snapshot Local nội bộ bất biến; Core giữ tệp, Ngan chỉ giữ chỉ mục.
+"""Hồ sơ Local nội bộ chỉ RAM theo P4; không có kho snapshot Core.
 
-Chưa có transport SDK: bên tích hợp phải cấp cả quyền và port kho tệp có
-ACL/lease. Không lấy port từ đầu vào, không dùng đường tệp máy hoặc bộ đệm
-bền. Kế hoạch do Core cấp; thuật toán chia đoạn thuộc MASK-2c-2.
+Các hàm bytes là bộ kiểm thuần trong RAM, không phải đường khôi phục.
+KhoHoSoAI lịch sử bị đóng; bên tích hợp phải truyền handle kho R4.
 """
 from __future__ import annotations
 
@@ -23,7 +22,7 @@ from .quyen_yeu_cau import xac_minh
 
 PHIEN_BAN_HO_SO = 1
 GIOI_HAN_HO_SO = 64 * 1024 * 1024
-# Khai báo nội bộ cho adapter, chưa thêm trường vào phiếu SDK 2.0.
+# Khai báo lịch sử chỉ để import hồi quy; R5 không dùng hoặc tạo chỉ mục.
 KHAI_NGAN_HO_SO_AI = ({'bang': 'ho_so_ai', 'khoa': ['bam_yeu_cau'],
                        'pham_vi': 'engine', 'duy_nhat': []},)
 _BAM = re.compile(r'sha256:[0-9a-f]{64}')
@@ -200,97 +199,63 @@ class DauHoSoAI:
 
 
 class CongHoSoAI(Protocol):
-    """Port được bên tích hợp tiêm, KHÔNG phải API/transport SDK đã có.
-
-    Core phải kiểm ACL, pháp nhân và lease ngay trong từng luu/doc; không
-    dùng riêng kiểm_quyen trước thao tác để thay kiểm quyền nguyên tử.
-    Kho giữ snapshot bất biến, dọn tệp chưa có chỉ mục/khi đóng yêu cầu.
-    """
+    """Tên lịch sử chỉ để import tương thích; không còn cửa luu/doc."""
     def kiem_quyen(self, viec, ngu_canh, *, tham_chieu, thao_tac) -> bool: ...
-    def luu(self, viec, ngu_canh, du_lieu: bytes) -> ThamChieuHoSo: ...
-    def doc(self, viec, ngu_canh, tham_chieu: ThamChieuHoSo) -> bytes: ...
 
 
 class KhoHoSoAI:
-    def __init__(self, *, ngan, quyen=None, cong=None):
-        self._ngan, self._quyen, self._cong = ngan, quyen, cong
+    """Cửa snapshot cũ đã đóng, kể cả khi caller cấp ngăn/port giả."""
+    def __init__(self, *, ngan=None, quyen=None, cong=None):
+        pass
 
-    def _xac_minh(self, viec, ma, thao_tac, tham_chieu=None):
-        if type(ma) is not str or not ma.strip() or self._cong is None:
-            raise _loi('MASK_AI_QUYEN')
-        ngu_canh = xac_minh(self._quyen, viec, loai='che', ma_yeu_cau=ma, thao_tac=thao_tac)
-        pn = viec.ngu_canh.get('phap_nhan_id')
-        if (type(pn) is not str or not pn.strip() or self._cong.kiem_quyen(
-                viec, ngu_canh, tham_chieu=tham_chieu, thao_tac=thao_tac) is not True):
-            raise _loi('MASK_AI_QUYEN')
-        # Không dùng ma_luot/viec_id: cùng yêu cầu đi qua nhiều bước.
-        khoa = {'ma': ma, 'phien': ngu_canh.phien, 'module': ngu_canh.module,
-                'nguoi_gui': ngu_canh.nguoi_gui, 'tai_lieu': ngu_canh.tai_lieu,
-                'vung': ngu_canh.vung, 'phap_nhan_id': pn}
-        return ngu_canh, {'bam_yeu_cau': bam_bytes(json_chuan(khoa))}
+    def luu(self, *a, **kw):
+        raise _loi('MASK_AI_QUYEN')
 
-    def _doc(self, viec, ma, chi_muc, khoa):
-        v = chi_muc.gia_tri
-        _dung_khoa(v['ho_so'], ThamChieuHoSo)
-        ref = ThamChieuHoSo(**v['ho_so'])
-        ref.kiem()
-        ctx, khoa_moi = self._xac_minh(viec, ma, 'doc_ho_so_ai', ref)
-        if khoa_moi != khoa:
-            raise _loi('MASK_AI_QUYEN')
-        raw = self._cong.doc(viec, ctx, ref)
-        if type(raw) is not bytes or len(raw) != ref.kich_thuoc or bam_bytes(raw) != v['bam_ho_so']:
-            raise _loi()
-        ho_so = doc_bytes(raw)
-        if (v['bam_goc'] != ho_so.anh_xa.bam_goc or v['bam_da_che_quy_tac'] != ho_so.anh_xa.bam_da_che
-                or type(v['phien_ban_map']) is not int or v['phien_ban_map'] != ho_so.anh_xa.phien_ban
-                or type(v['phien_ban_ho_so']) is not int or v['phien_ban_ho_so'] != ho_so.phien_ban
-                or self._xac_minh(viec, ma, 'doc_ho_so_ai', ref)[1] != khoa):
-            raise _loi()
-        return ho_so
+    def doc(self, *a, **kw):
+        raise _loi('MASK_AI_QUYEN')
 
-    @_chan_loi
-    def luu(self, viec, ma_yeu_cau, ho_so):
-        ctx, khoa = self._xac_minh(viec, ma_yeu_cau, 'luu_ho_so_ai')
-        if type(ho_so) is not HoSoAI:
-            raise _loi()
-        raw = ho_so.thanh_bytes()
-        bam = bam_bytes(raw)
-        cu = self._ngan.doc('ho_so_ai', khoa)
-        if cu is not None:
-            if cu.gia_tri['bam_ho_so'] != bam:
-                raise _loi('MASK_AI_XUNG_DOT')
-            self._doc(viec, ma_yeu_cau, cu, khoa)
-            return DauHoSoAI(ThamChieuHoSo(**cu.gia_tri['ho_so']), bam)
-        ref = self._cong.luu(viec, ctx, raw)
-        if type(ref) is not ThamChieuHoSo:
-            raise _loi()
-        ref.kiem()
-        # Đọc lại bằng chính port có quyền: không tin metadata tự khai.
-        ctx, khoa_moi = self._xac_minh(viec, ma_yeu_cau, 'doc_ho_so_ai', ref)
-        if khoa_moi != khoa or self._cong.doc(viec, ctx, ref) != raw:
-            raise _loi()
-        chi_muc = {**khoa, 'ho_so': asdict(ref), 'bam_ho_so': bam,
-                   'bam_goc': ho_so.anh_xa.bam_goc, 'bam_da_che_quy_tac': ho_so.anh_xa.bam_da_che,
-                   'phien_ban_map': ho_so.anh_xa.phien_ban, 'phien_ban_ho_so': ho_so.phien_ban}
-        if self._xac_minh(viec, ma_yeu_cau, 'chot_ho_so_ai', ref)[1] != khoa:
-            raise _loi('MASK_AI_QUYEN')
-        with self._ngan.lo() as lo:
-            ket = lo.lay_hoac_tao('ho_so_ai', khoa, chi_muc)
-        if ket.gia_tri != chi_muc:
-            raise _loi('MASK_AI_XUNG_DOT')
-        # Thu hồi quyền hoặc mất tệp trong lúc chốt: không phát hành tham chiếu.
-        self._doc(viec, ma_yeu_cau, ket.ban_ghi, khoa)
-        return DauHoSoAI(ref, bam)
 
-    @_chan_loi
-    def doc(self, viec, ma_yeu_cau, dau):
-        if (type(dau) is not DauHoSoAI or type(dau.ho_so) is not ThamChieuHoSo
-                or type(dau.bam_ho_so) is not str or not _BAM.fullmatch(dau.bam_ho_so)):
+@dataclass(frozen=True, slots=True, repr=False)
+class DauHoSoRAM:
+    ma_ho_so_ram: str
+    bam_ho_so: str
+
+    def kiem(self):
+        if (type(self.ma_ho_so_ram) is not str
+                or re.fullmatch(r'[0-9a-f]{32}', self.ma_ho_so_ram) is None
+                or type(self.bam_ho_so) is not str or not _BAM.fullmatch(self.bam_ho_so)):
             raise _loi()
-        dau.ho_so.kiem()
-        _, khoa = self._xac_minh(viec, ma_yeu_cau, 'doc_ho_so_ai', dau.ho_so)
-        ban = self._ngan.doc('ho_so_ai', khoa)
-        if (ban is None or ban.gia_tri['ho_so'] != asdict(dau.ho_so)
-                or ban.gia_tri['bam_ho_so'] != dau.bam_ho_so):
-            raise _loi()
-        return self._doc(viec, ma_yeu_cau, ban, khoa)
+
+
+def kiem_kho_ram(ram):
+    from .kho_anh_xa_ram import KhoAnhXaRAM
+    if type(ram) is not KhoAnhXaRAM:
+        raise LoiNghiepVu('MASK_AI_CHUA_CO_CUA_CORE',
+                         'Chưa có đủ cổng Core cho chuỗi AI cục bộ.')
+    return ram
+
+
+def _buoc_da_nhuong():
+    from .quyen_yeu_cau import loi_ram
+    raise loi_ram('MASK_VONG_DOI_KHONG_HOP_LE')
+
+
+def nhuong_luot(luot):
+    """Bỏ việc SDK/handle khỏi lookup khi chờ, cấm dùng ngoài bước RAM."""
+    if luot is not None:
+        luot._kiem_huy = _buoc_da_nhuong
+        luot._kho = None
+
+
+def du_lieu_ram(buoc):
+    """Chỉ dùng dưới quyền sở hữu R4; không lấy object từ payload/Core."""
+    v = buoc.du_lieu
+    s, dau = v.get('ho_so_ai'), v.get('dau_ho_so_ai')
+    if type(s) is not dict or type(dau) is not DauHoSoRAM:
+        from .quyen_yeu_cau import loi_ram
+        raise loi_ram('MASK_ANH_XA_KHONG_CON')
+    dau.kiem()
+    if bam_bytes(json_chuan(s)) != dau.bam_ho_so:
+        raise _loi()
+    buoc.kiem()
+    return s, dau

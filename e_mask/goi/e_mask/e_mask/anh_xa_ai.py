@@ -120,6 +120,23 @@ class AnhXaAI:
         return any(p.loai == 'thay_bi_danh' and p.goc[0] <= bat_dau
                    and ket_thuc <= p.goc[1] for p in self.goc_che)
 
+    def alias_nguyen_van(self):
+        """Map mở che chỉ RAM; cùng alias khác nguyên văn phải từ chối.
+
+        Không normalize tên gốc NFD/Cf, không chọn lần xuất hiện đầu tiên.
+        Caller phải giữ dictionary này trong handle vòng đời R4.
+        """
+        kiem_anh_xa(self)
+        ket = {}
+        for p in self.goc_che:
+            if p.loai != 'thay_bi_danh':
+                continue
+            alias, goc = self.da_che[slice(*p.dich)], self.goc[slice(*p.goc)]
+            if alias in ket and ket[alias] != goc:
+                raise LoiAnhXa()
+            ket[alias] = goc
+        return ket
+
 
 def _them(phep, a, b, c, d, loai):
     if a == b:

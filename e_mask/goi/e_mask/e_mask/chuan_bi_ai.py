@@ -1,8 +1,7 @@
-"""Chuẩn bị Local qua port Core tin cậy; chưa có transport trong SDK 2.0.
+"""Chuẩn bị từng đoạn Local; hồ sơ/map/kế hoạch chỉ trong kho RAM R4.
 
-Core sở hữu prompt của module/quy trình, tokenizer, deadline và điều phối
-toàn kế hoạch. Không lấy các quyền này từ payload. Snapshot nhạy cảm chỉ
-qua kho tệp Core; ngăn chỉ giữ băm/tham chiếu. Không thực hiện lượt AI.
+Core chọn từng đoạn, điều phối Local và xác minh quyền/deadline. Không
+snapshot Core, không chỉ mục ngăn, không gọi model từ Mask.
 """
 from __future__ import annotations
 
@@ -14,16 +13,21 @@ from functools import wraps
 import json
 import re
 from typing import Protocol
+from time import monotonic
+from uuid import uuid4
 
 from kho_tri_thuc_sdk.engine import ChuaRo, LoiDuongTruyen, LoiNghiepVu, ViecDaHuy
 
 from . import che_van_ban, phong_bi, tai_nguyen
 from .anh_xa_ai import bam_chu
-from .ho_so_ai import (CongHoSoAI, DauHoSoAI, DoanAI, GIOI_HAN_HO_SO, HoSoAI,
-                       ThamChieuHoSo, _bien_doan, bam_bytes, doc_bytes, json_chuan)
+from .ho_so_ai import (DoanAI, GIOI_HAN_HO_SO, HoSoAI,
+                       DauHoSoRAM, du_lieu_ram, kiem_kho_ram, nhuong_luot,
+                       _bien_doan, bam_bytes, doc_bytes, json_chuan)
 from .kho_dinh_danh import KhoDinhDanh
 from .ngan import NganXungDot
-from .quyen_yeu_cau import loi_kho, xac_minh
+from .quyen_yeu_cau import loi_kho, xac_minh, loi_ram
+from .khoi_tao_ngan import thoi_han_anh_xa_giay
+from .tra_cuu_dinh_danh import TraCuuDinhDanh
 
 NANG_LUC = 'mask.chuan_bi_ai_cuc_bo@1'
 TOI_DA_DOAN, OVERLAP, TOI_DA_SO_DOAN = 8000, 512, 128
@@ -93,12 +97,24 @@ def _bao_ve(ham):
     def goi(*a, **kw):
         try:
             return ham(*a, **kw)
-        except (ChuaRo, ViecDaHuy, LoiDuongTruyen):
+        except ChuaRo as exc:
+            raise ChuaRo('mask-ai-' + bam_chu(exc.ma_tuong_quan)[7:]) from None
+        except ViecDaHuy:
             raise
+        except LoiDuongTruyen as exc:
+            raise LoiDuongTruyen('MASK_AI_DUONG_TRUYEN', http_status=exc.http_status,
+                                thu_lai_duoc=exc.thu_lai_duoc) from None
         except NganXungDot:
             raise loi('MASK_AI_XUNG_DOT') from None
+        except tai_nguyen.ThieuTaiNguyen:
+            raise LoiNghiepVu('MASK_THIEU_TAI_NGUYEN',
+                             'Chưa có đủ tài nguyên nhận diện được phê duyệt.') from None
         except LoiNghiepVu as exc:
-            # Cổng ngăn có thể ném kiểu nghiệp vụ với câu tùy ý.
+            if exc.ma in {'MASK_ANH_XA_KHONG_CON', 'MASK_CHUOI_CHUA_GHIM',
+                          'MASK_CHUOI_DANG_XU_LY', 'MASK_BUOC_DANG_XU_LY',
+                          'MASK_DAU_VAO_THAY_DOI', 'MASK_VONG_DOI_KHONG_HOP_LE'}:
+                raise loi_ram(exc.ma) from None
+            # Không chuyển câu tùy ý của port ra ngoài.
             if exc.ma in _CAU_LOI:
                 raise loi(exc.ma) from None
             if exc.ma in {'MASK_DAU_VAO', 'MASK_QUA_GIOI_HAN', 'MASK_MA_YEU_CAU'}:
@@ -152,19 +168,18 @@ def lap_ke_hoach(goc):
     return tuple(ke)
 
 
-class CongChuanBiAI(CongHoSoAI, Protocol):
-    """Port NỘI BỘ đề nghị cho Core, không phải các API SDK đã hiện hữu.
+class CongChuanBiAI(Protocol):
+    """Đề nghị C-P4-04, chưa là API SDK. Không giữ/đọc snapshot.
 
-    Mọi thao tác phải kiểm ACL/lease nguyên tử, cùng mã yêu cầu. Core ghim
-    prompt/config và biên nhận ngay lần đầu, không gia hạn khi retry.
-    kiem_ngan_sach dùng tokenizer/model thật cho TỪNG đoạn và đầu ra, không
-    ước token bằng ký tự. ban_giao ghim bytes chuẩn, snapshot và toàn kế
-    hoạch để Core lặp/ghép/ghim nguồn; không gửi model từ bên Mask.
+    Core chọn chỉ số từng lượt và ghim hash yêu cầu Local; chỉ yêu cầu
+    của đoạn hiện tại đi qua contract Local, không map/bản quy tắc/gốc
+    toàn văn phụ trợ. Quyền/lease phải kiểm nguyên tử trong mỗi thao tác.
     """
     def cau_hinh(self, viec, ngu_canh) -> dict: ...
+    def chi_so_doan(self, viec, ngu_canh, *, so_doan: int) -> int: ...
     def kiem_ngan_sach(self, viec, ngu_canh, *, de_nghi: dict) -> dict: ...
     def kiem_han(self, viec, ngu_canh, *, bien_nhan: dict) -> bool: ...
-    def ban_giao(self, viec, ngu_canh, *, dau: DauHoSoAI, yeu_cau: bytes) -> bool: ...
+    def ban_giao(self, viec, ngu_canh, *, dau: DauHoSoRAM, yeu_cau: bytes) -> bool: ...
 
 
 def _dung_khoa(v, khoa):
@@ -230,7 +245,7 @@ def _kiem_snapshot(v):
         raise loi('MASK_AI_HO_SO')
     _ngan_sach(v['bien_nhan'], _de_nghi(h.anh_xa.goc, h.ke_hoach, cfg))
     kq = v['ket_qua_quy_tac']
-    if kq.get('van_ban_da_che') != h.anh_xa.da_che:
+    if kq.get('van_ban_da_che') != h.anh_xa.da_che or kq.get('gui_duoc') is not True:
         raise loi('MASK_AI_HO_SO')
     phong_bi.ket_qua_che(kq, h.anh_xa.goc)
     return h
@@ -238,6 +253,7 @@ def _kiem_snapshot(v):
 
 @_bao_ve
 def doc_snapshot(raw):
+    """Bộ kiểm bytes thuần trong RAM cho hồi quy; handler không phục hồi."""
     if type(raw) is not bytes or not 0 < len(raw) <= GIOI_HAN_HO_SO:
         raise loi('MASK_AI_HO_SO')
     def cam(_):
@@ -249,20 +265,28 @@ def doc_snapshot(raw):
     return v
 
 
+def tham_chieu_ram(snapshot, dau):
+    """Metadata tương thích AI-9; không phải tệp và không dùng để tải lại.
+
+    AI-9 cũ đòi hình dạng ho_so. Chỉ mã opaque/độ dài của dữ liệu RAM đi
+    qua cửa này; không tạo snapshot Core, kể cả khi mất RAM hoặc retry.
+    """
+    return dict(tep_id='ram-' + dau.ma_ho_so_ram, ten='mask-2c-ram.json',
+                mime='application/json', kich_thuoc=len(json_chuan(snapshot)))
+
+
 @_bao_ve
 def yeu_cau_cho_doan(snapshot, dau, chi_so=0):
-    """Hàm thuần cho adapter Core; không tự lặp/gọi bước kế tiếp."""
+    """Hàm nội bộ Mask dưới handle RAM; Core chỉ chọn chỉ số qua port."""
     h = _kiem_snapshot(snapshot)
-    if (type(dau) is not DauHoSoAI or type(dau.ho_so) is not ThamChieuHoSo
+    if (type(dau) is not DauHoSoRAM
             or dau.bam_ho_so != bam_bytes(json_chuan(snapshot))
             or type(chi_so) is not int or not 0 <= chi_so < len(h.ke_hoach)):
         raise loi('MASK_AI_HO_SO')
-    dau.ho_so.kiem()
-    if dau.ho_so.kich_thuoc != len(json_chuan(snapshot)):
-        raise loi('MASK_AI_HO_SO')
+    dau.kiem()
     d, cfg = h.ke_hoach[chi_so], snapshot['cau_hinh']
     tiep = dict(phien_ban=1, ma_yeu_cau=snapshot['ket_qua_quy_tac']['ma_yeu_cau'],
-                nha_cung_cap_bat_buoc='local', ho_so=asdict(dau.ho_so), bam_ho_so=dau.bam_ho_so,
+                nha_cung_cap_bat_buoc='local', ho_so=tham_chieu_ram(snapshot, dau), bam_ho_so=dau.bam_ho_so,
                 bam_goc=h.anh_xa.bam_goc, bam_da_che_quy_tac=h.anh_xa.bam_da_che,
                 phien_ban_map=h.anh_xa.phien_ban, chi_so_doan=chi_so, so_doan=len(h.ke_hoach),
                 bat_dau_doan=d.bat_dau, ket_thuc_doan=d.ket_thuc, bam_doan=d.bam_doan,
@@ -278,10 +302,43 @@ def yeu_cau_cho_doan(snapshot, dau, chi_so=0):
     return ket
 
 
+def ket_qua_ram(ma, goc, phep, *, buoc):
+    """Dựng/kiểm bản che trong RAM, không chốt snapshot hay ghi alias tạm.
+
+    Kho R2 chỉ đọc được alias đã duyệt. Tạo tên/đếm gặp vẫn chờ C-P4-03;
+    không dùng kho RAM lịch sử để vượt bảo đảm duy nhất bí mật của Core.
+    """
+    from .anh_xa_ai import tao_anh_xa
+    from .nguon.privacy.types import bo_ky_tu_vo_hinh
+    buoc.kiem()
+    m = tao_anh_xa(goc, phep)
+    aliases = m.alias_nguyen_van()
+    tat_ca = [(goc[a:b], 'KHAC', True) for a, b, _ in phep]
+    con_sot, day_du = che_van_ban._kiem_con_sot(m.da_che, tat_ca)
+    tien_ngay = che_van_ban._kiem_tien_ngay(goc, m.da_che)
+    so_sanh, cuoi = [], 0
+    for a, b, _ in phep:
+        so_sanh.extend((bo_ky_tu_vo_hinh(goc[cuoi:a]), '\x00'))
+        cuoi = b
+    so_sanh.append(bo_ky_tu_vo_hinh(goc[cuoi:]))
+    tien_ngay = tien_ngay and not che_van_ban.core.numeric_review(
+        ''.join(so_sanh), che_van_ban._an_bi_danh(m.da_che), [])['changed']
+    if con_sot or not day_du or not tien_ngay:
+        raise LoiNghiepVu('MASK_DINH_DANH_CHUA_DAT',
+                         'Chưa kiểm tra hết định danh. Không thể trả kết quả che.')
+    _kiem_span(m)
+    buoc.kiem()
+    kq = dict(ma_yeu_cau=ma, van_ban_da_che=m.da_che, con_sot=[],
+              kiem_tien_ngay=True, gui_duoc=True, so_cho_thay=len(phep),
+              bi_danh=[], cho_duyet={'so_cum_vua_them': 0}, canh_bao=[])
+    return kq, m, aliases
+
+
 class ChuanBiAI:
-    def __init__(self, *, ngan, quyen, cong, phien_ban_engine):
-        self.ngan, self.quyen, self.cong, self.phien_ban_engine = ngan, quyen, cong, phien_ban_engine
-        self._khoa = None
+    def __init__(self, *, ngan, quyen, cong, phien_ban_engine, ram=None):
+        # ngan chỉ giữ tương thích lời gọi; R5 không đọc/ghi ngăn lịch sử.
+        self.quyen, self.cong = quyen, cong
+        self.phien_ban_engine, self.ram = phien_ban_engine, ram
 
     def _ctx(self, viec, ma=None):
         ctx = xac_minh(self.quyen, viec, loai='che', ma_yeu_cau=ma,
@@ -289,108 +346,121 @@ class ChuanBiAI:
         pn = viec.ngu_canh.get('phap_nhan_id')
         if self.cong is None or type(pn) is not str or not pn.strip():
             raise loi('MASK_AI_CHUA_CO_CUA_CORE')
-        return ctx, {'bam_yeu_cau': bam_bytes(json_chuan(dict(
-            ma=ctx.ma_yeu_cau, phien=ctx.phien, module=ctx.module, nguoi_gui=ctx.nguoi_gui,
-            tai_lieu=ctx.tai_lieu, vung=ctx.vung, phap_nhan_id=pn)))}
+        return ctx, pn
 
     def _goi(self, ten, viec, ctx, **kw):
-        # Không tin thông điệp ngoại lệ tùy ý từ port.
-        try:
-            moi, khoa = self._ctx(viec, ctx.ma_yeu_cau)
-            if moi != ctx or khoa != self._khoa:
-                raise loi()
-            ham = getattr(self.cong, ten, None)
-            if not callable(ham):
-                raise loi('MASK_AI_CHUA_CO_CUA_CORE')
-            return ham(viec, ctx, **kw)
-        except (ChuaRo, ViecDaHuy, LoiDuongTruyen):
-            raise
-        except Exception:
-            raise loi('MASK_AI_CHUA_CO_CUA_CORE') from None
+        self.buoc.kiem()
+        if (self._ctx(viec, ctx.ma_yeu_cau) != (ctx, self.pn)
+                or bam_bytes(json_chuan([viec.dau_vao, viec.tham_so])) != self.bam_phong_bi):
+            raise loi('MASK_AI_CHUA_CO_CUA_CORE')
+        ham = getattr(self.cong, ten, None)
+        if not callable(ham):
+            raise loi('MASK_AI_CHUA_CO_CUA_CORE')
+        ket = ham(viec, ctx, **kw)
+        self.buoc.kiem()
+        if (self._ctx(viec, ctx.ma_yeu_cau) != (ctx, self.pn)
+                or bam_bytes(json_chuan([viec.dau_vao, viec.tham_so])) != self.bam_phong_bi):
+            raise loi('MASK_AI_CHUA_CO_CUA_CORE')
+        return ket
 
     def _han(self, viec, ctx, bien_nhan):
-        viec.kiem_huy()
         if self._goi('kiem_han', viec, ctx, bien_nhan=deepcopy(bien_nhan)) is not True:
             raise loi('MASK_AI_NGAN_SACH')
 
-    def _doc(self, viec, ctx, gia_tri):
-        ref = ThamChieuHoSo(**gia_tri['ho_so'])
-        ref.kiem()
-        if self._goi('kiem_quyen', viec, ctx, tham_chieu=ref, thao_tac='doc_ho_so_ai') is not True:
-            raise loi('MASK_AI_HO_SO')
-        raw = self._goi('doc', viec, ctx, tham_chieu=ref)
-        if type(raw) is not bytes or len(raw) != ref.kich_thuoc or bam_bytes(raw) != gia_tri['bam_ho_so']:
-            raise loi('MASK_AI_HO_SO')
-        return doc_snapshot(raw), DauHoSoAI(ref, bam_bytes(raw))
-
     @_bao_ve
     def chuan_bi(self, viec):
+        with kiem_kho_ram(self.ram).buoc(viec, loai='che') as buoc:
+            self.buoc = buoc
+            try:
+                return self._chuan_bi(viec, buoc)
+            finally:
+                # Handle/lookup không được giữ việc SDK qua lúc chờ Local.
+                v = buoc._ban_ghi.du_lieu
+                luot = v.get('luot_ung_vien')
+                nhuong_luot(luot)
+                self.buoc = None
+
+    def _chuan_bi(self, viec, buoc):
+        # Đọc bytes đầu vào trong handle: cùng ref nhưng tệp đổi cũng bị chặn.
         chu, ds = phong_bi.doc_che(viec)
-        ctx, khoa = self._ctx(viec)
-        self._khoa = khoa
-        cfg = _cau_hinh(self._goi('cau_hinh', viec, ctx))
-        ke = lap_ke_hoach(chu)
-        de_nghi = _de_nghi(chu, ke, cfg)
-        bien_nhan = _ngan_sach(self._goi('kiem_ngan_sach', viec, ctx,
-                                        de_nghi=deepcopy(de_nghi)), de_nghi)
-        self._han(viec, ctx, bien_nhan)
-        dau_vao = bam_bytes(json_chuan({'dau_vao': viec.dau_vao, 'tham_so': viec.tham_so}))
-        ghim = dict(**khoa, bam_dau_vao=dau_vao, bam_de_nghi=bien_nhan['bam_de_nghi'],
-                    bam_bien_nhan=bam_bytes(json_chuan(bien_nhan)))
-        with self.ngan.lo() as lo:
-            lan = lo.lay_hoac_tao('chuan_bi_ai', khoa, ghim)
-        ban = lan.ban_ghi
-        if any(ban.gia_tri.get(k) != v for k, v in ghim.items()):
-            raise loi('MASK_AI_XUNG_DOT')
-        if 'ho_so' in ban.gia_tri:
-            snapshot, dau = self._doc(viec, ctx, ban.gia_tri)
-        else:
-            viec.tien_do(10, 'Đang kiểm tra quy tắc và ánh xạ văn bản.')
-            kho = KhoDinhDanh(ngan=self.ngan, quyen=self.quyen)
-            def quy_tac(kho):
-                try:
-                    tai_nguyen.nap_tu_goi()
-                    kq, m = che_van_ban.che_co_anh_xa(chu, ds, kho)
-                    _kiem_span(m)
-                    phong_bi.ket_qua_che(kq, chu)
-                    return kq, m
-                except tai_nguyen.ThieuTaiNguyen:
-                    raise LoiNghiepVu('MASK_THIEU_TAI_NGUYEN', 'Chưa có đủ tài nguyên nhận diện được phê duyệt.') from None
-                except che_van_ban.LoiCheVanBan:
-                    raise LoiNghiepVu('MASK_DINH_DANH_CHUA_DAT', 'Chưa kiểm tra hết định danh. Không thể trả kết quả che.') from None
-            kq, m = kho.xu_ly_co_anh_xa(viec, quy_tac)
-            h = HoSoAI(m, ke, self.phien_ban_engine)
-            snapshot = dict(phien_ban=1, quy_tac=json.loads(h.thanh_bytes()), ket_qua_quy_tac=kq,
-                            cau_hinh=cfg, khuon=khuon_tra_loi(), profile=profile(), bien_nhan=bien_nhan)
-            raw = json_chuan(snapshot)
-            if len(raw) > GIOI_HAN_HO_SO:
-                raise loi('MASK_AI_HO_SO')
-            _kiem_snapshot(snapshot)
-            self._han(viec, ctx, bien_nhan)
-            if self._goi('kiem_quyen', viec, ctx, tham_chieu=None, thao_tac='luu_ho_so_ai') is not True:
-                raise loi('MASK_AI_HO_SO')
-            ref = self._goi('luu', viec, ctx, du_lieu=raw)
-            if type(ref) is not ThamChieuHoSo:
-                raise loi('MASK_AI_HO_SO')
-            ref.kiem()
-            moi = dict(ghim, ho_so=asdict(ref), bam_ho_so=bam_bytes(raw))
-            # Kiểm bytes/ACL trước chốt chỉ mục. Core tự dọn tệp mồ côi nếu
-            # CAS hoặc lease thất bại; engine không xóa/ghi tệp máy.
-            self._doc(viec, ctx, moi)
-            self._han(viec, ctx, bien_nhan)
-            with self.ngan.lo() as lo:
-                lo.sua('chuan_bi_ai', khoa, moi, row_version=ban.row_version)
-            ban = self.ngan.doc('chuan_bi_ai', khoa)
-            snapshot, dau = self._doc(viec, ctx, ban.gia_tri)
-        if (snapshot['quy_tac']['anh_xa']['goc'] != chu
-                or snapshot['cau_hinh'] != cfg or snapshot['bien_nhan'] != bien_nhan
-                or snapshot['ket_qua_quy_tac']['ma_yeu_cau'] != ctx.ma_yeu_cau):
-            raise loi('MASK_AI_XUNG_DOT')
-        self._han(viec, ctx, bien_nhan)
-        ket = yeu_cau_cho_doan(snapshot, dau)
-        if self._goi('ban_giao', viec, ctx, dau=dau, yeu_cau=json_chuan(ket)) is not True:
+        ctx, self.pn = self._ctx(viec)
+        if self.pn != buoc._ctx.phap_nhan_id:
             raise loi('MASK_AI_CHUA_CO_CUA_CORE')
-        self._doc(viec, ctx, ban.gia_tri)
-        self._han(viec, ctx, bien_nhan)
+        self.bam_phong_bi = bam_bytes(json_chuan([viec.dau_vao, viec.tham_so]))
+        v = buoc.du_lieu
+        bam = bam_bytes(json_chuan(dict(dau_vao=viec.dau_vao, tham_so=viec.tham_so,
+                                        van_ban=chu, dinh_danh=ds)))
+        cfg = _cau_hinh(self._goi('cau_hinh', viec, ctx))
+        if 'ho_so_ai' in v:
+            s, dau = du_lieu_ram(buoc)
+            if (v['bam_dau_vao'] != bam or s['cau_hinh'] != cfg
+                    or v.get('giai_doan_ai') != 'CHO_LOCAL'):
+                raise loi('MASK_AI_XUNG_DOT')
+            h = _kiem_snapshot(s)
+            de_nghi = _de_nghi(chu, h.ke_hoach, cfg)
+            bn = _ngan_sach(self._goi('kiem_ngan_sach', viec, ctx,
+                                      de_nghi=deepcopy(de_nghi)), de_nghi)
+            if bn != s['bien_nhan']:
+                raise loi('MASK_AI_XUNG_DOT')
+        else:
+            ke = lap_ke_hoach(chu)
+            de_nghi = _de_nghi(chu, ke, cfg)
+            bn = _ngan_sach(self._goi('kiem_ngan_sach', viec, ctx,
+                                      de_nghi=deepcopy(de_nghi)), de_nghi)
+            self._han(viec, ctx, bn)
+            viec.tien_do(10, 'Đang kiểm tra quy tắc và ánh xạ văn bản.')
+            tai_nguyen.nap_tu_goi()
+            kho = KhoDinhDanh(quyen=self.quyen).mo_kho_nhan_dien(viec)
+            luot = TraCuuDinhDanh(chu, kho, han_monotonic=monotonic() + thoi_han_anh_xa_giay(viec),
+                                  kiem_huy=buoc.kiem)
+            try:
+                da_biet = che_van_ban._kiem_dinh_danh(ds, la_khai_bao=True)
+                do = che_van_ban.thu_thap_ung_vien(chu, da_biet, luot)
+                kq, m, aliases = ket_qua_ram(ctx.ma_yeu_cau, chu, do.phep_thay, buoc=buoc)
+                kq['bi_danh'] = [dict(bi_danh=a, nhom=nh, nguon='chinh_thuc')
+                                  for a, _g, nh in luot._alias.values() if a in aliases]
+                h = HoSoAI(m, ke, self.phien_ban_engine)
+                s = dict(phien_ban=1, quy_tac=json.loads(h.thanh_bytes()), ket_qua_quy_tac=kq,
+                         cau_hinh=cfg, khuon=khuon_tra_loi(), profile=profile(), bien_nhan=bn)
+                raw = json_chuan(s)
+                if len(raw) > GIOI_HAN_HO_SO:
+                    raise loi('MASK_AI_HO_SO')
+                _kiem_snapshot(s)
+                dau = DauHoSoRAM(uuid4().hex, bam_bytes(raw))
+                buoc.du_lieu.update(ho_so_ai=s, dau_ho_so_ai=dau, bam_dau_vao=bam,
+                                    alias_nguyen_van=aliases, luot_ung_vien=luot,
+                                    giai_doan_ai='CHO_LOCAL', da_giao={}, doan_theo_luot={})
+            except BaseException:
+                luot.dong()
+                raise
+        self._han(viec, ctx, s['bien_nhan'])
+        i = self._goi('chi_so_doan', viec, ctx, so_doan=len(h.ke_hoach))
+        if type(i) is not int or not 0 <= i < len(h.ke_hoach):
+            raise loi()
+        theo_luot = buoc.du_lieu['doan_theo_luot']
+        if ctx.ma_luot in theo_luot and theo_luot[ctx.ma_luot] != i:
+            raise loi('MASK_AI_XUNG_DOT')
+        theo_luot[ctx.ma_luot] = i
+        da_giao = buoc.du_lieu['da_giao']
+        if i != len(da_giao) and i not in da_giao:
+            raise loi('MASK_AI_XUNG_DOT')
+        ket = yeu_cau_cho_doan(s, dau, i)
+        raw = json_chuan(ket)
+        if i in da_giao and da_giao[i] != bam_bytes(raw):
+            raise loi('MASK_AI_XUNG_DOT')
+        # Sau điểm này ChuaRo có thể là Local/Core đã nhận. Giữ đúng TTL;
+        # mọi lỗi xác định/hủy vẫn bị context manager R4 dọn.
+        buoc.cho_ai()
+        if self._goi('ban_giao', viec, ctx, dau=dau, yeu_cau=raw) is not True:
+            raise loi('MASK_AI_CHUA_CO_CUA_CORE')
+        self._han(viec, ctx, s['bien_nhan'])
+        du_lieu_ram(buoc)
+        # Core phải giữ nguồn bất biến. Kiểm lại bytes đã đọc, kể cả khi
+        # tham chiếu/kích thước không đổi; không nạp lại map từ tệp này.
+        chu_cuoi, ds_cuoi = phong_bi.doc_che(viec)
+        if chu_cuoi != chu or json_chuan(ds_cuoi) != json_chuan(ds):
+            raise loi('MASK_AI_XUNG_DOT')
+        buoc.kiem()
+        da_giao[i] = bam_bytes(raw)
         viec.tien_do(100, 'Đã chuẩn bị yêu cầu AI cục bộ qua Core.')
         return ket

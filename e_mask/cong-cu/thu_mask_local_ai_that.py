@@ -27,11 +27,10 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 import kho_tri_thuc_sdk
 from e_mask import chuan_bi_ai as cb
 from e_mask.chay import tao_app
-from e_mask.ho_so_ai import DauHoSoAI, ThamChieuHoSo, bam_bytes, json_chuan
-from e_mask.kho_ngan import KHAI_NGAN
-from e_mask.ngan import NganBoNho
-from ho_tro_hau_kiem_ai import CongHauKiemCoreGia, giao, chay
-from ho_tro_ngan import QuyenNganDemo, viec_demo
+from e_mask.ho_so_ai import bam_bytes, json_chuan
+from ho_tro_hau_kiem_ai import (CATALOGUE, CongHauKiemCoreGia, giao, chay,
+                                tao_bo as tao_bo_ram, ho_so_ram)
+from ho_tro_ngan import viec_demo
 
 BO_DEMO = Path(__file__).with_name('mask_2c_4_ung_vien_demo.json')
 PROMPT = 'Quy trình đo DEMO MASK-2c-4.\n' + cb.CHI_DAN_BAT_BUOC
@@ -85,20 +84,9 @@ def map_doc_lap(goc, ra, ngan):
     chốt ở vị trí hiện tại. Ánh xạ không duy nhất hoặc không khớp -> lỗi đo.
     Không dùng gold để suy khoảng che; che prefix vẫn để lại phần gold hở.
     """
-    gia_tri = {}
-    for bang in ('dinh_danh', 'bi_danh_tam', 'cho_duyet'):
-        tiep = None
-        while True:
-            trang = ngan.tim(bang, gioi_han=500, tiep=tiep)
-            for ban in trang.danh_sach:
-                v = ban.gia_tri
-                if 'gia_tri' in v:
-                    for k in ('bi_danh', 'bi_danh_tam'):
-                        if isinstance(v.get(k), str):
-                            gia_tri[v[k]] = chuan(v['gia_tri'])
-            tiep = trang.tiep
-            if tiep is None:
-                break
+    # Chỉ catalogue DEMO đã cấp trước chuỗi; SDK trả null+cờ. Không đọc
+    # kho bản rõ, map nội bộ R4, gold hoặc snapshot Core để suy phép che.
+    gia_tri = {alias: chuan(ten) for ten, _nhom, alias in ngan.danh_muc_demo}
     vi_tri = [i for i, c in enumerate(goc) if not vo_hinh(c)]
     sach = ''.join(goc[i] for i in vi_tri)
     i = j = 0
@@ -180,7 +168,7 @@ class CongDoCoreGia(CongHauKiemCoreGia):
         v = super().kiem_ngan_sach(viec, ctx, de_nghi=de_nghi)
         # Không dùng hạn fixture 15/11 cho các lần Anh chạy sau ngày đó.
         from datetime import timedelta
-        khoa = self.chu(viec, ctx)
+        khoa = ctx.ma_yeu_cau
         cu = self.ngan_sach[khoa]
         if not hasattr(self, '_han'):
             self._han = (datetime.now(timezone.utc) + timedelta(seconds=self.han_giay)).isoformat()
@@ -192,22 +180,30 @@ class CongDoCoreGia(CongHauKiemCoreGia):
     def kiem_han(self, viec, ctx, *, bien_nhan):
         self._quyen(viec, ctx)
         return (time.monotonic() - self.bat_dau < self.han_giay
-                and bien_nhan == self.ngan_sach.get(self.chu(viec, ctx)))
+                and bien_nhan == self.ngan_sach.get(ctx.ma_yeu_cau))
 
 
 def tao_bo(ca, model, han_giay):
-    n, c, q = NganBoNho([*KHAI_NGAN, *cb.KHAI_NGAN_CHUAN_BI_AI]), CoreGia(), QuyenNganDemo()
-    cong = CongDoCoreGia(c, model, han_giay)
-    app = tao_app(ngan=n, quyen=q, cong_chuan_bi_ai=cong, cong_hau_kiem_ai=cong)
-    return SimpleNamespace(n=n, c=c, q=q, cong=cong, app=app, chu=ca['van_ban'])
+    chu = ca['van_ban']
+    # Catalogue hồi quy công khai của adapter, độc lập gold và Local.
+    # Tên ngoài catalogue vẫn fail-closed, không tự duyệt theo model/gold.
+    seeds = [(ten, 'CA_NHAN', '[[MASKCN-DEMO-%04d]]' % i)
+             for i, ten in enumerate(CATALOGUE, 1) if chuan(ten) in chuan(chu)]
+    return tao_bo_ram(chu, cong=CongDoCoreGia(None, model, han_giay), seeds=seeds)
 
 
 def chay_buoc(b, nang_luc):
-    v = b.c.giao_viec(nang_luc, {'loai': 'van_ban', 'van_ban': b.chu})
-    b.ctx = b.q.cap(v)
-    b.cong.cap(viec_demo(v), b.ctx)
+    # tao_bo_ram đã xếp bước chuẩn bị đầu tiên, dùng chính kho R4 của app.
     b.c.chay(b.app)
-    return b.c.xem(v)
+    k = b.c.xem(b.v)
+    if nang_luc == 'mask.che_van_ban@1' and k['trang_thai'] == 'XONG':
+        # Baseline quy tắc là phép khảo sát trong RAM, chưa qua Local và
+        # không phải public handler mask.che_van_ban (R3 đang đóng).
+        from e_mask import phong_bi
+        s, _ = ho_so_ram(b)
+        return dict(trang_thai='XONG', ket_qua=phong_bi.ket_qua_che(
+            s['ket_qua_quy_tac'], b.chu))
+    return k
 
 
 class DemLocal:
@@ -261,10 +257,17 @@ def hai_lop(b, ai, model, thong_ke=None, cap_nhat=None):
         thong_ke['chan_truoc_ai'] = (truoc.get('loi') or {}).get('ma') == 'MASK_DINH_DANH_CHUA_DAT'
         return truoc, thong_ke
     meta = truoc['ket_qua']['yeu_cau_ai']['chuyen_tiep']['mask_2c']
-    raw = b.c.doc_tep(meta['ho_so']['tep_id'])
-    b.s = cb.doc_snapshot(raw)
-    b.dau = DauHoSoAI(ThamChieuHoSo(**meta['ho_so']), bam_bytes(raw))
-    b.ys = [cb.yeu_cau_cho_doan(b.s, b.dau, i) for i in range(len(b.s['quy_tac']['ke_hoach']))]
+    b.s, b.dau = ho_so_ram(b)
+    n = len(b.s['quy_tac']['ke_hoach'])
+    for i in range(1, n):
+        b.cong.i = i
+        b.v = b.c.giao_viec(cb.NANG_LUC, {'loai': 'van_ban', 'van_ban': b.chu})
+        ctx = b.q.cap(b.v, ma_yeu_cau=b.ctx.ma_yeu_cau)
+        b.cong.cap(viec_demo(b.v), ctx)
+        b.c.chay(b.app)
+        k = b.c.xem(b.v)
+        if k['trang_thai'] != 'XONG': return k, thong_ke
+    b.ys = [deepcopy(b.cong.giao[i]) for i in range(n)]
     thong_ke['so_doan_ke_hoach'] = len(b.ys)
     ds = []
     for y in b.ys:
@@ -293,12 +296,11 @@ def hai_lop(b, ai, model, thong_ke=None, cap_nhat=None):
         ban_model = next((r for r in ai.core.xem_ngan(ai.app.ma, 'model_phat_hien')
                           if r['id_model'] == model), None)
         loai_api = ban_model['loai'] if ban_model else ''
-        ds.append(dict(yeu_cau_ai=y, tra_loi_ai=kq['ket_qua'], nguon=dict(
+        ds.append(dict(tra_loi_ai=kq['ket_qua'], nguon=dict(
             engine='e_hoi_ai', nang_luc='ai.hoi_mask_cuc_bo@1', nha_cung_cap='local', model=model,
             trang_thai='XONG', hoan_tat=dict(giao_thuc='ollama' if loai_api == 'ollama' else 'openai_compatible',
                                            ket_thuc='stop'))))
-    bundle = dict(phien_ban=1, ma_yeu_cau=b.ctx.ma_yeu_cau,
-                  ke_hoach=deepcopy(b.s['quy_tac']['ke_hoach']), phan_hoi=ds)
+    bundle = dict(phien_ban=1, ma_yeu_cau=b.ctx.ma_yeu_cau, phan_hoi=ds)
     giao(b, bundle)
     ket = chay(b)
     thong_ke['du_doan'] = len(ds) == len(b.ys)
@@ -426,7 +428,7 @@ def do(bo, *, that=False, url=None, model=None, timeout=None, timeout_toi_da=TRA
                so_luot_cloud=0, so_luot_local=0, ket_qua=None)
     for c in ca:
         han_ca(c, timeout, timeout_toi_da)
-    ket.update(phien_ban_sdk=kho_tri_thuc_sdk.__version__, phien_ban_cong_cu='MASK-2c-4-2',
+    ket.update(phien_ban_sdk=kho_tri_thuc_sdk.__version__, phien_ban_cong_cu='MASK-R5-RAM-1',
                bam_cong_cu=bam_bytes(Path(__file__).read_bytes()),
                timeout=dict(giay=timeout, mac_dinh_giay_moi_doan=120, tran_giay=timeout_toi_da),
                bam_cau_hinh_khong_url=bam(dict(model=model, timeout_giay=timeout,
@@ -436,13 +438,15 @@ def do(bo, *, that=False, url=None, model=None, timeout=None, timeout_toi_da=TRA
                so_timeout_xac_dinh=None,
                ghi_chu_timeout='AI-9 gom timeout/mất phản hồi/202 vào ChuaRo; không suy số timeout bằng 0.',
                gioi_han_ket_luan='AI chỉ cứu khi báo đủ; báo thiếu một phần tên thì phần còn lại có thể lọt.')
+    ket['gioi_han_kho'] = ('Catalogue DEMO đã duyệt, độc lập gold/phản hồi Local; '
+                         'tên mới thiếu bảo đảm Core bị chặn. Chưa chứng nhận chất lượng thật.')
     # Khô chỉ kiểm bộ/băm/cấu trúc. Không có số đo detector hoặc Local giả.
     if not that:
         return ket
     if not url or not model:
         raise ValueError('Chạy thật cần đủ URL và model.')
     rows = [dong_chua_do(c, che_do) for c in ca for che_do in ('quy_tac', 'hai_lop')]
-    ai = local = cloud = cu = None
+    ai = local = cloud = cu = b = None
     def tien_do():
         if local:
             ket.update(so_luot_cloud=cloud.so_luot, so_luot_local=local.so_luot,
@@ -476,6 +480,8 @@ def do(bo, *, that=False, url=None, model=None, timeout=None, timeout_toi_da=TRA
                     kq, thong_ke = hai_lop(b, ai, model, thong_ke, cap_nhat_ca)
                 # Chỉ mã ca cố định/đếm/băm/thời gian; không phản chiếu lỗi/provider.
                 row.update(cham(c, kq, b.n))
+                if hasattr(b.q, 'ram_ctx') and b.ctx.ma_yeu_cau in b.q.ram_ctx:
+                    b.q.bao_ram(b.ctx.ma_yeu_cau, 'KET_THUC')
                 row.update(tinh_trang_do='chưa đo đủ' if thong_ke['het_han']
                            or row['trang_thai'] in {'loi_ky_thuat', 'chua_ro'} else 'đã đo',
                            so_luot_local=local.so_luot - luot,
@@ -488,6 +494,8 @@ def do(bo, *, that=False, url=None, model=None, timeout=None, timeout_toi_da=TRA
             if row['tinh_trang_do'] == 'chưa đo đủ' and row['ma_loi'] == 'CHUA_DO':
                 row['ma_loi'] = 'NGOAI_LE_KHI_DO'
     finally:
+        if b is not None and hasattr(b.q, 'ram_ctx') and b.ctx.ma_yeu_cau in b.q.ram_ctx:
+            b.q.bao_ram(b.ctx.ma_yeu_cau, 'KET_THUC')
         if cu is not None:
             from e_hoi_ai import chay as ai_module
             ai_module.bo_hoi.cong_ai = cu

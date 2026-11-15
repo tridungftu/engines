@@ -1,0 +1,50 @@
+{
+  "bat_dau": "2026-11-15T23:50:00+07:00",
+  "python": "3.13.14",
+  "sdk": "2.2.0",
+  "jsonschema": "4.26.0",
+  "pytest": "9.1.1",
+  "lenh": [
+    {
+      "ten": "SDK CLI",
+      "ma": 1,
+      "giay": 1.04,
+      "tom_tat": "Engine e_mask 1.4.0: có ví dụ chạy thử DEMO chưa đạt."
+    },
+    {
+      "ten": "Full pytest",
+      "ma": 0,
+      "giay": 379.37,
+      "tom_tat": "2523 passed, 4 xfailed, 190 subtests passed in 378.34s (0:06:18)"
+    },
+    {
+      "ten": "Kiểm độc lập",
+      "ma": 0,
+      "giay": 0.7,
+      "tom_tat": "[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch."
+    }
+  ],
+  "sha_wheel": "0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984",
+  "kiem_ke": {
+    "tep": 52,
+    "lf": true,
+    "ma": 0
+  },
+  "phan_loai": {
+    "tong_cu": 216,
+    "con_thu_thap": 216,
+    "thieu": 0,
+    "tong_thu_thap": 2527,
+    "nhom": {
+      "b": 9,
+      "a": 207
+    }
+  },
+  "diff_check": 0,
+  "chot_kiem": "2026-11-16T00:31:35.991482+07:00",
+  "ket_thuc_luot": "2026-11-16T00:32:52.364219+07:00",
+  "gio_thuc_te": 0.7145,
+  "luu_tru_nguon_khop_lf": "4/4",
+  "khai_bao_skip_xfail_giu_nguyen": 2,
+  "ca_bo_sung_xung_dot_nhom": 2
+}

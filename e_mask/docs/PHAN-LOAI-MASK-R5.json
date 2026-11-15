@@ -1,0 +1,1092 @@
+{
+  "nhan": "DEMO, kiểm bằng CoreGia",
+  "tong": 216,
+  "nhom": {
+    "b": 9,
+    "a": 207
+  },
+  "test": [
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_core_gia_luu_doc_retry_chi_muc_khong_co_noi_dung",
+      "nhom": "b",
+      "cach_xu_ly": "Lưu/đọc/retry trên R4; spy cấm tệp/Core, bảng ho_so_ai phải rỗng."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_thieu_quyen_tham_chieu_hash_phai_tu_choi[quyen]",
+      "nhom": "a",
+      "cach_xu_ly": "Dùng dấu hồ sơ RAM; sai quyền/instance/dấu/băm bị chặn, không đọc snapshot Core."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_thieu_quyen_tham_chieu_hash_phai_tu_choi[cong]",
+      "nhom": "a",
+      "cach_xu_ly": "Dùng dấu hồ sơ RAM; sai quyền/instance/dấu/băm bị chặn, không đọc snapshot Core."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_thieu_quyen_tham_chieu_hash_phai_tu_choi[tham_chieu]",
+      "nhom": "a",
+      "cach_xu_ly": "Dùng dấu hồ sơ RAM; sai quyền/instance/dấu/băm bị chặn, không đọc snapshot Core."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_thieu_quyen_tham_chieu_hash_phai_tu_choi[chi_muc]",
+      "nhom": "b",
+      "cach_xu_ly": "Ngăn/tệp rỗng vẫn đọc được cùng RAM; kết thúc RAM phải lỗi rõ, không tải lại hồ sơ Core."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_thieu_quyen_tham_chieu_hash_phai_tu_choi[tep]",
+      "nhom": "b",
+      "cach_xu_ly": "Ngăn/tệp rỗng vẫn đọc được cùng RAM; kết thúc RAM phải lỗi rõ, không tải lại hồ sơ Core."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_thieu_quyen_tham_chieu_hash_phai_tu_choi[metadata]",
+      "nhom": "a",
+      "cach_xu_ly": "Dùng dấu hồ sơ RAM; sai quyền/instance/dấu/băm bị chặn, không đọc snapshot Core."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_thieu_quyen_tham_chieu_hash_phai_tu_choi[bam]",
+      "nhom": "a",
+      "cach_xu_ly": "Dùng dấu hồ sơ RAM; sai quyền/instance/dấu/băm bị chặn, không đọc snapshot Core."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_khong_doc_cheo_chu_yeu_cau[module]",
+      "nhom": "a",
+      "cach_xu_ly": "Scope tin cậy R4 gồm module/người/tài liệu/vùng/pháp nhân; giữ kiểm từ chối đọc chéo."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_khong_doc_cheo_chu_yeu_cau[nguoi_gui]",
+      "nhom": "a",
+      "cach_xu_ly": "Scope tin cậy R4 gồm module/người/tài liệu/vùng/pháp nhân; giữ kiểm từ chối đọc chéo."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_khong_doc_cheo_chu_yeu_cau[tai_lieu]",
+      "nhom": "a",
+      "cach_xu_ly": "Scope tin cậy R4 gồm module/người/tài liệu/vùng/pháp nhân; giữ kiểm từ chối đọc chéo."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_khong_doc_cheo_chu_yeu_cau[vung]",
+      "nhom": "a",
+      "cach_xu_ly": "Scope tin cậy R4 gồm module/người/tài liệu/vùng/pháp nhân; giữ kiểm từ chối đọc chéo."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_khong_doc_cheo_chu_yeu_cau[phap_nhan_id]",
+      "nhom": "a",
+      "cach_xu_ly": "Scope tin cậy R4 gồm module/người/tài liệu/vùng/pháp nhân; giữ kiểm từ chối đọc chéo."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_snapshot_qua_hai_buoc_core_cung_quyen",
+      "nhom": "b",
+      "cach_xu_ly": "Hai bước chỉ đọc cùng RAM; Core/ngăn không có hồ sơ; mất RAM trả MASK_ANH_XA_KHONG_CON."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_bam_bytes_sai_va_map_sai_du_co_bam_moi_khong_doc",
+      "nhom": "a",
+      "cach_xu_ly": "Sửa dữ liệu RAM/băm hoặc map thuần trong RAM; cả hai vẫn bị kiểm từ chối."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_khong_tai_dung_cung_ma_khi_noi_dung_doi",
+      "nhom": "a",
+      "cach_xu_ly": "Cùng mã R4 với nội dung khác bị từ chối và dọn; không tạo snapshot dự phòng."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_chua_ro_cas_huy_va_loi_port_khong_lo_noi_dung",
+      "nhom": "a",
+      "cach_xu_ly": "Chạy handler R5/R4 thật qua CoreGia: ACK chưa rõ giữ TTL, retry không trùng; hủy/lỗi không rò."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_1.py::test_xung_dot_ngan_khong_tra_tham_chieu",
+      "nhom": "b",
+      "cach_xu_ly": "Không còn giao dịch chỉ mục snapshot; cấm upload, ngăn rỗng, mất RAM phải lỗi rõ."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_cau_truc_yeu_cau_sha_profile_schema_va_khong_ro_map_ten",
+      "nhom": "a",
+      "cach_xu_ly": "Kiểm băm/profile/schema trên RAM; ho_so chỉ metadata ram-…, không tệp/giá trị gốc/map ở chuyển tiếp."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\u200b-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\u200b-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\u200f-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\u200f-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\ufe0f-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\ufe0f-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\U000e0100-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\U000e0100-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\t-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\t-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\xa0-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\xa0-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\n-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_local_giu_nguyen_goc_unicode_map_snapshot[\\n-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 + alias DEMO đã duyệt đúng ứng viên Unicode; giữ toàn bộ NFC/NFD/Cf/tab/NBSP/newline và băm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_nfd_cf_thuc_su_giu_nguyen_bytes",
+      "nhom": "a",
+      "cach_xu_ly": "Cấp đúng biến thể DEMO trong kho bí mật; Local và RAM giữ nguyên bytes NFD/Cf/selector."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_lop_2b_con_sot_van_chan[l\\xea th\\u1ecb hoa \\u0111\\u01a1n g\\u1ed1c; 1.000.000 VND ng\\xe0y 30/10/2026; n\\u1ed9i dung DEMO.]",
+      "nhom": "a",
+      "cach_xu_ly": "Không tự duyệt tên detector đề nghị; fixture catalogue hữu hạn, lớp 1 còn sót vẫn chặn trước Local."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_lop_2b_con_sot_van_chan[john smith \\u0111\\xe3 k\\xfd h\\u1ee3p \\u0111\\u1ed3ng DEMO.]",
+      "nhom": "a",
+      "cach_xu_ly": "Không tự duyệt tên detector đề nghị; fixture catalogue hữu hạn, lớp 1 còn sót vẫn chặn trước Local."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_lop_2b_con_sot_van_chan[Mai sau khi nh\\u1eadn h\\xf3a \\u0111\\u01a1n s\\u1ebd h\\u1ea1ch to\\xe1n v\\xe0o t\\xe0i kho\\u1ea3n 331.]",
+      "nhom": "a",
+      "cach_xu_ly": "Không tự duyệt tên detector đề nghị; fixture catalogue hữu hạn, lớp 1 còn sót vẫn chặn trước Local."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_huy_kiem_o_cac_cua_khong_tra_ket_qua[kiem_ngan_sach]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ ba ca hủy; mốc luu lịch sử chuyển sang chi_so_doan trong vòng đời RAM; không phát hành."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_huy_kiem_o_cac_cua_khong_tra_ket_qua[luu]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ ba ca hủy; mốc luu lịch sử chuyển sang chi_so_doan trong vòng đời RAM; không phát hành."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_huy_kiem_o_cac_cua_khong_tra_ket_qua[ban_giao]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ ba ca hủy; mốc luu lịch sử chuyển sang chi_so_doan trong vòng đời RAM; không phát hành."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_retry_sdk_mat_ack_khong_cap_alias_dem_lan_hai",
+      "nhom": "a",
+      "cach_xu_ly": "ACK SDK gửi lại đúng một kết quả, alias/số gặp giữ nguyên; không alias tạm/map ở ngăn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_giao_lai_cung_ma_snapshot_y_nguyen_khong_cap_lai",
+      "nhom": "a",
+      "cach_xu_ly": "Retry cùng mã dùng nguyên RAM/dấu/băm/hạn tuyệt đối; không ghi lại ngăn/tệp hoặc đếm thêm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_retry_mat_snapshot_doi_ghim_khong_phat_hanh[snapshot]",
+      "nhom": "a",
+      "cach_xu_ly": "Thay snapshot bằng bản ghi RAM: mất RAM/băm/prompt/profile/hạn/quyền đổi đều chặn, không phục hồi."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_retry_mat_snapshot_doi_ghim_khong_phat_hanh[bam]",
+      "nhom": "a",
+      "cach_xu_ly": "Thay snapshot bằng bản ghi RAM: mất RAM/băm/prompt/profile/hạn/quyền đổi đều chặn, không phục hồi."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_retry_mat_snapshot_doi_ghim_khong_phat_hanh[prompt]",
+      "nhom": "a",
+      "cach_xu_ly": "Thay snapshot bằng bản ghi RAM: mất RAM/băm/prompt/profile/hạn/quyền đổi đều chặn, không phục hồi."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_retry_mat_snapshot_doi_ghim_khong_phat_hanh[profile]",
+      "nhom": "a",
+      "cach_xu_ly": "Thay snapshot bằng bản ghi RAM: mất RAM/băm/prompt/profile/hạn/quyền đổi đều chặn, không phục hồi."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_retry_mat_snapshot_doi_ghim_khong_phat_hanh[han]",
+      "nhom": "a",
+      "cach_xu_ly": "Thay snapshot bằng bản ghi RAM: mất RAM/băm/prompt/profile/hạn/quyền đổi đều chặn, không phục hồi."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_retry_mat_snapshot_doi_ghim_khong_phat_hanh[quyen]",
+      "nhom": "a",
+      "cach_xu_ly": "Thay snapshot bằng bản ghi RAM: mất RAM/băm/prompt/profile/hạn/quyền đổi đều chặn, không phục hồi."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_chua_ro_sau_luu_retry_khong_cap_alias_lan_hai",
+      "nhom": "a",
+      "cach_xu_ly": "Tiêm ChuaRo tại ban_giao sau khi giữ RAM, retry trong hạn dùng cùng dấu/alias và không gia hạn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_tep_json_nhu_che_hien_tai_va_chan_ma_tu_khai",
+      "nhom": "a",
+      "cach_xu_ly": "Fixture R4 + ngăn SDK 2.2.0; giữ kiểm chuẩn bị/nguồn/trần/không rò và Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_core_dieu_phoi_tung_doan_giu_lap_nguon_va_khong_ro_chuyen_tiep",
+      "nhom": "a",
+      "cach_xu_ly": "Dấu RAM R4 dựng từng yêu cầu; giữ chỉ số/biên/băm, từ chối bool/ngoài kế hoạch."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_0_goi_engine_khac_0_cloud_khong_ghi_dia",
+      "nhom": "a",
+      "cach_xu_ly": "Fixture R4 + ngăn SDK 2.2.0; giữ kiểm chuẩn bị/nguồn/trần/không rò và Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_van_ban_tai_lieu_khong_chuyen_ocr_metadata_ra_ai",
+      "nhom": "a",
+      "cach_xu_ly": "Fixture R4 + ngăn SDK 2.2.0; giữ kiểm chuẩn bị/nguồn/trần/không rò và Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_prompt_injection_chi_la_noi_dung_local_khong_doi_prompt",
+      "nhom": "a",
+      "cach_xu_ly": "Fixture R4 + ngăn SDK 2.2.0; giữ kiểm chuẩn bị/nguồn/trần/không rò và Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_cas_chot_ho_so_rollback_retry_khong_nhan_doi_alias",
+      "nhom": "b",
+      "cach_xu_ly": "Không ghi chỉ mục snapshot/CAS hồ sơ; mất RAM không dựng lại; alias chính thức không đổi."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_buoc_core_doc_lap_khong_doc_ngan_engine_khac",
+      "nhom": "b",
+      "cach_xu_ly": "Không Core nào có bảng snapshot/map; Core khác không thấy kho; đọc SDK đúng null+cờ."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_2.py::test_thieu_tai_nguyen_lop_1_khong_phat_hanh",
+      "nhom": "a",
+      "cach_xu_ly": "Thiếu tài nguyên tại runtime R5 vẫn fail-closed và trả đúng MASK_THIEU_TAI_NGUYEN, không rò."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ten_lop_mot_lot_ai_che_them_giu_tien_ngay_khong_ro_log",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ba_loai_khong_can_danh_sach_ho[nguoi]",
+      "nhom": "a",
+      "cach_xu_ly": "Ba nhóm dùng alias DEMO chính thức qua ngăn SDK; fixture gửi: tránh giả thuyết cả trường KHAC; không bỏ Local."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ba_loai_khong_can_danh_sach_ho[to_chuc]",
+      "nhom": "a",
+      "cach_xu_ly": "Ba nhóm dùng alias DEMO chính thức qua ngăn SDK; fixture gửi: tránh giả thuyết cả trường KHAC; không bỏ Local."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ba_loai_khong_can_danh_sach_ho[dia_chi]",
+      "nhom": "a",
+      "cach_xu_ly": "Ba nhóm dùng alias DEMO chính thức qua ngăn SDK; fixture gửi: tránh giả thuyết cả trường KHAC; không bỏ Local."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\u200b-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\u200b-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\u200f-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\u200f-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\ufe0f-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\ufe0f-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\U000e0100-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\U000e0100-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\t-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\t-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\xa0-NFC]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_unicode_code_point_nfd_cf_selector_ten_lap[\\xa0-NFD]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ emoji/NFD/Cf/selector/tên lặp/trùng; đặt ngữ cảnh gửi: và tính lại offset fixture theo chuỗi thực."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_khong_replace_toan_cuc_chi_che_lan_ai_xac_nhan",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_da_che_toan_phan_giu_nguyen_alias_khong_mo_che",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nghi_van_chong_lan_bien_va_vung_bao_ve_chan[nghi_ngo]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nghi_van_chong_lan_bien_va_vung_bao_ve_chan[loai_mau_thuan]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nghi_van_chong_lan_bien_va_vung_bao_ve_chan[muc_mau_thuan]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nghi_van_chong_lan_bien_va_vung_bao_ve_chan[long_span]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nghi_van_chong_lan_bien_va_vung_bao_ve_chan[bien_tu]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nghi_van_chong_lan_bien_va_vung_bao_ve_chan[tien]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nghi_van_chong_lan_bien_va_vung_bao_ve_chan[ngay]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nghi_van_chong_lan_bien_va_vung_bao_ve_chan[alias]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_hop_le_can_du_nguon_va_khuon",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[du_lieu-None]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[du_lieu-gia_tri1]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[du_lieu-gia_tri2]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[du_lieu-gia_tri3]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[trang_thai-co_can_cu]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[kiem_trich_dan-gia_tri5]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[kiem_trich_dan-gia_tri6]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[nha_cung_cap-cloud]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[canh_bao-gia_tri8]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[bam_dau_vao-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[ma_prompt-gia]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[phien_ban_prompt-99]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_rong_gia_sai_bam_khuon_metadata_khong_thanh_cong[model-model-cloud]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_span_sai_hoac_khoa_la[bat_dau]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_span_sai_hoac_khoa_la[ket_thuc]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_span_sai_hoac_khoa_la[loai]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_span_sai_hoac_khoa_la[muc]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_span_sai_hoac_khoa_la[nguyen_van]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_span_sai_hoac_khoa_la[them]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nguon_core_khong_tin_co_caller[khong_chung_thuc]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nguon_core_khong_tin_co_caller[nguon_khac]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nguon_core_khong_tin_co_caller[finish_length]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nguon_core_khong_tin_co_caller[thieu_finish]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nguon_core_khong_tin_co_caller[trich_dan_gia]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nguon_core_khong_tin_co_caller[sha_tai_lieu]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_du_dung_tat_ca_doan_va_local_moi_doan[thieu]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 giao thực sự mọi đoạn; tập phản hồi không mang yêu cầu/gốc/map; sai kế hoạch sửa trực tiếp RAM để kiểm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_du_dung_tat_ca_doan_va_local_moi_doan[dao_thu_tu]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 giao thực sự mọi đoạn; tập phản hồi không mang yêu cầu/gốc/map; sai kế hoạch sửa trực tiếp RAM để kiểm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_du_dung_tat_ca_doan_va_local_moi_doan[cloud_mot_doan]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 giao thực sự mọi đoạn; tập phản hồi không mang yêu cầu/gốc/map; sai kế hoạch sửa trực tiếp RAM để kiểm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_du_dung_tat_ca_doan_va_local_moi_doan[lap]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 giao thực sự mọi đoạn; tập phản hồi không mang yêu cầu/gốc/map; sai kế hoạch sửa trực tiếp RAM để kiểm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_du_dung_tat_ca_doan_va_local_moi_doan[ke_hoach]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 giao thực sự mọi đoạn; tập phản hồi không mang yêu cầu/gốc/map; sai kế hoạch sửa trực tiếp RAM để kiểm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_du_dung_tat_ca_doan_va_local_moi_doan[rong_mau_thuan]",
+      "nhom": "a",
+      "cach_xu_ly": "R4 giao thực sự mọi đoạn; tập phản hồi không mang yêu cầu/gốc/map; sai kế hoạch sửa trực tiếp RAM để kiểm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gom_trung_overlap_dung_span_giu_lan_xuat_hien",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gia_profile_va_bam[ma_yeu_cau]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gia_profile_va_bam[bam_goc]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gia_profile_va_bam[bam_da_che_quy_tac]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gia_profile_va_bam[bam_prompt]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gia_profile_va_bam[bam_khuon]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gia_profile_va_bam[bam_profile]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gia_profile_va_bam[phien_ban_map]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gia_profile_va_bam[he_offset]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_gia_profile_va_bam[nha_cung_cap_bat_buoc]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_sai_quyen_tung_chieu[module]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ đủ sáu chiều quyền tin cậy qua R4 và port Local; không dùng ACL tệp snapshot."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_sai_quyen_tung_chieu[nguoi_gui]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ đủ sáu chiều quyền tin cậy qua R4 và port Local; không dùng ACL tệp snapshot."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_sai_quyen_tung_chieu[tai_lieu]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ đủ sáu chiều quyền tin cậy qua R4 và port Local; không dùng ACL tệp snapshot."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_sai_quyen_tung_chieu[vung]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ đủ sáu chiều quyền tin cậy qua R4 và port Local; không dùng ACL tệp snapshot."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_sai_quyen_tung_chieu[phien]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ đủ sáu chiều quyền tin cậy qua R4 và port Local; không dùng ACL tệp snapshot."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_sai_quyen_tung_chieu[phap_nhan_id]",
+      "nhom": "a",
+      "cach_xu_ly": "Giữ đủ sáu chiều quyền tin cậy qua R4 và port Local; không dùng ACL tệp snapshot."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_tap_quyen_tham_chieu_sai[sha]",
+      "nhom": "a",
+      "cach_xu_ly": "ho_so chỉ metadata RAM; giả băm/size/path/URL/tệp bổ sung hoặc thiếu quyền/port đều bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_tap_quyen_tham_chieu_sai[size]",
+      "nhom": "a",
+      "cach_xu_ly": "ho_so chỉ metadata RAM; giả băm/size/path/URL/tệp bổ sung hoặc thiếu quyền/port đều bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_tap_quyen_tham_chieu_sai[path]",
+      "nhom": "a",
+      "cach_xu_ly": "ho_so chỉ metadata RAM; giả băm/size/path/URL/tệp bổ sung hoặc thiếu quyền/port đều bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_tap_quyen_tham_chieu_sai[url]",
+      "nhom": "a",
+      "cach_xu_ly": "ho_so chỉ metadata RAM; giả băm/size/path/URL/tệp bổ sung hoặc thiếu quyền/port đều bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_tap_quyen_tham_chieu_sai[ten_tep]",
+      "nhom": "a",
+      "cach_xu_ly": "ho_so chỉ metadata RAM; giả băm/size/path/URL/tệp bổ sung hoặc thiếu quyền/port đều bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_tap_quyen_tham_chieu_sai[thu_hoi]",
+      "nhom": "a",
+      "cach_xu_ly": "ho_so chỉ metadata RAM; giả băm/size/path/URL/tệp bổ sung hoặc thiếu quyền/port đều bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_tap_quyen_tham_chieu_sai[thieu_port]",
+      "nhom": "a",
+      "cach_xu_ly": "ho_so chỉ metadata RAM; giả băm/size/path/URL/tệp bổ sung hoặc thiếu quyền/port đều bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_json_tap_nghiem[{\"phien_ban\":1,\"phien_ban\":1}]",
+      "nhom": "a",
+      "cach_xu_ly": "Tiêm bytes JSON trực tiếp vào port nhan_phan_hoi, giữ khóa trùng/NaN/Infinity/JSON hỏng bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_json_tap_nghiem[{\"x\":NaN}]",
+      "nhom": "a",
+      "cach_xu_ly": "Tiêm bytes JSON trực tiếp vào port nhan_phan_hoi, giữ khóa trùng/NaN/Infinity/JSON hỏng bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_json_tap_nghiem[{\"x\":Infinity}]",
+      "nhom": "a",
+      "cach_xu_ly": "Tiêm bytes JSON trực tiếp vào port nhan_phan_hoi, giữ khóa trùng/NaN/Infinity/JSON hỏng bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_json_tap_nghiem[{}]",
+      "nhom": "a",
+      "cach_xu_ly": "Tiêm bytes JSON trực tiếp vào port nhan_phan_hoi, giữ khóa trùng/NaN/Infinity/JSON hỏng bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_json_tap_nghiem[{]",
+      "nhom": "a",
+      "cach_xu_ly": "Tiêm bytes JSON trực tiếp vào port nhan_phan_hoi, giữ khóa trùng/NaN/Infinity/JSON hỏng bị chặn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_loi_timeout_chuaro_huy_lease_cas_khong_phat_hanh[timeout]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_loi_timeout_chuaro_huy_lease_cas_khong_phat_hanh[chua_ro]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_loi_timeout_chuaro_huy_lease_cas_khong_phat_hanh[huy]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_loi_timeout_chuaro_huy_lease_cas_khong_phat_hanh[mat_lease]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_loi_timeout_chuaro_huy_lease_cas_khong_phat_hanh[cas]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_loi_timeout_chuaro_huy_lease_cas_khong_phat_hanh[sau_ban_giao]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_prompt_injection_chi_la_du_lieu_khong_thuc_thi",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_mat_ack_core_ban_giao_retry_khong_cap_alias_dem_lan_nua",
+      "nhom": "b",
+      "cach_xu_ly": "Sau bàn giao chưa rõ phải dọn RAM; retry không tái tạo map, không cấp alias/đếm thêm."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_con_sot_noi_bo_khong_chua_nguyen_van",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_khong_tin_co_kiem_tien_ngay_hay_ai_de_go_chan_cu[thieu_tai_nguyen]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_khong_tin_co_kiem_tien_ngay_hay_ai_de_go_chan_cu[hau_kiem_cu_loi]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_khong_tin_co_kiem_tien_ngay_hay_ai_de_go_chan_cu[tien_ngay_sai]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_khong_tin_co_kiem_tien_ngay_hay_ai_de_go_chan_cu[hau_kiem_chua_du]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_sai_du_sha_bytes_dung_van_chan[map]",
+      "nhom": "a",
+      "cach_xu_ly": "Sửa hồ sơ/map/profile ngay RAM và tính lại SHA; kiểm ngữ nghĩa vẫn chặn, không upload."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_sai_du_sha_bytes_dung_van_chan[bam_goc]",
+      "nhom": "a",
+      "cach_xu_ly": "Sửa hồ sơ/map/profile ngay RAM và tính lại SHA; kiểm ngữ nghĩa vẫn chặn, không upload."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_sai_du_sha_bytes_dung_van_chan[quy_tac_con_sot]",
+      "nhom": "a",
+      "cach_xu_ly": "Sửa hồ sơ/map/profile ngay RAM và tính lại SHA; kiểm ngữ nghĩa vẫn chặn, không upload."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_sai_du_sha_bytes_dung_van_chan[quy_tac_tien_ngay]",
+      "nhom": "a",
+      "cach_xu_ly": "Sửa hồ sơ/map/profile ngay RAM và tính lại SHA; kiểm ngữ nghĩa vẫn chặn, không upload."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_sai_du_sha_bytes_dung_van_chan[quy_tac_gui_duoc]",
+      "nhom": "a",
+      "cach_xu_ly": "Sửa hồ sơ/map/profile ngay RAM và tính lại SHA; kiểm ngữ nghĩa vẫn chặn, không upload."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_sai_du_sha_bytes_dung_van_chan[profile]",
+      "nhom": "a",
+      "cach_xu_ly": "Sửa hồ sơ/map/profile ngay RAM và tính lại SHA; kiểm ngữ nghĩa vẫn chặn, không upload."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_sai_du_sha_bytes_dung_van_chan[khuon]",
+      "nhom": "a",
+      "cach_xu_ly": "Sửa hồ sơ/map/profile ngay RAM và tính lại SHA; kiểm ngữ nghĩa vẫn chặn, không upload."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_snapshot_sai_du_sha_bytes_dung_van_chan[prompt]",
+      "nhom": "a",
+      "cach_xu_ly": "Sửa hồ sơ/map/profile ngay RAM và tính lại SHA; kiểm ngữ nghĩa vẫn chặn, không upload."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nfd_khong_duoc_cat_dau_ket_hop",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_che_prefix_khong_duoc_coi_che_toan_ten",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_cas_ngan_thuc_su_sai_version_rollback_alias_hang_cho",
+      "nhom": "a",
+      "cach_xu_ly": "Gây CAS sai row_version thật qua SDK ở port chứng thực; rollback metadata/alias, không bàn giao, dọn RAM."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_vuot_100_lenh_khong_chia_lo_gia_nguyen_tu",
+      "nhom": "b",
+      "cach_xu_ly": "Bỏ kỳ vọng lô lưu map cũ; spy cấm mọi lô ghi, 24 tên mới bị chặn, không ghi một phần."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_thu_hoi_quyen_huy_het_han_giua_cac_cua[han]",
+      "nhom": "a",
+      "cach_xu_ly": "Đổi mốc commit snapshot sang trước/sau chốt RAM/bàn giao; giữ đầy đủ năm ca thu hồi/hạn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_thu_hoi_quyen_huy_het_han_giua_cac_cua[chung_thuc]",
+      "nhom": "a",
+      "cach_xu_ly": "Đổi mốc commit snapshot sang trước/sau chốt RAM/bàn giao; giữ đầy đủ năm ca thu hồi/hạn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_thu_hoi_quyen_huy_het_han_giua_cac_cua[truoc_commit]",
+      "nhom": "a",
+      "cach_xu_ly": "Đổi mốc commit snapshot sang trước/sau chốt RAM/bàn giao; giữ đầy đủ năm ca thu hồi/hạn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_thu_hoi_quyen_huy_het_han_giua_cac_cua[sau_commit]",
+      "nhom": "a",
+      "cach_xu_ly": "Đổi mốc commit snapshot sang trước/sau chốt RAM/bàn giao; giữ đầy đủ năm ca thu hồi/hạn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_thu_hoi_quyen_huy_het_han_giua_cac_cua[sau_ban_giao]",
+      "nhom": "a",
+      "cach_xu_ly": "Đổi mốc commit snapshot sang trước/sau chốt RAM/bàn giao; giữ đầy đủ năm ca thu hồi/hạn."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_mat_ack_sdk_ket_qua_chi_nop_cung_mot_ban",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_timeout_sau_ghi_chung_cu_la_chua_ro",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_nguon_da_nhan_ai_chua_tra_khong_thanh_rong",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ngucanh_bi_doi_trong_port_phai_dung[module]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ngucanh_bi_doi_trong_port_phai_dung[nguoi_gui]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ngucanh_bi_doi_trong_port_phai_dung[tai_lieu]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ngucanh_bi_doi_trong_port_phai_dung[phien]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ngucanh_bi_doi_trong_port_phai_dung[ma_luot]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ngucanh_bi_doi_trong_port_phai_dung[phap_nhan_id]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_ngucanh_bi_doi_trong_port_phai_dung[dau_vao]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_selector_cf_cuoi_ten_khong_lam_mat_bien_unicode[\\u200b]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_selector_cf_cuoi_ten_khong_lam_mat_bien_unicode[\\u200f]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_selector_cf_cuoi_ten_khong_lam_mat_bien_unicode[\\ufe0f]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_selector_cf_cuoi_ten_khong_lam_mat_bien_unicode[\\U000e0100]",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_3.py::test_cf_noi_hai_phan_tu_khong_cho_che_prefix",
+      "nhom": "a",
+      "cach_xu_ly": "Tập Local qua port RAM + ngăn SDK thật; giữ kiểm span/đủ đoạn/nguồn/tiền-ngày và fail-closed."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_toan_chuoi_model_va_network_checks_nguyen_ban[False]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_toan_chuoi_model_va_network_checks_nguyen_ban[True]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_nfd_cf_selector_lap[orvella linero]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_nfd_cf_selector_lap[a\\u0301nh veloria]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_nfd_cf_selector_lap[orvella\\u200b linero]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_nfd_cf_selector_lap[orvella\\u200f linero]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_nfd_cf_selector_lap[orvella linero\\ufe0f]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_nhieu_doan_overlap_du_va_khong_gui_gold",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_hai_lop_bon_ca_lead_cu_ai_bao_du[m\\u1ea1c \\u0111\\u0129nh chi-m\\u1ea1c \\u0111\\u0129nh chi]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_hai_lop_bon_ca_lead_cu_ai_bao_du[l\\u01b0\\u01a1ng th\\u1ebf vinh-l\\u01b0\\u01a1ng th\\u1ebf vinh]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_hai_lop_bon_ca_lead_cu_ai_bao_du[t\\u1eeb minh t\\xe2m-t\\u1eeb minh t\\xe2m]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_hai_lop_bon_ca_lead_cu_ai_bao_du[v\\u0103n ti\\u1ebfn d\\u0169ng-ph\\u1ee5 tr\\xe1ch h\\u1ea1ng m\\u1ee5c: v\\u0103n ti\\u1ebfn d\\u0169ng]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_ai_bao_thieu_mot_phan_ten_van_lot_khong_duoc_tuyen_bo_cuu_het",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_da_thay_lot_van_khong_dat_khi_ca_khac_loi_ky_thuat",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_loi_ky_thuat_va_chua_ro_khong_thanh_0_dat[cat]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_loi_ky_thuat_va_chua_ro_khong_thanh_0_dat[202]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_loi_ky_thuat_va_chua_ro_khong_thanh_0_dat[timeout]",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_thieu_doan_hau_kiem_chan_ky_thuat",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_bao_nham_dem_tu_ca_thuong_chay_thuc_bang_mock",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_bao_cao_khong_ro_goc_url_path_ma_yeu_cau",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_tach_chan_truoc_ai_khoi_ai_do_va_mau_so_bao_nham",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_ngoai_le_giua_chung_giu_ca_xong_va_danh_dau_ca_chua_do",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_che_thua_dinh_danh_qua_toan_chuoi_local_gia",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_ngoai_le_tien_trinh_cli_van_ghi_ca_truoc",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    },
+    {
+      "test": "e_mask/tests/test_mask_2c_4.py::test_timeout_cung_giu_dem_doan_ai_da_xong",
+      "nhom": "a",
+      "cach_xu_ly": "Công cụ nối RAM R4 + AI-9 nguyên bản + HTTP loopback giả; giữ số đo/ngưỡng/timeout/Cloud tắt."
+    }
+  ],
+  "ket_qua_chot": "216/216 còn thu thập và passed trong full suite; không thiếu/skip/xfail mới",
+  "log_chot": "KET-QUA-KIEM-MASK-R5-TIEP.txt"
+}

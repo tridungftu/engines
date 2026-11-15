@@ -82,8 +82,8 @@ class CongAI:
         # Seam để kiểm đếm provider; bản 1 chỉ truy cập khóa local.
         self.nha_cung_cap = {"local": NhaCungCapLocal()} if nha_cung_cap is None else nha_cung_cap
 
-    def chon_model(self, yeu_cau, cau_hinh, *, kiem_huy=lambda: None):
-        return chon_model(yeu_cau, cau_hinh, kiem_huy=kiem_huy)
+    def chon_model(self, yeu_cau, cau_hinh, *, kiem_huy=lambda: None, ngan=None):
+        return chon_model(yeu_cau, cau_hinh, kiem_huy=kiem_huy, ngan=ngan)
 
     def goi(self, yeu_cau, cau_hinh, *, model, ly_do_chon, kiem_huy):
         kiem_huy()

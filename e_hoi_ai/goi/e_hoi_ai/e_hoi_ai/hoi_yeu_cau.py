@@ -11,7 +11,7 @@ from types import SimpleNamespace
 from kho_tri_thuc_sdk.engine import LoiNghiepVu, ViecDaHuy
 
 from .ai_cuc_bo import LocalAIKhongSanSang
-from .cau_hinh_may import yeu_cau_cau_hinh
+from .hoi import yeu_cau_cau_hinh, lay_ngan
 from .cong_ai import CANH_BAO, MA_SO, danh_gia, ghep_khung
 from .dto import KHONG_THAY_CAN_CU, MA_DINH_DANH, YeuCauAI, kiem_prompt
 from .khuon_json import boc_khuon, doc_json, json_chuan, khop, kiem_khuon
@@ -107,9 +107,9 @@ def goi_theo_yeu_cau(viec, cong, *, phien_ban):
         metadata[k] = v if isinstance(v, str) and MA_DINH_DANH.fullmatch(v) else ""
     try:
         yeu_cau, vao, bam = _doc_yeu_cau(viec)
-        cau_hinh = yeu_cau_cau_hinh()
+        cau_hinh = yeu_cau_cau_hinh(viec)
         viec.kiem_huy()
-        model, ly_do = cong.chon_model(yeu_cau, cau_hinh, kiem_huy=viec.kiem_huy)
+        model, ly_do = cong.chon_model(yeu_cau, cau_hinh, kiem_huy=viec.kiem_huy, ngan=lay_ngan(viec))
         khuon = vao["khuon_tra_loi"]
         khuon_gui = boc_khuon(khuon) if khuon is not None else None
         prompt = ghep_khung(yeu_cau)

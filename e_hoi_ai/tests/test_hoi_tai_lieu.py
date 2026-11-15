@@ -12,7 +12,7 @@ from e_hoi_ai import ai_cuc_bo, chay
 from e_hoi_ai.nha_cung_cap import NhaCungCapCloud
 from e_hoi_ai.cong_ai import CongAI, NhaCungCapLocal, danh_gia
 from e_hoi_ai.dto import YeuCauAI
-from local_gia import LocalGia, TAI_LIEU, TRA_LOI, TRICH_TIEN, TRICH_NGAY, ghi_cau_hinh
+from local_gia import LocalGia, TAI_LIEU, TRA_LOI, TRICH_TIEN, TRICH_NGAY, nap_cau_hinh
 
 THAM_SO = {"ma_prompt": "demo.hoi", "phien_ban_prompt": "1",
            "prompt": "DEMO: Số tiền và ngày thanh toán là bao nhiêu?"}
@@ -60,8 +60,7 @@ def khong_mang_ngoai_va_khong_cloud(monkeypatch):
 @pytest.fixture
 def local(tmp_path, monkeypatch):
     with LocalGia() as may:
-        tep = ghi_cau_hinh(tmp_path, may.url)
-        monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
+        nap_cau_hinh(may.url)
         yield may
 
 
@@ -148,8 +147,7 @@ def test_khong_gui_truong_prompt_cung_tra_thieu_prompt(local):
 
 def test_local_tat_loi_thu_lai_duoc_khong_cloud(tmp_path, monkeypatch):
     with LocalGia() as may:
-        tep = ghi_cau_hinh(tmp_path, may.url, thoi_han=0.2)
-    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
+        nap_cau_hinh(may.url, thoi_han=0.2)
     kq = hoi()
     assert kq["trang_thai"] == "LOI"
     assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG"
@@ -197,8 +195,7 @@ def test_phan_hoi_http_hong_hoac_vuot_tran(local, raw):
 
 
 def test_timeout_theo_cau_hinh(local, tmp_path, monkeypatch):
-    tep = ghi_cau_hinh(tmp_path, local.url, thoi_han=0.02)
-    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
+    nap_cau_hinh(local.url, thoi_han=0.02)
     cho = threading.Event()
     local.khi_nhan = lambda phuong_thuc, duong: cho.wait(0.1) if phuong_thuc == "POST" else None
     kq = hoi()
@@ -298,8 +295,7 @@ def test_model_uu_tien_tham_so_thang_quy_tac(local):
 
 
 def test_khong_co_quy_tac_chon_model_dau_tien_kha_dung(local, tmp_path, monkeypatch):
-    tep = ghi_cau_hinh(tmp_path, local.url, quy_tac=[])
-    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
+    nap_cau_hinh(local.url, quy_tac=[])
     kq = hoi()
     assert kq["ket_qua"]["truong"]["model"] == "model-demo"
     assert kq["ket_qua"]["truong"]["ly_do_chon_model"] == "model_dau_tien_kha_dung"

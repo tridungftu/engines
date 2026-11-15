@@ -9,7 +9,7 @@ from kho_tri_thuc_sdk.thu import CoreGia
 from e_hoi_ai import chay, chon_model
 from e_hoi_ai.cong_ai import CongAI, NhaCungCapLocal
 from e_hoi_ai.dto import YeuCauAI
-from local_gia import LocalGia, TAI_LIEU, ghi_cau_hinh
+from local_gia import LocalGia, TAI_LIEU, nap_cau_hinh
 
 
 @pytest.fixture(autouse=True)
@@ -42,8 +42,7 @@ def cau_hinh(may):
 
 
 def hoi(may, tmp_path, monkeypatch, *, quy_tac=None, model=None, ma_prompt="m4.hoi"):
-    tep = ghi_cau_hinh(tmp_path, may.url, quy_tac=quy_tac or [])
-    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
+    nap_cau_hinh(may.url, quy_tac=quy_tac or [])
     tham_so = {"ma_prompt": ma_prompt, "phien_ban_prompt": "1", "prompt": "Câu hỏi DEMO"}
     if model is not None:
         tham_so["model_uu_tien"] = model

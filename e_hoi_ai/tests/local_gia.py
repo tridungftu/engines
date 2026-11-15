@@ -117,12 +117,21 @@ class LocalGia:
         self.luong.join(timeout=5)
 
 
-def ghi_cau_hinh(thu_muc, url, *, thoi_han=2, quy_tac=None):
-    tep = Path(thu_muc) / "cau_hinh_DEMO.json"
-    tep.write_text(json.dumps({
+def nap_cau_hinh(url, *, thoi_han=2, quy_tac=None):
+    """Nạp DEMO qua API ngăn, không tạo tệp cấu hình."""
+    from e_hoi_ai.chay import app
+    from e_hoi_ai.ngan import chon_ngan
+    ngan = chon_ngan(app)
+    gia_tri = {
         "local_ai": {"url": url, "timeout_giay": thoi_han},
         "quy_tac_model": quy_tac if quy_tac is not None else [
             {"mau_ma_prompt": "demo.*", "uu_tien": "model-demo", "du_phong": []}
         ],
-    }), encoding="utf-8")
-    return tep
+    }
+    cu = ngan.doc("cau_hinh", {})
+    with ngan.lo() as lo:
+        if cu is None:
+            lo.them("cau_hinh", {}, gia_tri)
+        else:
+            lo.sua("cau_hinh", {}, gia_tri, row_version=cu.row_version)
+    return gia_tri

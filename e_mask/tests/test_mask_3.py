@@ -488,8 +488,14 @@ def tu_vung_demo(monkeypatch):
 
 
 def tao_app_demo(core_kho, quyen, thu_muc, cac_lan):
-    """Adapter chỉ trong tests để kiểm port qua SDK; handler sản phẩm ở MASK-5."""
-    app = Engine.tu_khai_bao(str(GOI / 'engine.json'))
+    """Adapter lịch sử MASK-3 kiểm hai port cũ, dùng phiếu con tương ứng.
+
+    Handler sản phẩm và năng lực Local mới được kiểm bằng tao_app thật
+    trong các bộ MASK-4…6/MASK-2c; không dựng stub cho năng lực mới ở đây.
+    """
+    phieu = json.loads((GOI / 'engine.json').read_text('utf-8'))
+    phieu['nang_luc'] = [n for n in phieu['nang_luc'] if n['ma'] in {CHE, MO}]
+    app = Engine(phieu, thu_muc_goi=GOI)
     lop = KhoDinhDanh(goi_kho=core_kho.port(quyen), quyen=quyen, kho_tam=KhoTam(thu_muc))
     @app.nang_luc(CHE)
     def che(viec):

@@ -14,6 +14,7 @@ from .cau_hoi import phan_tich_cau_hoi
 from .xep_hang import xep_hang_lai
 from .phan_loai import phan_loai_tai_lieu
 from .tra_loi import soan_tra_loi
+from .xuat_ket_qua import xuat_ket_qua
 from .bang_chung import chuan_bi_tang_mot
 from .kiem_dau_vao import doi_tuong, loi
 
@@ -178,10 +179,22 @@ def dang_ky_nang_luc(ung_dung):
         except Exception:
             raise LoiNghiepVu("ENGINE_LOI_XU_LY", "Engine gặp lỗi khi xử lý việc này.") from None
 
+    @ung_dung.nang_luc("tra_cuu.xuat_ket_qua@1")
+    def xuat(viec):
+        try:
+            return xuat_ket_qua(viec, getattr(ung_dung, "cua_nguon", None),
+                                ung_dung.phien_ban, kiem_cau_hinh_da_chup)
+        except (LoiNghiepVu, LoiDuongTruyen, ChuaRo, ViecDaHuy):
+            raise
+        except (ValueError, TypeError, KeyError, AttributeError, RecursionError, OverflowError):
+            loi("TC_SAI_NGUON")
+        except Exception:
+            raise LoiNghiepVu("ENGINE_LOI_XU_LY", "Engine gặp lỗi khi xử lý việc này.") from None
+
     for nang_luc in ung_dung.phieu["nang_luc"]:
         if nang_luc["ma"] not in {"tra_cuu.nhan_yeu_cau@1", "tra_cuu.cat_doan@1", "tra_cuu.chuan_bi_ai@1",
                                  "tra_cuu.phan_loai_tai_lieu@1", "tra_cuu.phan_tich_cau_hoi@1",
-                                 "tra_cuu.xep_hang_lai@1", "tra_cuu.soan_tra_loi@1"}:
+                                 "tra_cuu.xep_hang_lai@1", "tra_cuu.soan_tra_loi@1", "tra_cuu.xuat_ket_qua@1"}:
             ung_dung.nang_luc(nang_luc["ma"])(chua_lam)
 
 

@@ -1,5 +1,11 @@
 # Thay đổi
 
+## 0.1.0 — 15/11/2026 — TC-8
+
+- Xuất kết quả hậu kiểm thành JSON tại Core và các trường tĩnh; kiểm nguồn,
+  băm, trạng thái, số đếm, quyền, nhãn và xác nhận tải; không lưu tệp cục bộ.
+- Đã kiểm bằng Core giả (CoreGia); CLI SDK chuẩn vẫn thiếu cấu hình/ngăn (§2.5).
+
 ## 0.1.0 — 15/11/2026 — TC-7 sửa sau kiểm độc lập KHÔNG ĐẠT
 
 - Sửa hai tệp runtime `kiem_chung.py`, `tra_loi.py`: giá trị phải gắn với

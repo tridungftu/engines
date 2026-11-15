@@ -193,7 +193,7 @@ def app_kiem_demo():
     phieu["nang_luc"] = [{"ma": "demo.kiem_contract@1", "ten": "Kiểm phong bì DEMO",
                           "nhan": ["ho_so_doi_chieu"], "tra": "ho_so_doi_chieu",
                           "gioi_han": {"tep_toi_da_mib": 20, "thoi_han_giay": 120}}]
-    app = Engine(phieu)
+    app = Engine(phieu, thu_muc_goi=GOI)
 
     @app.nang_luc("demo.kiem_contract@1")
     def kiem_fixture(viec):
@@ -241,8 +241,6 @@ def test_bam_schema_va_mau_ngan_lf():
         src = ROOT / "_chung/contract" / (ten + ".schema.json")
         assert bam(src.read_bytes().replace(b"\r\n", b"\n")) == bam((GOI / src.name).read_bytes().replace(b"\r\n", b"\n"))
     assert {p.name for p in GOI.glob("*.schema.json")} == {"cau_hinh.schema.json", *(n + ".schema.json" for n in TEN_SCHEMA)}
-    for ten in ("ngan.py", "cau_hinh.py"):
-        assert bam((GOI / "e_doi_chieu" / ten).read_bytes().replace(b"\r\n", b"\n")) == bam((ROOT / "_chung/mau-ma" / ten).read_bytes().replace(b"\r\n", b"\n"))
 
 
 def test_manifest_core_gia_giu_khung():

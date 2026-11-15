@@ -9,7 +9,8 @@ import zipfile
 import pytest
 
 from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu, ViecDaHuy
-from kho_tri_thuc_sdk.thu import CoreGia, nap_engine_tu_goi
+from kho_tri_thuc_sdk.thu import nap_engine_tu_goi
+from ngan_demo import core_demo
 
 from demo.tao_pdf import CONG_TY, DONG_DEMO, NGAY, TIEN, pdf_demo
 from e_ocr.xuat_word import MIME_DOCX, W, dung_docx
@@ -169,7 +170,7 @@ def test_tu_choi_du_lieu_khong_day_du_hoac_qua_tran(sua, ma):
 
 
 def chay_word(raw, ten="DEMO.goc.pdf"):
-    core = CoreGia()
+    core = core_demo()
     tep = core.them_tep(ten, raw, "application/pdf")
     kq = core.chay_thu(nap_engine_tu_goi(GOI), WORD, {"loai": "tep", "tep": tep})
     return core, kq

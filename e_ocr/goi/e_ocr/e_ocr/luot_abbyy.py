@@ -3,19 +3,56 @@
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from hashlib import sha256
+from decimal import Decimal, InvalidOperation
 import json
 import re
 from uuid import NAMESPACE_URL, uuid4, uuid5
 
-from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu
+from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu, NganXungDot
 
 from .abbyy import LoiABBYYChuaNhan
-from .ngan import NganXungDot
 
 
 DANG_DO = {"dang_gui", "chua_ro"}
 DA_CHOT = {"xong", "loi", "huy", "chua_gui", "tu_choi"}
 HAN_XU_LY_GIAY = 30
+
+
+def doc_so_nguyen(gia_tri):
+    """SDK trả numeric bằng chuỗi thập phân; không cắt phần lẻ."""
+    if isinstance(gia_tri, bool) or not isinstance(gia_tri, (str, int, float)):
+        raise ValueError("Số đếm không hợp lệ.")
+    try:
+        so = Decimal(str(gia_tri))
+        if not so.is_finite() or so != so.to_integral_value():
+            raise ValueError("Số đếm không hợp lệ.")
+        return int(so)
+    except InvalidOperation:
+        raise ValueError("Số đếm không hợp lệ.") from None
+
+
+def ghi_map(gia_tri):
+    """Map nhỏ dùng van_ban vì SDK 2.2.0 chưa nhận kiểu json cho ngăn."""
+    raw = json.dumps(gia_tri, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    if len(raw.encode("utf-8")) > 64 * 1024:
+        raise LoiNghiepVu("NGAN_DU_LIEU_QUA_LON", "Sổ OCR vượt giới hạn lưu trữ. Hãy liên hệ quản trị viên.")
+    return raw
+
+
+def doc_map(raw):
+    if not isinstance(raw, str) or len(raw.encode("utf-8")) > 64 * 1024:
+        raise ValueError("Sổ OCR không hợp lệ.")
+    def cap(cac_cap):
+        kq = dict(cac_cap)
+        if len(kq) != len(cac_cap):
+            raise ValueError("Sổ OCR có khóa trùng.")
+        return kq
+    def hang_so(_):
+        raise ValueError("Sổ OCR chứa số không hợp lệ.")
+    gia_tri = json.loads(raw, object_pairs_hook=cap, parse_constant=hang_so)
+    if type(gia_tri) is not dict:
+        raise ValueError("Sổ OCR không hợp lệ.")
+    return gia_tri
 
 
 def khoa_nhat_ky(phap_nhan_id, bam):
@@ -29,7 +66,7 @@ def khoa_nhat_ky(phap_nhan_id, bam):
 
 def tim_luot(ngan, phap_nhan_id, bam):
     khoa_nhat_ky(phap_nhan_id, bam)
-    ds = ngan.tim("luot_abbyy", loc={"phap_nhan_id": str(phap_nhan_id), "bam_noi_dung": bam}, gioi_han=2)
+    ds = ngan.tim("luot_abbyy", loc={"bam_noi_dung": bam}, gioi_han=2)
     if len(ds.danh_sach) > 1:
         raise LoiNghiepVu("NHAT_KY_LUOT_CAN_KIEM_TRA", "Nhật ký lượt ABBYY cần được đối chiếu.")
     return ds.danh_sach[0] if ds.danh_sach else None
@@ -50,7 +87,24 @@ class NhatKyLuot:
         return uuid5(NAMESPACE_URL, f"e_ocr:{self.khoa}:{lan_gui}").hex
 
     def _khoa(self, ma=None):
-        return {"phap_nhan_id": self.phap_nhan_id, "ma_tuong_quan": ma or self.ma}
+        return {"ma_tuong_quan": ma or self.ma}
+
+    @staticmethod
+    def _gia_tri(luot):
+        return {k: v for k, v in luot.items() if k != "phap_nhan_id"}
+
+    def _tu_ban_ghi(self, b):
+        if b is None:
+            return None
+        chuan = {"id", "row_version", "tao_luc", "sua_luc", "het_han_luc", "viec_id"}
+        try:
+            gt = {k: v for k, v in b.gia_tri.items() if k not in chuan}
+            for k in ("so_trang", "lan_gui", "luc_giu", "luc_nhan", "han_xu_ly"):
+                if gt.get(k) is not None:
+                    gt[k] = doc_so_nguyen(gt[k])
+            return self._kiem(gt)
+        except (ValueError, TypeError, OverflowError):
+            raise LoiNghiepVu("NHAT_KY_LUOT_CAN_KIEM_TRA", "Nhật ký lượt ABBYY không hợp lệ. Hãy liên hệ quản trị viên.") from None
 
     def _kiem(self, luot):
         if luot is None:
@@ -81,7 +135,7 @@ class NhatKyLuot:
 
     def doc(self):
         b = tim_luot(self.ngan, self.phap_nhan_id, self.bam)
-        luot = self._kiem(None if b is None else b.gia_tri)
+        luot = self._tu_ban_ghi(b)
         if luot is not None:
             self.ma = luot["ma_tuong_quan"]
         self._da_doc = True
@@ -94,7 +148,7 @@ class NhatKyLuot:
         for _ in range(12):
             anh, so = self.so._doc()
             b = tim_luot(self.ngan, self.phap_nhan_id, self.bam)
-            cu = self._kiem(None if b is None else b.gia_tri)
+            cu = self._tu_ban_ghi(b)
             # Việc khác đã bắt đầu/kết thúc kể từ lần đọc đầu: nhập lượt đó,
             # không tạo thế hệ mới từ một quyết định đọc đã cũ (nợ OCR-4 #1).
             hien_tai = None if cu is None else (cu["ma_tuong_quan"], cu["trang_thai"])
@@ -117,13 +171,14 @@ class NhatKyLuot:
             try:
                 with self.ngan.lo() as lo:
                     if b is not None:
-                        lo.xoa("luot_abbyy", self._khoa(cu["ma_tuong_quan"]), row_version=b.row_version)
-                    ket_qua = lo.lay_hoac_tao("luot_abbyy",
-                                   {"phap_nhan_id": self.phap_nhan_id, "bam_noi_dung": self.bam}, luot)
+                        # Giữ id/phiên bản; thế hệ mới thay bằng CAS, không xóa lượt.
+                        lo.sua("luot_abbyy", self._khoa(cu["ma_tuong_quan"]), self._gia_tri(luot),
+                               row_version=b.row_version)
+                    else:
+                        lo.them("luot_abbyy", self._gia_tri(luot))
                     self.so._ghi(lo, anh, so)
-                luot = self._kiem(ket_qua.gia_tri)
                 self.ma = luot["ma_tuong_quan"]
-                return luot, ket_qua.da_tao
+                return luot, True
             except NganXungDot:
                 continue
         self._xung_dot()
@@ -145,7 +200,12 @@ class NhatKyLuot:
             return
         khoa = {"ma": "chua_ro"}
         cu = self.ngan.doc("trang_thai_engine", khoa)
-        theo_ngay = {} if cu is None else dict(cu.gia_tri["theo_ngay"])
+        try:
+            theo_ngay = {} if cu is None else doc_map(cu.gia_tri["theo_ngay"])
+            if any(type(n) is not int or n < 1 for n in theo_ngay.values()):
+                raise ValueError
+        except (ValueError, TypeError, KeyError, RecursionError):
+            raise LoiNghiepVu("NHAT_KY_LUOT_CAN_KIEM_TRA", "Số lượt chưa rõ cần được đối chiếu lại.") from None
         ngay = datetime.fromtimestamp(luot["luc_giu"], timezone.utc).date().isoformat()
         dem = theo_ngay.get(ngay, 0) + (1 if moi_chua_ro else -1)
         if dem < 0:
@@ -154,9 +214,9 @@ class NhatKyLuot:
             theo_ngay[ngay] = dem
         else:
             theo_ngay.pop(ngay, None)
-        gia_tri = {"so_luot": sum(theo_ngay.values()), "theo_ngay": theo_ngay}
+        gia_tri = {"so_luot": sum(theo_ngay.values()), "theo_ngay": ghi_map(theo_ngay)}
         if cu is None:
-            lo.them("trang_thai_engine", khoa, gia_tri)
+            lo.them("trang_thai_engine", {**khoa, **gia_tri})
         else:
             lo.sua("trang_thai_engine", khoa, gia_tri, row_version=cu.row_version)
 
@@ -168,7 +228,7 @@ class NhatKyLuot:
             b = self.ngan.doc("luot_abbyy", self._khoa())
             if b is None:
                 raise ChuaRo(self.ma)
-            luot = self._kiem(b.gia_tri)
+            luot = self._tu_ban_ghi(b)
             self._kiem_quyen(luot)
             if luot["trang_thai"] not in DANG_DO:
                 return luot
@@ -204,7 +264,7 @@ class NhatKyLuot:
                 luot["trang_thai"] = trang_thai
             try:
                 with self.ngan.lo() as lo:
-                    lo.sua("luot_abbyy", self._khoa(), self._kiem(luot), row_version=b.row_version)
+                    lo.sua("luot_abbyy", self._khoa(), self._gia_tri(self._kiem(luot)), row_version=b.row_version)
                     self._ghi_chua_ro(lo, luot, trang_thai_cu)
                     self.so._ghi(lo, anh, so)
                 return luot
@@ -217,7 +277,7 @@ class NhatKyLuot:
             b = self.ngan.doc("luot_abbyy", self._khoa())
             if b is None:
                 raise ChuaRo(self.ma)
-            luot = self._kiem(b.gia_tri)
+            luot = self._tu_ban_ghi(b)
             luc = int(self.so.dong_ho())
             if nha:
                 if luot["chu_xu_ly"] != self.chu:
@@ -235,7 +295,7 @@ class NhatKyLuot:
                 luot.update(chu_xu_ly=self.chu, han_xu_ly=luc + HAN_XU_LY_GIAY)
             try:
                 with self.ngan.lo() as lo:
-                    lo.sua("luot_abbyy", self._khoa(), luot, row_version=b.row_version)
+                    lo.sua("luot_abbyy", self._khoa(), self._gia_tri(luot), row_version=b.row_version)
                 if not nha:
                     self._da_nam_quyen = True
                 return

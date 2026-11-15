@@ -14,11 +14,12 @@ sys.path.insert(0, str(GOI))
 chay = importlib.import_module("e_doi_chieu.chay")
 
 
-def test_mau_ngan_nguyen_ban():
-    for ten in ("ngan.py", "cau_hinh.py"):
-        def bam(path):
-            return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).digest()
-        assert bam(GOI / "e_doi_chieu" / ten) == bam(ROOT / "_chung" / "mau-ma" / ten)
+def test_cong_tam_da_luu_tru_khong_nam_trong_goi():
+    luu = ROOT / "e_doi_chieu/LUU-TRU/DC-S22"
+    for ten in ("ngan.py", "cau_hinh.py", "KHAI-SDK-2.1.json"):
+        assert (luu / ten).is_file()
+        assert not (GOI / "e_doi_chieu" / ten).exists()
+    assert not (GOI / "KHAI-SDK-2.1.json").exists()
 
 
 def test_core_gia_docx_hong_khong_tra_ket_qua():
@@ -31,28 +32,27 @@ def test_core_gia_docx_hong_khong_tra_ket_qua():
 
 
 def test_thieu_cau_hinh_khong_chan_khoi_dong(monkeypatch):
-    monkeypatch.setattr(chay, "ngan", chay.NganBoNho())
+    from types import SimpleNamespace
     with pytest.raises(LoiNghiepVu) as exc:
-        chay.can_cau_hinh()
+        chay.can_cau_hinh(SimpleNamespace(cau_hinh={}))
     assert exc.value.ma == "CHUA_CAU_HINH"
     CoreGia().chay(chay.app)
 
 
 def test_chon_ngan_va_schema(monkeypatch):
-    ngan = chay.NganBoNho()
-    class App: pass
-    app = App()
-    app.ngan = ngan
-    assert chay.chon_ngan(app) is ngan
-    monkeypatch.setattr(chay, "ngan", ngan)
-    with ngan.lo() as lo:
-        lo.them("cau_hinh", {}, {"phien_ban_cau_hinh":"DEMO", "ma_bo_chuan_hoa":"DEMO", "bam_bo_chuan_hoa":"DEMO", "ma_tu_dien":"DEMO", "bam_tu_dien":"DEMO", "phuong_phap_detector":"DEMO", "phien_ban_detector":"DEMO"})
-    assert chay.can_cau_hinh()["nguong_ocr_kem"] is None
-    assert ngan.doc("cau_hinh", {}).gia_tri.get("nguong_ocr_kem", "thieu") == "thieu"
+    from types import SimpleNamespace
+    core = CoreGia(chay.app)
+    config = {k: "DEMO" for k in chay._BAT_BUOC}
+    core.dat_cau_hinh(chay.app.ma, config)
+    core.chay(chay.app)
+    assert chay.app.cau_hinh["nguong_ocr_kem"] is None
+    assert chay.can_cau_hinh(SimpleNamespace(cau_hinh=chay.app.cau_hinh))["so_trang_toi_da"] == 60
+    assert "nguong_ocr_kem" not in config
 
 
 def test_manifest_khung():
     phieu = json.loads((GOI / "engine.json").read_text(encoding="utf-8"))
-    assert not ({"ngan_du_lieu", "cau_hinh", "giao_dien_quan_tri"} & phieu.keys())
+    assert phieu["tuong_thich"]["sdk"] == ">=2.2.0 <3.0.0"
+    assert "cau_hinh" not in {b["bang"] for b in phieu["ngan_du_lieu"]}
     assert phieu["chay_thu_demo"]
     assert [n["ma"] for n in phieu["nang_luc"]] == ["doi_chieu.doc_docx@1", "doi_chieu.nhan_cap@1", "doi_chieu.so_van_ban@1", "doi_chieu.phat_hien_sua_tay@1", "doi_chieu.chuan_bi_ai@1", "doi_chieu.phan_loai_diem_lech@1"]

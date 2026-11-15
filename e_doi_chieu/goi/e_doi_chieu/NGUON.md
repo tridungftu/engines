@@ -1,5 +1,72 @@
 # Nguồn của gói Đối chiếu
 
+## DC-S22 — 15/11/2026 · 0.7.1 chưa phát hành
+
+Chuyển cổng ngăn/cấu hình theo SDK 2.2.0 và mẫu `e_demo_ngan` trong repo;
+SQL viết mới cho đúng bốn bảng đã khai, chỉ CREATE TABLE trong schema
+`eng_e_doi_chieu`, không kết nối CSDL lúc chạy. Không thêm dependency
+runtime ngoài SDK 2.2.0 và Pillow 12.3.0 đã ghim từ DC-8. Wheel SDK có
+SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`,
+khớp `docs/goi-gui-engine/sdk-2.2.0/SHA256SUMS.txt`.
+
+`ngan.py`, `cau_hinh.py`, `KHAI-SDK-2.1.json` lưu nguyên bytes tại
+`e_doi_chieu/LUU-TRU/DC-S22/`, không còn thuộc gói chạy; không tiếp tục
+test so băm với mẫu NGAN-0. Bốn schema loại dữ liệu chung vẫn giữ nguyên
+và được test so SHA LF. Khuôn DC-6 thêm `$comment` theo §8 loại chung,
+khớp profile DC-6 trong Hỏi AI-12; không đổi schema chung/API hoặc loại.
+
+Test dùng ngăn/cấu hình của CoreGia 2.2.0, provider Local/nguồn DEMO.
+`tests/ngan_demo.py` chỉ giao việc DEMO qua SDK để sửa ngăn giữa các lượt,
+không tự triển khai kho/CAS. Mã Hỏi AI AI-11/AI-12 chỉ nạp trong test
+tích hợp từ nội dung `origin/main` `12ed8db`; runtime không import engine
+khác. 0 Cloud; chưa đo model/OCR/Core thật. Dependency test đã ghim tại
+`e_doi_chieu/tests/requirements.lock`; môi trường offline dùng dependency
+đã cài đúng bản qua system-site-packages, không tải mạng.
+
+`quy_tac.py` thêm `functools.lru_cache` của thư viện chuẩn cho tối đa
+128 cụm tiền trong cùng lượt quét, không đệm cấu hình/lưu bền. Giữ ngưỡng
+test hiệu năng cũ và kiểm từng vị trí có bản giá trị riêng, không chia sẻ
+dict đầu ra. Bộ kiểm đầy đủ sau chuyển: 898 passed, 0 skipped.
+
+Bảng sau là SHA hiện hành sau CRLF→LF; các bảng lát cũ là lịch sử.
+`sql/kiem_ke.json` dùng bytes/SHA thực của mọi tệp gói, gồm NGUON,
+trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hóa.
+
+<!-- DC-S22-SHA:DAU -->
+| Tệp hiện hành | SHA-256 LF |
+|---|---|
+| `.gitattributes` | `36f5046d7b9e6c15c3d77263f4918fa7997bebfbf79f3a4f3b954da607cd4eed` |
+| `cau_hinh.schema.json` | `15f77ad989363254ab67fffeb88b48eccbb8243fc58b91e5357f130c2fc70d98` |
+| `CHANGELOG.md` | `cc93a1e9c1a66b6d6644de6ea21546caba02c7c1afc2a3c4e417a8ddc32e17a4` |
+| `demo/DEMO-ban-chot.docx` | `e086e49c1dfad0cdfc702ab141a9de6123cbd123e4c7110df975b673e194bcaa` |
+| `demo/README.md` | `e65567d43ae6afeb303f977ddb3ea58ca18fe9dcb166b76fc731ad81d763d580` |
+| `e_doi_chieu/__init__.py` | `a427fe739dab3a98c108b79f40f7a53328d504300979b71ccc900892064948b3` |
+| `e_doi_chieu/anh.py` | `2358268bca79589385e904909ab32d5bdaa43d3ebf5097776698e91a0c5f7dbe` |
+| `e_doi_chieu/can_chinh.py` | `39b084ae09adc8785051fbbb95238281b0f305e4a5370f5856c65263f0ada76e` |
+| `e_doi_chieu/cau_truc.py` | `ddde14383f97bf5c1fa1a2161aed7db8f3ea1e36004c16350a2db52018c2d333` |
+| `e_doi_chieu/chay.py` | `ab7f490dec356ad6f0e5a878dd7dfc2fbc82ad9f52168f5650a8a2cc573e6fd6` |
+| `e_doi_chieu/chuan_bi_ai.py` | `82b8f8d2363ee3746aed14e1cbf4c1c4a290c7d6b92cfcd46eac456aab7de8ae` |
+| `e_doi_chieu/chuan_hoa.py` | `a427053b5465450e838c274589d7d4b91fa86f69817414854a16cce2028bfe1b` |
+| `e_doi_chieu/doc_docx.py` | `7e63532c8ae2358ccc1b90a1bb65cb85e83c5c743fb3d8d9287fb2ed3cce3945` |
+| `e_doi_chieu/hau_kiem_ai.py` | `a9dab45b42db79b3779ceabd903602a7a63eb2493d9f344e12db3059a715e030` |
+| `e_doi_chieu/ho_so.py` | `13441efae45cca90d2cbc2c4dabd7f5f4c4e2e2240ce96f12cd25ced1531e0e0` |
+| `e_doi_chieu/lech_dau.py` | `6c82cf3d41622ca038a0ea9ab5df12edb2b93224a1e99b7c07a37a32e81ec26f` |
+| `e_doi_chieu/quy_tac.py` | `e937c98d97a31a9f6f8e8e79e68a0c76efdda5fb5c0880a19418e81e08138a76` |
+| `e_doi_chieu/so_chu.py` | `f6045c6494422bb842c638d90f378e8e95d66ad3d0996fff9d365814779f5038` |
+| `e_doi_chieu/sua_tay.py` | `29a63bdfa9306c748a6a6bc4808f85206dfc69e9f94d816c52c6a22d369528d0` |
+| `e_doi_chieu/tien_chu.py` | `d0aba9de44269b62fe1a1506780b3a3459c1a462a9fc9988b502ad6a8d48224d` |
+| `e_doi_chieu/tu_dien.py` | `4ac5ec887ae9a732f2a69675ae69b9b28801a583b4310cb5986830e8ca874481` |
+| `e_doi_chieu/vi_tri.py` | `0efdfb41d3cc56e857ab74e49c8f8cbaa7f0d075267581f60ffb33232d148a97` |
+| `engine.json` | `a13beaea3539315c4aa989a800f235dc9958d02f7fc31d54ac47bac67cf1ca9b` |
+| `ho_so_doi_chieu.schema.json` | `9114bf674c4d16189050eb3130453838b7bc1c2c22f6208a05e866df84adf776` |
+| `README.md` | `ed232754fda2c1f1bf154da6cbe868f0c7f57d7f5330b11a1dd9973296eb3e8a` |
+| `requirements.lock` | `68ddd023dd5f4610cea4f5aa63fbe91a9915c3b0fde10661edecb430e9f4bc4f` |
+| `sql/001_tao_ngan.sql` | `e71934770ec9664fa902782bd849a4a1d375e428602cff959691154ddb5f5f8e` |
+| `tra_loi_ai.schema.json` | `5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f` |
+| `van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
+| `yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
+<!-- DC-S22-SHA:CUOI -->
+
 ## DC-7 — 15/11/2026 · 0.7.0 chưa phát hành
 
 Viết mới `lech_dau.py`, `tu_dien.py` theo DC-f/DAC-TA §4 và phiếu

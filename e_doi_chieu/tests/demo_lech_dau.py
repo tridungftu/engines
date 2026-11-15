@@ -16,8 +16,8 @@ class CoreOCRVungDEMO(CoreTepConDEMO):
         super().__init__()
         self.ocr_vung_viec = {}
 
-    def _nhan_viec(self, ma):
-        v = super()._nhan_viec(ma)
+    def _nhan_viec(self, ma, instance=None):
+        v = super()._nhan_viec(ma, instance)
         if v and v["id"] in self.ocr_vung_viec:
             v["ngu_canh"]["doi_chieu_ocr_vung"] = deepcopy(self.ocr_vung_viec[v["id"]])
         return v

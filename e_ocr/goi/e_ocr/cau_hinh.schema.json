@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Cấu hình OCR trong ngăn của engine",
+  "title": "Cấu hình OCR do Core quản lý",
   "type": "object",
   "additionalProperties": false,
   "properties": {

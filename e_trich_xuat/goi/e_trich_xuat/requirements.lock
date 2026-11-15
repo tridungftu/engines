@@ -1,3 +1,11 @@
-# Runtime chỉ dùng thư viện chuẩn Python >= 3.11 và wheel SDK trong repo.
-# Cài SDK offline bằng --no-index --no-deps; không tải gói mạng.
-kho_tri_thuc_sdk==2.0.0
+# Python >= 3.11; SDK và phụ thuộc runtime, cài offline --no-index --no-deps.
+kho_tri_thuc_sdk==2.2.0
+cryptography==49.0.0
+cffi==2.0.0
+pycparser==3.0
+jsonschema==4.26.0
+attrs==26.1.0
+jsonschema-specifications==2025.9.1
+referencing==0.37.0
+rpds-py==2026.6.3
+typing_extensions==4.15.0

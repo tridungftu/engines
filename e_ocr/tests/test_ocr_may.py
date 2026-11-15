@@ -18,7 +18,8 @@ from PIL import Image
 import pytest
 
 from kho_tri_thuc_sdk.engine import LoiNghiepVu, Viec
-from kho_tri_thuc_sdk.thu import CoreGia, nap_engine_tu_goi
+from kho_tri_thuc_sdk.thu import nap_engine_tu_goi
+from ngan_demo import core_demo
 
 from chay_demo import GOI, TesseractGia, chay_demo
 from demo.tao_bo_demo import CONG_TY, TIEN, NGAY, tao_bo_demo
@@ -39,7 +40,7 @@ def bo_demo(tmp_path_factory):
 
 
 def gui(tep, nang_luc=DOC, *, core=None, nguon="tu_dong"):
-    core = core or CoreGia()
+    core = core or core_demo()
     mime = {".pdf": "application/pdf", ".png": "image/png", ".jpg": "image/jpeg"}[tep.suffix]
     dau_vao = {"loai": "tep", "tep": core.them_tep(tep.name, tep.read_bytes(), mime)}
     return core, core.chay_thu(nap_engine_tu_goi(GOI), nang_luc, dau_vao, {"nguon": nguon})
@@ -125,7 +126,7 @@ def test_ca_2_pdf_quet_abbyy_vi_tri_word_tien_ngay(bo_demo, hot_folder, nang_luc
 
 def test_ca_3_hai_anh_hang_cho_va_trung_luot_do(bo_demo, hot_folder, monkeypatch):
     vao, ra, _ = hot_folder
-    core, app = CoreGia(), nap_engine_tu_goi(GOI)
+    core, app = core_demo(), nap_engine_tu_goi(GOI)
     viec = []
     for tep in (bo_demo.anh_png, bo_demo.anh_jpeg, bo_demo.anh_png):
         mime = "image/png" if tep.suffix == ".png" else "image/jpeg"
@@ -221,7 +222,7 @@ def test_ca_7_tep_loi_khong_tru_han_muc(bo_demo, hot_folder, ten, ma):
 
 def test_ca_7_huy_dang_cho_khong_tru_han_muc(bo_demo, hot_folder, capsys):
     vao, ra, _ = hot_folder
-    core = CoreGia()
+    core = core_demo()
     ref = core.them_tep(bo_demo.pdf_quet.name, bo_demo.pdf_quet.read_bytes(), "application/pdf")
     ma = core.giao_viec(DOC, {"loai": "tep", "tep": ref})
     with ABBYYGia(vao, ra, b"", nhan=False) as gia:
@@ -274,7 +275,7 @@ def test_ca_9_stderr_thoi_gian_nguon_khong_noi_dung_duong_dan(bo_demo, hot_folde
 
 def test_demo_du_sau_vi_du_va_nguon_gia_di_qua_tsv(capsys):
     with TesseractGia() as gia:
-        ket_qua = CoreGia().chay_thu_demo(nap_engine_tu_goi(GOI), GOI)
+        ket_qua = core_demo().chay_thu_demo(nap_engine_tu_goi(GOI), GOI)
     assert len(ket_qua) == 6 and all(k["trang_thai"] == "XONG" for k in ket_qua)
     assert sum("--list-langs" not in lenh for lenh in gia.lenh) == 12
     for vd in nap_engine_tu_goi(GOI).phieu["chay_thu_demo"]:

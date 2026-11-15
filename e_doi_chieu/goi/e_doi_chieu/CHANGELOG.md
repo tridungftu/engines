@@ -1,5 +1,24 @@
 # Thay đổi
 
+## DC-S22 — 15/11/2026 · 0.7.1 chưa phát hành
+
+- Chuyển sang SDK 2.2.0; cấu hình đọc bản chụp `viec.cau_hinh`, giữ
+  `CHUA_CAU_HINH` khi thiếu trường bắt buộc; không còn bảng cấu hình.
+- Bốn bảng khai thật trong manifest, SQL chỉ CREATE TABLE trong schema
+  riêng, đủ cột hệ thống/kiểu/duy nhất và kiểm kê toàn gói bằng bytes/SHA.
+- Mọi bảng pháp nhân qua `viec.ngan`; bỏ pháp nhân khỏi khóa/lọc, giữ
+  CAS/chống trùng/thu hồi lượt/hủy. Dùng `lo.ket_qua` và đọc lại phiên bản
+  bằng SDK; phong bì nhỏ tuần tự hóa JSON trong cột văn bản.
+- Chuyển ba bản cổng tạm/bản khai vào LUU-TRU, không xóa. Test dùng
+  `CoreGia.dat_cau_hinh/gay_xung_dot_ngan/xem_ngan`, giữ ca hành vi cũ.
+- Gắn `$comment` vai trò trường DC-6 theo AI-12; kiểm tích hợp Hỏi AI từ
+  `origin/main` trên 2.2.0 với provider Local giả, giữ `CHUA_RO` và 0 Cloud.
+- Thêm kiểm nguyên tử/CAS, pháp nhân, bản chụp cấu hình, SQL/kiểm kê LF.
+  Đã kiểm bằng Core giả (CoreGia); kết quả thật và giới hạn tại VIEC.md.
+- Giữ ngưỡng hiệu năng cũ 2 giây: đệm phân tích tối đa 128 cụm tiền
+  trong một lượt quét, giữ kết quả/vị trí riêng từng dòng. Ca 500.000 ký
+  tự nhiều dòng lặp đo lại 0,5992 giây; không lưu đệm sau lượt quét.
+
 ## DC-7 — 15/11/2026 · 0.7.0 chưa phát hành
 
 - Thêm `lech_dau.py`, `tu_dien.py`, nối `chay.py` sau so/hậu kiểm; không

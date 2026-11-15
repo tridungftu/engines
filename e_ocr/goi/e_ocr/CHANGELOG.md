@@ -1,5 +1,25 @@
 # Thay đổi
 
+## 1.0.9 — 15/11/2026 — OCR-9
+
+- Chuyển sang SDK 2.2.0: dùng `viec.ngan`, `viec.cau_hinh`; trạng thái định
+  kỳ dùng `app.ngan`/`app.cau_hinh`. Bỏ cổng RAM/cấu hình tạm khỏi runtime,
+  chuyển nguyên bản cùng `KHAI-SDK-2.1.json` vào `e_ocr/LUU-TRU/OCR-9/`.
+- Phiếu khai ba bảng ngăn, schema cấu hình, migration CREATE TABLE trong
+  `eng_e_ocr`, đủ cột hệ thống; kiểm kê bytes/SHA-256 mọi tệp gói.
+- Bỏ pháp nhân khỏi khóa/lọc/giá trị ghi. Lượt mới cập nhật bằng CAS giữ
+  nguyên id; không dùng xóa. Giữ cửa sổ đúng 30 ngày và phương án B.
+- Hàng ngày được Core ẩn sau 45 ngày. Chỗ giữ chuyển vào mốc CAS không
+  hết hạn, bảo toàn lượt chưa rõ kể cả dừng engine hơn 45 ngày.
+- SDK chưa nhận kiểu ngăn `json`: map nhỏ lưu JSON text có trần 64 KiB;
+  đọc numeric dạng chuỗi bằng chuyển đổi số nguyên có kiểm. UI đọc cùng
+  biểu diễn, tiếp tục dùng `KttCore.engine("e_ocr").cau_hinh` và CAS.
+- Test dùng CoreGia SDK 2.2.0, giữ các ca hành vi cũ, bỏ hai test băm cổng
+  tạm; thêm kiểm TTL, bản chụp cấu hình, id/CAS và kiểm kê SQL. CLI DEMO
+  chuẩn chạy với cấu hình mặc định SDK, không còn cổng thay thế.
+- Chưa có `giao_dien_quan_tri` trong manifest SDK 2.2.0; ghi “Cần Core”,
+  chưa kiểm nạp màn, migration hoặc lưu dữ liệu trên Core thật.
+
 ## 1.0.8 — 15/11/2026 — OCR-8
 
 - Sửa theo kiểm độc lập của lead: màn Admin đọc tổng hợp chưa rõ cấp engine,

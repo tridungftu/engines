@@ -1,4 +1,53 @@
-# Đối chiếu bản ký — SDK 2.0, DC-7/DC-8, phiên bản 0.7.0 chưa phát hành
+# Đối chiếu bản ký — SDK 2.2.0, DC-S22, phiên bản 0.7.1 chưa phát hành
+
+## Ngăn và cấu hình — DC-S22
+
+Gói dùng trực tiếp SDK 2.2.0. Mọi bảng pháp nhân đi qua `viec.ngan`;
+Core lấy pháp nhân từ việc, không nhận `phap_nhan_id` trong khóa/lọc.
+Bốn bảng khai trong `engine.json`, SQL chỉ tạo bảng tại `eng_e_doi_chieu`;
+`sql/kiem_ke.json` ghi bytes/SHA-256 của mọi tệp gói trừ chính kiểm kê.
+Không đặt TTL cho lượt/xác nhận và không xóa; lỗi/hủy nhường trạng thái
+`can_thu_lai` bằng CAS. Cột số của ngăn được SDK trả thành chuỗi; hạn
+chiếm được chuyển thành số trước khi so thời gian.
+
+Cấu hình là bản chụp `viec.cau_hinh`, đã kiểm schema/điền mặc định bởi
+Core. Cho phép chưa cấu hình lúc khởi động; việc cần cấu hình thiếu một
+trong bảy trường mã/phiên bản bắt buộc vẫn trả `CHUA_CAU_HINH`. Không có
+bảng `cau_hinh`, đệm cấu hình hay tệp cấu hình trên máy engine.
+`phong_bi` chỉ giữ chuỗi JSON nhỏ ≤64 KiB vì SDK 2.2.0 chưa có cột `json`;
+snapshot/toàn văn/ảnh giữ tại kho tệp Core. Các bản `ngan.py`, `cau_hinh.py`
+và `KHAI-SDK-2.1.json` đã chuyển nguyên bytes vào `../../LUU-TRU/DC-S22/`.
+
+Khuôn DC-6 gắn `$comment` theo loại chung §8: `ma_diem/nhan/ly_do` là
+metadata của phân loại, `trai/phai` là citation. Cách gắn này khớp profile
+DC-6 của AI-12; hậu kiểm Đối chiếu vẫn kiểm riêng offset/map nguồn và
+sàn mức. Đã kiểm bằng Core giả (CoreGia), gồm handler Hỏi AI từ main với
+provider Local giả; 0 Cloud, chưa chứng nhận chất lượng model/Core thật.
+
+SDK chưa hỗ trợ cột `json`, khóa UI `giao_dien_quan_tri` trong phiếu hoặc
+cấu hình riêng từng ví dụ CLI. DEMO hiện chỉ đọc Word nên không cần cấu
+hình. Ba màn trong bản khai cũ vẫn là dự kiến DC-10/DC-11, chưa có tệp UI;
+không khai đường dẫn màn chưa tồn tại. Quyền tệp con/provenance OCR vùng,
+xác nhận chỉ-thêm và mapping chặn hiệu lực tiếp tục cần Core.
+
+Kiểm bằng `.venv/Scripts/python` mới, wheel nội bộ 2.2.0 cài
+`--no-index --no-deps`, SHA đối chiếu `SHA256SUMS.txt`. Dependency ghim
+trong `requirements.lock`; test ghim riêng `../../tests/requirements.lock`.
+Môi trường máy này dùng `system-site-packages` để nhận dependency offline
+đã có đúng phiên bản, SDK nằm riêng trong `.venv`; chưa chạy Linux.
+
+```powershell
+$env:PYTHONDONTWRITEBYTECODE='1'
+$env:PYTHONUTF8='1'
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q --basetemp=.pytest-tmp
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+```
+
+Sau khi chủ động sửa tệp gói: chạy `e_doi_chieu/tests/cap_nhat_kiem_ke.py`
+để cập nhật bảng SHA LF hiện hành trong NGUON và kiểm kê bytes thật, rồi
+chạy lại kiểm. Các báo cáo lát cũ bên dưới là lịch sử; mô tả cổng RAM/SDK
+2.0 và nợ C-DC-07 được thay bởi phần DC-S22 này.
 
 ## Lệch dấu và trang OCR kém — DC-7
 
@@ -52,7 +101,8 @@ Core phải chứng thực bước tạo kết quả và quyền, điều phối
 engine không gọi OCR/Tesseract/Hot Folder. **Chưa có contract SDK thật**:
 không có manifest Core thì cặp có nghĩa luôn giữ Cần xem, dù caller đưa
 tệp tự khai có nội dung đúng. Băm hoặc tên nguồn không tự tạo provenance.
-Hỏi AI-2 còn nợ C-DC-07 mô tả bên dưới; provider DEMO không khép nợ đó.
+AI-12 cùng annotation DC-S22 đã xử lý C-DC-07 ở CoreGia; chất lượng
+Local AI và tích hợp nguồn thật vẫn cần nghiệm thu riêng.
 
 Mẫu số là token trên nguyên văn OCR **từng trang**: tách bằng khoảng
 trắng, bỏ dấu câu ở hai mép, giữ dấu câu bên trong (1.000.000 là một
@@ -96,9 +146,9 @@ bước. Băm hoặc module do caller khai không cấp quyền.
 
 Tham số bắt buộc nghiệp vụ: `module`, `ma_prompt`, `phien_ban_prompt`,
 `prompt`; `model_uu_tien` tùy chọn, chỉ là ưu tiên Local. Không có prompt
-mặc định. Thiếu/rỗng → `THIEU_PROMPT`; thiếu cấu hình ngăn → `CHUA_CAU_HINH`.
-Do SDK 2.0 kiểm `bat_buoc` trước handler và chưa cho đặt mã lỗi riêng,
-manifest để engine kiểm bắt buộc và ghi rõ trên nhãn/mô tả. Mã module/
+mặc định. Thiếu/rỗng → `THIEU_PROMPT`; thiếu cấu hình việc → `CHUA_CAU_HINH`.
+Manifest giữ engine kiểm bắt buộc và ghi rõ trên nhãn/mô tả để bảo toàn
+hành vi DC-6. SDK 2.2.0 có `ma_loi_khi_thieu`; lát này không đổi ô bước. Mã module/
 prompt ≤200, phiên bản ≤100, prompt module ≤16.000 ký tự. Nội dung module
 giữ nguyên, nối thêm chỉ dẫn cố định về dữ liệu nguồn/khuôn/offset.
 
@@ -138,8 +188,8 @@ nhưng chưa trả: tầng Hỏi AI sở hữu lượt báo `ChuaRo(ma_tuong_qua
 Giữ/chốt lượt bằng Ngan `lay_hoac_tao`/CAS; cùng yêu cầu hoặc phản hồi
 giao lại dùng cùng tham chiếu đã ghim. ACK tệp/kết quả/kết thúc do SDK
 gửi lại cùng khóa chống trùng. Toàn văn chỉ ở tệp Core/RAM, không có
-kho/cấu hình/đệm bền trên engine. NganBoNho mất chỉ mục khi khởi động
-lại thì từ chối hồ sơ chưa chứng thực lại, không suy quyền từ băm.
+kho/cấu hình/đệm bền trên engine. Ngăn Core giữ chỉ mục; mỗi việc vẫn
+phải chứng thực lại quyền/nguồn, không suy quyền từ băm.
 
 **Giới hạn tích hợp Hỏi AI-2:** test chạy handler thật với provider DEMO
 không mạng cho thấy phép kiểm mọi lá `du_lieu` còn coi nhãn/lý do/ID/
@@ -157,7 +207,7 @@ DC-8 thêm `doi_chieu.phat_hien_sua_tay@1`: `ho_so_doi_chieu` → cùng loại,
 quét ảnh qua SDK, phát hiện ứng viên gạch/chèn, tải PNG vùng có ngữ cảnh và
 snapshot lên Core. Cần Pillow 12.3.0 theo `requirements.lock`, cấu hình
 `phuong_phap_detector=net_de_vung_chu`, `phien_ban_detector=DC-8.1-thu-nghiem`
-trong ngăn; Core cấp metadata ảnh tin cậy. Không đọc máy hoặc gọi AI/OCR.
+trong cấu hình Core; Core cấp metadata ảnh tin cậy. Không đọc máy hoặc gọi AI/OCR.
 
 Phương pháp **chỉ thử nghiệm**: DEMO 12 ca có 3 TP/0 FP/3 FN, recall 50%.
 Đã quét pixel vẫn giữ `sua_tay=chua_kiem`, `da_kiem_du=false`, đề nghị chặn;
@@ -292,9 +342,9 @@ Quy ước nguyên văn và vị trí (không chuẩn hóa NFC/strip ở bước
 - Chưa render Word: `so_trang=0`, `trang=[]`, cảnh báo chưa phân trang;
   không có trang/hộp giả. `bam_dau_vao` băm SHA-256 bytes DOCX thật.
 
-SDK 2.0 dùng ngăn RAM, mất khi dừng; ngăn bền và màn quản trị chờ Core/SDK
-2.1. Các màn trong bản khai là dự kiến, chưa có tệp UI. Cấu hình và dữ liệu
-cần giữ chỉ qua Ngan; snapshot/ảnh do kho Core giữ, không lưu bền trên engine.
+SDK 2.2.0 cung cấp ngăn Core. Các màn trong bản khai cũ vẫn là dự kiến,
+chưa có tệp UI. Cấu hình qua `viec.cau_hinh`, dữ liệu cần giữ qua
+`viec.ngan`; snapshot/ảnh do kho Core giữ, không lưu bền trên engine.
 
 DEMO `demo/DEMO-ban-chot.docx` có nhãn DEMO, bảng gộp/ô trống, 1.000.000 VND
 và 2026-10-30; không chứa hồ sơ thật. Chạy bằng venv và
@@ -323,12 +373,12 @@ engine tạo kết quả); không lấy `word_da_chot=true` làm chứng nhận 
 OCR lỗi, thiếu trang hoặc nguyên văn rỗng đều từ chối, không ra `khop`.
 
 Core phải cấp quyền tệp con và bảo đảm provenance/phiên bản gắn nguồn,
-bao gồm kết quả OCR và ảnh đúng bản ký. Băm chỉ kiểm bytes. SDK 2.0 mặc
-định thiếu cửa tệp con sẽ trả `DC_THIEU_NGUON`; adapter DEMO chỉ ở tests,
+bao gồm kết quả OCR và ảnh đúng bản ký. Băm chỉ kiểm bytes. Khi thiếu
+cửa tệp con sẽ trả `DC_THIEU_NGUON`; adapter DEMO chỉ ở tests,
 không có nhánh giả lập/fallback trong runtime. PDF được kiểm dấu định dạng
 vận chuyển, không tự đọc PDF hoặc gọi OCR để chứng thực lại nội dung.
 
-Cấu hình đọc từ ngăn, thiếu trả `CHUA_CAU_HINH`. Bộ JSON do Core cấp được
+Cấu hình đọc từ `viec.cau_hinh`, thiếu trả `CHUA_CAU_HINH`. Bộ JSON do Core cấp được
 ghim nguyên bytes, SHA-256 phải khớp `cau_hinh.bam_bo_chuan_hoa` và mã bộ
 khớp `ma_bo_chuan_hoa`. Quy ước nội bộ của bộ tại DC-3 (không đổi schema
 loại chung): `phien_ban=1`, `phien_ban_bo` khớp tham chiếu, mã bộ và
@@ -393,7 +443,7 @@ hình đã điền mặc định (gồm các trần). Không phụ thuộc ID/t�
 cặp, cảnh báo hoặc cấu hình thì tạo lượt mới, không trả metadata cũ.
 
 Chủ lượt có mã riêng mỗi lần thực thi, `luc_chiem`/`han_chiem` theo giây
-Unix UTC. Cấu hình ngăn `thoi_han_chiem_luot_giay` là số nguyên dương,
+Unix UTC. Cấu hình `thoi_han_chiem_luot_giay` là số nguyên dương,
 không bắt buộc; khi bỏ trống, dùng `gioi_han.thoi_han_giay` của bước nhận
 cặp cộng biên 60 giây (**180 giây** với manifest hiện tại). Lượt quá hạn
 hoặc hàng cũ thiếu hạn được chiếm lại bằng CAS; chưa quá hạn đợi tối đa
@@ -406,7 +456,7 @@ Nếu tệp cũ thiếu/hết hạn/không còn quyền, CAS chuyển `can_thu_l
 chiếm lượt và dựng lại từ các nguồn **hiện tại đã kiểm quyền/băm/trần**.
 Sai băm vẫn từ chối `DC_SAI_NGUON`, lỗi truyền vẫn giữ ngữ nghĩa SDK.
 Hủy/lỗi nhường `can_thu_lai` bằng CAS, không xóa sổ hoặc đè chủ khác.
-Ngăn chỉ giữ phong bì nhỏ, không toàn văn. Ngăn RAM mất khi khởi động lại;
+Ngăn Core chỉ giữ phong bì nhỏ, không toàn văn;
 quyền/vòng đời snapshot, đồng hồ giữa worker, lease Core và CAS bền vẫn
 cần Core xác nhận.
 
@@ -425,9 +475,9 @@ ghim trước quét. Không suy phép đổi `pt`↔`px`, DPI hoặc xoay từ m
 khai; giữ tọa độ nguồn và kích thước ảnh riêng. DC-3 không đánh dấu đã quét.
 
 `thu` tiếp tục kiểm DEMO Word 1/1; nhận cặp được kiểm end-to-end trong
-pytest với CoreGia/NganBoNho/adapter tệp con, không thêm DEMO thành công
+pytest với CoreGia 2.2.0/adapter tệp con, không thêm DEMO thành công
 giả vào runtime thiếu quyền/cấu hình. Lớp bọc handler đổi lỗi bất ngờ thành
-câu cố định để SDK 2.0 không in nội dung ngoại lệ; không sửa SDK và chưa
+câu cố định để không in nội dung ngoại lệ; không sửa SDK và chưa
 khép nợ log lỗi ngoài handler của SDK.
 
 ## DC-4 — So văn bản hai bên

@@ -263,7 +263,8 @@ def test_mat_ack_tep_ket_qua_ket_thuc_chi_ghi_mot_lan_va_khong_ghi_dia_mang(monk
 
 @pytest.mark.parametrize("nguon", ["docx", "abbyy"])
 def test_chuoi_docx_hoac_ocr_gia_chuan_bi_ai_gia_hau_kiem_xuat(nguon):
-    core, app = CoreGia(), app_tx3()
+    core = CoreGia()
+    app = app_tx3(core)
     if nguon == "docx":
         tep = core.them_tep("DEMO.docx", (GOC_GOI / "demo/DEMO-hop-dong.docx").read_bytes(),
                             "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
@@ -283,7 +284,7 @@ def test_chuoi_docx_hoac_ocr_gia_chuan_bi_ai_gia_hau_kiem_xuat(nguon):
     p.update(ma="e_ai_demo", nang_luc=[{"ma": "ai.hoi_theo_yeu_cau@1", "ten": "AI giả DEMO",
         "nhan": ["yeu_cau_ai"], "tra": "tra_loi_ai", "gioi_han": {"thoi_han_giay": 30}}],
         loai_du_lieu_rieng=app.phieu["loai_du_lieu_rieng"], chay_thu_demo=[])
-    ai = Engine(p)
+    ai = Engine(p, thu_muc_goi=GOC_GOI)
     @ai.nang_luc("ai.hoi_theo_yeu_cau@1")
     def hoi_gia(viec):
         r = viec.dau_vao["yeu_cau_ai"]

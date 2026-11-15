@@ -1,3 +1,16 @@
+## 0.12.0 — 15/11/2026 — AI-12 (PR: chờ lead mở)
+
+- Tương thích nguyên khuôn bốn tác vụ Tra cứu và DC-6: metadata/phân loại/nhãn/điểm/cờ kiểm theo schema; giá trị trích vẫn kiểm bằng chứng, câu trích đúng offset, tiền cùng số và mã tiền. Không import/gọi engine khác.
+- Đề xuất annotation `$comment` tùy chọn tại sổ loại chung §8; adapter nội bộ trên bản sao schema cho producer chưa có annotation. Khuôn khác giữ kiểm bảo thủ; không tự miễn mọi enum/const.
+- Câu tổng hợp được diễn đạt lại nhưng không bịa số; giữ từng vị trí trích lặp. Chuyển tiếp/băm/khuôn gửi Local không đổi; Cloud vẫn tắt. Thêm fixture DEMO độc lập TC/DC và các ca âm; đã kiểm bằng Core giả (CoreGia), chưa kiểm Core/model thật. CLI SDK vẫn thiếu cửa cấu hình DEMO/Local giả đã ghi AI-11.
+
+## 0.11.0 — 15/11/2026 — AI-11
+
+- Chuyển SDK 2.2.0: cấu hình snapshot của việc, ngăn SDK trực tiếp, bỏ fallback RAM và bảng cấu hình; hook làm mới đệm khi đổi cấu hình.
+- Khai catalog/cấu hình/migration trong engine.json; SQL tạo bảng riêng, kiểm kê toàn gói; api lưu JSON dạng văn bản, thứ tự model đọc số.
+- Chuyển nguyên bản cổng tạm/bản khai 2.1 vào LUU-TRU/AI-11 ngoài gói; giữ ca hành vi, đổi môi trường sang CoreGia 2.2.0.
+- CLI SDK thu chưa có cửa cấp cấu hình DEMO/Local giả: chưa đạt nghiệm thu AI-11; hồi quy API chính thức chỉ là bằng chứng bổ sung, đã kiểm bằng Core giả (CoreGia).
+
 ## AI-10 — 15/11/2026 (PR: chờ lead mở)
 
 - Phân loại lỗi transport và phản hồi Local sau khi bắt đầu POST là `ChuaRo`; lỗi kết nối chắc chắn trước gửi vẫn cho thử lại. Áp dụng chung cho ba năng lực, Cloud vẫn tắt.

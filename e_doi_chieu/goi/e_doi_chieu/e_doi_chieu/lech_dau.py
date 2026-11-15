@@ -352,12 +352,12 @@ def xu_ly_ho_so(viec, ngan, cau_hinh, pb, *, hau_kiem=False):
     core = viec.ngu_canh.get("doi_chieu_ocr_vung") if hau_kiem else None
     if core is not None and len(hs.json_bytes(core)) > 65536:
         loi("DC_QUA_GIOI_HAN")
-    key = {"phap_nhan_id": scope["phap_nhan_id"], "bam_bo": p["bam_bo_quy_tac"], "phien_ban_engine": p["phien_ban_engine"],
+    key = {"bam_bo": p["bam_bo_quy_tac"], "phien_ban_engine": p["phien_ban_engine"],
            "bam_cap": hs.bam(hs.json_bytes({"buoc": PHIEN_BAN, "pham_vi": scope, "bam_ho_so": p["bam_ho_so"],
                "hau_kiem": hau_kiem, "core": core, "gioi_han": doc.cau_hinh}))}
     ban = ngan.doc("luot_doi_chieu", key)
     if ban is not None and ban.gia_tri["trang_thai"] == p["giai_doan"]:
-        cp = ban.gia_tri["phong_bi"]["ho_so_doi_chieu"]
+        cp = hs.mo_phong_bi(ban.gia_tri["phong_bi"])["ho_so_doi_chieu"]
         try:
             doc.doc({"tep": cp["ho_so"], "bam": cp["bam_ho_so"]}, doc.cau_hinh["ho_so_mib"] * hs.MIB)
         except LoiNghiepVu as exc:
@@ -365,7 +365,7 @@ def xu_ly_ho_so(viec, ngan, cau_hinh, pb, *, hau_kiem=False):
                 raise
             # Chỉ dựng lại từ nguồn đã kiểm quyền, không tái dùng tham chiếu cũ.
             with ngan.lo() as lo:
-                lo.sua("luot_doi_chieu", {"phap_nhan_id": scope["phap_nhan_id"], "ma_luot": ban.gia_tri["ma_luot"]},
+                lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                        {"trang_thai": "can_thu_lai"}, row_version=ban.row_version)
     with cb.luot(viec, ngan, key, "dang_kiem_lech_dau", p["giai_doan"]) as (cu, chot):
         # Tái tính bằng cùng nguồn tin cậy trước khi tái dùng, không tin chứng nhận tự khai.

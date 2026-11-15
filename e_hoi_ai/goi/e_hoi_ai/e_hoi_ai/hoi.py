@@ -5,40 +5,35 @@ import time
 
 from kho_tri_thuc_sdk.engine import LoiNghiepVu, ViecDaHuy
 
-from pathlib import Path
+import math
 from urllib.parse import urlsplit
 
-from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
-from .ngan import NganKhongHopLe, chon_ngan
 from .cong_ai import CongAI
 from .dto import MA_DINH_DANH, YeuCauAI
 
 
 def lay_ngan(viec):
-    if getattr(viec, "ngan", None) is not None:
-        return viec.ngan
-    from .chay import app
-    return chon_ngan(app)
+    return viec.ngan
 
 
 def yeu_cau_cau_hinh(viec):
-    schema = json.loads((Path(__file__).resolve().parents[1] / "cau_hinh.schema.json").read_text(encoding="utf-8"))
+    # SDK kiểm schema và cung cấp bản chụp cấu hình khi nhận việc.
+    cau_hinh = viec.cau_hinh
+    local = cau_hinh.get("local_ai")
+    if local is None or isinstance(local, dict) and not {"url", "timeout_giay"}.issubset(local):
+        raise LoiNghiepVu("CHUA_CAU_HINH", "Engine chưa được cấu hình. Admin vào Quản lý engine › Hỏi AI › Cấu hình.")
     try:
-        cau_hinh = doc_cau_hinh(lay_ngan(viec), schema)
-        if cau_hinh is not None:
-            url = urlsplit(cau_hinh["local_ai"]["url"])
-            if (not url.hostname or url.username is not None or url.password is not None
-                    or url.query or url.fragment):
-                raise ValueError
-            url.port
-            return cau_hinh
-    except NganKhongHopLe:
-        raise
-    except CauHinhKhongHopLe as exc:
-        raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None
-    except (ValueError, OverflowError):
+        giay = local["timeout_giay"]
+        if isinstance(giay, bool) or not isinstance(giay, (int, float)) or not math.isfinite(giay) or not 0 < giay <= 600:
+            raise ValueError
+        url = urlsplit(local["url"])
+        if (not url.hostname or url.username is not None or url.password is not None
+                or url.query or url.fragment):
+            raise ValueError
+        url.port
+    except (ValueError, TypeError, OverflowError, KeyError):
         raise LoiNghiepVu("CAU_HINH_KHONG_HOP_LE", "Cấu hình Hỏi AI không hợp lệ. Admin hãy kiểm tra lại.") from None
-    raise LoiNghiepVu("CHUA_CAU_HINH", "Engine chưa được cấu hình. Admin vào Quản lý engine › Hỏi AI › Cấu hình.")
+    return cau_hinh
 
 
 class AdapterHoiAI:

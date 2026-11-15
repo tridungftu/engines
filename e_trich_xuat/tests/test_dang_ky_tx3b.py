@@ -48,7 +48,7 @@ def test_mau_manifest_co_ho_so_that_va_chay_bang_handlers_that():
     core.them_tep("DEMO-khac.txt", b"DEMO")
     truoc = deepcopy(app.phieu)
     nap_ho_so_demo(core, app)
-    assert app.ngan.doc("cau_hinh", {}) is None  # Helper không tự điền cấu hình.
+    assert core.xem_ngan(app.ma, "cau_hinh") == []  # Helper không tự điền cấu hình.
     assert truoc == PHIEU
     mau = {v["nang_luc"]: v for v in app.phieu["chay_thu_demo"]}
     ai = mau["trich.hau_kiem@1"]["dau_vao"]

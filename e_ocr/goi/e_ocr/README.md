@@ -1,6 +1,6 @@
-# Engine nhận dạng văn bản — OCR-8
+# Engine nhận dạng văn bản — OCR-9
 
-Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.8. Ba năng lực
+Gói độc lập theo SDK 2.2.0, phiên bản engine 1.0.9. Ba năng lực
 `ocr.doc_tai_lieu@1`, `ocr.doc_van_ban@1` và `ocr.xuat_word@1` dùng chung
 lõi đọc lớp chữ PDF hoặc ABBYY Hot Folder cục bộ, dự phòng Tesseract.
 Xuất Word dựng DOCX và gửi qua `viec.tai_tep_ra`. **Đã kiểm bằng Core giả
@@ -12,17 +12,20 @@ nguồn `tu_dong` / `chi_abbyy` / `chi_tesseract`. Tệp được đọc bằng 
 kiểm định dạng thực và đếm trang trước khi gửi nguồn ngoài. Vượt 60 trang
 trả `QUA_SO_TRANG`, tệp hỏng/mật khẩu trả `TEP_HONG`, không gửi ABBYY.
 Loại `van_ban_tai_lieu` dùng schema sao chép
-nguyên tệp từ `_chung/contract/van_ban_tai_lieu.schema.json`.
+từ `_chung/contract/van_ban_tai_lieu.schema.json`, so băm sau chuẩn hóa LF.
 
 ## Cài và kiểm
 
-Python >= 3.11. Dùng SDK 2.0.0, pdfplumber, Pillow và dependency đã ghim
+Python >= 3.11. Dùng SDK 2.2.0, pdfplumber, Pillow và dependency đã ghim
 trong `requirements.lock`; tất cả phiên bản thư viện ngoài SDK giữ như
 lock cũ. Bộ render là pypdfium2 đã ghim; vendor mask_ocr chỉ giữ phần cần
 dùng, không thêm PyMuPDF, defusedxml, numpy hoặc model. Môi
-trường kiểm dùng `.venv --system-site-packages` và thư viện có sẵn, SDK cài
-offline từ wheel repo với `--no-index --no-deps`. Đây chưa là kiểm máy sạch
-của OCR-6; lock đã có hash wheel đa nền tảng. Nguồn/băm xem `NGUON.md`.
+trường OCR-9 dùng venv mới, SDK cài offline từ wheel repo với
+`--no-index --no-deps`, đối chiếu `SHA256SUMS.txt`. Thư viện đúng pin được
+cài offline bằng các tệp distribution đã có trên máy, kiểm từng hash trong
+`RECORD`; không dùng system-site-packages. Chưa kiểm lại archive wheel
+phụ thuộc trên máy sạch; lock giữ các hash wheel Windows/Linux đã ghim.
+Nguồn/băm xem `NGUON.md`.
 
 Trong thư mục gốc repo, sau khi cài SDK vào `.venv`:
 
@@ -44,7 +47,9 @@ thật với `vie+eng`. Máy thiếu bộ đọc chạy công cụ test từ rep
 `.venv\Scripts\python e_ocr/tests/chay_demo.py`; công cụ tự dùng Tesseract
 giả và ghi rõ khi thiếu executable/ngôn ngữ. `--gia` ép dùng giả cho CI.
 Nguồn giả chỉ ở ngoài gói, không tự thay nguồn trong engine. Công cụ cách
-ly cấu hình và dữ liệu DEMO bằng ngăn RAM riêng.
+ly cấu hình và dữ liệu DEMO bằng CoreGia SDK 2.2.0 riêng, dùng `dat_cau_hinh`.
+CLI chuẩn nhận cấu hình mặc định từ schema qua SDK, đủ chạy Tesseract;
+không có nhánh thay thế cổng ngăn/cấu hình trong engine.
 
 Bộ sinh `tests/demo/tao_bo_demo.py` chuyển từ mã cũ, dùng Pillow đã ghim,
 font Arial/DejaVu Sans sẵn trên máy, PDF thuần Python và bộ ghi Word của
@@ -161,12 +166,12 @@ cắt ngầm hay tự thêm ô. Hủy/chưa rõ của nguồn đọc được gi
 tạo kết quả thành công giả. Word có thể dàn lại dòng/chiều cao theo font
 trên máy; tọa độ bảng được ghi trong XML, chưa kiểm hiển thị trên Word thật.
 
-## Cấu hình và ngăn dữ liệu (OCR-8)
+## Cấu hình và ngăn dữ liệu (OCR-9)
 
 Admin dùng màn `ui/cau_hinh.js` trong Quản lý engine › OCR › Cấu hình.
-Schema: `cau_hinh.schema.json`. Cấu hình là bản ghi bảng `cau_hinh`, khóa
-`{}`; giá trị có `abbyy` và `tesseract`. Engine đọc bằng
-`doc_cau_hinh(ngan, schema)`, kiểm kiểu/giới hạn và điền mặc định.
+Schema: `cau_hinh.schema.json`. Core kiểm và điền mặc định; engine dùng
+`viec.cau_hinh`, bản chụp khi nhận việc. Thay đổi chỉ áp dụng việc tiếp theo.
+Không còn bảng `cau_hinh` trong ngăn. Không có đệm cấu hình cần làm mới.
 Không đọc cấu hình máy hoặc thư mục dữ liệu từ biến môi trường.
 
 Thiếu cấu hình: `chi_abbyy` trả `CHUA_CAU_HINH` và hướng dẫn Admin.
@@ -175,31 +180,27 @@ thể dùng Tesseract mặc định (tự tìm executable, `vie+eng`) khi không
 cấu hình; lượt ABBYY dở vẫn phải đối chiếu trước. PDF có lớp chữ không
 cần cấu hình. Cấu hình sai trả câu lỗi cố định, không lộ giá trị.
 
-Mọi trạng thái đi qua `viec.ngan` khi SDK cấp; nếu không có thì dùng
-`chon_ngan(app)`. Có `app.ngan` thì dùng ngăn Core; SDK 2.0 tạm dùng
-`NganBoNho`. **Cấm chạy thật trên ngăn RAM:** khởi động lại sẽ mất cấu hình,
-lượt chưa rõ, hạn mức và dấu chống trùng. RAM chỉ dùng kiểm DEMO trong lúc
-chờ ngăn bền của Core/SDK 2.1. Cảnh báo in một lần trên stderr khi chọn RAM.
-Không tự nhập dữ liệu từ sổ đĩa cũ.
+Mọi trạng thái của việc đi qua `viec.ngan`; Core gắn pháp nhân từ việc.
+Khóa/lọc/giá trị ghi lượt không tự gửi `phap_nhan_id`. Luồng trạng thái
+định kỳ dùng `app.ngan` và `app.cau_hinh`, chỉ đọc/ghi bảng phạm vi engine.
+Chưa kết nối Core thì trả lỗi SDK, không tự tạo kho RAM. Không tự nhập sổ đĩa cũ.
 
 | Bảng | Khóa/phạm vi | Nội dung |
 |---|---|---|
-| `cau_hinh` | `{}`, engine | Cấu hình ABBYY/Tesseract |
-| `han_muc_ngay` | `ngay`, engine | Trang nhận theo giây UTC trong ngày; trang đang giữ theo mã lượt |
+| `han_muc_ngay` | `ngay`, engine | Trang nhận theo giây UTC; `giu_toi_da_ngay: 45` |
 | `luot_abbyy` | `ma_tuong_quan`, phap_nhan | Duy nhất `[phap_nhan_id, bam_noi_dung]`; chỉ metadata |
-| `trang_thai_engine` | `ma`, engine | Bản `abbyy` cập nhật 30 giây/lần; `han_muc` là mốc CAS; `chua_ro` chỉ tổng số lượt theo ngày UTC |
+| `trang_thai_engine` | `ma`, engine | `abbyy` cập nhật 30 giây/lần; `han_muc` giữ mốc CAS và `dang_giu` không hết hạn; `chua_ro` chỉ số lượt theo ngày UTC |
 
-Giữ trang và `lay_hoac_tao` lượt nằm trong **một lô nguyên tử** trước khi
+Giữ trang và tạo/sửa CAS lượt nằm trong **một lô nguyên tử** trước khi
 gửi. Tất cả thay đổi sổ cùng tăng mốc CAS `han_muc`, kể cả qua nửa đêm;
 xung đột thì đọc lại và thử tối đa 12 lần, không cộng trang từ lần thất bại.
 Đọc ban đầu đã cũ thì nhập lượt vừa có, không tạo thế hệ gửi tiếp.
 Trang đã dùng tính đúng cửa sổ trượt 30 × 86.400 giây; trang đang giữ vẫn
 chặn hạn mức cho tới khi có căn cứ chốt/nhả, kể cả quá 30 ngày.
-Khi ghi, dọn tối đa 50 hàng ngày đã hoàn toàn ngoài cửa sổ trong cùng lô
-(tránh vượt 100 lệnh/lô); dữ liệu tồn nhiều ngày được dọn tiếp qua các lần ghi.
-Chỗ giữ còn dở chuyển sang hàng ngày hiện tại cùng lô trước khi xóa hàng cũ,
-không mất chỗ giữ, không xóa lượt. Khai thời hạn lưu bảng ngày là 45 ngày;
-Core cần bảo toàn hàng còn chỗ giữ khi áp dụng tự dọn, kể cả engine dừng lâu.
+Dòng ngày cũ do Core ẩn sau 45 ngày; engine không xóa hoặc ghi lại để gia
+hạn TTL. `dang_giu` nằm cùng mốc CAS không hết hạn, không mất khi dừng
+engine quá 45 ngày. Lô cập nhật chỉ các ngày trong cửa sổ 30 ngày và các
+bản ghi trạng thái/lượt, dưới 100 lệnh dù tồn hàng trăm ngày lịch sử.
 
 Quyền xử lý một lượt dùng CAS trên `chu_xu_ly`/`han_xu_ly`, không dùng
 khóa tệp. Quyền kéo dài 30 giây, kiểm trong vòng chờ, gia hạn khi còn
@@ -223,12 +224,19 @@ Ngày dd/mm/yyyy, số có dấu chấm hàng nghìn; mọi nội dung qua `text
 `mount(goc, {KttCore})` trả `{refresh, destroy}`; Core cần gọi `destroy`
 khi đóng màn để dừng chu kỳ đọc 30 giây.
 
-`engine.json` giữ schema 2.0, chỉ tăng phiên bản engine lên 1.0.8.
-Khai báo dự kiến SDK 2.1 nằm riêng trong `KHAI-SDK-2.1.json`.
-`ngan.py`/`cau_hinh.py` dùng nguyên bản chung NGAN-0 (PR #34).
-Hai test so băm luôn chạy, chuẩn hóa CRLF thành LF trước khi tính SHA-256.
-Ngăn RAM nhận khai báo bảng từ `KHAI-SDK-2.1.json/ngan_du_lieu`;
-bảng cấu hình có khóa `{}`, giá trị chính là dict cấu hình.
+`engine.json` khai trực tiếp ba ngăn, schema cấu hình và `du_lieu.goi_migration`.
+`sql/001_tao_ngan.sql` chỉ CREATE TABLE trong `eng_e_ocr`, đủ bảy cột hệ
+thống; Core thực hiện migration khi cài. `sql/kiem_ke.json` kiểm bytes/SHA-256
+của mọi tệp gói trừ chính kiểm kê; `.gitattributes` giữ LF qua checkout.
+`KHAI-SDK-2.1.json`, `ngan.py`, `cau_hinh.py` được chuyển nguyên bản sang
+`e_ocr/LUU-TRU/OCR-9/`; bỏ hai test so băm cổng tạm.
+
+SDK 2.2.0 chưa nhận kiểu `json` trong ngăn: `da_nhan`, `dang_giu`,
+`theo_ngay` được tuần tự hóa JSON text ≤64 KiB qua trường `van_ban`,
+quá trần từ chối cả lô. Các trường `so` từ Core là chuỗi numeric, engine
+chuyển sang số nguyên có kiểm, không cắt phần lẻ. SDK chưa nhận
+`giao_dien_quan_tri` trong phiếu; giữ `ui/cau_hinh.js` để lead/Core nạp
+qua cổng trình duyệt khi hỗ trợ. Hai giới hạn này ghi ở “Cần Core”.
 `kho_tam.py`, `cau_hinh_may.py` và schema máy cũ giữ nguyên để chuyển
 `LUU-TRU/` sau; chúng không thuộc đường chạy engine hiện tại.
 
@@ -268,7 +276,8 @@ nhận khác mã, thiếu trường, báo đã tiêu trang hoặc xung đột v�
 này **chưa kiểm ABBYY thật**, cần xác nhận khi nối nguồn ở OCR-7; không có
 biên nhận xác nhận thì tiếp tục giữ hạn mức.
 
-Khi SDK 2.1 cấp ngăn thật, dữ liệu sẽ được Core lưu bền qua cùng API.
+Ngăn SDK 2.2.0 do Core giữ bền; các kiểm tra hiện tại dùng CoreGia,
+chưa chứng minh lưu qua khởi động lại Core thật hoặc phân quyền CSDL thật.
 Không dùng hàm `ocr_*_luot` hoặc cổng riêng cũ.
 
 `demo/van_ban_tai_lieu.demo.json` chỉ minh họa hợp đồng bằng dữ liệu giả có

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| DC-S22 | Chuyển Đối chiếu sang SDK 2.2.0, ngăn/cấu hình/SQL, vai trò trường DC-6 và tích hợp Hỏi AI | CHUYEN-SDK-2.2 §2, §4 | Xong mã/kiểm CoreGia; chờ lead merge Git — 15/11/2026 | PR: **chờ lead mở**. DEMO 1/1 ĐẠT; pytest **898 passed, 0 skipped**, kể cả Hỏi AI; kiểm độc lập mã 0; kiểm kê 31 tệp khớp. Nội dung main `12ed8db` đã đồng bộ; merge Git metadata cần lead hoàn tất vì sandbox chỉ cho ghi worktree. |
 | DC-7 (phiếu mới) | Lệch dấu năm bước, từ điển ghim, bằng chứng OCR lại và tỷ lệ trang | DC-f; Q12/14/15 | Xong phạm vi CoreGia — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **881 passed, 0 skipped** (85 ca DC-7); kiểm độc lập ĐẠT, ba mã thoát 0. Chỉ DEMO, 0 Cloud. Nguồn từ điển thật DC-Q14, ngưỡng DC-Q15 và contract OCR vùng C-DC-05 vẫn thiếu. |
 | DC-6 (phiếu mới) | Chuẩn bị yêu cầu Local AI, ghim hồ sơ Core và hậu kiểm độc lập nguồn/trích dẫn/sàn Python | DC-h | Xong phạm vi CoreGia — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 796 passed, 0 skipped (88 ca DC-6); kiểm độc lập ĐẠT, ba mã thoát 0. Provider Cloud = 0. Tích hợp Hỏi AI còn C-DC-07, giữ Cần xem bảo thủ. |
 | DC-5 (phiếu mới) | Quy tắc cứng, bảo vệ số/định danh và kiểm tiền bằng số ↔ chữ trong bản ký | DC-g | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã sửa ba điểm kiểm độc lập lead. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 629 passed, 0 skipped (222 ca DC-5); kiểm độc lập ĐẠT; cả ba lệnh mã 0. Bộ quét tiền 400.000–500.000 ký tự <2 giây và hủy giữa chừng đạt. Thiếu nhận diện/phân tích giữ chưa đủ kiểm. |
@@ -26,6 +27,122 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Đề xuất loại `ho_so_doi_chieu` đã ghi **ĐỀ XUẤT DC-P, chờ Anh** ở cuối `_chung/docs/LOAI-DU-LIEU-RIENG.md` §5; chưa tạo schema/kích hoạt. Tái dùng nguyên ba loại `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`; không đổi `bang_trich_xuat`.
 - Quy tắc mới: không lưu gì bền trên máy engine; cấu hình/chỉ mục/danh mục/xác nhận qua `Ngan`, snapshot/ảnh/báo cáo qua kho tệp Core; màn trong `goi/e_doi_chieu/ui/`. Không dùng `cau_hinh_may`/`kho_tam` cũ.
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
+
+## DC-S22 — 15/11/2026
+
+**Kết luận: Chưa đạt toàn bộ bước bàn giao vì merge Git metadata bị
+sandbox chặn; phần mã và điều kiện kiểm DC-S22 đã đạt.
+PR: chờ lead mở.** Bắt đầu **17:51 ngày 15/11/2026
+(UTC+7)** theo giờ lead giao. Phiếu `CHUYEN-SDK-2.2.md` §4 chưa có dòng
+ước tính riêng DC-S22; không lấy 4 giờ DC-7 làm dự toán chuyển SDK.
+Đã kiểm bằng Core giả (CoreGia), dữ liệu/provider Local DEMO, 0 Cloud;
+chưa kiểm Core thật hoặc Linux.
+
+**Thời gian thực tế DC-S22: 17:51–18:34:08 ngày 15/11/2026 (UTC+7), khoảng 0.72 giờ.** Phiếu chưa nêu ước tính riêng DC-S22.
+
+- Nhánh `codex/e_doi_chieu-dc-s22` bắt đầu đúng tại DC-7 `9123c48`.
+  Đã thử `git merge --no-commit --no-ff origin/main`; sandbox từ chối ghi
+  `ORIG_HEAD.lock` vì Git metadata chung nằm ngoài worktree. Không commit/
+  push. Đã kiểm không có tệp giao nhau giữa DC-7 và main rồi áp nội dung
+  merge từ main **`12ed8db`** (gồm AI-11/AI-12); đây là đồng bộ nội dung,
+  **chưa phải merge trong lịch sử Git**. Lead cần hoàn tất bước Git này
+  trước khi commit/mở PR; patch đối chiếu ở `.venv/origin-main.patch`.
+- `.venv` mới, Python 3.13.14; wheel SDK 2.2.0 cài offline
+  `--no-index --no-deps`, SHA-256
+  `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`
+  khớp `SHA256SUMS.txt`. Pillow 12.3.0 và dependency test ghim đúng bản,
+  kiểm bằng pip `--no-index --no-deps`; máy không có wheel dependency
+  offline nên dùng `system-site-packages`. SDK cài riêng trong venv.
+  Khác với môi trường cô lập hoàn toàn; không tải mạng.
+- Manifest 0.7.1 dùng `sdk >=2.2.0 <3.0.0`, khai bốn bảng ngăn và cấu
+  hình thật, bỏ bảng `cau_hinh`; thêm SQL chỉ CREATE TABLE trong
+  `eng_e_doi_chieu`, đủ bảy cột hệ thống, kiểu và unique khớp manifest.
+  `sql/kiem_ke.json` gồm mọi tệp gói trừ chính nó, bytes và SHA thực.
+- Bảng pháp nhân chỉ qua `viec.ngan`, bỏ pháp nhân khỏi khóa/lọc/giá trị
+  ghi. Dùng `lo.ket_qua` sau lô và đọc lại đúng id/row_version; giữ thử
+  lại CAS, chủ/hạn chiếm, chống trùng, phục hồi snapshot, hủy/ACK/giao lại.
+  Không xóa/TTL mất lịch sử; nhường `can_thu_lai`. Cột số SDK trả chuỗi,
+  chuyển số khi so hạn. Cột `phong_bi` là chuỗi JSON nhỏ vì SDK chưa có
+  kiểu json; toàn văn/snapshot/ảnh vẫn ở Core.
+- Cấu hình đọc từ bản chụp `viec.cau_hinh`; không đệm cấu hình, không cần
+  hook làm mới. Khởi động chưa cấu hình được phép; thiếu từng trường bắt
+  buộc vẫn `CHUA_CAU_HINH`. Cấu hình sai kiểu/trần được Core từ chối ngay
+  khi `dat_cau_hinh`, test giữ mọi giá trị lỗi cũ và kiểm thời điểm mới.
+- Chuyển nguyên bytes ba bản cổng tạm/bản khai vào `LUU-TRU/DC-S22/`,
+  không xóa. Bỏ đúng kiểm so băm mẫu tạm; giữ băm bốn schema chung và
+  mọi ca/tham số hành vi cũ. Test dùng ngăn/cấu hình CoreGia 2.2.0,
+  `dat_cau_hinh/gay_xung_dot_ngan/xem_ngan`; helper chỉ giao việc DEMO
+  qua SDK để sửa ngăn, không tự triển khai kho thay thế.
+- DC-6 gắn `$comment`: `ma_diem/nhan/ly_do=metadata`,
+  `trai/phai=trich_dan`, đúng profile DC-6 của AI-12. Không đổi schema
+  loại chung/API, không cho metadata miễn hậu kiểm nguồn/sàn. Hai ca
+  nạp handler Hỏi AI mới dùng cấu hình CoreGia thật và provider Local
+  giả: phản hồi hợp lệ được nhận có căn cứ; nguồn đã nhận chưa trả giữ
+  `CHUA_RO`. Đóng phần lỗi kỹ thuật C-DC-07 trong môi trường CoreGia.
+- Lệch phạm vi cần thiết: chuyển đồng bộ bảy module đang gọi ngăn; chia
+  nội bộ DC-S22a (chay/ho_so/so_chu/quy_tac + schema) và DC-S22b
+  (chuan_bi_ai/hau_kiem_ai/lech_dau + SQL), mỗi nhóm tối đa năm tệp mã.
+  Không thể để nửa đường chạy còn import cổng tạm. Một nhánh theo lệnh
+  lead; lead commit/mở PR. Ngoài nội dung main đã đồng bộ, không sửa
+  engine khác, `_chung/**`, tài liệu cổng hoặc mã Core/SDK.
+- Test hiệu năng cũ `nhieu_cum` 500.000 ký tự vượt trần 2 giây trên máy
+  này (2,1351 và 2,3119 giây). Giữ nguyên test/ngưỡng; thêm đệm phân tích
+  cụm tiền hữu hạn (128 cụm), chỉ tồn tại trong một lượt quét, không lưu
+  bền. Mỗi vị trí vẫn có bản giá trị/offset riêng. Đo lại ca đó 0,5992 giây;
+  sáu ca hiệu năng cũ xanh, thêm ca không chia sẻ giá trị giữa vị trí.
+
+### Kết quả kiểm DC-S22
+
+Đã kiểm bằng Core giả (CoreGia). Môi trường có
+`PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`.
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.7.1: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q --basetemp=.pytest-tmp
+898 passed in 393.05s (0:06:33)
+0 skipped; mã thoát 0.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0.
+```
+
+- Bộ cũ 881 ca giữ nguyên tình huống/tham số, thay đúng ca băm cổng tạm
+  bằng kiểm đã lưu trữ; thêm 17 ca DC-S22, không skip hay bỏ ca hành vi.
+  Hai ca Hỏi AI (thành công/CHUA_RO) nằm trong bộ đầy đủ; 0 Cloud.
+- `sql/kiem_ke.json`: **31/31 tệp**, bytes/SHA thực khớp; mọi tệp văn bản
+  trong gói chuẩn LF. SQL khai đủ bốn bảng, cột hệ thống/kiểu/unique khớp.
+- Sau chốt README/CHANGELOG/NGUON, tái tạo kiểm kê và kiểm lại bộ 17 ca
+  DC-S22, CLI DEMO và kiểm độc lập; không đổi runtime sau lượt 898 ca.
+- Đối chiếu 120 tệp thêm/sửa/chuyển từ main `12ed8db`: nội dung ngoài
+  engine khớp main (sau chuẩn CRLF→LF), không chỉnh riêng engine khác.
+- `git diff --check -- e_doi_chieu`: mã 0; chưa commit/push.
+
+### Cần Core — cập nhật DC-S22
+
+- C-DC-01: **đã có** ngăn/cấu hình SDK 2.2.0; không còn RAM fallback.
+  Chưa nghiệm thu Core thật/migration CSDL thực tế. Ba màn dự kiến
+  DC-10/DC-11 chưa có tệp UI, SDK 2.2.0 chưa nhận khóa
+  `giao_dien_quan_tri` trong manifest; cần cửa nạp màn chung ở Core.
+- SDK 2.2.0 chưa có kiểu cột `json`: tạm dùng cột `van_ban` tuần tự hóa
+  phong bì ≤64 KiB. Không nới SDK hoặc đưa SQL vào runtime.
+- CLI SDK chưa đọc cấu hình riêng từng ví dụ `chay_thu_demo`; DEMO Word
+  hiện tại không cần cấu hình nên CLI chuẩn đạt toàn bộ, không có cổng
+  DEMO thay thế. Nếu thêm DEMO nghiệp vụ cần cấu hình/quyền tệp con thì
+  Core/SDK cần cách cấp tương ứng; không tự đặt cấu hình DEMO mặc định.
+- C-DC-02/03/04/05 tiếp tục mở: quyền/vòng đời tệp con, provenance và
+  điều phối OCR vùng/nhánh bỏ AI; xác nhận chỉ-thêm có danh tính/quyền;
+  mapping chặn hiệu lực; từ điển/DC-Q14, ngưỡng/DC-Q15 và detector/model
+  thật có nguồn/giấy phép/số đo. CoreGia không chứng minh các cửa này.
+- C-DC-06: giữ giới hạn tệp chung của SDK; engine tự kiểm JSON yêu cầu
+  ≤1 MiB và tệp con ≤20 MiB/tổng ≤128 MiB. SDK đã đổi lỗi HTTP 413 khi
+  mở tệp thành `VUOT_GIOI_HAN`; engine đổi lại `DC_QUA_GIOI_HAN` để giữ
+  hành vi. Chưa coi test là nghiệm thu lease/log/Core thật.
+- Chưa phát sinh câu hỏi mới cần Anh chốt.
 
 ## DC-7 — 15/11/2026
 

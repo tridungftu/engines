@@ -152,7 +152,12 @@ def tao_snapshot(dm, module="DEMO-crm"):
 
 
 def chay_module(docx_raw, tham_so, du_lieu_ai, *, app=None):
-    core, app = CoreGia(), app or app_tx3()
+    core = CoreGia()
+    if app is None:
+        app = app_tx3(core)
+    else:
+        core.nap_engine(app)
+        core.dat_cau_hinh(app.ma, {"ngan_sach_token_vao_toi_da": 100000})
 
     def chay(ma, vao, ts=None):
         kq = core.chay_thu(app, ma, vao, ts)

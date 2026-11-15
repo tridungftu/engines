@@ -4,16 +4,15 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from fnmatch import fnmatchcase
 import http.client
+import json
 import time
 import urllib.error
 import urllib.request
 
-from kho_tri_thuc_sdk.engine import LoiNghiepVu
+from kho_tri_thuc_sdk.engine import LoiNghiepVu, NganXungDot
 
 from . import ai_cuc_bo
 from .dto import MA_MODEL
-from .ngan import NganXungDot
-from .ngan_engine import tao_ngan_bo_nho
 
 THOI_GIAN_DEM = 300
 CAC_API = (
@@ -160,10 +159,10 @@ def _luu_catalog(ngan, url, catalog):
             for ban in _doc_models(ngan, url):
                 gt = ban.gia_tri
                 muc = moi.get(gt["id_model"])
-                gia_tri = {**gt, "kha_dung": bool(muc and muc[1].kha_dung),
+                gia_tri = {"url": gt["url"], "kha_dung": bool(muc and muc[1].kha_dung),
                            "kiem_luc": luc, "phat_hien_dat": catalog is not None}
                 if muc:
-                    gia_tri.update(thu_tu=muc[0], loai=catalog.loai, api=list(catalog.api))
+                    gia_tri.update(thu_tu=muc[0], loai=catalog.loai, api=json.dumps(catalog.api, ensure_ascii=False))
                 with ngan.lo() as lo:
                     lo.sua("model_phat_hien", {"id_model": gt["id_model"]}, gia_tri,
                            row_version=ban.row_version)
@@ -174,7 +173,7 @@ def _luu_catalog(ngan, url, catalog):
                     with ngan.lo() as lo:
                         lo.sua("model_phat_hien", {"id_model": m.ma}, {
                             "url": url, "kha_dung": m.kha_dung, "thu_tu": i,
-                            "loai": catalog.loai, "api": list(catalog.api),
+                            "loai": catalog.loai, "api": json.dumps(catalog.api, ensure_ascii=False),
                             "kiem_luc": luc, "phat_hien_dat": True,
                         }, row_version=ban.row_version)
             return
@@ -185,13 +184,15 @@ def _luu_catalog(ngan, url, catalog):
 
 
 def chon_model(yeu_cau, cau_hinh, *, kiem_huy=lambda: None, ngan=None):
-    # Công cụ độc lập AI-7 có thể không có app; vẫn chỉ dùng RAM, không đọc tệp.
-    ngan = tao_ngan_bo_nho() if ngan is None else ngan
     catalog = bo_phat_hien.kha_dung_hien_tai(cau_hinh["local_ai"], kiem_huy=kiem_huy)
     url = cau_hinh["local_ai"]["url"]
-    _luu_catalog(ngan, url, catalog)
-    cac_ma = [b.gia_tri["id_model"] for b in sorted(_doc_models(ngan, url),
-              key=lambda b: b.gia_tri["thu_tu"]) if b.gia_tri["kha_dung"]]
+    if ngan is not None:
+        _luu_catalog(ngan, url, catalog)
+        cac_ma = [b.gia_tri["id_model"] for b in sorted(_doc_models(ngan, url),
+                  key=lambda b: int(b.gia_tri["thu_tu"])) if b.gia_tri["kha_dung"]]
+    else:
+        # Công cụ AI-7 độc lập chỉ chọn từ phản hồi hiện tại, không giữ dữ liệu.
+        cac_ma = [m.ma for m in catalog.models if m.kha_dung] if catalog else []
     if yeu_cau.model_uu_tien in cac_ma:
         return yeu_cau.model_uu_tien, "model_uu_tien"
     for quy_tac in cau_hinh.get("quy_tac_model", []):

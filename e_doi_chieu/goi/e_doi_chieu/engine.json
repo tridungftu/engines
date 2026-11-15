@@ -3,11 +3,11 @@
   "loai": "engine",
   "ma": "e_doi_chieu",
   "ten": "Đối chiếu bản ký",
-  "phien_ban": "0.7.0",
+  "phien_ban": "0.7.1",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
-    "sdk": ">=2.0.0 <3.0.0"
+    "sdk": ">=2.2.0 <3.0.0"
   },
   "che_do_chay": "cuc_bo",
   "diem_vao": {
@@ -39,61 +39,155 @@
     {
       "ma": "doi_chieu.nhan_cap@1",
       "ten": "Nhận cặp tài liệu đối chiếu",
-      "nhan": ["tep"],
+      "nhan": [
+        "tep"
+      ],
       "tra": "ho_so_doi_chieu",
       "gioi_han": {
         "tep_toi_da_mib": 20,
-        "mime": ["application/json"],
+        "mime": [
+          "application/json"
+        ],
         "thoi_han_giay": 120
       },
       "huy_duoc": true,
-      "tham_so": [{
-        "ma": "bam_yeu_cau", "ten": "Băm yêu cầu đã ghim",
-        "kieu": "van_ban", "bat_buoc": true, "toi_da": 71
-      }]
+      "tham_so": [
+        {
+          "ma": "bam_yeu_cau",
+          "ten": "Băm yêu cầu đã ghim",
+          "kieu": "van_ban",
+          "bat_buoc": true,
+          "toi_da": 71
+        }
+      ]
     },
     {
       "ma": "doi_chieu.so_van_ban@1",
       "ten": "So văn bản hai bên",
-      "nhan": ["ho_so_doi_chieu"],
+      "nhan": [
+        "ho_so_doi_chieu"
+      ],
       "tra": "ho_so_doi_chieu",
-      "gioi_han": {"tep_toi_da_mib": 20, "mime": ["application/json"], "ky_tu_toi_da": 500000, "thoi_han_giay": 300},
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "mime": [
+          "application/json"
+        ],
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 300
+      },
       "huy_duoc": true,
       "tham_so": [
-        {"ma": "bo_quy_tac_json", "ten": "Bộ quy tắc đã ghim", "kieu": "van_ban", "bat_buoc": true, "toi_da": 65536},
-        {"ma": "bam_bo_quy_tac", "ten": "Băm bộ quy tắc", "kieu": "van_ban", "bat_buoc": true, "toi_da": 71}
+        {
+          "ma": "bo_quy_tac_json",
+          "ten": "Bộ quy tắc đã ghim",
+          "kieu": "van_ban",
+          "bat_buoc": true,
+          "toi_da": 65536
+        },
+        {
+          "ma": "bam_bo_quy_tac",
+          "ten": "Băm bộ quy tắc",
+          "kieu": "van_ban",
+          "bat_buoc": true,
+          "toi_da": 71
+        }
       ]
     },
     {
       "ma": "doi_chieu.phat_hien_sua_tay@1",
       "ten": "Phát hiện vùng nghi sửa tay",
-      "nhan": ["ho_so_doi_chieu"],
+      "nhan": [
+        "ho_so_doi_chieu"
+      ],
       "tra": "ho_so_doi_chieu",
-      "gioi_han": {"tep_toi_da_mib": 20, "mime": ["application/json"], "ky_tu_toi_da": 500000, "thoi_han_giay": 900},
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "mime": [
+          "application/json"
+        ],
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 900
+      },
       "huy_duoc": true,
-      "tham_so": [{"ma": "che_do", "ten": "Phạm vi quét", "kieu": "chon", "mac_dinh": "day_du", "lua_chon": [{"ma": "day_du", "ten": "Quét đủ ảnh trang"}]}]
+      "tham_so": [
+        {
+          "ma": "che_do",
+          "ten": "Phạm vi quét",
+          "kieu": "chon",
+          "mac_dinh": "day_du",
+          "lua_chon": [
+            {
+              "ma": "day_du",
+              "ten": "Quét đủ ảnh trang"
+            }
+          ]
+        }
+      ]
     },
     {
       "ma": "doi_chieu.chuan_bi_ai@1",
       "ten": "Chuẩn bị phân loại bằng Local AI",
-      "nhan": ["ho_so_doi_chieu"],
+      "nhan": [
+        "ho_so_doi_chieu"
+      ],
       "tra": "yeu_cau_ai",
-      "gioi_han": {"tep_toi_da_mib": 20, "mime": ["application/json"], "ky_tu_toi_da": 500000, "thoi_han_giay": 300},
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "mime": [
+          "application/json"
+        ],
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 300
+      },
       "huy_duoc": true,
       "tham_so": [
-        {"ma": "module", "ten": "Module cung cấp prompt (bắt buộc)", "kieu": "van_ban", "mo_ta": "Bắt buộc nghiệp vụ; engine kiểm và trả THIEU_PROMPT khi thiếu."},
-        {"ma": "ma_prompt", "ten": "Mã prompt (bắt buộc)", "kieu": "van_ban", "mo_ta": "Mã prompt của module, không có mặc định."},
-        {"ma": "phien_ban_prompt", "ten": "Phiên bản prompt (bắt buộc)", "kieu": "van_ban", "mo_ta": "Phiên bản được module ghim, không có mặc định."},
-        {"ma": "prompt", "ten": "Nội dung prompt (bắt buộc)", "kieu": "van_ban", "mo_ta": "Tối đa 16.000 ký tự; thiếu thì THIEU_PROMPT, vượt thì DC_QUA_NGAN_SACH_AI."},
-        {"ma": "model_uu_tien", "ten": "Model Local ưu tiên", "kieu": "van_ban"}
+        {
+          "ma": "module",
+          "ten": "Module cung cấp prompt (bắt buộc)",
+          "kieu": "van_ban",
+          "mo_ta": "Bắt buộc nghiệp vụ; engine kiểm và trả THIEU_PROMPT khi thiếu."
+        },
+        {
+          "ma": "ma_prompt",
+          "ten": "Mã prompt (bắt buộc)",
+          "kieu": "van_ban",
+          "mo_ta": "Mã prompt của module, không có mặc định."
+        },
+        {
+          "ma": "phien_ban_prompt",
+          "ten": "Phiên bản prompt (bắt buộc)",
+          "kieu": "van_ban",
+          "mo_ta": "Phiên bản được module ghim, không có mặc định."
+        },
+        {
+          "ma": "prompt",
+          "ten": "Nội dung prompt (bắt buộc)",
+          "kieu": "van_ban",
+          "mo_ta": "Tối đa 16.000 ký tự; thiếu thì THIEU_PROMPT, vượt thì DC_QUA_NGAN_SACH_AI."
+        },
+        {
+          "ma": "model_uu_tien",
+          "ten": "Model Local ưu tiên",
+          "kieu": "van_ban"
+        }
       ]
     },
     {
       "ma": "doi_chieu.phan_loai_diem_lech@1",
       "ten": "Hậu kiểm phân loại Local AI",
-      "nhan": ["tra_loi_ai"],
+      "nhan": [
+        "tra_loi_ai"
+      ],
       "tra": "ho_so_doi_chieu",
-      "gioi_han": {"tep_toi_da_mib": 20, "mime": ["application/json"], "ky_tu_toi_da": 500000, "thoi_han_giay": 300},
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "mime": [
+          "application/json"
+        ],
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 300
+      },
       "huy_duoc": true,
       "tham_so": []
     }
@@ -134,5 +228,136 @@
     }
   ],
   "bi_mat": [],
-  "webhook": null
+  "webhook": null,
+  "ngan_du_lieu": [
+    {
+      "bang": "luot_doi_chieu",
+      "ten": "Lượt đối chiếu",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "ma_luot"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "bam_cap",
+          "bam_bo",
+          "phien_ban_engine"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "ma_luot",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "bam_cap",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bam_bo",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "trang_thai",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "chu_so_huu",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "luc_chiem",
+          "kieu": "so"
+        },
+        {
+          "ma": "han_chiem",
+          "kieu": "so"
+        },
+        {
+          "ma": "phong_bi",
+          "kieu": "van_ban"
+        }
+      ]
+    },
+    {
+      "bang": "xac_nhan",
+      "ten": "Xác nhận",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "ma_xac_nhan"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "ma_yeu_cau"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "ma_xac_nhan",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "ma_yeu_cau",
+          "kieu": "van_ban"
+        }
+      ]
+    },
+    {
+      "bang": "loi_ocr_de_xuat",
+      "ten": "Lỗi OCR đề xuất",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "bam_cap_tu"
+      ],
+      "duy_nhat": [],
+      "truong": [
+        {
+          "ma": "bam_cap_tu",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        }
+      ]
+    },
+    {
+      "bang": "loi_ocr_da_duyet",
+      "ten": "Lỗi OCR đã duyệt",
+      "pham_vi": "engine",
+      "khoa": [
+        "bam_cap_tu",
+        "phien_ban"
+      ],
+      "duy_nhat": [],
+      "truong": [
+        {
+          "ma": "bam_cap_tu",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "phien_ban",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        }
+      ]
+    }
+  ],
+  "cau_hinh": {
+    "schema": "cau_hinh.schema.json"
+  },
+  "du_lieu": {
+    "goi_migration": {
+      "ma": "e_doi_chieu",
+      "thu_muc": "sql",
+      "tep_kiem_ke": "sql/kiem_ke.json",
+      "phien_ban_du_lieu": 1
+    }
+  }
 }

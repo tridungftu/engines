@@ -1,5 +1,79 @@
 # VIỆC — danh sách việc duy nhất của project `e_trich_xuat`
 
+## TX-7 — chuyển SDK 2.2.0 (15/11/2026)
+
+**Trạng thái: đã chuyển mã, chưa đạt nghiệm thu do C-TX-06. PR: chờ lead mở.**
+Đây là lát chuyển SDK theo `_chung/docs/CHUYEN-SDK-2.2.md` §2/§4,
+khác mã yêu cầu nghiệp vụ TX-7 (E6) trong bảng cũ bên dưới. Ước tính: **2 giờ**.
+
+- Venv `.venv` mới Python 3.13.14, wheel 2.2.0 cài `--no-index --no-deps`;
+  SHA-256 nguyên bytes khớp `SHA256SUMS.txt`:
+  `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`.
+  Phụ thuộc SDK/runtime/test đã ghim, cài offline; `pip check` đạt.
+- Gói 0.5.0, `tuong_thich.sdk: ">=2.2.0 <3.0.0"`, khai schema cấu hình
+  thật trong `engine.json`. Bỏ bảng cấu hình; **không còn bảng ngăn TX**,
+  không có khóa/lọc pháp nhân, thao tác xóa hoặc SQL runtime.
+  Không khai `ngan_du_lieu: []` vì SDK bắt khóa này đi cùng migration.
+  **SQL/kiểm kê SQL: không áp dụng**, không tạo bảng/migration rỗng.
+- Handler chỉ lấy `viec.cau_hinh`, giữ `CHUA_CAU_HINH` khi thiếu trường.
+  SDK điền default 16.000 hợp lệ cho DEMO chuẩn. Không cache cấu hình;
+  không cần hook làm mới cache. UI đã dùng `.cau_hinh` từ trước, giữ nguyên.
+- Chuyển nguyên bytes `KHAI-SDK-2.1.json`, `ngan.py`, `cau_hinh.py` và
+  cổng `chay_demo_voi_ngan_gia.py` sang `e_trich_xuat/LUU-TRU/TX-7/`.
+  Bỏ mọi import/test so băm mẫu ngăn; không có cổng kiểm thay thế hiện hành.
+  Helper hồ sơ trong gói chỉ phục vụ fixture unit, không được runtime gọi.
+- Giữ các ca hành vi cũ bằng CoreGia 2.2.0, `dat_cau_hinh`,
+  `gay_xung_dot_ngan`, `xem_ngan`; ca xóa/RAM cập nhật sang ngữ nghĩa
+  cấm xóa/trạng thái và Core giữ dữ liệu qua app mới. Test trần byte lõi
+  dùng phiếu test riêng vì SDK mới chặn chuỗi metadata dài trước handler;
+  trần phiếu runtime không đổi. Thêm 3 ca hồ sơ null phiên bản phải có băm đúng.
+- Công cụ TX-6/kiểm venv mới chuyển sang 2.2.0 và lock đầy đủ. Không sửa
+  engine khác, `_chung/**`, SDK/Core/nguồn cũ; không commit/push.
+
+### Cần Core — cập nhật TX-7
+
+- **C-TX-04: đã giải quyết phần ngăn/cấu hình và cấu hình DEMO** bằng API
+  SDK 2.2.0/default schema. Các ghi chú cổng RAM ở phần lịch sử không còn áp dụng.
+- **C-TX-06 vẫn chặn nghiệm thu:** `CoreGia.chay_thu_demo`/CLI chỉ tự tải
+  `tep_demo` đầu vào loại `tep`; chưa có khai báo/API nạp tệp phụ được tham
+  chiếu trong loại riêng `tra_loi_ai`. Mẫu hậu kiểm dùng hồ sơ đóng gói thực,
+  nhưng CLI không đưa nó vào kho CoreGia: 404 dẫn đến `DANG_CHAY`, exit 1.
+  Cần cơ chế chung khai tệp phụ + ánh xạ tham chiếu/băm, hoặc chuỗi DEMO
+  dùng đầu ra bước trước qua Core. Không ghim ID cấp theo thứ tự, không
+  sửa SDK hoặc đổi handler để báo thành công. Giữ đủ 5 ví dụ, không bỏ ca lỗi.
+- **C-TX-07 (mới):** SDK có phiên bản cấu hình trong payload nhận việc nhưng
+  `Viec` chưa công bố `phien_ban_cau_hinh`. Cần SDK cấp phiên bản gắn chính
+  bản chụp trên việc. Tạm thời hồ sơ mới ghi null + `bam_cau_hinh` SHA-256
+  canonical JSON; hậu kiểm kiểm băm bắt buộc, vẫn nhận hồ sơ cũ có phiên bản
+  dương. Không đọc `_phien_ban_cau_hinh` của app vì có thể đã đổi bởi việc khác.
+  Đây là metadata hồ sơ nội bộ, không đổi hợp đồng loại chung. Hash không chứng minh quyền.
+- **C-TX-08 (tách từ C-TX-04):** SDK 2.2.0 chưa nhận khóa
+  `giao_dien_quan_tri` trong manifest. Giữ `ui/cau_hinh.js` qua
+  `KttCore.engine("e_trich_xuat").cau_hinh`, không đưa khóa chưa hỗ trợ vào
+  `engine.json`; lead Core cần xác nhận cơ chế chung nạp/review màn.
+- **C-TX-05 vẫn mở:** cần hook lỗi công khai. Đã kiểm lại hai chữ ký nội bộ
+  trên đúng 2.2.0, SDK mới log loại exception không chứa nội dung nhạy cảm;
+  wrapper giữ thông điệp lỗi DOCX và chuẩn bị khi SDK chặn trước handler.
+  C-TX-01/02/03 về quyền/ghim/vòng đời/trường động vẫn giữ phần chưa kiểm Core thật.
+
+### Kết quả TX-7 — đã kiểm bằng Core giả (CoreGia)
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat
+→ 4/5 ĐẠT, 1/5 LỖI (hậu kiểm: DANG_CHAY), exit 1.
+.venv/Scripts/python -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp
+→ 486 passed, 0 skipped; exit 0 (lượt đầy đủ: 34,64 giây).
+.venv/Scripts/python e_trich_xuat/tests/kiem_doc_lap.py
+→ [ĐẠT] Gói độc lập: không import Core/kênh cũ, không bytecode hoặc liên kết; exit 0.
+```
+
+Linux/Core thật/máy OS sạch chưa chạy; 0 Cloud, không gọi Local AI thật.
+Thời gian thực tế: **16:45–17:11:03 ngày 15/11/2026**, khoảng **0.43 giờ**
+(ước tính trong phiếu: **2 giờ**). Kết luận chung **Chưa đạt** do CLI chuẩn chưa đủ 5/5.
+
+---
+
+
 Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ Core / Xong** (ghi ngày và bằng chứng).
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |

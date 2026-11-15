@@ -1,5 +1,21 @@
 # Thay đổi
 
+## 0.5.0 — 15/11/2026, TX-7; PR: chờ lead mở
+
+- Chuyển SDK 2.2.0, khai schema cấu hình trong manifest; bỏ bảng cấu hình
+  và các cổng tạm khỏi đường chạy, lưu nguyên bản ở `LUU-TRU/TX-7`.
+- Đọc `viec.cau_hinh` đã kiểm/default. SDK chưa cấp phiên bản công khai
+  trên việc: hồ sơ mới dùng phiên bản null + SHA-256 bản chụp; hậu kiểm
+  kiểm băm, vẫn nhận hồ sơ cũ có phiên bản dương. Ghi C-TX-07.
+- Không có bảng ngăn TX sau bỏ cấu hình; không cần SQL/migration/kiểm kê SQL.
+- Giữ hành vi và các ca kiểm cũ, chuyển môi trường sang CoreGia 2.2.0;
+  bỏ test so SHA mẫu ngăn, bỏ cổng DEMO thay thế. Ghim đủ phụ thuộc SDK.
+- CLI chuẩn 4/5 ĐẠT, exit 1: C-TX-06 vẫn thiếu nạp tệp phụ cho DEMO hậu kiểm.
+  C-TX-04 phần ngăn/cấu hình đã có; C-TX-05 hook lỗi, C-TX-08 nạp màn còn mở.
+  Pytest 486 passed, 0 skipped; độc lập exit 0; SHA LF khớp.
+  **đã kiểm bằng Core giả (CoreGia)**, chưa đạt nghiệm thu TX-7.
+
+
 ## Chưa phát hành — 15/11/2026, TX-6
 
 - Thêm ngoài runtime: công cụ T3 DEMO-1/20/60 × ba ID model, N1 một lần,

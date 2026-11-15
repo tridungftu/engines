@@ -24,7 +24,7 @@ td = importlib.import_module("e_doi_chieu.tu_dien")
 @pytest.fixture
 def mau(monkeypatch):
     m = Mau(CoreOCRVungDEMO())
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     dat_tu_dien(m)
     m.provider = DieuPhoiDEMO()
     yield m

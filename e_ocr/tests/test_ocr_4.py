@@ -7,13 +7,14 @@ from hashlib import sha256
 import json
 from concurrent.futures import ThreadPoolExecutor
 import threading
+import time
 import os
 from pathlib import Path
 
 import pytest
 
 from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu, Viec, ViecDaHuy
-from kho_tri_thuc_sdk.thu import CoreGia
+from ngan_demo import core_demo
 
 from demo.tao_pdf import DONG_DEMO, pdf_demo
 from e_ocr import abbyy, chay as cong
@@ -37,17 +38,23 @@ def app_moi():
 
 
 def chay_moi(*, pn="pn-demo", lan_thu=1, nang_luc=DOC, nguon="tu_dong"):
-    core = CoreGia()
+    core = core_demo()
     tep = core.them_tep("DEMO.pdf", RAW, "application/pdf")
     ma = core.giao_viec(nang_luc, {"loai": "tep", "tep": tep}, {"nguon": nguon}, phap_nhan_id=pn)
     # CoreGia tự tăng lan_thu lúc lấy việc, giống Core thật giao lại sau mất lease.
     core._viec[ma]["lan_thu"] = lan_thu - 1
     core.chay(app_moi())
+    # Worker khác có thể đã nhận việc này trong cùng CoreGia. Chờ đúng việc,
+    # thay vì coi worker vừa hết hàng là việc của nó đã kết thúc.
+    han = time.monotonic() + 10
+    while core.xem(ma)["trang_thai"] in {"CHO", "DANG_CHAY"}:
+        assert time.monotonic() < han, "Việc DEMO chưa kết thúc."
+        time.sleep(0.005)
     return core, core.xem(ma)
 
 
 def nhat_ky(pn="pn-demo", so=None):
-    return NhatKyLuot(so or SoHanMuc(), pn, "sha256:" + sha256(RAW).hexdigest(), 1)
+    return NhatKyLuot(so or SoHanMuc(ngan_demo(pn)), pn, "sha256:" + sha256(RAW).hexdigest(), 1)
 
 
 def kiem_chua_ro(core, kq, ma=None):
@@ -240,22 +247,9 @@ def test_loi_chot_ben_giu_pdf_chua_ro_roi_khoi_dong_lai_chot_mot_lan(hot_folder,
 
 
 def test_ghi_giu_loi_khong_co_luot_hoac_trang_mot_nua(hot_folder, monkeypatch):
-    from contextlib import contextmanager
-    from e_ocr.ngan import NganXungDot
     vao, _, _ = hot_folder
-    ngan = ngan_demo()
-
-    lo_goc = ngan.lo
-
-    @contextmanager
-    def hong():
-        with lo_goc() as lo:
-            yield lo
-            raise NganXungDot()
-
-    with monkeypatch.context() as tam:
-        tam.setattr(ngan, "lo", hong)
-        _, kq = chay_moi()
+    core_demo().gay_xung_dot_ngan("trang_thai_engine", so_lan=12)
+    _, kq = chay_moi()
     assert kq["loi"]["ma"] == "NGAN_XUNG_DOT", kq
     assert nhat_ky().doc() is None and SoHanMuc()._doc()[1] == {"da_nhan": {}, "dang_giu": {}}
     assert not list(vao.iterdir())
@@ -421,6 +415,13 @@ def test_nhat_ky_hong_khong_tu_dat_lai_va_gui_trung(hot_folder, tess_gia, sua):
     nk = nhat_ky()
     luot, _ = nk.giu(5000)
     luot.update(sua)
+    if sua == {"da_nhan": "khong"}:
+        cu = nk.doc()
+        with pytest.raises(LoiNghiepVu) as loi:
+            ghi_luot(nk, luot)
+        assert loi.value.ma == "NGAN_DU_LIEU_SAI" and nk.doc() == cu
+        assert not tess_gia and not list(hot_folder[0].iterdir())
+        return
     ghi_luot(nk, luot)
     _, kq = chay_moi()
     assert kq["loi"]["ma"] == "NHAT_KY_LUOT_CAN_KIEM_TRA", kq

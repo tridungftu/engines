@@ -1,4 +1,4 @@
-"""Khóa SDK 2.0.0 và kiểm log an toàn qua đầy đủ vòng CoreGia."""
+"""Khóa SDK 2.2.0 và kiểm log an toàn qua đầy đủ vòng CoreGia."""
 
 from inspect import signature
 
@@ -11,7 +11,7 @@ from e_trich_xuat.chay import tao_app
 
 
 def test_chot_sdk_va_chu_ky_hai_hook_noi_bo():
-    assert kho_tri_thuc_sdk.__version__ == "2.0.0"
+    assert kho_tri_thuc_sdk.__version__ == "2.2.0"
     assert str(signature(Engine._ghi)) == "(self, cau)"
     assert str(signature(Engine._ket_thuc)) == (
         "(self, dt, viec, cfg, trang_thai, *, loi=None, ma_tuong_quan=None)")
@@ -20,7 +20,7 @@ def test_chot_sdk_va_chu_ky_hai_hook_noi_bo():
 @pytest.mark.parametrize("doi", ["phien_ban", "ghi", "ket_thuc"])
 def test_sdk_doi_thi_khong_khoi_dong(monkeypatch, doi):
     if doi == "phien_ban":
-        monkeypatch.setattr(kho_tri_thuc_sdk, "__version__", "2.0.1")
+        monkeypatch.setattr(kho_tri_thuc_sdk, "__version__", "2.2.1")
     else:
         monkeypatch.setattr(Engine, "_ghi" if doi == "ghi" else "_ket_thuc", lambda self: None)
     with pytest.raises(RuntimeError, match="SDK đã thay đổi"):
@@ -38,7 +38,7 @@ def test_runtimeerror_bi_mat_demo_qua_coregia_khong_lo_stderr(capsys):
     kq = core.chay_thu(app, "trich.doc_docx@1", {"loai": "tep", "tep": tep})
     err = capsys.readouterr().err
     assert kq["trang_thai"] == "LOI" and kq["loi"]["ma"] == "ENGINE_LOI_XU_LY"
-    assert bi_mat not in err and "Traceback" not in err and "ENGINE_LOI_XU_LY" in err
+    assert bi_mat not in err and "Traceback" not in err and "RuntimeError" in err
     assert bi_mat not in str(kq)
 
 

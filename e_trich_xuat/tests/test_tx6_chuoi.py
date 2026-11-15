@@ -24,7 +24,7 @@ def engine_gia(ma, nang_luc, nhan, tra):
     phieu = deepcopy(tao_app().phieu)
     phieu.update(ma=ma, nang_luc=[{"ma": nang_luc, "ten": "DEMO giả",
         "nhan": [nhan], "tra": tra, "gioi_han": {"tep_toi_da_mib": 20, "thoi_han_giay": 30}}], chay_thu_demo=[])
-    return Engine(phieu)
+    return Engine(phieu, thu_muc_goi=GOC_GOI)
 
 
 def pdf_demo():
@@ -54,8 +54,8 @@ def test_hai_chuoi_schema_metadata_tien_ngay_tep_snapshot(nguon, monkeypatch):
     # Chặn mạng: CoreGia giao từng bước, không có engine gọi chéo.
     monkeypatch.setattr(socket, "create_connection", lambda *a, **k: pytest.fail("Không mạng"))
     core, app = CoreGia(), tao_app()
-    with app.ngan.lo() as lo:
-        lo.them("cau_hinh", {}, {"ngan_sach_token_vao_toi_da": 100000})
+    core.nap_engine(app)
+    core.dat_cau_hinh(app.ma, {"ngan_sach_token_vao_toi_da": 100000})
     docx = (E6 / "DEMO-thuong.docx").read_bytes()
     t = core.them_tep("DEMO.docx", docx, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     tl = chay(core, app, "trich.doc_docx@1", {"loai": "tep", "tep": t})
@@ -86,9 +86,7 @@ def test_hai_chuoi_schema_metadata_tien_ngay_tep_snapshot(nguon, monkeypatch):
     # Đổi bộ/cấu hình sau chuẩn bị: hồ sơ cũ và metadata đầu ra giữ nguyên.
     ts["prompt"] = "DEMO prompt mới"
     ts["bo_tham_so_json"] = "DEMO khác"
-    cu = app.ngan.doc("cau_hinh", {})
-    with app.ngan.lo() as lo:
-        lo.sua("cau_hinh", {}, {"ngan_sach_token_vao_toi_da": 1024}, row_version=cu.row_version)
+    core.dat_cau_hinh(app.ma, {"ngan_sach_token_vao_toi_da": 1024})
     assert json.loads(ho_so)["cau_hinh_da_ghim"]["gia_tri"]["ngan_sach_token_vao_toi_da"] == 100000
     vang = json.loads((E6 / "DEMO-thuong.vang.json").read_text(encoding="utf-8"))
     data = {}

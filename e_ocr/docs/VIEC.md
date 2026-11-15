@@ -8,6 +8,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | OCR-0 | Khung SDK 2.0, cấu hình máy, kho tạm, schema chung và kiểm độc lập | OCR-6 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã đạt tiêu chí riêng của OCR-0; kết quả DEMO chung và giới hạn xem bên dưới |
 | OCR-1 | Đọc lớp chữ PDF và ABBYY Hot Folder cục bộ; hai action đọc dùng chung lõi | OCR-2, 3, 4, 7, 15 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 2/2, pytest 119 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
 | OCR-2 | Chọn nguồn, hạn mức 30 ngày và dự phòng Tesseract; vendor PDF/DOCX/bảng | OCR-8 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), mock CI và Tesseract thật bằng DEMO; bằng chứng OCR-2 bên dưới |
+| OCR-9 | Chuyển SDK 2.2.0: ngăn/cấu hình, migration SQL, CoreGia và kiểm kê gói | OCR-8, 13, 14 | Xong 15/11/2026 trong phạm vi CoreGia | PR: **chờ lead mở**, nhánh `codex/e_ocr-ocr-9`; không commit/push |
 | OCR-3 | Xuất Word từ cấu trúc tài liệu, giữ ô trống/ô gộp, vị trí bảng và thứ tự trang | OCR-4, 5 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 3/3, pytest 145 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
 | OCR-4 | Lượt chưa rõ theo phương án B, chống trùng bền và đối chiếu hạn mức sau khởi động lại | OCR-13, 14, 15 | Xong 15/11/2026 | Phiếu 14/11/2026; PR: **chờ lead mở**. SDK DEMO 3/3, pytest 218 passed, 0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia) |
 | OCR-5 | Bộ DEMO, sáu ví dụ chạy thử và OCR-MAY ca 2/3/4/5/7/9; sửa namespace Word | OCR-11, 15, 16 | Xong — phiếu 14/11/2026 | Thực hiện 15/11/2026; PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); SDK 6/6, pytest 239 passed, 0 skipped; bằng chứng bên dưới |
@@ -19,6 +20,78 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 4 | Bài máy test còn lại ca 1, 6, 8 | OCR-11 | Chờ Core / thiết kế | Ca 3 đã kiểm bằng Core giả ở OCR-5; ca 1 chờ thẻ trạng thái, ca 6 chờ Đối chiếu, ca 8 chờ bí mật/cầu nối có khóa |
 | 5 | Lát 9: ABBYY thật trên máy hiện tại bằng PDF DEMO (Anh đã cho phép mở kết nối tạm) | OCR-12 | Chờ làm | Không chép `in\ out\ jobs\ state\` |
 | 6 | Ghép Core (K1–K6) → nghiệm thu tổng thể | — | Chờ Core |  |
+
+## OCR-9 — chuyển SDK 2.2.0, 15/11/2026
+
+PR: **chờ lead mở**, nhánh `codex/e_ocr-ocr-9`; chỉ sửa e_ocr trong worktree.
+Bắt đầu **16:44 ngày 15/11/2026** theo lead; phiếu ước tính **4 giờ**.
+
+Đã chuyển `engine.json`/lock lên SDK 2.2.0, khai ba bảng ngăn, schema cấu
+hình và gói migration. Cấu hình từ `viec.cau_hinh`; phạm vi pháp nhân qua
+`viec.ngan`, khóa/lọc không tự cấp pháp nhân. Bỏ bảng cấu hình và fallback
+RAM. Lượt, hạn mức, tổng hợp chưa rõ vẫn cùng lô nguyên tử; xung đột đọc
+lại, thử tối đa 12 lần. Thế hệ lượt mới sửa CAS giữ id, không xóa/tạo lại.
+Giữ chỗ chuyển vào mốc CAS không TTL để bảo toàn khi ngừng quá 45 ngày.
+
+`KHAI-SDK-2.1.json`, `ngan.py`, `cau_hinh.py` chuyển nguyên bản vào
+`e_ocr/LUU-TRU/OCR-9/`; chỉ bỏ hai ca băm mẫu chung được yêu cầu. Các ca
+hành vi cũ giữ, đổi cách dựng môi trường sang CoreGia 2.2.0; ca ghi sai
+kiểu boolean bị CoreGia từ chối ngay khi ghi và kiểm rollback tại đó.
+Các ca xóa/khởi động lại RAM đổi sang CAS trạng thái/giữ dữ liệu qua App
+mới và kiểm SDK từ chối xóa. Không còn tự cài đặt ngữ nghĩa NganBoNho.
+
+Lệch kỹ thuật đã kiểm: SDK không hỗ trợ kiểu ngăn `json` và khóa manifest
+`giao_dien_quan_tri`; giải pháp/việc cần Core ở mục tương ứng. Numeric của
+SDK trả chuỗi, đã chuyển có kiểm số nguyên. Màn đọc JSON text cùng mã.
+Thay đổi đồng bộ **5 tệp Python runtime + 1 JS + 1 SQL**: vượt ngưỡng nhỏ
+~5 tệp vì phải đổi biểu diễn ngăn/UI/migration trong cùng gói được giao,
+tránh gói pha API cũ/mới. Không tự tách thành các gói không chạy độc lập.
+
+Môi trường: venv mới, wheel SDK cài `--no-index --no-deps`, SHA khớp
+`0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`.
+Không có wheelhouse phụ thuộc, tải pip bị ngắt; cài offline tệp distribution
+đúng pin sẵn có, kiểm hash `RECORD`, không dùng system-site-packages.
+Chưa kiểm cài lại archive wheel phụ thuộc trên máy sạch. Không đổi pin
+thư viện OCR; README/NGUON ghi đúng giới hạn môi trường này.
+
+Kết luận: **Đạt OCR-9 trong phạm vi được giao — đã kiểm bằng Core giả (CoreGia)**.
+Chưa kiểm Core/ABBYY thật, màn trình duyệt thật hoặc Linux.
+
+Kết quả kiểm thực tế, Python 3.13.14/SDK 2.2.0:
+
+```text
+> .venv/Scripts/python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+6/6 [ĐẠT]. Engine e_ocr 1.0.9: mọi ví dụ chạy thử DEMO đều đạt.
+Mã thoát 0; CoreGia + Tesseract thật vie+eng, cấu hình mặc định SDK.
+
+> .venv/Scripts/python -m pytest e_ocr/tests -q --basetemp=.pytest-tmp
+294 passed in 79.89s (0:01:19)
+Mã thoát 0; 0 skipped. Bao gồm kiểm TTL/schema/kiểm kê SQL và Node UI.
+288 ca trước OCR-9 - 2 ca băm cổng tạm + 8 ca SDK 2.2.0 = 294 ca.
+
+> .venv/Scripts/python e_ocr/tests/kiem_doc_lap.py
+[ĐẠT] Gói e_ocr độc lập; không import Core/kênh cũ, không có tệp biên dịch sẵn.
+Mã thoát 0.
+
+> node --test e_ocr/tests/ui/test_cau_hinh.mjs
+tests 12; pass 12; fail 0; skipped 0. Mã thoát 0.
+
+> .venv/Scripts/python -m pip check
+No broken requirements found. Mã thoát 0.
+
+Kiểm kê SQL: 43/43 tệp khớp bytes/SHA-256, chỉ bỏ chính kiểm kê.
+NGUON: đủ 44 tệp, một dòng/tệp; SHA nguồn LF khớp.
+Ba tệp lưu trữ: nội dung khớp bản trước OCR-9 sau chuẩn hóa LF.
+git diff --check: mã thoát 0.
+```
+
+Thời gian thực tế: **0.61 giờ**, **16:44:00–17:20:34 ngày
+15/11/2026** (giờ Việt Nam), so với **4 giờ ước tính** trong phiếu chuyển SDK.
+Bàn giao cho lead: PR **chờ lead mở**; không chạy commit/push.
+
+Cần Core / Chờ Anh mới phát sinh: kiểu ngăn `json` và khai màn quản trị
+chưa được SDK 2.2.0 chấp nhận; đã có giải pháp tương thích nêu trên. Nghiệm
+thu lưu bền/migration/quyền/màn thật do Core tiếp tục. Không có câu chờ Anh mới.
 
 ## Sửa kiểm độc lập OCR-8 — 15/11/2026
 
@@ -75,26 +148,32 @@ và bảo toàn chỗ giữ khi áp dụng lưu tối đa 45 ngày; chi tiết n
 Không có câu chờ Anh mới.
 
 ## Cần Core (chuyển lead Core qua Anh)
-- Xác nhận màn Admin có được đọc bảng phạm vi pháp nhân xuyên pháp nhân không.
-  OCR-8 hiện không giả định quyền này: màn chỉ đọc bản tổng hợp
-  `trang_thai_engine/chua_ro` phạm vi engine, chỉ số đếm/ngày, không định danh.
-- `han_muc_ngay` khai `giu_toi_da_ngay: 45`: khi Core áp dụng tự dọn cần
-  bảo toàn hàng còn `dang_giu`, kể cả engine dừng hơn 45 ngày; không được
-  tự nhả hạn mức của lượt chưa rõ. Runtime dọn hàng cũ trong cùng lô và
-  chuyển chỗ giữ sang ngày hiện tại, nhưng không thay cơ chế TTL của Core.
-- OCR-8 đã chuyển cấu hình vào ngăn theo quyết định 15/11; cần SDK 2.1 cấp `app.ngan`/`viec.ngan` và màn quản trị `KttCore.engine`. Không còn dùng biến `KTT_ENGINE_CAU_HINH`/`KTT_ENGINE_DU_LIEU` trong đường chạy engine.
-- Ngăn thật cần nguyên tử toàn lô, CAS/`row_version`, duy nhất/lấy hoặc tạo theo pháp nhân + băm, đọc hết phân trang. Khai báo dự kiến ở `goi/e_ocr/KHAI-SDK-2.1.json`; manifest vẫn 2.0. Tạm RAM, chấp nhận mất hạn mức/dấu chống trùng khi khởi động lại theo quyết định Anh.
-- NGAN-0 (PR #34) đã nối ngày 15/11/2026; hai test so băm đã bật, chuẩn hóa CRLF→LF. Không còn chờ gộp mẫu chung; còn chờ ngăn bền và màn quản trị thật của Core/SDK 2.1.
-- Cần Core cấp quyền `admin_core`, nạp `mount(goc, {KttCore})` và gọi `destroy` khi đóng màn. Ngăn trạng thái có hai bản `abbyy` và mốc CAS `han_muc`; không tự xóa mốc hoặc lượt chưa rõ theo tuổi. Trạng thái ABBYY hiện phản ánh công tắc và khả năng truy cập thư mục, chưa là kiểm tiến trình FineReader.
-- Bí mật theo tên, nhật ký kỹ thuật chung và cầu nối có khóa vẫn thuộc các lát sau. Lượt bền #10 có thể dùng ngăn theo đề nghị SDK 2.1; không cần hàm `ocr_*_luot` cũ.
-- Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
-- OCR-3 không phát sinh thiếu hụt Core/SDK: tải DOCX ra bằng API chung `viec.tai_tep_ra`, không cần kênh ACK hoặc sổ bàn giao riêng.
-- OCR-5: cần mốc vào hàng chờ/nhận việc và số việc đang chờ qua cổng chung
-  để đo/hiện hàng chờ thật. SDK 2.0 chưa cấp mốc đó; hiện chỉ đo chờ nguồn
-  ABBYY trong action, test đếm trạng thái `CHO` của CoreGia. Không sửa API.
-- SDK 2.0 in traceback khi action ném ngoại lệ bất ngờ, có thể lộ nội dung
-  và đường dẫn. OCR-5 đã đổi lỗi bất ngờ tại cổng engine thành lỗi cố định;
-  cần cơ chế nhật ký an toàn chung của SDK/Core cho cả lỗi ngoài action.
+
+Cập nhật OCR-9, 15/11/2026; các mục OCR-8 cần ngăn/cấu hình đã được SDK
+2.2.0 giải quyết. Các phần bằng chứng cũ bên dưới giữ làm lịch sử.
+
+- **SDK 2.2.0 chưa nhận kiểu `json` trong `ngan_du_lieu.truong`.** OCR-9 dùng
+  `van_ban` chứa JSON ≤64 KiB cho `da_nhan`, `dang_giu`, `theo_ngay`, kiểm
+  cấu trúc/số đếm; SQL dùng `text`, UI giải mã cùng biểu diễn. Khi thêm kiểu
+  `json` cần thống nhất migration tiếp theo, không tự đổi hợp đồng SDK.
+- **SDK 2.2.0 chưa nhận `giao_dien_quan_tri` trong manifest.** Màn hiện có
+  `ui/cau_hinh.js` vẫn dùng `KttCore.engine("e_ocr").cau_hinh` với CAS, chỉ
+  đọc bảng phạm vi engine. Cần Core nạp màn, cấp `admin_core`, gọi `destroy`
+  khi đóng và kiểm trên trình duyệt thật; chưa tuyên bố màn đã nối.
+- Cần lead/Core cài gói migration ba bảng `eng_e_ocr`, kiểm quyền pháp nhân,
+  nâng gói và khởi động lại Core DEMO để xác nhận lưu bền. Đã kiểm bằng
+  Core giả (CoreGia), không thay nghiệm thu PostgreSQL/Core thật.
+- **Đã xử lý trong OCR-9:** `dang_giu` chuyển sang `trang_thai_engine/han_muc`
+  không TTL; không còn chờ Core bảo toàn giữ chỗ trong hàng ngày có TTL.
+  `luot_abbyy` không TTL; chỉ `han_muc_ngay` ẩn sau 45 ngày. Ngăn SDK đọc lại
+  hàng hết hạn bằng `gom_het_han=True`; engine không dùng xóa.
+- `app.hang_cho()` của SDK 2.2.0 đã có số việc chờ/đang chạy. Mốc vào hàng
+  chờ và nhận việc để đo thời gian chờ Core chưa có; nhật ký hiện chỉ đo
+  chờ ABBYY/chạy action. Không mở rộng yêu cầu OCR-9 sang đo hàng chờ.
+- Bí mật theo tên, nhật ký tập trung, cầu nối ABBYY có khóa và gỡ mã riêng
+  trong Core vẫn theo các lát trước. Không dùng `ocr_*_luot`, không đòi
+  API riêng cho OCR. Trạng thái ABBYY chỉ phản ánh cấu hình/truy cập thư mục,
+  chưa chứng minh FineReader đang chạy. Không có câu chờ Anh mới.
 
 ## Nợ OCR-4 — cập nhật OCR-8 ngày 15/11/2026
 
@@ -918,3 +997,9 @@ C?n Core / Ch? Anh m?i ph?t sinh: **kh?ng**. C?n c?c vi?c ?? ghi ? m?c
 C?n Core: ng?n b?n SDK 2.1, quy?n/ph?m vi th?t v? m?n qu?n tr? trong Core;
 kh?ng c?n ch? NGAN-0. N? OCR-4 s? 2, 3 gi? nguy?n ngo?i ph?m vi.
 Kh?ng commit/push; lead th?c hi?n commit v? m? PR.
+
+## Giới hạn đã biết sau OCR-9 (kiểm độc lập 15/11/2026)
+
+- `luot_abbyy` không có hạn giữ và SDK 2.2.0 không có lệnh xóa: mỗi (pháp nhân, tài liệu) giữ 1 hàng vĩnh viễn. Cần Core: hạn giữ riêng cho lượt đã chốt.
+
+- Chỗ giữ `dang_giu` nằm trong một map ≤ 64 KiB; chỗ giữ bỏ dở không tự giải phóng; đầy thì mọi lượt mới báo NGAN_DU_LIEU_QUA_LON — Admin đối chiếu thủ công.

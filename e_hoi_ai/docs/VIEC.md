@@ -4,6 +4,8 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| AI-12 | Tương thích khuôn TC bốn tác vụ và DC-6; tách metadata/giá trị trích | Lệnh lead 15/11/2026 17:08; AI-2 | Chờ Core — 15/11/2026 | Phần AI-12 đạt 5/5 fixture; pytest 637 passed, 0 skipped (63 ca AI-12); DEMO 3/3 + AI-9 1/1, độc lập mã 0, kiểm kê 27/27 khớp. CLI chuẩn 0/3 CHUA_CAU_HINH/mã 1, nợ AI-11. Đã kiểm bằng Core giả (CoreGia); đề xuất annotation ở sổ loại chung §8 chờ lead duyệt. PR: **chờ lead mở**. |
+| AI-11 | Chuyển ngăn/cấu hình và gói sang SDK 2.2.0 | CHUYEN-SDK-2.2 §2, §4 | Chờ Core — 15/11/2026 | Phần chuyển đổi xong; đã kiểm bằng Core giả (CoreGia). Pytest 574 passed, 0 skipped; độc lập mã 0; kiểm kê SQL 26/26 khớp. CLI SDK thu 0/3, mã 1: thiếu cửa cấu hình DEMO/Local giả; không thay cổng nghiệm thu. PR: **chờ lead mở**. |
 | AI-10 | Đóng nợ phân loại lỗi Local sau POST từ kiểm độc lập AI-9 | AI-8; AI-9 | Xong — 15/11/2026 | Đã kiểm bằng Core giả (CoreGia) và socket Local giả; pytest 568 passed, 0 skipped; DEMO 3/3 và AI-9 1/1, SDK thu qua cổng Local giả 3/3; kiểm độc lập đạt. CLI SDK thu độc lập 0/3 do thiếu cấu hình ngăn RAM. PR: **chờ lead mở**. |
 | AI-8 | Cấu hình/model vào ngăn, màn Cổng Local AI/Cổng Cloud AI | AI-10, AI-11; quyết định 15/11 | Xong — 15/11/2026, đã kiểm bằng Core giả (CoreGia); đã nối ngăn chung NGAN-0 | pytest 370 passed, 0 skipped; SDK thu qua cổng DEMO 3/3; kiểm độc lập mã 0; so băm hai tệp chung đạt. PR: **chờ lead mở** |
 | 0 | Đọc tài liệu bắt buộc; đối chiếu kế hoạch lát AI-0 đã giao | — | Xong — 14/11/2026 | Phạm vi, kiến trúc và cách triển khai theo `GIAO-CODEX-e_hoi_ai.md` và lệnh giao của Anh |
@@ -590,3 +592,128 @@ Nền trước sửa: **370 passed in 48.75s**, không skip. Thêm **190 ca** tr
 **Lệch khỏi phiếu / quyết định tạm đã dùng:** không vượt 5 tệp mã. Chọn **0 lần hỏi lại AI-9**, trong giới hạn tối đa một lần được cho phép; handler hỏi–đáp cũ giữ quy tắc cũ. Giữ ba DEMO manifest vì công cụ AI-7 chấm riêng khuôn tiền/ngày; ca AI-9 nằm trong fixture/bộ chạy test ngoài gói với snapshot bytes/kích thước/băm thật ở RAM CoreGia. Cổng DEMO thay thế theo AI-4/AI-8; CLI độc lập mã 1 được giữ trung thực. Không sửa mẫu ngăn/cấu hình hoặc schema chung để làm xanh kiểm. Trường context của server chưa xác minh/đo trên máy thật; server không công bố context hiện dùng thì AI-9 từ chối.
 
 **Cần Core / Chờ Anh mới phát sinh:** đã bổ sung ba mục AI-9 ở phần Cần Core: chứng thực nguồn/yêu cầu/băm chuẩn, lặp/ghép đủ đoạn/deadline/ChuaRo, snapshot/tệp con có quyền và vòng đời/chống lặp qua SDK 2.1; cửa Cloud kiểm hậu kiểm cuối. Lead cần xác nhận model tại chỗ/egress bị chặn và đo context/model thật trước dùng thật. Không có câu hỏi quyết định nghiệp vụ mới cho Anh; chưa đo model/Core thật hoặc held-out, không tuyên bố đạt mục tiêu 0 lọt.
+
+## Cần Core — AI-11
+
+- **AI-11 — 15/11/2026, còn chặn nghiệm thu:** wheel SDK 2.2.0 `thu.main()` chỉ nhận đúng một đối số là thư mục gói và gọi `CoreGia().chay_thu_demo(app)`; `chay_thu_demo()` không đọc cấu hình từ mỗi ví dụ/fixture. Phiếu không cho khai cấu hình DEMO. Vì CoreGia mới không có `local_ai`, cả ba ví dụ hợp lệ đều trả `CHUA_CAU_HINH`; đặt default cấu hình DEMO vào runtime không phải giải pháp đúng. Cần SDK/Core có cửa chung cấp cấu hình DEMO hợp lệ và thiết lập nguồn Local giả/fixture cho CLI chuẩn, không đổi handler thật. API `CoreGia.dat_cau_hinh` hiện hoạt động, bộ hồi quy chính thức đạt 3/3 + AI-9 1/1; bằng chứng này **không thay** điều kiện CLI.
+- **AI-11 — màn engine:** SDK 2.2.0 chưa nhận trường `giao_dien_quan_tri` trong engine.json; wheel trình duyệt chưa cung cấp `KttCore.engine`. Giữ `ui/cau_hinh.js` dùng đúng API đề nghị `.cau_hinh.doc/luu` và `.ngan.tim`, không khai trường ngoài hợp đồng. Cần Core xác nhận cửa nạp màn module và quyền Admin trên Core thật. Đây là phần chưa nghiệm thu, không phải lỗi cần route riêng cho Hỏi AI.
+- **AI-11 — đóng nợ cấu hình/ngăn:** các yêu cầu ngăn RAM/cấu hình ngoài gói ở bản ghi lịch sử dưới đây đã được thay bằng `viec.ngan`/`viec.cau_hinh` của SDK 2.2.0. Vẫn cần kiểm Core thật/Windows đích, Linux CI và model thật; CoreGia không chứng minh RLS, lưu bền hoặc vận hành thực tế của Core.
+
+## Bàn giao AI-11 — 15/11/2026
+
+Kết luận: **Chưa đạt** toàn bộ điều kiện AI-11 — đã chuyển runtime/gói/test sang SDK 2.2.0, còn CLI chuẩn không có cửa cấp cấu hình DEMO và Local giả.
+
+PR: **chờ lead mở**. Nhánh `codex/e_hoi_ai-ai-11`; tiêu đề đề nghị `[e_hoi_ai] AI-11 — Chuyển sang SDK 2.2.0`. Không commit/push.
+
+Đã làm:
+
+- Venv `.venv` mới, cài wheel SDK với `--no-index --no-deps`; phiên bản 2.2.0, SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp bản phát hành. `requirements.lock` ghim SDK 2.2.0; không thêm dependency runtime. Bộ phụ thuộc test offline ghim riêng, sao distribution đã cài vào venv; không tải mạng.
+- Manifest 0.11.0 khai ngăn catalog/cấu hình/migration theo SDK; bỏ bảng cấu hình. SQL chỉ CREATE TABLE `eng_e_hoi_ai.model_phat_hien`, đầy đủ cột hệ thống; api đổi json sang chuỗi JSON/van_ban/text vì SDK không hỗ trợ kiểu json.
+- Runtime đọc snapshot `viec.cau_hinh`, dùng `viec.ngan`; không có fallback RAM. `local_ai` chưa khai không chặn khởi động; thiếu trường bắt buộc ở việc vẫn `CHUA_CAU_HINH`. Đổi cấu hình làm mới đệm discovery bằng hook SDK. Catalog không gửi ngược cột hệ thống, thứ tự đọc theo số; model mất đánh dấu trạng thái.
+- Chuyển bốn tệp KHAI-SDK-2.1/ngan/cau_hinh/ngan_engine nguyên nội dung vào LUU-TRU/AI-11, không xóa. Test so băm hai mẫu cổng tạm bỏ theo phiếu; hành vi CAS/rollback/unique/pháp nhân/phân trang/trần lô/cấu hình/lỗi/khởi động HTTP được kiểm lại với CoreGia SDK. Thêm kiểm snapshot đổi giữa hai việc, hook, thứ tự >10 model và dữ liệu còn khi tạo lại đối tượng Engine nối cùng CoreGia.
+- UI giữ `.cau_hinh` của KttCore; không đọc/ghi bảng cấu hình. Công cụ AI-7 cũng cấp cấu hình bằng `dat_cau_hinh`, không mock đường cấu hình. Bộ Local giả chỉ là hồi quy bổ sung, không còn tùy chọn --sdk-thu/cổng thay thế nghiệm thu.
+- README/CHANGELOG/NGUON cập nhật; tệp gói chuẩn LF, kiểm kê 26 tệp raw bytes. NGUON băm LF trừ chính nó và sql/kiem_ke.json để tránh vòng băm; kiểm kê cuối bao gồm NGUON. Có `tests/cap_nhat_bam.py` để tái sinh đúng thứ tự. Mã nghiệp vụ sửa 3 tệp, SQL thêm 1, công cụ AI-7 sửa 1; các tệp lưu trữ là di chuyển, các thay đổi LF khác không đổi logic. Không sửa SDK/_chung/engine khác.
+
+Kết quả kiểm thật — **đã kiểm bằng Core giả (CoreGia)**, Windows/Python 3.13.14, chưa kiểm Linux/Core thật/model thật. Đặt PYTHONUTF8=1, PYTHONDONTWRITEBYTECODE=1; pytest thêm PYTEST_DISABLE_PLUGIN_AUTOLOAD=1:
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+[LỖI] Hỏi số tiền và ngày thanh toán DEMO: CHUA_CAU_HINH
+[LỖI] Hỏi người bảo lãnh không có trong tài liệu DEMO: CHUA_CAU_HINH
+[LỖI] Trích tiền và ngày theo khuôn DEMO: CHUA_CAU_HINH
+=> 0/3 ĐẠT, mã thoát 1.
+
+.venv/Scripts/python -B -m pytest e_hoi_ai/tests -q --basetemp=.pytest-tmp
+574 passed in 127.02s (0:02:07)
+=> 0 skipped, mã thoát 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+=> mã thoát 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/chay_demo_voi_local_gia.py
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+[ĐẠT] Hỏi người bảo lãnh không có trong tài liệu DEMO
+[ĐẠT] Trích tiền và ngày theo khuôn DEMO
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia); 3/3 DEMO, 3 lượt Local HTTP giả.
+[ĐẠT] AI-9 nhận diện tổ chức DEMO; CoreGia, 1 lượt Local HTTP giả.
+=> mã thoát 0; chỉ bằng chứng bổ sung, không thay CLI SDK thu.
+
+Kiểm kê SQL: 26/26 tệp, bytes/SHA-256 khớp; SQL/cột/kiểu/ràng buộc khớp manifest.
+Sau sửa câu mô tả README và tái sinh băm: 7 passed in 0.10s (test_nguon_sha256 + test_sdk_22).
+git diff --check => mã 0.
+```
+
+Thời gian thực tế: **16:44–17:03 ngày 15/11/2026 (+07), khoảng 0,32 giờ**; ước tính trong CHUYEN-SDK-2.2 §4: **2 giờ**.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: không thay cửa nghiệm thu hoặc tạo nhánh DEMO runtime. CLI không đạt do SDK chưa hỗ trợ fixture cấu hình/Local giả; trường json chuyển thành văn bản; khai màn quản trị chưa thể đưa vào engine.json. Các khác biệt schema/kiểu/cột hệ thống và băm LF mô tả ở trên.
+
+Cần Core / Chờ Anh mới phát sinh: xem ba mục AI-11 ở phần Cần Core. Cần cửa CLI chung cho cấu hình DEMO/Local giả và cửa nạp màn engine/quyền Admin. Không có câu hỏi mới cần Anh quyết về nghiệp vụ.
+
+## Cần Core — AI-12, 15/11/2026
+
+- Giữ nợ CLI chung của AI-11: cấp cấu hình DEMO/nguồn Local giả qua cửa SDK/Core chính thức. CLI hiện 0/3 `CHUA_CAU_HINH`, mã 1; không đưa cấu hình/fixture vào runtime để làm đạt giả.
+- Lead duyệt **ĐỀ XUẤT AI-12** tại `_chung/docs/LOAI-DU-LIEU-RIENG.md` §8: annotation `$comment` đã có của JSON Schema, không đổi schema chung/trường bắt buộc. Trong lát này dùng quy ước và adapter nội bộ trên bản sao khuôn, theo lệnh giao. Không có quyết định nghiệp vụ mới cần Anh.
+- Phần gây chặn metadata ở L-TC-01/C-DC-07 đã có bằng chứng consumer AI-12 đạt bằng fixture DEMO độc lập. Cần lead TC/DC nối lại pipeline với quyền nguồn/tệp xuyên bước của Core; việc này chưa được chứng nhận bởi bài kiểm e_hoi_ai. Không sửa VIEC của producer hoặc tuyên bố đóng các cửa Core còn thiếu của họ.
+
+## Bàn giao AI-12 — 15/11/2026
+
+Kết luận: **Chưa đạt toàn bộ điều kiện §5** do CLI SDK chuẩn thiếu cấu hình DEMO/Local giả (nợ AI-11); phần tương thích AI-12 đạt bằng bộ giả. **Đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả, chưa kiểm Core/model thật hoặc Linux thực tế.
+
+PR: **chờ lead mở**; nhánh `codex/e_hoi_ai-ai-12`. Tiêu đề đề nghị: `[e_hoi_ai] AI-12 — Tách metadata và giá trị trích trong khuôn TC/DC`. Không commit/push.
+
+### Tái hiện trước sửa
+
+Chép dữ liệu DEMO từ `e_tra_cuu/tests/ho_tro_tc_2/4/5/6/7.py` và `e_doi_chieu/tests/test_dc6.py` vào `tests/fixture_ai_12.json`, kèm đường nguồn/SHA-256 LF. Ngữ cảnh/khuôn được tạo bằng định nghĩa hàm thuần producer đã đọc qua AST; không import chéo package, không sửa producer. Bộ test chỉ đọc bản chép, không cần các engine kia. Tham chiếu snapshot chỉ kiểm chuyển tiếp, không chứng nhận quyền/vòng đời tệp hoặc toàn pipeline producer.
+
+Chạy đúng `ai.hoi_theo_yeu_cau@1` qua CoreGia SDK 2.2.0, cấu hình chính thức `dat_cau_hinh`, Local HTTP giả trả JSON `du_lieu` đúng khuôn cùng `truong` có quote nguồn đúng. **Cả năm ca đều qua kiểm đầu vào, chọn/gọi Local và `khop(du_lieu,khuon)`**; SDK kết thúc `XONG`, nhưng `_kiem_tra_loi` duyệt `_cac_la` rồi `_duoc_dan` hạ kết quả về `khong_thay_can_cu`, `kiem_trich_dan={dat:false,loi:[DU_LIEU_NGOAI_TRICH_DAN]}`. Đây là từ chối căn cứ sau schema, không phải lỗi nhận khuôn.
+
+| Fixture | Các trường bị coi nhầm là nguyên văn |
+|---|---|
+| TC phân loại | Nhóm/loại đề xuất, điểm 0.95, cờ chuyển bộ và offset căn cứ |
+| TC phân tích câu hỏi | Ý định `gia_tri`, loại thực thể, tên/phiên bản hàm, cờ thời điểm và mốc Core |
+| TC xếp hạng lại | Mã ứng viên và điểm 0.5 |
+| TC soạn trả lời | Mã trường, câu tổng hợp, cờ mâu thuẫn và offset căn cứ |
+| DC-6 | Mã điểm, nhãn `can_xem`, lý do phân loại và offset hai phía |
+
+Lệnh tái hiện trước sửa: `.venv/Scripts/python -B -m pytest e_hoi_ai/tests/test_ai_12.py -q --basetemp=.pytest-tmp-ai12-truoc --tb=short` → **5 failed in 2.33s**, đều tại assertion `kiem_trich_dan.dat`; mã thoát 1. Không nhét nhãn/điểm/offset vào quote để làm qua kiểm.
+
+### Đã làm
+
+- Hai mô-đun runtime: thêm `vai_tro_khuon.py`, sửa `hoi_yeu_cau.py`; manifest tăng 0.12.0, kiểm kê gói tự sinh. Không sửa `khuon_json.py`: dùng đúng tập từ khóa/schema checker đang có, annotation nằm trong `$comment` đã được hỗ trợ. Không đổi schema/API chung hoặc thêm trường bắt buộc/dependency.
+- Lớp tương thích nhận cấu trúc object đóng và profile phiên bản 1 của bốn tác vụ TC/DC-6, gán vai trò trên bản sao. Metadata kiểm schema/enum/const/kiểu; giá trị thực thể/tham số và khẳng định vẫn kiểm nguyên văn. Khuôn khác/trường mới giữ kiểm bảo thủ; không tự miễn mọi enum/const. Annotation xung đột không hạ chuẩn trích.
+- Câu trích kiểm `tai_lieu[a:b] == cau`, int thật/code point/nửa mở; giữ các vị trí lặp, không dò sửa offset. Giá trị trong mục có `can_cu` chỉ dùng quote của mục đó; tiền phải cùng số và mã tiền trong một cụm, không ghép hai khoản. Chuỗi số/ngày phải khớp token đầy đủ; giữ chuyển đổi nhóm ba/ngày ISO đã có. Câu tổng hợp không cần nguyên văn nhưng số bịa vẫn bị chặn.
+- Không sửa khuôn gửi Local/chuyển tiếp/băm đầu vào; không dùng metadata để cấp quyền. Sai giá trị/span tiếp tục hạ trạng thái và cảnh báo, sai enum/kiểu vẫn hỏi lại đúng một lần rồi `AI_TRA_SAI_KHUON`; 0 Cloud. Các handler AI-1/AI-9 và transport giữ nguyên.
+- 63 ca AI-12: năm fixture thành công, enum/const/kiểu/thang điểm sai, bịa số/tiền/ngày/tham số, mượn quote khoản khác, ghép sai tiền tệ, offset/câu bịa, quote ngoài sai, câu tổng hợp bịa số, `$ref`/nhánh schema/annotation xung đột, NFD/Cf/emoji/từng vị trí lặp, offset bool/float, citation null và căn cứ rỗng. Hồi quy cũ giữ đạt.
+- Cập nhật VIEC/CHANGELOG/NGUON và kiểm kê. Ngoài e_hoi_ai chỉ thêm đề xuất đúng phạm vi cho phép vào sổ loại chung §8; không sửa engine khác, docs/goi-gui-engine, Core hoặc mã cũ.
+
+### Kết quả kiểm thật
+
+Windows x64, Python 3.13.14, venv `.venv` trong worktree. SDK 2.2.0 cài wheel offline `--no-index --no-deps`; SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp `SHA256SUMS.txt`. Phụ thuộc test sao offline từ distribution đã cài theo `tests/requirements.lock`; không tải mạng. Đặt `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+0/3 ĐẠT: cả ba ví dụ CHUA_CAU_HINH; mã thoát 1.
+Engine e_hoi_ai 0.12.0: có ví dụ chạy thử DEMO chưa đạt.
+
+.venv/Scripts/python -B e_hoi_ai/tests/chay_demo_voi_local_gia.py
+3/3 DEMO ĐẠT, 3 lượt Local HTTP giả; AI-9 1/1 ĐẠT, 1 lượt Local HTTP giả.
+Đã kiểm bằng Core giả (CoreGia); mã thoát 0.
+
+.venv/Scripts/python -B -m pytest e_hoi_ai/tests -q --basetemp=.pytest-tmp
+637 passed in 261.40s (0:04:21); 0 skipped; mã thoát 0.
+Trong đó 63 ca mới AI-12; 5/5 fixture XONG/co_can_cu/kiem_trich_dan.dat=true.
+
+.venv/Scripts/python -B e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát 0.
+
+Kiểm kê sql/kiem_ke.json: 27/27 tệp khớp bytes/SHA-256.
+git diff --check: mã 0.
+```
+
+Thời gian thực tế: bắt đầu **15/11/2026 17:08** theo lead; bộ kiểm chính kết thúc **17:32:07 (+07)**, kiểm bàn giao kết thúc **17:33:25 (+07)**; tổng khoảng **0,42 giờ**. Phiếu `GIAO-CODEX-e_hoi_ai.md` và lệnh lead **không ghi ước tính riêng AI-12**; 4 giờ trong phiếu là AI-2 gốc, không dùng thay ước tính AI-12.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: quy ước annotation tùy chọn và adapter schema nội bộ theo đề xuất AI-12 §8, chờ lead duyệt; không yêu cầu producer đổi payload. Không thay cổng nghiệm thu CLI bằng harness. Dữ liệu/shape fixture được chép độc lập, không phải nghiệm thu toàn pipeline TC/DC hoặc model thật.
+
+Cần Core / Chờ Anh mới phát sinh: không có nợ kỹ thuật Core mới ngoài cửa CLI của AI-11; cần lead duyệt đề xuất §8 và nối lại TC/DC với nguồn/quyền Core thật. Không có câu hỏi nghiệp vụ mới cho Anh.

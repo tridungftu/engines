@@ -17,7 +17,6 @@ def moi_truong_demo(monkeypatch, tmp_path):
     monkeypatch.delenv("KTT_ENGINE_CAU_HINH", raising=False)
     monkeypatch.delenv("KTT_ENGINE_DU_LIEU", raising=False)
     import ngan_demo
-    from e_ocr import chay
-    ngan = ngan_demo.tao_ngan()
-    monkeypatch.setattr(ngan_demo, "_ngan", ngan)
-    monkeypatch.setattr(chay.app, "ngan", ngan, raising=False)
+    ngan_demo.khoi_tao()
+    yield
+    ngan_demo.dong()

@@ -7,6 +7,7 @@ import threading
 import pytest
 from kho_tri_thuc_sdk.engine import Viec
 from kho_tri_thuc_sdk.thu import CoreGia
+from local_gia import core_demo
 
 from e_hoi_ai import ai_cuc_bo, chay
 from e_hoi_ai.nha_cung_cap import NhaCungCapCloud
@@ -66,7 +67,7 @@ def local(tmp_path, monkeypatch):
 
 def hoi(*, core=None, tham_so=None, van_ban=TAI_LIEU, loai="van_ban"):
     du_lieu = van_ban if loai == "van_ban" else {"phien_ban": 1, "van_ban": van_ban}
-    return (core or CoreGia()).chay_thu(
+    return (core or core_demo()).chay_thu(
         chay.app, "ai.hoi_tai_lieu@1", {"loai": loai, loai: du_lieu},
         THAM_SO if tham_so is None else tham_so,
     )
@@ -203,7 +204,7 @@ def test_timeout_theo_cau_hinh(local, tmp_path, monkeypatch):
 
 
 def test_huy_truoc_goi_ai_khong_gui_yeu_cau(local, monkeypatch):
-    core = CoreGia()
+    core = core_demo()
     tien_do_goc = core._tien_do
 
     def huy_ngay_khi_gui_tien_do(ma, viec_id, phan_tram, cau):
@@ -217,7 +218,7 @@ def test_huy_truoc_goi_ai_khong_gui_yeu_cau(local, monkeypatch):
 
 
 def test_huy_giua_luot_local_khong_nop_ket_qua(local, monkeypatch):
-    core = CoreGia()
+    core = core_demo()
     tien_do_goc = core._tien_do
     ma_viec = []
 
@@ -247,7 +248,7 @@ def test_goi_kiem_huy_ngay_truoc_goi_ai(local, monkeypatch):
 
 
 def test_mat_xac_nhan_ket_qua_khong_goi_lai_ai_khong_nop_trung(local):
-    core = CoreGia()
+    core = core_demo()
     core.gay_mat_xac_nhan("ket_qua")
     kq = hoi(core=core)
     assert kq["trang_thai"] == "XONG"

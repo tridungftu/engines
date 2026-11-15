@@ -111,16 +111,19 @@ export async function mount(goc, {
       })(),
       (async () => {
         try {
-          const ngay = await timHet("han_muc_ngay", {});
+          const [ngay, mocHanMuc] = await Promise.all([
+            timHet("han_muc_ngay", {}), cong.ngan.doc("trang_thai_engine", {ma: "han_muc"}),
+          ]);
           if (daDong) return;
           const moc = Math.floor(dongHo() / 1000) - 30 * 86400;
-          let daDung = 0, dangGiu = 0;
+          let daDung = 0;
+          const dangGiu = Object.values(JSON.parse(mocHanMuc?.gia_tri?.dang_giu ?? "{}"))
+            .reduce((a, b) => a + b, 0);
           for (const b of ngay) {
             const dauNgay = Date.parse(b.ngay + "T00:00:00Z") / 1000;
-            for (const [giay, n] of Object.entries(b.da_nhan)) {
+            for (const [giay, n] of Object.entries(JSON.parse(b.da_nhan))) {
               if (dauNgay + Number(giay) > moc) daDung += n;
             }
-            dangGiu += Object.values(b.dang_giu).reduce((a, b) => a + b, 0);
           }
           const conLai = Math.max(0, cauHinh.abbyy.han_muc_trang_30_ngay - daDung - dangGiu);
           hanMuc.textContent = `Đã dùng ${so(daDung)} trang trong 30 ngày · Đang giữ ${so(dangGiu)} trang · Còn lại ${so(conLai)} trang`;
@@ -134,11 +137,12 @@ export async function mount(goc, {
           if (daDong) return;
           const b = tt?.gia_tri;
           danhSach.replaceChildren();
-          if (!b?.so_luot) nut("li", "Không có lượt chưa rõ kết quả.", danhSach);
+          const soLuot = Number(b?.so_luot ?? 0);
+          if (!soLuot) nut("li", "Không có lượt chưa rõ kết quả.", danhSach);
           else {
-            nut("li", `Có ${so(b.so_luot)} lượt chưa rõ kết quả.`, danhSach);
+            nut("li", `Có ${so(soLuot)} lượt chưa rõ kết quả.`, danhSach);
             let i = 0;
-            for (const [ngay, dem] of Object.entries(b.theo_ngay).sort(([a], [b]) => a.localeCompare(b))) {
+            for (const [ngay, dem] of Object.entries(JSON.parse(b.theo_ngay)).sort(([a], [b]) => a.localeCompare(b))) {
               for (let n = 0; n < dem; n++) {
                 nut("li", `Lượt ${so(++i)} · ${ngay.split("-").reverse().join("/")} · Chưa rõ kết quả`, danhSach);
               }

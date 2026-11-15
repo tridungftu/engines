@@ -18,17 +18,17 @@ GOC = Path(__file__).resolve().parents[2]
 GOI = GOC / "e_trich_xuat/goi/e_trich_xuat"
 
 
-def test_phieu_20_va_khai_21_tach_rieng():
+def test_phieu_22_va_khai_21_da_luu_tru():
     phieu = json.loads((GOI / "engine.json").read_text(encoding="utf-8"))
     assert kiem_phieu(phieu, GOI) == []
     assert [n["ma"] for n in phieu["nang_luc"]] == [
         "trich.doc_docx@1", "trich.chuan_bi@1", "trich.hau_kiem@1", "trich.xuat_ket_qua@1"]
-    for k in ["ngan_du_lieu", "cau_hinh", "giao_dien_quan_tri"]:
-        assert k not in phieu
-    khai = json.loads((GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))
-    assert set(khai) == {"ngan_du_lieu", "cau_hinh", "giao_dien_quan_tri"}
-    assert khai["ngan_du_lieu"][0]["pham_vi"] == "engine"
-    assert "giu_toi_da_ngay" not in khai["ngan_du_lieu"][0]
+    assert phieu["tuong_thich"]["sdk"] == ">=2.2.0 <3.0.0"
+    assert phieu["cau_hinh"] == {"schema": "cau_hinh.schema.json"}
+    assert "ngan_du_lieu" not in phieu and "du_lieu" not in phieu
+    assert "giao_dien_quan_tri" not in phieu  # SDK 2.2.0 chưa nhận khóa này.
+    assert not (GOI / "KHAI-SDK-2.1.json").exists()
+    assert (GOC / "e_trich_xuat/LUU-TRU/TX-7/KHAI-SDK-2.1.json").is_file()
 
 
 @pytest.mark.parametrize("ten", ["van_ban_tai_lieu.schema.json", "yeu_cau_ai.schema.json"])
@@ -39,11 +39,11 @@ def test_schema_chung_khop_tung_byte_va_sha(ten):
 
 
 @pytest.mark.parametrize("ten", ["ngan.py", "cau_hinh.py"])
-def test_sha_mau_ngan_0(ten):
-    mau = GOC / "_chung/mau-ma" / ten
-    a = mau.read_bytes().replace(b"\r\n", b"\n")
-    b = (GOI / "e_trich_xuat" / ten).read_bytes().replace(b"\r\n", b"\n")
-    assert hashlib.sha256(a).digest() == hashlib.sha256(b).digest()
+def test_cong_tam_da_luu_tru_khong_con_duong_chay(ten):
+    assert not (GOI / "e_trich_xuat" / ten).exists()
+    assert (GOC / "e_trich_xuat/LUU-TRU/TX-7" / ten).is_file()
+    for p in (GOI / "e_trich_xuat").glob("*.py"):
+        assert ("from ." + ten[:-3] + " import") not in p.read_text(encoding="utf-8")
 
 
 def test_goi_doc_lap_va_import_chi_sdk_thu_vien_chuan():

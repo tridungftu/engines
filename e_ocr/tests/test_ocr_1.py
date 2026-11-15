@@ -16,7 +16,8 @@ from PIL import Image
 import pdfplumber
 
 from kho_tri_thuc_sdk.engine import Viec, ViecDaHuy
-from kho_tri_thuc_sdk.thu import CoreGia, nap_engine_tu_goi
+from kho_tri_thuc_sdk.thu import nap_engine_tu_goi
+from ngan_demo import core_demo
 
 from demo.tao_pdf import CONG_TY, TIEN, NGAY, DONG_DEMO, pdf_demo
 from e_ocr import abbyy, lop_chu
@@ -108,7 +109,7 @@ def hot_folder(tmp_path, monkeypatch):
 
 
 def chay(raw, nang_luc=DOC, *, mime="application/pdf", tham_so=None, core=None):
-    core = core or CoreGia()
+    core = core or core_demo()
     tep = core.them_tep("DEMO.pdf", raw, mime)
     ket_qua = core.chay_thu(nap_engine_tu_goi(GOI), nang_luc, {"loai": "tep", "tep": tep}, tham_so)
     return core, ket_qua
@@ -185,7 +186,7 @@ def test_pdf_co_chu_khong_gui_abbyy_hoac_ocr_lai(nang_luc, nguon, monkeypatch):
     def cam(*args, **kwargs):
         raise AssertionError("PDF có chữ không được đọc cấu hình/gửi ABBYY/render ảnh.")
 
-    monkeypatch.setattr("e_ocr.van_ban.doc_cau_hinh", cam)
+    monkeypatch.setattr("e_ocr.van_ban.doc_theo_nguon", cam)
     monkeypatch.setattr(abbyy.BackendABBYY, "doc_pdf", cam)
     monkeypatch.setattr(pdfplumber.page.Page, "to_image", cam)
     raw = pdf_demo(DONG_DEMO, DONG_DEMO, DONG_DEMO)
@@ -309,7 +310,7 @@ def test_abbyy_da_nhan_qua_han_phai_chua_ro(hot_folder):
 @pytest.mark.parametrize("da_nhan", [False, True])
 def test_huy_viec_dang_cho_va_don_tep_tam(hot_folder, da_nhan):
     vao, ra, cac_tam = hot_folder
-    core = CoreGia()
+    core = core_demo()
     tep = core.them_tep("DEMO.pdf", pdf_demo(()), "application/pdf")
     ma = core.giao_viec(DOC, {"loai": "tep", "tep": tep})
     with ABBYYGia(vao, ra, b"", nhan=da_nhan, tra=False) as gia:
@@ -333,7 +334,7 @@ def test_khong_doc_pdf_abbyy_dang_ghi_do_va_khong_lay_nham_ma(hot_folder):
     vao, ra, _ = hot_folder
     khac = ra / "DEMO-ma-khac.pdf"
     khac.write_bytes(pdf_demo(("DEMO KHONG PHAI VIEC NAY",)))
-    core = CoreGia()
+    core = core_demo()
     tep = core.them_tep("DEMO.pdf", pdf_demo(()), "application/pdf")
     ma = core.giao_viec(DOC, {"loai": "tep", "tep": tep})
     with ABBYYGia(vao, ra, pdf_demo(DONG_DEMO), tung_phan=True) as gia:

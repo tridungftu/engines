@@ -15,6 +15,7 @@ from .hoi import yeu_cau_cau_hinh, lay_ngan
 from .cong_ai import CANH_BAO, MA_SO, danh_gia, ghep_khung
 from .dto import KHONG_THAY_CAN_CU, MA_DINH_DANH, YeuCauAI, kiem_prompt
 from .khuon_json import boc_khuon, doc_json, json_chuan, khop, kiem_khuon
+from .vai_tro_khuon import khuon_hau_kiem, kiem_du_lieu
 
 
 def _loi_dau_vao():
@@ -60,13 +61,14 @@ def _duoc_dan(v, cac_trich):
     """Đối chiếu cả dữ liệu có kiểu; chỉ chuẩn hóa tiền dạng nhóm 3 số và ngày."""
     text = "true" if v is True else "false" if v is False else str(v)
     if isinstance(v, str):
-        if any(v and v in trich for trich in cac_trich):
+        # Chuỗi số/ngày phải khớp token đầy đủ, kể cả khi schema cho string.
+        if any(v in MA_SO.findall(t) if MA_SO.fullmatch(v) else bool(v and v in t) for t in cac_trich):
             return True
         # Ngày trong dữ liệu YYYY-MM-DD, nguồn có thể còn DD/MM/YYYY.
         try:
             if re.fullmatch(r"\d{4}-\d{2}-\d{2}", v):
                 ngay = datetime.strptime(v, "%Y-%m-%d").strftime("%d/%m/%Y")
-                return any(ngay in t for t in cac_trich)
+                return any(ngay in MA_SO.findall(t) for t in cac_trich)
         except ValueError:
             pass
         return False
@@ -85,15 +87,26 @@ def _duoc_dan(v, cac_trich):
     return any(re.search(r"(?<!\w)" + text + r"(?!\w)", t) for t in cac_trich)
 
 
-def _kiem_tra_loi(phan_hoi, yeu_cau, du_lieu):
+def _kiem_tra_loi(phan_hoi, yeu_cau, du_lieu, khuon=None):
     cac_truong, cac_loi = danh_gia(phan_hoi, yeu_cau)
     trich = tuple(dict.fromkeys(t.trich_dan for t in cac_truong))
     loi = list(cac_loi)
-    if du_lieu is not None and any(not _duoc_dan(v, trich) for v in _cac_la(du_lieu)):
-        loi.append("DU_LIEU_NGOAI_TRICH_DAN")
-    if du_lieu and not cac_truong and "THIEU_TRICH_DAN" not in loi:
+    spans = []
+    if du_lieu is not None:
+        if khuon is None:
+            if any(not _duoc_dan(v, trich) for v in _cac_la(du_lieu)):
+                loi.append("DU_LIEU_NGOAI_TRICH_DAN")
+        else:
+            spans, loi_khuon = kiem_du_lieu(du_lieu, khuon, yeu_cau.van_ban, trich, _duoc_dan, MA_SO)
+            loi.extend(loi_khuon)
+    if du_lieu and not cac_truong and not spans and "THIEU_TRICH_DAN" not in loi:
         loi.append("THIEU_TRICH_DAN")
-    return cac_truong, trich, list(dict.fromkeys(loi))
+    # Citation trong khuôn giữ đúng vị trí model đã khai. Quote ngoài không có
+    # offset giữ hành vi cũ; không tạo thêm vị trí đầu tiên nếu cùng câu đã có span.
+    spans.extend({"cau": t, "bat_dau": yeu_cau.van_ban.index(t),
+                  "ket_thuc": yeu_cau.van_ban.index(t) + len(t)}
+                 for t in trich if not any(s["cau"] == t for s in spans))
+    return cac_truong, spans, list(dict.fromkeys(loi))
 
 
 def goi_theo_yeu_cau(viec, cong, *, phien_ban):
@@ -107,6 +120,7 @@ def goi_theo_yeu_cau(viec, cong, *, phien_ban):
         metadata[k] = v if isinstance(v, str) and MA_DINH_DANH.fullmatch(v) else ""
     try:
         yeu_cau, vao, bam = _doc_yeu_cau(viec)
+        khuon_kiem = khuon_hau_kiem(vao["khuon_tra_loi"], vao["chuyen_tiep"])
         cau_hinh = yeu_cau_cau_hinh(viec)
         viec.kiem_huy()
         model, ly_do = cong.chon_model(yeu_cau, cau_hinh, kiem_huy=viec.kiem_huy, ngan=lay_ngan(viec))
@@ -116,7 +130,9 @@ def goi_theo_yeu_cau(viec, cong, *, phien_ban):
         if khuon is not None:
             prompt += ("\nThay đối tượng JSON mẫu bằng {\"du_lieu\": <đối tượng đúng khuôn>, "
                        "\"truong\": [<các giá trị nguyên văn và trích dẫn như trên>]}. "
-                       "Mọi giá trị trong du_lieu phải có căn cứ từ các trích dẫn; "
+                       "Giá trị trích xuất phải có căn cứ từ trích dẫn đúng offset. "
+                       "Metadata, phân loại, nhãn, điểm và mã kỹ thuật kiểm theo kiểu/enum của khuôn, "
+                       "không cần chép nguyên văn. Câu tổng hợp không được bịa số liệu; "
                        "tiền kèm mã tiền tệ, ngày YYYY-MM-DD. Khuôn của du_lieu:\n"
                        + json_chuan(khuon).decode("utf-8"))
         viec.tien_do(10, "Đang gửi yêu cầu tới Local AI.")
@@ -152,17 +168,16 @@ def goi_theo_yeu_cau(viec, cong, *, phien_ban):
             prompt += "\nLần trước dữ liệu sai khuôn. Hãy trả lại đúng khuôn đã cung cấp, giữ phần trích dẫn nguyên văn."
         if not isinstance(phan_hoi, dict) or not isinstance(phan_hoi.get("truong"), list):
             phan_hoi = None
-        cac_truong, cac_trich, loi = _kiem_tra_loi(phan_hoi, yeu_cau, du_lieu)
-        co_can_cu = bool(cac_truong) and not loi
+        cac_truong, cac_trich, loi = _kiem_tra_loi(phan_hoi, yeu_cau, du_lieu, khuon_kiem)
+        co_can_cu = bool(cac_truong or cac_trich) and not loi
         ket_qua_kiem = "KHONG_DAT" if loi else "DAT" if co_can_cu else "KHONG_THAY_CAN_CU"
         viec.tien_do(90, "Đã nhận phản hồi Local AI và kiểm trích dẫn.")
         viec.kiem_huy()
         return {"loai": "tra_loi_ai", "tra_loi_ai": {
             "phien_ban": 1, "trang_thai": "co_can_cu" if co_can_cu else "khong_thay_can_cu",
-            "tra_loi": "\n".join(t.gia_tri for t in cac_truong) if co_can_cu else KHONG_THAY_CAN_CU,
+            "tra_loi": ("\n".join(t.gia_tri for t in cac_truong) or "\n".join(t["cau"] for t in cac_trich)) if co_can_cu else KHONG_THAY_CAN_CU,
             "du_lieu": du_lieu,
-            "trich_dan": [{"cau": t, "bat_dau": yeu_cau.van_ban.index(t),
-                           "ket_thuc": yeu_cau.van_ban.index(t) + len(t)} for t in cac_trich],
+            "trich_dan": cac_trich,
             "kiem_trich_dan": {"dat": not loi, "loi": loi}, "nha_cung_cap": "local",
             "model": model, "ly_do_chon_model": ly_do,
             "ma_prompt": yeu_cau.ma_prompt, "phien_ban_prompt": yeu_cau.phien_ban_prompt,

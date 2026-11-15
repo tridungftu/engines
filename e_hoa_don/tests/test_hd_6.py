@@ -375,7 +375,7 @@ def test_manifest_zip_va_xml_giu_nguyen():
     p = cong.app.phieu
     cap = p["nang_luc"][1]
     assert cap["ma"] == NL and cap["nhan"] == ["tep"] and cap["tra"] == "truong"
-    assert cap["gioi_han"] == dict(tep_toi_da_mib=64, mime=["application/zip", "application/x-zip-compressed"], thoi_han_giay=600)
+    assert cap["gioi_han"] == dict(tep_toi_da_mib=20, mime=["application/zip", "application/x-zip-compressed"], thoi_han_giay=600)
     assert cap["huy_duoc"] is True and cap["tham_so"] == p["loai_du_lieu_rieng"] == []
     assert p["nang_luc"][0]["ma"] == "hoa_don.doc_xml@2"
     assert len(p["nang_luc"][0]["truong_ra"]) == 18
@@ -390,9 +390,18 @@ def test_mime_zip_duong(mime):
     assert core.xem(vid)["trang_thai"] == "XONG"
 
 
-def test_bytes_thuc_64mib_metadata_gia_khong_upload():
+def test_zip_20mib_bien_qua_core_gia():
+    empty = tao_zip([])
+    raw = b"D" * (20 * 1024 * 1024 - len(empty)) + empty
     core = CoreGia()
-    vid, _ = giao(core, b"D" * (64 * 1024 * 1024 + 1), {"kich_thuoc": 1})
+    vid, _ = giao(core, raw)
+    core.chay(cong.app)
+    assert core.xem(vid)["trang_thai"] == "XONG"
+
+
+def test_bytes_thuc_20mib_cong_1_metadata_gia_khong_upload():
+    core = CoreGia()
+    vid, _ = giao(core, b"D" * (20 * 1024 * 1024 + 1), {"kich_thuoc": 1})
     core.chay(cong.app)
     kq = core.xem(vid)
     assert kq["trang_thai"] == "LOI" and kq["loi"]["ma"] == "HD_ZIP_VUOT_GIOI_HAN"

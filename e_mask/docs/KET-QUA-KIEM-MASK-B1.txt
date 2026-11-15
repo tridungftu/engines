@@ -1,0 +1,54 @@
+MASK-B1 — ngày 15/11/2026; PR: chờ lead mở; không commit/push.
+Môi trường Windows x64, Python 3.13.14, SDK 2.0.0, pytest 9.1.1.
+Venv .venv --system-site-packages, cài SDK offline --no-index --no-deps.
+SHA-256 wheel: a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
+Khớp SHA256SUMS.txt. Không thêm dependency runtime, không tải mạng.
+Các lệnh Python dùng -B, PYTHONDONTWRITEBYTECODE=1, PYTHONUTF8=1.
+
+Lệnh: .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.1.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát: 1; 0/2 ĐẠT. Thiếu nguồn quyền Core như gói trước B1, không nới handler.
+
+Lệnh: .venv/Scripts/python -B -m pytest e_mask/tests -q
+1248 passed, 4 xfailed, 190 subtests passed in 99.42s (0:01:39)
+Mã thoát: 0; 0 skipped.
+Bốn xfail strict giữ nguyên: bốn tên held-out lớp quy tắc đã biết; không phải kết quả Local.
+
+Lệnh: .venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát: 0.
+
+Lệnh: .venv/Scripts/python -B e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+Mã thoát: 0; 2/2 ĐẠT, adapter quyền/ngăn DEMO ngoài gói hiện có.
+
+Kiểm riêng B1 sau chốt code/nguồn:
+Lệnh: .venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b1.py -q
+276 passed in 2.12s
+Mã thoát: 0; 0 skipped. Bao gồm 300 lượt biến đổi byte và các điểm hủy.
+Các lượt phát triển trước: 259 passed in 1.90s; 267 passed in 2.24s;
+275 passed in 2.18s; cả ba mã 0. Không sửa/nới test hoặc xfail cũ.
+
+Kiểm bổ sung trước chốt tài liệu:
+UTF-8/AST/trailing whitespace: 5/5
+SHA bytes 3/3 new modules match NGUON
+Mã thoát: 0.
+Lượt smoke ban đầu lỗi do quote XML trong PowerShell -c, mã 1; đã chuyển
+sang fixture pytest. Khi sinh NGUON qua pipeline PowerShell có mất dấu;
+đã ghi lại UTF-8 bằng apply_patch và thêm test UTF-8/SHA, không giữ bản lỗi.
+
+Mức kiểm: đã kiểm bằng Core giả (CoreGia) gói văn bản hiện có.
+Cổng tệp B1 chỉ kiểm trực tiếp trong RAM; chưa nối năng lực tệp/Core/Office/Local thật.
+Chưa chạy Linux thực tế, chưa đo RAM/CPU biên vận hành. Cloud giữ tắt; không gọi engine khác.
+Kiểm cuối:
+git diff --check: exit 0
+UTF-8/AST/whitespace 5/5; SHA bytes/LF 3/3; handlers/manifest/sources/Core/SDK unchanged
+Mã thoát: 0. Chỉ ba tệp runtime mới; test/tài liệu ngoài trần. Không commit/push.
+Thời gian thực tế: 13:50:00–14:37:27 ngày 15/11/2026 (UTC+07), 0.79 giờ.
+Mốc bắt đầu theo handoff; kết thúc tại mốc chốt kết quả. Phiếu 6–8 giờ ƯỚC TÍNH.

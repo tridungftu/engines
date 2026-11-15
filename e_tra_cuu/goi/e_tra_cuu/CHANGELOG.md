@@ -1,5 +1,15 @@
 # Thay đổi
 
+## 0.1.0 — 15/11/2026 — Gộp TC-6 với TC-5 (chưa phát hành)
+
+- Giải sáu tệp xung đột khi gộp origin/main; giữ cả ba hậu kiểm Local của
+  TC-5/TC-6 và chỉ để soạn/xuất ở CHUA_LAM. Giữ riêng cách xử lý lỗi từng lát.
+- Harness chạy đủ 28 DEMO: 13 ca nền + 11 phân loại/hàng chờ + 4 câu hỏi/xếp hạng.
+  Giữ nguyên test TC-5/TC-6 và toàn bộ hai biên bản bàn giao; cập nhật SHA-256 LF.
+- Đã kiểm bằng Core giả (CoreGia): 814 passed, 0 skipped; harness 28/28, độc lập
+  mã 0. CLI SDK vẫn 0/5 CHUA_CAU_HINH/mã 1 (C-TC-01), chưa đạt cổng chung.
+  Không phát sinh phụ thuộc Core/SDK mới; chưa nối Core/RLS/model thật.
+
 ## 0.1.0 — 15/11/2026 — TC-6 (chưa phát hành)
 
 - Thực thi hai hậu kiểm Local `phan_tich_cau_hoi@1`, `xep_hang_lai@1`, đúng
@@ -20,6 +30,25 @@
   thật/Cloud. Seam phân giải chỉ là quy ước tạm C-TC-03, không chứng nhận RLS.
   Harness 17/17; CLI chuẩn vẫn 0/5 CHUA_CAU_HINH/mã 1. Số kiểm thực và thời
   gian ở docs/VIEC.md; chưa kiểm Core thật/AI thật/Linux.
+
+## 0.1.0 — 15/11/2026 — TC-5 (chưa phát hành)
+
+- Thực thi `tra_cuu.phan_loai_tai_lieu@1`: nguồn Local, request/prompt/version/
+  chuyển tiếp/băm/snapshot/quyền đúng; tự dựng lại map/khuôn/ngữ cảnh và kiểm
+  nguyên văn/offset nguồn. Cloud/sai nguồn/sai khuôn có lỗi riêng an toàn.
+- Áp quy tắc tám nhóm và bộ dấu hiệu/bên ký/loại hình/quan hệ đối tượng Core
+  ghim; không có danh mục/chính sách thật mặc định. Thuê máy 03, công trình/
+  thiết bị lắp/vật tư cấp/sửa chữa có thông tin 04, quy chế lao động 07;
+  thiếu công trình/bên ký/ngưỡng đo, sai CP/TNHH, nhánh ngừng/chưa bật đều chờ.
+  Gốc 08 cho phép loại/đối tượng null, không tạo loại/thư mục.
+- Điểm model giữ nguyên và không gắn xác suất. Mọi kết quả cần Core duyệt;
+  phụ lục đổi bản chất chỉ đề nghị chuyển cả bộ có căn cứ và trạng thái chờ.
+  Không ghi ngăn/cây kho/danh mục/K5 hoặc đĩa bền; snapshot tải Core.
+- Thêm 126 ca TC-5 và 11 ca harness. Đã kiểm bằng Core giả (CoreGia),
+  NganBoNho; 0 Cloud/AI thật. Kiểm nối AI-2 0.5.0 với Local giả ghi đúng
+  giới hạn kiểm metadata như giá trị nguyên văn, kết quả chuyển hàng chờ.
+  Harness 24/24; CLI chuẩn vẫn 0/5 CHUA_CAU_HINH/mã 1. Chi tiết và các cửa
+  Core/lead còn thiếu tại docs/VIEC.md; chưa kiểm Core/RLS/Linux/model thật.
 
 ## 0.1.0 — 15/11/2026 — TC-4 (chưa phát hành)
 

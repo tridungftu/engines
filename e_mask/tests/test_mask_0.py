@@ -19,16 +19,15 @@ def test_phieu():
     assert app.ma == "e_mask"
     assert len(app.phieu["nang_luc"]) == 2
 
-def test_stub_core_gia(module):
+def test_mac_dinh_thieu_port_tin_cay_core_gia(module):
     for vd in module.app.phieu["chay_thu_demo"]:
         kq = CoreGia().chay_thu(module.app, vd["nang_luc"], vd["dau_vao"], vd["tham_so"])
         assert kq["trang_thai"] == "LOI"
-        assert kq["loi"]["ma"] == "CHUA_LAM"
-        assert kq["loi"]["thong_diep"] == "Chức năng này chưa được hoàn tất."
+        assert kq["loi"]["ma"] == "MASK_NGU_CANH_CHUA_XAC_MINH"
         assert kq["ket_qua"] is None
 
 def test_cau_hinh_thieu(tmp_path, monkeypatch):
-    from e_mask import cau_hinh_may as ch
+    from ho_tro_luu_tru import cau_hinh_may as ch
     monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tmp_path / "demo.json"))
     assert ch.doc_cau_hinh() is None
     with pytest.raises(LoiNghiepVu) as exc: ch.yeu_cau_cau_hinh()
@@ -37,7 +36,7 @@ def test_cau_hinh_thieu(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("noi_dung", ["{", "{\"la\": 1}", "{\"a\":1,\"a\":2}", "NaN"])
 def test_cau_hinh_hong(tmp_path, monkeypatch, noi_dung):
-    from e_mask import cau_hinh_may as ch
+    from ho_tro_luu_tru import cau_hinh_may as ch
     tep = tmp_path / "demo.json"
     tep.write_text(noi_dung, encoding="utf-8")
     monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
@@ -46,7 +45,7 @@ def test_cau_hinh_hong(tmp_path, monkeypatch, noi_dung):
     assert exc.value.ma == "MASK_CAU_HINH_KHONG_HOP_LE"
 
 def test_cau_hinh_rong(tmp_path, monkeypatch):
-    from e_mask import cau_hinh_may as ch
+    from ho_tro_luu_tru import cau_hinh_may as ch
     tep = tmp_path / "demo.json"
     tep.write_text("{}", encoding="utf-8")
     monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))

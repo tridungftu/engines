@@ -88,11 +88,10 @@ def hot_folder(tmp_path, monkeypatch):
     vao, ra = tmp_path / "nhan-DEMO", tmp_path / "tra-DEMO"
     vao.mkdir()
     ra.mkdir()
-    cau_hinh = tmp_path / "cau-hinh-DEMO.json"
-    cau_hinh.write_text(json.dumps({"abbyy": {
+    from ngan_demo import dat_cau_hinh
+    dat_cau_hinh({"abbyy": {
         "bat": True, "thu_muc_vao": str(vao), "thu_muc_ra": str(ra), "thoi_han_giay": 1,
-    }}), encoding="utf-8")
-    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(cau_hinh))
+    }})
     monkeypatch.setattr(abbyy, "KHOANG_CHO_GIAY", 0.01)
     cac_thu_muc_tam = []
     tao_tam = abbyy.TemporaryDirectory
@@ -326,7 +325,7 @@ def test_huy_viec_dang_cho_va_don_tep_tam(hot_folder, da_nhan):
     assert kq["trang_thai"] == "HUY", kq
     assert kq["ket_qua"] is None and core.so_lan_ghi["ket_qua"] == 0
     assert len(cac_tam) == 1
-    from e_ocr.chon_nguon import SoHanMuc
+    from ngan_demo import SoHanMuc
     assert SoHanMuc().da_dung() == (1 if da_nhan else 0)
 
 

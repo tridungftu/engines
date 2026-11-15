@@ -18,7 +18,7 @@ sys.path.insert(0, str(GOI))
 from e_mask import che_van_ban, kho_qua_core, tai_nguyen
 from e_mask.kho_dinh_danh import KhoDinhDanh
 from e_mask.kho_qua_core import KhoQuaCore
-from e_mask.kho_tam import KhoTam
+from ho_tro_luu_tru import KhoTam
 from e_mask.quyen_yeu_cau import NguCanhTinCay, loi_kho
 from ho_tro_core_gia import KhoCoreGia, MayKhoGia, QuyenCoreGia
 
@@ -64,6 +64,12 @@ def khong_duoc_chay(kho):
 def test_toan_bo_vector_kho_luot(tmp_path, monkeypatch, ca):
     snap = deepcopy(VECTOR['snapshot_mac_dinh'])
     snap.update(deepcopy(ca['snapshot']))
+    # Vector cũ chưa mang quyền sở hữu alias. Ở các ca tái dùng này, fixture
+    # xác nhận alias có sẵn thuộc chính mã yêu cầu đang kiểm, không thuộc B.
+    snap['bi_danh_tam_duoc_dung'] = sorted({b for m in snap['danh_muc']
+        for b in ([m['bi_danh']] if m['nguon'] == 'tam' else [m.get('bi_danh_tam')]) if b}
+        | {m['bi_danh'] for m in snap['cum_cho_toan_vung'].values()}
+        | set(snap['bi_danh_bo_sung']))
     goc = deepcopy(snap)
     cac_goi = []
     ctx = NguCanhTinCay(VECTOR['ma_yeu_cau'], VECTOR['ma_luot'], 'phien-demo',
@@ -87,6 +93,11 @@ def test_toan_bo_vector_kho_luot(tmp_path, monkeypatch, ca):
     assert kho.nhat_ky == ca['nhat_ky']
     ket_qua = deepcopy(ca['ket_qua_chot'])
     mong_doi = dict(ket_qua, ma_yeu_cau=ctx.ma_yeu_cau, ma_luot=ctx.ma_luot)
+    if ca['ma'] == 'che_khong_gui_duoc_dong_khi_chot':
+        with pytest.raises(LoiNghiepVu):
+            kho.chot(ket_qua)
+        assert len(cac_goi) == 1  # Bản che không đạt không được chốt/đóng.
+        return
     assert kho.chot(ket_qua) == mong_doi
     assert ket_qua == ca['ket_qua_chot']
     assert cac_goi[-1] == ('chot_luot', dict(ma_yeu_cau=ctx.ma_yeu_cau, ma_luot=ctx.ma_luot,
@@ -175,12 +186,12 @@ def test_gap_lai_retry_khoi_dong_lai_khong_cap_dem_moi(tmp_path, monkeypatch):
     v2 = viec_demo('viec-demo-khac')
     ctx2 = quyen.cap(v2.id)
     sau = lop_moi.xu_ly(v2, xu_ly_demo)
-    assert sau['van_ban_da_che'] == dau['van_ban_da_che']
+    assert sau['van_ban_da_che'] != dau['van_ban_da_che']
     assert sau['ma_yeu_cau'] != ctx.ma_yeu_cau
     dl = core.bang['DEMO']
     assert len(dl['cho_duyet']) == 1 and dl['cho_duyet'][che_van_ban.chuan_hoa(TEN)]['so_lan_gap'] == 2
-    for ma in (ctx.ma_yeu_cau, ctx2.ma_yeu_cau):
-        assert dl['yeu_cau'][ma]['bi_danh_tam_da_dung'] == {che_van_ban.chuan_bi_danh(dau['van_ban_da_che'])}
+    for ma, kq in ((ctx.ma_yeu_cau, dau), (ctx2.ma_yeu_cau, sau)):
+        assert dl['yeu_cau'][ma]['bi_danh_tam_da_dung'] == {che_van_ban.chuan_bi_danh(kq['van_ban_da_che'])}
 
 
 def test_hai_snapshot_tranh_chot_xung_dot_thu_lai(tmp_path):
@@ -196,7 +207,7 @@ def test_hai_snapshot_tranh_chot_xung_dot_thu_lai(tmp_path):
     assert exc.value.ma == 'MASK_XUNG_DOT' and exc.value.thu_lai_duoc
     assert core.bang == truoc
     sau = lop.xu_ly(v2, xu_ly_demo)
-    assert sau['van_ban_da_che'] == ka['van_ban_da_che']
+    assert sau['van_ban_da_che'] != ka['van_ban_da_che']
     assert len(core.bang['DEMO']['cho_duyet']) == 1
 
 
@@ -268,9 +279,10 @@ def test_bang_chung_khac_module_phap_nhan_va_mo_bi_danh_chua_tham_chieu(tmp_path
     quyen_b.cap(v_mo.id, loai='mo_che', ma_yeu_cau=ctx_b.ma_yeu_cau)
     mo = lop_b.xu_ly(v_mo, lambda kho: che_van_ban.mo_che(kq_a['van_ban_da_che'], ctx_b.ma_yeu_cau, kho),
                      loai='mo_che', ma_yeu_cau=ctx_b.ma_yeu_cau)
-    assert mo['van_ban_da_mo_che'] == TEN and mo['mo_day_du']
+    assert mo['van_ban_da_mo_che'] == kq_a['van_ban_da_che'] and not mo['mo_day_du']
+    assert mo['bi_danh_khong_ro'][0]['vi_tri']['bat_dau'] == 0
     assert len(core.bang['DEMO']['cho_duyet']) == 1
-    assert core.bang['DEMO']['yeu_cau'][ctx_b.ma_yeu_cau]['bi_danh_tam_da_dung']
+    assert core.bang['DEMO']['yeu_cau'][ctx_b.ma_yeu_cau]['bi_danh_tam_da_dung'] == set()
     assert core.bang['THAT']['yeu_cau'] == {} and core.bang['THAT']['cho_duyet'] == {}
 
 

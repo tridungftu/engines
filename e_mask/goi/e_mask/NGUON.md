@@ -1,15 +1,15 @@
-# NGUỒN — gói e_mask, MASK-1, MASK-2 và MASK-3
+# NGUỒN — gói e_mask, MASK-1…6 và sửa an toàn
 
-Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Cổng của MASK-0 vẫn trả `CHUA_LAM`; chưa hoàn tất nghiệp vụ che/mở che, chưa kích hoạt vận hành. Đã kiểm bằng Core giả (CoreGia).
+Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Handler che/mở che hiện đã có nghiệp vụ qua ngăn; các mô tả stub/kho tệp dưới đây là lịch sử từng lát. Trạng thái mới nhất tại mục sửa an toàn ngày 15/11/2026. Đã kiểm bằng Core giả (CoreGia).
 
 ## Năm tệp chép vào gói
 
-Đường nguồn tính từ gốc repo; đường đích tính từ thư mục chứa tài liệu này. SHA-256 trước/sau tính trên byte thực tế tại lần bàn giao. Hai cột SHA LF tính sau đổi CRLF thành LF để kiểm trên Linux/Windows; không đổi nội dung ngoài xuống dòng. Test so SHA LF, vì checkout Git có thể đổi xuống dòng. Hai matcher tên chép nguyên byte trong worktree này.
+Đường nguồn tính từ gốc repo; đường đích tính từ thư mục chứa tài liệu này. SHA trước giữ bản nguồn, SHA sau trong bảng privacy phản ánh bản gói hiện tại. Hai cột SHA LF tính sau đổi CRLF thành LF để kiểm trên Linux/Windows; không đổi nội dung ngoài xuống dòng. Test so SHA LF, vì checkout Git có thể đổi xuống dòng. Hai matcher tên chép nguyên byte trong worktree này.
 
 | Đường nguồn | Đích trong gói | SHA trước (byte) | SHA sau (byte) | SHA trước (LF) | SHA sau (LF) | Điều chỉnh |
 |---|---|---|---|---|---|---|
 | `e_mask/ma-nguon/nguon/privacy/__init__.py` | `e_mask/nguon/privacy/__init__.py` | `ad88cdef05aa5862fb2e34bab1b19bc2e80727e40cabdbe9246133f8e846096f` | `bff7a8d02fd5f38b6876ea7930a2cdbcbbed9e85d2b3b6883005506a92f602c3` | `089a17a5759e62cb2e7a4f160bb88ac248ea4a8e2a507f1c7aad323a123e6845` | `584c0a757e561d88a1d2e624400c3f41908ae59167c7e734c02e19cdaa9cf181` | Ghi rõ phiên bản nguồn 2.7.2 chỉ là thông tin nguồn; không gọi ứng dụng cũ. |
-| `e_mask/ma-nguon/nguon/privacy/types.py` | `e_mask/nguon/privacy/types.py` | `c99ab1584d732dd35938d2cca4202129673bb4507ada4ec77a96cea7eaa1141a` | `1840cc8bf08430c9af657a8d3dc400356561e771d4b59d2c51d5c5f0fe61007d` | `59acab78646831909af6da5d54b292c0ad35929fbbff8b526084853bbf02c562` | `334e5fcf3f9e7e7c03514017fb6825f1db217560e70c76328216e4777ed89a83` | Giữ normalize/Extracted/PrivacyError; thêm bản dò NFC kèm khoảng ký tự gốc cho NFD; lỗi nội bộ không đưa thẳng ra cổng. |
+| `e_mask/ma-nguon/nguon/privacy/types.py` | `e_mask/nguon/privacy/types.py` | `c99ab1584d732dd35938d2cca4202129673bb4507ada4ec77a96cea7eaa1141a` | `76e6bae89a5acfad89068a09583d2485d3d4c7010ba6b7730451ac779ffa4698` | `59acab78646831909af6da5d54b292c0ad35929fbbff8b526084853bbf02c562` | `7f81a43ed1f61a8553c73da9499c5fab1c0bb69334f27b40eabfc202b9c3b3e1` | Bỏ Cf/selector trước NFC, ánh xạ về nguyên văn; từ chối nếu không ánh xạ được. |
 | `e_mask/ma-nguon/nguon/privacy/core.py` | `e_mask/nguon/privacy/core.py` | `1b0cc53af256f6cfcb3ce2eeebe28eabb574c3b2cf3f82e1bdb4535732876029` | `842a978dafacb1d9e92ebc235917cab15910c66140380f7a695b87fc94255f75` | `287616e854e5c6a59be5a2531638dd5f68dda2df387b0ff778b770da4ff44075` | `80b89e308d02212f42e3bc4ea23fcd60fdd146d2593cf5fe45ec600ccc7df990` | Bỏ mã hóa bảng và xuất TXT/Word/ZIP cùng import liên quan; detector import khi gọi, thiếu thì từ chối. Giữ KnownText/nhóm/vị trí/bảo vệ số/numeric_review; thay bí danh [[...]], giữ mã Junsky, số tự sinh tối thiểu 4 chữ số không cắt; bỏ cụm gốc khỏi lỗi trùng; replace giữ phần NFD chưa thay và verify giữ ranh giới bí danh. MASK-2: numeric_review giữ ranh giới số bằng NUL thay vì nối qua bí danh. |
 | `e_mask/ma-nguon/nguon/privacy/company_names.py` | `e_mask/nguon/privacy/company_names.py` | `b3c595c193b3711737846762112654e45d8448fd9b6922903154b1d3d302d958` | `b3c595c193b3711737846762112654e45d8448fd9b6922903154b1d3d302d958` | `56a6b584d2e78161182413df61c6391e21c9c6fa8f64d2c483e5f849fc3a2fb3` | `56a6b584d2e78161182413df61c6391e21c9c6fa8f64d2c483e5f849fc3a2fb3` | Chép nguyên byte; giữ matcher và vị trí tên doanh nghiệp. |
 | `e_mask/ma-nguon/nguon/privacy/person_names.py` | `e_mask/nguon/privacy/person_names.py` | `68d77c172b618a309722350af8910cc7323d93f11c6347cbc152dbe4d70aed7a` | `68d77c172b618a309722350af8910cc7323d93f11c6347cbc152dbe4d70aed7a` | `e1b00921cdd1374876eaa13ce9baa3a79eef7cac7614d2b9854621f728054214` | `e1b00921cdd1374876eaa13ce9baa3a79eef7cac7614d2b9854621f728054214` | Chép nguyên byte; giữ gợi ý tên người có nhãn. |
@@ -73,3 +73,95 @@ Chỉ bốn tệp mã chạy mới. Không thêm dependency ngoài thư viện c
 Nguồn `ma-nguon/kho_qua_core.py` giữ nguyên: SHA byte `2dd5c5f3ea64711a31f17265ba4e3b75a17e136258ae94c157cf2e6bb91dee15`; SHA LF `3608e50f82c76cde036afcc309bc4f01656e1a0cb4a17679ba9c7e106a547c78`. KhoBoNho từ nguồn cũ đã được MASK-2 chép ra helper test, nay tập trung tại `tests/ho_tro_core_gia.py`; helper `ho_tro_kho_demo.py` chỉ chuyển tiếp import. Fixture quyền/kho, máy chia sẻ RAM cho hai tiến trình và adapter SDK thử nghiệm đều ngoài gói chạy. Mã nguồn gốc giữ nguyên, không xóa/di chuyển.
 
 Port này chưa công bố API ngăn mới. Core cần cấp mã ổn định theo việc/bước, kiểm phiên/module/người/tài liệu/vùng, quyền và lease tại snapshot/chốt/đọc lại, cùng CAS/duy nhất/ghi lô nguyên tử phía kho. Kho tạm chỉ băm mã và nội dung, không lưu nhật ký chứa cụm gốc hay kết quả; `ChuaRo` chỉ khi bên kho đã nhận chốt chưa trả, giao lại hỏi nguồn trước. Phần gửi lại kết quả thuộc SDK. Tiền tố cấp alias tại MASK-3 tập trung trong `TIEN_TO_TU_SINH`; còn chờ xác nhận họ MASK không trùng Junsky thật. Không đổi helper/matcher thuộc các lát lõi trước.
+
+
+## Bổ sung MASK-3b → MASK-6 — 15/11/2026
+
+Các mô tả stub/chờ tài nguyên/kho tệp ở các mục trên là lịch sử bàn giao. Handler hiện dùng ngăn và tài nguyên sạch đã duyệt theo lệnh giao mới nhất. Hai bản ngan.py, cau_hinh.py viết tạm bằng thư viện chuẩn theo đặc tả SDK 2.1 vì mẫu NGAN-0 đang làm song song; lead thay nguyên tệp khi gộp, hai test so SHA tạm skip. Không thêm dependency chạy.
+
+Bốn từ điển chép nguyên byte từ e_mask/tham-chieu/tu-dien/ vào e_mask/tu_dien/. Nguồn là Mask v2 nội bộ đã được lead lọc sạch; ghi chú chờ duyệt trong bản nguồn là lịch sử, lệnh giao mới nhất xác nhận Anh đã duyệt. Gói không chứa danh mục đối tác thật. Nạp kiểm SHA bằng SHA256.json, test so byte với bản tham chiếu.
+
+| Tệp | SHA-256 nguồn và bản gói |
+|---|---|
+| `common_acronyms.txt` | `920f0952f2584ece4c37d5419c073cd6f60cf151da3b38b1e68fdd6a2bb24f4e` |
+| `leftover_allowlist.txt` | `7074f53c296bd7be258610335adc270879eccb2db63fa412c7a9088b077aea4b` |
+| `vn_places.txt` | `e991d899a1fa2265082e871715a653c9ca4fd7ed233a8d3951fb80b7a2d41847` |
+| `vn_surnames.txt` | `b9fc76e5fa1ebb6abca7f4bc7c58d0dd9ecffc992e642a21958449080b2aaad1` |
+
+Kho mới giữ nguyên nguyên tắc snapshot/chốt của MASK-3, chuyển thành adapter API ngăn chung; dùng dòng CAS bảo vệ năm bảng. Chỉ dấu/băm/số đếm và định danh cần che được giữ; không cache tài liệu hoặc kết quả AI. Cổng quyền vẫn là port được bên tích hợp tin cậy cấp. Tệp kho_tam.py/cau_hinh_may.py giữ nguyên làm hiện vật, không được handler import; lead xét lưu trữ sau.
+
+Schema van_ban_da_che tạo theo phần đã duyệt của sổ loại riêng, chép nguyên byte vào gói; hai schema van_ban_tai_lieu/tra_loi_ai chép từ sổ chung, không sửa nguồn. Test so SHA cả ba. Bản khai chờ 2.1 độc lập phiếu 2.0. Màn duyệt viết bằng JavaScript chuẩn, chỉ gọi KttCore, Node dùng riêng cho kiểm với bản giả. Công cụ chuyển DEMO chỉ nhận danh sách giả tích hợp sẵn, không đọc danh mục thật.
+
+Đã kiểm bằng Core giả (CoreGia) và KttCore giả; chưa kiểm Core thật, Linux thực tế hoặc Cloud. CLI SDK chuẩn chưa được tiêm quyền Mask nên từ chối xử lý; adapter DEMO có port nằm ngoài gói. Trần 100 lệnh/lô và trần kỹ thuật JSON 4 MiB được ghi ở README; băm nội bộ chưa có khóa HMAC từ Core.
+
+## Nối ngăn chung NGAN-0 — 15/11/2026
+
+Đã nối ngăn chung NGAN-0 (PR chung #34 đã gộp). Mục này cập nhật các ghi chú chờ mẫu/skip ở các lần bàn giao trước: hai tệp mẫu đã do lead chép, phiên này giữ nguyên, không sửa `_chung/**`. Khai báo RAM lấy từ `KHAI-SDK-2.1.json/ngan_du_lieu`, đổi tên bảng từ `ma` sang `bang` đúng hợp đồng chung; không đổi engine.json 2.0. Không thêm thư viện chạy. Các test an toàn MASK-5 giữ nguyên hành vi và xanh; không gọi Cloud.
+
+**Quy ước SHA-256 LF:** tính trên `read_bytes().replace(b'\r\n', b'\n')`, không bỏ BOM/khoảng trắng hoặc đổi ký tự khác. Đây là băm hiện tại thay cho số băm lịch sử của các tệp cùng tên. Test so mẫu và từ điển dùng cùng quy ước. NGUON.md tự mô tả nên không tự ghi băm chính nó.
+
+| Tệp (từ gốc repo) | SHA-256 LF |
+|---|---|
+| `e_mask/cong-cu/chuyen_danh_muc_demo.py` | `3ffb0fad8b709bde45371aee785b3d5a9d7da8540e328e8a21c83b2c0fd56db3` |
+| `e_mask/docs/VIEC.md` | `785ff02e4203c088307c3a086621ea2e38f39da2fbbb570d015eda7564e7375c` |
+| `e_mask/goi/e_mask/CHANGELOG.md` | `abae2f86b71dcb1b452f067014e41e1895205994a1168cf4a5806d89e4f74d43` |
+| `e_mask/goi/e_mask/KHAI-SDK-2.1.json` | `db2ca7378f08d4d5c9fd60d77d79b403c4c1f9b8ea80a5f26e796c5349306cb5` |
+| `e_mask/goi/e_mask/README.md` | `2c5bd3abd44733826a15bba70b307dab7fd6906021cf8d4351d3caee78103683` |
+| `e_mask/goi/e_mask/e_mask/chay.py` | `346ff1d95734f7d52c78cac53e209e726b75fdf682ec43f763279f4eab637959` |
+| `e_mask/goi/e_mask/e_mask/kho_ngan.py` | `dd7f47f871a8b1bced793855a79a9a98b66a6c11d6559a8112d99f3b39d7f67b` |
+| `e_mask/goi/e_mask/e_mask/kho_qua_core.py` | `ead192d13252dab309692c1f7e95ebbf3100930a73a1f2ed9ced051a03c292c3` |
+| `e_mask/tests/chay_demo.py` | `edbfe964c6d628435a068ca2965189c617964cd913c69d7b3e8dbc16a06ef58c` |
+| `e_mask/tests/test_mask_3b.py` | `96ef2c819123429b6e0e20f9d1a1d97ae48fc73249198843eca8912d9bf98c48` |
+| `e_mask/tests/test_mask_4_6.py` | `cc4345889d8d7cc51d95d8c4a44d1ae5997e79fa269c18c9d41c6ed461de77b8` |
+
+Hai mẫu chung được giữ nguyên, kiểm đối chiếu nguồn → bản gói sau chuẩn hóa LF:
+
+| Nguồn | Bản gói | SHA-256 LF của cả hai |
+|---|---|---|
+| `_chung/mau-ma/ngan.py` | `e_mask/goi/e_mask/e_mask/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
+| `_chung/mau-ma/cau_hinh.py` | `e_mask/goi/e_mask/e_mask/cau_hinh.py` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
+
+Đã kiểm bằng Core giả (CoreGia): cổng thay thế trong tests đạt 2/2 DEMO; CLI SDK chuẩn chặn thiếu nguồn quyền. Pytest 280 passed, 190 subtests passed, 0 skipped; kiểm độc lập đạt. RAM không bền qua khởi động lại, quyền/ngăn thật vẫn chờ Core.
+
+## Sửa an toàn theo kiểm độc lập — 15/11/2026
+
+Mục này cập nhật trạng thái hiện tại; số băm ở bảng nguồn privacy phía trên được làm mới theo bản gói. Không sửa nguồn trong ma-nguon, mẫu chung hoặc hai bản ngan.py/cau_hinh.py trong gói. Chỉ thư viện chuẩn và SDK 2.0.0; không thêm dependency.
+
+- `nguon/privacy/types.py`: dùng bảng Unicode của Python (category Cf) và các variation selector, tạo bộ quét một lần trong RAM. Bỏ ký tự vô hình trước NFC và giữ khoảng ký tự nguyên văn; không ánh xạ được thì từ chối. Không duy trì whitelist Cf thủ công.
+- `che_van_ban.py`, `phong_bi.py`: dùng chung ánh xạ, dò bổ sung tên qua tab/xuống dòng; bỏ mọi ký tự vô hình trên đầu ra, kiểm chặn phong bì, giữ đối chiếu tiền/ngày. Mã Junsky đã duyệt giữ nguyên khi khớp tên.
+- `kho_qua_core.py`, `kho_ngan.py`, `chay.py`: bí danh tạm riêng mỗi yêu cầu, không nhận tham chiếu chéo, giữ chính thức; gộp cụm chờ và đếm gặp đúng. Lỗi ngăn/port thành câu cố định, bỏ chuỗi ngoại lệ gốc; giữ hủy/ChuaRo/CAS. Chốt không nhận bản che không đạt.
+- Ba hiện vật `kho_tam.py`, `cau_hinh_may.py`, `schemas/cau_hinh_may.schema.json` chuyển nguyên nội dung từ gói sang `e_mask/LUU-TRU/mask_truoc_ngan/` theo đúng cấu trúc con. Gói không còn mô-đun/schema này. Test lịch sử nạp qua `tests/ho_tro_luu_tru.py`, không đưa thư mục lưu trữ vào đường chạy engine. SHA LF đối chiếu với blob gốc của cả ba tệp.
+- `git mv` bị sandbox chặn Git index ngoài worktree; dùng Move-Item để giữ nguyên tệp. Lead stage rename khi commit. Không commit/push. Kiểm độc lập đã thêm chặn mã đọc biến cấu hình máy và import mô-đun lưu trữ.
+
+Các test hồi quy dùng đúng ví dụ định danh DEMO do lead cung cấp; kiểm Cf toàn bộ bảng Unicode, selector ngoài BMP, NFD/NBSP/tab/xuống dòng, MST/STK, quyền alias và stdout/stderr. Hai yêu cầu độc lập có alias tạm khác nhau là thay đổi có chủ ý theo lệnh sửa an toàn, thay kỳ vọng cũ dùng chung alias. Vector trong ma-nguon giữ nguyên; fixture bổ sung quyền sở hữu rõ ràng cho các ca tái dùng của chính yêu cầu đó.
+
+SHA-256 hiện tại bên dưới tính sau chuẩn hóa CRLF thành LF, không băm chính NGUON.md. Kết quả chạy thật và giờ thực tế ở báo cáo sửa an toàn trong e_mask/docs; đã kiểm bằng Core giả (CoreGia).
+
+<!-- SHA-SUA-AN-TOAN -->
+
+| Tệp (từ gốc repo) | SHA-256 LF |
+|---|---|
+| `.gitignore` | `ce73ac75f2132332709576302ce0e8b848d232780636db3da15bf4deb3dfe275` |
+| `e_mask/LUU-TRU/mask_truoc_ngan/cau_hinh_may.py` | `282258c946f3d1dc9562f00a3c3d5aa89113372c670b62a2d43726b57adcb0b2` |
+| `e_mask/LUU-TRU/mask_truoc_ngan/kho_tam.py` | `f59171f0094a6093a338a9894a0695f6ce8d2a2d66f4acd1769714c1555714f5` |
+| `e_mask/LUU-TRU/mask_truoc_ngan/schemas/cau_hinh_may.schema.json` | `111673c65f54ad9b866e08b4f300871bbc3f6faf2cc2309a060aa3e9a2ae45d1` |
+| `e_mask/docs/VIEC.md` | `785ff02e4203c088307c3a086621ea2e38f39da2fbbb570d015eda7564e7375c` |
+| `e_mask/goi/e_mask/CHANGELOG.md` | `abae2f86b71dcb1b452f067014e41e1895205994a1168cf4a5806d89e4f74d43` |
+| `e_mask/goi/e_mask/README.md` | `2c5bd3abd44733826a15bba70b307dab7fd6906021cf8d4351d3caee78103683` |
+| `e_mask/goi/e_mask/e_mask/chay.py` | `346ff1d95734f7d52c78cac53e209e726b75fdf682ec43f763279f4eab637959` |
+| `e_mask/goi/e_mask/e_mask/che_van_ban.py` | `55cdceed15cd9d0988abf1211f66b3290522860fa36621b8b1e440d15d227104` |
+| `e_mask/goi/e_mask/e_mask/kho_ngan.py` | `dd7f47f871a8b1bced793855a79a9a98b66a6c11d6559a8112d99f3b39d7f67b` |
+| `e_mask/goi/e_mask/e_mask/kho_qua_core.py` | `ead192d13252dab309692c1f7e95ebbf3100930a73a1f2ed9ced051a03c292c3` |
+| `e_mask/goi/e_mask/e_mask/nguon/privacy/types.py` | `7f81a43ed1f61a8553c73da9499c5fab1c0bb69334f27b40eabfc202b9c3b3e1` |
+| `e_mask/goi/e_mask/e_mask/phong_bi.py` | `8d1393bba2fbd278fcd22a469b9b76c55acb7c2627109b4998c4af1f45f97661` |
+| `e_mask/tests/ho_tro_core_gia.py` | `98319448372a4269b43fdacd8b482febbbf6e4cacc11ca3b8a978906dd871cfe` |
+| `e_mask/tests/ho_tro_luu_tru.py` | `54f9c2a6965da00325337e64d828b279646f39bd32dd3730b724a8a1f665d64a` |
+| `e_mask/tests/kiem_doc_lap.py` | `8557adb5389495692f34d1d15b162a68968d4a54aa5b2ce53ce896f86b8045ab` |
+| `e_mask/tests/test_kho_tam.py` | `dbf436f6312d2399b4be012f041ab53bdd24fea18ee0acb132a1412a9c5a843d` |
+| `e_mask/tests/test_mask_0.py` | `700940273d7165f5cdd3e7021c2e5a15097013de22092f213bc8b829304c798c` |
+| `e_mask/tests/test_mask_3.py` | `25049167381885f975a068b2c5c891098fa9d2da24733d9bff8ccdc3d3298c80` |
+| `e_mask/tests/test_mask_3b.py` | `96ef2c819123429b6e0e20f9d1a1d97ae48fc73249198843eca8912d9bf98c48` |
+| `e_mask/tests/test_mask_4_6.py` | `cc4345889d8d7cc51d95d8c4a44d1ae5997e79fa269c18c9d41c6ed461de77b8` |
+| `e_mask/tests/test_sua_an_toan.py` | `c85beeb506055e65303ce302546300054792f588e9325f3174b02940d6cb4413` |
+| `e_mask/docs/BAO-CAO-SUA-AN-TOAN-MASK-3b-6.md` | `b670eaf9a1199dfaff23dc20045e15219f88cf7f455189872f58347671b3cc7d` |
+| `e_mask/docs/KET-QUA-KIEM-SUA-AN-TOAN-MASK-3b-6.txt` | `4b232e449470aeb2b5d91e27d7772a93b105d28e8ae6344d3700c37961c6c24d` |

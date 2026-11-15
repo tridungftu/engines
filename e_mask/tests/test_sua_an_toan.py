@@ -8,7 +8,7 @@ import pytest
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
 from e_mask import che_van_ban, phong_bi
-from e_mask.duyet_dinh_danh import DuyetDinhDanh
+from ho_tro_duyet_lich_su import DuyetDinhDanh
 from e_mask.kho_dinh_danh import KhoDinhDanh
 from e_mask.kho_ngan import khoa_dau, khoa_muc
 from e_mask.nguon.privacy import core

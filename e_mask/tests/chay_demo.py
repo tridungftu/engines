@@ -6,7 +6,7 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'goi/e_mask'))
 from kho_tri_thuc_sdk.thu import CoreGia
 from e_mask.chay import tao_app
-from e_mask.duyet_dinh_danh import DuyetDinhDanh
+from ho_tro_duyet_lich_su import DuyetDinhDanh
 from e_mask.kho_ngan import KHAI_NGAN
 from e_mask.ngan import NganBoNho
 from ho_tro_ngan import ADMIN, QuyenNganDemo, TEN

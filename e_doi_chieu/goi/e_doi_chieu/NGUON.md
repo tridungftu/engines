@@ -1,5 +1,57 @@
 # Nguồn của gói Đối chiếu
 
+## DC-12 — nguồn và lock offline, 15/11/2026
+
+Không thêm dependency, không tải mạng. Runtime lock giữ nguyên pin/hash
+được cấp: SDK 2.2.0 cài wheel repo riêng, Pillow 12.3.0 theo lock OCR;
+thư viện chuẩn Python theo PSF. Băm wheel SDK
+`0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`
+khớp `SHA256SUMS.txt` và lock. Hai hash Pillow ở mục DC-8 bên dưới;
+chưa có wheel Pillow trong repo. Mười hai gói test/QA ghim phiên bản
+trong `tests/requirements.lock` nhưng chưa có wheel/hash được cấp.
+Công cụ máy sạch từ chối mã 2 trước khi tạo venv; không bịa hash wheel.
+
+Font Roboto, Apache 2.0 và NOTICE giữ nguyên theo DC-9. Detector
+`sua_tay.py` viết trong repo, không chép model/detector ngoài; băm hiện
+hành tại bảng DC-S22-SHA. Từ điển và raster trong tests tự tạo, chỉ DEMO,
+không thay nguồn từ điển/detector vận hành được duyệt. Bộ đáp án DC-12,
+harness/test và ba công cụ offline viết mới, tái dùng fixture nội bộ
+DC-2…11 chỉ trong tests. Không cấp phép mới cho nguồn bên thứ ba.
+
+Nguồn thuật toán chép có sửa: ba đường Trích xuất ở mục DC-2 bên dưới,
+băm nguồn gốc và phạm vi chuyển đã ghi tại đó. Hai mẫu NGAN-0 và bốn
+schema sao nguyên từ `_chung`, quyền dùng nội bộ theo phiếu; bảng băm
+hiện hành bên dưới và test so SHA-256 LF kiểm cả nguồn lẫn bản chép.
+SDK nội bộ không có trường giấy phép trong METADATA; cần lead xác nhận
+quyền phân phối, không suy thành giấy phép nguồn mở.
+
+<!-- DC-12-METADATA:DAU -->
+| Dependency | Nguồn khai trong metadata | Giấy phép | SHA-256 METADATA đã cài |
+|---|---|---|---|
+| `kho_tri_thuc_sdk==2.2.0` | wheel nội bộ trong repo | Nội bộ; chưa khai SPDX | `6a8ea42619a68c4750b0f17aa1e4b1a2d80270b2ceb6eb7d24fd2f142cea3040` |
+| `Pillow==12.3.0` | https://python-pillow.github.io | MIT-CMU | `2c4378001803cfac65809a50722d46e0da4ce8061e717f103e5d52734bab30f5` |
+| `pytest==9.1.1` | https://docs.pytest.org/en/latest/ | MIT | `c5d032518012789cabc870d46589aca3aeda36cf9fa4399ee88bda3d10438451` |
+| `packaging==26.3` | https://github.com/pypa/packaging | Apache-2.0 OR BSD-2-Clause | `70fdb89fc4d4a9a043bf7372b8972bcc883fddff34ab55e9cf80d73875384763` |
+| `pluggy==1.6.0` | https://github.com/pytest-dev/pluggy (mô tả trong METADATA) | MIT | `7438c35ee25a095eb7416f84b461c2d74425c5e734ad54c3912453c65244e01c` |
+| `pygments==2.21.0` | https://pygments.org | BSD-2-Clause | `1dde075570136774c706bf0009183a793fe0ee262e4a5590cc6eff8453eedd43` |
+| `iniconfig==2.3.0` | https://github.com/pytest-dev/iniconfig | MIT | `40d773f84e4e112f495bbf4f1be9cbd2d456c0aeb6ef5311f75d1bf322f2165b` |
+| `colorama==0.4.6` | https://github.com/tartley/colorama | BSD-3-Clause (LICENSE có sẵn) | `7baed29eb50c3b29bdb33ff84e3177bf1bc05784f7685ecdcaa4471c7dd810cc` |
+| `jsonschema==4.26.0` | https://github.com/python-jsonschema/jsonschema | MIT | `05b189866ca98a96da3934bf6b83687ced3ff85325273b77e16b705f6d8b26d2` |
+| `attrs==26.1.0` | https://github.com/python-attrs/attrs | MIT | `4cd40e690f23bf37cbcad34efd6758e062df1df07c86833f7e3ce95bf1fa38cc` |
+| `jsonschema-specifications==2025.9.1` | https://github.com/python-jsonschema/jsonschema-specifications | MIT | `35abd41757f32b4ea24756920ded47b70173d77cbc052a5a6d3ab583b2e8d89d` |
+| `referencing==0.37.0` | https://github.com/python-jsonschema/referencing | MIT | `c93b00e6ab1524fd60848376604c189a114374776475c25a31d57be47b29de6a` |
+| `rpds-py==2026.6.3` | https://github.com/crate-py/rpds | MIT | `e9deba3569d39352c663fd09d01d53a649c8ab2c28de1c37e80b3e2beaf84926` |
+| `pypdfium2==5.13.0` | https://github.com/pypdfium2-team/pypdfium2 | BSD-3-Clause, Apache-2.0, dependency licenses | `77230dd502a7693f2a713566263247dd13f8749b5677f5050f22d19bbe37ceba` |
+<!-- DC-12-METADATA:CUOI -->
+
+Bảng metadata chỉ đọc từ distribution có sẵn, không truy cập các URL.
+Băm METADATA **không phải băm wheel**, không được dùng làm hash pip.
+Giấy phép native kèm Pillow/pypdfium2 theo LICENSE/NOTICE distribution;
+engine không vendor thêm chúng. pypdfium2 chỉ QA PDF tùy chọn, không
+import runtime. Node 24.18.0 chỉ công cụ test UI, không đóng gói.
+Không đưa font máy, model Local hoặc từ điển thật vào gói; nguồn chưa
+cấp không được thay bằng fixture rồi coi là đã kiểm.
+
 ## DC-11 — 15/11/2026
 
 - `loi_ocr.py`, `ui/loi_ocr.js`, SQL 003 viết mới theo phiếu DC-11;
@@ -97,9 +149,9 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 |---|---|
 | `.gitattributes` | `36f5046d7b9e6c15c3d77263f4918fa7997bebfbf79f3a4f3b954da607cd4eed` |
 | `cau_hinh.schema.json` | `e38e7414afacb2b1abc8fa1e01e28c130213686d79ea3f3d71d7873f5ab39b87` |
-| `CHANGELOG.md` | `941b919a5ee4fb18dd9079453c2ec4ca00da1998e35c3c4577e8034698b7ff54` |
+| `CHANGELOG.md` | `e6945a48fe4d3c7d847e20f68210a9a0d7d858f89c563539e7716a761942d993` |
 | `demo/DEMO-ban-chot.docx` | `e086e49c1dfad0cdfc702ab141a9de6123cbd123e4c7110df975b673e194bcaa` |
-| `demo/README.md` | `e65567d43ae6afeb303f977ddb3ea58ca18fe9dcb166b76fc731ad81d763d580` |
+| `demo/README.md` | `c55d1d9bb7381dd821b4a4c1fea1b129af974ae3c7f83acf35de6ef45fac64bf` |
 | `e_doi_chieu/__init__.py` | `a427fe739dab3a98c108b79f40f7a53328d504300979b71ccc900892064948b3` |
 | `e_doi_chieu/anh.py` | `2358268bca79589385e904909ab32d5bdaa43d3ebf5097776698e91a0c5f7dbe` |
 | `e_doi_chieu/bao_cao.py` | `9cc4c1941d0512b8e97d1f7af845f029edcbe852c1e1b3fb3bbf20f33b38b965` |

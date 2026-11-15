@@ -4,6 +4,8 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| DC-13 (phiếu mới) | Công cụ đo DEMO ngoài runtime và CMD ASCII; Anh tự thử trên Core thật | DC-n; DC-12; C-DC-08 | Xong công cụ/kiểm giả; phép đo thật Chờ Anh — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): CLI **1/1 ĐẠT**, pytest **1164 passed, 0 skipped**, kiểm độc lập **ĐẠT**; riêng DC-13 kiểm lại **74/74**. Chạy khô mặc định, 0 Cloud; số đo thật **CHỜ ANH TỰ CHẠY**. Không commit/push. |
+| DC-12 (phiếu mới) | DEMO toàn tuyến, đáp án độc lập, kiểm gói/nguồn/lock và công cụ offline | DC-n; DC-9…11 | Xong phạm vi CoreGia; còn kiểm máy sạch/thật — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): CLI **1/1 ĐẠT**; pytest **1090 passed, 0 skipped** (33 ca DC-12); Node **29/29**; harness **10/10** + **4/4** lỗi nguồn; kiểm độc lập ĐẠT. Bắt **5/5** Nghiêm trọng, **0/8** sửa thật bị ẩn; giữ 12 điểm máy. Thiếu wheel/hash offline; chưa Linux/Core thật. Không sửa runtime, không commit/push. |
 | DC-11 (phiếu mới) | Học lỗi OCR có duyệt, bộ phiên bản mới trong ngăn và màn chỉ đọc | DC-m; Q14; C-DC-03 | Xong phạm vi CoreGia; chờ cổng thật — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **1057 passed, 0 skipped** (68 ca DC-11); Node **29/29**; kiểm độc lập ĐẠT; kiểm kê 46 tệp. DC-11-CH tách schema/giữ ngưỡng đã duyệt. Q14 và C-DC-03 bắt buộc trước vận hành thật; không commit/push. |
 | DC-10 (phiếu mới) | Màn cấu hình/kết quả, xác nhận chỉ-thêm + CAS, đề nghị module qua cổng cấp | DC-k/l; Q01–04; C-DC-01/03/04 | Xong phạm vi CoreGia; chờ cổng thật — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO **1/1 ĐẠT**; pytest **989 passed, 0 skipped** (47 ca DC-10); Node **22/22**; kiểm độc lập ĐẠT; kiểm kê 43 tệp. C-DC-01/03/04 chưa tích hợp thật; ngăn RAM không chứng minh nhật ký đã bền. |
 | DC-S22 | Chuyển Đối chiếu sang SDK 2.2.0, ngăn/cấu hình/SQL, vai trò trường DC-6 và tích hợp Hỏi AI | CHUYEN-SDK-2.2 §2, §4 | Xong mã/kiểm CoreGia; chờ lead merge Git — 15/11/2026 | PR: **chờ lead mở**. DEMO 1/1 ĐẠT; pytest **898 passed, 0 skipped**, kể cả Hỏi AI; kiểm độc lập mã 0; kiểm kê 31 tệp khớp. Nội dung main `12ed8db` đã đồng bộ; merge Git metadata cần lead hoàn tất vì sandbox chỉ cho ghi worktree. |
@@ -23,12 +25,153 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | DC-2 (phiếu mới) | Đọc DOCX đã chốt, giữ nguyên văn/bảng/offset, chặn đầu vào không an toàn | DC-a | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 153 passed, 0 skipped; kiểm độc lập mã 0. Chi tiết DC-2 bên dưới. |
 | DC-3 (phiếu mới) | Nhận cặp, ghim snapshot, chuẩn hóa và ánh xạ về nguyên văn/cấu trúc | DC-b, d; DC-Q16 | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã sửa theo kiểm độc lập lead; đã kiểm bằng Core giả (CoreGia): DEMO Word 1/1 ĐẠT; pytest 297 passed, 0 skipped (144 ca DC-3); kiểm độc lập mã 0. 12.000 nút OCR lề lặp: 0,1190 giây. Tích hợp thật vẫn chờ C-DC-01/02/05/06. |
 
+## DC-13 — Báo cáo công cụ, 15/11/2026
+
+- PR: **chờ lead mở**. Ước tính 3 giờ; thực tế khoảng **0,35 giờ**,
+  15/11/2026 **22:54–23:15 (UTC+7)**, không gồm Anh đo máy thật.
+- Hai tệp mã ngoài gói: `cong-cu/thu_doi_chieu_that.py` và
+  `THU-DOI-CHIEU-THAT.cmd` ASCII. Thêm manifest khung DEMO và hướng dẫn
+  `docs/DC-13-THU-THAT.md`, có checklist bằng chứng trình duyệt Core.
+- Không mở mạng/engine/Hot Folder, không đọc cấu hình thật, không nhận
+  khóa. Host Core cấp pipe đã xác thực; binding là đề nghị chưa phát hành.
+  Chạy khô không đọc bộ mẫu/handle/ghi báo cáo. `--that` thiếu môi trường
+  từ chối `DC_CHUA_CO_MOI_TRUONG_THU`; mất ACK/chưa xong → `ChuaRo`,
+  không retry. Chỉ `--bao-cao` mới ghi một JSON DEMO mới ngoài gói;
+  báo cáo allowlist không khóa/đường máy/tep_id/nội dung văn bản.
+- Đáp án trong RAM, không gửi nguồn xử lý. Tử/mẫu/null có lý do; cổng
+  100% Nghiêm trọng gồm điểm chữ và vùng sửa tay, 0 sửa thật bị ẩn;
+  thiếu đo khác thất bại. Ngưỡng detector/lệch giả/OCR kém chờ số đo
+  và Anh duyệt. Hai cổng chỉ áp bộ mẫu, không bảo đảm mọi tài liệu.
+- **Đã kiểm bằng Core giả (CoreGia)** và adapter/pipe giả. Ba lệnh
+  AGENTS.md §5 qua `.venv/Scripts/python -B`, mọi mã thoát **0**:
+
+  - `-m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu`: **1/1 ĐẠT**.
+  - `-m pytest e_doi_chieu/tests -q`: **1164 passed, 0 skipped**, 226,67 giây.
+  - `e_doi_chieu/tests/kiem_doc_lap.py`: **ĐẠT: kiểm độc lập**.
+
+  Riêng `test_dc13.py` kiểm lại sau chỉnh cuối: **74 passed**, 2,19 giây;
+  CLI chạy khô mã 0, manifest khung hợp lệ và CMD ASCII; `git diff --check`
+  không lỗi. Kiểm kê gói **46 tệp** khớp, chỉ hash CHANGELOG/NGUON đổi.
+  Không chạy --that với Core thật. Các số đo ABBYY/tọa độ/cờ, OCR vùng,
+  từ điển thật, Local/detector,
+  thời gian/RAM/sức chứa thật, trình duyệt CAS/quyền/chặn/mở hiệu lực và
+  hai người Q03: **CHỜ ANH TỰ CHẠY**; không báo đã đạt máy thật.
+- Venv `.venv` dùng SDK 2.2.0 wheel repo đúng SHA-256, cài no-index/no-deps;
+  kế thừa dependency offline đã có qua system-site-packages. Không thêm
+  dependency/đổi lock; đây không phải chứng nhận máy sạch hay Linux.
+- Chỉ cập nhật CHANGELOG và metadata băm/kiểm kê trong gói vì tài liệu
+  đổi; không sửa runtime/manifest/ma-nguon/Core/SDK, không commit/push.
+
+### Cần Core / Chờ Anh — DC-13
+
+- **C-DC-08 (mới):** host handle đã review ánh xạ vào cửa chung Core:
+  xác minh DEMO/quyền/nguồn, fan-in và OCR/Local-only, nguồn số đo đầy đủ
+  không cắt, băm cấu hình bất biến, audit 0 Cloud, chống trùng/receipt bền,
+  đọc trạng thái theo mã tương quan và ACK lưu báo cáo. Hợp đồng đề nghị
+  tại `DC-13-THU-THAT.md`; chưa có binding thật, không tự thêm route SDK.
+  Vẫn cần khép C-DC-01…06 về màn/quyền/xác nhận/module và bằng chứng OCR.
+- Anh/lead cấp Word/scan **chỉ DEMO** đã gán nhãn đầy đủ trong kho Core,
+  nguồn Q14/phương pháp detector/cấu hình được duyệt; Anh tự chạy công cụ
+  và checklist trình duyệt, lưu bằng chứng DEMO rồi duyệt ngưỡng Q15.
+
 **Cập nhật sau DC-P:** hàng 0…6 phía trên giữ làm lịch sử cách chia lát cũ, không dùng để giao code. Mã DC-0…DC-13 và phụ thuộc hiện hành theo phiếu mới §3; 8 nhóm câu cũ đã tách/gom thành DC-Q01…DC-Q17 (§5.2). Quyết định chiều 15/11 đã duyệt cả 17 câu theo đề xuất; trạng thái hiện hành theo các dòng phiếu mới và báo cáo từng lát bên dưới.
 
 - Kiểm kê 15/11: không có `ma-nguon/`, `goi/`, `tests/`, `QUYET-DINH-CUOI-*`, `PHIEU-ENGINE-*.md` trong engine; không truy cập mã K2 ngoài workspace, không có mã cũ tại chỗ để port.
 - Đề xuất loại `ho_so_doi_chieu` đã ghi **ĐỀ XUẤT DC-P, chờ Anh** ở cuối `_chung/docs/LOAI-DU-LIEU-RIENG.md` §5; chưa tạo schema/kích hoạt. Tái dùng nguyên ba loại `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`; không đổi `bang_trich_xuat`.
 - Quy tắc mới: không lưu gì bền trên máy engine; cấu hình/chỉ mục/danh mục/xác nhận qua `Ngan`, snapshot/ảnh/báo cáo qua kho tệp Core; màn trong `goi/e_doi_chieu/ui/`. Không dùng `cau_hinh_may`/`kho_tam` cũ.
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
+
+## DC-12 — 15/11/2026
+
+**Kết luận: Đạt phạm vi DC-12/CoreGia; chưa kiểm máy sạch/Linux/Core thật.**
+PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), NganBoNho nguyên mẫu
+kiểm riêng và KttCore/DOM giả trên Node. Chỉ DEMO, 0 Cloud/OCR/AI thật.
+Báo cáo/phạm vi/chưa kiểm: [DC-12-KIEM-VA-GIOI-HAN.md](DC-12-KIEM-VA-GIOI-HAN.md).
+Số đếm máy đọc được: [DC-12-SO-DO-DEMO.json](DC-12-SO-DO-DEMO.json).
+
+Đã làm:
+- Giữ một DOCX DEMO sạch chạy trực tiếp CLI chuẩn. Harness ngoài gói nạp
+  tệp thật vào kho RAM CoreGia, ngăn SDK 2.2.0 và điều phối Local/OCR giả;
+  có đường đủ cả bảy năng lực. Không ID chưa tải hoặc cờ DEMO trong runtime.
+- 33 ca DC-12: toàn chuỗi/đáp án, dẫn chứng đúng/sai, lỗi nguồn, thiếu
+  detector/ảnh/tọa độ, hủy/mất lease ba bước, mất ACK/CAS/chống trùng/quyền
+  giả, tự sửa rồi băm snapshot, không ghi máy/mạng, HTTP loopback đọc dòng
+  stdin khởi động qua app.chay và công cụ offline từ chối thiếu wheel/hash.
+  Năm kết luận/xác nhận/học OCR tiếp tục kiểm trong DC-9…11; phân biệt ma
+  trận upstream giả với đo chất lượng thật.
+- Đáp án độc lập 8 thay đổi nghiệp vụ: bắt **5/5** Nghiêm trọng; **0/8**
+  sửa thật bị ẩn thành nhiễu. Giữ **12 điểm máy**, trong đó **7 Nghiêm trọng**.
+  Hai điểm kiểm tiền nội bộ cũng giữ Cần xem; không cộng chúng vào mẫu số
+  sửa thật. Harness 10 ca có 7 lượt Local giả; chưa đo máy thật để null và
+  có lý do. Không suy accuracy ngoài bộ, không đổi số đo detector DC-8.
+- Nguồn/giấy phép/băm metadata dependency bổ sung tại NGUON; băm metadata
+  không thay hash wheel. Runtime lock/pin/hash giữ nguyên đúng nguồn được
+  phép. Hai wrapper .sh/.cmd ASCII và tool kiểm tag/hash trước cài offline,
+  mặc định chạy khô. SDK cài wheel repo riêng, venv sạch không dùng gói hệ
+  thống. Chưa đủ wheel thì từ chối, không tạo venv/tải mạng.
+- Cấu hình/dữ liệu cần giữ qua ngăn; tệp gốc/snapshot/báo cáo qua CoreGia.
+  So băm LF 4/4 schema và 2/2 mẫu nguyên bản; kiểm kê gói **46 tệp** khớp.
+  Không sửa runtime/manifest/Core/SDK/_chung/ma-nguon; không xóa tệp,
+  không thêm dependency, không commit/push. Không phát hiện lỗi lớn cần
+  tách lát runtime; ba tệp công cụ ngoài gói, test/tài liệu/DEMO không tính
+  vào trần tệp runtime của lát.
+
+Kết quả kiểm cuối (venv trong worktree; Windows x64/Python 3.13.14;
+SDK 2.2.0 offline, wheel SHA khớp; pytest 9.1.1/Pillow 12.3.0 có sẵn
+qua system-site-packages, Node 24.18.0; không phải cài máy sạch):
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.9.0: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 DEMO ĐẠT; mã 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q
+1090 passed in 235.12s (0:03:55)
+0 skipped; mã 0; 33 ca DC-12 mới.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã 0; không import Core/kênh cũ, không pycache/pyc/symlink trong gói.
+
+.venv/Scripts/python e_doi_chieu/tests/chay_demo_voi_core_gia.py
+10/10 ca chuỗi; 4/4 lỗi nguồn; 5/5 Nghiêm trọng; 0/8 sửa thật bị ẩn.
+7 lượt Local giả, 0 Cloud/OCR/AI thật; mã 0.
+
+node --test e_doi_chieu/tests/ui/*.test.mjs
+tests 29; pass 29; fail 0; skipped 0; duration_ms 415.8968; mã 0.
+KttCore/DOM giả; chưa thao tác trên trình duyệt Core thật.
+
+e_doi_chieu/cong-cu/KIEM-MAY-SACH.cmd
+CHẠY KHÔ: thiếu wheel Pillow 12.3.0 và wheel/hash 12 gói test/QA.
+Mã 2 đúng thiết kế; không tạo venv sạch, không tải mạng.
+.sh kiểm ASCII/nội dung, chưa chạy Linux.
+```
+
+Biến kiểm: PYTHONDONTWRITEBYTECODE=1, PYTHONUTF8=1,
+PYTHONIOENCODING=utf-8; pytest tắt tự nạp plugin ngoài bộ bằng
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1. Không skip nào được tính là đạt.
+
+Thời gian thực tế: **22:18–22:39:25 ngày 15/11/2026 (UTC+7), khoảng 0.36 giờ**;
+ước tính phiếu **3 giờ**; bắt đầu theo lead **22:18**.
+Lệch/phương án tạm: dùng SDK **2.2.0** theo main/quyết định chuyển đã duyệt,
+không dùng SDK 2.0.0 cho runtime. NganBoNho chỉ kiểm riêng theo yêu cầu
+nguyên mẫu; chuỗi dùng viec.ngan thật của SDK trên CoreGia. Thiếu wheel/hash
+nên chỉ soạn/chạy khô công cụ máy sạch; không coi đã cài sạch/đã kiểm Linux.
+
+### Cần Core — cập nhật DC-12
+
+- **L-DC-01:** cần wheel Pillow 12.3.0 đúng hash/tag đã ghim và wheel/hash
+  được cấp cho 12 gói test/QA trong tests/requirements.lock; SDK repo có
+  sẵn, không thiếu SDK. Cần làm rõ quyền phân phối SDK nội bộ vì METADATA
+  không khai giấy phép; chưa suy thành giấy phép nguồn mở.
+- **C-DC-01/02/03/04:** ngăn bền/RLS, quyền/vòng đời tệp con, Core điều phối
+  OCR/Local/nhánh không AI, xác nhận chỉ-thêm có danh tính/giờ/quyền, CAS
+  và hai người thật, mapping hiệu lực/thông báo module; vẫn chưa tích hợp.
+- **C-DC-05/06/07, Q14/Q15/DC-13:** nguồn OCR vùng/ảnh/phân trang/chuyển
+  tiếp Hỏi AI thật; nợ SDK ngoài handler; nguồn từ điển có phép/đã duyệt,
+  ngưỡng/detector/scan/model đo thật. Số đo DC-8 không thay đổi. Anh tự chạy
+  DC-13; thao tác trên trình duyệt Core thật chưa kiểm. Không câu Chờ Anh mới.
 
 ## DC-11 — 15/11/2026
 

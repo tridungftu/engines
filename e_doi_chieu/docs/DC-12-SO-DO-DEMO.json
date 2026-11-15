@@ -1,0 +1,96 @@
+{
+  "nhan": "DEMO; đã kiểm bằng Core giả (CoreGia)",
+  "so_ca_chuoi": 10,
+  "nghiem_trong_bat_du": 5,
+  "nghiem_trong_da_cai": 5,
+  "sua_that_bi_an_thanh_nhieu": 0,
+  "sua_that_da_cai": 8,
+  "ca": [
+    {
+      "ma": "tien",
+      "nghiem_trong": true,
+      "bat_du": true,
+      "bi_an_thanh_nhieu": false,
+      "so_diem_may": 2,
+      "so_nghiem_trong_may": 1,
+      "local_gia": 1
+    },
+    {
+      "ma": "ngay",
+      "nghiem_trong": true,
+      "bat_du": true,
+      "bi_an_thanh_nhieu": false,
+      "so_diem_may": 1,
+      "so_nghiem_trong_may": 1,
+      "local_gia": 0
+    },
+    {
+      "ma": "phu_dinh",
+      "nghiem_trong": true,
+      "bat_du": true,
+      "bi_an_thanh_nhieu": false,
+      "so_diem_may": 2,
+      "so_nghiem_trong_may": 1,
+      "local_gia": 1
+    },
+    {
+      "ma": "mat_khoan",
+      "nghiem_trong": true,
+      "bat_du": true,
+      "bi_an_thanh_nhieu": false,
+      "so_diem_may": 3,
+      "so_nghiem_trong_may": 3,
+      "local_gia": 0
+    },
+    {
+      "ma": "ben_ky",
+      "nghiem_trong": true,
+      "bat_du": true,
+      "bi_an_thanh_nhieu": false,
+      "so_diem_may": 1,
+      "so_nghiem_trong_may": 1,
+      "local_gia": 0
+    },
+    {
+      "ma": "doi_nghia_dau",
+      "nghiem_trong": false,
+      "bat_du": true,
+      "bi_an_thanh_nhieu": false,
+      "so_diem_may": 1,
+      "so_nghiem_trong_may": 0,
+      "local_gia": 1
+    },
+    {
+      "ma": "doi_mau",
+      "nghiem_trong": false,
+      "bat_du": true,
+      "bi_an_thanh_nhieu": false,
+      "so_diem_may": 1,
+      "so_nghiem_trong_may": 0,
+      "local_gia": 1
+    },
+    {
+      "ma": "doi_tu_co_nghia",
+      "nghiem_trong": false,
+      "bat_du": true,
+      "bi_an_thanh_nhieu": false,
+      "so_diem_may": 1,
+      "so_nghiem_trong_may": 0,
+      "local_gia": 1
+    }
+  ],
+  "loi_nguon": [
+    "DC_SAI_NGUON",
+    "DC_QUA_GIOI_HAN",
+    "CHUA_CAU_HINH",
+    "DC_OCR_KHONG_DOC_DUOC"
+  ],
+  "so_diem_may_trong_bo_dap_an": 12,
+  "so_diem_nghiem_trong_trong_bo_dap_an": 7,
+  "so_luot_local_gia": 7,
+  "cloud_that": 0,
+  "ocr_that": 0,
+  "ai_that": 0,
+  "do_chat_luong_may_that": null,
+  "ly_do_chua_do": "Chưa có Core/OCR/Local thật; detector/ngưỡng/nguồn từ điển chưa nghiệm thu."
+}

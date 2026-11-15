@@ -9,7 +9,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 2 | J8b: đối soát mất xác nhận | — | Chờ làm |  |
 | 3 | Lát 4: màn duyệt danh sách chờ (Admin) — giao diện của engine | MK-15, 16 | Chờ làm |  |
 | 4 | Lát 5: màn thử che/mở che DEMO | — | Bỏ — 15/11/2026 | Anh chốt bỏ `PHIEU-MASK-CHAY-THU-DEMO.md` (QUYET-DINH-ANH-20261115 câu 10); thử DEMO dùng màn Chạy thử chung của Core |
-| 5 | Lát 8: che/mở che Word/Excel (mẫu 5–8) | §1.3 | Chờ làm |  |
+| 5 | Lát 8: che/mở che Word/Excel (mẫu 5–8) | §1.3; quyết định Anh chiều 15/11 câu 9 | Chờ làm theo B — 15/11/2026 | Anh cần nhận tệp giữ định dạng; MASK-P2 đã lập lại phiếu MASK-B1…B10, chưa code tệp |
 | 6 | Lát 6: 8 contract (Anh duyệt tên) → lát 7: bài 11 bước | — | Chờ làm |  |
 | MASK-P | Lập phiếu giao Codex theo SDK 2.0; chỉ tài liệu, không tạo gói/không sửa nguồn | MK-1…6, 10…22 | Xong — 14/11/2026 | [Phiếu giao](GIAO-CODEX-e_mask.md): 14 lát, 52–62 giờ ước tính có điều kiện. Regex 14/14 khối đạt; 5 mục/bảng lát/tổng giờ khớp; UTF-8/NFC và kiểm khoảng trắng đạt, `git diff --check` mã 0. Ba lệnh kiểm gói AGENTS.md §5 không áp dụng theo ngoại lệ lát chỉ tài liệu; không chạy hoặc nhận là đã kiểm bằng CoreGia. Đề xuất `van_ban_da_che` ở cuối sổ chung mang nhãn **ĐỀ XUẤT MASK-P, chờ Anh**. Không commit/push; PR: **chờ lead mở** |
 | MASK-3 | Port kho/quyền, kho tạm và chống trùng sau MASK-2 | MK-10…13, 16…19 | Xong phạm vi port/CoreGia — 14/11/2026 | Chỉ DEMO; đúng bốn tệp mã. Pytest 225 passed, 190 subtests passed; kiểm độc lập ĐẠT. CLI SDK 0/2 ĐẠT do handler MASK-5 còn stub; chưa đạt nghiệm thu chung. PR: **chờ lead mở** |
@@ -17,7 +17,8 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-4 | Phong bì và schema ba loại riêng | MK-20 | Xong phạm vi CoreGia — 15/11/2026 | Schema chung/bản gói so SHA; kiểm UTF-8/JSON/trần lồng. PR: **chờ lead mở** |
 | MASK-5 | Hai handler văn bản SDK và mở che dữ liệu/trích dẫn AI | MK-12…14, 18, 20, 21 | Xong phạm vi CoreGia — 15/11/2026; chờ quyền thật | DEMO qua port ngoài gói; CLI chuẩn vẫn bị chặn do thiếu quyền. PR: **chờ lead mở** |
 | MASK-6 | Duyệt/từ chối, đóng/dọn, chuyển DEMO và màn Admin | MK-11, 15…19, 22 | Xong phạm vi CoreGia/KttCore giả — 15/11/2026 | Màn trong gói; chưa nạp trong Core thật. PR: **chờ lead mở** |
-| MASK-7 | Khảo sát từng vùng tệp, đo DEMO và trình phương án/trần | MK-1, 4, 21; quyết định 15/11 câu 11 | Xong khảo sát — 15/11/2026; Chờ Anh/lead chốt phần tệp | [Bảng bằng chứng và phương án](MASK-7-KHAO-SAT-TEP.md), [số đo thật](SO-DO-MASK-7.json). Không thêm thuật toán/năng lực tệp; MASK-8…11 chưa code. PR: **chờ lead mở** |
+| MASK-7 | Khảo sát từng vùng tệp, đo DEMO và trình phương án/trần | MK-1, 4, 21; quyết định 15/11 câu 11 | Xong khảo sát — 15/11/2026; Anh đã chọn B chiều cùng ngày | [Bảng bằng chứng và phương án](MASK-7-KHAO-SAT-TEP.md), [số đo thật](SO-DO-MASK-7.json). Câu 9 chiều thay trạng thái chờ cũ: dùng trần thử nghiệm §5, lập lại phiếu ở MASK-P2; chưa code tệp. PR: **chờ lead mở** |
+| MASK-P2 | Lập lại MASK-8…11 theo phương án B, chỉ tài liệu | Quyết định Anh chiều 15/11 câu 9 | Xong tài liệu — 15/11/2026 | [Phiếu §7](GIAO-CODEX-e_mask.md#7-mask811-theo-phương-án-b): 10 lát MASK-B1…B10, 54–80 giờ ƯỚC TÍNH, mỗi lát ≤5 tệp mã, đủ khối tự đủ; regex 10/10. Chưa code/chưa kiểm Office/Local thật, Cloud tắt; PR: **chờ lead mở** |
 | MASK-2b | Sửa theo kiểm độc lập: chấm điểm tên, giảm báo nhầm | MK-2, 18, 20; lệnh lead 15/11 lúc 09:47 | Xong phạm vi CoreGia — 15/11/2026 | t9: 0/32 lọt; t10: 2/41 báo nhầm (4,88%); 717 passed, 190 subtests. [Báo cáo](BAO-CAO-MASK-2b.md), [số đo](SO-DO-MASK-2b.json); PR: **chờ lead mở** |
 | MASK-2c-P | Thiết kế lớp Local AI thứ hai và lệnh giao Codex, chỉ tài liệu | Quyết định Anh 15/11: "Thêm AI cục bộ" | Xong tài liệu — 15/11/2026 | [Phiếu Mask §6](GIAO-CODEX-e_mask.md#6-mask-2c--lớp-ai-cục-bộ), AI-9 ở phiếu Hỏi AI, đề xuất dữ liệu chung §6; 4 lát Mask + AI-9, tổng 31 giờ ƯỚC TÍNH triển khai. Chưa code/chưa đo model thật, Cloud tắt; PR: **chờ lead mở** |
 | MASK-2c-1 | Map gốc/bản dò/bản che và snapshot bất biến qua port Core/Ngan | MASK-2b, MASK-3b…6; profile kỹ thuật lead duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core thật | Đúng bốn tệp mã; 866 passed, 4 xfailed giữ nguyên, 190 subtests; adapter DEMO 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-1.md); PR: **chờ lead mở** |
@@ -334,6 +335,54 @@ Mã thoát 0.
 - **C-M2C-05:** thêm bảng chỉ mục `ho_so_ai`, khóa `bam_yeu_cau`, phạm vi engine qua ngăn SDK 2.1. Khai báo nội bộ tạm `KHAI_NGAN_HO_SO_AI` dùng nguyên API NGAN-0; chưa sửa phiếu SDK 2.0/bản mẫu. Chỉ giá trị băm, phiên bản và tham chiếu tệp, không gốc/bản che/map. `lay_hoac_tao` giữ cùng chỉ mục cho retry; khác băm cùng yêu cầu từ chối. Core cần bảo đảm chốt quyền/ngăn/vòng đời tệp; không nhận phép thử RAM là bằng chứng giao dịch Core thật.
 
 Các mục này làm rõ phụ thuộc đã ghi C-M2C-01/02/05, không yêu cầu route riêng và không thêm câu chờ Anh. Profile `chuyen_tiep.mask_2c` đã được lead duyệt 15/11 theo lệnh giao; không hỏi lại các nhãn “chưa duyệt” lịch sử của lát P.
+
+## MASK-P2 — lập lại phiếu tệp theo B, 15/11/2026
+
+**Quyết định của Anh, câu 9 chiều 15/11:** “Cần tệp giữ định dạng → phương án B” trong [_chung/docs/QUYET-DINH-ANH-20261115-CHIEU.md](../../_chung/docs/QUYET-DINH-ANH-20261115-CHIEU.md). Chọn ZIP/XML Python thư viện chuẩn, whitelist OOXML và từ chối phần lạ; dùng **trần thử nghiệm MASK-7 §5**, đo lại tại biên trước đề nghị vận hành. Không còn chờ Anh chọn lại phương án/trần thử nghiệm; các dòng chờ ở báo cáo/phiếu cũ là lịch sử.
+
+- **Đạt phạm vi tài liệu MASK-P2**, PR: **chờ lead mở**. Chỉ sửa `GIAO-CODEX-e_mask.md` và `VIEC.md`; không sửa code/test/schema/manifest/Core/SDK/nguồn mẫu, không commit/push. Bốn khối MASK-8…11 cũ giữ nguyên nội dung, thêm dòng **THAY BỞI MASK-P2 — 15/11/2026** vào từng khối.
+- Phiếu §7 có bảng 10 lát **MASK-B1…B10, 54–80 giờ ƯỚC TÍNH**, mỗi lát ≤5 tệp mã, độ khó `kho`/`vua`, phụ thuộc và khối giao việc tự đủ. Bảng bằng chứng từng vùng chọn che có map hoặc từ chối rõ; comments/revisions/sheet ẩn/chart/formula/link/nhúng/macro/phần chưa kiểm không được giữ với cảnh báo rồi báo che đủ. Giữ bytes phần không chạm; tệp che không sửa mở lại đúng bytes gốc, AI-sửa mở trên bản đang gửi và giữ nội dung mới.
+- Văn bản rút từ tệp phải qua **MASK-2b + MASK-2c/AI-9 Local do Core điều phối** trước phát hành; không handler gọi engine khác, không đường tắt quy tắc. Snapshot gốc/map/bản che ở kho tệp Core ACL, chỉ mục qua Ngan/RAM; không lưu máy engine. Cloud giữ tắt. Đã ghi nguồn và SHA LF thực của bốn mẫu ZIP/XLSX/DOCX, yêu cầu **CHÉP + NGUON/SHA**, không import chéo engine; mẫu writer workbook mới/reader chỉ thân không bị nhận nhầm là đã giữ định dạng/quét đủ.
+- **B10** giao bộ held-out tệp DEMO mới có gold/SHA, đo mọi biên thử nghiệm, công cụ `.cmd` ASCII mặc định chạy khô; **Anh tự chạy** Word/Excel/Local thật, Codex chỉ kiểm mock. Chưa tạo bộ tệp/công cụ này trong MASK-P2. PDF tách khỏi loạt B, cần phiếu riêng; không nhận đã thực hiện MASK-8b PDF dự kiến cũ.
+- Khoảng **54–80 giờ** là ước tính phân rã mới, không phải thời gian thực tế; phân bổ lại phần PDF sang bảo toàn byte/tích hợp hai lớp/held-out. Không gồm 25 giờ MASK-2c +6 giờ AI-9 đã lập phiếu, công Core/SDK/chờ Anh, hoặc mở rộng OOXML ngoài whitelist. Không cộng máy móc tổng dự án 85–111 giờ khảo sát cũ. MASK-P2 **không có dự toán giờ riêng** trong lệnh giao.
+
+Kiểm thực tế bằng `.venv/Scripts/python -B`, `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`; Python **3.13.14**, SDK **2.0.0** cài offline từ wheel repo, SHA-256 **a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892** khớp `SHA256SUMS.txt`. Venv `--system-site-packages` dùng pytest **9.1.1** có sẵn, không mạng/dependency mới của gói.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+0/2 ĐẠT; mã thoát 1 (thiếu nguồn quyền Core đã biết, không nới handler).
+
+.venv/Scripts/python -B -m pytest e_mask/tests -q
+866 passed, 4 xfailed, 190 subtests passed in 62.12s (0:01:02)
+Mã thoát 0; 0 skipped. Bốn xfail strict là bốn tên held-out lớp quy tắc đã biết; chưa là phép đo Local.
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_mask/tests/chay_demo.py
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+2/2 ĐẠT; mã thoát 0 (adapter quyền/ngăn DEMO ngoài gói hiện có).
+```
+
+Đã kiểm bằng Core giả (CoreGia) **gói văn bản hiện có**, không phải năng lực tệp B/Local mới. Chưa kiểm Linux thực tế, Core thật, Word/Excel thật hoặc model thật; 0 lượt Cloud. Regex đúng biểu thức trong lệnh giao, dùng MULTILINE|DOTALL, đọc **10/10** khối mới; tổng giờ **54–80**, đánh dấu **4/4** khối cũ và so toàn bộ nội dung cũ còn nguyên sau dòng đánh dấu; SHA LF **4/4** nguồn khớp, `git diff --check` mã 0.
+
+Thời gian thực tế: **13:37:00–13:49:23 ngày 15/11/2026 (UTC+07), 0.21 giờ** (mốc kiểm hoàn tất); MASK-P2 không có giờ ước tính riêng, **54–80 giờ** dành cho triển khai tương lai. Không lấy 1 giờ MASK-P cũ làm dự toán P2.
+
+## Cần Core — bổ sung MASK-P2, 15/11/2026
+
+| Mã | Cửa chung cần có | Khi chưa có |
+|---|---|---|
+| C-MB-01 (kế thừa C-M2C-01/02/03) | Giữ bytes gốc/bản che và map/patch/kế hoạch bất biến trong kho tệp ACL tới khi đóng, quyền tham chiếu con xuyên bước/module/người/tài liệu; điều phối và chứng thực đủ Local trên mọi vùng, ghim dạng trả/năng lực cuối/băm tệp cuối | Adapter CoreGia ngoài gói; thiếu snapshot/quyền/nguồn/đoạn thì từ chối, không phát hành tệp chỉ qua quy tắc |
+| C-MB-02 (kế thừa C-M2C-05) | Ngan thật CAS/ghi lô nguyên tử/chốt alias+kết quả/mất ACK; cách ly upload trước phát hành, dọn tệp mồ côi khi chốt lỗi, giữ gốc có quyền cho khứ hồi đúng byte | RAM theo mẫu, ChuaRo khi đã nhận chưa xác nhận; không tự tạo cache máy/đường tải bỏ quyền hoặc coi giao dịch RAM là Core thật |
+| C-MB-03 (kế thừa MASK-7 §7) | Trần streaming/download/upload đếm bytes thực trước cấp phát, ánh xạ 413, budget RAM/thời gian/job/concurrency và hủy trên máy đích | Engine áp trần thử nghiệm sau cổng SDK hiện có, chưa chứng minh giới hạn tải trước engine; B10 đo biên/đề nghị lead/Core trước vận hành |
+
+Không yêu cầu route/SQL/màn riêng Mask, không sửa Core/SDK trong P2. Không có câu mới chờ Anh quyết phương án; chờ Anh chạy Office/Local sau khi B10 được triển khai.
 
 ## MASK-2c-1 — bàn giao map và snapshot, 15/11/2026
 

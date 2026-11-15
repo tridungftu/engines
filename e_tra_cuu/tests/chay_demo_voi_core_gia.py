@@ -14,6 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "goi/e_tra_cuu"))
 from e_tra_cuu.kiem_dau_vao import bam, doc_json
 from ho_tro_tc_2 import BoDemo, GOI
 from ho_tro_tc_3 import BoCatDoan, bang_demo, kiem_phu_nguon, phong_bi_trang
+from ho_tro_tc_4 import chay_demo_ai
+from ho_tro_tc_5 import chay_demo_phan_loai
 
 
 def chay_demo():
@@ -65,12 +67,12 @@ def main():
 
     with patch.object(socket.socket, "connect", cam_mang), patch.object(socket.socket, "connect_ex", cam_mang), \
             patch.object(socket, "create_connection", cam_mang), patch.object(socket, "getaddrinfo", cam_mang):
-        kq = chay_demo() + chay_demo_cat_doan()
+        kq = chay_demo() + chay_demo_cat_doan() + chay_demo_ai() + chay_demo_phan_loai()
     for k in kq:
         dat = k["trang_thai"] == "XONG"
         print(f'[{"ĐẠT" if dat else "LỖI"}] {k["ten"]}' + ("" if dat else ": " + str(k["loi"]["ma"])))
     dat = sum(k["trang_thai"] == "XONG" for k in kq)
-    print(f"{dat}/{len(kq)} DEMO ĐẠT; mạng ngoài/AI/Cloud={dem_mang} (không có provider trong harness).")
+    print(f"{dat}/{len(kq)} DEMO ĐẠT; mạng ngoài/lượt provider/Cloud={dem_mang} (không có provider trong harness).")
     print("Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật; ngăn RAM mất khi dừng.")
     return 0 if kq and dat == len(kq) and dem_mang == 0 else 1
 

@@ -1,5 +1,37 @@
 # Nguồn và phụ thuộc — TC-0, 15/11/2026
 
+## TC-5 — 15/11/2026
+
+Viết mới `phan_loai.py`, `quy_tac_nhom.py` và thêm đăng ký trong `chay.py`:
+đúng 3 tệp runtime, chỉ thư viện chuẩn/SDK và mô-đun cùng gói. Căn cứ phiếu
+TC-5, DAC-TA §3.2–3.7, TC-1-CONTRACT và quyết định 15/11 chiều; không sửa
+API/manifest/schema/mẫu NGAN-0/requirements hoặc mã Hỏi AI/Core/nguồn cũ.
+
+Bộ quy tắc/ngưỡng/dấu hiệu/quan hệ trong `tests/ho_tro_tc_5.py` tự tạo và chỉ
+DEMO. Không đặt chính sách hoặc bộ nghiệp vụ mặc định vào runtime. Runtime
+mở tài nguyên Core theo ref+băm đã ghim trong cấu hình ngăn. So khớp dấu hiệu
+Python có giới hạn, không tuyên bố đã đo độ chính xác/pháp nhân hoặc model.
+
+Tests dùng CoreGia có thật, NganBoNho và adapter quyền/tệp con riêng tests;
+consumer AI-2 0.5.0 dùng Local giả trong một ca kiểm nối, giữ nguyên phản hồi
+không căn cứ/hàng chờ. Không engine TC import/gọi Hỏi AI. Harness thêm 11 ca
+phân loại/hàng chờ, tổng 24/24. Đã kiểm bằng Core giả (CoreGia), 0 Cloud/AI
+thật; chưa kiểm Linux/Core/RLS/model thật. Kết quả thật ở VIEC.md.
+
+## TC-4 — 15/11/2026
+
+Viết mới `chuan_bi_ai.py`, `ngu_canh_ai.py` bằng thư viện chuẩn theo TC-4,
+TC-1-CONTRACT, hợp đồng loại chung và mẫu chuyển tiếp AI-2/TX-0/DC-P; sửa
+`chay.py` đăng ký handler. Đúng 3 tệp mã. Không dependency hoặc nguồn bên ngoài.
+Tái dùng bộ đọc/kiểm miền TC-2 và API SDK; không sửa Core/SDK/mẫu chung/nguồn cũ.
+Hai mẫu NGAN-0, bốn schema và requirements.lock giữ nguyên, test băm LF.
+
+Test/harness dùng fixture DEMO tự tạo, bytes thực nạp CoreGia và cấu hình
+NganBoNho; mở rộng bốn ca chuẩn bị. Consumer `hoi_yeu_cau.py`/`khuon_json.py`
+của Hỏi AI có thật chỉ được import trong tests ngoài gói; provider Local giả
+không mạng, không thay consumer/runtime engine khác. Đã kiểm bằng Core giả
+(CoreGia); chưa kiểm model/Cloud/Core/RLS thật hoặc Linux. Kết quả ở VIEC.md.
+
 Gói mới theo phiếu `e_tra_cuu/docs/GIAO-CODEX-e_tra_cuu.md` §1–5,
 API-ENGINE-v1 và hai hướng dẫn SDK 2.0.0. Không có lõi cũ tại chỗ để chuyển;
 không tạo `ma-nguon/`. Mã khung/schema/test mới viết trong lát TC-0.

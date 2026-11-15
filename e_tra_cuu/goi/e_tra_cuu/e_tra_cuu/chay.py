@@ -8,6 +8,8 @@ from kho_tri_thuc_sdk.engine import ChuaRo, Engine, LoiDuongTruyen, LoiNghiepVu,
 from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
 from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
 from .ho_so import nhan_yeu_cau
+from .cat_doan import cat_doan
+from .kiem_dau_vao import doi_tuong, loi
 
 
 _GOI = Path(__file__).resolve().parent.parent
@@ -62,6 +64,22 @@ def yeu_cau_cau_hinh(ngan):
     return chup_cau_hinh(ngan)["gia_tri"]
 
 
+def kiem_cau_hinh_da_chup(cau_hinh):
+    """Dùng cùng bộ kiểm với bản đọc ngăn, giữ nguyên mẫu NGAN-0."""
+    from types import SimpleNamespace
+
+    doi_tuong(cau_hinh, ("gia_tri", "row_version"), ())
+
+    class NganSnapshot:
+        def doc(self, bang, khoa):
+            return SimpleNamespace(**cau_hinh)
+
+    try:
+        return chup_cau_hinh(NganSnapshot())
+    except LoiNghiepVu:
+        loi("TC_SAI_NGUON")
+
+
 app = Engine.tu_khai_bao("engine.json")
 ngan = khoi_tao_ngan(app)
 
@@ -91,8 +109,20 @@ def dang_ky_nang_luc(ung_dung):
     def chua_lam(viec):
         raise LoiNghiepVu("CHUA_LAM", "Chức năng tra cứu đang được hoàn thiện.")
 
+    @ung_dung.nang_luc("tra_cuu.cat_doan@1")
+    def cat(viec):
+        try:
+            return cat_doan(viec, getattr(ung_dung, "cua_nguon", None),
+                            ung_dung.phien_ban, kiem_cau_hinh_da_chup)
+        except (LoiNghiepVu, LoiDuongTruyen, ChuaRo, ViecDaHuy):
+            raise
+        except (ValueError, TypeError, KeyError, AttributeError, RecursionError, OverflowError):
+            loi()
+        except Exception:
+            raise LoiNghiepVu("ENGINE_LOI_XU_LY", "Engine gặp lỗi khi xử lý việc này.") from None
+
     for nang_luc in ung_dung.phieu["nang_luc"]:
-        if nang_luc["ma"] != "tra_cuu.nhan_yeu_cau@1":
+        if nang_luc["ma"] not in {"tra_cuu.nhan_yeu_cau@1", "tra_cuu.cat_doan@1"}:
             ung_dung.nang_luc(nang_luc["ma"])(chua_lam)
 
 

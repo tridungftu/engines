@@ -1,5 +1,24 @@
 # Thay đổi
 
+## 0.1.0 — 15/11/2026 — TC-3 (chưa phát hành)
+
+- Thực thi `tra_cuu.cat_doan@1`: snapshot ghim qua Core, `cat_doan/da_nhan`
+  → `da_cat_doan`; kiểm lại quyền/băm bytes/nguồn/cấu hình/metadata. Cấu hình
+  lấy bản Ngan đã ghim, không đọc lại giá trị mới giữa chuỗi.
+- Cắt Điều/Khoản rồi câu/khối/trang, ghép tới mục tiêu, giữ đủ đuôi và Unicode
+  NFC/NFD. Mã đoạn ổn định theo nguồn/phiên bản/offset/bản thuật toán. Từ chối
+  đơn vị không chia an toàn >8000, quá số đoạn/ngân sách; không cắt ngầm.
+- Bảng giữ tiêu đề/ô gộp/ô rỗng và map từng ô; chỉ suy map khi chiếu TAB +
+  LF/CRLF khớp chính xác, còn lại cần offset tường minh. Tiêu đề lặp đánh dấu
+  ngữ cảnh, đoạn tổng hợp không giả một lát liên tục. Giữ hộp thực cấp khối/ô,
+  DOCX không trang để null, không confidence/hộp suy đoán hoặc chỉ mục/vector.
+- Đóng ba nợ TC-2: regex kênh ngoài chỉ ở định danh/tham chiếu; các object
+  metadata/ứng viên/bằng chứng/mục danh mục từ chối khóa thừa; đọc luồng ngắn
+  tiếp tới EOF/trần. Thêm .gitattributes cố định LF cho DEMO có băm bytes.
+- Đã kiểm bằng Core giả (CoreGia), harness 9/9; AI/Cloud=0, không ghi bền/tệp
+  tạm. CLI chuẩn vẫn 0/5 do CHUA_CAU_HINH/mã 1; C-TC-01/02/03/05 còn chờ.
+  Kết quả kiểm thực ở docs/VIEC.md; không chứng nhận RLS/Core thật hoặc Linux.
+
 ## 0.1.0 — 15/11/2026 — TC-2 (chưa phát hành)
 
 - Thay stub nội bộ bằng tám năng lực/bốn loại đã duyệt; nhận yêu cầu đã làm,

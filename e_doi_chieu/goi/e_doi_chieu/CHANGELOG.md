@@ -1,5 +1,18 @@
 # Thay đổi
 
+## DC-11 — 15/11/2026 · 0.9.0 chưa phát hành
+
+- Lõi đề xuất/duyệt chưa đăng ký SDK, đọc xác nhận/cặp từ nguồn ghim;
+  cấm đổi nghĩa/vùng bảo vệ/định danh/căn cứ không rõ. Một vị trí đếm một
+  lần; ngưỡng phải đã đo/duyệt, đủ ngưỡng không tự duyệt.
+- Admin qua adapter chung, kiểm lại nguồn/quyền/Q14/ngưỡng, CAS và một
+  lô ngăn chốt đề xuất/nhật ký/bộ vô danh phiên bản mới. Không sửa snapshot
+  cũ hoặc tự áp bộ mới vào kết quả máy. Màn chỉ đọc KttCore/textContent.
+- DC-11-CH giữ ngưỡng khi lưu giới hạn; SQL 003 thêm hai cột, dữ liệu
+  phiên bản 3, chưa chạy DB thật. Không dependency/Cloud/đĩa bền. Q14 và
+  C-DC-03 bắt buộc trước vận hành thật; docs/DC-11-CONG-CORE và VIEC ghi
+  hợp đồng/kết quả kiểm; PR: chờ lead mở.
+
 ## DC-10 — 15/11/2026 · 0.8.0 chưa phát hành
 
 - Thêm hai màn cấu hình/kết quả, CAS cấu hình, bộ lọc/nhiễu ẩn mặc định,

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| DC-11 (phiếu mới) | Học lỗi OCR có duyệt, bộ phiên bản mới trong ngăn và màn chỉ đọc | DC-m; Q14; C-DC-03 | Xong phạm vi CoreGia; chờ cổng thật — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **1057 passed, 0 skipped** (68 ca DC-11); Node **29/29**; kiểm độc lập ĐẠT; kiểm kê 46 tệp. DC-11-CH tách schema/giữ ngưỡng đã duyệt. Q14 và C-DC-03 bắt buộc trước vận hành thật; không commit/push. |
 | DC-10 (phiếu mới) | Màn cấu hình/kết quả, xác nhận chỉ-thêm + CAS, đề nghị module qua cổng cấp | DC-k/l; Q01–04; C-DC-01/03/04 | Xong phạm vi CoreGia; chờ cổng thật — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO **1/1 ĐẠT**; pytest **989 passed, 0 skipped** (47 ca DC-10); Node **22/22**; kiểm độc lập ĐẠT; kiểm kê 43 tệp. C-DC-01/03/04 chưa tích hợp thật; ngăn RAM không chứng minh nhật ký đã bền. |
 | DC-S22 | Chuyển Đối chiếu sang SDK 2.2.0, ngăn/cấu hình/SQL, vai trò trường DC-6 và tích hợp Hỏi AI | CHUYEN-SDK-2.2 §2, §4 | Xong mã/kiểm CoreGia; chờ lead merge Git — 15/11/2026 | PR: **chờ lead mở**. DEMO 1/1 ĐẠT; pytest **898 passed, 0 skipped**, kể cả Hỏi AI; kiểm độc lập mã 0; kiểm kê 31 tệp khớp. Nội dung main `12ed8db` đã đồng bộ; merge Git metadata cần lead hoàn tất vì sandbox chỉ cho ghi worktree. |
 | DC-7 (phiếu mới) | Lệch dấu năm bước, từ điển ghim, bằng chứng OCR lại và tỷ lệ trang | DC-f; Q12/14/15 | Xong phạm vi CoreGia — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **881 passed, 0 skipped** (85 ca DC-7); kiểm độc lập ĐẠT, ba mã thoát 0. Chỉ DEMO, 0 Cloud. Nguồn từ điển thật DC-Q14, ngưỡng DC-Q15 và contract OCR vùng C-DC-05 vẫn thiếu. |
@@ -28,6 +29,92 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Đề xuất loại `ho_so_doi_chieu` đã ghi **ĐỀ XUẤT DC-P, chờ Anh** ở cuối `_chung/docs/LOAI-DU-LIEU-RIENG.md` §5; chưa tạo schema/kích hoạt. Tái dùng nguyên ba loại `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`; không đổi `bang_trich_xuat`.
 - Quy tắc mới: không lưu gì bền trên máy engine; cấu hình/chỉ mục/danh mục/xác nhận qua `Ngan`, snapshot/ảnh/báo cáo qua kho tệp Core; màn trong `goi/e_doi_chieu/ui/`. Không dùng `cau_hinh_may`/`kho_tam` cũ.
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
+
+## DC-11 — 15/11/2026
+
+**Kết luận: Đạt phạm vi DC-11/CoreGia; chưa vận hành thật.**
+PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), NganBoNho và
+KttCore/DOM giả trên Node; chỉ DEMO, 0 Cloud/OCR/AI thật. Chưa kiểm Core
+thật, Linux, RLS, nhật ký bền hoặc trình duyệt Core. Hợp đồng và giới
+hạn: [DC-11-CONG-CORE.md](DC-11-CONG-CORE.md).
+
+Đã làm:
+- Lõi nhận mã xác nhận `loi_ocr` từ nhật ký Core, đọc lại báo cáo/snapshot/
+  nguồn có quyền; lấy token từ vị trí ghim, chỉ nhận cặp vô danh được
+  chứng minh không đổi nghĩa theo Q14. Cấm cặp đổi nghĩa/vùng bảo vệ/
+  định danh/không rõ căn cứ. Không nhận nhãn an toàn hoặc quyền từ UI.
+- Đếm một vị trí một lần, không đếm hai khi gửi lại/mất ACK/hai người
+  xác nhận cùng điểm. Ngưỡng cấu hình phải đã đo/duyệt, không mặc định;
+  đủ ngưỡng chỉ đề xuất. Đổi ngưỡng được duyệt có thể tính lại trạng thái
+  mà không tăng số lần. Đề xuất chưa duyệt không ảnh hưởng kết quả máy.
+- Admin qua adapter chung chưa đăng ký SDK; kiểm lại mọi căn cứ/quyền,
+  CAS, một lô chốt trạng thái/nhật ký người-giờ/bộ phiên bản mới trong
+  ngăn. Hai Admin tranh nhau chỉ một lô thắng; lỗi rollback cả lô.
+  Bộ engine chỉ có token vô danh/băm căn cứ, nhật ký thuộc pháp nhân;
+  snapshot/bộ ghim của lượt cũ không đổi. Core còn phải ghép/phát hành
+  bộ mới cho các việc mới qua cổng chung.
+- Màn `ui/loi_ocr.js` chỉ đọc/phân trang qua KttCore, textContent, không
+  tự cấp Admin hoặc ghi ngăn/thao tác quản trị. Màn cấu hình giữ nguyên
+  ngưỡng đã được Core cấp khi lưu giới hạn, không cho tự tạo ngưỡng.
+- Gói 0.9.0, dữ liệu phiên bản 3; SQL 003 chỉ thêm hai cột. Giữ nguyên
+  7 capability, không decorator/API giả. Không sửa ma-nguon/Core/SDK/
+  schema chung/mẫu NGAN-0, không dependency mới, không commit/push.
+
+Chia phạm vi: DC-11 gồm loi_ocr.py, ui/loi_ocr.js, ghi chú chay.py và
+SQL 003 (4 tệp mã); DC-11-CH riêng schema + hai dòng giữ ngưỡng trong
+ui/cau_hinh.js (2 tệp). Tách vì tổng vượt khoảng 5 tệp; phần này cần
+để form cũ không làm mất ngưỡng đã duyệt. Chưa có nguồn cũ cần lưu trữ.
+
+Kết quả kiểm cuối: pytest **1057 passed, 0 skipped**, gồm **68 ca DC-11**;
+CLI DEMO **1/1 ĐẠT**, kiểm độc lập **ĐẠT**, Node **29/29**, gồm 7 ca mới;
+kiểm kê **46 tệp** khớp bytes/SHA-256; git diff --check mã 0.
+Môi trường .venv trong worktree, Python 3.13.14, SDK 2.2.0 cài offline
+--no-index --no-deps từ wheel repo, SHA-256 khớp SHA256SUMS.txt; pytest
+9.1.1/Pillow 12.3.0 qua system-site-packages, Node 24.18.0. Kiểm có
+PYTHONDONTWRITEBYTECODE=1, PYTHONUTF8=1, PYTHONIOENCODING=utf-8.
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.9.0: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 DEMO ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q
+1057 passed in 183.45s (0:03:03)
+0 skipped; mã thoát 0.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0; không import Core/kênh cũ, không pycache/pyc/symlink trong gói.
+
+node --test e_doi_chieu/tests/ui/*.test.mjs
+tests 29; pass 29; fail 0; skipped 0; duration_ms 220.168
+Mã thoát 0; KttCore/DOM giả, không trình duyệt Core thật.
+```
+
+Thời gian thực tế: **20:54–21:18 ngày 15/11/2026 (UTC+7), khoảng 0,40
+giờ**; ước tính trong phiếu **4 giờ**. Lượt kiểm cuối kết thúc 21:18:03.
+
+### Cần Core — cập nhật DC-11
+
+- **C-DC-03:** chưa có thao tác quản trị SDK/cửa quyền-xác nhận chung
+  để nối thật. Chỉ test lõi qua adapter tin cậy giả, màn chỉ đọc. Core
+  phải cấp người/giờ/pháp nhân/quyền, kiểm lại tại commit, CAS/chống trùng,
+  nhật ký bền/chỉ-thêm và cấm UI/người dùng ghi trực tiếp kho đã duyệt,
+  đề xuất hoặc xác nhận qua API ngăn tổng quát. SQL không thay ACL.
+- **Q14/L-DC-01:** vẫn cần nguồn từ điển/cặp sạch có giấy phép, băm,
+  phê duyệt căn cứ không đổi nghĩa và đã loại định danh. Bộ Q14 và ngưỡng
+  trong tests là giả; chưa có ngưỡng số lần đề xuất đo/duyệt vận hành.
+  **Q14 và C-DC-03 bắt buộc trước vận hành thật**, không coi phê duyệt
+  phương án chiều 15/11 là đã cấp tài nguyên hoặc phép lách cửa.
+- **C-DC-01/03:** review loader/màn/CSP, context pháp nhân từ phiên Core,
+  đường ghép/xuất từ điển mới từ ngăn thành tệp Core và ghim việc mới.
+  Chưa kiểm migration/CSDL/RLS thật, khởi động lại hoặc giữ lịch sử bền.
+  Bản đầu không gom chứng cứ khác module; chờ review quyền xuyên module.
+  Đề xuất ≤64 KiB, lô duyệt ≤98 lượt nguồn (chừa 2 lệnh trong trần 100
+  của SDK); vượt trần từ chối, cần thiết kế tiếp nếu quy mô lớn hơn.
+- Không có câu Chờ Anh mới. Các phụ thuộc C-DC-02/04/05/06 trước đó
+  vẫn giữ nguyên; kết quả này không nghiệm thu toàn tuyến hoặc vận hành.
 
 ## DC-10 — 15/11/2026
 

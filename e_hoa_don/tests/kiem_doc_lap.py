@@ -158,6 +158,26 @@ else:
 assert type(InvoiceIssue('DEMO', 'Vấn đề DEMO.', '$', 'WARNING').as_issue()) is Issue
 ket_qua = CoreGia().chay_thu_demo(app, sys.argv[1])
 assert ket_qua and all(k['trang_thai'] == 'XONG' for k in ket_qua)
+# Chu?i ZIP ? XLSX qua kho CoreGia trong ti?n tr?nh c? l?p.
+import io
+import zipfile
+import xml.etree.ElementTree as ET
+core = CoreGia()
+raw_zip = (Path(sys.argv[1]) / 'demo' / 'goi-hon-hop-DEMO.zip').read_bytes()
+tep = core.them_tep('DEMO.zip', raw_zip, 'application/zip')
+doc = core.chay_thu(app, 'hoa_don.doc_zip@1', {'loai': 'tep', 'tep': tep})
+assert doc['trang_thai'] == 'XONG'
+xuat = core.chay_thu(app, 'hoa_don.bang_ke_xlsx@1', doc['ket_qua'])
+assert xuat['trang_thai'] == 'XONG'
+truong = xuat['ket_qua']['truong']
+assert (truong['so_hoa_don'], truong['so_loi'], truong['so_khong_ho_tro'], truong['da_doc_het']) == (3, 1, 1, False)
+with zipfile.ZipFile(io.BytesIO(core.doc_tep(truong['bang_ke']['tep_id']))) as z:
+    assert z.testzip() is None
+    for name in z.namelist():
+        ET.fromstring(z.read(name))
+    ns = {'s': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
+    wb = ET.fromstring(z.read('xl/workbook.xml'))
+    assert [x.attrib['name'] for x in wb.findall('s:sheets/s:sheet', ns)] == ['Hoa don', 'Kiem ke tep']
 assert not any(n == 'kho_tri_thuc' or n.startswith('kho_tri_thuc.') for n in sys.modules)
 print('DA_KIEM_DOC_LAP')
 """

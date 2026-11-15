@@ -301,3 +301,42 @@ XML chỉ UTF-8/UTF-16 và namespace/prefix đã liệt kê; DTD/entity/quan h�
 Trần thử nghiệm: container vào/ra 1 MiB riêng mỗi chiều; 8 MiB giải nén tổng, 2 MiB/phần, 256 phần, ratio 200:1 kể cả nhỏ; depth 64, 100.000 node tổng, 50 sheet, 20.000 ô; vào 500.000 code point. B1 đếm bảo thủ mọi text/tail và giá trị attribute, cộng shared string ở từng ô dùng, không preview; có thể từ chối sớm hơn reader ngữ nghĩa. Reader sau vẫn kiểm ký tự logic/vùng thực đọc. Helper ra kiểm đồng thời 2.000.000 code point/8 MiB UTF-8 và JSON 256/64/32 KiB; B4/B7/B9 phải gọi khi có writer/phát hành, B1 chưa upload. Unicode hợp lệ: 2 triệu code point tối đa 8.000.000 byte, nhỏ hơn 8 MiB; test riêng cửa đếm byte 8 MiB/+1, không nâng trần ký tự để tạo biên giả.
 
 Dữ liệu việc chỉ RAM, không thêm trạng thái bền hoặc bảng ngăn. Buffer/bảng tạm dọn `finally`; dữ liệu cần giữ ở lát sau dùng Ngan/kho tệp Core đúng mẫu. Lỗi parse/trần chỉ hai mã và câu Việt cố định, không tên/path/nội dung; hủy/mất lease/ChuaRo truyền nguyên. Từng lỗi DEMO kiểm không trả một phần, không ghi đĩa, không mạng hoặc in log. Không thêm dependency/PDF/Office automation. Gói hiện có đã kiểm bằng Core giả (CoreGia); cổng B1 kiểm trực tiếp RAM, **chưa nối năng lực tệp, Core thật, Word/Excel hay Local thật**, Cloud giữ tắt.
+
+## MASK-B3 — reader Excel nội bộ, 15/11/2026
+
+**Quyền tái dùng:** lệnh giao MASK-B3 của Anh/lead cho phép CHÉP chọn lọc `xlsx_toi_thieu.py` trong repo. `e_hoa_don/goi/e_hoa_don/NGUON.md` HD-7 ghi writer Python stdlib tự viết; bằng chứng CD-096 A1 ở đó dành cho nguồn Node nội bộ chỉ tham chiếu, không tự suy thành giấy phép Python hoặc quyền phân phối ngoài. Không thêm giấy phép/dependency. Mã mới B3 chỉ SDK 2.0.0 và thư viện chuẩn Python.
+
+| Đường nguồn từ gốc repo | Symbol đọc/chép | Đích và khác biệt |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/xlsx_toi_thieu.py` | `chu_xml`: escape literal ST_Xstring một lượt, control XML và CR | Chép chọn lọc vào `e_mask/xml_excel.py::chu_xml`; chỉ nhận chuỗi, từ chối surrogate lẻ, không ép số hoặc cắt độ dài. Helper escape text cho B4/B6, chưa dùng để ghi tệp trong B3. Không chép `tao_xlsx`, writer inline string hoặc bộ nén |
+| `./e_mask/ma-nguon/nguon/privacy/excel.py` | `decode_string`, `encode_string`, `_read_cells`, `_read_metadata`, `_validate_relationships`, `_audit`; đối chiếu MASK-7 §3 | Chỉ tham chiếu để xác định vùng, ST_Xstring, shared index và rủi ro. Reader/map mới không normalize gốc về NFC; map đủ surrogate pair, entity, CR và từng run/attribute/byte. Chặn formula/link/sheet ẩn/phần chưa phân loại, không giữ bằng disclosures có tên |
+| `./e_mask/ma-nguon/nguon/privacy/excel_values.py` | `clean_text`, `safe_sheet_name`, `_cell_xml`, `build_values_workbook` | Chỉ đọc tĩnh, không nạp runtime. Không dùng đường dựng workbook mới/cắt 32767/đổi tên sheet làm fallback giữ định dạng |
+| `e_mask/goi/e_mask/e_mask/{doc_tep,zip_an_toan,xml_an_toan}.py` | Cổng B1, ngân sách XML, kiểm danh mục/header/DEFLATE EOF/CRC, content types/relationship graph | Dùng trực tiếp nội bộ cùng engine. Khối B3 riêng ở cuối `doc_tep.py` kiểm cờ nén 1–2 và descriptor bit 3; không sửa 37 định nghĩa/câu lệnh AST B1 trước đó, không thay parser Word hoặc sửa nguồn mẫu |
+
+**Nguồn trước và sau:** băm lại bytes thực sau triển khai, cả ba nguồn không đổi nên trước = sau. LF chỉ thay CRLF bằng LF, không chuẩn hóa Unicode.
+
+| Đường nguồn | SHA-256 bytes trước = sau | SHA-256 LF trước = sau |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/xlsx_toi_thieu.py` | `06e185c00dc5762a4393a7223d47e234d6af39a3424dcf43263ae60933fbc304` | `ad6a6c8e89d73e5e994c4f21066c7ee76640b261eaf253dc82a69cf1337fa46d` |
+| `./e_mask/ma-nguon/nguon/privacy/excel.py` | `464456eae2a71488ef57954af2265c1bba0656254a466e3b19d90200c7e873a5` | `b837f86a9accaea662357b485fb0d835a6deef4ba4e9f8ccffb0bb9a1243fdc7` |
+| `./e_mask/ma-nguon/nguon/privacy/excel_values.py` | `12d3f14b74cba21de40ade2b5d707e8a604ea0ff72b00927c58d68c0f83c43aa` | `6bbcb1c0e19923d13923ca935970199626aca668ec3f23d903ef3e512c22e901` |
+
+**Đích trước sửa:** `doc_excel.py` và `xml_excel.py` chưa có. `doc_tep.py` trước B3 có SHA bytes `77e3b72b743e6c239f7b416eb017b8add2ecccd4e8ffdd45f1baeb95f31eb655`, SHA LF `9050f061dab051b69fd0ca7d383edf0850aeb74ee7bf560f95da00eef8186e1c`. Băm B1 lịch sử ở trên giữ nguyên; bảng dưới là toàn tệp sau B3, không là băm phát hành cả gói.
+
+| Đích từ gốc gói e_mask | SHA-256 bytes sau | SHA-256 LF sau |
+|---|---|---|
+| `e_mask/doc_tep.py` | `8490326022023e2980ac666e1c5f7f917b33e4e94a61f15500a29c86c8c24526` | `24175ad56221e4d3b3403416f1c8e7dd1d9550ad6325f292f176df2967f8ad7e` |
+| `e_mask/doc_excel.py` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` |
+| `e_mask/xml_excel.py` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` |
+
+Profile B3: XLSX transitional, đường part cố định/số thứ tự B1, đủ graph/types/root/namespace/node/attribute và ngữ nghĩa được hỗ trợ. Thêm `xl/theme/theme1.xml` với grammar màu/font/style có miền giá trị cố định; `xl/calcChain.xml` chỉ được rỗng. CalcChain có tham chiếu công thức luôn bị từ chối theo chính sách formula/cache, kể cả khi phần đó do Office lưu. Không nhận mọi OOXML hoặc mọi theme/font/numFmt thực tế.
+
+Font name, tên style mặc định và mã định dạng chỉ được giữ trong allowlist đã kiểm; numFmt tùy ý có tên, codeName hoặc attribute chưa phân loại bị chặn. Properties core/app/custom: chuỗi thành vùng có map, số/boolean/ngày kiểm kiểu và giữ nguyên; custom tên/giá trị có map inverse, HeadingPairs chỉ nhãn Worksheets với số sheet đúng, TitlesOfParts phải khớp tên sheet theo thứ tự và không được tự đổi. Sheet name có vùng riêng `duoc_sua=False`: B6/B7 phải chạy cả hai lớp trên vùng đó và gọi `kiem_thay_the`; yêu cầu thay khác gốc thì từ chối cả tệp.
+
+ST_Xstring chỉ giải mã tại shared/inline/rich text và tên sheet; text metadata theo kiểu chuỗi XML của properties. Không normalize NFD/Cf hoặc chuẩn hóa CR gốc tùy ý: map phản ánh đúng chuẩn hóa XML literal CR/CRLF thành LF, character reference và ST CR vẫn giữ CR. Chuỗi literal `_x005F_x0041_` chỉ thành literal `_x0041_`, surrogate pair thành một code point có span bao hai escape, surrogate lẻ bị chặn. Map UTF-8/UTF-16, BOM, attribute normalization và khoảng byte hai chiều; node tự đóng không có neo chèn text giả trong tail. CDATA trong part cần map bị từ chối: chưa có profile patch chứng minh cho kiểu escape khác và miền lexical không liền nhau, không giả khoảng bao delimiter là text an toàn để thay.
+
+Mỗi shared string có vùng gốc kể cả chưa được dùng; mỗi ô dùng có vùng tham chiếu riêng và danh sách đầy đủ `(số sheet, địa chỉ ô)`. Ghép rich runs trong cùng đơn vị, không nối hai ô. Đếm cả shared dùng lặp và mọi metadata, không preview. Trần Excel 32767 UTF-16 code unit được kiểm, không cắt. Giữ raw value/type/style và XML ô số/boolean/serial ngày; ghi riêng style gốc và style hiệu lực từ ô/hàng/cột, giữ epoch, merge và bytes các part.
+
+ZIP Office: B1 giải nén bounded/CRC/EOF thật sau kiểm descriptor CRC/size khớp central directory; hỗ trợ cờ nén 0x0006, bit UTF-8 và bit 3, descriptor cổ điển 12/16 bytes. Các cờ khác/extra/comment/overlap/gap/ZIP64/nhúng/part lạ vẫn chặn. `PhanZip.le_cuoi` kết thúc payload, `PhanZipExcel.le_cuoi_ban_ghi` bao descriptor; B4 phải dùng đúng hai mốc khi chép record nguyên trạng. Không sửa hoặc nén lại bytes trong B3.
+
+Chỉ RAM, không bảng ngăn mới; giữ nguyên Ngan theo mẫu và không tạo tệp tạm. Bảng làm việc dọn `finally`. Chưa phát hành năng lực tệp, chưa nối writer hoặc hai lớp/Local cho tệp. Gói văn bản đã kiểm bằng Core giả (CoreGia); reader B3 kiểm trực tiếp RAM, chưa Excel/Core/Local thật. Cloud giữ tắt, không import engine khác, Core, nguồn cũ hoặc dependency mới. B2/B3 để lead gộp khối riêng, B3 không sửa mã Word.

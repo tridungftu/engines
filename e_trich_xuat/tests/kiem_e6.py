@@ -1,7 +1,7 @@
 """Cổng E6 offline; artifact trả qua stdout/RAM, không sửa nguồn/runtime.
 
 Thiếu nguồn/bản vàng được lead chấp nhận: exit 2 (chưa kiểm).
-Nguồn sai băm: exit 3; byte khác: exit 1. Chỉ đủ mọi ca mới được exit 0.
+Nguồn sai băm: exit 3; sai tiêu chí: exit 1. Chờ lead: đo đủ nhưng exit 2.
 """
 
 import argparse
@@ -20,7 +20,9 @@ from kho_tri_thuc_sdk import danh_muc_tham_so as e1, xlsx_mini
 from kho_tri_thuc_sdk.thu import CoreGia
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
 from e_trich_xuat.tham_so import bam_bytes, doc_bo, doc_json, json_bytes
-from doi_chieu_cu_e6 import CAC_TEP_NGUON, GOC, ThieuBangAI, chay_mac_dinh_chuyen_tiep, doc_bo_cu
+from doi_chieu_cu_e6 import (CAC_TEP_NGUON, GOC, ThieuBangAI,
+                           chay_mac_dinh_chuyen_tiep, doc_bo_cu, gia_tri_cu)
+from e_trich_xuat.kiem_tra import co_nguyen_van, trich_dan_dung
 from mau_tx3 import ai_demo, app_tx3
 
 
@@ -29,6 +31,8 @@ BAM_XLSX_CU = "05846a2acd60f2cde708d13a163a137ee3fb0b4e08fd84f85a7e14e7ef861bcd"
 THIEU = "Thiếu nguồn đối chiếu E6."
 SAI_BAM = "Nguồn đối chiếu không khớp mã kiểm tra."
 CAC_PHAN = ("bo_10_cot", "tham_so", "van_ban", "cau_hoi", "bang", "phan_hoi")
+BAT_BUOC_BYTE = ("bo_10_cot", "tham_so", "van_ban")
+CHUAN_HOA = "Chỉ str.strip() khoảng trắng đầu/cuối; không NFC, không đổi khoảng trắng bên trong, số/tiền/ngày."
 
 
 class LoiKiemE6(ValueError):
@@ -59,6 +63,48 @@ def so_cac_phan(trai, phai):
     if set(trai) != set(CAC_PHAN) or set(phai) != set(CAC_PHAN):
         raise LoiKiemE6(THIEU, 2)
     return {k: so_byte(trai[k], phai[k]) for k in CAC_PHAN}
+
+
+def chuan_gia_tri(v):
+    if v is not None and not isinstance(v, str):
+        raise LoiKiemE6(THIEU, 2)
+    return v.strip() if isinstance(v, str) else None
+
+
+def so_tung_ma(cu, moi, van_ban, ds_ma, vang=None):
+    """Đọc giá trị cuối của hai pipeline; không dùng phản hồi AI thay TX-3."""
+    if ([r["ma"] for r in cu] != ds_ma or [r["ma"] for r in moi] != ds_ma
+            or len(set(ds_ma)) != len(ds_ma)
+            or vang is not None and set(vang) != set(ds_ma)):
+        raise LoiKiemE6(THIEU, 2)
+    out = []
+    for a, b in zip(cu, moi):
+        x, y = chuan_gia_tri(gia_tri_cu(a)), chuan_gia_tri(b["gia_tri"])
+        nhan = ("khớp" if x == y else "cũ có-mới null" if y is None
+                else "cũ null-mới có" if x is None else "khác")
+        qs = b["dan_chung"]
+        dan_chung = (None if y is None else bool(qs)
+                     and all(trich_dan_dung(q, van_ban) for q in qs)
+                     and co_nguyen_van(y, qs))
+        ly_do = ["Giá trị bằng nhau sau strip đầu/cuối." if x == y
+                 else "Giá trị hai luồng khác nhau sau strip đầu/cuối."]
+        if y is not None and not dan_chung:
+            ly_do.append("Giá trị mới thiếu dẫn chứng nguyên văn/offset hợp lệ hoặc không được dẫn chứng hỗ trợ.")
+        if nhan != "khớp":
+            ly_do.extend(b.get("ly_do", []))
+            if a.get("kiem_tra_tu"):
+                ly_do.append("Hậu kiểm cũ: " + a["kiem_tra_tu"])
+        row = {"ma": a["ma"], "ket_qua": nhan, "cu": x, "moi": y,
+               "dan_chung_hop_le": dan_chung, "ly_do": ly_do,
+               "dat": x == y and dan_chung is not False}
+        if vang is not None:
+            z = chuan_gia_tri(vang[a["ma"]])
+            row.update(vang=z, cu_khop_vang=x == z, moi_khop_vang=y == z)
+            row["dat"] = row["dat"] and x == z and y == z
+            if x != z or y != z:
+                ly_do.append("Giá trị khác bản vàng độc lập; giữ nguyên bản vàng.")
+        out.append(row)
+    return out
 
 
 def dong_nguyen_van(dong):
@@ -162,18 +208,23 @@ def _doc_ghim(goc, spec):
 
 def kiem_manifest(manifest, *, goc=ENGINE):
     dm, report = kiem_nguon(goc)
-    report.update(trang_thai="chua_kiem", ai_that=0, cloud=0, cac_ca=[])
+    report.update(trang_thai="chua_kiem", ai_that=0, cloud=0, cac_ca=[], chuan_hoa=CHUAN_HOA,
+                  da_kiem="đã kiểm bằng Core giả (CoreGia)")
     try:
         p = Path(manifest)
         ref = goc / "tham-chieu"
         if not p.resolve().is_relative_to(ref.resolve()) or p.is_symlink():
             raise LoiKiemE6(THIEU, 2)
-        m = doc_json(p.read_text(encoding="utf-8"))
-        if (m.get("phien_ban") != 1 or m.get("nhan") != "DEMO"
-                or not isinstance(m.get("chap_nhan_lead"), str) or not m["chap_nhan_lead"].strip()
+        manifest_raw = p.read_bytes()
+        m = doc_json(manifest_raw)
+        report["bam_manifest"] = bam_bytes(manifest_raw)
+        if (m.get("phien_ban") != 2 or m.get("nhan") != "DEMO"
+                or m.get("chap_nhan_lead") not in ("chờ lead", "đã duyệt")
+                or m.get("chap_nhan_lead") == "đã duyệt" and not m.get("bien_ban_lead")
                 or {c["loai"] for c in m["cac_ca"]} != {"thuong", "track_changes"}
                 or len({c["ma"] for c in m["cac_ca"]}) != len(m["cac_ca"])):
             raise LoiKiemE6(THIEU, 2)
+        report["chap_nhan_lead"] = m["chap_nhan_lead"]
         modules = set()
         for c in m["cac_ca"]:
             raw = {k: _doc_ghim(p.parent, c[k]) for k in ("docx", "ai", "tham_so", "vang")}
@@ -188,12 +239,23 @@ def kiem_manifest(manifest, *, goc=ENGINE):
             if (c["loai"] == "track_changes") != (cu["track_changes"] > 0):
                 raise LoiKiemE6(THIEU, 2)
             old = byte_cu(cu)
-            gold = {k: v.encode("utf-8") for k, v in vang.items()}
-            base = so_cac_phan(gold, old)
+            # Bản vàng là giá trị tự soạn từ văn bản DEMO, không là dump engine.
+            if vang.get("nhan") != "DEMO" or not isinstance(vang.get("gia_tri"), dict):
+                raise LoiKiemE6(THIEU, 2)
             new, meta = chay_module(raw["docx"], ts, ai["moi"])
             diff = so_cac_phan(old, new)
+            tung_ma = so_tung_ma(cu["bang"], doc_json(new["bang"]),
+                                 new["van_ban"].decode("utf-8"),
+                                 [r["ma"] for r in dm.cac_dong], vang["gia_tri"])
+            dat_ca = (all(diff[k]["trung_byte"] for k in BAT_BUOC_BYTE)
+                      and all(r["dat"] for r in tung_ma))
             report["cac_ca"].append({"ma": c["ma"], "loai": c["loai"],
-                "ban_vang_voi_nguon": base, "mac_dinh_voi_module": diff, "metadata": meta})
+                "byte_bat_buoc": {k: diff[k] for k in BAT_BUOC_BYTE},
+                "tham_khao_khong_cham": {k: diff[k] for k in CAC_PHAN if k not in BAT_BUOC_BYTE},
+                "tung_ma": tung_ma, "dat_do": dat_ca, "metadata": meta,
+                "nguon": {k: c[k] for k in ("docx", "ai", "tham_so", "vang")},
+                "track_changes_da_nhan": cu["track_changes"],
+                "so_cau_hoi_cu": len(cu["cau_hoi"]), "so_cau_hoi_moi": 1})
         if len(modules) < 2:
             raise LoiKiemE6(THIEU, 2)
     except LoiKiemE6 as exc:
@@ -206,10 +268,13 @@ def kiem_manifest(manifest, *, goc=ENGINE):
     except (OSError, ValueError, KeyError, TypeError, AttributeError, ThieuBangAI):
         report["loi"] = THIEU
         return report, 2
-    dat = all(v["trung_byte"] for c in report["cac_ca"]
-              for k in ("ban_vang_voi_nguon", "mac_dinh_voi_module") for v in c[k].values())
-    report["trang_thai"] = "dat" if dat else "chua_dat"
-    return report, 0 if dat else 1
+    dat = all(c["dat_do"] for c in report["cac_ca"])
+    report["ket_qua_do"] = "dat" if dat else "chua_dat"
+    report["trang_thai"] = ("chua_dat" if not dat else "dat"
+                            if m["chap_nhan_lead"] == "đã duyệt" else "chua_kiem")
+    if m["chap_nhan_lead"] == "chờ lead":
+        report["ly_do_nghiem_thu"] = "Đã đo; bộ DEMO và bản vàng chờ lead duyệt."
+    return report, (1 if not dat else 0 if m["chap_nhan_lead"] == "đã duyệt" else 2)
 
 
 def chan_doan_co_che():
@@ -234,12 +299,18 @@ def chan_doan_co_che():
         tape = {"tim_vi_tri": [{}], "hoi_trich": [[] for _ in range(so_hoi)]}
         cu = chay_mac_dinh_chuyen_tiep(ENGINE / "tham-chieu/DANH_MUC_THAM_SO.xlsx", raw, tape)
         moi, meta = chay_module(raw, ts, data)
+        tung_ma = so_tung_ma(cu["bang"], doc_json(moi["bang"]), moi["van_ban"].decode("utf-8"),
+                             [r["ma"] for r in dm.cac_dong])
+        diff = so_cac_phan(byte_cu(cu), moi)
         report["cac_ca"].append({"ma": ten, "bam_docx": bam_bytes(raw),
             "bam_bang_ai_gia": bam_bytes(json_bytes({"cu": tape, "moi": data})),
             "track_changes_da_nhan": cu["track_changes"],
             "so_cau_hoi_cu": len(cu["cau_hoi"]), "so_cau_hoi_moi": 1,
-            "ket_qua_chan_doan": "chua_dat", "metadata": meta,
-            "mac_dinh_voi_module": so_cac_phan(byte_cu(cu), moi)})
+            "ket_qua_chan_doan": "dat" if all(r["dat"] for r in tung_ma)
+                and all(diff[k]["trung_byte"] for k in BAT_BUOC_BYTE) else "chua_dat",
+            "metadata": meta, "tung_ma": tung_ma,
+            "byte_bat_buoc": {k: diff[k] for k in BAT_BUOC_BYTE},
+            "tham_khao_khong_cham": {k: diff[k] for k in CAC_PHAN if k not in BAT_BUOC_BYTE}})
     return report, 2
 
 

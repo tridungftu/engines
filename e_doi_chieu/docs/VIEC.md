@@ -4,7 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| DC-5 (phiếu mới) | Quy tắc cứng, bảo vệ số/định danh và kiểm tiền bằng số ↔ chữ trong bản ký | DC-g | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 580 passed, 0 skipped (173 ca DC-5); kiểm độc lập ĐẠT; cả ba lệnh mã 0. Bộ DEMO bắt đủ các điểm cài, không suy tỷ lệ thực tế. Nguyên văn/bộ/sàn/nhật ký được ghim; thiếu nhận diện/phân tích giữ chưa đủ kiểm. |
+| DC-5 (phiếu mới) | Quy tắc cứng, bảo vệ số/định danh và kiểm tiền bằng số ↔ chữ trong bản ký | DC-g | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã sửa ba điểm kiểm độc lập lead. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 629 passed, 0 skipped (222 ca DC-5); kiểm độc lập ĐẠT; cả ba lệnh mã 0. Bộ quét tiền 400.000–500.000 ký tự <2 giây và hủy giữa chừng đạt. Thiếu nhận diện/phân tích giữ chưa đủ kiểm. |
 | DC-4 (phiếu mới) | Căn cấu trúc, so hai lượt, edit script đầy đủ và kiểm thứ tự trang có bằng chứng | DC-c, e | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 407 passed, 0 skipped (110 ca DC-4); kiểm độc lập mã 0. Lõi 450.000 ký tự lặp: 1,1848 giây; 500 bảng: 0,1856 giây. Tích hợp phân trang tin cậy vẫn chờ C-DC-05. |
 | 0 | Đọc `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` và `docs\YEU-CAU-VA-HIEN-TRANG.md`; lập kế hoạch lát có giờ ước tính; trình Anh | — | Chờ làm | Kế hoạch phải đối chiếu 3 yêu cầu bắt buộc |
 | 1 | DC-0: khảo sát ABBYY (tọa độ từ, cờ nghi ngờ), từ điển tiếng Việt, cách phát hiện sửa tay; dựng bộ mẫu | — | Chờ làm |  |
@@ -25,6 +25,78 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
 
 ## DC-5 — 15/11/2026
+
+### Sửa theo kiểm độc lập lead
+
+**Kết luận: Đạt ba điểm sửa được giao; PR: chờ lead mở.** Đã kiểm bằng
+Core giả (CoreGia), chỉ DEMO, 0 Cloud, không commit/push.
+
+- Chỉ sửa `quy_tac.py`, `tien_chu.py`, `tests/test_dc5.py` cùng ba tài
+  liệu VIEC/CHANGELOG/NGUON. Giữ `_chung/**`, `ngan.py`, `cau_hinh.py`,
+  API/schema/manifest và các phần DC-3/4/8.
+- Bỏ `.*` giữa từ chỉ số và đơn vị, thay bằng một lần quét token, kiểm
+  hủy mỗi 256 token. Rà regex cả hai tệp và đổi hai mẫu số kèm đơn vị
+  sang quét số một lần rồi kiểm đơn vị tại cuối số. Không còn `.*`/`.+`;
+  regex số có phân cách trong `doc_so` đã chặn đầu vào 200 ký tự, các
+  nhóm còn lại không có hậu tố bắt buộc khiến quét lại dãy số.
+- Thêm kiểm hủy khi lập chỉ mục từ, quét số/nhãn/đơn vị/phủ định/ngày.
+  Giới hạn toàn cụm tiền chữ 64 từ; không cắt ngầm, vượt giữ nguyên văn,
+  `can_xem`, `khop=null` và lý do nêu giới hạn.
+- Parser hỗ trợ một nghìn tỷ, một nghìn hai trăm tỷ, hai nghìn linh/lẻ
+  năm, hai mươi năm, mười năm, một trăm năm; một cấp tỷ, số nguyên dưới
+  10^15. Thiếu/lặp/đảo cấp hoặc cách đọc chưa chắc vẫn cần xem.
+- Chỉ ghép ngoặc không nhãn khi ngay sau một số tiền duy nhất cùng
+  dòng/ô và không có đuôi mơ hồ/ngoặc lồng. Chữ đọc được trái số/tiền tệ
+  → Nghiêm trọng; không đọc được → Cần xem. Offset giữ đúng nguyên văn.
+- Nâng thuật toán `DC-5-1 → DC-5-2` trong khóa/băm hiện có, tránh tái
+  dùng snapshot có kết quả phân tích cũ; không đổi cổng API.
+
+Thêm 49 ca (tổng 222 ca DC-5): ngữ pháp/cặp tiền mới, ngoặc đúng/lệch/
+không đọc được/mơ hồ/khác dòng ô, trần 64 từ, hiệu năng và hủy giữa chừng.
+Test hiệu năng chạy trong tiến trình con với timeout 10 giây để test
+hồi quy không treo cả pytest. Số đo thực trên bộ quét tiền, adapter offset
+đồng nhất DEMO (không bao gồm chuẩn hóa/đối chiếu toàn tuyến Core/OCR):
+
+| Đầu vào | Ký tự | Giây |
+|---|---:|---:|
+| `"năm " * 100000`, không đơn vị | 400.000 | 0,0640 |
+| `"một trăm " * 50000`, không đơn vị | 450.000 | 0,0690 |
+| Nhiều cặp tiền hợp lệ, mỗi cặp một dòng | 500.000 | 0,4418 |
+| Nhiều cụm tiền trên cùng một dòng, giữ mơ hồ | 500.000 | 0,0482 |
+| Dãy `1.1.1…` thiếu đơn vị | 500.000 | 0,4450 |
+| Dãy số dài có đơn vị | 499.999 | 0,4591 |
+
+Hai dòng cuối lấy thời gian lớn hơn giữa bộ quét tiền nội bộ và bộ quét
+đặc trưng. Tất cả dưới 2 giây; không suy thành tốc độ toàn tuyến hoặc
+chất lượng nhận dạng. Các test hủy giữa quét token, số và lập chỉ mục
+đạt; ngữ cảnh thật vẫn nhận `viec.kiem_huy` qua lớp bọc hiện có.
+
+Kết quả thật bằng `.venv/Scripts/python`, Python 3.13.14, pytest 9.1.1,
+SDK 2.0.0 offline (SHA wheel khớp `SHA256SUMS.txt`), có
+`PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`:
+
+```text
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q --basetemp=.pytest-tmp
+629 passed in 32.33s
+0 skipped; mã thoát 0.
+
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.4.0: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 ĐẠT; mã thoát 0.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0.
+```
+
+Thời gian sửa thực tế: **16:04–16:17 ngày 15/11/2026 (UTC+7), khoảng
+0,22 giờ**; phiếu DC-5 ước tính **5 giờ**,
+không có dự toán riêng cho lượt sửa. SHA-256 chuẩn LF hiện hành ở NGUON.
+Không lệch phạm vi; **không phát sinh Cần Core/Chờ Anh mới**. Các C-DC
+hiện có tiếp tục mở, chưa kiểm Linux/Core thật/OCR/model thật.
+
+### Bản bàn giao trước kiểm độc lập (lịch sử)
 
 **Kết luận: Đạt phạm vi DC-5; PR: chờ lead mở.** Đã kiểm bằng Core giả
 (CoreGia), NganBoNho và adapter tệp con/ảnh/phân trang DEMO kế thừa DC-3/4.

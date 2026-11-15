@@ -13,10 +13,11 @@ from . import so_chu as sc
 from .can_chinh import BanDo
 from .chuan_hoa import chuan_hoa
 from .ngan import NganXungDot
-from .tien_chu import chuan_chu, doc_ngay, doc_so, doc_tien_chu, doc_tien_so, so_json
+from .tien_chu import (TOI_DA_TU_TIEN_CHU, chuan_chu, doc_ngay, doc_so,
+                       doc_tien_chu, doc_tien_so, so_json, vuot_cum_tien_chu)
 from .vi_tri import loi
 
-PHIEN_BAN = "DC-5-1"
+PHIEN_BAN = "DC-5-2"
 CAC_VUNG = ("ben_ky", "nguoi_dai_dien", "chuc_vu", "mst", "stk", "dia_chi", "so_hop_dong")
 CAC_QUY_TAC = ("DC_CHU_SO", "DC_NGAY_THOI_HAN", "DC_TIEN_TY_LE", "DC_TIEN_CHU",
                "DC_DINH_DANH", "DC_CAU_TRUC", "DC_PHU_DINH_BAT_BUOC", "DC_OCR_NHAM")
@@ -33,6 +34,10 @@ _SO = re.compile(r"(?<!\w)[+\-−]?[0-9]+(?:[.,][0-9]+|[ \u00a0][0-9]{3}(?![0-9]
 _NGAY = re.compile(r"(?<!\w)(?:[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}|[0-9]{1,2}/[0-9]{1,2}/[0-9]{4})(?!\w)")
 _PHU = re.compile(r"\b(?:ngoại\s+trừ|có\s+thể|không|chưa|chỉ|trừ|phải|được|not|shall|must|may|except)\b", re.I)
 _TU = re.compile(r"\w+", re.UNICODE)
+_TU_SO = frozenset(("không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín",
+                    "mười", "mươi", "trăm", "nghìn", "ngàn", "triệu", "tỷ", "tỉ"))
+_DON_VI_CHU = frozenset(("đồng", "vnd", "usd", "eur"))
+_MA_TIEN = re.compile(r"\s*[A-Z]{3}(?!\w)")
 _MUC = {"nhieu_ocr": 0, "hinh_thuc": 1, "can_xem": 2, "nghiem_trong": 3}
 
 
@@ -127,7 +132,12 @@ class _Ban:
         ch = chuan_hoa(v, q, kiem)
         self.raw, self.text, self.map = v["van_ban"], ch["van_ban"], BanDo(ch)
         self.bam = hs.bam(self.raw.encode("utf-8"))
-        self.tu = _ChiMuc([self.vung(m.start(), m.end(), "tu") for m in _TU.finditer(self.text)])
+        tu = []
+        for i, m in enumerate(_TU.finditer(self.text)):
+            if i % 256 == 0:
+                kiem()
+            tu.append(self.vung(m.start(), m.end(), "tu"))
+        self.tu = _ChiMuc(tu)
 
     def vung(self, a, b, loai, **phu):
         while a > 0 and not self.map.bien_an_toan(a):
@@ -178,8 +188,10 @@ def _dac_trung(ban, q):
         n = doc_so(m.group(), q["dinh_dang_so"])
         ds.append(ban.vung(m.start(), m.end(), "so", gia_tri=None if n is None else so_json(n)))
     for m in _PHU.finditer(ban.text):
+        ban.kiem()
         ds.append(ban.vung(m.start(), m.end(), "phu_dinh"))
     for m in _NGAY.finditer(ban.text):
+        ban.kiem()
         ds.append(ban.vung(m.start(), m.end(), "ngay", ngay=doc_ngay(m.group(), q["dinh_dang_ngay"])))
     for loai, pat in (
         ("thoi_han", r"\b(?:thời\s+hạn|thời\s+điểm|hạn\s+(?:trả|giao|thanh\s+toán)|ngày|tháng|năm|date|duration|term|days?|months?|years?|deadline)\b"),
@@ -194,11 +206,11 @@ def _dac_trung(ban, q):
     if q["don_vi_tien"]:
         pat = r"(?<!\w)(?:" + "|".join(re.escape(x) for x in sorted(q["don_vi_tien"], key=len, reverse=True)) + r")(?!\w)"
         for m in re.finditer(pat, ban.text, re.I):
+            ban.kiem()
             ds.append(ban.vung(m.start(), m.end(), "don_vi_tien"))
     # Mã tiền chưa có quy ước vẫn là vùng phải bảo vệ, không tự suy giá trị.
-    for m in re.finditer(r"(?<!\w)[+\-]?[0-9]+(?:[.,][0-9]+)*\s*[A-Z]{3}(?!\w)", ban.text):
-        ban.kiem()
-        ds.append(ban.vung(m.start(), m.end(), "tien"))
+    for a, b in _cum_tien_so(ban.text, _MA_TIEN, ban.kiem):
+        ds.append(ban.vung(a, b, "tien"))
     return ds
 
 
@@ -264,40 +276,85 @@ def _lat(ban, a, b):
     return {"nguyen_van": v["nguyen_van"], "bat_dau": v["bat_dau"], "ket_thuc": v["ket_thuc"], "vi_tri": None}
 
 
+def _cum_tien_so(text, don_vi, kiem):
+    """Quét số một lần; đơn vị chỉ kiểm tại cuối số, không thử lại hậu tố.
+
+    Nếu gắn đơn vị vào regex số, một dãy dài như "1.1.1..." thiếu đơn vị
+    sẽ bị quét lại từ từng nhóm số. Hai bước này giữ chi phí tuyến tính.
+    """
+    for m in _SO.finditer(text):
+        kiem()
+        dv = don_vi.match(text, m.end())
+        if dv is not None:
+            yield m.start(), dv.end()
+
+
+def _co_tien_chu(text, kiem):
+    """Không dùng wildcard nối từ chỉ số với đơn vị trên cả dòng."""
+    co_so = False
+    for i, m in enumerate(_TU.finditer(text)):
+        if i % 256 == 0:
+            kiem()
+        tu = m.group().casefold()
+        if tu in _TU_SO:
+            co_so = True
+        elif co_so and tu in _DON_VI_CHU:
+            return True
+    return False
+
+
 def _kiem_tien_noi_bo(ban, q, kiem):
     """Ghép duy nhất trong cùng dòng/ô; không nối một số với chữ ở khoản khác."""
     ds = []
     units = sorted(set(q["don_vi_tien"]) | {"VND", "VNĐ", "USD", "EUR", "GBP", "JPY", "đồng", "đô la", "đô la Mỹ", "$", "€", "¥", "£", "₫"}, key=len, reverse=True)
     pat_don_vi = r"(?:" + "|".join(re.escape(x) for x in units) + r"|[A-Z]{3})(?!\w)"
-    pat_tien = r"(?<!\w)[+\-−]?[0-9]+(?:[.,][0-9]+|[ \u00a0][0-9]{3}(?![0-9]))*\s*" + pat_don_vi
+    don_vi = re.compile(r"\s*" + pat_don_vi, re.I)
     for line in re.finditer(r"[^\n\f\t|]+", ban.text):
         kiem()
         text, off = line.group(), line.start()
-        marks = list(re.finditer(r"\b(?:bằng\s+chữ|in\s+words)\s*[:：]?\s*", text, re.I))
+        marks = []
+        for m in re.finditer(r"\b(?:bằng\s+chữ|in\s+words)\s*[:：]?\s*", text, re.I):
+            kiem()
+            marks.append(m)
         # Tìm mọi cụm số + đơn vị, kể cả đơn vị chưa biết. Không suy tiền tệ.
-        amounts = list(re.finditer(pat_tien, text, re.I))
-        words_money = re.search(r"\b(?:không|một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười|trăm|triệu|tỷ)\b.*\b(?:đồng|VND|USD|EUR)\b", text, re.I)
+        amounts = list(_cum_tien_so(text, don_vi, kiem))
+        words_money = _co_tien_chu(text, kiem)
         if not marks and not amounts and not words_money:
             continue
         so, chu, tien_so, tien_chu = None, None, None, None
         ly_do = "Chưa nhận diện duy nhất cặp tiền bằng số và bằng chữ trong cùng dòng hoặc ô."
+        a_chu, b_chu = None, None
         if len(marks) == 1:
             m = marks[0]
             # Lấy trọn phần sau nhãn; chỉ bỏ ngoặc đóng/dấu câu kết thúc.
             end = len(text.rstrip(" .;"))
             if end > m.end() and text[end - 1:end] == ")":
                 end -= 1
-            chu = _lat(ban, off + m.end(), off + end)
-            tien_chu = doc_tien_chu(text[m.end():end], q["don_vi_tien"])
-            before = [x for x in amounts if x.end() <= m.start()]
+            a_chu, b_chu = m.end(), end
+            before = [x for x in amounts if x[1] <= m.start()]
             # Không chấp nhận một dòng có nhiều số tiền dù có thể chọn số gần nhất.
             if len(before) == 1 and len(amounts) == 1:
-                x = before[0]
-                so = _lat(ban, off + x.start(), off + x.end())
-                tien_so = doc_tien_so(x.group(), q["don_vi_tien"], q["dinh_dang_so"])
+                a, b = before[0]
+                so = _lat(ban, off + a, off + b)
+                tien_so = doc_tien_so(text[a:b], q["don_vi_tien"], q["dinh_dang_so"])
         elif len(amounts) == 1:
-            x = amounts[0]
-            so = _lat(ban, off + x.start(), off + x.end())
+            a, b = amounts[0]
+            so = _lat(ban, off + a, off + b)
+            # Ngoặc ngay sau một số tiền duy nhất, cùng dòng/ô; không ghép
+            # qua nội dung trung gian, ngoặc lồng hoặc nhãn không duy nhất.
+            ngoac = re.compile(r"\s*\(").match(text, b)
+            if not marks and ngoac is not None:
+                end = text.find(")", ngoac.end())
+                if (end >= 0 and "(" not in text[ngoac.end():end]
+                        and not text[end + 1:].strip(" .;")):
+                    a_chu, b_chu = ngoac.end(), end
+                    tien_so = doc_tien_so(text[a:b], q["don_vi_tien"], q["dinh_dang_so"])
+        if a_chu is not None:
+            chu = _lat(ban, off + a_chu, off + b_chu)
+            if not vuot_cum_tien_chu(text[a_chu:b_chu]):
+                tien_chu = doc_tien_chu(text[a_chu:b_chu], q["don_vi_tien"])
+        if vuot_cum_tien_chu(text[a_chu:b_chu] if a_chu is not None else text):
+            ly_do = f"Cụm tiền bằng chữ vượt {TOI_DA_TU_TIEN_CHU} từ; cần xem lại nguyên văn."
         du = tien_so is not None and tien_chu is not None
         if du:
             khop = tien_so["tien_te"] == tien_chu["tien_te"] and doc_so(str(tien_so["so"]), [{"nghin": None, "thap_phan": "."}]) == tien_chu["so"]

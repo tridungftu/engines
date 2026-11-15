@@ -1,5 +1,29 @@
 # Thay đổi
 
+## DC-5 — sửa theo kiểm độc lập lead, 15/11/2026 · chưa phát hành
+
+- Bỏ ReDoS ở nhận diện tiền chữ; quét token tuyến tính và kiểm hủy trong
+  dòng dài. Hai mẫu tìm số kèm đơn vị cũng đổi thành quét số một lần rồi
+  kiểm đơn vị phía sau, tránh quét lại dãy số dài thiếu đơn vị.
+- Cụm tiền chữ tối đa 64 từ; vượt giữ Cần xem, `khop=null`, nguyên văn
+  đầy đủ. Bổ sung nghìn tỷ, hai nghìn linh năm, năm/lăm ở hàng chục và
+  cách đọc gọn một trăm năm. Ngoài ngữ pháp vẫn chưa đủ kiểm.
+- Ngoặc ngay sau một số tiền duy nhất, cùng dòng/ô, không cần nhãn:
+  `1.000.000 đồng (hai triệu đồng)` → Nghiêm trọng; chữ không đọc được
+  → Cần xem. Cụm mơ hồ/nhiều số/ngoặc lồng không tự ghép.
+- Thuật toán `DC-5-2` không tái dùng kết quả cũ. Chỉ sửa hai tệp runtime
+  và `tests/test_dc5.py`; giữ `_chung/**`, `ngan.py`, `cau_hinh.py` và API.
+- Đã kiểm bằng Core giả (CoreGia): **629 passed, 0 skipped** (222 ca DC-5,
+  thêm 49 ca), SDK DEMO **1/1 ĐẠT**, kiểm độc lập **ĐẠT**, cả ba lệnh mã 0.
+  Bộ quét: `năm * 100000` **0,0640 giây**, `một trăm * 50000`
+  **0,0690 giây**, 500.000 ký tự nhiều cụm tiền **0,4418 giây**;
+  cùng một dòng **0,0482 giây**. Dãy số thiếu/có đơn vị khoảng 500.000
+  ký tự (lấy thời gian lớn hơn giữa quét tiền và đặc trưng) **0,4450 /
+  0,4591 giây**; tất cả <2 giây. Có test hủy giữa vòng quét/lập chỉ mục.
+  Đây là số đo bộ quét bằng adapter DEMO, không phải toàn tuyến/OCR.
+- SHA-256 LF hiện hành ở NGUON; PR: **chờ lead mở**. Chưa kiểm Core thật/
+  Linux/OCR/model thật; không phát sinh Cần Core/Chờ Anh, không commit/push.
+
 ## DC-5 — 15/11/2026 · chưa phát hành
 
 - Hoàn thiện `doi_chieu.so_van_ban@1` trong đúng ba tệp runtime:

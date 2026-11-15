@@ -2,6 +2,10 @@
 from copy import deepcopy
 from decimal import Decimal
 import importlib
+import json
+from pathlib import Path
+import subprocess
+import sys
 import unicodedata
 
 import pytest
@@ -108,6 +112,12 @@ def test_ma_tran_khong_lech_khong_tu_sinh_nghiem_trong(mau, ten, a, b, quy_tac):
     ("105 VND", "một trăm linh năm đồng", 105),
     ("1.000.005 VND", "một triệu không trăm lẻ năm đồng", 1000005),
     ("1.000.000.000 VND", "một tỷ đồng", 1000000000),
+    ("1.000.000.000.000 VND", "một nghìn tỷ đồng", 1000000000000),
+    ("1.200.000.000.000 VND", "một nghìn hai trăm tỷ đồng", 1200000000000),
+    ("2005 VND", "hai nghìn linh năm đồng", 2005),
+    ("25 VND", "hai mươi năm đồng", 25),
+    ("15 VND", "mười năm đồng", 15),
+    ("105 VND", "một trăm năm đồng", 105),
 ])
 def test_tien_noi_bo_giong_nhau_khop_chi_khi_phan_tich_du(mau, so, chu, gia_tri):
     s = chay_cap(mau, f"DEMO số tiền {so} (Bằng chữ: {chu}).")
@@ -168,10 +178,20 @@ def test_mo_ho_thieu_khong_doc_duoc_khong_tu_coi_khop(mau, text):
     ("một trăm mười", 110), ("chín trăm chín mươi chín", 999),
     ("một tỷ hai triệu ba nghìn bốn trăm linh năm", 1002003405),
     ("một ngàn", 1000), ("một tỉ", 1000000000),
-    ("một trăm năm", None), ("mười mốt", None), ("một mươi", None),
+    ("một trăm năm", 105), ("mười mốt", None), ("một mươi", None),
     ("một triệu triệu", None), ("một nghìn một triệu", None), ("một tỷ triệu", None),
     ("triệu", None), ("một trăm linh", None), ("một trăm linh không", None),
-    ("một phẩy năm", None), ("một nghìn tỷ", None),
+    ("một phẩy năm", None), ("một nghìn tỷ", 1000000000000),
+    ("một nghìn hai trăm tỷ", 1200000000000),
+    ("hai nghìn linh năm", 2005), ("hai nghìn lẻ năm", 2005),
+    ("hai mươi năm", 25), ("mười năm", 15),
+    ("một ngàn tỉ", 1000000000000),
+    ("một nghìn hai trăm tỷ hai triệu ba nghìn linh năm", 1200002003005),
+    ("chín trăm chín mươi chín nghìn chín trăm chín mươi chín tỷ", 999999000000000),
+    ("một triệu tỷ", None), ("nghìn tỷ", None), ("một tỷ tỷ", None),
+    ("một nghìn tỷ một tỷ", None), ("một nghìn tỷ triệu", None),
+    ("một nghìn tỷ một nghìn triệu", None), ("linh năm", None),
+    ("hai nghìn linh mười", None), ("hai nghìn linh không", None),
 ])
 def test_ngu_phap_chu_nghiem_khong_doan(chu, so):
     assert tc.doc_chu_so(chu) == so
@@ -524,3 +544,142 @@ def test_vuot_tran_tinh_ca_diem_kiem_noi_bo(mau):
     mau.cau_hinh["diem_lech_toi_da"] = 1
     mau.dat_cau_hinh()
     kiem_loi(so(mau), "DC_QUA_GIOI_HAN")
+
+
+@pytest.mark.parametrize("chu,khop,muc", [
+    ("một triệu đồng", True, None),
+    ("hai triệu đồng", False, "nghiem_trong"),
+    ("một triệu USD", False, "nghiem_trong"),
+    ("hai trẹo đồng", None, "can_xem"),
+    ("nghìn tỷ đồng", None, "can_xem"),
+])
+def test_ngoac_tien_chu_khong_nhan(mau, chu, khop, muc):
+    text = f"DEMO 1.000.000 đồng ({chu})."
+    s = chay_cap(mau, text)
+    x, = s["kiem_quy_tac"]["tien_bang_chu"]["danh_sach"]
+    assert x["khop"] is khop and x["da_kiem_du"] is (khop is not None)
+    assert x["so"]["nguyen_van"] == "1.000.000 đồng"
+    assert x["chu"]["nguyen_van"] == chu
+    for p in (x["so"], x["chu"], x["nguyen_van"]):
+        assert text[p["bat_dau"]:p["ket_thuc"]] == p["nguyen_van"]
+    if muc is None:
+        assert not s["diem_lech"]
+    else:
+        d, = s["diem_lech"]
+        assert d["muc_san"] == d["muc"] == muc
+        assert d["quy_tac_trung"] == (["DC_TIEN_CHU"] if khop is False else [])
+
+
+@pytest.mark.parametrize("text", [
+    "DEMO 1.000.000 đồng và ghi chú (hai triệu đồng).",
+    "DEMO 1.000.000 đồng (hai triệu đồng) và ghi chú.",
+    "DEMO 1.000.000 đồng ((hai triệu đồng)).",
+    "DEMO 1.000.000 đồng (hai triệu đồng). 2.000.000 đồng.",
+    "DEMO 1.000.000 đồng (hai triệu đồng",
+    "DEMO 1.000.000 đồng\n(hai triệu đồng).",
+    "DEMO 1.000.000 đồng\t(hai triệu đồng).",
+    "DEMO 1.000.000 đồng | (hai triệu đồng).",
+])
+def test_ngoac_mo_ho_khong_ghep_chu_voi_so(mau, text):
+    s = chay_cap(mau, text)
+    ds = s["kiem_quy_tac"]["tien_bang_chu"]["danh_sach"]
+    assert ds and all(not x["da_kiem_du"] and x["khop"] is None for x in ds)
+    assert all(d["muc_san"] == "can_xem" for d in s["diem_lech"])
+
+
+@pytest.mark.parametrize("nhan", ["Bằng chữ: ", ""])
+def test_cum_tien_chu_vuot_64_tu_bao_can_xem_giu_nguyen_van(mau, nhan):
+    chu = "một trăm " * 40 + "đồng"
+    s = chay_cap(mau, f"DEMO 100 VND ({nhan}{chu}).")
+    x, = s["kiem_quy_tac"]["tien_bang_chu"]["danh_sach"]
+    assert not x["da_kiem_du"] and x["khop"] is None and x["tien_bang_chu"] is None
+    assert x["chu"]["nguyen_van"] == chu and "64" in x["ly_do"]
+    d, = s["diem_lech"]
+    assert d["muc_san"] == "can_xem" and not d["quy_tac_trung"]
+
+
+def test_bien_64_tu_khong_cat_duoi_de_doan():
+    assert not tc.vuot_cum_tien_chu("một " * 63 + "đồng")
+    assert tc.vuot_cum_tien_chu("một " * 64 + "đồng")
+    assert tc.doc_chu_so("một " * 100000) is None
+    assert tc.doc_tien_chu("một " * 100000 + "đồng", {"đồng": "VND"}) is None
+
+
+class BanQuetDemo:
+    """Adapter offset đồng nhất chỉ để đo bộ quét, không đo OCR/chuẩn hóa."""
+    def __init__(self, text, kiem=lambda: None):
+        self.text, self.kiem = text, kiem
+
+    def vung(self, a, b, loai, **phu):
+        return {"bat_dau": a, "ket_thuc": b, "nguyen_van": self.text[a:b], "loai": loai, **phu}
+
+
+@pytest.mark.parametrize("ca", ["nam", "mot_tram", "nhieu_cum", "nhieu_cum_mot_dong", "so_thieu_don_vi", "so_co_don_vi"])
+def test_hieu_nang_quet_tien_duoi_hai_giay(ca):
+    # Tiến trình con có timeout để bản hồi quy ReDoS không treo cả pytest.
+    script = """
+import json, sys, time
+sys.path.insert(0, sys.argv[1])
+from test_dc5 import qt, bo_demo, BanQuetDemo
+ca = sys.argv[2]
+cum = 'DEMO 1000 VND (một nghìn đồng).'
+text = {'nam': lambda: 'năm ' * 100000,
+        'mot_tram': lambda: 'một trăm ' * 50000,
+        'nhieu_cum': lambda: (cum + '\\n') * (500000 // (len(cum) + 1)),
+        'nhieu_cum_mot_dong': lambda: (cum + ' ') * (500000 // (len(cum) + 1)),
+        'so_thieu_don_vi': lambda: '1.' * 250000,
+        'so_co_don_vi': lambda: '1.' * 249997 + '1 VND'}[ca]()
+text += ' ' * (500000 - len(text)) if ca.startswith('nhieu_cum') else ''
+q = bo_demo()['quy_tac_cung']
+t = time.perf_counter()
+ds = qt._kiem_tien_noi_bo(BanQuetDemo(text), q, lambda: None)
+giay = time.perf_counter() - t
+if ca in ('nam', 'mot_tram', 'so_thieu_don_vi'):
+    assert not ds
+elif ca == 'nhieu_cum':
+    assert len(ds) > 10000 and all(x['khop'] is True for x in ds)
+else:
+    assert ds and all(x['khop'] is None for x in ds)
+if ca.startswith('so_'):
+    t = time.perf_counter()
+    qt._dac_trung(BanQuetDemo(text), q)
+    giay = max(giay, time.perf_counter() - t)
+print(json.dumps({'ca': ca, 'ky_tu': len(text), 'giay': giay}))
+"""
+    kq = subprocess.run([sys.executable, "-B", "-c", script, str(Path(__file__).resolve().parent), ca],
+                        capture_output=True, text=True, encoding="utf-8", timeout=10, check=True)
+    do = json.loads(kq.stdout)
+    print(f"DEMO bộ quét {do['ca']}: {do['ky_tu']} ký tự, {do['giay']:.4f} giây")
+    assert do["giay"] < 2
+
+
+@pytest.mark.parametrize("text", ["năm " * 100000, "một trăm " * 50000, "1 VND; " * 50000],
+                         ids=["nam", "mot_tram", "nhieu_so"])
+def test_huy_giua_vong_quet_tien_dai(text):
+    so_lan = 0
+    def kiem():
+        nonlocal so_lan
+        so_lan += 1
+        if so_lan == 20:
+            raise ViecDaHuy()
+    with pytest.raises(ViecDaHuy):
+        qt._kiem_tien_noi_bo(BanQuetDemo(text, kiem), bo_demo()["quy_tac_cung"], kiem)
+    assert so_lan == 20
+
+
+def test_huy_khi_lap_chi_muc_tu_tren_mot_dong_dai():
+    text = "DEMO " * 1000
+    so_lan = 0
+    def kiem():
+        nonlocal so_lan
+        so_lan += 1
+        if so_lan == 3:
+            raise ViecDaHuy()
+    # BanDo và chuẩn hóa được kiểm riêng ở DC-3/4; buộc hủy lúc quét từ DC-5.
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(qt, "chuan_hoa", lambda v, q, k: {"van_ban": text})
+        mp.setattr(qt, "BanDo", lambda ch: None)
+        mp.setattr(qt._Ban, "vung", lambda self, a, b, loai: {"bat_dau": a, "ket_thuc": b})
+        with pytest.raises(ViecDaHuy):
+            qt._Ban({"van_ban": {"ban_ky": {"van_ban_tai_lieu": {"van_ban": text}}}}, "ban_ky", kiem)
+    assert so_lan == 3

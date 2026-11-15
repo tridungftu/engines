@@ -63,6 +63,12 @@ def doc_ngay(chu, dinh_dang=("YYYY-MM-DD",)):
 _DON = {"không": 0, "một": 1, "hai": 2, "ba": 3, "bốn": 4, "năm": 5,
         "sáu": 6, "bảy": 7, "tám": 8, "chín": 9}
 _HANG = {"tỷ": 9, "tỉ": 9, "triệu": 6, "nghìn": 3, "ngàn": 3}
+TOI_DA_TU_TIEN_CHU = 64
+
+
+def vuot_cum_tien_chu(chu):
+    """Kiểm toàn cụm, không cắt đuôi rồi phân tích như một số hợp lệ."""
+    return len(chu.split(None, TOI_DA_TU_TIEN_CHU)) > TOI_DA_TU_TIEN_CHU
 
 
 def _tram(tu):
@@ -77,8 +83,11 @@ def _tram(tu):
         if tu[0] in ("linh", "lẻ"):
             return kq + _DON[tu[1]] if len(tu) == 2 and tu[1] in _DON and _DON[tu[1]] > 0 else None
     if len(tu) == 1:
-        # Sau hàng trăm phải đọc rõ linh/lẻ hoặc hàng chục.
-        return (10 if tu[0] == "mười" else _DON.get(tu[0])) if not co_tram else (kq + 10 if tu[0] == "mười" else None)
+        if tu[0] == "mười":
+            return kq + 10
+        n = _DON.get(tu[0])
+        # Chấp nhận cách đọc gọn "một trăm năm" = 105.
+        return n if not co_tram else (kq + n if kq and n else None)
     if tu[0] == "mười":
         chuc, du = 1, tu[1:]
     elif len(tu) >= 2 and tu[0] in _DON and _DON[tu[0]] >= 2 and tu[1] == "mươi":
@@ -94,24 +103,17 @@ def _tram(tu):
         n = 5
     elif don in ("mốt", "tư") and chuc >= 2:
         n = {"mốt": 1, "tư": 4}[don]
-    elif don in _DON and _DON[don] > 0 and don != "năm":
+    elif don in _DON and _DON[don] > 0:
         n = _DON[don]
     else:
         return None
     return kq + chuc * 10 + n
 
 
-def doc_chu_so(chu):
-    """Ngữ pháp tiếng Việt từ 0 tới dưới 10^12; ngoài phạm vi trả None.
-
-    Không đoán cụm thiếu (triệu đồng), thứ tự sai, viết tắt hoặc chữ OCR sai.
-    """
-    tu = chuan_chu(chu).split()
-    if not tu or len(tu) > 100:
+def _duoi_ty(tu, co_hang=False):
+    if not tu:
         return None
-    if tu[-1] == "chẵn":
-        tu = tu[:-1]
-    tong, nhom, truoc = 0, [], 12
+    tong, nhom, truoc = 0, [], 9
     for t in tu:
         if t not in _HANG:
             nhom.append(t)
@@ -122,8 +124,13 @@ def doc_chu_so(chu):
             return None
         tong += n * 10 ** bac
         nhom, truoc = [], bac
+        co_hang = True
     if nhom:
-        n = _tram(nhom)
+        # Hàng đơn vị sau hàng nghìn/triệu/tỷ có thể đọc "linh năm".
+        if co_hang and len(nhom) == 2 and nhom[0] in ("linh", "lẻ"):
+            n = _DON.get(nhom[1]) or None
+        else:
+            n = _tram(nhom)
         if n is None:
             return None
         tong += n
@@ -132,8 +139,34 @@ def doc_chu_so(chu):
     return tong
 
 
+def doc_chu_so(chu):
+    """Ngữ pháp hữu hạn, tối đa 64 từ, số nguyên từ 0 tới dưới 10^15.
+
+    Một cấp tỷ, phần trước cho phép nghìn tỷ; không đoán cụm thiếu,
+    thứ tự sai, cấp lặp, viết tắt hoặc chữ OCR sai.
+    """
+    if vuot_cum_tien_chu(chu):
+        return None
+    tu = chuan_chu(chu).split()
+    if tu and tu[-1] == "chẵn":
+        tu = tu[:-1]
+    ty = [i for i, t in enumerate(tu) if t in ("tỷ", "tỉ")]
+    if not ty:
+        return _duoi_ty(tu)
+    if len(ty) != 1:
+        return None
+    i = ty[0]
+    dau = _duoi_ty(tu[:i])
+    if dau is None or not 0 < dau < 1000000:
+        return None
+    du = _duoi_ty(tu[i + 1:], co_hang=True) if i + 1 < len(tu) else 0
+    return None if du is None else dau * 1000000000 + du
+
+
 def doc_tien_chu(chu, don_vi):
     """Chỉ nhận khi toàn bộ cụm và đơn vị đã được khai, không suy từ ký hiệu $."""
+    if vuot_cum_tien_chu(chu):
+        return None
     text = chuan_chu(chu).strip(" .;\t\r\n")
     if text.endswith(" chẵn"):
         text = text[:-5].rstrip()

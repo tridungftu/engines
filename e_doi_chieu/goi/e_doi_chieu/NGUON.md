@@ -2,6 +2,21 @@
 
 ## DC-5 — 15/11/2026
 
+Sửa theo kiểm độc lập lead: bỏ regex wildcard nối chữ số với đơn vị;
+quét token có kiểm hủy, tách lần quét số khỏi lần kiểm đơn vị để không
+quét lại hậu tố số dài. Rà toàn bộ regex của hai tệp: không còn `.*`/`.+`;
+regex phân cách trong `doc_so` chỉ nhận tối đa 200 ký tự, các nhóm còn
+lại có dấu phân cách tách biệt hoặc chiều dài hữu hạn. Không thêm nguồn
+ngoài/dependency. Phiên bản thuật toán `DC-5-2` tránh dùng lại kết quả cũ.
+
+Parser giới hạn toàn cụm tiền chữ **64 từ**, giữ nguyên văn và Cần xem
+khi vượt. Ngữ pháp bổ sung nghìn tỷ (số nguyên dưới 10^15), linh/lẻ sau
+hàng lớn, cách đọc năm/lăm và hàng trăm đọc gọn. Ngoặc chữ ngay sau một
+số tiền duy nhất cùng dòng/ô được kiểm kể cả không có nhãn. Bộ test
+hiệu năng sinh chuỗi DEMO trong RAM; tiến trình con có timeout để chặn
+test hồi quy ReDoS treo pytest. Số đo chỉ cho bộ quét tiền/đặc trưng,
+adapter offset đồng nhất; không phải thời gian toàn tuyến Core/OCR.
+
 `quy_tac.py`, `tien_chu.py` viết mới trong workspace theo DAC-TA §5.1,
 DC-g và phiếu DC-5. Chỉ dùng thư viện chuẩn Python/SDK 2.0.0; không tải
 mạng, chép từ điển/model/font hoặc thêm dependency. `chay.py` chỉ đổi
@@ -22,9 +37,10 @@ SHA-256 hiện hành UTF-8 sau CRLF→LF (các bảng lát trước là lịch s
 
 | Tệp trong gói | SHA-256 LF |
 |---|---|
-| `e_doi_chieu/quy_tac.py` | `ac2eb150649f14ecf9ea4fd5e8c4a4d8e58c5871085e3e06c0bfc15c46844473` |
-| `e_doi_chieu/tien_chu.py` | `94a03177d0b99ce05ec86b184ef6da59f857935863d769d3d67204e1a4c0d665` |
+| `e_doi_chieu/quy_tac.py` | `11e9163fb90842dd35ff51d605f8a44918742efb23f55c285bb47a3e4f892291` |
+| `e_doi_chieu/tien_chu.py` | `d0aba9de44269b62fe1a1506780b3a3459c1a462a9fc9988b502ad6a8d48224d` |
 | `e_doi_chieu/chay.py` | `821f0c57ea9bfb980f146231ce5ac201b32bf6fd3a3ef8e323ddb812ac42f591` |
+| Repo: `e_doi_chieu/tests/test_dc5.py` | `a90501217248846257fb6c471d831206cee5c192e23272dd7c3af45107c6f2c0` |
 
 Hai bản chép NGAN-0 và mọi schema chung giữ nguyên; test so băm LF vẫn
 đạt. SDK offline/wheel/phiên bản và giấy phép nguồn giữ theo DC-4 bên dưới.

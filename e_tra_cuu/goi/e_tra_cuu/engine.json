@@ -4,23 +4,362 @@
   "ma": "e_tra_cuu",
   "ten": "Tra cứu tài liệu",
   "phien_ban": "0.1.0",
-  "tuong_thich": {"core": ">=2.0.0 <3.0.0", "api": "v1", "sdk": ">=2.0.0 <3.0.0"},
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "api": "v1",
+    "sdk": ">=2.0.0 <3.0.0"
+  },
   "che_do_chay": "cuc_bo",
-  "diem_vao": {"lenh": ["{python}", "-m", "e_tra_cuu.chay"], "thu_muc": "."},
-  "nang_luc": [{
-    "ma": "tra_cuu.kiem_khung@1",
-    "ten": "Kiểm khung nội bộ (chưa phát hành)",
-    "nhan": ["tep"],
-    "tra": "truong",
-    "truong_ra": [{"ma": "trang_thai", "ten": "Trạng thái", "kieu": "van_ban"}],
-    "gioi_han": {"tep_toi_da_mib": 1, "mime": ["application/json"], "thoi_han_giay": 30},
-    "huy_duoc": true,
-    "tham_so": []
-  }],
-  "loai_du_lieu_rieng": [],
-  "tai_nguyen": {"so_viec_dong_thoi": 1},
-  "readiness": {"thoi_han_giay": 30},
-  "chay_thu_demo": [],
+  "diem_vao": {
+    "lenh": [
+      "{python}",
+      "-m",
+      "e_tra_cuu.chay"
+    ],
+    "thu_muc": "."
+  },
+  "nang_luc": [
+    {
+      "ma": "tra_cuu.nhan_yeu_cau@1",
+      "ten": "Nhận yêu cầu tra cứu",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "ho_so_tra_cuu",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 120,
+        "mime": [
+          "application/json"
+        ]
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "bam_yeu_cau",
+          "ten": "Băm tệp yêu cầu",
+          "kieu": "van_ban",
+          "bat_buoc": true,
+          "toi_da": 71
+        }
+      ]
+    },
+    {
+      "ma": "tra_cuu.cat_doan@1",
+      "ten": "Cắt đoạn tài liệu",
+      "nhan": [
+        "ho_so_tra_cuu"
+      ],
+      "tra": "ho_so_tra_cuu",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 120,
+        "ky_tu_toi_da": 500000
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "do_dai_muc_tieu",
+          "ten": "Độ dài mục tiêu",
+          "kieu": "so",
+          "mac_dinh": 2000,
+          "toi_thieu": 200,
+          "toi_da": 8000
+        }
+      ]
+    },
+    {
+      "ma": "tra_cuu.chuan_bi_ai@1",
+      "ten": "Chuẩn bị yêu cầu AI",
+      "nhan": [
+        "ho_so_tra_cuu"
+      ],
+      "tra": "yeu_cau_ai",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 180,
+        "ky_tu_toi_da": 500000
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "tac_vu",
+          "ten": "Tác vụ",
+          "kieu": "chon",
+          "bat_buoc": true,
+          "lua_chon": [
+            {
+              "ma": "phan_loai",
+              "ten": "Phân loại"
+            },
+            {
+              "ma": "phan_tich_cau_hoi",
+              "ten": "Phân tích câu hỏi"
+            },
+            {
+              "ma": "xep_hang_lai",
+              "ten": "Xếp hạng lại"
+            },
+            {
+              "ma": "soan_tra_loi",
+              "ten": "Soạn trả lời"
+            }
+          ]
+        },
+        {
+          "ma": "ma_prompt",
+          "ten": "Mã prompt",
+          "kieu": "van_ban",
+          "bat_buoc": true,
+          "toi_da": 200
+        },
+        {
+          "ma": "phien_ban_prompt",
+          "ten": "Phiên bản prompt",
+          "kieu": "van_ban",
+          "bat_buoc": true,
+          "toi_da": 100
+        },
+        {
+          "ma": "prompt",
+          "ten": "Prompt của module",
+          "kieu": "van_ban",
+          "bat_buoc": true,
+          "toi_da": 16000
+        },
+        {
+          "ma": "model_uu_tien",
+          "ten": "Model ưu tiên",
+          "kieu": "van_ban",
+          "toi_da": 200
+        }
+      ]
+    },
+    {
+      "ma": "tra_cuu.phan_loai_tai_lieu@1",
+      "ten": "Hậu kiểm phân loại",
+      "nhan": [
+        "tra_loi_ai"
+      ],
+      "tra": "ho_so_tra_cuu",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 180,
+        "ky_tu_toi_da": 500000
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    },
+    {
+      "ma": "tra_cuu.phan_tich_cau_hoi@1",
+      "ten": "Hậu kiểm phân tích câu hỏi",
+      "nhan": [
+        "tra_loi_ai"
+      ],
+      "tra": "ho_so_tra_cuu",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 180,
+        "ky_tu_toi_da": 500000
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    },
+    {
+      "ma": "tra_cuu.xep_hang_lai@1",
+      "ten": "Hậu kiểm xếp hạng lại",
+      "nhan": [
+        "tra_loi_ai"
+      ],
+      "tra": "ho_so_tra_cuu",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 180,
+        "ky_tu_toi_da": 500000
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    },
+    {
+      "ma": "tra_cuu.soan_tra_loi@1",
+      "ten": "Soạn và kiểm câu trả lời",
+      "nhan": [
+        "tra_loi_ai",
+        "ho_so_tra_cuu"
+      ],
+      "tra": "ho_so_tra_cuu",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 180,
+        "ky_tu_toi_da": 500000
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    },
+    {
+      "ma": "tra_cuu.xuat_ket_qua@1",
+      "ten": "Xuất kết quả tra cứu",
+      "nhan": [
+        "ho_so_tra_cuu"
+      ],
+      "tra": "truong",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 120,
+        "ky_tu_toi_da": 500000
+      },
+      "huy_duoc": true,
+      "tham_so": [],
+      "truong_ra": [
+        {
+          "ma": "tac_vu",
+          "ten": "Tác vụ",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "trang_thai",
+          "ten": "Trạng thái",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "tra_loi",
+          "ten": "Trả lời",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nhan",
+          "ten": "Nhãn",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nhom_de_xuat",
+          "ten": "Nhóm đề xuất",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "loai_de_xuat",
+          "ten": "Loại đề xuất",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "tang",
+          "ten": "Tầng",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_doan",
+          "ten": "Số đoạn",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_ung_vien",
+          "ten": "Số ứng viên",
+          "kieu": "so"
+        },
+        {
+          "ma": "co_can_cu",
+          "ten": "Có căn cứ",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "co_mau_thuan",
+          "ten": "Có mâu thuẫn",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "can_duyet",
+          "ten": "Cần duyệt",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "tep_json",
+          "ten": "Tệp JSON",
+          "kieu": "tep"
+        }
+      ]
+    }
+  ],
+  "loai_du_lieu_rieng": [
+    {
+      "ma": "van_ban_tai_lieu",
+      "ten": "Văn bản tài liệu có vị trí"
+    },
+    {
+      "ma": "yeu_cau_ai",
+      "ten": "Yêu cầu hỏi AI"
+    },
+    {
+      "ma": "tra_loi_ai",
+      "ten": "Trả lời AI có trích dẫn"
+    },
+    {
+      "ma": "ho_so_tra_cuu",
+      "ten": "Hồ sơ tính toán tra cứu"
+    }
+  ],
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
+  "chay_thu_demo": [
+    {
+      "nang_luc": "tra_cuu.nhan_yeu_cau@1",
+      "ten": "Nhận DEMO — Phân loại",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/yeu-cau-phan_loai-DEMO.json"
+      },
+      "tham_so": {
+        "bam_yeu_cau": "sha256:8f7cff75165e039543952c1f5d32c4c08db49afc4956e060405cf4b435dc1cda"
+      }
+    },
+    {
+      "nang_luc": "tra_cuu.nhan_yeu_cau@1",
+      "ten": "Nhận DEMO — Cắt đoạn",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/yeu-cau-cat_doan-DEMO.json"
+      },
+      "tham_so": {
+        "bam_yeu_cau": "sha256:7b73b3da2a44e5a97f7b39e739d39fb1b200fbeecdd4159a1bac90f7bcd5beb2"
+      }
+    },
+    {
+      "nang_luc": "tra_cuu.nhan_yeu_cau@1",
+      "ten": "Nhận DEMO — Phân tích câu hỏi",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/yeu-cau-phan_tich_cau_hoi-DEMO.json"
+      },
+      "tham_so": {
+        "bam_yeu_cau": "sha256:77225331184e00ab132f2ce7f5d984382efaa18c5d79e7b481855cbcc1bc5bbe"
+      }
+    },
+    {
+      "nang_luc": "tra_cuu.nhan_yeu_cau@1",
+      "ten": "Nhận DEMO — Xếp hạng lại",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/yeu-cau-xep_hang_lai-DEMO.json"
+      },
+      "tham_so": {
+        "bam_yeu_cau": "sha256:a5eea0ad57332b0f27b7df5566c2706c871b0b992cab2723869663895da4b2ba"
+      }
+    },
+    {
+      "nang_luc": "tra_cuu.nhan_yeu_cau@1",
+      "ten": "Nhận DEMO — Soạn trả lời tầng 1",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/yeu-cau-soan_tra_loi-DEMO.json"
+      },
+      "tham_so": {
+        "bam_yeu_cau": "sha256:8e1c38792aa61b489b1ef9f7271fa9ce7d3b8b28a2e43dd0dc8d3770f33e0cec"
+      }
+    }
+  ],
   "bi_mat": [],
   "webhook": null
 }

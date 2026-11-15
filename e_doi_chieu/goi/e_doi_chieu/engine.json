@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_doi_chieu",
   "ten": "Đối chiếu bản ký",
-  "phien_ban": "0.1.0",
+  "phien_ban": "0.2.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -61,7 +61,17 @@
   "readiness": {
     "thoi_han_giay": 30
   },
-  "chay_thu_demo": [],
+  "chay_thu_demo": [
+    {
+      "nang_luc": "doi_chieu.doc_docx@1",
+      "ten": "Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/DEMO-ban-chot.docx"
+      },
+      "tham_so": {}
+    }
+  ],
   "bi_mat": [],
   "webhook": null
 }

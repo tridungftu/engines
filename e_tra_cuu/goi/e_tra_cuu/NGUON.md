@@ -43,3 +43,26 @@ Chỉ 5 tệp schema nguồn/bản chép trong TC-1, không thay manifest/chay.p
 schema đã khóa. Không thêm dependency, không dùng bộ đọc cấu hình làm validator
 chung; bộ đánh giá schema mới và adapter CoreGia chỉ ở tests. Mọi fixture chỉ
 DEMO với bytes được nạp vào CoreGia, metadata/băm tính thật, không tải mạng/AI.
+
+## TC-2 — 15/11/2026
+
+Runtime mới/sửa đúng `ho_so.py`, `kiem_dau_vao.py`, `chay.py`; không thêm
+dependency. Giữ nguyên bytes hai mẫu NGAN-0 và cả bốn schema đã chép ở TC-1;
+test SHA-256 sau CRLF→LF tiếp tục áp dụng. Không sửa nguồn/schema chung/Core/SDK.
+
+Tám tệp trong `demo/` là dữ liệu giả mới tạo cho TC-2: nguồn văn bản Công ty
+DEMO Ánh Dương, phong bì OCR DEMO, danh mục DEMO và năm JSON yêu cầu. Không phải
+đáp án hoặc số đo chất lượng đã được nghiệp vụ nghiệm thu. Tên/metadata/băm
+của tệp con nằm trong JSON yêu cầu, băm bytes chính xác từng yêu cầu ở
+`engine.json.chay_thu_demo`. Không đổi Unicode hoặc canonical hóa để chữa băm.
+
+Harness test nạp ba tệp con theo thứ tự gốc → OCR → danh mục bằng API
+`CoreGia.them_tep`; vì vậy ba ID `tep-1/tep-2/tep-3` trong DEMO thực sự trỏ
+bytes đã tải vào kho RAM đó. Có kiểm lại bytes/metadata/băm trước chạy; runtime
+không hardcode các ID hoặc nạp dữ liệu này. SDK CLI gốc thiếu ngăn/cấu hình/
+quyền tệp con; không diễn giải các ID như nguồn có sẵn ở Core thật.
+
+Adapter `CoreGiaTepCon`/`CuaNguonGia` và dữ liệu cấu hình chỉ trong tests ngoài
+gói; không đưa vào runtime. Đã kiểm bằng Core giả (CoreGia), mạng ngoài/Cloud=0;
+chưa chứng nhận RLS thật hoặc Linux. Quyền/ghép nguồn/vòng đời/ACK chờ C-TC-02/03,
+ngăn/cấu hình CLI chờ C-TC-01, log/lỗi trần/lease SDK chờ C-TC-05.

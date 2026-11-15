@@ -21,12 +21,12 @@ def test_mau_ngan_nguyen_ban():
         assert bam(GOI / "e_doi_chieu" / ten) == bam(ROOT / "_chung" / "mau-ma" / ten)
 
 
-def test_core_gia_docx_chua_lam():
+def test_core_gia_docx_hong_khong_tra_ket_qua():
     core = CoreGia()
     tep = core.them_tep("DEMO.docx", b"DEMO", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     kq = core.chay_thu(chay.app, "doi_chieu.doc_docx@1", {"loai": "tep", "tep": tep})
     assert kq["trang_thai"] == "LOI"
-    assert kq["loi"]["ma"] == "CHUA_LAM"
+    assert kq["loi"]["ma"] == "DC_WORD_KHONG_DOC_DUOC"
     assert kq["ket_qua"] is None
 
 
@@ -54,5 +54,5 @@ def test_chon_ngan_va_schema(monkeypatch):
 def test_manifest_khung():
     phieu = json.loads((GOI / "engine.json").read_text(encoding="utf-8"))
     assert not ({"ngan_du_lieu", "cau_hinh", "giao_dien_quan_tri"} & phieu.keys())
-    assert phieu["chay_thu_demo"] == []
+    assert phieu["chay_thu_demo"]
     assert [n["ma"] for n in phieu["nang_luc"]] == ["doi_chieu.doc_docx@1"]

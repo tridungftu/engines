@@ -1,15 +1,16 @@
-# Tra cứu tài liệu — khung TC-0
+# Tra cứu tài liệu — TC-2: nhận yêu cầu
 
-Phiên bản 0.1.0, SDK 2.0.0, chỉ dùng nội bộ trước phát hành.
-`tra_cuu.kiem_khung@1` nhận tệp JSON, khai đầu ra `truong.trang_thai` kiểu
-`van_ban`, nhưng handler luôn báo `CHUA_LAM`: “Chức năng tra cứu đang được hoàn thiện.”
-Chưa có quy trình người dùng phụ thuộc stub. Theo lệnh giao TC-0, TC-1 cần xử lý
-việc thay stub bằng năng lực đích trước phát hành; phiếu TC-1 hiện chuyển thao tác
-đổi manifest/handler sang TC-2. Lead cần thống nhất mốc này, không phát hành stub.
-Không khai loại `ho_so_tra_cuu` khi TC-Q13 chưa duyệt.
+Phiên bản 0.1.0, SDK 2.0.0, chưa phát hành. TC-Q13 đã duyệt chiều 15/11/2026.
+Manifest đăng ký tám năng lực và bốn loại đúng phiếu §2.1; stub nội bộ
+`kiem_khung` đã bỏ. `tra_cuu.nhan_yeu_cau@1` nhận tệp JSON, kiểm và ghim dữ liệu
+thành `ho_so_tra_cuu` ở giai đoạn `da_nhan`. Bảy năng lực còn lại luôn báo
+`CHUA_LAM`, chờ TC-3…8. Nhận thành công không có nghĩa đã phân loại/trả lời.
 
-`chay_thu_demo=[]`: **0 demo, chưa kiểm nghiệp vụ**. Gói chưa có năng lực tra cứu
-nghiệp vụ, không có ví dụ thành công giả, không tạo cấu hình DEMO lúc chạy.
+Có **5 ví dụ chay_thu_demo**, tệp và băm thật trong `demo/`. Cổng bổ sung ở
+`tests/chay_demo_voi_core_gia.py` nạp ngăn/cấu hình, nguồn, giấy cấp quyền giả
+rồi chạy đúng các ví dụ. **Đã kiểm bằng Core giả (CoreGia)**; chưa chứng nhận
+quyền Core thật. CLI SDK gốc thiếu cấu hình vẫn lỗi `CHUA_CAU_HINH`, không tự
+khởi tạo dữ liệu DEMO hoặc đọc cấu hình từ môi trường để vượt cổng.
 
 ## Khởi động và cấu hình
 
@@ -24,7 +25,9 @@ không Cloud, không kết nối mạng ngoài, không SQL hoặc gọi engine k
 
 Giá trị cấu hình là một bản ghi `cau_hinh`, khóa `{}`, trong ngăn.
 Schema và bản khai SDK 2.1 là metadata chỉ đọc, không phải nơi lưu giá trị cấu hình.
-`yeu_cau_cau_hinh(ngan)` dành cho handler cần cấu hình ở các lát sau:
+`chup_cau_hinh(ngan)` lấy giá trị và `row_version` từ **một lần đọc** nhất quán.
+Mẫu `doc_cau_hinh` chỉ kiểm/điền mặc định trên bản vừa đọc, không đọc lại ngăn.
+`yeu_cau_cau_hinh` giữ tiện ích trả giá trị cho các phần chỉ cần đọc cấu hình:
 
 - Thiếu bản ghi: `CHUA_CAU_HINH`, câu hướng dẫn Admin vào Cấu hình; khởi động vẫn được.
 - Sai kiểu/trường/trần: `CAU_HINH_KHONG_HOP_LE`; ngoại lệ ngăn đổi sang lỗi SDK an toàn.
@@ -38,9 +41,58 @@ Schema và bản khai SDK 2.1 là metadata chỉ đọc, không phải nơi lưu
   mục tiêu không vượt trần đơn vị. `ngan_sach` chứa các trần thiết kế phiếu §2.3,
   chỉ cho giảm. Đây chưa là số đo token/context/model thực tế.
 
-Khi cần CAS dùng `ngan.doc("cau_hinh", {})` lấy `row_version`.
-`phien_ban` là phiên bản cấu trúc cấu hình, khác phiên bản CAS.
-Ghim cấu hình/row_version nhất quán theo từng việc thuộc TC-2.
+`phien_ban` là phiên bản cấu trúc cấu hình, khác phiên bản CAS. RAM mất cả
+cấu hình/bài đo khi khởi động lại; chưa có lưu bền Core/SDK 2.1.
+
+## Đầu vào và cửa nguồn tin cậy
+
+JSON chính có `phien_ban=1,ma_yeu_cau,tac_vu,ngu_canh_core,du_lieu`; xem năm tệp
+`demo/yeu-cau-*-DEMO.json` và TC-1-CONTRACT. Năm tác vụ là `phan_loai`, `cat_doan`,
+`phan_tich_cau_hoi`, `xep_hang_lai`, `soan_tra_loi`.
+
+- Tham số `bam_yeu_cau` băm bytes chính xác trước parse. JSON chính ≤1 MiB;
+  manifest khai **20 MiB** vì SDK dùng trần đó cho mọi `mo_tep` trong bước.
+- Từ chối khóa trùng, NaN/Infinity/overflow, UTF-8/surrogate hỏng; không nhận
+  URL/đường máy/base64/SQL/mã thực thi hay cờ `da_loc_quyen` trong JSON yêu cầu.
+  Văn bản OCR được giữ nguyên như chứng cứ bất hoạt, không dùng làm kênh đọc dữ liệu.
+- Tham chiếu `{tep:{tep_id,ten,mime,kich_thuoc},bam}` phải khớp metadata/băm Core.
+  Tệp con ≤20 MiB, tổng tệp con thực đọc ≤64 MiB; còn kiểm ngân sách cấu hình
+  thấp hơn nếu có. Không cắt ngầm. Nguồn gồm `ma_nguon,phien_ban_nguon,goc,van_ban`;
+  `van_ban` là ref tới nguyên phong bì `van_ban_tai_lieu`, không chuỗi thay thế.
+- Đối chiếu `bam_dau_vao` OCR với bytes gốc và băm UTF-8 toàn văn với nguồn Core
+  đã cấp. Kiểm văn bản ≤500000 ký tự, ≤60 trang, câu hỏi ≤4000, hàm ≤100,
+  tổng mục danh mục ≤1000, ứng viên ≤50. Văn bản OCR rỗng bị từ chối.
+- Danh mục/metadata/hàm/ứng viên/bằng chứng có thể là nội dung JSON hoặc ref JSON
+  khi thuộc trường đã khai; sau mở được ghim thành giá trị trong snapshot. Nguồn
+  của ứng viên/tầng 2–3 nằm ở `du_lieu.nguon`, các đoạn khớp nguồn/phiên bản/băm/
+  offset. Tầng 1 dùng descriptor và bằng chứng Core cấp, không mở lại gốc/OCR.
+- Snapshot lưu nguyên phong bì ở `du_lieu.tai_lieu.van_ban_tai_lieu` hoặc từng
+  phần tử `du_lieu.nguon`. `nguon` ở gốc snapshot giữ ref/băm/phiên bản đã kiểm.
+  Cấu hình có `{gia_tri,row_version}`, `ket_qua=null`; chưa có kết quả nghiệp vụ.
+  Chỉ tải bytes bằng `tai_tep_ra` rồi mới dựng ref. Phong bì ≤64 KiB chỉ có
+  tham chiếu+băm và tóm tắt nhỏ, chưa tính thì null.
+
+**C-TC-02/03 chưa có thật.** `app.cua_nguon` là seam để bên chủ Core tích hợp
+sau review, không phải API mới đã phát hành của SDK. Runtime hiện không tự gắn
+seam, không có adapter giả trong gói. Chỉ tests gắn đối tượng có
+`doc_quyen(viec_id)` trả giấy cấp độc lập với JSON:
+
+```text
+{ma_yeu_cau,tac_vu,bam_yeu_cau,ngu_canh_core,
+ tep:{tep_id:{tep:{tep_id,ten,mime,kich_thuoc},bam}},
+ nguon:{ma_nguon:{ma_nguon,phien_ban_nguon,tep_id,bam_goc,bam_van_ban}}}
+```
+
+Giấy cấp phải ràng buộc việc/request/task, pháp nhân/module/nhóm/người/thời điểm/
+phạm vi và từng nguồn. Core vẫn kiểm quyền sống mỗi lần `mo_tep`. `tep_id`, băm,
+prompt hay cờ caller không chứng minh quyền. Thiếu pháp nhân SDK →
+`TC_THIEU_NGU_CANH`; thiếu cửa/ngoài phạm vi/quyền → `TC_CHUA_CO_CUA_CORE`;
+lệch nguồn/băm/phiên bản → `TC_SAI_NGUON`. Theo lệnh TC-2 mới nhất, pháp nhân
+khác phạm vi cũng trả `TC_CHUA_CO_CUA_CORE` (mô hình TC-1 lịch sử dùng mã khác).
+
+Không ghi câu hỏi/toàn văn vào log. Không tạo tệp tạm hoặc kho/cache/sổ trên máy.
+Hủy/mất lease/ACK do SDK xử lý; không nhận ACK tải tệp thì không nộp hồ sơ giả.
+Tệp đã tải mà việc chưa xong thuộc vòng đời kho Core, chờ C-TC-02.
 
 ## Bản khai dự kiến SDK 2.1
 
@@ -69,18 +121,17 @@ $env:PYTHONDONTWRITEBYTECODE='1'
 .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_tra_cuu/goi/e_tra_cuu
 .venv/Scripts/python -B -m pytest e_tra_cuu/tests -q
 .venv/Scripts/python -B e_tra_cuu/tests/kiem_doc_lap.py
+.venv/Scripts/python -B e_tra_cuu/tests/chay_demo_voi_core_gia.py
 ```
 
 Linux đổi `Scripts/python` thành `bin/python`, đặt hai biến môi trường tương ứng.
-Test chặn mạng, chỉ DEMO. Stub và cổng cấu hình **đã kiểm bằng Core giả (CoreGia)**;
-handler kiểm cấu hình chỉ đăng ký trong test, không thay stub runtime.
+Test chặn mạng, chỉ DEMO. Handler nhận, stub và cổng cấu hình
+**đã kiểm bằng Core giả (CoreGia)**; adapter quyền/tệp con chỉ trong tests.
 CAS/unique/rollback/pháp nhân/cursor kiểm trực tiếp trên `NganBoNho`.
 Symlink của bộ quét kiểm bằng giả lập cờ, không yêu cầu Windows cấp quyền tạo symlink.
 Chưa kiểm Core thật, lưu bền, UI thật hoặc Linux.
 
-**Kết quả CLI thực tế SDK 2.0.0:** đã kiểm/nạp được phiếu nhưng in
-`Phiếu chưa có ví dụ chay_thu_demo.` và trả **mã 1** khi danh sách rỗng.
-Vì TC-0 bắt buộc giữ 0 demo, cổng CLI mã 0 của AGENTS.md §5 **chưa đạt**.
-Không sửa SDK, thêm demo thành công giả hoặc coi mã 1 là đạt.
-Cần Core C-TC-01 bổ sung cách kiểm khung không demo ở bản SDK sau;
-pytest và kiểm độc lập đã trả 0, chi tiết trong VIEC.md. Chưa nghiệm thu nghiệp vụ.
+**Cổng CLI chuẩn chưa đạt:** SDK 2.0.0 chạy cả 5 demo và trả mã 1 vì thiếu
+ngăn/cấu hình (`CHUA_CAU_HINH`). Harness bổ sung có 5/5 ĐẠT ở bước nhận, không
+thay kết quả CLI chuẩn. Cần Core C-TC-01/02/03/05; số kiểm thật ở VIEC.md ngoài
+gói. Chưa nối Core thật, chưa kiểm RLS/AI/UI/Linux hoặc chất lượng tra cứu.

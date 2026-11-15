@@ -1,5 +1,20 @@
 # Thay đổi
 
+## DC-2 — 15/11/2026 · 0.2.0 chưa phát hành
+
+- Triển khai đọc DOCX trong RAM qua SDK, SHA-256 bytes thật, giữ nguyên văn,
+  bảng lồng/ô trống/gộp ngang dọc và offset Unicode. Đọc cả thân, đầu/chân
+  trang và chú thích; `so_trang=0`, `trang=[]`, không render/trang/hộp giả.
+- Chặn sửa đổi/comment ở mọi phần XML Word bằng `DC_WORD_CHUA_CHOT`;
+  không Accept All. Vùng chưa hỗ trợ/hỏng trả `DC_WORD_KHONG_DOC_DUOC`.
+- Bảo vệ ZIP/XML/quan hệ ngoài, trần trước giải nén và bytes/EOF/CRC thật;
+  không tin kích thước tự khai để bỏ đuôi. Không OCR/AI/Cloud/nhúng/mạng.
+- Thêm DEMO DOCX sạch thực vào manifest; đúng ba tệp runtime của lát.
+  Nguồn/băm TX-1 tại NGUON.md; phạm vi và quy ước nguyên văn tại README.
+- Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 153 passed,
+  0 skipped; kiểm độc lập mã 0. Khép nợ DEMO rỗng của DC-0/DC-1.
+  Chưa kiểm Core thật/Linux; không commit/push.
+
 ## DC-1 — 15/11/2026 · 0.1.0 chưa phát hành
 
 - Thêm schema `ho_so_doi_chieu` theo DC-Q17 đã duyệt; chép nguyên ba schema

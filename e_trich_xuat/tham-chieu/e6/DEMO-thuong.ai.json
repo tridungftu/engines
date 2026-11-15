@@ -1,0 +1,767 @@
+{
+  "cu": {
+    "tim_vi_tri": [],
+    "hoi_trich": [
+      [
+        {
+          "ma": "TC-01",
+          "gia_tri": "DEMO-XD-001",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Số: DEMO-XD-001.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TC-02",
+          "gia_tri": "2026-10-30",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Ngày ký hợp đồng: 2026-10-30.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TC-03",
+          "gia_tri": "Thi công nhà kho DEMO",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Gói thầu: Thi công nhà kho DEMO.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TC-04",
+          "gia_tri": "Khu công nghiệp DEMO Sao Mai",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Dự án: Khu công nghiệp DEMO Sao Mai.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TC-05",
+          "gia_tri": "Lô DEMO A khu DEMO Bình Minh",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Địa điểm: Lô DEMO A khu DEMO Bình Minh.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TC-06",
+          "gia_tri": "Công ty DEMO Ánh Dương",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Bên A là Công ty DEMO Ánh Dương (bên giao thầu).",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TC-07",
+          "gia_tri": "Công ty DEMO Mây Trắng",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Bên B là Công ty DEMO Mây Trắng (bên nhận thầu).",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TC-08",
+          "gia_tri": "2026-11-01",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Hiệu lực hợp đồng bắt đầu từ 2026-11-01.",
+          "dieu_khoan": "Điều 1"
+        }
+      ],
+      [
+        {
+          "ma": "TC-09",
+          "gia_tri": "Thi công xây dựng",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Phạm vi công việc thuộc loại Thi công xây dựng: xây nhà kho DEMO.",
+          "dieu_khoan": "Điều 1"
+        }
+      ],
+      [
+        {
+          "ma": "TT-01",
+          "gia_tri": "trọn gói",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Loại hợp đồng là trọn gói.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-02",
+          "gia_tri": "1.100.000 VND",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Giá trị hợp đồng là 1.100.000 VND, đã gồm thuế GTGT.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-03",
+          "gia_tri": "Có",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Giá trị hợp đồng đã gồm VAT hay chưa: Có, đã gồm thuế GTGT.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-04",
+          "gia_tri": "10%",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Thuế suất GTGT là 10%.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-05",
+          "gia_tri": "KL nghiệm thu thực tế",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Cơ sở thanh toán khối lượng: KL nghiệm thu thực tế.",
+          "dieu_khoan": "Điều 1"
+        }
+      ],
+      [
+        {
+          "ma": "TT-10",
+          "gia_tri": "20% giá trị sau VAT",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Tỷ lệ tạm ứng là 20% giá trị sau VAT.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-11",
+          "gia_tri": "Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Cách thu hồi tạm ứng: Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-12",
+          "gia_tri": "220.000 VND, hiệu lực đến khi thu hồi hết tạm ứng",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Bảo lãnh tạm ứng: 220.000 VND, hiệu lực đến khi thu hồi hết tạm ứng.",
+          "dieu_khoan": "Điều 1"
+        }
+      ],
+      [
+        {
+          "ma": "TT-20",
+          "gia_tri": "90% giá trị nghiệm thu mỗi đợt",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Tỷ lệ thanh toán mỗi đợt là 90% giá trị nghiệm thu mỗi đợt.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-21",
+          "gia_tri": "10%",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Tỷ lệ giữ lại mỗi đợt được ghi trực tiếp là 10%, không tính theo công thức.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-22",
+          "gia_tri": "15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Thời hạn thanh toán: 15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ.",
+          "dieu_khoan": "Điều 1"
+        }
+      ],
+      [
+        {
+          "ma": "TT-30",
+          "gia_tri": "95% giá trị quyết toán",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Tỷ lệ thanh toán khi quyết toán là 95% giá trị quyết toán.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-31",
+          "gia_tri": "5% giá trị quyết toán",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Tỷ lệ bảo lãnh bảo hành là 5% giá trị quyết toán.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-32",
+          "gia_tri": "12 tháng kể từ ngày nghiệm thu hoàn thành",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Thời hạn bảo hành: 12 tháng kể từ ngày nghiệm thu hoàn thành.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-33",
+          "gia_tri": "110.000 VND, hiệu lực đến nghiệm thu hoàn thành",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Bảo lãnh thực hiện hợp đồng: 110.000 VND, hiệu lực đến nghiệm thu hoàn thành.",
+          "dieu_khoan": "Điều 1"
+        }
+      ],
+      [
+        {
+          "ma": "TT-40",
+          "gia_tri": "Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Điều kiện điều chỉnh giá: Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-41",
+          "gia_tri": "Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Ngưỡng biến động để điều chỉnh giá: Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-42",
+          "gia_tri": "Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Cách xử lý khối lượng phát sinh: Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký.",
+          "dieu_khoan": "Điều 1"
+        }
+      ],
+      [
+        {
+          "ma": "TT-50",
+          "gia_tri": "120 ngày kể từ ngày khởi công 2026-11-02",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Tiến độ thực hiện hợp đồng: 120 ngày kể từ ngày khởi công 2026-11-02.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-51",
+          "gia_tri": "8% giá trị phần công việc vi phạm chất lượng",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Mức phạt vi phạm chất lượng tối đa là 8% giá trị phần công việc vi phạm chất lượng.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-52",
+          "gia_tri": "0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Phạt chậm tiến độ giai đoạn mức 1: 0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-53",
+          "gia_tri": "0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Phạt chậm tiến độ giai đoạn mức 2: 0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-54",
+          "gia_tri": "0,05% giá trị phần công việc chậm hoàn thành mỗi ngày",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Phạt Bên B chậm hoàn thành tổng tiến độ: 0,05% giá trị phần công việc chậm hoàn thành mỗi ngày.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-55",
+          "gia_tri": "8% giá trị phần nghĩa vụ vi phạm",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Trần tổng mức phạt không quá 8% giá trị phần nghĩa vụ vi phạm.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-56",
+          "gia_tri": "Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Cách khấu trừ tiền phạt: Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận.",
+          "dieu_khoan": "Điều 1"
+        }
+      ],
+      [
+        {
+          "ma": "TT-60",
+          "gia_tri": "Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Hồ sơ thanh toán mỗi đợt: Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-61",
+          "gia_tri": "Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Hồ sơ quyết toán: Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO.",
+          "dieu_khoan": "Điều 1"
+        },
+        {
+          "ma": "TT-62",
+          "gia_tri": "3 bộ",
+          "don_vi": "",
+          "ghi_chu": "",
+          "trich_dan": "Số lượng hồ sơ thanh toán phải nộp là 3 bộ.",
+          "dieu_khoan": "Điều 1"
+        }
+      ]
+    ]
+  },
+  "moi": {
+    "TC-01": {
+      "gia_tri": "DEMO-XD-001",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Số: DEMO-XD-001.",
+          "bat_dau": 107,
+          "ket_thuc": 123
+        }
+      ]
+    },
+    "TC-02": {
+      "gia_tri": "2026-10-30",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Ngày ký hợp đồng: 2026-10-30.",
+          "bat_dau": 124,
+          "ket_thuc": 153
+        }
+      ]
+    },
+    "TC-03": {
+      "gia_tri": "Thi công nhà kho DEMO",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Gói thầu: Thi công nhà kho DEMO.",
+          "bat_dau": 154,
+          "ket_thuc": 186
+        }
+      ]
+    },
+    "TC-04": {
+      "gia_tri": "Khu công nghiệp DEMO Sao Mai",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Dự án: Khu công nghiệp DEMO Sao Mai.",
+          "bat_dau": 187,
+          "ket_thuc": 223
+        }
+      ]
+    },
+    "TC-05": {
+      "gia_tri": "Lô DEMO A khu DEMO Bình Minh",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Địa điểm: Lô DEMO A khu DEMO Bình Minh.",
+          "bat_dau": 224,
+          "ket_thuc": 263
+        }
+      ]
+    },
+    "TC-06": {
+      "gia_tri": "Công ty DEMO Ánh Dương",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Bên A là Công ty DEMO Ánh Dương (bên giao thầu).",
+          "bat_dau": 264,
+          "ket_thuc": 312
+        }
+      ]
+    },
+    "TC-07": {
+      "gia_tri": "Công ty DEMO Mây Trắng",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Bên B là Công ty DEMO Mây Trắng (bên nhận thầu).",
+          "bat_dau": 313,
+          "ket_thuc": 361
+        }
+      ]
+    },
+    "TC-08": {
+      "gia_tri": "2026-11-01",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Hiệu lực hợp đồng bắt đầu từ 2026-11-01.",
+          "bat_dau": 406,
+          "ket_thuc": 446
+        }
+      ]
+    },
+    "TC-09": {
+      "gia_tri": "Thi công xây dựng",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Phạm vi công việc thuộc loại Thi công xây dựng: xây nhà kho DEMO.",
+          "bat_dau": 447,
+          "ket_thuc": 512
+        }
+      ]
+    },
+    "TT-01": {
+      "gia_tri": "trọn gói",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Loại hợp đồng là trọn gói.",
+          "bat_dau": 513,
+          "ket_thuc": 539
+        }
+      ]
+    },
+    "TT-02": {
+      "gia_tri": "1.100.000 VND",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Giá trị hợp đồng là 1.100.000 VND, đã gồm thuế GTGT.",
+          "bat_dau": 540,
+          "ket_thuc": 592
+        }
+      ]
+    },
+    "TT-03": {
+      "gia_tri": "Có",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Giá trị hợp đồng đã gồm VAT hay chưa: Có, đã gồm thuế GTGT.",
+          "bat_dau": 593,
+          "ket_thuc": 652
+        }
+      ]
+    },
+    "TT-04": {
+      "gia_tri": "10%",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Thuế suất GTGT là 10%.",
+          "bat_dau": 653,
+          "ket_thuc": 675
+        }
+      ]
+    },
+    "TT-05": {
+      "gia_tri": "KL nghiệm thu thực tế",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Cơ sở thanh toán khối lượng: KL nghiệm thu thực tế.",
+          "bat_dau": 676,
+          "ket_thuc": 727
+        }
+      ]
+    },
+    "TT-10": {
+      "gia_tri": "20% giá trị sau VAT",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Tỷ lệ tạm ứng là 20% giá trị sau VAT.",
+          "bat_dau": 728,
+          "ket_thuc": 765
+        }
+      ]
+    },
+    "TT-11": {
+      "gia_tri": "Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Cách thu hồi tạm ứng: Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt.",
+          "bat_dau": 766,
+          "ket_thuc": 846
+        }
+      ]
+    },
+    "TT-12": {
+      "gia_tri": "220.000 VND, hiệu lực đến khi thu hồi hết tạm ứng",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Bảo lãnh tạm ứng: 220.000 VND, hiệu lực đến khi thu hồi hết tạm ứng.",
+          "bat_dau": 847,
+          "ket_thuc": 915
+        }
+      ]
+    },
+    "TT-20": {
+      "gia_tri": "90% giá trị nghiệm thu mỗi đợt",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Tỷ lệ thanh toán mỗi đợt là 90% giá trị nghiệm thu mỗi đợt.",
+          "bat_dau": 916,
+          "ket_thuc": 975
+        }
+      ]
+    },
+    "TT-21": {
+      "gia_tri": "10%",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Tỷ lệ giữ lại mỗi đợt được ghi trực tiếp là 10%, không tính theo công thức.",
+          "bat_dau": 976,
+          "ket_thuc": 1051
+        }
+      ]
+    },
+    "TT-22": {
+      "gia_tri": "15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Thời hạn thanh toán: 15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ.",
+          "bat_dau": 1052,
+          "ket_thuc": 1121
+        }
+      ]
+    },
+    "TT-30": {
+      "gia_tri": "95% giá trị quyết toán",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Tỷ lệ thanh toán khi quyết toán là 95% giá trị quyết toán.",
+          "bat_dau": 1122,
+          "ket_thuc": 1180
+        }
+      ]
+    },
+    "TT-31": {
+      "gia_tri": "5% giá trị quyết toán",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Tỷ lệ bảo lãnh bảo hành là 5% giá trị quyết toán.",
+          "bat_dau": 1181,
+          "ket_thuc": 1230
+        }
+      ]
+    },
+    "TT-32": {
+      "gia_tri": "12 tháng kể từ ngày nghiệm thu hoàn thành",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Thời hạn bảo hành: 12 tháng kể từ ngày nghiệm thu hoàn thành.",
+          "bat_dau": 1231,
+          "ket_thuc": 1292
+        }
+      ]
+    },
+    "TT-33": {
+      "gia_tri": "110.000 VND, hiệu lực đến nghiệm thu hoàn thành",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Bảo lãnh thực hiện hợp đồng: 110.000 VND, hiệu lực đến nghiệm thu hoàn thành.",
+          "bat_dau": 1293,
+          "ket_thuc": 1370
+        }
+      ]
+    },
+    "TT-40": {
+      "gia_tri": "Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Điều kiện điều chỉnh giá: Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản.",
+          "bat_dau": 1371,
+          "ket_thuc": 1448
+        }
+      ]
+    },
+    "TT-41": {
+      "gia_tri": "Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Ngưỡng biến động để điều chỉnh giá: Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01.",
+          "bat_dau": 1449,
+          "ket_thuc": 1539
+        }
+      ]
+    },
+    "TT-42": {
+      "gia_tri": "Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Cách xử lý khối lượng phát sinh: Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký.",
+          "bat_dau": 1540,
+          "ket_thuc": 1635
+        }
+      ]
+    },
+    "TT-50": {
+      "gia_tri": "120 ngày kể từ ngày khởi công 2026-11-02",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Tiến độ thực hiện hợp đồng: 120 ngày kể từ ngày khởi công 2026-11-02.",
+          "bat_dau": 1636,
+          "ket_thuc": 1705
+        }
+      ]
+    },
+    "TT-51": {
+      "gia_tri": "8% giá trị phần công việc vi phạm chất lượng",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Mức phạt vi phạm chất lượng tối đa là 8% giá trị phần công việc vi phạm chất lượng.",
+          "bat_dau": 1706,
+          "ket_thuc": 1789
+        }
+      ]
+    },
+    "TT-52": {
+      "gia_tri": "0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Phạt chậm tiến độ giai đoạn mức 1: 0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên.",
+          "bat_dau": 1790,
+          "ket_thuc": 1885
+        }
+      ]
+    },
+    "TT-53": {
+      "gia_tri": "0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Phạt chậm tiến độ giai đoạn mức 2: 0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8.",
+          "bat_dau": 1886,
+          "ket_thuc": 1973
+        }
+      ]
+    },
+    "TT-54": {
+      "gia_tri": "0,05% giá trị phần công việc chậm hoàn thành mỗi ngày",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Phạt Bên B chậm hoàn thành tổng tiến độ: 0,05% giá trị phần công việc chậm hoàn thành mỗi ngày.",
+          "bat_dau": 1974,
+          "ket_thuc": 2069
+        }
+      ]
+    },
+    "TT-55": {
+      "gia_tri": "8% giá trị phần nghĩa vụ vi phạm",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Trần tổng mức phạt không quá 8% giá trị phần nghĩa vụ vi phạm.",
+          "bat_dau": 2070,
+          "ket_thuc": 2132
+        }
+      ]
+    },
+    "TT-56": {
+      "gia_tri": "Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Cách khấu trừ tiền phạt: Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận.",
+          "bat_dau": 2133,
+          "ket_thuc": 2226
+        }
+      ]
+    },
+    "TT-60": {
+      "gia_tri": "Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Hồ sơ thanh toán mỗi đợt: Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO.",
+          "bat_dau": 2227,
+          "ket_thuc": 2313
+        }
+      ]
+    },
+    "TT-61": {
+      "gia_tri": "Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Hồ sơ quyết toán: Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO.",
+          "bat_dau": 2314,
+          "ket_thuc": 2383
+        }
+      ]
+    },
+    "TT-62": {
+      "gia_tri": "3 bộ",
+      "don_vi": null,
+      "ghi_chu": null,
+      "trich_dan": [
+        {
+          "cau": "Số lượng hồ sơ thanh toán phải nộp là 3 bộ.",
+          "bat_dau": 2384,
+          "ket_thuc": 2427
+        }
+      ]
+    }
+  }
+}

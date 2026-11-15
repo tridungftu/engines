@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_doi_chieu",
   "ten": "Đối chiếu bản ký",
-  "phien_ban": "0.4.8",
+  "phien_ban": "0.6.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -72,6 +72,30 @@
       "gioi_han": {"tep_toi_da_mib": 20, "mime": ["application/json"], "ky_tu_toi_da": 500000, "thoi_han_giay": 900},
       "huy_duoc": true,
       "tham_so": [{"ma": "che_do", "ten": "Phạm vi quét", "kieu": "chon", "mac_dinh": "day_du", "lua_chon": [{"ma": "day_du", "ten": "Quét đủ ảnh trang"}]}]
+    },
+    {
+      "ma": "doi_chieu.chuan_bi_ai@1",
+      "ten": "Chuẩn bị phân loại bằng Local AI",
+      "nhan": ["ho_so_doi_chieu"],
+      "tra": "yeu_cau_ai",
+      "gioi_han": {"tep_toi_da_mib": 20, "mime": ["application/json"], "ky_tu_toi_da": 500000, "thoi_han_giay": 300},
+      "huy_duoc": true,
+      "tham_so": [
+        {"ma": "module", "ten": "Module cung cấp prompt (bắt buộc)", "kieu": "van_ban", "mo_ta": "Bắt buộc nghiệp vụ; engine kiểm và trả THIEU_PROMPT khi thiếu."},
+        {"ma": "ma_prompt", "ten": "Mã prompt (bắt buộc)", "kieu": "van_ban", "mo_ta": "Mã prompt của module, không có mặc định."},
+        {"ma": "phien_ban_prompt", "ten": "Phiên bản prompt (bắt buộc)", "kieu": "van_ban", "mo_ta": "Phiên bản được module ghim, không có mặc định."},
+        {"ma": "prompt", "ten": "Nội dung prompt (bắt buộc)", "kieu": "van_ban", "mo_ta": "Tối đa 16.000 ký tự; thiếu thì THIEU_PROMPT, vượt thì DC_QUA_NGAN_SACH_AI."},
+        {"ma": "model_uu_tien", "ten": "Model Local ưu tiên", "kieu": "van_ban"}
+      ]
+    },
+    {
+      "ma": "doi_chieu.phan_loai_diem_lech@1",
+      "ten": "Hậu kiểm phân loại Local AI",
+      "nhan": ["tra_loi_ai"],
+      "tra": "ho_so_doi_chieu",
+      "gioi_han": {"tep_toi_da_mib": 20, "mime": ["application/json"], "ky_tu_toi_da": 500000, "thoi_han_giay": 300},
+      "huy_duoc": true,
+      "tham_so": []
     }
   ],
   "loai_du_lieu_rieng": [

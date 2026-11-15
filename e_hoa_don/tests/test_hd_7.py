@@ -347,9 +347,9 @@ def test_mat_ack_khong_upload_trung(kenh, op):
 def test_vuot_tran_khong_upload(kind, monkeypatch):
     core = CoreGia()
     data = nguon(core, zip=kind in {"entry", "rows"})
-    if kind == "json_metadata": data["truong"]["chi_tiet_nguon"]["kich_thuoc"] = 32 * 1024 * 1024 + 1
+    if kind == "json_metadata": data["truong"]["chi_tiet_nguon"]["kich_thuoc"] = 20 * 1024 * 1024 + 1
     elif kind == "json_bytes":
-        data = doi_report(core, data, raw=b" " * (32 * 1024 * 1024 + 1))
+        data = doi_report(core, data, raw=b" " * (20 * 1024 * 1024 + 1))
         data["truong"]["chi_tiet_nguon"]["kich_thuoc"] = 1
     elif kind in {"entry", "rows"}:
         data = doi_report(core, data, lambda r, t: r.update(danh_sach_tep=[r["danh_sach_tep"][0]] * 1001))
@@ -374,13 +374,13 @@ def test_1000_entry_va_1000_dong_bien(xml_demo):
     assert sheets[0][-1][0:3] == ["1000", "1000", "DEMO-999.xml"]
 
 
-def test_json_32mib_va_cell_16000_bien():
+def test_json_20mib_va_cell_16000_bien():
     core = CoreGia()
     data = nguon(core)
     data["truong"]["tep_xml"]["ten"] = "D" * 16000
     data = doi_report(core, data, lambda r, t: r["tep_xml"].update(ten=t["tep_xml"]["ten"]))
     source = core.doc_tep(data["truong"]["chi_tiet_nguon"]["tep_id"])
-    raw = source + b" " * (32 * 1024 * 1024 - len(source))
+    raw = source + b" " * (20 * 1024 * 1024 - len(source))
     data = doi_report(core, data, raw=raw)
     t, out = xuat(core, data)
     assert t["bam_dau_vao"] == bam(raw) and len(doc_xlsx(out)[0][0][1][2]) == 16000
@@ -440,7 +440,7 @@ def test_doi_chieu_tinh_cot_nguon_va_thiet_ke():
 def test_manifest_khong_gia_fixture_truong():
     cap = cong.app.phieu["nang_luc"][2]
     assert cap["ma"] == NL and cap["nhan"] == ["truong"] and cap["tra"] == "truong"
-    assert cap["gioi_han"] == dict(tep_toi_da_mib=32, mime=[], thoi_han_giay=600)
+    assert cap["gioi_han"] == dict(tep_toi_da_mib=20, mime=[], thoi_han_giay=600)
     assert cap["tham_so"] == [] and cap["huy_duoc"] is True
     assert not any(c["nang_luc"] == NL for c in cong.app.phieu["chay_thu_demo"])
     assert len(cong.app.phieu["chay_thu_demo"]) == 4

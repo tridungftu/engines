@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
-WHEEL="$ROOT/docs/goi-gui-engine/sdk-2.0.0/kho_tri_thuc_sdk-2.0.0-py3-none-any.whl"
-EXPECTED=a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
+WHEEL="$ROOT/docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl"
+EXPECTED=0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984
 export PYTHONDONTWRITEBYTECODE=1
 unset PYTHONPATH PYTHONHOME
 python3 -B -c 'import hashlib,sys; assert hashlib.sha256(open(sys.argv[1], "rb").read()).hexdigest() == sys.argv[2]' "$WHEEL" "$EXPECTED"

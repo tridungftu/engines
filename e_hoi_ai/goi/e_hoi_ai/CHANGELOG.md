@@ -1,3 +1,10 @@
+## 0.11.0 — 15/11/2026 — AI-11
+
+- Chuyển SDK 2.2.0: cấu hình snapshot của việc, ngăn SDK trực tiếp, bỏ fallback RAM và bảng cấu hình; hook làm mới đệm khi đổi cấu hình.
+- Khai catalog/cấu hình/migration trong engine.json; SQL tạo bảng riêng, kiểm kê toàn gói; api lưu JSON dạng văn bản, thứ tự model đọc số.
+- Chuyển nguyên bản cổng tạm/bản khai 2.1 vào LUU-TRU/AI-11 ngoài gói; giữ ca hành vi, đổi môi trường sang CoreGia 2.2.0.
+- CLI SDK thu chưa có cửa cấp cấu hình DEMO/Local giả: chưa đạt nghiệm thu AI-11; hồi quy API chính thức chỉ là bằng chứng bổ sung, đã kiểm bằng Core giả (CoreGia).
+
 ## AI-10 — 15/11/2026 (PR: chờ lead mở)
 
 - Phân loại lỗi transport và phản hồi Local sau khi bắt đầu POST là `ChuaRo`; lỗi kết nối chắc chắn trước gửi vẫn cho thử lại. Áp dụng chung cho ba năng lực, Cloud vẫn tắt.

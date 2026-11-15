@@ -5,6 +5,7 @@ import socket
 import pytest
 from kho_tri_thuc_sdk.engine import ViecDaHuy
 from kho_tri_thuc_sdk.thu import CoreGia
+from local_gia import core_demo
 
 from e_hoi_ai import chay, chon_model
 from e_hoi_ai.cong_ai import CongAI, NhaCungCapLocal
@@ -46,7 +47,7 @@ def hoi(may, tmp_path, monkeypatch, *, quy_tac=None, model=None, ma_prompt="m4.h
     tham_so = {"ma_prompt": ma_prompt, "phien_ban_prompt": "1", "prompt": "Câu hỏi DEMO"}
     if model is not None:
         tham_so["model_uu_tien"] = model
-    return CoreGia().chay_thu(chay.app, "ai.hoi_tai_lieu@1",
+    return core_demo().chay_thu(chay.app, "ai.hoi_tai_lieu@1",
                              {"loai": "van_ban", "van_ban": TAI_LIEU}, tham_so)
 
 

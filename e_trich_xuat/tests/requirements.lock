@@ -1,4 +1,7 @@
-# Chỉ phục vụ kiểm thử; dùng bản có sẵn trên máy, không thêm runtime engine.
+# Phụ thuộc chỉ phục vụ kiểm; runtime ghim riêng trong gói.
 pytest==9.1.1
-# Dependency có sẵn của SDK 2.0; kiểm schema tài liệu đầy đủ ($defs/$ref/type).
-jsonschema==4.26.0
+iniconfig==2.3.0
+packaging==26.3
+pluggy==1.6.0
+Pygments==2.21.0
+colorama==0.4.6; sys_platform == "win32"

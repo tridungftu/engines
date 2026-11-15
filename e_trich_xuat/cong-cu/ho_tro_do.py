@@ -97,10 +97,10 @@ def bao_loi_artifact(tep, phep_do, cau):
             pass
 
 
-def app_demo(ngan_sach=100000):
+def app_demo(core, ngan_sach=100000):
     app = tao_app()
-    with app.ngan.lo() as lo:
-        lo.them("cau_hinh", {}, {"ngan_sach_token_vao_toi_da": ngan_sach})
+    core.nap_engine(app)
+    core.dat_cau_hinh(app.ma, {"ngan_sach_token_vao_toi_da": ngan_sach})
     return app
 
 
@@ -202,7 +202,8 @@ def tao_yeu_cau_t3(n, model, ngan_sach_trich=100000):
         "phien_ban": 1, "van_ban": tl[n], "trang": [], "nguon_doc": "docx",
         "ly_do_chuyen_nguon": None, "so_trang": 0, "phien_ban_engine": "DEMO-TX0 1",
         "bam_dau_vao": bam(tl[n].encode("utf-8")), "canh_bao": ["DEMO tổng hợp; chưa phân trang."]}}
-    core, app = CoreGia(), app_demo(ngan_sach_trich)
+    core = CoreGia()
+    app = app_demo(core, ngan_sach_trich)
     req = buoc(core, app, "trich.chuan_bi@1", vao, ts)
     return core, app, req, bam(prompt_goc.encode("utf-8"))
 
@@ -513,7 +514,8 @@ def doc_bo_demo(tep=None):
 
 
 def yeu_cau_n1(c, cfg):
-    core, app = CoreGia(), app_demo(cfg.get("ngan_sach_trich", 100000))
+    core = CoreGia()
+    app = app_demo(core, cfg.get("ngan_sach_trich", 100000))
     tep = core.them_tep("DEMO-N1.docx", c["docx"],
                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     tl = buoc(core, app, "trich.doc_docx@1", {"loai": "tep", "tep": tep})

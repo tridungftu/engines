@@ -30,7 +30,7 @@ def test_sdk_va_wheel_dung_ban():
 def test_sql_khai_bao_va_cot_he_thong_khop():
     sql = (GOI / "sql/001_tao_ngan.sql").read_text(encoding="utf-8")
     statements = [s.strip() for s in re.sub(r"--[^\n]*", "", sql).split(";") if s.strip()]
-    them_cot = (GOI / "sql/002_xac_nhan.sql").read_text(encoding="utf-8")
+    them_cot = "\n".join(p.read_text(encoding="utf-8") for p in sorted((GOI / "sql").glob("*.sql")))
     assert len(statements) == len(chay.app.phieu["ngan_du_lieu"]) == 4
     for statement, bang in zip(statements, chay.app.phieu["ngan_du_lieu"]):
         assert statement.startswith("CREATE TABLE eng_e_doi_chieu." + bang["bang"] + " (")

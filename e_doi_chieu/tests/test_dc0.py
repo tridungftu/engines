@@ -19,10 +19,10 @@ def test_cong_tam_da_luu_tru_khong_nam_trong_goi():
     for ten in ("ngan.py", "cau_hinh.py", "KHAI-SDK-2.1.json"):
         assert (luu / ten).is_file()
         assert not (GOI / "e_doi_chieu" / ten).exists()
-    # DC-10: bản khai mới chỉ màn/quyền, không khôi phục ngăn tạm vào runtime.
+    # DC-10/11: bản khai chỉ màn/quyền, không khôi phục ngăn tạm vào runtime.
     khai = json.loads((GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))
     assert "ngan_du_lieu" not in khai
-    assert len(khai["giao_dien_quan_tri"]) == 2
+    assert [m["ma"] for m in khai["giao_dien_quan_tri"]] == ["cau_hinh", "ket_qua", "loi_ocr"]
 
 
 def test_core_gia_docx_hong_khong_tra_ket_qua():

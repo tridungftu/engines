@@ -74,6 +74,8 @@ export default async function cauHinh(goc, KttCore = globalThis.KttCore) {
     if (dangLuu || canTaiLai || luu.disabled || !form.reportValidity()) return;
     // Chỉ gửi các thuộc tính schema đã khai, giữ nguyên bộ đã duyệt.
     const giaTri = Object.fromEntries(BO_GHIM.map(k => [k, banChup[k]]));
+    // Ngưỡng học chỉ do Core cấp sau đo/duyệt; form giới hạn giữ nguyên.
+    if (Object.hasOwn(banChup, "hoc_loi_ocr")) giaTri.hoc_loi_ocr = structuredClone(banChup.hoc_loi_ocr);
     giaTri.nguong_ocr_kem = null;
     for (const [ma, , max] of TRUONG_SO) {
       const text = o.get(ma).value.trim();

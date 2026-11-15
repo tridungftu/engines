@@ -27,7 +27,8 @@ CHE, MO = 'mask.che_van_ban@1', 'mask.mo_che_van_ban@1'
 
 @pytest.mark.parametrize('ma', ['van_ban_da_che','van_ban_tai_lieu','tra_loi_ai'])
 def test_so_schema_chung(ma):
-    assert sha256((ROOT/'_chung/contract'/f'{ma}.schema.json').read_bytes()).digest() == sha256((GOI/'e_mask/schemas'/f'{ma}.schema.json').read_bytes()).digest()
+    lf = lambda t: t.read_bytes().replace(b'\r\n', b'\n')
+    assert sha256(lf(ROOT/'_chung/contract'/f'{ma}.schema.json')).digest() == sha256(lf(GOI/'e_mask/schemas'/f'{ma}.schema.json')).digest()
 
 
 @pytest.mark.parametrize('noi_dung', [b'{',b'{"van_ban":"DEMO","van_ban":"x"}',b'{"van_ban":NaN}',b'\xff', b'[]'])

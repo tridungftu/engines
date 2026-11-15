@@ -189,10 +189,11 @@ def _phep_alias(m):
 
 
 def _kiem_vung(goc, phep, buoc):
-    """Dùng R5; xử lý báo trùng ngày ISO đúng chính sách MASK-2b.
+    """Dùng R5; chỉ miễn báo trùng trong ngày hợp lệ không có nhãn định danh.
 
     R5 có thể báo GIAY_TO/TAI_KHOAN bên trong một ngày đã được chính
-    _cac_tien_ngay nhận diện. Chỉ miễn các khoảng số nằm trọn ngày đó;
+    _cac_tien_ngay nhận diện sau kiểm lịch/nhãn chung với văn bản thường.
+    Nhãn tài khoản/giấy tờ thắng hình dạng ngày; chỉ miễn số nằm trọn ngày;
     vẫn kiểm đủ, nguyên tiền/ngày, numeric_review và mọi nghi vấn khác.
     Không nới detector tên hoặc dùng kết quả này làm chứng cứ Local.
     """
@@ -207,12 +208,11 @@ def _kiem_vung(goc, phep, buoc):
     _kiem_span(m)
     tat_ca = [(goc[a:b], 'KHAC', True) for a, b, _ in phep]
     con_sot, day_du = che._kiem_con_sot(m.da_che, tat_ca)
-    ngay = [(a, b) for a, b, loai, _ in che._cac_tien_ngay(m.da_che) if loai == 'ngay']
+    ngay = sorted((a, b) for a, b, loai, _ in che._cac_tien_ngay(m.da_che) if loai == 'ngay')
     for muc in con_sot:
         buoc.kiem()
         a, b = muc['vi_tri']['bat_dau'], muc['vi_tri']['ket_thuc']
-        if (muc['nhom'] not in {'GIAY_TO', 'TAI_KHOAN'}
-                or not any(x <= a < b <= y for x, y in ngay)):
+        if not che._duoc_mien_ngay(m.da_che, a, b, muc['nhom'], ngay):
             raise _loi('MASK_DINH_DANH_CHUA_DAT')
     if not day_du or not con_sot or not che._kiem_tien_ngay(goc, m.da_che):
         raise _loi('MASK_DINH_DANH_CHUA_DAT')

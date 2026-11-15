@@ -1,0 +1,3468 @@
+MASK-B4 | 2026-11-15T16:26:00.294487+07:00
+Python 3.13.14, SDK 2.0.0, wheel SHA khop SHA256SUMS; pytest 9.1.1; chi DEMO, Cloud tat.
+Luot muc tieu truoc ho so nguon: 269 passed in 26.63s, ma 0.
+Cac luot phat trien: 18 failed/231 passed (oracle fixture); 1 failed/248 passed (offset oracle); 249 passed; 1 failed/252 passed (surrogate le truoc encode UTF-16, da sua); 269 passed.
+
+$ .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+
+Runner dau chua khoi dong lenh nao: WinError 2 voi duong dan executable thieu .exe. Dung sys.executable cua .venv cho subprocess tren Windows.
+Luot chay that: 2026-11-15T16:26:24.243335+07:00
+
+$ .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.2.0: có ví dụ chạy thử DEMO chưa đạt.
+Ma thoat: 1
+
+$ .venv/Scripts/python -B -m pytest e_mask/tests -q
+.......................................................... [  2%]
+........................................ [  4%]
+........................................................................ [  7%]
+........................................................................ [ 11%]
+........................................................................ [ 14%]
+....xxxx................................................................ [ 17%]
+........................................................................ [ 20%]
+........................................................................ [ 24%]
+........................................................................ [ 27%]
+........................................................................ [ 30%]
+........................................................................ [ 34%]
+........................................................................ [ 37%]
+........................................................................ [ 40%]
+.................F...F.................................................. [ 44%]
+........................................................................ [ 47%]
+........................................................................ [ 50%]
+........................................................................ [ 54%]
+........................................................................ [ 57%]
+........................................................................ [ 60%]
+........................................................................ [ 63%]
+........................................................................ [ 67%]
+........................................................................ [ 70%]
+........................................................................ [ 73%]
+........................................................................ [ 77%]
+........................................................................ [ 80%]
+........................................................................ [ 83%]
+........................................................................ [ 87%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 96%]
+...................................................................      [100%]
+================================== FAILURES ===================================
+_ CheVanBanDemoTests.test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu (mau='1; ') _
+
+self = <test_che_van_ban.CheVanBanDemoTests testMethod=test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu>
+
+    def test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu(self):
+        mau_con = os.environ.get('MASK_3A_MAU_HIEU_NANG')
+        if mau_con is not None:
+            chu = (mau_con * (500_000 // len(mau_con) + 1))[:500_000]
+            bat_dau = perf_counter()
+            kq = che(chu, [], KhoBoNho())
+            giay = perf_counter() - bat_dau
+            self.assertLessEqual(giay, 5, f'{mau_con!r}: {giay:.3f} giây')
+            self.assertTrue(kq['kiem_tien_ngay'])
+            self.assertEqual(kq['so_cho_thay'], 0)
+            if mau_con == '1 ':
+                self.assertFalse(kq['gui_duoc'])
+                self.assertIsNone(kq['van_ban_da_che'])
+                self.assertIn({'nhom': 'TAI_KHOAN', 'vi_tri': {
+                    'bat_dau': 0, 'ket_thuc': 499_999, 'dong': 1, 'cot': 1}}, kq['con_sot'])
+                self.assertTrue(all('nhom' in m for m in kq['con_sot']))
+            else:
+                self.assertTrue(kq['gui_duoc'])
+                self.assertEqual(kq['van_ban_da_che'], chu)
+                self.assertEqual(kq['con_sot'], [])
+            print(f'Hiệu năng {mau_con!r}: {giay:.3f} giây')
+            return
+        # Chỉ tiến trình test con bị giới hạn; không thao tác dịch vụ/PG.
+        for mau in ('1; ', '1, ', '1 '):
+            with self.subTest(mau=mau):
+                moi_truong = dict(os.environ, MASK_3A_MAU_HIEU_NANG=mau)
+                try:
+                    chay = subprocess.run(
+                        [sys.executable, '-X', 'utf8', '-B', '-m', 'unittest', 'discover',
+                         '-s', str(Path(__file__).parent), '-p', Path(__file__).name,
+                         '-k', 'test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu'],
+                        env=moi_truong, capture_output=True, text=True, encoding='utf-8', timeout=12)
+                except subprocess.TimeoutExpired:
+                    self.fail(f'{mau!r}: vượt 12 giây kể cả khởi tạo tiến trình; ngưỡng xử lý là 5 giây')
+>               self.assertEqual(chay.returncode, 0, chay.stdout + chay.stderr)
+E               AssertionError: 1 != 0 : F
+E               ======================================================================
+E               FAIL: test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu (test_che_van_ban.CheVanBanDemoTests.test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu)
+E               ----------------------------------------------------------------------
+E               Traceback (most recent call last):
+E                 File "D:\Claude\engines-wt\e_mask-mask-b4\e_mask\tests\test_che_van_ban.py", line 620, in test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+E                   self.assertLessEqual(giay, 5, f'{mau_con!r}: {giay:.3f} giây')
+E                   ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AssertionError: 5.162354200001573 not less than or equal to 5 : '1; ': 5.162 giây
+E               
+E               ----------------------------------------------------------------------
+E               Ran 1 test in 5.167s
+E               
+E               FAILED (failures=1)
+
+e_mask\tests\test_che_van_ban.py:647: AssertionError
+__________ test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan __________
+
+tmp_path = WindowsPath('C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-181/test_timeout_cung_cli_dung_chi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017130160670>
+capsys = <_pytest.capture.CaptureFixture object at 0x000001713262F7D0>
+
+    def test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan(tmp_path, monkeypatch, capsys):
+        ca = ca_demo()
+        monkeypatch.setattr(tool,'doc_bo',lambda: bo_demo(ca))
+        tep = tmp_path/'timeout-cung.json'
+        # Server trì hoãn POST lâu hơn deadline cứng; transport vẫn là AI-9 gốc.
+        with LocalGia() as may:
+            may.khi_nhan = lambda method,path: time.sleep(4) if method == 'POST' else None
+            bat_dau = time.monotonic()
+            code = tool.main(['--that','--url',may.url,'--model','model-demo',
+                              '--timeout','2','--bao-cao',str(tep),'--thu-muc-bao-cao',str(tmp_path)])
+            thoi_gian = time.monotonic()-bat_dau
+        k = json.loads(tep.read_text('utf-8'))
+        assert code == 1 and thoi_gian < 3.5
+        assert k['so_ca_het_han_cung'] == 1
+>       assert k['tung_ca'][0]['tinh_trang_do'] == 'đã đo'
+E       AssertionError: assert 'chưa đo đủ' == 'đã đo'
+E         
+E         - đã đo
+E         + chưa đo đủ
+
+e_mask\tests\test_mask_2c_4.py:429: AssertionError
+---------------------------- Captured stdout call -----------------------------
+{
+  "nhan": "DEMO",
+  "trang_thai_local": "ĐÃ THỬ Local qua CoreGia; chưa nghiệm thu độc lập",
+  "core": "CoreGia",
+  "canh_bao": "CoreGia không chứng nhận cửa Core thật; nợ CAO còn mở, Cloud giữ tắt.",
+  "held_out_doc_lap": false,
+  "tinh_trang_gold": "DEMO test, không held-out",
+  "bam_bo": "sha256:aa1c18a4be40de40b92ae679a1d9e174f34fece59f1a20c1ca34d8ed0a56b710",
+  "tap": "ung_vien",
+  "so_ca": 1,
+  "so_ten_co_so": 1,
+  "so_span_gold": 1,
+  "bam_model": "sha256:fa7e04643ea4e4a471f1e0d0324d14274b2bfd26d0069c5c4bd3eb09a75e674f",
+  "model": "model-demo",
+  "prompt": {
+    "ma": "demo.mask_2c_4",
+    "phien_ban": "DEMO-1",
+    "bam": "sha256:ec69ee76fc5721b7ec1d1f6f627eb7d0101a6e0eb2910e171a1acdae876eeb79"
+  },
+  "bam_khuon": "sha256:f67c5f43e3a7f116e95b94aa3351f0b7519249a3c365f633c469ec249874b6b6",
+  "bam_profile": "sha256:4e9c32d6759eaf5d92bc9955f7c64576cc70732a5fdf23121cc36fbea6cad9e9",
+  "profile": {
+    "phien_ban": 1,
+    "tac_vu": "mask.chuan_bi_ai_cuc_bo@1",
+    "nha_cung_cap_bat_buoc": "local",
+    "loai": [
+      "nguoi",
+      "to_chuc",
+      "dia_chi"
+    ],
+    "muc": [
+      "chac",
+      "nghi_ngo"
+    ],
+    "he_offset": "unicode_code_point",
+    "khoang": "nua_mo",
+    "ky_tu_toi_da": 500000,
+    "doan_toi_da": 8000,
+    "overlap_moi_phia": 512,
+    "so_doan_toi_da": 128,
+    "span_toi_da": 300,
+    "thuc_the_toi_da": 2000,
+    "json_phan_hoi_toi_da": 1048576,
+    "prompt_toi_da": 16000,
+    "khuon_toi_da": 32768,
+    "chuyen_tiep_toi_da": 65536,
+    "so_luot_dong_thoi": 1,
+    "thoi_han_chuan_bi_giay": 60
+  },
+  "phien_ban_sdk": "2.0.0",
+  "phien_ban_mask": "1.2.0",
+  "budget_core": "Fixture CoreGia; token chưa đo, AI-9 kiểm context/byte bảo thủ nguyên bản.",
+  "so_luot_cloud": 0,
+  "so_luot_local": 0,
+  "ket_qua": {
+    "quy_tac": {
+      "tong_ca": 1,
+      "ca_hop_le": 0,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 0,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 1,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 0,
+      "so_ca_lot": 0,
+      "so_span_gold": 1,
+      "so_span_lot": 0,
+      "so_span_gold_phat_hanh": 0,
+      "so_span_che_du": 0,
+      "ma_loi": {
+        "HET_HAN_CHUOI": 1
+      },
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 0,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 1,
+      "che_thua_dinh_danh": {
+        "so_ca": 0,
+        "so_ca_da_cham": 0,
+        "tong_ca_co_gold": 1,
+        "so_span": 0,
+        "so_ky_tu": 0
+      },
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 1,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": null,
+      "ti_le_lot_span_phat_hanh": null
+    },
+    "hai_lop": {
+      "tong_ca": 1,
+      "ca_hop_le": 0,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 0,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 1,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 0,
+      "so_ca_lot": 0,
+      "so_span_gold": 1,
+      "so_span_lot": 0,
+      "so_span_gold_phat_hanh": 0,
+      "so_span_che_du": 0,
+      "ma_loi": {
+        "HET_HAN_CHUOI": 1
+      },
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 0,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 1,
+      "che_thua_dinh_danh": {
+        "so_ca": 0,
+        "so_ca_da_cham": 0,
+        "tong_ca_co_gold": 1,
+        "so_span": 0,
+        "so_ky_tu": 0
+      },
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 1,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": null,
+      "ti_le_lot_span_phat_hanh": null,
+      "phan_tach": {
+        "chan_truoc_ai": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "ai_thuc_su_do": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "chua_co_doan_ai_xong": {
+          "tong_ca": 1,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 1,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 1,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {
+            "HET_HAN_CHUOI": 1
+          },
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 1,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 1,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": 0.0,
+          "p95_ms": 0.0,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 1,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        }
+      },
+      "so_ca_ai_da_goi_provider": 0,
+      "ghi_chu": "0 lọt trên ca bị chặn trước AI là hiển nhiên. AI thực sự đo = có ít nhất một đoạn AI-9 XONG; đủ đoạn/hợp lệ báo riêng. Số lọt chưa đo để null từng ca; số 0 tổng chỉ là số quan sát, không chứng minh an toàn."
+    }
+  },
+  "phien_ban_cong_cu": "MASK-2c-4-2",
+  "bam_cong_cu": "sha256:347abc2b0fb70d7cb0792c1e1942a86c9f0b32f60ffc611f7a997857d3d90074",
+  "timeout": {
+    "giay": 2.0,
+    "mac_dinh_giay_moi_doan": 120,
+    "tran_giay": 3600
+  },
+  "bam_cau_hinh_khong_url": "sha256:ddaf911bd44524c0d74c03a037fd854712a72c109620beade1f0095ad0047737",
+  "thoi_diem_utc": "2026-11-15T09:29:03.936458+00:00",
+  "dinh_nghia_luot_local": "Số gọi provider Local, kể cả lỗi trước POST; số đoạn AI xong báo riêng.",
+  "so_timeout_xac_dinh": null,
+  "ghi_chu_timeout": "AI-9 gom timeout/mất phản hồi/202 vào ChuaRo; không suy số timeout bằng 0.",
+  "gioi_han_ket_luan": "AI chỉ cứu khi báo đủ; báo thiếu một phần tên thì phần còn lại có thể lọt.",
+  "so_ca_het_han_cung": 1,
+  "local_p50_ms": null,
+  "local_p95_ms": null,
+  "tung_ca": [
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "quy_tac",
+      "so_span_gold": 1,
+      "trang_thai": "loi_ky_thuat",
+      "so_span_lot": null,
+      "che_thua": null,
+      "so_span_che_thua": null,
+      "so_ky_tu_che_thua": null,
+      "ma_loi": "HET_HAN_CHUOI",
+      "thoi_gian_ms": 0,
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "chưa đo đủ",
+      "het_han": true,
+      "timeout_giay": 2.0,
+      "so_doan_du_kien": 1
+    },
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "hai_lop",
+      "so_span_gold": 1,
+      "trang_thai": "loi_ky_thuat",
+      "so_span_lot": null,
+      "che_thua": null,
+      "so_span_che_thua": null,
+      "so_ky_tu_che_thua": null,
+      "ma_loi": "HET_HAN_CHUOI",
+      "thoi_gian_ms": 0,
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "chưa đo đủ",
+      "het_han": true,
+      "timeout_giay": 2.0,
+      "so_doan_du_kien": 1
+    }
+  ],
+  "muc_tieu_0_lot": "CHƯA ĐO ĐỦ"
+}
+__________________ test_timeout_cung_giu_dem_doan_ai_da_xong __________________
+
+tmp_path = WindowsPath('C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-181/test_timeout_cung_giu_dem_doan0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000171300F9A20>
+
+    def test_timeout_cung_giu_dem_doan_ai_da_xong(tmp_path,monkeypatch):
+        ca = ca_demo(chu='DEMO; '+ 'nội dung tổng hợp; '*900+' orvella linero')
+        monkeypatch.setattr(tool,'doc_bo',lambda: bo_demo(ca))
+        tep = tmp_path/'mot-phan-doan.json'
+        with LocalGia(tra_loi={'da_quet_het':True,'thuc_the':[]}) as may:
+            may.khi_nhan = lambda method,path: time.sleep(7) if method == 'POST' and may.so_luot_hoi > 1 else None
+            code = tool.main(['--that','--url',may.url,'--model','model-demo','--timeout','5',
+                              '--bao-cao',str(tep),'--thu-muc-bao-cao',str(tmp_path)])
+        k = json.loads(tep.read_text('utf-8'))
+        r = k['tung_ca'][1]
+>       assert code == 1 and r['so_doan_ai_xong'] == 1
+E       assert (1 == 1 and 0 == 1)
+
+e_mask\tests\test_mask_2c_4.py:495: AssertionError
+---------------------------- Captured stdout call -----------------------------
+{
+  "nhan": "DEMO",
+  "trang_thai_local": "ĐÃ THỬ Local qua CoreGia; chưa nghiệm thu độc lập",
+  "core": "CoreGia",
+  "canh_bao": "CoreGia không chứng nhận cửa Core thật; nợ CAO còn mở, Cloud giữ tắt.",
+  "held_out_doc_lap": false,
+  "tinh_trang_gold": "DEMO test, không held-out",
+  "bam_bo": "sha256:4b917818f2fd65b95932136086650ad883baefc3fd4504f2558475e14ebfe0c2",
+  "tap": "ung_vien",
+  "so_ca": 1,
+  "so_ten_co_so": 1,
+  "so_span_gold": 1,
+  "bam_model": "sha256:fa7e04643ea4e4a471f1e0d0324d14274b2bfd26d0069c5c4bd3eb09a75e674f",
+  "model": "model-demo",
+  "prompt": {
+    "ma": "demo.mask_2c_4",
+    "phien_ban": "DEMO-1",
+    "bam": "sha256:ec69ee76fc5721b7ec1d1f6f627eb7d0101a6e0eb2910e171a1acdae876eeb79"
+  },
+  "bam_khuon": "sha256:f67c5f43e3a7f116e95b94aa3351f0b7519249a3c365f633c469ec249874b6b6",
+  "bam_profile": "sha256:4e9c32d6759eaf5d92bc9955f7c64576cc70732a5fdf23121cc36fbea6cad9e9",
+  "profile": {
+    "phien_ban": 1,
+    "tac_vu": "mask.chuan_bi_ai_cuc_bo@1",
+    "nha_cung_cap_bat_buoc": "local",
+    "loai": [
+      "nguoi",
+      "to_chuc",
+      "dia_chi"
+    ],
+    "muc": [
+      "chac",
+      "nghi_ngo"
+    ],
+    "he_offset": "unicode_code_point",
+    "khoang": "nua_mo",
+    "ky_tu_toi_da": 500000,
+    "doan_toi_da": 8000,
+    "overlap_moi_phia": 512,
+    "so_doan_toi_da": 128,
+    "span_toi_da": 300,
+    "thuc_the_toi_da": 2000,
+    "json_phan_hoi_toi_da": 1048576,
+    "prompt_toi_da": 16000,
+    "khuon_toi_da": 32768,
+    "chuyen_tiep_toi_da": 65536,
+    "so_luot_dong_thoi": 1,
+    "thoi_han_chuan_bi_giay": 60
+  },
+  "phien_ban_sdk": "2.0.0",
+  "phien_ban_mask": "1.2.0",
+  "budget_core": "Fixture CoreGia; token chưa đo, AI-9 kiểm context/byte bảo thủ nguyên bản.",
+  "so_luot_cloud": 0,
+  "so_luot_local": 0,
+  "ket_qua": {
+    "quy_tac": {
+      "tong_ca": 1,
+      "ca_hop_le": 1,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 1,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 0,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 1,
+      "so_ca_lot": 1,
+      "so_span_gold": 1,
+      "so_span_lot": 1,
+      "so_span_gold_phat_hanh": 1,
+      "so_span_che_du": 0,
+      "ma_loi": {},
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 0,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 0,
+      "che_thua_dinh_danh": {
+        "so_ca": 1,
+        "so_ca_da_cham": 1,
+        "tong_ca_co_gold": 1,
+        "so_span": 1,
+        "so_ky_tu": 4
+      },
+      "p50_ms": 914.44,
+      "p95_ms": 914.44,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 1,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": 1.0,
+      "ti_le_lot_span_phat_hanh": 1.0
+    },
+    "hai_lop": {
+      "tong_ca": 1,
+      "ca_hop_le": 0,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 0,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 1,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 0,
+      "so_ca_lot": 0,
+      "so_span_gold": 1,
+      "so_span_lot": 0,
+      "so_span_gold_phat_hanh": 0,
+      "so_span_che_du": 0,
+      "ma_loi": {
+        "HET_HAN_CHUOI": 1
+      },
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 0,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 1,
+      "che_thua_dinh_danh": {
+        "so_ca": 0,
+        "so_ca_da_cham": 0,
+        "tong_ca_co_gold": 1,
+        "so_span": 0,
+        "so_ky_tu": 0
+      },
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 1,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": null,
+      "ti_le_lot_span_phat_hanh": null,
+      "phan_tach": {
+        "chan_truoc_ai": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "ai_thuc_su_do": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "chua_co_doan_ai_xong": {
+          "tong_ca": 1,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 1,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 1,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {
+            "HET_HAN_CHUOI": 1
+          },
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 1,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 1,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": 0.0,
+          "p95_ms": 0.0,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 1,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        }
+      },
+      "so_ca_ai_da_goi_provider": 0,
+      "ghi_chu": "0 lọt trên ca bị chặn trước AI là hiển nhiên. AI thực sự đo = có ít nhất một đoạn AI-9 XONG; đủ đoạn/hợp lệ báo riêng. Số lọt chưa đo để null từng ca; số 0 tổng chỉ là số quan sát, không chứng minh an toàn."
+    }
+  },
+  "phien_ban_cong_cu": "MASK-2c-4-2",
+  "bam_cong_cu": "sha256:347abc2b0fb70d7cb0792c1e1942a86c9f0b32f60ffc611f7a997857d3d90074",
+  "timeout": {
+    "giay": 5.0,
+    "mac_dinh_giay_moi_doan": 120,
+    "tran_giay": 3600
+  },
+  "bam_cau_hinh_khong_url": "sha256:8d6d25ea507bf9f9a52e6993c921981b4e2331b53a3747874572d9e904763c9c",
+  "thoi_diem_utc": "2026-11-15T09:29:10.677201+00:00",
+  "dinh_nghia_luot_local": "Số gọi provider Local, kể cả lỗi trước POST; số đoạn AI xong báo riêng.",
+  "so_timeout_xac_dinh": null,
+  "ghi_chu_timeout": "AI-9 gom timeout/mất phản hồi/202 vào ChuaRo; không suy số timeout bằng 0.",
+  "gioi_han_ket_luan": "AI chỉ cứu khi báo đủ; báo thiếu một phần tên thì phần còn lại có thể lọt.",
+  "phien_ban_hoi_ai": "0.5.0",
+  "so_ca_het_han_cung": 1,
+  "local_p50_ms": null,
+  "local_p95_ms": null,
+  "tung_ca": [
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "quy_tac",
+      "so_span_gold": 1,
+      "trang_thai": "phat_hanh_con_lot",
+      "so_span_lot": 1,
+      "che_thua": true,
+      "so_span_che_thua": 1,
+      "so_ky_tu_che_thua": 4,
+      "ma_loi": null,
+      "thoi_gian_ms": 914.44,
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "đã đo",
+      "timeout_giay": 5.0,
+      "so_doan_du_kien": 3,
+      "het_han": false,
+      "so_luot_local": 0
+    },
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "hai_lop",
+      "so_span_gold": 1,
+      "trang_thai": "loi_ky_thuat",
+      "so_span_lot": null,
+      "che_thua": null,
+      "so_span_che_thua": null,
+      "so_ky_tu_che_thua": null,
+      "ma_loi": "HET_HAN_CHUOI",
+      "thoi_gian_ms": 0,
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "chưa đo đủ",
+      "timeout_giay": 5.0,
+      "so_doan_du_kien": 3,
+      "het_han": true,
+      "so_luot_local": 0
+    }
+  ],
+  "muc_tieu_0_lot": "CHƯA ĐO ĐỦ"
+}
+=========================== short test summary info ===========================
+SUBFAILED(mau='1; ') e_mask/tests/test_che_van_ban.py::CheVanBanDemoTests::test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+FAILED e_mask/tests/test_mask_2c_4.py::test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan
+FAILED e_mask/tests/test_mask_2c_4.py::test_timeout_cung_giu_dem_doan_ai_da_xong
+3 failed, 2175 passed, 4 xfailed, 189 subtests passed in 241.09s (0:04:01)
+Ma thoat: 1
+
+$ .venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Ma thoat: 0
+
+$ .venv/Scripts/python -B e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[ĐẠT] Che văn bản DEMO XONG 
+[ĐẠT] Mở che DEMO XONG 
+Đã kiểm bằng Core giả (CoreGia).
+Ma thoat: 0
+
+$ git diff --check
+Ma thoat: 0
+
+Da kiem bang Core gia (CoreGia) goi van ban; writer tep kiem truc tiep RAM, chua Office/Core/Local that hoac Linux thuc te.
+
+Chay rieng 3 ca thoi gian cu, giu nguyen threshold va runtime:
+$ -B -m pytest e_mask/tests/test_che_van_ban.py::CheVanBanDemoTests::test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu e_mask/tests/test_mask_2c_4.py::test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan e_mask/tests/test_mask_2c_4.py::test_timeout_cung_giu_dem_doan_ai_da_xong -q --tb=short
+..F                                                                   [100%]
+================================== FAILURES ===================================
+__________________ test_timeout_cung_giu_dem_doan_ai_da_xong __________________
+e_mask\tests\test_mask_2c_4.py:495: in test_timeout_cung_giu_dem_doan_ai_da_xong
+    assert code == 1 and r['so_doan_ai_xong'] == 1
+E   assert (1 == 1 and 0 == 1)
+---------------------------- Captured stdout call -----------------------------
+{
+  "nhan": "DEMO",
+  "trang_thai_local": "ĐÃ THỬ Local qua CoreGia; chưa nghiệm thu độc lập",
+  "core": "CoreGia",
+  "canh_bao": "CoreGia không chứng nhận cửa Core thật; nợ CAO còn mở, Cloud giữ tắt.",
+  "held_out_doc_lap": false,
+  "tinh_trang_gold": "DEMO test, không held-out",
+  "bam_bo": "sha256:4b917818f2fd65b95932136086650ad883baefc3fd4504f2558475e14ebfe0c2",
+  "tap": "ung_vien",
+  "so_ca": 1,
+  "so_ten_co_so": 1,
+  "so_span_gold": 1,
+  "bam_model": "sha256:fa7e04643ea4e4a471f1e0d0324d14274b2bfd26d0069c5c4bd3eb09a75e674f",
+  "model": "model-demo",
+  "prompt": {
+    "ma": "demo.mask_2c_4",
+    "phien_ban": "DEMO-1",
+    "bam": "sha256:ec69ee76fc5721b7ec1d1f6f627eb7d0101a6e0eb2910e171a1acdae876eeb79"
+  },
+  "bam_khuon": "sha256:f67c5f43e3a7f116e95b94aa3351f0b7519249a3c365f633c469ec249874b6b6",
+  "bam_profile": "sha256:4e9c32d6759eaf5d92bc9955f7c64576cc70732a5fdf23121cc36fbea6cad9e9",
+  "profile": {
+    "phien_ban": 1,
+    "tac_vu": "mask.chuan_bi_ai_cuc_bo@1",
+    "nha_cung_cap_bat_buoc": "local",
+    "loai": [
+      "nguoi",
+      "to_chuc",
+      "dia_chi"
+    ],
+    "muc": [
+      "chac",
+      "nghi_ngo"
+    ],
+    "he_offset": "unicode_code_point",
+    "khoang": "nua_mo",
+    "ky_tu_toi_da": 500000,
+    "doan_toi_da": 8000,
+    "overlap_moi_phia": 512,
+    "so_doan_toi_da": 128,
+    "span_toi_da": 300,
+    "thuc_the_toi_da": 2000,
+    "json_phan_hoi_toi_da": 1048576,
+    "prompt_toi_da": 16000,
+    "khuon_toi_da": 32768,
+    "chuyen_tiep_toi_da": 65536,
+    "so_luot_dong_thoi": 1,
+    "thoi_han_chuan_bi_giay": 60
+  },
+  "phien_ban_sdk": "2.0.0",
+  "phien_ban_mask": "1.2.0",
+  "budget_core": "Fixture CoreGia; token chưa đo, AI-9 kiểm context/byte bảo thủ nguyên bản.",
+  "so_luot_cloud": 0,
+  "so_luot_local": 1,
+  "ket_qua": {
+    "quy_tac": {
+      "tong_ca": 1,
+      "ca_hop_le": 1,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 1,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 0,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 1,
+      "so_ca_lot": 1,
+      "so_span_gold": 1,
+      "so_span_lot": 1,
+      "so_span_gold_phat_hanh": 1,
+      "so_span_che_du": 0,
+      "ma_loi": {},
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 0,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 0,
+      "che_thua_dinh_danh": {
+        "so_ca": 1,
+        "so_ca_da_cham": 1,
+        "tong_ca_co_gold": 1,
+        "so_span": 1,
+        "so_ky_tu": 4
+      },
+      "p50_ms": 774.488,
+      "p95_ms": 774.488,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 1,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": 1.0,
+      "ti_le_lot_span_phat_hanh": 1.0
+    },
+    "hai_lop": {
+      "tong_ca": 1,
+      "ca_hop_le": 0,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 0,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 1,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 0,
+      "so_ca_lot": 0,
+      "so_span_gold": 1,
+      "so_span_lot": 0,
+      "so_span_gold_phat_hanh": 0,
+      "so_span_che_du": 0,
+      "ma_loi": {
+        "HET_HAN_CHUOI": 1
+      },
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 3,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 1,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 1,
+      "che_thua_dinh_danh": {
+        "so_ca": 0,
+        "so_ca_da_cham": 0,
+        "tong_ca_co_gold": 1,
+        "so_span": 0,
+        "so_ky_tu": 0
+      },
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 1,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": null,
+      "ti_le_lot_span_phat_hanh": null,
+      "phan_tach": {
+        "chan_truoc_ai": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "ai_thuc_su_do": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "chua_co_doan_ai_xong": {
+          "tong_ca": 1,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 1,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 1,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {
+            "HET_HAN_CHUOI": 1
+          },
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 3,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 1,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 1,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 1,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": 0.0,
+          "p95_ms": 0.0,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 1,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        }
+      },
+      "so_ca_ai_da_goi_provider": 1,
+      "ghi_chu": "0 lọt trên ca bị chặn trước AI là hiển nhiên. AI thực sự đo = có ít nhất một đoạn AI-9 XONG; đủ đoạn/hợp lệ báo riêng. Số lọt chưa đo để null từng ca; số 0 tổng chỉ là số quan sát, không chứng minh an toàn."
+    }
+  },
+  "phien_ban_cong_cu": "MASK-2c-4-2",
+  "bam_cong_cu": "sha256:347abc2b0fb70d7cb0792c1e1942a86c9f0b32f60ffc611f7a997857d3d90074",
+  "timeout": {
+    "giay": 5.0,
+    "mac_dinh_giay_moi_doan": 120,
+    "tran_giay": 3600
+  },
+  "bam_cau_hinh_khong_url": "sha256:8d6d25ea507bf9f9a52e6993c921981b4e2331b53a3747874572d9e904763c9c",
+  "thoi_diem_utc": "2026-11-15T09:31:40.775638+00:00",
+  "dinh_nghia_luot_local": "Số gọi provider Local, kể cả lỗi trước POST; số đoạn AI xong báo riêng.",
+  "so_timeout_xac_dinh": null,
+  "ghi_chu_timeout": "AI-9 gom timeout/mất phản hồi/202 vào ChuaRo; không suy số timeout bằng 0.",
+  "gioi_han_ket_luan": "AI chỉ cứu khi báo đủ; báo thiếu một phần tên thì phần còn lại có thể lọt.",
+  "phien_ban_hoi_ai": "0.5.0",
+  "so_ca_het_han_cung": 1,
+  "local_p50_ms": null,
+  "local_p95_ms": null,
+  "tung_ca": [
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "quy_tac",
+      "so_span_gold": 1,
+      "trang_thai": "phat_hanh_con_lot",
+      "so_span_lot": 1,
+      "che_thua": true,
+      "so_span_che_thua": 1,
+      "so_ky_tu_che_thua": 4,
+      "ma_loi": null,
+      "thoi_gian_ms": 774.488,
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "đã đo",
+      "timeout_giay": 5.0,
+      "so_doan_du_kien": 3,
+      "het_han": false,
+      "so_luot_local": 0
+    },
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "hai_lop",
+      "so_span_gold": 1,
+      "trang_thai": "loi_ky_thuat",
+      "so_span_lot": null,
+      "che_thua": null,
+      "so_span_che_thua": null,
+      "so_ky_tu_che_thua": null,
+      "ma_loi": "HET_HAN_CHUOI",
+      "thoi_gian_ms": 0,
+      "so_doan_ke_hoach": 3,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "chưa đo đủ",
+      "timeout_giay": 5.0,
+      "so_doan_du_kien": 3,
+      "het_han": true,
+      "so_luot_local": 1
+    }
+  ],
+  "muc_tieu_0_lot": "CHƯA ĐO ĐỦ"
+}
+=========================== short test summary info ===========================
+FAILED e_mask/tests/test_mask_2c_4.py::test_timeout_cung_giu_dem_doan_ai_da_xong
+1 failed, 2 passed, 3 subtests passed in 25.64s
+Ma thoat: 1
+
+Kiem lai toan bo, temp trong worktree nhu luot gop B2/B3, khong doi threshold hoac code:
+$ -B -m pytest e_mask/tests -q --basetemp=D:\Claude\engines-wt\e_mask-mask-b4\.pytest-tmp\mask-b4-kiem-2 --tb=short
+.......................................................... [  2%]
+....................................EEEE [  4%]
+EEEEEEEEEEE...EE..EEEEEEE............................................... [  7%]
+...EEEEEEE.............................................................. [ 11%]
+........................................................................ [ 14%]
+....xxxx................................................................ [ 17%]
+........................................................................ [ 20%]
+........................................................................ [ 24%]
+........................................................................ [ 27%]
+........................................................................ [ 30%]
+........................................................................ [ 34%]
+........................................................................ [ 37%]
+........................................................................ [ 40%]
+..EEE.......EEEE.EE.EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE [ 44%]
+EEEEEE...........E.E.................................................... [ 47%]
+........................................................................ [ 50%]
+........................................................................ [ 54%]
+........................................................................ [ 57%]
+........................................................................ [ 60%]
+........................................................................ [ 63%]
+........................................................................ [ 67%]
+........................................................................ [ 70%]
+........................................................................ [ 73%]
+........................................................................ [ 77%]
+........................................................................ [ 80%]
+........................................................................ [ 83%]
+........................................................................ [ 87%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 96%]
+..............................................................EEEE.      [100%]
+=================================== ERRORS ====================================
+________ ERROR at setup of test_hai_tien_trinh_tranh_ghi_khong_mat_dau ________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_khoa_da_tien_trinh_het_han_bao_loi_khong_fallback ___
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____ ERROR at setup of test_byte_kho_tam_chi_bam_ma_so_khong_ten_toan_van _____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____________ ERROR at setup of test_hong_khong_tao_lai_kho_rong[] _____________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+___________ ERROR at setup of test_hong_khong_tao_lai_kho_rong[{}] ____________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____________ ERROR at setup of test_hong_khong_tao_lai_kho_rong[{] ____________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_hong_khong_tao_lai_kho_rong[{"phien_ban":1,"luot":{},"luot":{}}] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_hong_khong_tao_lai_kho_rong[{"phien_ban":1,"luot":{},"van_ban":"DEMO"}] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_hong_khong_tao_lai_kho_rong[{"phien_ban":true,"luot":{}}] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_loi_io_khong_lo_du_lieu_khong_thanh_cong_gia[doc] ___
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_loi_io_khong_lo_du_lieu_khong_thanh_cong_gia[ghi] ___
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_loi_io_khong_lo_du_lieu_khong_thanh_cong_gia[doi_ten] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_________ ERROR at setup of test_cung_luot_khac_noi_dung_la_xung_dot __________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+________ ERROR at setup of test_giu_bam_chot_khi_giao_lai_va_tach_vung ________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_________________ ERROR at setup of test_duong_dan_dung_phieu _________________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+________________ ERROR at setup of test_thu_muc_khong_ghi_duoc ________________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__________ ERROR at setup of test_khong_cho_noi_dung_vao_truong_bam ___________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____________________ ERROR at setup of test_cau_hinh_thieu ____________________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+___________________ ERROR at setup of test_cau_hinh_hong[{] ___________________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_______________ ERROR at setup of test_cau_hinh_hong[{"la": 1}] _______________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____________ ERROR at setup of test_cau_hinh_hong[{"a":1,"a":2}] _____________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__________________ ERROR at setup of test_cau_hinh_hong[NaN] __________________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____________________ ERROR at setup of test_cau_hinh_rong _____________________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__________________ ERROR at setup of test_kiem_doc_lap_chan ___________________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____ ERROR at setup of test_whitelist_du_4_tep_dung_sha_va_thu_hoi_cache _____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[thieu_tep] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[thieu_whitelist] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[sai_sha] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[duong_tuong_doi] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[ten_la] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[tep_rong] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_______ ERROR at setup of test_bao_cao_khong_ro_goc_url_path_ma_yeu_cau _______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_______ ERROR at setup of test_cam_bao_cao_trong_engine_va_khong_ghi_de _______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_cmd_chay_kho_duong_dan_va_thu_muc_co_khoang_trang ___
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+______ ERROR at setup of test_timeout_khong_hop_le_khong_tao_bao_cao[0] _______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+______ ERROR at setup of test_timeout_khong_hop_le_khong_tao_bao_cao[-1] ______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____ ERROR at setup of test_timeout_khong_hop_le_khong_tao_bao_cao[nan] ______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____ ERROR at setup of test_timeout_khong_hop_le_khong_tao_bao_cao[inf] ______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_______ ERROR at setup of test_bao_cao_trong_repo_can_thu_muc_chi_dinh ________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_______ ERROR at setup of test_ngoai_le_tien_trinh_cli_van_ghi_ca_truoc _______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_________ ERROR at setup of test_timeout_cung_giu_dem_doan_ai_da_xong _________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+________ ERROR at setup of test_toan_bo_vector_kho_luot[nhat_ky_rong] _________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_toan_bo_vector_kho_luot[tra_cum_trung_hut_chuan_hoa] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____ ERROR at setup of test_toan_bo_vector_kho_luot[cum_moi_chong_dem_lap] ____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_toan_bo_vector_kho_luot[gap_lai_cum_tam_trong_danh_muc] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_toan_bo_vector_kho_luot[tai_dung_cum_cho_toan_vung] __
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_toan_bo_vector_kho_luot[cum_cho_khac_nhom_giu_nhom_cua_core] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_toan_bo_vector_kho_luot[cum_cho_khac_khong_tai_dung] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_toan_bo_vector_kho_luot[mo_chinh_thuc_tam_bo_sung_va_hut] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+___ ERROR at setup of test_toan_bo_vector_kho_luot[mo_day_du_dong_ro_rang] ____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____ ERROR at setup of test_toan_bo_vector_kho_luot[mo_day_du_giu_yeu_cau] ____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_toan_bo_vector_kho_luot[che_khong_gui_duoc_dong_khi_chot] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_snapshot_hong_tu_choi_truoc_su_dung[thieu_trang_thai] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_snapshot_hong_tu_choi_truoc_su_dung[thieu_yeu_cau] __
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_snapshot_hong_tu_choi_truoc_su_dung[cum_cho_sai_nhom] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_snapshot_hong_tu_choi_truoc_su_dung[cum_cho_lo_ten] __
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_snapshot_hong_tu_choi_truoc_su_dung[trung_gia_tri] __
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_snapshot_hong_tu_choi_truoc_su_dung[trung_bi_danh] __
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____ ERROR at setup of test_mac_dinh_khong_co_kho_hoac_danh_tinh_tu_khai _____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__________ ERROR at setup of test_rollback_giao_dich_khong_the_chot ___________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____ ERROR at setup of test_chot_loi_giua_chung_rollback_toan_bo[alias] ______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+______ ERROR at setup of test_chot_loi_giua_chung_rollback_toan_bo[dem] _______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____ ERROR at setup of test_chot_loi_giua_chung_rollback_toan_bo[hang_cho] ____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+___ ERROR at setup of test_chot_loi_giua_chung_rollback_toan_bo[tham_chieu] ___
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____ ERROR at setup of test_chot_loi_giua_chung_rollback_toan_bo[yeu_cau] _____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+______ ERROR at setup of test_chot_loi_giua_chung_rollback_toan_bo[luot] ______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____ ERROR at setup of test_gap_lai_retry_khoi_dong_lai_khong_cap_dem_moi _____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_______ ERROR at setup of test_hai_snapshot_tranh_chot_xung_dot_thu_lai _______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+______ ERROR at setup of test_hai_tien_trinh_tranh_chot_cung_ben_kho_gia ______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_bang_chung_khac_module_phap_nhan_va_mo_bi_danh_chua_tham_chieu _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_sai_module_nguoi_tai_lieu_vung_khong_mo[module-module-demo-sai] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_sai_module_nguoi_tai_lieu_vung_khong_mo[nguoi_gui-nguoi-demo-sai] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_sai_module_nguoi_tai_lieu_vung_khong_mo[tai_lieu-tai-lieu-demo-sai] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_sai_module_nguoi_tai_lieu_vung_khong_mo[vung-THAT] __
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__________ ERROR at setup of test_kiem_quyen_lai_tung_cua[snapshot] ___________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____________ ERROR at setup of test_kiem_quyen_lai_tung_cua[chot] _____________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+___________ ERROR at setup of test_kiem_quyen_lai_tung_cua[doc_lai] ___________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____ ERROR at setup of test_port_kho_tu_kiem_quyen_ngay_ca_nguon_quyen_cu _____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__________ ERROR at setup of test_ngu_canh_doi_giua_luot_bi_tu_choi ___________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_________ ERROR at setup of test_loi_port_khong_lo_ten_duong_dan[kho] _________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+________ ERROR at setup of test_loi_port_khong_lo_ten_duong_dan[quyen] ________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+___________ ERROR at setup of test_ma_mo_thieu_sai_bi_tu_choi[None] ___________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____________ ERROR at setup of test_ma_mo_thieu_sai_bi_tu_choi[] _____________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____ ERROR at setup of test_ma_mo_thieu_sai_bi_tu_choi[ma-demo-khong-co] _____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+____ ERROR at setup of test_doc_lai_ket_qua_chua_dat_khong_bao_thanh_cong _____
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+___________ ERROR at setup of test_ma_opaque_khong_ep_uuid_64_ky_tu ___________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_______ ERROR at setup of test_khong_tin_ma_yeu_cau_tu_payload_khi_che ________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_chua_ro_sau_chot_giao_lai_doc_port_khong_tinh_lai ___
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+______ ERROR at setup of test_chua_ro_nguon_con_dang_cho_khong_chay_lai _______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____________ ERROR at setup of test_kho_tam_hong_khong_gui_chot ______________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_dau_da_chot_nhung_port_mat_trang_thai_thi_tu_choi ___
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_______________ ERROR at setup of test_huy_truoc_chot_khong_ghi _______________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_________ ERROR at setup of test_ket_qua_chua_dat_khong_chot[con_sot] _________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_____ ERROR at setup of test_ket_qua_chua_dat_khong_chot[kiem_tien_ngay] ______
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong[1] __
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong[4] __
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_________ ERROR at setup of test_core_gia_chua_ro_khong_bao_xong_gia __________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_ngan_chot_retry_khong_ghi_tep_va_khong_luu_tai_lieu __
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__________ ERROR at setup of test_chua_ro_khong_mat_khi_ghi_dau_loi ___________
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_port_loi_la_chi_tra_loi_co_dinh_khong_in_ten[snapshot_luot] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_port_loi_la_chi_tra_loi_co_dinh_khong_in_ten[chot_luot] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+_ ERROR at setup of test_kiem_doc_lap_bat_ma_doc_cau_hinh_may[KTT_ENGINE_DU_LIEU] _
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+__ ERROR at setup of test_kiem_doc_lap_bat_ma_doc_cau_hinh_may[PROGRAMDATA] ___
+C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:722: in mkdir
+    os.mkdir(self, mode)
+E   FileNotFoundError: [WinError 3] The system cannot find the path specified: 'D:\\Claude\\engines-wt\\e_mask-mask-b4\\.pytest-tmp\\mask-b4-kiem-2'
+================================== FAILURES ===================================
+_ CheVanBanDemoTests.test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu (mau='1, ') _
+e_mask\tests\test_che_van_ban.py:647: in test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+    self.assertEqual(chay.returncode, 0, chay.stdout + chay.stderr)
+E   AssertionError: 1 != 0 : F
+E   ======================================================================
+E   FAIL: test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu (test_che_van_ban.CheVanBanDemoTests.test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu)
+E   ----------------------------------------------------------------------
+E   Traceback (most recent call last):
+E     File "D:\Claude\engines-wt\e_mask-mask-b4\e_mask\tests\test_che_van_ban.py", line 620, in test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+E       self.assertLessEqual(giay, 5, f'{mau_con!r}: {giay:.3f} giây')
+E       ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: 5.185337600007188 not less than or equal to 5 : '1, ': 5.185 giây
+E   
+E   ----------------------------------------------------------------------
+E   Ran 1 test in 5.206s
+E   
+E   FAILED (failures=1)
+_ CheVanBanDemoTests.test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu (mau='1 ') _
+e_mask\tests\test_che_van_ban.py:647: in test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+    self.assertEqual(chay.returncode, 0, chay.stdout + chay.stderr)
+E   AssertionError: 1 != 0 : F
+E   ======================================================================
+E   FAIL: test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu (test_che_van_ban.CheVanBanDemoTests.test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu)
+E   ----------------------------------------------------------------------
+E   Traceback (most recent call last):
+E     File "D:\Claude\engines-wt\e_mask-mask-b4\e_mask\tests\test_che_van_ban.py", line 620, in test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+E       self.assertLessEqual(giay, 5, f'{mau_con!r}: {giay:.3f} giây')
+E       ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: 5.257536200020695 not less than or equal to 5 : '1 ': 5.258 giây
+E   
+E   ----------------------------------------------------------------------
+E   Ran 1 test in 5.266s
+E   
+E   FAILED (failures=1)
+=========================== short test summary info ===========================
+SUBFAILED(mau='1, ') e_mask/tests/test_che_van_ban.py::CheVanBanDemoTests::test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+SUBFAILED(mau='1 ') e_mask/tests/test_che_van_ban.py::CheVanBanDemoTests::test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+ERROR e_mask/tests/test_kho_tam.py::test_hai_tien_trinh_tranh_ghi_khong_mat_dau
+ERROR e_mask/tests/test_kho_tam.py::test_khoa_da_tien_trinh_het_han_bao_loi_khong_fallback
+ERROR e_mask/tests/test_kho_tam.py::test_byte_kho_tam_chi_bam_ma_so_khong_ten_toan_van
+ERROR e_mask/tests/test_kho_tam.py::test_hong_khong_tao_lai_kho_rong[] - File...
+ERROR e_mask/tests/test_kho_tam.py::test_hong_khong_tao_lai_kho_rong[{}] - Fi...
+ERROR e_mask/tests/test_kho_tam.py::test_hong_khong_tao_lai_kho_rong[{] - Fil...
+ERROR e_mask/tests/test_kho_tam.py::test_hong_khong_tao_lai_kho_rong[{"phien_ban":1,"luot":{},"luot":{}}]
+ERROR e_mask/tests/test_kho_tam.py::test_hong_khong_tao_lai_kho_rong[{"phien_ban":1,"luot":{},"van_ban":"DEMO"}]
+ERROR e_mask/tests/test_kho_tam.py::test_hong_khong_tao_lai_kho_rong[{"phien_ban":true,"luot":{}}]
+ERROR e_mask/tests/test_kho_tam.py::test_loi_io_khong_lo_du_lieu_khong_thanh_cong_gia[doc]
+ERROR e_mask/tests/test_kho_tam.py::test_loi_io_khong_lo_du_lieu_khong_thanh_cong_gia[ghi]
+ERROR e_mask/tests/test_kho_tam.py::test_loi_io_khong_lo_du_lieu_khong_thanh_cong_gia[doi_ten]
+ERROR e_mask/tests/test_kho_tam.py::test_cung_luot_khac_noi_dung_la_xung_dot
+ERROR e_mask/tests/test_kho_tam.py::test_giu_bam_chot_khi_giao_lai_va_tach_vung
+ERROR e_mask/tests/test_kho_tam.py::test_duong_dan_dung_phieu - FileNotFoundE...
+ERROR e_mask/tests/test_kho_tam.py::test_thu_muc_khong_ghi_duoc - FileNotFoun...
+ERROR e_mask/tests/test_kho_tam.py::test_khong_cho_noi_dung_vao_truong_bam - ...
+ERROR e_mask/tests/test_mask_0.py::test_cau_hinh_thieu - FileNotFoundError: [...
+ERROR e_mask/tests/test_mask_0.py::test_cau_hinh_hong[{] - FileNotFoundError:...
+ERROR e_mask/tests/test_mask_0.py::test_cau_hinh_hong[{"la": 1}] - FileNotFou...
+ERROR e_mask/tests/test_mask_0.py::test_cau_hinh_hong[{"a":1,"a":2}] - FileNo...
+ERROR e_mask/tests/test_mask_0.py::test_cau_hinh_hong[NaN] - FileNotFoundErro...
+ERROR e_mask/tests/test_mask_0.py::test_cau_hinh_rong - FileNotFoundError: [W...
+ERROR e_mask/tests/test_mask_0.py::test_kiem_doc_lap_chan - FileNotFoundError...
+ERROR e_mask/tests/test_mask_2.py::test_whitelist_du_4_tep_dung_sha_va_thu_hoi_cache
+ERROR e_mask/tests/test_mask_2.py::test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[thieu_tep]
+ERROR e_mask/tests/test_mask_2.py::test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[thieu_whitelist]
+ERROR e_mask/tests/test_mask_2.py::test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[sai_sha]
+ERROR e_mask/tests/test_mask_2.py::test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[duong_tuong_doi]
+ERROR e_mask/tests/test_mask_2.py::test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[ten_la]
+ERROR e_mask/tests/test_mask_2.py::test_cau_hinh_chi_nhan_nguon_whitelist_du_va_dung[tep_rong]
+ERROR e_mask/tests/test_mask_2c_4.py::test_bao_cao_khong_ro_goc_url_path_ma_yeu_cau
+ERROR e_mask/tests/test_mask_2c_4.py::test_cam_bao_cao_trong_engine_va_khong_ghi_de
+ERROR e_mask/tests/test_mask_2c_4.py::test_cmd_chay_kho_duong_dan_va_thu_muc_co_khoang_trang
+ERROR e_mask/tests/test_mask_2c_4.py::test_timeout_khong_hop_le_khong_tao_bao_cao[0]
+ERROR e_mask/tests/test_mask_2c_4.py::test_timeout_khong_hop_le_khong_tao_bao_cao[-1]
+ERROR e_mask/tests/test_mask_2c_4.py::test_timeout_khong_hop_le_khong_tao_bao_cao[nan]
+ERROR e_mask/tests/test_mask_2c_4.py::test_timeout_khong_hop_le_khong_tao_bao_cao[inf]
+ERROR e_mask/tests/test_mask_2c_4.py::test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan
+ERROR e_mask/tests/test_mask_2c_4.py::test_bao_cao_trong_repo_can_thu_muc_chi_dinh
+ERROR e_mask/tests/test_mask_2c_4.py::test_ngoai_le_tien_trinh_cli_van_ghi_ca_truoc
+ERROR e_mask/tests/test_mask_2c_4.py::test_timeout_cung_giu_dem_doan_ai_da_xong
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[nhat_ky_rong]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[tra_cum_trung_hut_chuan_hoa]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[cum_moi_chong_dem_lap]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[gap_lai_cum_tam_trong_danh_muc]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[tai_dung_cum_cho_toan_vung]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[cum_cho_khac_nhom_giu_nhom_cua_core]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[cum_cho_khac_khong_tai_dung]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[mo_chinh_thuc_tam_bo_sung_va_hut]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[mo_day_du_dong_ro_rang]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[mo_day_du_giu_yeu_cau]
+ERROR e_mask/tests/test_mask_3.py::test_toan_bo_vector_kho_luot[che_khong_gui_duoc_dong_khi_chot]
+ERROR e_mask/tests/test_mask_3.py::test_snapshot_hong_tu_choi_truoc_su_dung[thieu_trang_thai]
+ERROR e_mask/tests/test_mask_3.py::test_snapshot_hong_tu_choi_truoc_su_dung[thieu_yeu_cau]
+ERROR e_mask/tests/test_mask_3.py::test_snapshot_hong_tu_choi_truoc_su_dung[cum_cho_sai_nhom]
+ERROR e_mask/tests/test_mask_3.py::test_snapshot_hong_tu_choi_truoc_su_dung[cum_cho_lo_ten]
+ERROR e_mask/tests/test_mask_3.py::test_snapshot_hong_tu_choi_truoc_su_dung[trung_gia_tri]
+ERROR e_mask/tests/test_mask_3.py::test_snapshot_hong_tu_choi_truoc_su_dung[trung_bi_danh]
+ERROR e_mask/tests/test_mask_3.py::test_mac_dinh_khong_co_kho_hoac_danh_tinh_tu_khai
+ERROR e_mask/tests/test_mask_3.py::test_rollback_giao_dich_khong_the_chot - F...
+ERROR e_mask/tests/test_mask_3.py::test_chot_loi_giua_chung_rollback_toan_bo[alias]
+ERROR e_mask/tests/test_mask_3.py::test_chot_loi_giua_chung_rollback_toan_bo[dem]
+ERROR e_mask/tests/test_mask_3.py::test_chot_loi_giua_chung_rollback_toan_bo[hang_cho]
+ERROR e_mask/tests/test_mask_3.py::test_chot_loi_giua_chung_rollback_toan_bo[tham_chieu]
+ERROR e_mask/tests/test_mask_3.py::test_chot_loi_giua_chung_rollback_toan_bo[yeu_cau]
+ERROR e_mask/tests/test_mask_3.py::test_chot_loi_giua_chung_rollback_toan_bo[luot]
+ERROR e_mask/tests/test_mask_3.py::test_gap_lai_retry_khoi_dong_lai_khong_cap_dem_moi
+ERROR e_mask/tests/test_mask_3.py::test_hai_snapshot_tranh_chot_xung_dot_thu_lai
+ERROR e_mask/tests/test_mask_3.py::test_hai_tien_trinh_tranh_chot_cung_ben_kho_gia
+ERROR e_mask/tests/test_mask_3.py::test_bang_chung_khac_module_phap_nhan_va_mo_bi_danh_chua_tham_chieu
+ERROR e_mask/tests/test_mask_3.py::test_sai_module_nguoi_tai_lieu_vung_khong_mo[module-module-demo-sai]
+ERROR e_mask/tests/test_mask_3.py::test_sai_module_nguoi_tai_lieu_vung_khong_mo[nguoi_gui-nguoi-demo-sai]
+ERROR e_mask/tests/test_mask_3.py::test_sai_module_nguoi_tai_lieu_vung_khong_mo[tai_lieu-tai-lieu-demo-sai]
+ERROR e_mask/tests/test_mask_3.py::test_sai_module_nguoi_tai_lieu_vung_khong_mo[vung-THAT]
+ERROR e_mask/tests/test_mask_3.py::test_kiem_quyen_lai_tung_cua[snapshot] - F...
+ERROR e_mask/tests/test_mask_3.py::test_kiem_quyen_lai_tung_cua[chot] - FileN...
+ERROR e_mask/tests/test_mask_3.py::test_kiem_quyen_lai_tung_cua[doc_lai] - Fi...
+ERROR e_mask/tests/test_mask_3.py::test_port_kho_tu_kiem_quyen_ngay_ca_nguon_quyen_cu
+ERROR e_mask/tests/test_mask_3.py::test_ngu_canh_doi_giua_luot_bi_tu_choi - F...
+ERROR e_mask/tests/test_mask_3.py::test_loi_port_khong_lo_ten_duong_dan[kho]
+ERROR e_mask/tests/test_mask_3.py::test_loi_port_khong_lo_ten_duong_dan[quyen]
+ERROR e_mask/tests/test_mask_3.py::test_ma_mo_thieu_sai_bi_tu_choi[None] - Fi...
+ERROR e_mask/tests/test_mask_3.py::test_ma_mo_thieu_sai_bi_tu_choi[] - FileNo...
+ERROR e_mask/tests/test_mask_3.py::test_ma_mo_thieu_sai_bi_tu_choi[ma-demo-khong-co]
+ERROR e_mask/tests/test_mask_3.py::test_doc_lai_ket_qua_chua_dat_khong_bao_thanh_cong
+ERROR e_mask/tests/test_mask_3.py::test_ma_opaque_khong_ep_uuid_64_ky_tu - Fi...
+ERROR e_mask/tests/test_mask_3.py::test_khong_tin_ma_yeu_cau_tu_payload_khi_che
+ERROR e_mask/tests/test_mask_3.py::test_chua_ro_sau_chot_giao_lai_doc_port_khong_tinh_lai
+ERROR e_mask/tests/test_mask_3.py::test_chua_ro_nguon_con_dang_cho_khong_chay_lai
+ERROR e_mask/tests/test_mask_3.py::test_kho_tam_hong_khong_gui_chot - FileNot...
+ERROR e_mask/tests/test_mask_3.py::test_dau_da_chot_nhung_port_mat_trang_thai_thi_tu_choi
+ERROR e_mask/tests/test_mask_3.py::test_huy_truoc_chot_khong_ghi - FileNotFou...
+ERROR e_mask/tests/test_mask_3.py::test_ket_qua_chua_dat_khong_chot[con_sot]
+ERROR e_mask/tests/test_mask_3.py::test_ket_qua_chua_dat_khong_chot[kiem_tien_ngay]
+ERROR e_mask/tests/test_mask_3.py::test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong[1]
+ERROR e_mask/tests/test_mask_3.py::test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong[4]
+ERROR e_mask/tests/test_mask_3.py::test_core_gia_chua_ro_khong_bao_xong_gia
+ERROR e_mask/tests/test_mask_3b.py::test_ngan_chot_retry_khong_ghi_tep_va_khong_luu_tai_lieu
+ERROR e_mask/tests/test_mask_3b.py::test_chua_ro_khong_mat_khi_ghi_dau_loi - ...
+ERROR e_mask/tests/test_sua_an_toan.py::test_port_loi_la_chi_tra_loi_co_dinh_khong_in_ten[snapshot_luot]
+ERROR e_mask/tests/test_sua_an_toan.py::test_port_loi_la_chi_tra_loi_co_dinh_khong_in_ten[chot_luot]
+ERROR e_mask/tests/test_sua_an_toan.py::test_kiem_doc_lap_bat_ma_doc_cau_hinh_may[KTT_ENGINE_DU_LIEU]
+ERROR e_mask/tests/test_sua_an_toan.py::test_kiem_doc_lap_bat_ma_doc_cau_hinh_may[PROGRAMDATA]
+2 failed, 2073 passed, 4 xfailed, 104 errors, 188 subtests passed in 211.92s (0:03:31)
+Ma thoat: 1
+
+Luot 2 loi thiet lap basetemp: chua tao thu muc cha .pytest-tmp; da sua runner, khong sua ma/test/threshold.
+Luot 3, cha temp da ton tai, khong chay tac vu kiem khac song song:
+$ -B -m pytest e_mask/tests -q --basetemp=D:\Claude\engines-wt\e_mask-mask-b4\.pytest-tmp\mask-b4-kiem-3 --tb=short
+.......................................................... [  2%]
+........................................ [  4%]
+........................................................................ [  7%]
+........................................................................ [ 11%]
+........................................................................ [ 14%]
+....xxxx................................................................ [ 17%]
+........................................................................ [ 20%]
+........................................................................ [ 24%]
+........................................................................ [ 27%]
+........................................................................ [ 30%]
+........................................................................ [ 34%]
+........................................................................ [ 37%]
+........................................................................ [ 40%]
+.................F...F.................................................. [ 44%]
+........................................................................ [ 47%]
+........................................................................ [ 50%]
+........................................................................ [ 54%]
+........................................................................ [ 57%]
+........................................................................ [ 60%]
+........................................................................ [ 63%]
+........................................................................ [ 67%]
+........................................................................ [ 70%]
+........................................................................ [ 73%]
+........................................................................ [ 77%]
+........................................................................ [ 80%]
+........................................................................ [ 83%]
+........................................................................ [ 87%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 96%]
+...................................................................      [100%]
+================================== FAILURES ===================================
+__________ test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan __________
+e_mask\tests\test_mask_2c_4.py:429: in test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan
+    assert k['tung_ca'][0]['tinh_trang_do'] == 'đã đo'
+E   AssertionError: assert 'chưa đo đủ' == 'đã đo'
+E     
+E     - đã đo
+E     + chưa đo đủ
+---------------------------- Captured stdout call -----------------------------
+{
+  "nhan": "DEMO",
+  "trang_thai_local": "ĐÃ THỬ Local qua CoreGia; chưa nghiệm thu độc lập",
+  "core": "CoreGia",
+  "canh_bao": "CoreGia không chứng nhận cửa Core thật; nợ CAO còn mở, Cloud giữ tắt.",
+  "held_out_doc_lap": false,
+  "tinh_trang_gold": "DEMO test, không held-out",
+  "bam_bo": "sha256:aa1c18a4be40de40b92ae679a1d9e174f34fece59f1a20c1ca34d8ed0a56b710",
+  "tap": "ung_vien",
+  "so_ca": 1,
+  "so_ten_co_so": 1,
+  "so_span_gold": 1,
+  "bam_model": "sha256:fa7e04643ea4e4a471f1e0d0324d14274b2bfd26d0069c5c4bd3eb09a75e674f",
+  "model": "model-demo",
+  "prompt": {
+    "ma": "demo.mask_2c_4",
+    "phien_ban": "DEMO-1",
+    "bam": "sha256:ec69ee76fc5721b7ec1d1f6f627eb7d0101a6e0eb2910e171a1acdae876eeb79"
+  },
+  "bam_khuon": "sha256:f67c5f43e3a7f116e95b94aa3351f0b7519249a3c365f633c469ec249874b6b6",
+  "bam_profile": "sha256:4e9c32d6759eaf5d92bc9955f7c64576cc70732a5fdf23121cc36fbea6cad9e9",
+  "profile": {
+    "phien_ban": 1,
+    "tac_vu": "mask.chuan_bi_ai_cuc_bo@1",
+    "nha_cung_cap_bat_buoc": "local",
+    "loai": [
+      "nguoi",
+      "to_chuc",
+      "dia_chi"
+    ],
+    "muc": [
+      "chac",
+      "nghi_ngo"
+    ],
+    "he_offset": "unicode_code_point",
+    "khoang": "nua_mo",
+    "ky_tu_toi_da": 500000,
+    "doan_toi_da": 8000,
+    "overlap_moi_phia": 512,
+    "so_doan_toi_da": 128,
+    "span_toi_da": 300,
+    "thuc_the_toi_da": 2000,
+    "json_phan_hoi_toi_da": 1048576,
+    "prompt_toi_da": 16000,
+    "khuon_toi_da": 32768,
+    "chuyen_tiep_toi_da": 65536,
+    "so_luot_dong_thoi": 1,
+    "thoi_han_chuan_bi_giay": 60
+  },
+  "phien_ban_sdk": "2.0.0",
+  "phien_ban_mask": "1.2.0",
+  "budget_core": "Fixture CoreGia; token chưa đo, AI-9 kiểm context/byte bảo thủ nguyên bản.",
+  "so_luot_cloud": 0,
+  "so_luot_local": 0,
+  "ket_qua": {
+    "quy_tac": {
+      "tong_ca": 1,
+      "ca_hop_le": 0,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 0,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 1,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 0,
+      "so_ca_lot": 0,
+      "so_span_gold": 1,
+      "so_span_lot": 0,
+      "so_span_gold_phat_hanh": 0,
+      "so_span_che_du": 0,
+      "ma_loi": {
+        "HET_HAN_CHUOI": 1
+      },
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 0,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 1,
+      "che_thua_dinh_danh": {
+        "so_ca": 0,
+        "so_ca_da_cham": 0,
+        "tong_ca_co_gold": 1,
+        "so_span": 0,
+        "so_ky_tu": 0
+      },
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 1,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": null,
+      "ti_le_lot_span_phat_hanh": null
+    },
+    "hai_lop": {
+      "tong_ca": 1,
+      "ca_hop_le": 0,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 0,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 1,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 0,
+      "so_ca_lot": 0,
+      "so_span_gold": 1,
+      "so_span_lot": 0,
+      "so_span_gold_phat_hanh": 0,
+      "so_span_che_du": 0,
+      "ma_loi": {
+        "HET_HAN_CHUOI": 1
+      },
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 0,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 1,
+      "che_thua_dinh_danh": {
+        "so_ca": 0,
+        "so_ca_da_cham": 0,
+        "tong_ca_co_gold": 1,
+        "so_span": 0,
+        "so_ky_tu": 0
+      },
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 1,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": null,
+      "ti_le_lot_span_phat_hanh": null,
+      "phan_tach": {
+        "chan_truoc_ai": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "ai_thuc_su_do": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "chua_co_doan_ai_xong": {
+          "tong_ca": 1,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 1,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 1,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {
+            "HET_HAN_CHUOI": 1
+          },
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 1,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 1,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": 0.0,
+          "p95_ms": 0.0,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 1,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        }
+      },
+      "so_ca_ai_da_goi_provider": 0,
+      "ghi_chu": "0 lọt trên ca bị chặn trước AI là hiển nhiên. AI thực sự đo = có ít nhất một đoạn AI-9 XONG; đủ đoạn/hợp lệ báo riêng. Số lọt chưa đo để null từng ca; số 0 tổng chỉ là số quan sát, không chứng minh an toàn."
+    }
+  },
+  "phien_ban_cong_cu": "MASK-2c-4-2",
+  "bam_cong_cu": "sha256:347abc2b0fb70d7cb0792c1e1942a86c9f0b32f60ffc611f7a997857d3d90074",
+  "timeout": {
+    "giay": 2.0,
+    "mac_dinh_giay_moi_doan": 120,
+    "tran_giay": 3600
+  },
+  "bam_cau_hinh_khong_url": "sha256:ddaf911bd44524c0d74c03a037fd854712a72c109620beade1f0095ad0047737",
+  "thoi_diem_utc": "2026-11-15T09:39:48.094904+00:00",
+  "dinh_nghia_luot_local": "Số gọi provider Local, kể cả lỗi trước POST; số đoạn AI xong báo riêng.",
+  "so_timeout_xac_dinh": null,
+  "ghi_chu_timeout": "AI-9 gom timeout/mất phản hồi/202 vào ChuaRo; không suy số timeout bằng 0.",
+  "gioi_han_ket_luan": "AI chỉ cứu khi báo đủ; báo thiếu một phần tên thì phần còn lại có thể lọt.",
+  "so_ca_het_han_cung": 1,
+  "local_p50_ms": null,
+  "local_p95_ms": null,
+  "tung_ca": [
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "quy_tac",
+      "so_span_gold": 1,
+      "trang_thai": "loi_ky_thuat",
+      "so_span_lot": null,
+      "che_thua": null,
+      "so_span_che_thua": null,
+      "so_ky_tu_che_thua": null,
+      "ma_loi": "HET_HAN_CHUOI",
+      "thoi_gian_ms": 0,
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "chưa đo đủ",
+      "het_han": true,
+      "timeout_giay": 2.0,
+      "so_doan_du_kien": 1
+    },
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "hai_lop",
+      "so_span_gold": 1,
+      "trang_thai": "loi_ky_thuat",
+      "so_span_lot": null,
+      "che_thua": null,
+      "so_span_che_thua": null,
+      "so_ky_tu_che_thua": null,
+      "ma_loi": "HET_HAN_CHUOI",
+      "thoi_gian_ms": 0,
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "chưa đo đủ",
+      "het_han": true,
+      "timeout_giay": 2.0,
+      "so_doan_du_kien": 1
+    }
+  ],
+  "muc_tieu_0_lot": "CHƯA ĐO ĐỦ"
+}
+__________________ test_timeout_cung_giu_dem_doan_ai_da_xong __________________
+e_mask\tests\test_mask_2c_4.py:495: in test_timeout_cung_giu_dem_doan_ai_da_xong
+    assert code == 1 and r['so_doan_ai_xong'] == 1
+E   assert (1 == 1 and 0 == 1)
+---------------------------- Captured stdout call -----------------------------
+{
+  "nhan": "DEMO",
+  "trang_thai_local": "ĐÃ THỬ Local qua CoreGia; chưa nghiệm thu độc lập",
+  "core": "CoreGia",
+  "canh_bao": "CoreGia không chứng nhận cửa Core thật; nợ CAO còn mở, Cloud giữ tắt.",
+  "held_out_doc_lap": false,
+  "tinh_trang_gold": "DEMO test, không held-out",
+  "bam_bo": "sha256:4b917818f2fd65b95932136086650ad883baefc3fd4504f2558475e14ebfe0c2",
+  "tap": "ung_vien",
+  "so_ca": 1,
+  "so_ten_co_so": 1,
+  "so_span_gold": 1,
+  "bam_model": "sha256:fa7e04643ea4e4a471f1e0d0324d14274b2bfd26d0069c5c4bd3eb09a75e674f",
+  "model": "model-demo",
+  "prompt": {
+    "ma": "demo.mask_2c_4",
+    "phien_ban": "DEMO-1",
+    "bam": "sha256:ec69ee76fc5721b7ec1d1f6f627eb7d0101a6e0eb2910e171a1acdae876eeb79"
+  },
+  "bam_khuon": "sha256:f67c5f43e3a7f116e95b94aa3351f0b7519249a3c365f633c469ec249874b6b6",
+  "bam_profile": "sha256:4e9c32d6759eaf5d92bc9955f7c64576cc70732a5fdf23121cc36fbea6cad9e9",
+  "profile": {
+    "phien_ban": 1,
+    "tac_vu": "mask.chuan_bi_ai_cuc_bo@1",
+    "nha_cung_cap_bat_buoc": "local",
+    "loai": [
+      "nguoi",
+      "to_chuc",
+      "dia_chi"
+    ],
+    "muc": [
+      "chac",
+      "nghi_ngo"
+    ],
+    "he_offset": "unicode_code_point",
+    "khoang": "nua_mo",
+    "ky_tu_toi_da": 500000,
+    "doan_toi_da": 8000,
+    "overlap_moi_phia": 512,
+    "so_doan_toi_da": 128,
+    "span_toi_da": 300,
+    "thuc_the_toi_da": 2000,
+    "json_phan_hoi_toi_da": 1048576,
+    "prompt_toi_da": 16000,
+    "khuon_toi_da": 32768,
+    "chuyen_tiep_toi_da": 65536,
+    "so_luot_dong_thoi": 1,
+    "thoi_han_chuan_bi_giay": 60
+  },
+  "phien_ban_sdk": "2.0.0",
+  "phien_ban_mask": "1.2.0",
+  "budget_core": "Fixture CoreGia; token chưa đo, AI-9 kiểm context/byte bảo thủ nguyên bản.",
+  "so_luot_cloud": 0,
+  "so_luot_local": 1,
+  "ket_qua": {
+    "quy_tac": {
+      "tong_ca": 1,
+      "ca_hop_le": 1,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 1,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 0,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 1,
+      "so_ca_lot": 1,
+      "so_span_gold": 1,
+      "so_span_lot": 1,
+      "so_span_gold_phat_hanh": 1,
+      "so_span_che_du": 0,
+      "ma_loi": {},
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 0,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 0,
+      "che_thua_dinh_danh": {
+        "so_ca": 1,
+        "so_ca_da_cham": 1,
+        "tong_ca_co_gold": 1,
+        "so_span": 1,
+        "so_ky_tu": 4
+      },
+      "p50_ms": 671.264,
+      "p95_ms": 671.264,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 1,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": 1.0,
+      "ti_le_lot_span_phat_hanh": 1.0
+    },
+    "hai_lop": {
+      "tong_ca": 1,
+      "ca_hop_le": 0,
+      "trang_thai": {
+        "phat_hanh_che_du": 0,
+        "phat_hanh_con_lot": 0,
+        "chan_nghiep_vu": 0,
+        "loi_ky_thuat": 1,
+        "chua_ro": 0
+      },
+      "so_ca_phat_hanh": 0,
+      "so_ca_lot": 0,
+      "so_span_gold": 1,
+      "so_span_lot": 0,
+      "so_span_gold_phat_hanh": 0,
+      "so_span_che_du": 0,
+      "ma_loi": {
+        "HET_HAN_CHUOI": 1
+      },
+      "cau_thuong": {
+        "tu_so": 0,
+        "mau_so": 0,
+        "so_ca_hop_le": 0,
+        "ti_le": null,
+        "ti_le_tren_ca_hop_le": null,
+        "nguyen_ven": 0
+      },
+      "so_doan_ke_hoach": 3,
+      "so_doan_ai_xong": 0,
+      "so_ca_co_ke_hoach": 1,
+      "so_ca_ai_du_doan": 0,
+      "so_ca_chua_do_du": 1,
+      "che_thua_dinh_danh": {
+        "so_ca": 0,
+        "so_ca_da_cham": 0,
+        "tong_ca_co_gold": 1,
+        "so_span": 0,
+        "so_ky_tu": 0
+      },
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "theo_nhom": {
+        "nguoi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 1,
+          "chua_ro": 0
+        },
+        "to_chuc": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "dia_chi": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "thuong": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        },
+        "bien_the": {
+          "phat_hanh_che_du": 0,
+          "phat_hanh_con_lot": 0,
+          "chan_nghiep_vu": 0,
+          "loi_ky_thuat": 0,
+          "chua_ro": 0
+        }
+      },
+      "ti_le_lot_ca_phat_hanh": null,
+      "ti_le_lot_span_phat_hanh": null,
+      "phan_tach": {
+        "chan_truoc_ai": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "ai_thuc_su_do": {
+          "tong_ca": 0,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 0,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 0,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {},
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 0,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 0,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 0,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 0,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": null,
+          "p95_ms": null,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        },
+        "chua_co_doan_ai_xong": {
+          "tong_ca": 1,
+          "ca_hop_le": 0,
+          "trang_thai": {
+            "phat_hanh_che_du": 0,
+            "phat_hanh_con_lot": 0,
+            "chan_nghiep_vu": 0,
+            "loi_ky_thuat": 1,
+            "chua_ro": 0
+          },
+          "so_ca_phat_hanh": 0,
+          "so_ca_lot": 0,
+          "so_span_gold": 1,
+          "so_span_lot": 0,
+          "so_span_gold_phat_hanh": 0,
+          "so_span_che_du": 0,
+          "ma_loi": {
+            "HET_HAN_CHUOI": 1
+          },
+          "cau_thuong": {
+            "tu_so": 0,
+            "mau_so": 0,
+            "so_ca_hop_le": 0,
+            "ti_le": null,
+            "ti_le_tren_ca_hop_le": null,
+            "nguyen_ven": 0
+          },
+          "so_doan_ke_hoach": 3,
+          "so_doan_ai_xong": 0,
+          "so_ca_co_ke_hoach": 1,
+          "so_ca_ai_du_doan": 0,
+          "so_ca_chua_do_du": 1,
+          "che_thua_dinh_danh": {
+            "so_ca": 0,
+            "so_ca_da_cham": 0,
+            "tong_ca_co_gold": 1,
+            "so_span": 0,
+            "so_ky_tu": 0
+          },
+          "p50_ms": 0.0,
+          "p95_ms": 0.0,
+          "theo_nhom": {
+            "nguoi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 1,
+              "chua_ro": 0
+            },
+            "to_chuc": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "dia_chi": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "thuong": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            },
+            "bien_the": {
+              "phat_hanh_che_du": 0,
+              "phat_hanh_con_lot": 0,
+              "chan_nghiep_vu": 0,
+              "loi_ky_thuat": 0,
+              "chua_ro": 0
+            }
+          },
+          "ti_le_lot_ca_phat_hanh": null,
+          "ti_le_lot_span_phat_hanh": null
+        }
+      },
+      "so_ca_ai_da_goi_provider": 1,
+      "ghi_chu": "0 lọt trên ca bị chặn trước AI là hiển nhiên. AI thực sự đo = có ít nhất một đoạn AI-9 XONG; đủ đoạn/hợp lệ báo riêng. Số lọt chưa đo để null từng ca; số 0 tổng chỉ là số quan sát, không chứng minh an toàn."
+    }
+  },
+  "phien_ban_cong_cu": "MASK-2c-4-2",
+  "bam_cong_cu": "sha256:347abc2b0fb70d7cb0792c1e1942a86c9f0b32f60ffc611f7a997857d3d90074",
+  "timeout": {
+    "giay": 5.0,
+    "mac_dinh_giay_moi_doan": 120,
+    "tran_giay": 3600
+  },
+  "bam_cau_hinh_khong_url": "sha256:8d6d25ea507bf9f9a52e6993c921981b4e2331b53a3747874572d9e904763c9c",
+  "thoi_diem_utc": "2026-11-15T09:39:55.538741+00:00",
+  "dinh_nghia_luot_local": "Số gọi provider Local, kể cả lỗi trước POST; số đoạn AI xong báo riêng.",
+  "so_timeout_xac_dinh": null,
+  "ghi_chu_timeout": "AI-9 gom timeout/mất phản hồi/202 vào ChuaRo; không suy số timeout bằng 0.",
+  "gioi_han_ket_luan": "AI chỉ cứu khi báo đủ; báo thiếu một phần tên thì phần còn lại có thể lọt.",
+  "phien_ban_hoi_ai": "0.5.0",
+  "so_ca_het_han_cung": 1,
+  "local_p50_ms": null,
+  "local_p95_ms": null,
+  "tung_ca": [
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "quy_tac",
+      "so_span_gold": 1,
+      "trang_thai": "phat_hanh_con_lot",
+      "so_span_lot": 1,
+      "che_thua": true,
+      "so_span_che_thua": 1,
+      "so_ky_tu_che_thua": 4,
+      "ma_loi": null,
+      "thoi_gian_ms": 671.264,
+      "so_doan_ke_hoach": 0,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "đã đo",
+      "timeout_giay": 5.0,
+      "so_doan_du_kien": 3,
+      "het_han": false,
+      "so_luot_local": 0
+    },
+    {
+      "ca": "D-test",
+      "nhom": "nguoi",
+      "che_do": "hai_lop",
+      "so_span_gold": 1,
+      "trang_thai": "loi_ky_thuat",
+      "so_span_lot": null,
+      "che_thua": null,
+      "so_span_che_thua": null,
+      "so_ky_tu_che_thua": null,
+      "ma_loi": "HET_HAN_CHUOI",
+      "thoi_gian_ms": 0,
+      "so_doan_ke_hoach": 3,
+      "so_doan_ai_xong": 0,
+      "du_doan": false,
+      "chan_truoc_ai": false,
+      "tinh_trang_do": "chưa đo đủ",
+      "timeout_giay": 5.0,
+      "so_doan_du_kien": 3,
+      "het_han": true,
+      "so_luot_local": 1
+    }
+  ],
+  "muc_tieu_0_lot": "CHƯA ĐO ĐỦ"
+}
+=========================== short test summary info ===========================
+FAILED e_mask/tests/test_mask_2c_4.py::test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan
+FAILED e_mask/tests/test_mask_2c_4.py::test_timeout_cung_giu_dem_doan_ai_da_xong
+2 failed, 2175 passed, 4 xfailed, 190 subtests passed in 229.20s (0:03:49)
+Ma thoat: 1
+
+Kiem rieng MASK-B4 kem provenance da chot:
+$ -B -m pytest e_mask/tests/test_mask_b4.py -q --tb=short
+........................................................................ [ 26%]
+........................................................................ [ 53%]
+........................................................................ [ 80%]
+......................................................                   [100%]
+270 passed in 27.25s
+Ma thoat: 0
+
+Kiem artifact cuoi: UTF-8/doc 11/11; AST/whitespace 5/5; SHA dich bytes+LF 3/3, nguon 4/4 giu nguyen; khong bytecode; git diff --check ma 0.
+Bo quet phu dau tien nham dong phan cach pytest/encoding PowerShell voi marker; da sua bo quet, khong sua artifact de ne loi.

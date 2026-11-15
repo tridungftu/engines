@@ -402,3 +402,41 @@ Giữ hai khối reader và cổng ZIP, không sửa `doc_word.py`, `xml_word.py
 | `e_mask/tests/test_gop_mask_b2_b3.py` | `58976f10be12beb8d7a4b8001e7856d49017cd3784c2230888c30c9733c95d28` |
 | `e_mask/tests/test_mask_2c_4.py` | `aaeb93c259f68e943d4ae212791e40c15909072f6d57afc1faef3cc214992510` |
 | `e_mask/tests/test_mask_b3.py` | `4f5dc6876b1ffe359c13a8aa3cc5aa938245b153fd2c923ec95d93fad3e9cd68` |
+
+## MASK-B4 — writer ZIP và patch XML nội bộ, 15/11/2026
+
+**Quyền tái dùng:** Anh/lead cho phép CHÉP chọn lọc các mẫu nội repo trong lệnh MASK-B4. Hóa đơn HD-7 ghi `xlsx_toi_thieu.py` là writer Python stdlib nội bộ tự viết; HD-4/HD-6 là nguồn ZIP Python của B1. Đối chiếu DC-2 ghi nguồn DOCX nội bộ chuyển có sửa từ Trích xuất. Không suy quyền CD-096 A1 của Node sang Python hoặc quyền phân phối ngoài tổ chức. Không import engine nguồn, sửa nguồn mẫu, thêm dependency hoặc đổi SDK/API.
+
+| Đường nguồn từ gốc repo | Symbol chép/chuyển có sửa | Đích và khác biệt |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/xlsx_toi_thieu.py` | `_BoDem.write`, `chu_xml`: RAM, kiểm byte trước ghi, escape literal ST_Xstring/control/CR | `ghi_zip.py::_BoDem.ghi`, `va_xml.py::_ma_hoa`: tính cả central directory/EOCD, đếm trước từng mảnh encode; ST chỉ ô Excel, attribute giữ tab/LF/CR, CDATA đổi miền ngay trong span. Không chép `tao_xlsx`, `ten_cot`, writer inline string hoặc dựng workbook mới |
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/doc_docx.py` | `_kiem_danh_muc`, `_kiem_zip`: EOCD, bounds/metadata, CRC/ratio/tên/loại tệp | `zip_an_toan.py::kiem_ban_ghi` tiếp tục kiểm của B1 và đối chiếu bytes record thực trước chép. Không dùng ZipInfo làm nguồn tin cậy hoặc mang policy bỏ qua vùng của reader mẫu |
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/zip.py` → `hoa_don_xml.py` | Closure đã ghi B1: `doc_goi_hoa_don_zip`, `dem_byte`, NFC/casefold, CRC, symlink/ZIP lồng/hủy | Tái dùng các kiểm B1 qua `doc_word`/`doc_excel`, `_kiem_danh_muc`, `_kiem_header`, `_giai_nen`; không kéo wrapper/DTO, báo cáo tên raw hoặc policy tiếp tục khi entry lỗi. Runtime không dùng zipfile nên không có UserWarning mang tên entry |
+| `e_mask/goi/e_mask/e_mask/{doc_tep,doc_word,xml_word,doc_excel,xml_excel}.py` | Reader/map B1/B2/B3 và hai kiểu mốc cuối descriptor | Dùng trực tiếp trong cùng engine, không sửa. Writer dựng lại reader từ bytes trước và sau, đối chiếu map/băm/metadata thay vì tin cây mutable của caller; `kiem_ban_ghi` phân biệt cuối payload với cuối local record |
+
+Nguồn trước = sau, đã đối chiếu snapshot `e_mask/docs/SHA-NGUON-MASK-B4-TRUOC.json`. LF chỉ thay CRLF bằng LF, không chuẩn hóa Unicode. Closure dừng tại các kiểm/mẫu trên; không nạp `ma-nguon`, COM, PDF, engine khác hoặc mã Core.
+
+| Đường nguồn | SHA-256 bytes trước = sau | SHA-256 LF trước = sau |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/xlsx_toi_thieu.py` | `06e185c00dc5762a4393a7223d47e234d6af39a3424dcf43263ae60933fbc304` | `ad6a6c8e89d73e5e994c4f21066c7ee76640b261eaf253dc82a69cf1337fa46d` |
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/zip.py` | `6212ab75f8f1e0cb8cc2103d11ce4a5d4ea08ab213d5191745c3721ecc215149` | `3be2a2156de2ba8f63c5a9679b8c4d344a6d7e5a8d12f838d5d440b2d4b3e733` |
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/hoa_don_xml.py` | `fb201bbb723c4c739596dbbbe0270584a8ab2dbc368886428cde7ef0e3fbcab1` | `8b7cb17848a5861b7384aefa31b22d6cc39f28b2e3486a0c4bc938929d397f32` |
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/doc_docx.py` | `5d261c682d130a7cc5fba80759d9a94512ba773e6d463af5b16a9a58592d476c` | `7e63532c8ae2358ccc1b90a1bb65cb85e83c5c743fb3d8d9287fb2ed3cce3945` |
+
+Đích trước/sau B4, băm toàn tệp chuyển có sửa, không là băm phát hành cả gói. Hai tệp mới chưa có trước; phần ZIP B1 trước B4 có SHA bytes `0b7112dc63c02c2b33893de1efa8f442090ed12ae1672aa72a1ccd3225644d8b`, LF `0628d86ff80985b365c0ac7fc1c25583b102254e8892a4de70b508d1f7d7d25e`. Băm hiện hành dưới đây thay băm ZIP cũ, không sửa provenance lịch sử.
+
+| Đích từ gốc gói | SHA-256 bytes sau | SHA-256 LF sau |
+|---|---|---|
+| `e_mask/ghi_zip.py` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` |
+| `e_mask/va_xml.py` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` |
+| `e_mask/zip_an_toan.py` | `d55a1555fd3fb05aed323b3fd9146d26e773c19bfcd57ac32d836905b53880db` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` |
+
+API nội bộ: `lap_kich_ban(tai_lieu, ((vi_vung, dau_unicode, cuoi_unicode, chu_moi), ...), kiem_huy=...)` → `KichBanXML`; `ghi_goi(tai_lieu, kich_ban, kiem_huy=...)` → bytes. Chỉ nhận `TaiLieuWord`/`ExcelDaDoc` qua B1+B2/B3, không nhận raw/path/dict thay reader. Script phiên bản 1 ghim SHA bytes ZIP, SHA UTF-8 vùng, SHA part và SHA từng khoảng byte XML gốc. Writer đọc lại bytes/map, kiểm chồng Unicode/byte và mọi băm/CRC/size/offset; không dùng script như chứng cứ hai lớp hoặc quyền phát hành.
+
+Một thay thế qua nhiều run/miền lexical ghi chữ mới ở mảnh đầu, xóa text đã chọn ở các mảnh sau; giữ toàn bộ markup/namespace/format ngoài khoảng. Không sửa tab/br/note như text. CDATA đóng/mở ngay trong span để escape đúng CR và chuỗi đóng CDATA. Không normalize NFD/Cf, không sửa byte ngoài span hoặc serialize XML. ST chỉ shared/inline/rich text Excel, metadata giữ nghĩa XML thường; surrogate lẻ, injection, ST ghép mã ngoài ý định ở biên bị chặn qua kiểm lại nghĩa mọi vùng.
+
+Part bất biến chép nguyên local header/payload nén/descriptor; central chỉ đổi offset nếu cần. Part sửa giữ method/flags, DOS time/attribute/thứ tự/names; cập nhật CRC và hai size trong central, local đầy đủ hoặc descriptor đúng kiểu 12/16 byte. Mức DEFLATE theo cờ normal/max/fast/superfast, chỉ một lần nén, không đổi method hoặc thử lại để tránh ratio. Không edit/no-op thì toàn ZIP bằng đúng gốc. Extra/comment/cờ/descriptor chưa kiểm đều từ chối cả gói.
+
+Giới hạn được kiểm trước/từng lần encode, thêm buffer, nén/ghi và đóng ZIP, gồm cả central+EOCD: output 1 MiB; giải nén tổng 8 MiB/phần 2 MiB; ratio 200. Các trần phần/node/depth/ô/sheet và tính hợp lệ XML/graph tiếp tục qua lại B1/readers. Nội dung dự kiến đếm cả shared dùng lặp, kiểm 2 triệu code point/8 MiB UTF-8 và 32767 UTF-16/ô; không thêm báo cáo JSON nên giữ helper 256/64/32 KiB của B1 nguyên trạng. **Giới hạn hiện hành:** B1/B2/B3 đọc lại output vẫn đếm bảo thủ 500.000 ký tự cả text/tail/attribute kỹ thuật, có thể từ chối sớm hơn trần ra 2 triệu; không nới reader bằng cờ hoặc monkey-patch. Điều chỉnh profile đọc chiều ra cần lát reader riêng trước khi cam kết hỗ trợ phần khuếch đại đó.
+
+Không ghi Ngan/bền máy hoặc tạo tệp tạm; chỉ RAM và dọn buffer trong `finally`. Hủy/mất lease/ChuaRo truyền nguyên, không output dở, mạng/log/tên gốc. Chưa công bố năng lực tệp; B7/B9 mới nối hai lớp/quyền/chốt/upload. Đã kiểm bằng Core giả (CoreGia) gói văn bản hiện có; writer tệp kiểm trực tiếp RAM/fixture Office DEMO, **chưa Word/Excel/Core/Local thật hoặc Linux thực tế**. Cloud vẫn tắt.

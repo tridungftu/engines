@@ -1,3 +1,13 @@
+## Chưa phát hành — 15/11/2026, MASK-B4 writer ZIP/XML nội bộ
+
+- Thêm `ghi_zip.py`, `va_xml.py`, mở kiểm record trong `zip_an_toan.py`; đúng ba runtime, chỉ stdlib/SDK và RAM. Không đổi manifest/năng lực/handler hoặc bật Cloud; B7/B9 mới nối hai lớp và phát hành.
+- Edit script ghim SHA ZIP/vùng/part/span; writer đọc lại B1+B2/B3, chặn span Unicode/byte chồng hoặc sai băm/map/CRC/size/offset. Kiểm tổng lệnh trước cấp phát map; không tin cây XML mutable của caller.
+- Chép nguyên local record, payload nén và descriptor part bất biến; central chỉ sửa offset cần thiết. Part sửa giữ method/flags/thứ tự, cập nhật CRC/size/local/descriptor; không nén lại part khác hoặc đổi compression để tránh ratio. Không edit/no-op thì toàn ZIP bằng gốc.
+- Patch byte text/attribute giữ markup/namespace/format ngoài span, không serialize toàn XML. UTF-8/UTF-16, entity/NFD/CR/CDATA, ST_Xstring/control của ô Excel và metadata XML thường có kiểm nghĩa sau đọc lại; shared string patch một lần, kiểm đủ mọi nơi dùng và mục chưa dùng. Giữ bytes ô số/ngày/style/merge.
+- Kiểm trước/từng lần encode/ghi/đóng ZIP: 1 MiB output, 2 MiB/part, 8 MiB tổng, ratio 200 cùng toàn bộ trần B1/readers. Đọc lại output hiện còn trần bảo thủ 500.000 ký tự B1/B2/B3, có thể từ chối trước trần văn bản ra 2 triệu; giữ chặn này và ghi rõ để lead lập lát reader nếu cần mở rộng.
+- DEMO có oracle SHA bytes giải nén/payload nén/local record, container 1 MiB/+1, part 2 MiB/tổng 8 MiB tại bước chuẩn bị patch, map/ZIP giả, XML hỏng dù CRC đúng, hủy/ChuaRo/không I/O hoặc log. Nguồn/quyền/SHA bytes+LF trước/sau tại NGUON; kết quả cuối ở `e_mask/docs/BAO-CAO-MASK-B4.md`.
+- Kết quả cuối: riêng B4 **270 passed**; toàn bộ **2175 passed, 2 failed deadline cũ MASK-2c-4, 4 xfailed giữ nguyên, 190 subtests passed, 0 skipped**. Chưa đạt kiểm chung; CLI 0/2 thiếu quyền, DEMO có quyền 2/2 và kiểm độc lập đạt. Đã kiểm bằng Core giả (CoreGia); chưa Office/Core/Local thật. PR chờ lead mở, không commit/push.
+
 ## Chưa phát hành — 15/11/2026, gộp MASK-B2 + MASK-B3
 
 - Giữ trọn reader Word/Excel và hai quy ước offset ZIP khi có data descriptor; cổng ZIP chung B2 áp cho XLSX, cổng B3 dùng chung kiểm tên 256.

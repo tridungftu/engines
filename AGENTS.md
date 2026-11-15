@@ -7,7 +7,7 @@ Mọi tài liệu, thông báo lỗi, báo cáo bằng **tiếng Việt**; tên 
 
 1. `docs/goi-gui-engine/API-ENGINE-v1.md` — hợp đồng API v1 + `engine.json` 2.0. **Đã khóa, không được đổi.**
 2. `docs/goi-gui-engine/sdk-2.0.0/HUONG-DAN-VIET-ENGINE.md` và `MAU-PHIEU-ENGINE.md`.
-3. `_chung/docs/GIAO-CODEX-THU-TU.md` — thứ tự engine, quyết định tạm, phần còn thiếu phía Core.
+3. `_chung/docs/QUYET-DINH-ANH-20261115.md` và `_chung/docs/GIAO-CODEX-DOT-2.md` — **quyết định của Anh 15/11 (thắng các quyết định tạm cũ)**; `_chung/docs/GIAO-CODEX-THU-TU.md` — thứ tự engine, phần còn thiếu phía Core; `_chung/docs/DE-NGHI-SDK-2.1.md` — API ngăn/cấu hình/màn engine mà mã phải bám.
 4. `_chung/docs/LOAI-DU-LIEU-RIENG.md` — loại dữ liệu riêng dùng chung giữa các engine.
 5. `<engine>/docs/GIAO-CODEX-<engine>.md` — lát đang được giao.
 6. `<engine>/CLAUDE.md`, `<engine>/docs/YEU-CAU-VA-HIEN-TRANG.md`, quyết định cuối của engine.
@@ -55,6 +55,8 @@ sha256sum docs/goi-gui-engine/sdk-2.0.0/kho_tri_thuc_sdk-2.0.0-py3-none-any.whl 
 9. Cloud AI chỉ nhận nội dung đã qua Mask (xem `LOAI-DU-LIEU-RIENG.md`, loại `van_ban_da_che`).
 10. **Không sửa** `docs/goi-gui-engine/**`, `_chung/tham-chieu-cong-hien-tai/**`, mã Core. Thiếu gì phía Core/SDK → ghi mục "Cần Core" trong `<engine>/docs/VIEC.md`, làm tiếp bằng lớp bọc tạm như phiếu chỉ dẫn.
 11. Không xóa tệp. Không push lên nhánh `main`.
+12. **Engine không lưu gì trên máy** (Anh chốt 15/11): không tệp cấu hình, không sổ, không đệm bền. Dữ liệu cần giữ và cấu hình đi qua cổng `Ngan` (`_chung/mau-ma/ngan.py`, tạm chạy RAM tới khi có SDK 2.1); tệp tạm của một việc xóa trong `finally`.
+13. Cấu hình thuộc engine: màn cấu hình của engine ở `goi/<ma>/ui/`, nạp như màn module, dùng `KttCore.engine(ma)`; không gọi mạng ngoài, không `eval`/`innerHTML` chưa lọc.
 
 ## 5. Cách làm một lát
 

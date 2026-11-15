@@ -1,0 +1,34 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_trich_xuat",
+  "ten": "Trích thông tin hợp đồng",
+  "phien_ban": "0.2.0",
+  "tuong_thich": {"core": ">=2.0.0 <3.0.0", "api": "v1", "sdk": ">=2.0.0 <3.0.0"},
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {"lenh": ["{python}", "-B", "-m", "e_trich_xuat.chay"], "thu_muc": "."},
+  "nang_luc": [
+    {
+      "ma": "trich.doc_docx@1",
+      "ten": "Đọc hợp đồng Word",
+      "nhan": ["tep"],
+      "tra": "van_ban_tai_lieu",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "mime": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+        "thoi_han_giay": 120
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    }
+  ],
+  "loai_du_lieu_rieng": [{"ma": "van_ban_tai_lieu", "ten": "Văn bản tài liệu có vị trí"}],
+  "tai_nguyen": {"so_viec_dong_thoi": 1},
+  "readiness": {"thoi_han_giay": 30},
+  "chay_thu_demo": [
+    {"nang_luc": "trich.doc_docx@1", "ten": "Đọc hợp đồng DOCX DEMO", "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-hop-dong.docx"}, "tham_so": {}},
+    {"nang_luc": "trich.doc_docx@1", "ten": "Chấp nhận Track Changes DOCX DEMO", "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-track-changes.docx"}, "tham_so": {}}
+  ],
+  "bi_mat": [],
+  "webhook": null
+}

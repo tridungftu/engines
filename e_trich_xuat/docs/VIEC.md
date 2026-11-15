@@ -6,6 +6,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 |---|---|---|---|---|
 | 0 | TX-0: sửa bản nháp theo quyết định 15/11; T1/T2, phép đếm T3, ngăn/cấu hình/màn và nguồn E6 | TX-2, 3, 5, 7 | Xong | **15/11/2026** — [TX-0-THIET-KE.md](TX-0-THIET-KE.md); xong cập nhật tài liệu, chưa có số đo model thật/E6. Bản trước PR #4; PR cập nhật: **chờ lead mở** |
 | TX-P | Hoàn thiện lệnh giao TX-1…TX-6, bảng chọn TX0-06 và độ khó gợi ý | TX-0 §8; quyết định 15/11 | Xong | **15/11/2026** — [GIAO-CODEX-e_trich_xuat.md](GIAO-CODEX-e_trich_xuat.md), sáu khối tự đủ theo dự toán **37 giờ ước tính** (8/7/8/4/3/7), màn cấu hình ở TX-1, công cụ đo T3/N1 ở TX-6 do Anh tự chạy; XLSX E6 đã đặt (PR #30). Chỉ tài liệu; PR: **chờ lead mở** |
+| TX-1 | Khung SDK 2.0, ngăn/cấu hình/UI và đọc DOCX/Track Changes | TX-0 §8; TX-15, 12 | Xong | **15/11/2026**, xong phần Codex — **đã kiểm bằng Core giả (CoreGia)**: SDK DEMO **2/2 ĐẠT**, pytest **66 passed, 2 skipped** (so SHA chờ NGAN-0 gộp), Node UI **6/6**, độc lập **exit 0**. Phân nhóm [TX-1a/TX-1b](TX-1-PHAM-VI.md), tổng **8 giờ ước tính**; PR: **chờ lead mở**. Linux/Core thật chưa chạy; ngăn chính thức và màn Core còn cần review |
 | 1 | Tách năng lực thành **chuẩn bị** và **hậu kiểm**; bỏ gọi AI trực tiếp (`ai_chung.py`) | TX-3 | Chờ làm | Theo CD-111 |
 | 2 | E2/E5: nhận bộ từ việc của module, đủ metadata module/loại/phiên bản/hash | TX-2, 4, 5 | Chờ làm |  |
 | 3 | E6: so từng byte bộ 37 xây dựng (cần tệp ghim `DANH_MUC_THAM_SO.xlsx`) | TX-7 | Chờ làm | `e_trich_xuat/tham-chieu/DANH_MUC_THAM_SO.xlsx`: **lead đã đặt 15/11 (PR #30)** + NGUON/SHA-256, xác nhận không dữ liệu thật theo đợt 2 §4; chưa kiểm E6 |
@@ -17,7 +18,9 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - **C-TX-01 (14/11/2026):** xác nhận cửa gửi việc module nhận và ghim `tham_so` riêng từng việc (bộ JSON, hash, prompt, phiên bản), kiểm module/pháp nhân; công bố trần chuỗi/byte thực. Không dùng thao tác sửa cấu hình quy trình chung để truyền bộ theo mỗi hợp đồng. Engine API v1 đã khóa, không đề nghị tự thêm đầu vào thứ hai.
 - **C-TX-02 (14/11/2026):** xác nhận quyền đọc qua SDK đối với tệp hồ sơ hậu kiểm do bước chuẩn bị tải lên rồi chuyển tham chiếu qua Hỏi AI; giữ tệp/kết quả cùng chuỗi tới khi module lưu/đóng; ca khác quyền và ACK lặp. SDK có `tai_tep_ra`/`mo_tep` nhưng TX-0 chưa kiểm Core thật phần cấp quyền/vòng đời xuyên bước.
 - **C-TX-03 (cập nhật 15/11/2026, dài hạn):** đề nghị cửa chung **“trường do tham số quyết định”** (`truong_ra` động theo snapshot). Anh đã chốt đợt 1 bảng loại riêng + Excel, module tự ghép cột; bước xuất trả `truong` tĩnh là thiết kế thích nghi API hiện có, không thêm khóa ngoài manifest 2.0. Payload/schema chi tiết còn cần review.
-- **C-TX-04 (15/11/2026):** ngăn và cấu hình/màn theo `_chung/docs/DE-NGHI-SDK-2.1.md` §2–5. Bảng cần: `cau_hinh`, phạm vi `engine`, một bản mặc định, giá trị JSON ≤ 64 KiB, CAS, không hết hạn; chi tiết `TX-0-THIET-KE.md` §6.3. Core thống nhất định danh bản ghi cấu hình hệ thống, `phien_ban_cau_hinh`/snapshot/sự kiện đổi; hỗ trợ `KttCore.engine("e_trich_xuat").cau_hinh`. Chờ mẫu NGAN-0 (chưa có trong worktree), tạm RAM qua `chon_ngan`, không tệp cấu hình/kho đĩa. Khi code khai riêng `KHAI-SDK-2.1.json`, không sửa phiếu 2.0. Cấu hình model/IP thuộc Hỏi AI, bộ thuộc module.
+- **C-TX-04 (cập nhật TX-1, 15/11/2026):** ngăn và cấu hình/màn theo `_chung/docs/DE-NGHI-SDK-2.1.md` §2–5. Bảng `cau_hinh`, phạm vi `engine`, duy nhất bản hệ thống `ma=mac_dinh`, giá trị JSON ≤64 KiB, CAS `row_version`, không hết hạn. Core cần thống nhất định danh/bảo đảm một bản ghi, `phien_ban_cau_hinh`, snapshot và `engine.cau_hinh_doi`; hỗ trợ `KttCore.engine("e_trich_xuat").cau_hinh`. Đã có seam đọc một bản, ưu tiên snapshot của việc, test mô phỏng thay đổi không sửa bản cũ; chưa có SDK 2.1 thật. `KHAI-SDK-2.1.json` đã khai riêng, phiếu 2.0 không thêm khóa. Màn export `nap({goc, KttCore})`/default, cổng đọc/lưu `{gia_tri, phien_ban_cau_hinh}`; **lead Core review cách nạp màn và mã màn trước cài**. Model/IP thuộc Hỏi AI, bộ thuộc module.
+- **NGAN-0 (TX-1, 15/11/2026):** hai mẫu `_chung/mau-ma/ngan.py`, `cau_hinh.py` chưa có trong worktree. Theo ghi chú lead trong lệnh TX-1, đã viết bản tạm cùng tên trong gói theo API §3, không tạo/sửa mẫu chung. Hai test SHA skip đúng lý do **"chờ NGAN-0 gộp"**; khi mẫu xuất hiện, test tự so SHA để lead thay bản gói bằng mẫu chính thức. Danh sách API/tham số dùng ghi trong biên bản TX-1 bên dưới. RAM có khóa, lô nguyên tử, CAS/duy nhất và chỉ mục; không deepcopy toàn kho. Không coi bản tạm là NGAN-0 đã gộp.
+- **C-TX-05 (mới từ TX-1, 15/11/2026):** SDK 2.0 kiểm MIME/kích thước trước handler, trả `LOAI_TEP_KHONG_NHAN`/câu lỗi khác TX-1; có thể in traceback khi gặp lỗi bất ngờ. Gói kế thừa `Engine.tu_khai_bao`, bọc hẹp `_ket_thuc` chỉ với `trich.doc_docx@1` để trả đúng `TEP_KHONG_HO_TRO`/`VUOT_GIOI_HAN`, bọc `_ghi` để không lộ traceback. Vòng việc/lease/hủy/ACK vẫn do SDK xử lý; không sửa SDK. Cần SDK có hook công khai cho thông điệp lỗi/nhật ký an toàn, lead kiểm lại hai seam nội bộ khi nâng phiên bản.
 - **Bổ sung C-TX-04 từ TX-P (15/11/2026):** CLI `kho_tri_thuc_sdk.thu` 2.0 chưa có cửa nạp cấu hình ngăn cho DEMO cần cấu hình. Phiếu giao yêu cầu báo kết quả lệnh chuẩn riêng và thêm `tests/chay_demo_voi_ngan_gia.py` nạp cấu hình DEMO vào `NganBoNho` trước `CoreGia.chay_thu_demo`, trình lead review cổng thay thế trong lúc chờ SDK; không tự tạo cấu hình mặc định trong engine hay dùng tệp cấu hình để làm xanh. Đây là giới hạn cần xử lý ở lát code, TX-P không chạy runtime để chứng nhận.
 - Các quyết định tạm ở `_chung/docs/GIAO-CODEX-THU-TU.md` §2 về tệp cấu hình/kho đĩa/không có màn **đã được Anh thay ngày 15/11**: không lưu gì trên máy, có màn cấu hình engine nạp như màn module; schema chỉ đọc trong gói, giá trị qua ngăn; tệp tạm của việc dọn trong `finally`. Chạy thử DEMO vẫn dùng màn chung Core. TX-0 không sửa Core/SDK và chưa kiểm nối Core thật.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
@@ -45,6 +48,105 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 ## Phần đề xuất lưu trữ sau chuyển đổi — chưa chuyển, không xóa
 
 Giữ nguyên toàn bộ `ma-nguon/`, `tu-core-cu/`, `tests-tu-core/`, shim và schema chung trong TX-0. Khi lead xác nhận thay thế/không còn consumer, đề xuất lưu bản lịch sử của vỏ socket trong `tich_hop.py`/`chay.py`, adapter gọi AI `ai_chung.py`/`tham_so._ai_legacy`, đường catalog máy cũ, CRUD danh mục/đọc `YEU_CAU_THEM.txt`, phần cập nhật `DANH_MUC_HD`/sửa tay của `vendor/review/xuat.py` và pipeline lặp trong `quy_trinh.py`. Chỉ tách phần không dùng; giữ thuật toán/chuẩn chấm còn cần đối chiếu. Bộ 37 chỉ đề xuất lưu trữ **sau E6 đạt**; bộ DV 30 và mẫu DV theo quyết định cuối, không đổi nhãn thành KCN để dùng lại nghiệp vụ.
+
+## Bàn giao TX-1 — 15/11/2026, PR: chờ lead mở
+
+**Kết luận:** đạt các kiểm tra phần Codex trên Windows, **đã kiểm bằng Core giả (CoreGia)**;
+chưa chứng nhận Linux/Core thật hoặc bản NGAN-0 chính thức. Hai nhóm theo lệnh giao:
+TX-1a có 5 tệp mã (khung/ngăn/cấu hình/UI), TX-1b có 1 tệp `docx.py` chuyển
+lõi từ hai nguồn cũ; xem [TX-1-PHAM-VI.md](TX-1-PHAM-VI.md). Giữ tổng 8 giờ
+công ước tính, cùng worktree/nhánh được lead giao; lead tách commit/PR, Codex không commit/push.
+
+Đã làm:
+
+- Gói `goi/e_trich_xuat/` SDK 2.0 hợp lệ, bản `0.2.0`, chỉ công bố
+  `trich.doc_docx@1`; hai DOCX DEMO xác định, có nhãn trong nội dung. Không
+  đăng ký stub hoặc năng lực TX-2/3. Schema `van_ban_tai_lieu` chép nguyên byte.
+- Chuyển có sửa Accept All/Numbering, đọc bytes SDK trong RAM, băm gốc;
+  giữ thứ tự, ô rỗng/gộp, bảng lồng/content control và số tự động theo từng
+  danh sách. Giữ nội dung Unicode, offset theo đúng văn bản. `so_trang=0`,
+  `trang=[]`; cây `khoi_docx` tùy chọn không mang trang/hộp giả. Vùng chưa
+  đọc (đầu/chân trang, chú thích, ảnh/đối tượng nhúng) có cảnh báo cố định.
+- Trần 20 MiB đầu vào, 120 giây khai tại Core; giới hạn ZIP/XML được kiểm
+  trước đọc/giải nén XML, DTD bị chặn; trần nội dung/JSON/bảng từ chối cả
+  việc, không cắt ngầm. Lỗi tiếng Việt không kèm dữ liệu/đường dẫn.
+  Có tiến độ/kiểm hủy tại các chặng và vòng đọc; không tạo tệp tạm.
+- Cấu hình qua ngăn RAM tạm, mặc định 16.000 chỉ điền khi bản ghi đã có;
+  không tự ghi vào ngăn hoặc tài nguyên gói. DOCX độc lập cấu hình AI;
+  kiểm thiếu cấu hình dùng một năng lực chỉ có trong test trên CoreGia,
+  không đưa năng lực kiểm vào manifest/runtime.
+- Màn một ô ngân sách và nút Lưu qua cổng KttCore, CAS lỗi bằng tiếng Việt,
+  không HTML động hoặc mạng ngoài. Khai ngăn/cấu hình/màn ở tệp SDK 2.1 riêng.
+  Nguồn/lock/SHA-256 và CHANGELOG đầy đủ; chỉ chuẩn Python + SDK trong runtime.
+
+### Kết quả lệnh thực
+
+Môi trường `.venv` trong worktree: Python **3.13.14**, SDK **2.0.0** cài offline
+`--no-index --no-deps`; băm wheel khớp SHA256SUMS:
+`a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`.
+Pytest có sẵn trên máy được đưa vào `PYTHONPATH` riêng của tiến trình kiểm,
+ưu tiên thư mục SDK trong `.venv`, tắt tự nạp plugin và bytecode;
+không thêm dependency runtime hoặc dùng mạng. Ba engine SDK mẫu cũng đã chạy đạt.
+
+| Lệnh thật | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat` | **2/2 ĐẠT, exit 0**: “Đọc hợp đồng DOCX DEMO”, “Chấp nhận Track Changes DOCX DEMO”; có đúng một cảnh báo RAM trên stderr |
+| `.venv/Scripts/python -B -m pytest e_trich_xuat/tests -q` | **66 passed, 2 skipped in 2.03s, exit 0**; cả hai skip so SHA `ngan.py`, `cau_hinh.py`, lý do **"chờ NGAN-0 gộp"** |
+| `.venv/Scripts/python -B e_trich_xuat/tests/kiem_doc_lap.py` | **exit 0**; `[ĐẠT] Gói độc lập: không import Core/kênh cũ, không bytecode hoặc liên kết.` |
+| `node --test e_trich_xuat/tests/ui/cau_hinh.test.mjs` | **6 pass, 0 fail, 0 skipped**; pytest cũng gọi bộ Node này |
+| Kiểm SHA/UTF-8/JSON/khoảng trắng | **18 tệp SHA-256 khớp** (16 tệp gói ngoài NGUON + 2 nguồn cũ), schema chung nguyên byte; UTF-8 không BOM, JSON hợp lệ, không khoảng trắng cuối dòng |
+
+Dòng kết của CLI SDK thực tế: `Engine e_trich_xuat 0.2.0: mọi ví dụ chạy thử DEMO đều đạt.`
+Pytest đã kiểm DOCX có/không Track Changes, dòng/ô bị xóa, nối đoạn qua
+phần chèn, bảng ô rỗng/gộp/lồng/content control, style/số đa cấp, tệp hỏng/
+sai MIME, bytes thực vượt trần hoặc lệch khai báo, ZIP/XML vượt trần trước đọc,
+DTD UTF-8/UTF-16, hủy khi đọc và tại các mốc tiến độ, mất ACK không nộp trùng,
+chặn ghi tệp/mạng trong runtime, log không lộ nội dung. Ngăn có kiểm rollback
+toàn lô, CAS sai không ghi, chỉ mục duy nhất, hai luồng lấy hoặc tạo, đọc/tìm
+theo pháp nhân, RAM mất ở phiên mới. UI kiểm đọc/lưu/phiên bản/CAS/thiếu bản ghi,
+giới hạn nhập, chặn gửi lặp và lỗi không lộ chi tiết. Không AI/OCR thật, **0 Cloud**.
+
+Linux **chưa chạy thực tế**: máy hiện không có runtime Linux/WSL. Test dùng
+thư viện chuẩn, mock metadata liên kết Windows, không phụ thuộc COM/OCR/đường
+máy thật. Không đánh dấu Linux là passed hoặc thêm skip để giả kết quả.
+
+### API ngăn đã dùng — gửi lead đối chiếu NGAN-0
+
+Runtime engine chỉ cần:
+
+- `chon_ngan(app)` → ưu tiên `app.ngan`; fallback `NganBoNho()`, tái dùng RAM
+  trên cùng app, cảnh báo stderr một lần trên tiến trình.
+- `ngan.doc(bang, khoa)`, cụ thể `doc("cau_hinh", {"ma": "mac_dinh"})` →
+  `None` hoặc `.gia_tri` (bản ghi `{ma, gia_tri}`) và `.row_version`.
+- `doc_cau_hinh(ngan, schema)` → `None` hoặc dict đã điền mặc định/kiểm schema.
+  `ghim_cau_hinh` đưa bản ghi vừa đọc qua cổng chỉ đọc để không đọc lệch
+  phiên bản; trả `{gia_tri, phien_ban_cau_hinh}`. Nếu SDK có snapshot của việc,
+  dùng `viec.cau_hinh`/`viec.phien_ban_cau_hinh`; nếu có `viec.ngan`, ưu tiên nó.
+
+Bản tạm và bộ test hợp đồng còn dùng:
+
+- `NganBoNho(khai_bao=None, *, phap_nhan_id=None)`; khai bảng có
+  `bang/pham_vi/khoa/duy_nhat`. Trên ngăn gốc, bảng `phap_nhan` bắt buộc
+  `phap_nhan_id` trong `khoa/loc`; chỉ mục có phạm vi pháp nhân.
+- `tim(bang, loc=None, gioi_han=100, tiep=None)` → `{danh_sach: [BanGhi], tiep}`;
+  giới hạn 1–500, mốc tiếp tạm là chuỗi offset. Runtime TX-1 chưa gọi `tim`.
+- `with ngan.lo() as lo`: `them(bang, khoa, gia_tri)`,
+  `sua(bang, khoa, gia_tri, *, row_version)`, `xoa(bang, khoa, *, row_version)`,
+  `lay_hoac_tao(bang, khoa_duy_nhat, gia_tri)`; tối đa 100 lệnh, cả lô nguyên tử,
+  CAS/duy nhất sai → `NganXungDot`, `thu_lai_duoc=True`.
+- Test đọc `lo.ket_qua` sau with: mỗi phần tử có `row_version`, `da_tao`,
+  `ban_ghi` (`BanGhi.gia_tri/row_version`). Đây là hình dạng tạm để test;
+  mã engine không phụ thuộc kết quả ghi lô này. Không sao chép sâu toàn kho.
+
+Lệch/tạm đã dùng: hai tệp ngăn viết trong gói theo ghi chú lead, chờ thay
+NGAN-0; hai hook nội bộ SDK tại C-TX-05; chưa kiểm Linux hoặc Core thật.
+Cần Core: NGAN-0/C-TX-04 và review màn, C-TX-05; các C-TX-01…03/A-TX-01
+giữ cho lát sau. Không phát sinh quyết định nghiệp vụ cần Anh. Không sửa/xóa
+`ma-nguon`, nguồn tham chiếu, schema chung, Core/SDK; không commit/push.
+
+Kiểm cuối TX-1: `git diff --check` **exit 0**; phạm vi chỉ gói/test mới, `TX-1-PHAM-VI.md` và `VIEC.md`; UTF-8/JSON/AST/hàng rào Markdown đạt. Không có tệp bị xóa, không sửa nguồn chỉ đọc, không commit/push.
+
+Thời gian TX-1 (UTC+07), **15/11/2026**: bắt đầu **07:52:00** theo lead; kết thúc **08:24:58**; thực tế **0,55 giờ**, so với phiếu **8 giờ công ước tính**. PR: **chờ lead mở**.
 
 ## Bằng chứng TX-P — 15/11/2026, PR: chờ lead mở
 

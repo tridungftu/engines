@@ -1,4 +1,4 @@
-"""Regression E6 giá trị + dẫn chứng; bộ chuẩn vẫn chờ lead duyệt.
+"""Regression E6 giá trị + dẫn chứng; bộ chuẩn DEMO đã được lead duyệt 15/11/2026.
 
 Băng trả lời rỗng/null dưới đây chỉ kiểm cơ chế. Không gán nhãn được lead
 chấp nhận, không tạo file ở tham-chieu và không tự chứng nhận tương đương.
@@ -155,12 +155,13 @@ def test_runtime_hash_sai_tra_nguyen_loi_khong_fallback(dm):
     assert core.so_lan_ghi["tep"] == 0
 
 
-def test_cong_mac_dinh_do_du_nhung_cho_lead_khong_bao_nghiem_thu(capsys):
-    assert e6.main([]) == 2
+def test_cong_mac_dinh_bo_chuan_da_duoc_lead_duyet(capsys):
+    # Lead duyệt bộ chuẩn DEMO 15/11/2026 (chap_nhan_lead="đã duyệt" + bien_ban_lead).
+    assert e6.main([]) == 0
     r = json.loads(capsys.readouterr().out)
-    assert r["trang_thai"] == "chua_kiem" and r["ket_qua_do"] == "dat"
+    assert r["chap_nhan_lead"] == "đã duyệt" and r["ket_qua_do"] == "dat"
+    assert r["trang_thai"] != "chua_kiem"
     assert len(r["cac_ca"]) == 2 and r["cloud"] == 0
-    assert r["chap_nhan_lead"] == "chờ lead"
 
 
 @pytest.mark.parametrize("loai", ["thieu_xlsx", "sai_xlsx", "sai_ghim"])
@@ -363,7 +364,7 @@ def test_bo_chuan_khop_vang_va_bang_ai_cung_cau_tra_loi_khong_tu_chung_nhan():
     truoc = {p.name: p.read_bytes() for p in ref.iterdir() if p.is_file()}
     report, code = e6.kiem_manifest(e6.ENGINE / "tham-chieu/e6/chap-nhan.json")
     assert truoc == {p.name: p.read_bytes() for p in ref.iterdir() if p.is_file()}
-    assert code == 2 and report["ket_qua_do"] == "dat"
+    assert code == 0 and report["ket_qua_do"] == "dat"
     assert [c["track_changes_da_nhan"] for c in report["cac_ca"]] == [0, 2]
     for c in report["cac_ca"]:
         assert len(c["tung_ma"]) == 37

@@ -1,7 +1,7 @@
 {
   "phien_ban": 2,
   "nhan": "DEMO",
-  "chap_nhan_lead": "chờ lead",
+  "chap_nhan_lead": "đã duyệt",
   "cac_ca": [
     {
       "ma": "DEMO-thuong",
@@ -43,5 +43,6 @@
         "bam": "sha256:6cb40338981b62f9699f382af468384d8379a82d0e706e331cffd60abbfa0f54"
       }
     }
-  ]
+  ],
+  "bien_ban_lead": "Lead (Claude) duyệt 15/11/2026 sau kiểm độc lập Sonnet: bản vàng 74/74 mã đối chiếu tay với hai DOCX, độc lập với đầu ra engine; chỉ dùng kiểm đường ống E6 (băm, offset, hậu kiểm, null), KHÔNG thay bộ hợp đồng thật. PR TX-4b."
 }

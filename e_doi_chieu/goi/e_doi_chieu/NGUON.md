@@ -1,5 +1,34 @@
 # Nguồn của gói Đối chiếu
 
+## DC-5 — 15/11/2026
+
+`quy_tac.py`, `tien_chu.py` viết mới trong workspace theo DAC-TA §5.1,
+DC-g và phiếu DC-5. Chỉ dùng thư viện chuẩn Python/SDK 2.0.0; không tải
+mạng, chép từ điển/model/font hoặc thêm dependency. `chay.py` chỉ đổi
+import handler tại khối DC-5 riêng, giữ đăng ký API hiện có.
+
+Tái dùng nội bộ `so_chu.py`/`can_chinh.py`/`ho_so.py`/`chuan_hoa.py` của
+DC-3/DC-4, không sửa chúng. Vòng giữ/chốt lượt DC-5 chuyển từ quy ước
+DC-4 vào coordinator riêng để giữ phạm vi đúng ba tệp và không tạo hai
+snapshot trung gian. Không import runtime engine khác hoặc mã Core.
+
+Ngữ pháp số tiếng Việt được cài hữu hạn trong `tien_chu.py`, không phải
+từ điển mua ngoài hay chứng nhận xử lý mọi cách viết. Bản không phân
+tích đủ luôn giữ cần xem/chưa đủ kiểm. Bộ, tệp DOCX/PDF/PNG và phản hồi
+AI đề xuất trong tests đều DEMO; OCR/ảnh/quyền/ngăn do CoreGia/adapter
+giả, không là số đo OCR/Core/model thật.
+
+SHA-256 hiện hành UTF-8 sau CRLF→LF (các bảng lát trước là lịch sử):
+
+| Tệp trong gói | SHA-256 LF |
+|---|---|
+| `e_doi_chieu/quy_tac.py` | `ac2eb150649f14ecf9ea4fd5e8c4a4d8e58c5871085e3e06c0bfc15c46844473` |
+| `e_doi_chieu/tien_chu.py` | `94a03177d0b99ce05ec86b184ef6da59f857935863d769d3d67204e1a4c0d665` |
+| `e_doi_chieu/chay.py` | `821f0c57ea9bfb980f146231ce5ac201b32bf6fd3a3ef8e323ddb812ac42f591` |
+
+Hai bản chép NGAN-0 và mọi schema chung giữ nguyên; test so băm LF vẫn
+đạt. SDK offline/wheel/phiên bản và giấy phép nguồn giữ theo DC-4 bên dưới.
+
 ## DC-4 — 15/11/2026
 
 `can_chinh.py`, `so_chu.py` viết mới trong lát DC-4; dùng cấu trúc/ánh xạ

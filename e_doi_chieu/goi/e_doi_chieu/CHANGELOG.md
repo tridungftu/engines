@@ -1,5 +1,34 @@
 # Thay đổi
 
+## DC-5 — 15/11/2026 · chưa phát hành
+
+- Hoàn thiện `doi_chieu.so_van_ban@1` trong đúng ba tệp runtime:
+  `quy_tac.py`, `tien_chu.py`, `chay.py`; dùng lại kiểm nguồn/căn/so DC-4,
+  giữ nguyên API/schema/manifest, hai mẫu NGAN-0 và phần ảnh DC-8.
+- Sàn Python và quy tắc trúng cho mọi điểm; quét toàn văn cùng vùng bảo
+  vệ từ nhãn/metadata đã kiểm băm/offset. Chữ số, ngày/thời hạn, tiền/
+  tiền tệ/tỷ lệ, định danh, phủ định/bắt buộc, cấu trúc và nghi nhầm OCR
+  giữ Nghiêm trọng. Kiểm lại cả lát tương đương chuẩn hóa để không mất
+  thay đổi mã/số/tên; NFC tương đương ngoài khác biệt nghiệp vụ vẫn giữ.
+- Chỉ chuẩn phân cách số theo bộ ghim, giữ chuỗi 0 đầu; Decimal/int,
+  không float hoặc đoán tiền tệ. Tiền snapshot `{so, tien_te}`; tiền lẻ
+  dùng chuỗi thập phân chính xác, ngày đã phân tích dùng ISO.
+- Kiểm số ↔ chữ ngay trong bản ký dù hai bản giống nhau. Đủ cụm/đơn vị
+  và trái nhau → Nghiêm trọng; thiếu/mơ hồ/chưa hiểu ngữ pháp → Cần xem,
+  `khop=null`, hạng mục chưa đủ kiểm. Không ghép qua dòng/ô.
+- Nhật ký/sàn ghim băm, kiểm với snapshot gốc Core; chặn hạ mức, tự băm
+  lại, thay căn cứ/xóa điểm. Áp lại không reset mức AI đã nâng. DC-6 còn
+  phải kiểm nguồn/trích dẫn/Local; DC-5 không gọi AI hoặc Cloud.
+- Snapshot/chống trùng/CAS/chủ/hạn chiếm qua Core/Ngan; trần điểm và
+  bytes tính cả bằng chứng/nhật ký, không cắt danh sách. Vùng dài tham
+  chiếu bằng offset/băm tới nguyên văn, tránh nhân cả dòng vào mỗi điểm.
+- Đã kiểm bằng Core giả (CoreGia): DEMO **1/1 ĐẠT**, pytest **580 passed,
+  0 skipped** (173 ca DC-5), kiểm độc lập **ĐẠT**, cả ba lệnh mã 0.
+  Ma trận 29 cặp dương + 29 cặp không lệch; 4 ca tiền nội bộ trái số và
+  8 ca tiền nội bộ khớp. Bắt đủ các điểm cài trong bộ này, không suy tỷ
+  lệ thực tế. Chưa kiểm Core thật/Linux/OCR/model thật; PR: **chờ lead mở**.
+  Không sửa `ma-nguon/`, không commit/push. Chi tiết tại VIEC/README.
+
 ## DC-4 — 15/11/2026 · 0.4.0 chưa phát hành
 
 - Thêm `doi_chieu.so_van_ban@1`, đúng ba tệp runtime `can_chinh.py`,

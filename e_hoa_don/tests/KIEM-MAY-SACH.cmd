@@ -4,8 +4,8 @@ set "PYTHONDONTWRITEBYTECODE=1"
 set "PYTHONPATH="
 set "PYTHONHOME="
 for %%I in ("%~dp0..\..") do set "ROOT=%%~fI"
-set "WHEEL=%ROOT%\docs\goi-gui-engine\sdk-2.0.0\kho_tri_thuc_sdk-2.0.0-py3-none-any.whl"
-set "EXPECTED=a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892"
+set "WHEEL=%ROOT%\docs\goi-gui-engine\sdk-2.2.0\kho_tri_thuc_sdk-2.2.0-py3-none-any.whl"
+set "EXPECTED=0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984"
 python -B -c "import hashlib,sys; assert hashlib.sha256(open(sys.argv[1], 'rb').read()).hexdigest() == sys.argv[2]" "%WHEEL%" "%EXPECTED%" || exit /b 1
 if not exist "%ROOT%\.venv" mkdir "%ROOT%\.venv" || exit /b 1
 for /f "delims=" %%I in ('python -B -c "import tempfile,sys; print(tempfile.mkdtemp(prefix='hoa-don-DEMO-', dir=sys.argv[1]))" "%ROOT%\.venv"') do set "TMP_DEMO=%%I"

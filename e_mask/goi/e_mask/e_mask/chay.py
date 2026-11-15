@@ -1,4 +1,4 @@
-"""Hai năng lực văn bản SDK; kho qua ngăn, quyền từ bên tích hợp tin cậy."""
+"""Năng lực văn bản SDK; kho qua ngăn, quyền từ bên tích hợp tin cậy."""
 from copy import deepcopy
 from functools import wraps
 from pathlib import Path
@@ -73,18 +73,26 @@ def _mo_ai(chu, ma, dong, ai, kho, viec):
                     tra_loi_ai=moi)
 
 
-def tao_app(*, ngan=None, quyen=None):
+def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None):
     """Chỉ bên tích hợp truyền port; dữ liệu việc không thể cấp quyền này."""
     ung_dung = Engine.tu_khai_bao(str(Path(__file__).resolve().parents[1] / 'engine.json'))
     if ngan is not None:
         ung_dung.ngan = ngan
     elif getattr(ung_dung, 'ngan', None) is None:
-        ung_dung.ngan = NganBoNho(KHAI_NGAN)
+        from .chuan_bi_ai import KHAI_NGAN_CHUAN_BI_AI
+        ung_dung.ngan = NganBoNho([*KHAI_NGAN, *KHAI_NGAN_CHUAN_BI_AI])
     ngan = chon_ngan(ung_dung)
 
     def ngan_cua_viec(viec):
         ngan_viec = getattr(viec, 'ngan', None)
         return ngan if ngan_viec is None else ngan_viec
+
+    @ung_dung.nang_luc('mask.chuan_bi_ai_cuc_bo@1')
+    @_loi_cong
+    def chuan_bi_ai(viec):
+        from .chuan_bi_ai import ChuanBiAI
+        return ChuanBiAI(ngan=ngan_cua_viec(viec), quyen=quyen, cong=cong_chuan_bi_ai,
+                         phien_ban_engine='e_mask ' + ung_dung.phieu['phien_ban']).chuan_bi(viec)
 
     @ung_dung.nang_luc('mask.che_van_ban@1')
     @_loi_cong

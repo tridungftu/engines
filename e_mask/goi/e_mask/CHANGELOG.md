@@ -7,6 +7,14 @@
 
 ## Chưa phát hành — 16/11/2026, MASK-B5
 
+## Chưa phát hành — 16/11/2026, MASK-B6 Excel chỉ RAM
+
+- Thêm `tep_excel.py` nội bộ: che shared/inline/rich text/metadata và ô/hàng/cột ẩn trong profile B3; giữ index, style, merge, kích thước và lexical/kiểu số/tiền/ngày. Shared chỉ patch một lần, kiểm mọi nơi dùng/unused và đọc lại bytes kết quả qua reader B3. Tên sheet cần đổi hoặc phần ngoài whitelist chặn cả workbook; không dựng workbook mới/fallback/COM/PDF.
+- Dùng detector/tìm chính xác R2/R3 và map/kiểm R5; ngân sách ứng viên/vị trí/chi phí chung trong RAM. Primitive che bổ sung cập nhật cùng nguồn shared cho mọi ô, giữ map Unicode/run/byte và chặn mơ hồ alias. Số General hoặc metadata có kiểu số cần che thì chặn, không biến số thành chuỗi. Nợ chất lượng R3 còn mở.
+- Gốc/map/bytes/script/budget chỉ trong handle R4 đúng mã Core, scope và instance; TTL 600 giây cấu hình 60–900, khóa ghi đồng bộ timer/hủy. Dọn sau lỗi/hủy/kết thúc/hết hạn/tiêu thụ; không snapshot/ngăn map/tệp tạm/log/stderr/chuyển tiếp. Chỉ trả băm/số đếm, trạng thái `CHO_LOCAL`, không tự xác nhận hai lớp hoặc upload/phát hành tệp; B7/B8/B9 còn riêng.
+- Nguồn/symbol/quyền/SHA bytes và LF trước/sau tại NGUON; 19 nguồn giữ nguyên, chỉ một runtime mới trong bốn tệp cho phép. Đã kiểm bằng Core giả (CoreGia); chưa Core/Office/Local/Linux thật, Cloud tắt. Kết quả thật và C-P4-01…05 ở VIEC/báo cáo B6; PR chờ lead mở.
+
+
 - Thêm logic nội bộ `tep_word.py` nối B1/B2/B4, ứng viên R2/R3, hậu kiểm MASK-2b/R5 và kho R4. Che mọi vùng Word trong whitelist đã đọc, gồm run tách, chữ ẩn, bảng/ô gộp, đầu/chân, footnote/endnote, metadata và attribute tự do. Không ghép qua ô/story; vùng hoặc markup chưa hiểu từ chối toàn tệp.
 - Patch theo khoảng byte có băm; đọc lại bytes kết quả và so từng vùng. Giữ nguyên markup/style/bảng, bytes ngoài patch và local record/payload nén của part không đổi. Giữ NFD ngoài vùng thay, nguyên văn NFD/Cf trong map và tiền/ngày. Cf ngoài alias được bỏ theo chính sách; Cf biểu diễn bằng markup mà không patch text được thì chặn. Trường hợp báo trùng số bên trong ngày ISO được đối chiếu đúng vùng ngày MASK-2b và kiểm số/tiền/ngày lại, không miễn vùng kế bên.
 - Toàn bộ gốc/map/bytes/patch/cache ứng viên chỉ trong handle RAM đúng scope/instance của R4; TTL snapshot 600 giây, nguyên 60–900, không gia hạn khi retry. Điểm ghi trạng thái khóa cùng timer/hủy R4 để không dựng lại map sau khi đã dọn. Chỉ tìm ứng viên chính xác qua ngăn bí mật SDK, không đọc danh mục/bản rõ. Cùng alias khác nguyên văn, lỗi/hủy/TTL hoặc thiếu quyền/RAM chặn và dọn; không ghi ngăn/tệp/hồ sơ, không upload/log/chuyển tiếp map.

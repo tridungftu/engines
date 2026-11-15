@@ -12,10 +12,10 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 from . import ho_so as hs
 from . import quy_tac as qt
 from . import so_chu as sc
-from .ngan import NganXungDot
+from kho_tri_thuc_sdk.engine import NganXungDot
 from .vi_tri import loi
 
-PHIEN_BAN = "DC-6-1"
+PHIEN_BAN = "DC-6-2"
 TRAN_DIEM, TRAN_NGU_CANH, TRAN_KHUON, TRAN_CHUYEN_TIEP = 100, 500000, 32768, 65536
 _GOI = Path(__file__).resolve().parent.parent
 _SCHEMA_YC = json.loads((_GOI / "yeu_cau_ai.schema.json").read_text(encoding="utf-8"))
@@ -70,8 +70,8 @@ def da_ghim(ngan, pn, pb, trang_thai, kiem=lambda: None):
     tiep = None
     while True:
         kiem()
-        trang = ngan.tim("luot_doi_chieu", {"phap_nhan_id": pn, "trang_thai": trang_thai}, gioi_han=500, tiep=tiep)
-        if any(hs.json_bytes(b.gia_tri.get("phong_bi")) == hs.json_bytes(pb) for b in trang.danh_sach):
+        trang = ngan.tim("luot_doi_chieu", loc={"trang_thai": trang_thai}, gioi_han=500, tiep=tiep)
+        if any(hs.json_bytes(hs.mo_phong_bi(b.gia_tri["phong_bi"])) == hs.json_bytes(pb) for b in trang.danh_sach):
             return
         tiep = trang.tiep
         if tiep is None:
@@ -131,7 +131,7 @@ def doc_goc(viec, ngan, cau_hinh, pb, doc=None):
 
 
 def khuon_tra_loi(ma_diem):
-    trich = {"type": ["object", "null"], "additionalProperties": False,
+    trich = {"$comment": "ktt:ai12:trich_dan", "type": ["object", "null"], "additionalProperties": False,
         "required": ["cau", "bat_dau", "ket_thuc"], "properties": {
             "cau": {"type": "string", "minLength": 1, "maxLength": TRAN_NGU_CANH},
             "bat_dau": {"type": "integer", "minimum": 0}, "ket_thuc": {"type": "integer", "minimum": 0}}}
@@ -139,9 +139,9 @@ def khuon_tra_loi(ma_diem):
         "additionalProperties": False, "required": ["diem"], "properties": {"diem": {"type": "array",
             "minItems": len(ma_diem), "maxItems": len(ma_diem), "items": {"type": "object",
                 "additionalProperties": False, "required": ["ma_diem", "nhan", "ly_do", "trai", "phai"],
-                "properties": {"ma_diem": {"type": "string", "enum": ma_diem},
-                    "nhan": {"enum": ["can_xem", "hinh_thuc", "nhieu_ocr", "nghiem_trong", "khong_chac"]},
-                    "ly_do": {"type": "string", "minLength": 1, "maxLength": 2000},
+                "properties": {"ma_diem": {"$comment": "ktt:ai12:metadata", "type": "string", "enum": ma_diem},
+                    "nhan": {"$comment": "ktt:ai12:metadata", "enum": ["can_xem", "hinh_thuc", "nhieu_ocr", "nghiem_trong", "khong_chac"]},
+                    "ly_do": {"$comment": "ktt:ai12:metadata", "type": "string", "minLength": 1, "maxLength": 2000},
                     "trai": trich, "phai": deepcopy(trich)}}}}}
 
 
@@ -208,20 +208,21 @@ def luot(viec, ngan, khoa, dang, xong):
                 luc = time.time()
                 chiem = {"trang_thai": dang, "chu_so_huu": chu, "han_chiem": luc + 360}
                 with ngan.lo() as lo:
-                    kq = lo.lay_hoac_tao("luot_doi_chieu", khoa, {**khoa, "ma_luot": uuid.uuid4().hex, **chiem})
-                ban = kq.ban_ghi
+                    lo.lay_hoac_tao("luot_doi_chieu", khoa, {**khoa, "ma_luot": uuid.uuid4().hex, **chiem})
+                kq = lo.ket_qua[0]
+                ban = hs.doc_sau_lo(ngan, khoa, lo)
                 if kq.da_tao:
                     giu = True
                     break
                 if ban.gia_tri["trang_thai"] == xong:
-                    cu = ban.gia_tri["phong_bi"]
+                    cu = hs.mo_phong_bi(ban.gia_tri["phong_bi"])
                     break
-                if ban.gia_tri["trang_thai"] != "can_thu_lai" and ban.gia_tri.get("han_chiem", 0) > luc:
+                if ban.gia_tri["trang_thai"] != "can_thu_lai" and float(ban.gia_tri.get("han_chiem") or 0) > luc:
                     raise LoiNghiepVu("DC_DANG_XU_LY", "Lượt đối chiếu đang được xử lý. Anh thử lại sau.", thu_lai_duoc=True)
                 with ngan.lo() as lo:
-                    kq = lo.sua("luot_doi_chieu", {"phap_nhan_id": khoa["phap_nhan_id"], "ma_luot": ban.gia_tri["ma_luot"]},
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                                 chiem, row_version=ban.row_version)
-                ban, giu = kq.ban_ghi, True
+                ban, giu = hs.doc_sau_lo(ngan, khoa, lo), True
                 break
             except NganXungDot:
                 if lan == 3:
@@ -234,15 +235,15 @@ def luot(viec, ngan, khoa, dang, xong):
             nonlocal giu
             viec.kiem_huy()
             with ngan.lo() as lo:
-                lo.sua("luot_doi_chieu", {"phap_nhan_id": khoa["phap_nhan_id"], "ma_luot": ban.gia_tri["ma_luot"]},
-                       {"trang_thai": xong, "phong_bi": pb}, row_version=ban.row_version)
+                lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
+                       {"trang_thai": xong, "phong_bi": hs.dong_phong_bi(pb)}, row_version=ban.row_version)
             giu = False
         yield None, chot
     finally:
         if giu and ban is not None:
             try:
                 with ngan.lo() as lo:
-                    lo.sua("luot_doi_chieu", {"phap_nhan_id": khoa["phap_nhan_id"], "ma_luot": ban.gia_tri["ma_luot"]},
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                            {"trang_thai": "can_thu_lai"}, row_version=ban.row_version)
             except NganXungDot:
                 pass
@@ -255,7 +256,7 @@ def chuan_bi_ai(viec, ngan, cau_hinh, *, phien_ban_engine):
     viec.tien_do(5, "Đang kiểm nguồn và sàn quy tắc trước khi chuẩn bị Local AI")
     s, doc, _ = doc_goc(viec, ngan, cau_hinh, viec.dau_vao)
     yc, ban_do, ids = dung_yeu_cau(s, params, viec.kiem_huy)
-    khoa = {"phap_nhan_id": scope["phap_nhan_id"], "bam_bo": s["bo_quy_tac"]["bam"], "phien_ban_engine": phien_ban_engine,
+    khoa = {"bam_bo": s["bo_quy_tac"]["bam"], "phien_ban_engine": phien_ban_engine,
         "bam_cap": hs.bam(hs.json_bytes({"buoc": PHIEN_BAN + ":chuan_bi", "pham_vi": scope,
             "ho_so": viec.dau_vao, "tham_so": params}))}
     with luot(viec, ngan, khoa, "dang_chuan_bi_ai", "cho_ai") as (cu, chot):

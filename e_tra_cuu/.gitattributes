@@ -1,2 +1,4 @@
 # DEMO có băm bytes đã ghim: giữ LF cả trên Windows.
 goi/e_tra_cuu/demo/* text eol=lf
+# Kiểm kê migration băm bytes toàn gói: giữ LF cả khi checkout trên Windows.
+goi/e_tra_cuu/** text eol=lf

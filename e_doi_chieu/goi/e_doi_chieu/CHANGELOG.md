@@ -1,5 +1,53 @@
 # Thay đổi
 
+## DC-S22 — 15/11/2026 · 0.7.1 chưa phát hành
+
+- Chuyển sang SDK 2.2.0; cấu hình đọc bản chụp `viec.cau_hinh`, giữ
+  `CHUA_CAU_HINH` khi thiếu trường bắt buộc; không còn bảng cấu hình.
+- Bốn bảng khai thật trong manifest, SQL chỉ CREATE TABLE trong schema
+  riêng, đủ cột hệ thống/kiểu/duy nhất và kiểm kê toàn gói bằng bytes/SHA.
+- Mọi bảng pháp nhân qua `viec.ngan`; bỏ pháp nhân khỏi khóa/lọc, giữ
+  CAS/chống trùng/thu hồi lượt/hủy. Dùng `lo.ket_qua` và đọc lại phiên bản
+  bằng SDK; phong bì nhỏ tuần tự hóa JSON trong cột văn bản.
+- Chuyển ba bản cổng tạm/bản khai vào LUU-TRU, không xóa. Test dùng
+  `CoreGia.dat_cau_hinh/gay_xung_dot_ngan/xem_ngan`, giữ ca hành vi cũ.
+- Gắn `$comment` vai trò trường DC-6 theo AI-12; kiểm tích hợp Hỏi AI từ
+  `origin/main` trên 2.2.0 với provider Local giả, giữ `CHUA_RO` và 0 Cloud.
+- Thêm kiểm nguyên tử/CAS, pháp nhân, bản chụp cấu hình, SQL/kiểm kê LF.
+  Đã kiểm bằng Core giả (CoreGia); kết quả thật và giới hạn tại VIEC.md.
+- Giữ ngưỡng hiệu năng cũ 2 giây: đệm phân tích tối đa 128 cụm tiền
+  trong một lượt quét, giữ kết quả/vị trí riêng từng dòng. Ca 500.000 ký
+  tự nhiều dòng lặp đo lại 0,5992 giây; không lưu đệm sau lượt quét.
+
+## DC-7 — 15/11/2026 · 0.7.0 chưa phát hành
+
+- Thêm `lech_dau.py`, `tu_dien.py`, nối `chay.py` sau so/hậu kiểm; không
+  đổi capability/API/schema hoặc hai mẫu NGAN-0. Từ điển chỉ fixture
+  DEMO ở tests, không có bộ mặc định trong gói; nguồn thật chờ DC-Q14.
+- Phân nhóm từ edit script đã tái dựng; tra token đầy đủ/từ/âm tiết có
+  phiên bản/băm/nguồn/giấy phép. Vắng mục giữ chưa biết/Cần xem; chỉ cặp
+  vô nghĩa có chứng nhận cụ thể và ngoài vùng bảo vệ mới được xét nhiễu.
+- Cặp có nghĩa cần Local AI đã kiểm trích dẫn và OCR lại đúng vùng cùng
+  ra Word. Sáu cặp đổi nghĩa không tự được bỏ qua; cờ ABBYY không thay
+  OCR lại. Manifest Core gắn đúng capability/kết quả nguồn, băm bản ký,
+  phiên bản/trang/vùng/điểm/ảnh/offset; caller không tự cấp provenance.
+  Thiếu/rỗng/khác OCR hoặc mất quyền kết quả giữ Cần xem, ảnh cắt nếu có.
+- Tỷ lệ trang dùng số token OCR phân biệt bị lệch dấu trên tổng token
+  trang; không đếm trùng edit/nút OCR, 0 token để null. Thiếu ngưỡng giữ
+  chưa kiểm; bộ DEMO chỉ mô phỏng ngưỡng đã đo, DC-Q15 vẫn mở. Trang OCR
+  kém giữ ảnh, nhóm nhiễu, riêng mọi điểm cứng và toàn bộ edit/điểm gốc.
+- Sàn/nhật ký DC-5 giữ nguyên; validator DC-7 tính lại từ nguồn tin cậy
+  trước khi cho Python phân loại ứng viên tạm thành nhiễu. Không hạ điểm
+  cứng hoặc mức AI đã nâng. DC-9 cần dùng validator DC-7 và tham chiếu
+  `ho_so_truoc_dc7`; không tin các boolean trong kết quả như chứng cứ.
+- Ngan/CAS/chống trùng; mỗi bước giữ cả snapshot tiền nhiệm và kết quả,
+  không lưu gì bền trên engine. Giữ hủy/ACK/giao lại và phục hồi snapshot
+  mất quyền từ nguồn còn quyền. Test DC-4/DC-6 cập nhật số snapshot theo
+  hai bước độc lập, không giảm kiểm chống trùng; 0 Cloud.
+- Đã kiểm bằng Core giả (CoreGia); kết quả ba lệnh, số đo và Cần Core
+  ghi tại VIEC. Chưa khép từ điển/contract OCR vùng/ngưỡng/model thật hoặc
+  nợ Hỏi AI C-DC-07. Không commit/push; PR: **chờ lead mở**.
+
 ## DC-6 — 15/11/2026 · 0.6.0 chưa phát hành
 
 - Thêm chuẩn bị `ho_so_doi_chieu → yeu_cau_ai` và hậu kiểm

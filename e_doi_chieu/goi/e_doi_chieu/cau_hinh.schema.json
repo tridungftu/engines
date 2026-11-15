@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "C?u h?nh ??i chi?u b?n k?",
+  "title": "Cấu hình Đối chiếu bản ký",
   "type": "object",
   "properties": {
     "phien_ban_cau_hinh": {
@@ -41,7 +41,7 @@
         null
       ],
       "default": null,
-      "description": "Ch?a ?o; ch?a ???c d?ng ?? k?t lu?n s?ch."
+      "description": "Chưa đo; chưa được dùng để kết luận sạch."
     },
     "so_trang_toi_da": {
       "type": "integer",
@@ -104,14 +104,6 @@
       "default": 2000
     }
   },
-  "required": [
-    "phien_ban_cau_hinh",
-    "ma_bo_chuan_hoa",
-    "bam_bo_chuan_hoa",
-    "ma_tu_dien",
-    "bam_tu_dien",
-    "phuong_phap_detector",
-    "phien_ban_detector"
-  ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "description": "Cho phép chưa cấu hình khi khởi động; việc cần đủ bảy mã/phiên bản bắt buộc, thiếu trả CHUA_CAU_HINH."
 }

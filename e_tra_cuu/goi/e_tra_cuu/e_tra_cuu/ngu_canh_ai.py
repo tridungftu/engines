@@ -134,7 +134,7 @@ def _chon(cac_ma, *, rong=False):
     cac_ma = list(dict.fromkeys(cac_ma))
     if rong:
         cac_ma.append(None)
-    return {"enum": cac_ma} if cac_ma else False
+    return {"enum": cac_ma, "$comment": "ktt:ai12:metadata"} if cac_ma else False
 
 
 def _kiem_schema_ham(s):
@@ -206,6 +206,9 @@ def _dong_tham_so(s, goc_ref):
     if type(s) is bool:
         return s
     s.pop("$id", None)  # ID module không tạo resource lồng trong khuôn ghép.
+    # Tham số hàm luôn là giá trị trích; schema module không được hạ vai trò.
+    if "$ref" in s or not any(k in s for k in ("properties", "items", "prefixItems", "$defs", "allOf", "anyOf", "oneOf", "not")):
+        s["$comment"] = "ktt:ai12:trich_xuat"
     if "$ref" in s:
         s["$ref"] = goc_ref + s["$ref"][1:]
     if s.get("type") == "object" or "properties" in s:
@@ -225,18 +228,21 @@ def _dong_tham_so(s, goc_ref):
 def dung_khuon(s):
     d, t = s["du_lieu"], s["tac_vu"]
     dinh_nghia = {}
-    chu = {"type": "string", "minLength": 1}
-    bool_ = {"type": "boolean"}
-    nguyen = {"type": "integer", "minimum": 0}
+    metadata = {"$comment": "ktt:ai12:metadata"}
+    trich = {"$comment": "ktt:ai12:trich_xuat"}
+    chu = {"type": "string", "minLength": 1, **metadata}
+    bool_ = {"type": "boolean", **metadata}
+    nguyen = {"type": "integer", "minimum": 0, **metadata}
     can_cu = _object({"ma_nguon": _chon(n["ma_nguon"] for n in s["nguon"]),
                      "ma_doan": _chon(_ma_doan(x) for x in _cac_doan(s)),
-                     "cau": chu, "bat_dau": nguyen, "ket_thuc": nguyen})
+                     "cau": {**chu, **trich}, "bat_dau": nguyen, "ket_thuc": nguyen})
+    can_cu["$comment"] = "ktt:ai12:trich_dan"
     if t == "phan_loai":
         dm = d["danh_muc"]
         props = {"nhom_de_xuat": _chon((x["ma"] for x in dm["nhom"]), rong=True),
                  "loai_de_xuat": _chon((x["ma"] for x in dm["loai"] if x["trang_thai"] == "hoat_dong"), rong=True),
                  "doi_tuong": _chon((x["ma"] for x in dm["doi_tuong"]), rong=True),
-                 "diem": {"type": "number", "minimum": 0, "maximum": 1},
+                 "diem": {"type": "number", "minimum": 0, "maximum": 1, **metadata},
                  "can_cu": _mang(can_cu), "ly_do_cho": _mang(chu), "de_nghi_chuyen_bo": bool_}
     elif t == "phan_tich_cau_hoi":
         cac_ham = []
@@ -245,18 +251,18 @@ def dung_khuon(s):
             ma_schema = "ham_" + str(i)
             ref = "#/$defs/" + ma_schema
             dinh_nghia[ma_schema] = _dong_tham_so(h["schema_tham_so"], ref)
-            cac_ham.append(_object({"ten": {"const": h["ten"]}, "phien_ban": {"const": h["phien_ban"]},
-                                   "tham_so": {"$ref": ref}}))
-        props = {"y_dinh": chu, "thuc_the": _mang(_object({"loai": chu, "ma": chu, "gia_tri": chu})),
+            cac_ham.append(_object({"ten": {"const": h["ten"], **metadata}, "phien_ban": {"const": h["phien_ban"], **metadata},
+                                   "tham_so": {"$ref": ref, **trich}}))
+        props = {"y_dinh": chu, "thuc_the": _mang(_object({"loai": chu, "ma": chu, "gia_tri": {**chu, **trich}})),
                  "ham_de_xuat": _mang({"oneOf": cac_ham} if cac_ham else False, toi_da=len(cac_ham)),
                  "phu_thuoc_thoi_diem": bool_,
-                 "thoi_diem": {"const": s["ngu_canh_core"]["thoi_diem"]}}
+                 "thoi_diem": {"const": s["ngu_canh_core"]["thoi_diem"], **metadata}}
     elif t == "xep_hang_lai":
         # Mỗi mã một nhánh riêng: đủ mã, mỗi mã đúng một lần, thứ tự tùy model.
         cac_ma = [x["ma_ung_vien"] for x in d["ung_vien"]]
         item = _object({"ma_ung_vien": _chon(cac_ma),
                         "diem": {"type": "number", "minimum": d["thang_diem"]["toi_thieu"],
-                                 "maximum": d["thang_diem"]["toi_da"]}})
+                                 "maximum": d["thang_diem"]["toi_da"], **metadata}})
         ds = {**_mang(item), "minItems": len(cac_ma), "maxItems": len(cac_ma)}
         if cac_ma:
             ds["allOf"] = [{"not": {"items": {"not": _object({"ma_ung_vien": {"const": m},
@@ -264,10 +270,10 @@ def dung_khuon(s):
         props = {"xep_hang": ds}
     else:
         # Model chỉ nối khẳng định tới nguồn/câu trích; không trường duyệt/quyền/nhãn.
-        tien = _object({"so": {"type": ["integer", "string"]}, "tien_te": {"type": "string", "minLength": 3, "maxLength": 3}})
+        tien = _object({"so": {"type": ["integer", "string"], **trich}, "tien_te": {"type": "string", "minLength": 3, "maxLength": 3, **trich}})
         khang_dinh = _object({"thuc_the": _chon(x["ma"] for x in d["thuc_the"]),
-                             "truong": chu, "gia_tri": {"oneOf": [{"type": ["string", "number", "boolean", "null"]}, tien]},
-                             "don_vi": {"type": ["string", "null"]}, "can_cu": {**_mang(can_cu), "minItems": 1}})
-        props = {"tra_loi": chu, "khang_dinh": _mang(khang_dinh), "co_mau_thuan": bool_}
+                             "truong": chu, "gia_tri": {"oneOf": [{"type": ["string", "number", "boolean", "null"], **trich}, tien], **trich},
+                             "don_vi": {"type": ["string", "null"], **trich}, "can_cu": {**_mang(can_cu), "minItems": 1}})
+        props = {"tra_loi": {**chu, "$comment": "ktt:ai12:tong_hop"}, "khang_dinh": _mang(khang_dinh), "co_mau_thuan": bool_}
     return {"$schema": "https://json-schema.org/draft/2020-12/schema", **_object(props),
             **({"$defs": dinh_nghia} if dinh_nghia else {})}

@@ -1,5 +1,23 @@
 # Thay đổi
 
+## 0.4.0 — 15/11/2026, TX-3b
+
+- Đăng ký `trich.hau_kiem@1` và `trich.xuat_ket_qua@1` bằng handlers lõi
+  TX-3 sẵn có; đầu cuối trả `truong` tĩnh đủ JSON/Excel và ba trường tổng hợp.
+- Tạo schema `bang_trich_xuat` theo §4 và bổ sung TX-3-REVIEW đã duyệt;
+  chép vào contract của gói, test SHA LF. Offset Unicode, cờ kiểu chưa
+  chuyển, dấu `dau_kiem_tam_e6` và `phan_hoi_ai` chỉ kiểm toán ghi rõ.
+- Hai DEMO thật trong manifest, kèm bytes hồ sơ trong gói; bỏ phiếu/handlers
+  giả trong test. Helper kiểm nạp tệp qua API công khai CoreGia, chỉ đổi
+  tham chiếu/băm request, không tự cấu hình engine.
+- **đã kiểm bằng Core giả (CoreGia)**: pytest **408 passed, 0 skipped**,
+  DEMO có ngăn **5/5 ĐẠT**, kiểm độc lập **ĐẠT**. CLI chuẩn **3/5 ĐẠT,
+  exit 1**: `CHUA_CAU_HINH` (C-TX-04) và hậu kiểm thiếu tệp tham chiếu
+  (`DANG_CHAY`, C-TX-06). Chưa đạt cổng CLI chung; không nhận E6/N1/Core thật.
+- Giữ nguyên nguồn cũ, mẫu ngăn/cấu hình, hai công cụ E6 đang làm TX-4b;
+  không thêm dependency, không sửa SDK/Core hoặc bốn schema chung trước đó.
+
+
 ## Chưa phát hành — 15/11/2026, TX-4 chưa kiểm E6 nghiệm thu
 
 - Thêm công cụ/wrapper/test E6 ngoài gói runtime; XLSX thật khớp SHA ghim,

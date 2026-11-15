@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_trich_xuat",
   "ten": "Trích thông tin hợp đồng",
-  "phien_ban": "0.3.0",
+  "phien_ban": "0.4.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -105,6 +105,61 @@
           "mac_dinh": 16000
         }
       ]
+    },
+    {
+      "ma": "trich.hau_kiem@1",
+      "ten": "Hậu kiểm thông tin trích xuất",
+      "nhan": [
+        "tra_loi_ai"
+      ],
+      "tra": "bang_trich_xuat",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 120
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    },
+    {
+      "ma": "trich.xuat_ket_qua@1",
+      "ten": "Xuất kết quả JSON và Excel",
+      "nhan": [
+        "bang_trich_xuat"
+      ],
+      "tra": "truong",
+      "truong_ra": [
+        {
+          "ma": "tep_json",
+          "ten": "Tệp JSON",
+          "kieu": "tep"
+        },
+        {
+          "ma": "tep_excel",
+          "ten": "Tệp Excel",
+          "kieu": "tep"
+        },
+        {
+          "ma": "so_tham_so",
+          "ten": "Số tham số",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_can_soat",
+          "ten": "Số cần soát",
+          "kieu": "so"
+        },
+        {
+          "ma": "co_can_cu",
+          "ten": "Có căn cứ",
+          "kieu": "co_khong"
+        }
+      ],
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 120
+      },
+      "huy_duoc": true,
+      "tham_so": []
     }
   ],
   "loai_du_lieu_rieng": [
@@ -115,6 +170,14 @@
     {
       "ma": "yeu_cau_ai",
       "ten": "Yêu cầu hỏi AI"
+    },
+    {
+      "ma": "tra_loi_ai",
+      "ten": "Trả lời AI có trích dẫn"
+    },
+    {
+      "ma": "bang_trich_xuat",
+      "ten": "Bảng thông tin trích xuất"
     }
   ],
   "tai_nguyen": {
@@ -168,6 +231,215 @@
         "phien_ban_prompt": "DEMO-1",
         "prompt": "Trích số và giá trị hợp đồng DEMO theo bộ của module CRM DEMO."
       }
+    },
+    {
+      "nang_luc": "trich.hau_kiem@1",
+      "ten": "Hậu kiểm độc lập từng ô DEMO",
+      "dau_vao": {
+        "loai": "tra_loi_ai",
+        "tra_loi_ai": {
+          "phien_ban": 1,
+          "trang_thai": "co_can_cu",
+          "tra_loi": "Phản hồi AI giả DEMO.",
+          "du_lieu": {
+            "TT-01": {
+              "gia_tri": "DEMO-001",
+              "don_vi": null,
+              "ghi_chu": null,
+              "trich_dan": [
+                {
+                  "cau": "DEMO-001",
+                  "bat_dau": 63,
+                  "ket_thuc": 71
+                }
+              ]
+            },
+            "TT-02": {
+              "gia_tri": "1.000.000 VND",
+              "don_vi": null,
+              "ghi_chu": null,
+              "trich_dan": [
+                {
+                  "cau": "1.000.000 VND",
+                  "bat_dau": 82,
+                  "ket_thuc": 95
+                }
+              ]
+            }
+          },
+          "trich_dan": [],
+          "kiem_trich_dan": {
+            "dat": true,
+            "loi": []
+          },
+          "nha_cung_cap": "local",
+          "model": "DEMO-model-gia",
+          "ly_do_chon_model": "DEMO",
+          "ma_prompt": "crm_demo.trich_hd",
+          "phien_ban_prompt": "DEMO-1",
+          "phien_ban_engine": "DEMO-ai-gia 1",
+          "bam_dau_vao": "sha256:26da1936b5355a9ceed3c2508ec6f7043a4bdde95ce1ef8a8a0256a03a815117",
+          "chuyen_tiep": {
+            "trich_xuat": {
+              "phien_ban": 1,
+              "module": "crm_demo",
+              "loai_hop_dong": "HD_DEMO",
+              "phien_ban_bo": "DEMO-1",
+              "bam_bo_tham_so": "sha256:599ef178fa65953a0311d387643aca5bf2334ba544c520416e570cd3db2d50b4",
+              "ma_bam_noi_dung": "de3d7a87c44efb71bf66c41df34b1bf311add3af2637cc14ee8a1276dc674bf4",
+              "bam_tep_goc": null,
+              "ho_so_hau_kiem": {
+                "tep_id": "DEMO-ho-so-hau-kiem",
+                "ten": "ho-so-hau-kiem.json",
+                "mime": "application/json",
+                "kich_thuoc": 6727
+              },
+              "bam_ho_so_hau_kiem": "sha256:4879e0e1d270631a50bcbc27707511f464bbca369816ab35f4e0fec82ab4e02b",
+              "bam_yeu_cau_ai": "sha256:093fd6d43f5c1337d0c9747970011409157c597feda274f6dd10e97c414d1da7"
+            }
+          },
+          "canh_bao": []
+        }
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "trich.xuat_ket_qua@1",
+      "ten": "Xuất đủ JSON và Excel DEMO",
+      "dau_vao": {
+        "loai": "bang_trich_xuat",
+        "bang_trich_xuat": {
+          "phien_ban": 1,
+          "don_vi_offset": "unicode",
+          "module": "crm_demo",
+          "loai_hop_dong": "HD_DEMO",
+          "phien_ban_bo": "DEMO-1",
+          "bam_bo_tham_so": "sha256:599ef178fa65953a0311d387643aca5bf2334ba544c520416e570cd3db2d50b4",
+          "ma_bam_noi_dung": "de3d7a87c44efb71bf66c41df34b1bf311add3af2637cc14ee8a1276dc674bf4",
+          "bam_tep_goc": null,
+          "ma_prompt": "crm_demo.trich_hd",
+          "phien_ban_prompt": "DEMO-1",
+          "phien_ban_engine": "e_trich_xuat 0.4.0",
+          "ma_truong_can_trich": [
+            "TT-01",
+            "TT-02"
+          ],
+          "nguon": {
+            "nguon_doc": "docx",
+            "bam_dau_vao": "sha256:75633b8dea48d93c147d7e172f84a1ef0ad1d5c481e45996701fdc51791784db",
+            "bam_van_ban": "sha256:6fbbdc313ea93a49aa7b1e96b42c87d2d1af648f2543020002728134dde08d1a",
+            "ho_so_hau_kiem": {
+              "tep_id": "DEMO-ho-so-hau-kiem",
+              "ten": "ho-so-hau-kiem.json",
+              "mime": "application/json",
+              "kich_thuoc": 6727
+            },
+            "bam_ho_so_hau_kiem": "sha256:4879e0e1d270631a50bcbc27707511f464bbca369816ab35f4e0fec82ab4e02b",
+            "phien_ban_engine_doc": "DEMO-nguon-gia 1",
+            "phien_ban_engine_chuan_bi": "e_trich_xuat 0.4.0"
+          },
+          "ai": {
+            "nha_cung_cap": "local",
+            "model": "DEMO-model-gia",
+            "phien_ban_engine": "DEMO-ai-gia 1",
+            "bam_dau_vao": "sha256:26da1936b5355a9ceed3c2508ec6f7043a4bdde95ce1ef8a8a0256a03a815117",
+            "trang_thai": "co_can_cu",
+            "kiem_trich_dan": {
+              "dat": true,
+              "loi": []
+            }
+          },
+          "bang": [
+            {
+              "ma": "TT-01",
+              "ten": "Số hợp đồng DEMO",
+              "kieu": "van_ban",
+              "kieu_da_chuyen": false,
+              "gia_tri": "DEMO-001",
+              "ly_do": [],
+              "dan_chung": [
+                {
+                  "cau": "DEMO-001",
+                  "bat_dau": 63,
+                  "ket_thuc": 71,
+                  "vi_tri": {
+                    "loai": "doan",
+                    "nhan": "Điều 1",
+                    "so_trang": null,
+                    "hop": null
+                  }
+                }
+              ],
+              "dau_kiem_tam_e6": "OK",
+              "nguyen_van": "DEMO-001",
+              "don_vi_nguyen_van": null,
+              "ghi_chu": null,
+              "phan_hoi_ai": {
+                "gia_tri": "DEMO-001",
+                "don_vi": null,
+                "ghi_chu": null,
+                "trich_dan": [
+                  {
+                    "cau": "DEMO-001",
+                    "bat_dau": 63,
+                    "ket_thuc": 71
+                  }
+                ]
+              },
+              "can_soat": false,
+              "kiem_tra_logic": []
+            },
+            {
+              "ma": "TT-02",
+              "ten": "Giá trị hợp đồng, giữ nguyên đơn vị",
+              "kieu": "van_ban",
+              "kieu_da_chuyen": false,
+              "gia_tri": "1.000.000 VND",
+              "ly_do": [],
+              "dan_chung": [
+                {
+                  "cau": "1.000.000 VND",
+                  "bat_dau": 82,
+                  "ket_thuc": 95,
+                  "vi_tri": {
+                    "loai": "doan",
+                    "nhan": "Điều 1",
+                    "so_trang": null,
+                    "hop": null
+                  }
+                }
+              ],
+              "dau_kiem_tam_e6": "OK",
+              "nguyen_van": "1.000.000 VND",
+              "don_vi_nguyen_van": null,
+              "ghi_chu": null,
+              "phan_hoi_ai": {
+                "gia_tri": "1.000.000 VND",
+                "don_vi": null,
+                "ghi_chu": null,
+                "trich_dan": [
+                  {
+                    "cau": "1.000.000 VND",
+                    "bat_dau": 82,
+                    "ket_thuc": 95
+                  }
+                ]
+              },
+              "can_soat": false,
+              "kiem_tra_logic": []
+            }
+          ],
+          "tom_tat": {
+            "so_tham_so": 2,
+            "so_can_soat": 0,
+            "co_can_cu": true
+          },
+          "canh_bao": [
+            "Chưa phân trang Word; vị trí theo đoạn/Điều/Khoản."
+          ]
+        }
+      },
+      "tham_so": {}
     }
   ],
   "bi_mat": [],

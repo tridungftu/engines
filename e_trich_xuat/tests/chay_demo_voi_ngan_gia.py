@@ -8,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "goi/e_trich_xuat")
 
 from kho_tri_thuc_sdk.thu import CoreGia
 from e_trich_xuat.chay import KHAI_BAO_NGAN, tao_app
+from e_trich_xuat.demo import nap_ho_so_demo
 from e_trich_xuat.ngan import NganBoNho
 
 
@@ -16,12 +17,13 @@ def chay_demo():
     app.ngan = NganBoNho(KHAI_BAO_NGAN)
     with app.ngan.lo() as lo:
         lo.them("cau_hinh", {}, {"ngan_sach_token_vao_toi_da": 16000})
-    return CoreGia().chay_thu_demo(app)
+    core = CoreGia()
+    nap_ho_so_demo(core, app)
+    return core.chay_thu_demo(app)
 
 
 def main():
-    from mau_tx3 import chay_demo_tx3
-    ket_qua = chay_demo() + chay_demo_tx3()
+    ket_qua = chay_demo()
     for kq in ket_qua:
         dat = kq["trang_thai"] == "XONG"
         print(f"[{'ĐẠT' if dat else 'LỖI'}] {kq['ten']}" +

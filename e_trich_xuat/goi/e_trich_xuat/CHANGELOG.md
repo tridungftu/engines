@@ -1,5 +1,17 @@
 # Thay đổi
 
+## Chưa phát hành — 15/11/2026, TX-4 chưa kiểm E6 nghiệm thu
+
+- Thêm công cụ/wrapper/test E6 ngoài gói runtime; XLSX thật khớp SHA ghim,
+  E1 giữ đúng 37 mã/thứ tự/10 cột nguyên văn, ghi riêng ba băm.
+- So bytes bộ/câu hỏi/toàn bộ dòng bảng/phản hồi, báo offset/độ dài/băm;
+  chặn nguồn thiếu/sai băm và bản vàng thiếu/chưa được lead chấp nhận.
+- Hai DEMO kỹ thuật gồm Track Changes: bộ/văn bản trùng nhưng câu hỏi,
+  bảng, phản hồi khác byte; **chưa đạt chẩn đoán**, **chưa kiểm E6 nghiệm thu**.
+  Không chuyển bộ/lưu trữ hoặc thay đổi runtime để fallback XD.
+- **đã kiểm bằng Core giả (CoreGia)**; 375 test passed, 0 skipped; CLI
+  2/3 ĐẠT (C-TX-04), DEMO có ngăn 5/5 ĐẠT. N1/Core thật chưa kiểm.
+
 ## Chưa phát hành — 15/11/2026, TX-3 chờ review
 
 - Sửa kiểm độc lập: giá trị phải khớp trọn token/cụm, không cắt số qua dấu

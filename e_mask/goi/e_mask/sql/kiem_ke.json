@@ -3,8 +3,8 @@
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 29957,
-      "sha256": "011d81e4185610894111ca494c809634b156cf4b00192022d95a0dd200b7e79b"
+      "bytes": 32434,
+      "sha256": "2a39637139801962a20ca24f1fbc4122568d153473a8cbae5d38faa91cb1aeca"
     },
     {
       "duong_dan": "NGUON.md",
@@ -43,8 +43,8 @@
     },
     {
       "duong_dan": "e_mask/che_van_ban.py",
-      "bytes": 37637,
-      "sha256": "c6d2c76477c86af17981dc551494723d1d02fefaa17bd637641b0a4fd71a5610"
+      "bytes": 42525,
+      "sha256": "bba2e02fb7f6403bff6d27de70080be9aa1f0f30876d1e821dfdc42a8b6bdaf5"
     },
     {
       "duong_dan": "e_mask/chuan_bi_ai.py",
@@ -78,8 +78,8 @@
     },
     {
       "duong_dan": "e_mask/hau_kiem_ai.py",
-      "bytes": 19780,
-      "sha256": "11116553f0ba3c62246c03e9b2dafe641afe339878c5655c020521849fda653d"
+      "bytes": 20436,
+      "sha256": "ac62af2369aa10a2b57a5560ecc21d8da7ead69622d9bb95120dccdce14b625d"
     },
     {
       "duong_dan": "e_mask/ho_so_ai.py",
@@ -185,6 +185,11 @@
       "duong_dan": "e_mask/ten_nguoi.py",
       "bytes": 14176,
       "sha256": "39ce61691967aaf6866013725eaaa9ea21dbb4f83c0d0075ec083ebcc56fdca1"
+    },
+    {
+      "duong_dan": "e_mask/tra_cuu_dinh_danh.py",
+      "bytes": 8032,
+      "sha256": "11ec834e6a181c2dcdcb625677f6920e1996aeceead7c4fe465f617d403f7ddf"
     },
     {
       "duong_dan": "e_mask/tu_dien/SHA256.json",

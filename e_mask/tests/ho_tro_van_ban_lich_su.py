@@ -87,6 +87,11 @@ def _mo_ai(chu, ma, dong, ai, kho, viec):
 def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None, cong_hau_kiem_ai=None):
     """Chỉ bên tích hợp truyền port; dữ liệu việc không thể cấp quyền này."""
     ung_dung = Engine.tu_khai_bao(str(Path(__file__).resolve().parents[1] / 'goi/e_mask/engine.json'))
+    # Fixture chỉ hồi quy vỏ bốn năng lực văn bản trước B7. Không đăng ký
+    # handler giả cho các năng lực tệp mới hoặc dùng fixture chứng minh B7.
+    ung_dung._nang_luc = {k: v for k, v in ung_dung._nang_luc.items()
+                         if k in {'mask.che_van_ban@1', 'mask.mo_che_van_ban@1',
+                                  'mask.chuan_bi_ai_cuc_bo@1', 'mask.hau_kiem_ai_cuc_bo@1'}}
     if ngan is None:
         from e_mask.chuan_bi_ai import KHAI_NGAN_CHUAN_BI_AI
         ngan = NganBoNho([*KHAI_NGAN, *KHAI_NGAN_CHUAN_BI_AI])

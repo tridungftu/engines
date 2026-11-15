@@ -1,0 +1,3 @@
+Kiểm kê đề nghị: 58/58 tệp, bytes/SHA khớp.
+Kiểm độc lập khi chỉ thay nội dung kiểm kê bằng bản đề nghị trong RAM: ĐẠT
+Gói thật giữ nguyên sql/kiem_ke.json; lệnh kiểm độc lập chuẩn mã 1.

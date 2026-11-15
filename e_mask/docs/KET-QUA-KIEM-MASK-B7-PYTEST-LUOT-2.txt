@@ -1,0 +1,10 @@
+Lượt toàn bộ trước cập nhật bốn assertion đăng ký năng lực B7.
+Lệnh: .venv/Scripts/python -B -m pytest e_mask/tests -q
+Mã thoát: 1. Không dùng làm kết quả chốt; stack/fixture/đường máy đã lược bỏ.
+
+FAILED e_mask/tests/test_mask_7.py::test_do_zip_ky_tu_va_chua_co_nang_luc_tep_trong_goi
+FAILED e_mask/tests/test_mask_b1.py::test_manifest_va_handler_chua_khai_nang_luc_tep
+FAILED e_mask/tests/test_mask_b5.py::test_lop_quy_tac_reader_va_caller_flag_khong_chung_minh_local
+FAILED e_mask/tests/test_mask_b6.py::test_local_bo_sung_shared_tat_ca_o_chi_trong_ram_chua_phat_hanh
+FAILED e_mask/tests/test_mask_r1.py::test_kiem_ke_day_du_bytes_va_sha_tung_tep
+5 failed, 3240 passed, 4 xfailed, 190 subtests passed in 450.26s (0:07:30)

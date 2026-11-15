@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_mask",
   "ten": "Che định danh",
-  "phien_ban": "1.4.0",
+  "phien_ban": "1.5.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -19,6 +19,100 @@
     "thu_muc": "."
   },
   "nang_luc": [
+    {
+      "ma": "mask.chuan_bi_tep_ai_cuc_bo@1",
+      "ten": "Chuẩn bị tệp cho AI cục bộ",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "yeu_cau_ai",
+      "gioi_han": {
+        "tep_toi_da_mib": 1,
+        "mime": [
+          "application/json",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ],
+        "thoi_han_giay": 300
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    },
+    {
+      "ma": "mask.hau_kiem_tep_van_ban@1",
+      "ten": "Hậu kiểm tệp và trả văn bản đã che",
+      "nhan": [
+        "tra_loi_ai"
+      ],
+      "tra": "van_ban_da_che",
+      "gioi_han": {
+        "ky_tu_toi_da": 1048576,
+        "thoi_han_giay": 300
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    },
+    {
+      "ma": "mask.hau_kiem_tep_giu_dinh_dang@1",
+      "ten": "Hậu kiểm tệp và giữ định dạng",
+      "nhan": [
+        "tra_loi_ai"
+      ],
+      "tra": "truong",
+      "gioi_han": {
+        "ky_tu_toi_da": 1048576,
+        "thoi_han_giay": 300
+      },
+      "huy_duoc": true,
+      "tham_so": [],
+      "truong_ra": [
+        {
+          "ma": "tep_da_che",
+          "ten": "Tệp đã che",
+          "kieu": "tep"
+        },
+        {
+          "ma": "ma_yeu_cau",
+          "ten": "Mã yêu cầu",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "con_sot_json",
+          "ten": "Còn sót JSON",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "kiem_tien_ngay",
+          "ten": "Kiểm tiền ngày",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "so_cho_thay",
+          "ten": "Số chỗ thay",
+          "kieu": "so"
+        },
+        {
+          "ma": "bi_danh_json",
+          "ten": "Bí danh JSON",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so_cum_vua_them",
+          "ten": "Số cụm vừa thêm",
+          "kieu": "so"
+        },
+        {
+          "ma": "vung_da_quet_json",
+          "ten": "Vùng đã quét JSON",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "canh_bao_json",
+          "ten": "Cảnh báo JSON",
+          "kieu": "van_ban"
+        }
+      ]
+    },
     {
       "ma": "mask.hau_kiem_ai_cuc_bo@1",
       "ten": "Hậu kiểm AI cục bộ và che bổ sung",

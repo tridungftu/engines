@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| TC-7 | Soạn/kiểm chứng Python và Local, nhãn TC-Q14, mâu thuẫn và phụ thuộc nguồn | Lead giao 15/11/2026, 15:16; sau TC-4/6, 5 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | Đúng 4 tệp runtime; 952 passed (138 ca TC-7), 0 skipped; độc lập mã 0, harness 36/36. CLI chuẩn 0/5 CHUA_CAU_HINH/mã 1. Đã kiểm bằng Core giả (CoreGia)/NganBoNho/Local giả theo protocol; 0 Cloud/model thật. Consumer Hỏi AI hiện có với Local giả từ chối khuôn, TC-7 giữ không căn cứ. TC-Q14 đã duyệt, không hỏi lại. PR: **chờ lead mở**; xem biên bản TC-7 và Cần Core dưới. |
 | 0 | Đọc `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` và `docs\YEU-CAU-VA-HIEN-TRANG.md`; lập kế hoạch lát có giờ ước tính; trình Anh | — | Chờ làm | Kế hoạch phải đối chiếu 3 yêu cầu bắt buộc |
 | 1 | TC-0: khảo sát pgvector/unaccent/pg_trgm trên PostgreSQL; chọn và đo model vector | — | Chờ làm | Chỉ đọc, DEMO |
 | 2 | TC-2 (phần engine): `phan_loai_tai_lieu@1`, `cat_doan@1` | §1.2 | Chờ làm |  |
@@ -908,3 +909,109 @@ của phiên này; lead cần git add các tệp đã giải trước khi kết 
 **Cần Core / Chờ Anh mới phát sinh:** không có. C-TC-01/02/03/04/05 và các
 mục lead đã ghi ở cả hai lát vẫn giữ nguyên; CLI chuẩn chưa đạt, chưa kiểm
 Core/RLS/AI thật hoặc Linux. Không phát sinh câu cần Anh quyết thêm.
+
+## Cần Core — bổ sung TC-7, 15/11/2026
+
+- **C-TC-01/02/05:** giữ khoảng trống CLI §2.5: chạy thật cả 5 ví dụ chuẩn
+  đều `CHUA_CAU_HINH`, mã 1; harness bổ sung đạt 36/36 với NganBoNho và
+  quyền/tệp con giả. Chờ lead review cổng bổ sung, không sửa SDK để làm xanh.
+- **C-TC-03:** cần binding trường/thực thể/đơn vị/hiệu lực/quote/offset đã xác
+  thực do Core cấp ngoài payload ở `doc_quyen(viec_id).kiem_chung_tra_loi`.
+  Profile ghim băm dữ liệu, tập trường câu hỏi, ngưỡng đo đã duyệt và mốc
+  công bố/duyệt của bằng chứng. Tầng 1 cần quote/locator lưu cùng trường đã
+  duyệt để tuân QĐ-4, không đọc ngược gốc/OCR. Metadata caller không thay
+  profile. Đặc tả/seam và giới hạn tại `TC-7-KIEM-CHUNG.md`; **chưa phải API
+  SDK thật**, thiếu cửa thì lỗi. Ngưỡng trong test chỉ DEMO, không kích hoạt
+  nhóm thật hoặc thay ngưỡng từ phép đo được duyệt TC-Q15.
+- **C-TC-04:** Core thực thi dừng tầng, RLS/quyền mọi nguồn, cache/hết hạn và
+  K5 theo tập nguồn/phiên bản/mốc công bố/duyệt/thực thể/phạm vi/cờ thời điểm.
+  TC-7 chỉ đề nghị K5 và cờ chưa lưu/chưa duyệt; adapter tầng 3 trong test
+  không chứng minh OCR/TX hoặc ba tầng thật đã chạy.
+- **L-TC-01 / lead Hỏi AI:** test nối **consumer Hỏi AI hiện có + Local giả**
+  xác nhận `khong_thay_can_cu/kiem_trich_dan.dat=false`; kiểm mọi lá metadata
+  và văn bản theo khuôn như giá trị nguyên văn đang chặn đường này, như
+  giới hạn TC-5 đã ghi. TC-7 giữ không căn cứ, không sửa response để qua
+  cổng. Cần lead review phân biệt metadata/binding và giá trị nghiệp vụ;
+  nhánh Local đạt trong harness là fixture **theo protocol**, chưa xác nhận
+  đường consumer/model thật trả lời thành công. Không sửa engine Hỏi AI.
+- **TC-Q14 đã duyệt:** đã cập nhật cùng bảng chọn duy nhất ở phiếu §5.2.
+  Không phát sinh câu hỏi cần Anh; TC-Q06 tiếp tục không tự xóa. Không sửa
+  `_chung/docs/LOAI-DU-LIEU-RIENG.md`, Core, SDK hoặc nguồn cũ.
+
+## Biên bản bàn giao TC-7 — 15/11/2026
+
+**Kết luận: Chưa đạt cổng chuẩn** — đã hoàn thành và kiểm phạm vi TC-7 bằng
+Core giả; CLI chuẩn vẫn lỗi thiếu cấu hình/ngăn của SDK 2.0. PR: **chờ lead mở**.
+
+**Đã làm:** đúng bốn tệp runtime `tra_loi.py`, `kiem_chung.py`, `bang_chung.py`,
+`chay.py`. Hai đường Python/Local, kiểm snapshot/quyền/prompt/chuyển tiếp/băm,
+quote/offset/nguồn/phiên bản/vị trí, từng trường/thực thể/giá trị/đơn vị/hiệu
+lực. Không khớp một phần `5` trong `5.000.000`, không lấy số của khoản vay B
+cho A. Tiền nguyên/Decimal kèm mã tiền tệ, ngày ISO, giữ mã số 0 đầu. Thiếu
+căn cứ/sai quan hệ thì xóa câu đề xuất và khẳng định, trả câu không số/nhãn null.
+Thiếu ngưỡng/duyệt/hiệu lực/trường có lý do để Core quyết tầng tiếp.
+
+TC-Q14 áp theo quyết định chiều: chỉ Python tầng 1 đủ điều kiện Xanh, có
+LLM/văn bản mới chờ duyệt tối đa Vàng. Mâu thuẫn hiện hành giữ hai nguồn/giá
+trị và cờ cần duyệt; bản hết hiệu lực không giả thành mâu thuẫn hiện hành.
+Xuất phụ thuộc nguồn/cache và đề nghị K5, không tạo cache/duyệt/K5, không
+ghi đĩa hoặc tệp tạm. Sau upload báo tiến độ/kiểm hủy để không nộp khi Core
+đã hủy. Nguồn lỗi/thiếu quyền/chưa rõ/mất lease/ACK sai không XONG giả.
+
+**Kết quả kiểm thực:** Windows, Python 3.13.14, pytest 9.1.1; venv riêng
+`--system-site-packages`, SDK 2.0.0 cài wheel offline, SHA-256 khớp
+`a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`.
+Hai mẫu NGAN-0 và schema không đổi; bộ test so băm CRLF→LF chạy trong hồi quy.
+Đặt `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_tra_cuu/goi/e_tra_cuu
+[LỖI] Nhận DEMO — Phân loại: Engine chưa được cấu hình.
+[LỖI] Nhận DEMO — Cắt đoạn: Engine chưa được cấu hình.
+[LỖI] Nhận DEMO — Phân tích câu hỏi: Engine chưa được cấu hình.
+[LỖI] Nhận DEMO — Xếp hạng lại: Engine chưa được cấu hình.
+[LỖI] Nhận DEMO — Soạn trả lời tầng 1: Engine chưa được cấu hình.
+Thông điệp đầy đủ chung: Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình.
+0/5 ĐẠT; 5 lỗi CHUA_CAU_HINH; mã thoát 1.
+
+.venv/Scripts/python -B -m pytest e_tra_cuu/tests -q
+952 passed in 21.65s
+0 failed, 0 skipped; mã thoát 0 (814 hồi quy + 138 TC-7).
+
+.venv/Scripts/python -B e_tra_cuu/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập; không import cấm, bytecode hoặc liên kết.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_tra_cuu/tests/chay_demo_voi_core_gia.py
+36/36 DEMO ĐẠT; mạng ngoài/lượt provider/Cloud=0 (không có provider trong harness).
+Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật; ngăn RAM mất khi dừng.
+Mã thoát 0 (28 ca nền + 8 ca TC-7).
+```
+
+138 ca TC-7 gồm hai đường/nhiều tầng giả, money/date/Decimal/số lớn/0 đầu,
+quote bịa/offset Unicode/UTF-16/trang giả/trang có thật nhưng sai đoạn,
+nhầm trường/thực thể/tiền tệ/đơn vị/tiền với tỷ lệ, chuyển ngày khai rõ,
+chưa duyệt/hết hiệu lực/ngưỡng thấp/thiếu ngưỡng/ngoài trường, văn bản mới,
+hai nguồn mâu thuẫn/AI giấu một bên, không căn cứ không số, metadata/Cloud/
+hủy/mất lease/ChuaRo/ACK/gửi lại/quá trần, không ghi đĩa/mạng thật. Test
+consumer Hỏi AI thật trong repo với Local **giả** được đếm riêng là ca từ
+chối đúng, không là ca pipeline trả lời thành công. Toàn bộ **đã kiểm bằng
+Core giả (CoreGia)**; chưa kiểm Linux/Core/RLS/model thật hoặc chất lượng
+nghiệp vụ, không công bố ba tầng thật đã chạy.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** trong bốn tệp runtime, thêm lớp
+bọc chuẩn bị AI tầng 1 vì TC-4 trước đó chỉ mở AI tầng 2/3. Chỉ Core cấp đủ
+profile thì mới mở; không có profile vẫn từ chối như TC-4. Để kiểm chứng
+được ngữ nghĩa, câu AI chỉ nhận mẫu xác định, chưa hỗ trợ diễn giải tự do.
+Profile/binding/ngưỡng đo là seam C-TC-03 tạm cần Core review; ngăn vẫn dùng
+mẫu nguyên trạng. Chi tiết tại `TC-7-KIEM-CHUNG.md` và README trong gói.
+Không thêm dependency, không sửa nguồn cũ/Core/SDK/schema chung, không commit/push.
+
+**Cần Core / Chờ Anh mới phát sinh:** cụ thể hóa C-TC-03/profile và nhánh AI
+tầng 1; ghi giới hạn consumer Hỏi AI nêu trên. Không có quyết định mới chờ
+Anh. Cổng CLI và quyền/ba tầng/K5/cache thật vẫn chờ C-TC-01…05/lead.
+
+**Thời gian thực tế TC-7:** bắt đầu **15/11/2026 15:16**, kết thúc chốt
+biên bản **15/11/2026 15:48:29 (UTC+07:00)**, khoảng **0.54 giờ**;
+ước tính trong phiếu **5 giờ**. Đây là thời gian thực trong phiên, không phải
+phép đo hiệu năng/model hoặc ước tính lại khối lượng triển khai thật.

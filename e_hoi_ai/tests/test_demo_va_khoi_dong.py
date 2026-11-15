@@ -8,6 +8,7 @@ import sys
 
 import pytest
 from kho_tri_thuc_sdk.thu import CoreGia, MayChuGia
+from local_gia import core_demo
 
 import chay_demo_voi_local_gia as bo_demo
 from e_hoi_ai.chay import app
@@ -46,7 +47,7 @@ def test_toan_bo_demo_dung_dap_an_va_khuon(local):
         tai_lieu = dau_vao.get("van_ban") or dau_vao["yeu_cau_ai"]["tai_lieu"]
         assert tai_lieu == TAI_LIEU
     bo_demo.chuan_bi_local_demo(local)
-    kiem_ket_qua_demo(CoreGia().chay_thu_demo(app))
+    kiem_ket_qua_demo(core_demo().chay_thu_demo(app))
     assert local.so_luot_hoi == 3 and not local.tra_loi_tung_luot
     assert local.yeu_cau[2]["response_format"]["type"] == "json_schema"
 
@@ -54,12 +55,11 @@ def test_toan_bo_demo_dung_dap_an_va_khuon(local):
 @pytest.mark.parametrize("thanh_cong", [True, False, None], ids=["dat", "loi", "rong"])
 def test_cong_demo_ma_thoat_va_cau_hinh_trong_tests(monkeypatch, thanh_cong):
     chay_goc = CoreGia.chay_thu_demo
-    from e_hoi_ai.cau_hinh import doc_cau_hinh
     cau_hinh_da_dung = []
     ngan_cu = app.ngan
 
     def chay_demo(core, ung_dung):
-        ch = app.ngan.doc("cau_hinh", {}).gia_tri
+        ch = core._doc_cau_hinh(app.ma)["cau_hinh"]
         assert ch["local_ai"]["url"].startswith("http://127.0.0.1:")
         cau_hinh_da_dung.append(ch)
         ket_qua = chay_goc(core, ung_dung)
@@ -73,11 +73,12 @@ def test_cong_demo_ma_thoat_va_cau_hinh_trong_tests(monkeypatch, thanh_cong):
     monkeypatch.setattr(CoreGia, "chay_thu_demo", chay_demo)
     assert bo_demo.main() == (0 if thanh_cong else 1)
     assert os.environ["KTT_ENGINE_CAU_HINH"] == "khong-doc-tep-DEMO.json"
-    assert cau_hinh_da_dung and app.ngan is ngan_cu
+    assert cau_hinh_da_dung
+    assert core_demo().xem_ngan(app.ma, "model_phat_hien") == []
 
 
 def test_app_chay_doc_stdin_qua_may_chu_gia_http(local):
-    core = CoreGia()
+    core = core_demo()
     cac_ma = [core.giao_viec(vd["nang_luc"], vd["dau_vao"], vd["tham_so"],
                              gui_kem_dau_vao=False) for vd in app.phieu["chay_thu_demo"]]
     bo_demo.chuan_bi_local_demo(local)
@@ -92,9 +93,6 @@ import ipaddress
 import socket
 from e_hoi_ai import chay
 from e_hoi_ai.cong_ai import CongAI, NhaCungCapLocal
-# Dùng ngăn engine đã khởi tạo từ KHAI-SDK-2.1.json.
-with chay.app.ngan.lo() as lo:
-    lo.them("cau_hinh", {}, CAU_HINH_DEMO)
 
 ket_noi_goc = socket.socket.connect
 def chi_loopback(self, dia_chi):
@@ -112,7 +110,6 @@ chay.bo_hoi.cong_ai = CongAI(nha_cung_cap={"local": NhaCungCapLocal(), "cloud": 
 chay.app.chay(dung_khi_het_viec=True)
 assert cloud.so_luot == 0, "Có lượt Cloud ngoài phạm vi."
 '''
-    ma_chay = ma_chay.replace('CAU_HINH_DEMO', repr(app.ngan.doc('cau_hinh', {}).gia_tri))
     with MayChuGia(core, {app.ma: khoa_demo}) as may:
         dong = json.dumps({"core_url": may.url, "khoa": khoa_demo, "instance": instance}) + "\n"
         tien_trinh = subprocess.run(

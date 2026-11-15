@@ -398,3 +398,22 @@ Giới hạn công việc theo phiếu TC-P §2.3: văn bản ≤500.000 ký t�
 API v1 mỗi bước chỉ một phong bì; Core/module chuẩn bị tệp JSON ghép các nguồn và cấp quyền mở tệp con xuyên bước, giữ vòng đời/ACK. Engine chỉ `mo_tep`/`tai_tep_ra`, không lấy `ket_qua_id` tùy ý/đọc đường máy/kết nối CSDL/gọi engine khác. Thiếu cửa C-TC-02/03 phải `LoiNghiepVu TC_CHUA_CO_CUA_CORE`, sai nguồn `TC_SAI_NGUON`; adapter CoreGia chỉ trong tests, không fallback runtime. CoreGia không chứng minh RLS thật.
 
 Cấu hình và bài đo `dot_kiem` qua `Ngan`, phạm vi pháp nhân bắt buộc `phap_nhan_id` trong `khoa/loc` từng thao tác, CAS/lô/unique đúng mẫu. Snapshot/kết quả/tệp ở kho Core. **Chỉ mục/vector/cache/nhật ký hỏi đáp và danh mục nghiệp vụ do Core giữ**, không chép sang ngăn engine hoặc đệm bền trên máy. Tệp tạm của việc dọn `finally`.
+
+## 8. AI-12 — vai trò trường trong khuôn `yeu_cau_ai` (lead duyệt 15/11/2026: quy ước `$comment` trong trường mở, không đổi schema chung)
+
+*15/11/2026. Đây là đề xuất mới chờ lead duyệt; không thuộc nhãn đã duyệt ở đầu sổ. Không đổi schema chung, API/SDK, trường bắt buộc hoặc phiên bản loại dữ liệu.*
+
+§2.2 hiện cho phép JSON Schema và §2.3 cho phép `du_lieu` theo khuôn, nhưng chưa phân biệt metadata với giá trị trích từ tài liệu. Đề xuất dùng annotation **`$comment` đã có của JSON Schema** trong `khuon_tra_loi`; không thêm từ khóa schema hay trường bắt buộc. Quy ước tùy chọn ở từng node schema:
+
+| `$comment` | Cách kiểm đề xuất |
+|---|---|
+| `ktt:ai12:metadata` | Giá trị vô hướng như mã phân loại, nhãn, điểm, mức, trạng thái, mã trường/hàm và cờ boolean. Kiểm toàn bộ type/enum/const/ràng buộc schema; không đòi chép nguyên văn. Không dùng để bỏ kiểm cả object/mảng |
+| `ktt:ai12:trich_xuat` | Giá trị trích xuất; kiểm nguyên văn trong căn cứ đã xác minh. Tiền kiểm cùng số và mã tiền trong một cụm; giữ quy tắc chuyển tiền nhóm ba/ngày ISO đã có của AI-2. Nếu mục có `can_cu` được đánh dấu citation thì chỉ dùng căn cứ của mục đó, không mượn quote của mục khác |
+| `ktt:ai12:trich_dan` | Object câu trích gồm `cau,bat_dau,ket_thuc`, có thể kèm mã nguồn/đoạn; `null` chỉ khi schema cho phép. Kiểm int thật, khoảng Unicode code point nửa mở và `tai_lieu[a:b] == cau`; không dò lại/chữa offset, giữ từng vị trí lặp |
+| `ktt:ai12:tong_hop` | Câu tổng hợp từ giá trị đã có căn cứ, không cần nguyên văn toàn câu; mọi token số vẫn phải có trong trích dẫn xác minh. Đây không phải chứng nhận ngữ nghĩa hoặc đúng thực thể |
+
+Không đánh dấu thì mặc định kiểm nguyên văn bảo thủ như AI-2 cũ; **enum/const tự nó không chứng minh là metadata** (ngày/tiền vẫn có thể là giá trị trích). Áp dụng `$ref` nội bộ và các nhánh schema thực sự khớp; không dùng annotation trong `not`/nhánh không khớp để miễn kiểm. Annotation trái nhau không được hạ chuẩn trích xuất. Model không được tự sinh/chỉnh annotation.
+
+Để nhận nguyên yêu cầu TC/DC hiện tại mà không sửa producer, AI-12 dùng lớp tương thích **trong e_hoi_ai**, chỉ trên bản sao schema: nhận đúng tập trường object đóng và profile phiên bản 1 ở `chuyen_tiep.tra_cuu` (bốn tác vụ) hoặc `chuyen_tiep.doi_chieu` (DC-6). Gán vai trò cố định theo cấu trúc đã có: TC `can_cu` và DC `trai/phai` là citation; TC `khang_dinh.gia_tri/don_vi`, `thuc_the.gia_tri`, giá trị `ham_de_xuat.tham_so` vẫn là trích xuất. Mã tham số là cấu trúc schema, không phải quyền bỏ kiểm giá trị tham số. Khuôn khác/trường mới không được tự miễn; mâu thuẫn annotation với vai trò trích cố định thì từ chối.
+
+Không sửa yêu cầu, băm, schema gửi Local hoặc chuyển tiếp. `chuyen_tiep` chỉ chọn quy ước tương thích, **không chứng thực nguồn/quyền**; TC/DC vẫn phải hậu kiểm map/nguồn/thực thể/sàn mức độc lập. Kết quả trích sai tiếp tục `khong_thay_can_cu`, `kiem_trich_dan.dat=false`; sai schema sau một lần hỏi lại vẫn `AI_TRA_SAI_KHUON`. Cloud giữ tắt.

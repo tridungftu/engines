@@ -81,11 +81,18 @@ Các đường dẫn dưới đây tính từ thư mục `e_hoi_ai/` trong repo 
 - Phụ thuộc kiểm thử ghim riêng tại `e_hoi_ai/tests/requirements.lock`; sao offline các tệp distribution đã cài trên máy vào venv mới, không tải mạng và không đưa vào gói chạy. Pytest 9.1.1, packaging 26.3, pluggy 1.6.0, Pygments 2.21.0, iniconfig 2.3.0, colorama 0.4.6.
 - CLI SDK chưa có cửa cấp cấu hình DEMO/Local giả, không còn cổng thay thế nghiệm thu. Màn UI giữ API .cau_hinh của KttCore, khai báo nạp màn engine vẫn cần Core xác nhận. Bằng chứng giả lập không chứng nhận Core/model thật.
 
+## AI-12 — 15/11/2026
+
+- `e_hoi_ai/vai_tro_khuon.py`: viết mới theo lệnh AI-12 và đề xuất tại `_chung/docs/LOAI-DU-LIEU-RIENG.md` §8. Tham chiếu cấu trúc khuôn `e_tra_cuu/.../ngu_canh_ai.py::dung_khuon` và `e_doi_chieu/.../chuan_bi_ai.py::khuon_tra_loi`; không chép/import runtime engine khác. Tái dùng bộ kiểm JSON Schema nội bộ và thư viện chuẩn.
+- `e_hoi_ai/hoi_yeu_cau.py`: nối phân biệt vai trò, giữ kiểm outer quote; kiểm trực tiếp offset của citation trong dữ liệu, không sửa schema gốc/chuyển tiếp/băm hoặc đường Local/Cloud. Manifest tăng 0.12.0; không dependency mới, vẫn SDK 2.2.0.
+- Fixture DEMO ngoài gói tại `tests/fixture_ai_12.json`: dữ liệu chép từ `ho_tro_tc_2/4/5/6/7.py` và `test_dc6.py` của hai producer, tạo ngữ cảnh/khuôn bằng bản định nghĩa hàm thuần đã đọc qua AST, không import chéo package. Tệp ghi đường nguồn + SHA-256 LF tại thời điểm chép; test chỉ đọc bản chép, không cần có gói producer. Tham chiếu snapshot là dữ liệu chuyển tiếp DEMO, không chứng nhận quyền/vòng đời tệp hoặc toàn pipeline TC/DC.
+- Chỉ sửa runtime hai mô-đun nêu trên, manifest và kiểm kê tự sinh; không sửa producer, schema chung/SDK hoặc mã cũ. Kết quả thật/giới hạn CLI theo `e_hoi_ai/docs/VIEC.md`.
+
 ## SHA-256 hiện hành
 
 ```text
 0298691f5437c83d749781c4bf9c08d2d5fe925192c71fbc1b442e97ae94d452  cau_hinh.schema.json
-9ae2efc7910795d25ffb9cd9a4182e94fdb35ddb7ca56dc423b4f8b445f65152  CHANGELOG.md
+14990317dcd3e136bd296e0a73077af8d0ad5e3c1d3db38d2a50046a5fd62401  CHANGELOG.md
 e42b1dee5af2da90583ee94eeac4df0404935de27da7b14a88f79f3f3a27e69c  contract/cau_hinh_may.schema.json
 5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f  contract/tra_loi_ai.schema.json
 81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977  contract/van_ban_tai_lieu.schema.json
@@ -101,10 +108,11 @@ ace9854285187c6dfd6543cd297f306ef45ddd29b9168dabe917749bdd5a3f66  e_hoi_ai/chon_
 912c22d54099fd4a2ddca9e0d6971ad514bfa104c067ebb249285a6237ec1985  e_hoi_ai/dto.py
 d92e9ba99655eca098525b4f71255f4f17e9314cbe4e2623304bd997f03c7f1c  e_hoi_ai/hoi.py
 10628ba65864e06b03b5250aaba277abc5c3921d9dae4144dc270688d55cc597  e_hoi_ai/hoi_mask.py
-4130ccafd39b070db959a0b6b3832f740d0cc694ff1e7747ff72089c2c705962  e_hoi_ai/hoi_yeu_cau.py
+3162ba602025607ec8b6ca7de3321a76af78b43fccaf8af837d9dce524cd565c  e_hoi_ai/hoi_yeu_cau.py
 ab4dc18a48df5f6f7c8e8f08ae10ea87e5a0a43ced3ca0870909e44eece069df  e_hoi_ai/khuon_json.py
 a9b105e6da5680cbdacda179d17357d0b91a8579cdefc7f862db17565803ef14  e_hoi_ai/nha_cung_cap.py
-e2e2c816ab401e0ae996aa1a79ed384e05a55365daa3a8e616d1a8d545406a60  engine.json
+ba15948dd9254e5daea0596ad46aeb40d84e054ed1e10accc8b6b0bb4385626b  e_hoi_ai/vai_tro_khuon.py
+cb5073b0e4423cddee82d9c7ef78b1c6fc0a2b518246cae46bb66cf533d1343f  engine.json
 89a04590a772e27f698a0d5eed5c02b4775a5de12039cee97b8b545eaf65cc9c  README.md
 2042fa331b34afc8df48dcfa2d46909276abd557f828865360618b07b64de5a9  requirements.lock
 2a803c6521dd0a2c50b41e644d7977aaf9318617c8a85afccba214708167cdae  sql/001_tao_model_phat_hien.sql

@@ -295,3 +295,78 @@ Trong phần **đã cho phép mở** `yeu_cau_ai.chuyen_tiep`, dùng khóa `doi_
 API v1 mỗi bước chỉ nhận một phong bì. Đầu vào cặp đề xuất là `tep` JSON do Core/module lập chứa tham chiếu+băm các tệp được cấp cho việc, **không phải** phong bì hai đầu vào mới. Cần Core chốt cửa chung ghép nguồn/quyền mở tệp con và vòng đời giữa các bước (C-DC-02); SDK có `mo_tep` không chứng minh tệp bất kỳ đều được mở. Test CoreGia không chứng nhận quyền thật. Chưa có cửa thì runtime từ chối; không đọc đường máy, gọi engine khác hoặc truy cập CSDL.
 
 Snapshot/kết quả/ảnh lưu qua kho tệp Core, chỉ mục/cấu hình qua `Ngan`; RAM tạm khi chưa có SDK 2.1, không đệm bền. Nhật ký xác nhận thuộc ngăn/cửa Core chỉ-thêm có danh tính/quyền/CAS, **không** đặt trong hồ sơ máy rồi coi là đã xác nhận hợp đồng. Module sở hữu chặn/mở hiệu lực và sự kiện nghiệp vụ.
+
+## 6. ĐỀ XUẤT TC-P, chờ Anh — `ho_so_tra_cuu`
+
+*Lập 15/11/2026 · Codex · Theo `e_tra_cuu/docs/GIAO-CODEX-e_tra_cuu.md` §2 và TC-Q13. Phần này là **đề xuất mới, chưa duyệt/kích hoạt**; nhãn “ĐÃ DUYỆT” đầu tệp chỉ áp dụng bốn loại §1–3, không áp dụng đề xuất này hoặc DC-P. TC-P chỉ bổ sung tài liệu, không tạo schema/gói hoặc sửa loại/schema đã có.*
+
+### 6.1 Lý do và tái dùng trước
+
+Đề xuất đúng **một** mã mới:
+
+```json
+{"ma": "ho_so_tra_cuu", "ten": "Hồ sơ tính toán tra cứu"}
+```
+
+| Loại có sẵn | Cách tái dùng / lý do chưa đủ cho trạng thái Tra cứu |
+|---|---|
+| `tep` | Giữ tệp nguồn, yêu cầu JSON, snapshot và báo cáo trong Core; có thể vận chuyển JSON ở mọi bước nhưng không phân biệt chỗ nối nghiệp vụ. Đề xuất một loại trung gian để Core kiểm mã, engine vẫn phải kiểm giai đoạn sâu |
+| `van_ban`, `truong` | `van_ban` không mang tập nguồn/hàm/thực thể/vị trí; `truong` dùng đầu cuối ghép cột tĩnh. Không tuần tự hóa cả hồ sơ vào một ô văn bản |
+| `van_ban_tai_lieu` | Giữ **nguyên phong bì** cho mỗi văn bản OCR/DOCX trong snapshot; không đổi nghĩa một tài liệu thành câu hỏi/danh mục/bộ ứng viên/câu trả lời |
+| `yeu_cau_ai`, `tra_loi_ai` | Dùng nguyên để trao đổi Local qua Core, không sửa schema bắt buộc; `chuyen_tiep.tra_cuu` chỉ tham chiếu+băm để khôi phục hồ sơ hậu kiểm |
+| `van_ban_da_che` | Chỉ dùng khi sau này mở Cloud qua Mask; bản đầu 0 Cloud, không khai nhận văn bản thường như đã che |
+| `bang_trich_xuat`, `ho_so_doi_chieu` (đề xuất ở phần trước) | Không đổi nghĩa bảng trường theo bộ hoặc hồ sơ so hai bản thành trạng thái RAG. Adapter Core có thể đưa bằng chứng TX đã được duyệt vào snapshot; không giả những đề xuất này đã có schema hoạt động |
+
+Không tạo năm mã DTO `.v1` lịch sử `phan_loai_tai_lieu`, `doan_van`, `cau_hoi_tra_cuu`, `tra_loi_tra_cuu`, `ham_tra_cuu` như năm loại chung mới. Các đối tượng tương ứng là **cấu trúc con trong snapshot** được đặc tả ở TC-1, không tự mở rộng registry chung. Thay đổi nhận/trả năm năng lực lịch sử theo hướng chuẩn bị/hậu kiểm ở phiếu TC-P cần duyệt TC-Q13 trước triển khai.
+
+### 6.2 Producer, consumer và phong bì
+
+Producer/consumer: **chỉ `e_tra_cuu`** ở `tra_cuu.nhan_yeu_cau@1`, `cat_doan@1`, `chuan_bi_ai@1`, `phan_loai_tai_lieu@1`, `phan_tich_cau_hoi@1`, `xep_hang_lai@1`, `soan_tra_loi@1`, `xuat_ket_qua@1`. Chuẩn bị trả `yeu_cau_ai`, ba hậu kiểm phân loại/câu hỏi/xếp hạng nhận `tra_loi_ai`, bước soạn nhận `tra_loi_ai` hoặc hồ sơ đường Python. Chỉ bước xuất trả `truong` để module ghép cột. Module đọc JSON đã xuất; chưa có engine khác mặc nhiên nhận loại mới này.
+
+Phong bì `{"loai": "ho_so_tra_cuu", "ho_so_tra_cuu": {...}}`; payload bắt buộc:
+
+| Trường | Kiểu / nghĩa / kiểm |
+|---|---|
+| `phien_ban` | Số nguyên `1` |
+| `ma_yeu_cau` | Chuỗi opaque do Core cấp/ghim, không phải quyền, mã phiên đăng nhập hay nơi chứa nội dung câu hỏi |
+| `tac_vu` | Một trong `phan_loai`, `cat_doan`, `phan_tich_cau_hoi`, `xep_hang_lai`, `soan_tra_loi` |
+| `giai_doan` | `da_nhan`, `cho_ai`, `cho_phan_loai`, `da_phan_loai`, `da_cat_doan`, `da_phan_tich`, `da_xep_hang`, `da_soan`; phải khớp tác vụ/chuyển trạng thái được phép |
+| `ho_so` | Đối tượng tệp chuẩn API (`tep_id`, `ten`, `mime`, `kich_thuoc`), MIME JSON, metadata thật của snapshot đã tải vào Core |
+| `bam_ho_so` | `sha256:<64 hex>` của bytes snapshot chính xác; kiểm trước parse, không chỉ băm lại object sau parse |
+| `bam_cau_hinh` | Băm JSON snapshot cấu hình đã ghim cho việc; quy tắc canonical JSON UTF-8 phải cố định ở TC-1 |
+| `bam_danh_muc` | Băm snapshot danh mục nếu tác vụ cần danh mục, tác vụ khác `null`; không biến model thành người sửa danh mục |
+| `phien_ban_engine` | Chuỗi mã + phiên bản engine tính kết quả |
+| `tom_tat` | Đối tượng nhỏ: `trang_thai`, `so_doan`, `so_ung_vien`, `tang`, `co_can_cu`, `co_mau_thuan`, `can_duyet`, `nhan`; chưa có/không áp dụng dùng `null`, số đếm phải khớp snapshot |
+| `canh_bao` | Mảng câu Việt cố định, không nguyên văn/tên riêng/đường máy/khóa; chi tiết bằng chứng chỉ ở snapshot có quyền |
+
+`tom_tat.trang_thai` có thể `null` ở trung gian; trạng thái có kết quả: `da_cat_doan`, `cho_phan_loai`, `da_phan_loai`, `da_phan_tich`, `da_xep_hang`, `co_can_cu`, `khong_thay_can_cu`. `nhan` chỉ `xanh`, `vang`, `null`; **nhãn Xanh thật chờ TC-Q14** vì đặc tả cũ mâu thuẫn về câu có LLM. Không suy boolean hay số 0 từ công việc chưa chạy. Không nhận số âm/NaN/Infinity, thời gian/ngày nếu có theo ISO và tiền luôn `{so, tien_te}`.
+
+Trần phong bì ≤ **64 KiB JSON UTF-8**, snapshot ≤ **20 MiB/tệp**. Không mang toàn văn/danh mục/ứng viên/ảnh base64 trong phong bì. Không có giá trị mẫu `tep_id`/băm giả được runtime chấp nhận; fixture phải tải bytes DEMO thật vào CoreGia và tính lại metadata/băm. Schema nguồn dự kiến `_chung/contract/ho_so_tra_cuu.schema.json`, chỉ tạo ở **TC-1 sau TC-Q13 được duyệt**, chép vào gói và so SHA-256 (chuẩn hóa CRLF→LF theo phiếu).
+
+Thêm trường tùy chọn tương thích giữ `phien_ban=1`; đổi nghĩa/required không tương thích tạo mã `ho_so_tra_cuu_2`, giữ mã cũ cho workflow đã có. Core chỉ khớp chuỗi mã, không kiểm được các quan hệ dưới đây thay engine.
+
+### 6.3 Snapshot và quan hệ Python phải kiểm
+
+| Thành phần snapshot | Nội dung / ràng buộc |
+|---|---|
+| Ngữ cảnh/nguồn | Tác vụ/mã yêu cầu, nhãn phạm vi pháp nhân/nhóm/module, nguồn quyền/duyệt/hiệu lực và thời điểm do Core cấp tin cậy. Payload tự khai không chứng minh danh tính; engine không đổi pháp nhân theo model |
+| Tài liệu | Tệp gốc/phiên bản/băm bytes; nguyên phong bì `van_ban_tai_lieu` hoặc tham chiếu+băm; băm UTF-8 toàn văn riêng, cấu trúc/ô bảng/vị trí và ánh xạ Unicode. Thiếu phân trang DOCX không bịa trang/hộp |
+| Danh mục | Snapshot 8 nhóm/loại/đối tượng/loại hình/trạng thái và băm; phân loại máy chỉ là đề nghị, trạng thái chờ/duyệt do Core quyết. Không tự tạo loại nhóm 08 hoặc kích hoạt bán nhựa/điện |
+| Đoạn | Mã ổn định, nguyên văn, offset Unicode nửa mở, nguồn/phiên bản/vị trí, cấu trúc/ô/tiêu đề và map nguồn cho phần ngữ cảnh lặp. Đủ toàn văn nguồn, không bỏ đuôi để đạt trần |
+| Câu hỏi/hàm | Câu hỏi, ý định, tập thực thể chính xác và cờ thời điểm; allowlist hàm Core cấp có tên/phiên bản/schema tham số/đầu ra. Model chỉ đề nghị hàm/tham số đúng allowlist, không SQL/code/URL; engine không thực thi hàm |
+| Ứng viên/xếp hạng | Core đã lọc quyền/hiệu lực trước giao; mỗi mã đúng một nguồn, xếp hạng đủ tập mã không thêm/bớt/trùng/đổi nguồn; điểm hữu hạn trong thang khuôn đã ghim, không xác suất đúng được duyệt |
+| Bằng chứng trả lời | Tầng 1 đã duyệt/còn hiệu lực/đủ tin cậy/đúng trường, hoặc đoạn/kết quả trích tầng 2–3 chưa duyệt; khẳng định → đúng thực thể/trường/đơn vị → câu trích/offset → nguồn thực. Mâu thuẫn giữ cả hai, thiếu căn cứ không trả số đoán |
+| Ghim AI | Tác vụ, prompt/phiên bản/khuôn, ngữ cảnh AI chính xác và map về nguồn; băm ngữ cảnh/cấu hình, tham chiếu+băm hồ sơ hậu kiểm; `tra_loi_ai` phải khớp và Local. Model không viết lại metadata này |
+| Phụ thuộc cache/K5 | Tập nguồn/phiên bản/mốc công bố/duyệt, thực thể, phạm vi và cờ thời điểm, văn bản mới chờ duyệt, đề nghị K5 dữ liệu mới/mâu thuẫn. Core thực thi cache/RLS/hết hạn/K5; engine không tuyên bố đã lưu/đã duyệt chỉ vì trả cờ |
+
+Quan hệ `tac_vu/giai_doan` hợp lệ: mọi tác vụ bắt đầu `da_nhan`; cắt đoạn kết thúc `da_cat_doan`, không qua AI; bốn tác vụ AI dùng snapshot `cho_ai` để hậu kiểm lần lượt về `da_phan_loai`/`cho_phan_loai`, `da_phan_tich`, `da_xep_hang`, `da_soan`. Đường `soan_tra_loi` không AI chỉ từ hồ sơ `da_nhan` có đủ bằng chứng tầng 1 để điền mẫu Python hoặc không căn cứ để trả từ chối. `xuat_ket_qua` từ chối `da_nhan`/`cho_ai`, kiểm summary khớp snapshot thực; không ghép số đếm hay nhãn caller tùy ý.
+
+Giới hạn công việc theo phiếu TC-P §2.3: văn bản ≤500.000 ký tự/60 trang nếu có; ≤5000 đoạn; đơn vị cấu trúc >8000 ký tự mà không chia an toàn thì lỗi; câu hỏi ≤4000 ký tự, ≤100 hàm/1000 mục danh mục/50 ứng viên, `tai_lieu` AI ≤100.000 ký tự, khuôn ≤32 KiB. Tổng bytes tệp con đọc ≤64 MiB/việc, mỗi tệp ≤20 MiB. JSON yêu cầu chính ≤1 MiB được engine tự kiểm; manifest trần tệp 20 MiB vì SDK 2.0 dùng chung trần khi `mo_tep`. Vượt từ chối, không cắt/chia nhiều lượt tự động; trần ký tự chưa là số đo context model.
+
+### 6.4 Qua Core/Local AI, không kho thứ hai
+
+`yeu_cau_ai.chuyen_tiep.tra_cuu` tận dụng phần mở hiện có, chỉ gồm `phien_ban`, `ma_yeu_cau`, `tac_vu`, tham chiếu+băm snapshot hậu kiểm và băm cấu hình/ngữ cảnh AI. Mục tiêu ≤4 KiB, trần chung 64 KiB; không toàn văn/danh mục/prompt trong đó. Hỏi AI giữ nguyên sang `tra_loi_ai`, không đưa phần này vào nội dung gửi model. Không sửa `yeu_cau_ai`/`tra_loi_ai` hoặc coi loại mới này là đầu vào Cloud. **Cloud vẫn tắt**; nếu mở sau chỉ nhận nội dung `van_ban_da_che` do Mask, M9/07 vẫn chỉ Local.
+
+API v1 mỗi bước chỉ một phong bì; Core/module chuẩn bị tệp JSON ghép các nguồn và cấp quyền mở tệp con xuyên bước, giữ vòng đời/ACK. Engine chỉ `mo_tep`/`tai_tep_ra`, không lấy `ket_qua_id` tùy ý/đọc đường máy/kết nối CSDL/gọi engine khác. Thiếu cửa C-TC-02/03 phải `LoiNghiepVu TC_CHUA_CO_CUA_CORE`, sai nguồn `TC_SAI_NGUON`; adapter CoreGia chỉ trong tests, không fallback runtime. CoreGia không chứng minh RLS thật.
+
+Cấu hình và bài đo `dot_kiem` qua `Ngan`, phạm vi pháp nhân bắt buộc `phap_nhan_id` trong `khoa/loc` từng thao tác, CAS/lô/unique đúng mẫu. Snapshot/kết quả/tệp ở kho Core. **Chỉ mục/vector/cache/nhật ký hỏi đáp và danh mục nghiệp vụ do Core giữ**, không chép sang ngăn engine hoặc đệm bền trên máy. Tệp tạm của việc dọn `finally`.

@@ -55,4 +55,4 @@ def test_manifest_khung():
     assert phieu["tuong_thich"]["sdk"] == ">=2.2.0 <3.0.0"
     assert "cau_hinh" not in {b["bang"] for b in phieu["ngan_du_lieu"]}
     assert phieu["chay_thu_demo"]
-    assert [n["ma"] for n in phieu["nang_luc"]] == ["doi_chieu.doc_docx@1", "doi_chieu.nhan_cap@1", "doi_chieu.so_van_ban@1", "doi_chieu.phat_hien_sua_tay@1", "doi_chieu.chuan_bi_ai@1", "doi_chieu.phan_loai_diem_lech@1"]
+    assert [n["ma"] for n in phieu["nang_luc"]] == ["doi_chieu.doc_docx@1", "doi_chieu.nhan_cap@1", "doi_chieu.so_van_ban@1", "doi_chieu.phat_hien_sua_tay@1", "doi_chieu.chuan_bi_ai@1", "doi_chieu.phan_loai_diem_lech@1", "doi_chieu.xuat_ket_qua@1"]

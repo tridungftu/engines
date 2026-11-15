@@ -10,6 +10,9 @@ from .quy_tac import so_van_ban as _so_van_ban
 from .chuan_bi_ai import chuan_bi_ai as _chuan_bi_ai, kiem_prompt
 from .hau_kiem_ai import phan_loai_diem_lech as _phan_loai_diem_lech
 from .lech_dau import xu_ly_ho_so as _kiem_lech_dau
+from . import chuan_bi_ai as cb
+from . import ho_so as hs
+from .tong_hop import xuat_ket_qua as _xuat_ket_qua
 
 _GOI = Path(__file__).resolve().parent.parent
 app = Engine.tu_khai_bao(str(_GOI / "engine.json"))
@@ -79,8 +82,21 @@ def phat_hien_sua_tay(viec):
     cau_hinh = can_cau_hinh(viec)
     thoi_han = next(n["gioi_han"]["thoi_han_giay"] for n in app.phieu["nang_luc"]
                    if n["ma"] == "doi_chieu.phat_hien_sua_tay@1")
-    return _phat_hien_sua_tay(viec, cau_hinh,
-        phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
+    pb_engine = "e_doi_chieu " + app.phieu["phien_ban"]
+    khoa = {"bam_bo": viec.dau_vao["ho_so_doi_chieu"]["bam_bo_quy_tac"],
+            "phien_ban_engine": pb_engine,
+            "bam_cap": hs.bam(hs.json_bytes({"buoc": "DC-9:ghim-DC-8", "pham_vi": cb.pham_vi(viec),
+                "ho_so": viec.dau_vao, "cau_hinh": cau_hinh, "anh_core": viec.ngu_canh.get("doi_chieu_anh")}))}
+    with cb.luot(viec, viec.ngan, khoa, "dang_quet_anh", "da_quet_anh") as (cu, chot):
+        if cu is not None:
+            return cu
+        ket_qua = _phat_hien_sua_tay(viec, cau_hinh,
+            phien_ban_engine=pb_engine, thoi_han_viec_giay=thoi_han)
+        # Không để một snapshot caller tự sửa rồi băm lại được ghim thành nguồn tin cậy.
+        cb.da_ghim(viec.ngan, cb.pham_vi(viec)["phap_nhan_id"], viec.dau_vao,
+                   viec.dau_vao["ho_so_doi_chieu"]["giai_doan"], viec.kiem_huy)
+        chot(ket_qua)
+        return ket_qua
 
 
 @app.nang_luc("doi_chieu.chuan_bi_ai@1")
@@ -98,6 +114,13 @@ def phan_loai_diem_lech(viec):
     pb = _phan_loai_diem_lech(viec, viec.ngan, cau_hinh,
                             phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"])
     return _kiem_lech_dau(viec, viec.ngan, cau_hinh, pb, hau_kiem=True)
+
+
+@app.nang_luc("doi_chieu.xuat_ket_qua@1")
+@_an_toan
+def xuat_ket_qua(viec):
+    return _xuat_ket_qua(viec, viec.ngan, can_cau_hinh(viec),
+                         phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"])
 
 
 if __name__ == "__main__":

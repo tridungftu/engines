@@ -190,6 +190,77 @@
       },
       "huy_duoc": true,
       "tham_so": []
+    },
+    {
+      "ma": "doi_chieu.xuat_ket_qua@1",
+      "ten": "Xuất kết quả JSON và PDF",
+      "nhan": [
+        "ho_so_doi_chieu"
+      ],
+      "tra": "truong",
+      "truong_ra": [
+        {
+          "ma": "ket_luan",
+          "ten": "Kết luận",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so_nghiem_trong",
+          "ten": "Số điểm Nghiêm trọng",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_can_xem",
+          "ten": "Số điểm Cần xem",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_hinh_thuc",
+          "ten": "Số điểm hình thức",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_nhieu_ocr",
+          "ten": "Số điểm nhiễu OCR",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_vung_sua_tay",
+          "ten": "Số vùng sửa tay",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_trang_ocr_kem",
+          "ten": "Số trang OCR kém",
+          "kieu": "so"
+        },
+        {
+          "ma": "da_kiem_du",
+          "ten": "Đã kiểm đủ",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "de_nghi_chan",
+          "ten": "Đề nghị chặn",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "tep_json",
+          "ten": "Báo cáo JSON",
+          "kieu": "tep"
+        },
+        {
+          "ma": "tep_pdf",
+          "ten": "Báo cáo PDF",
+          "kieu": "tep"
+        }
+      ],
+      "gioi_han": {
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 180
+      },
+      "huy_duoc": true,
+      "tham_so": []
     }
   ],
   "loai_du_lieu_rieng": [

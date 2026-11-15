@@ -553,3 +553,30 @@ câu cố định, không nội dung. Toàn bộ runtime dùng RAM/Ngan/tệp Co
 (110 ca DC-4), 0 skipped. DEMO Word của lệnh `thu`: 1/1; đường nhận cặp
 và so nằm trong pytest vì cần cấu hình/quyền tệp con. Phân trang dùng
 provider DEMO giả (PDF có trang/ảnh thực); chưa đo renderer/OCR/Core thật.
+# Xuất kết quả DC-9
+
+`doi_chieu.xuat_ket_qua@1` nhận hồ sơ `da_so`/`da_quet_anh`/`da_hau_kiem`
+được engine ghim trong Ngăn. Trả đủ 11 trường tĩnh theo phiếu và hai tệp
+JSON/PDF thực trong kho Core. JSON giữ toàn bộ snapshot, bằng chứng, nhiễu,
+tham chiếu nguồn đầu vào và băm PDF; PDF có số đếm/phần chưa kiểm ở đầu,
+nguyên văn/vị trí/lý do/sàn của từng điểm, ảnh cắt có căn cứ và phụ lục nhiễu.
+Không lấy bộ lọc UI làm giới hạn nội dung báo cáo.
+
+Chưa kiểm đủ trả báo cáo dở `chua_doi_chieu_duoc`, `da_kiem_du=false`,
+`de_nghi_chan=true`; giữ mọi điểm Nghiêm trọng và vùng sửa tay đã biết.
+Điểm còn chờ phân loại bị từ chối `DC_HO_SO_CHUA_DU`. Sai nguồn/schema/
+băm/quyền trả `DC_SAI_NGUON`. Core cần cấp lại manifest `doi_chieu_ocr_vung`
+khi bước xuất kiểm lại ngoại lệ DC-7 cần OCR vùng; không tin boolean tự khai.
+Tệp/vùng thiếu hệ tọa độ tin cậy được ghi rõ, không suy trang/hộp Word.
+
+Font Roboto Apache 2.0 đóng trong `tai_nguyen/font/`; thiếu hoặc sai băm
+trả `DC_THIEU_TAI_NGUYEN`. PDF là ảnh raster 150 dpi xấp xỉ, không có lớp
+text tìm kiếm; JSON là dữ liệu chuẩn. Mỗi tệp PDF tối đa trần `tep_mib`
+(không quá 20 MiB), tối đa 2.000 trang theo ngân sách bảo vệ RAM/thời hạn;
+vượt trần từ chối toàn lượt, không cắt nội dung. Tất cả dựng trong RAM,
+không tệp tạm hoặc đệm bền trên engine. Tải tệp lỗi trả `DC_KHONG_XUAT_DUOC`.
+
+Core/module giữ quyền, vòng đời tệp, xác nhận người dùng và hiệu lực thực
+tế. Engine không phát sự kiện riêng hoặc chốt xác nhận. Các kiểm tra hiện
+tại **đã kiểm bằng Core giả (CoreGia)**; không chứng nhận Core/Linux thật,
+nguồn từ điển/ngưỡng OCR hoặc chất lượng detector DC-13.

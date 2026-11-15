@@ -1,0 +1,8 @@
+Roboto Regular, Version 2.137; 2017.
+Copyright 2011 Google Inc. All Rights Reserved.
+Licensed under the Apache License, Version 2.0.
+Unmodified resource redistributed from CustomTkinter 5.2.2 assets/fonts/Roboto/Roboto-Regular.ttf.
+Upstream: https://github.com/TomSchimansky/CustomTkinter/tree/v5.2.2/customtkinter/assets/fonts/Roboto
+Font upstream: https://github.com/googlefonts/roboto
+The font name and embedded copyright/license metadata are preserved.
+See LICENSE-APACHE-2.0.txt.

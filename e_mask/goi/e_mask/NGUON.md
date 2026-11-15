@@ -2,6 +2,19 @@
 
 Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Handler che/mở che hiện đã có nghiệp vụ qua ngăn; các mô tả stub/kho tệp dưới đây là lịch sử từng lát. Trạng thái và băm mới nhất của lượt sửa nằm tại mục Sửa MASK-2b theo kiểm độc lập ở cuối tài liệu. Đã kiểm bằng Core giả (CoreGia).
 
+## MASK-B5b — 16/11/2026, sửa miễn ngày theo nhãn và lịch
+
+**Nguồn/quyền:** Anh/lead giao sửa hai runtime nội bộ đã có trong gói, dựa trên MASK-B5 và MASK-2b/R3/R6b. Không chép mã hoặc thêm thư viện bên ngoài; dùng `datetime.date` của thư viện chuẩn Python để kiểm lịch. Nguồn cũ giữ nguyên. Không sửa Core, SDK, engine khác hoặc mã Excel; map vẫn chỉ RAM theo MASK-P4.
+
+**Symbol sửa/thêm:** `che_van_ban._cac_tien_ngay`, `_kiem_con_sot`, `_nhan_dinh_danh_truoc`, `_ngay_hop_le`, `_so_dang_ngay_co_nhan`, `_duoc_mien_ngay`; `tep_word._kiem_vung`. Cửa sổ nhãn 120 ký tự, dừng tại biên đoạn/trường; bản dò bỏ dấu/Cf, tọa độ và nội dung gốc giữ nguyên. Vùng giá trị đã gắn nhãn bằng `_vung_nhan`/mẫu tài khoản R5 là bằng chứng độc lập, vẫn chặn miễn ngày khi nhiều khoảng trắng đẩy nhãn ra ngoài cửa sổ gần. Năm ngoài 1900–2100 hoặc hai chữ số không được miễn theo ngày; không đoán thế kỷ. Ngày viết chữ không có năm chỉ kiểm ngày/tháng, cho phép 29/2. Không thêm tài nguyên detector từ held-out.
+
+| Runtime nội bộ | SHA-256 trước (bytes = LF) | SHA-256 sau (bytes = LF) |
+|---|---|---|
+| `e_mask/che_van_ban.py` | `fb20d043b46cddea2080b50904f88533c0990b7cf21cc434be8089beb72ead81` | `206140bfe74302bcf560ba8020bf47835115284bab1d43dc2b14bb233fc32a83` |
+| `e_mask/tep_word.py` | `cc46f3619c676ed5d7124387ee870e8a74f737baf55f07777a1b6b588e33eb0c` | `8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8` |
+
+SDK 2.2.0 cài offline từ wheel repo, SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp sổ phát hành; không thêm dependency. Kiểm kê bao mọi tệp gói theo bytes LF thực tế, trừ chính kiểm kê. Đã kiểm bằng Core giả (CoreGia), chưa Core/Local/Office/Linux thật. Phép đo hồi quy nhánh quy tắc lịch sử không chứng nhận chất lượng Local/hai lớp; Cloud tắt.
+
 ## MASK-B5 — 16/11/2026, Word chỉ RAM
 
 **Quyền tái dùng:** Anh/lead giao MASK-B5 cho phép dùng B1/B2/B4, MASK-2b và R2…R6 trong chính gói này. Đây là mã nội bộ đã có nguồn/quyền ở các mục tương ứng của NGUON; không suy thêm quyền phân phối ngoài tổ chức. Không chép hoặc import engine khác, không sửa nguồn cũ, Core, SDK hoặc thêm dependency. Runtime mới chỉ dùng SDK 2.2.0 và thư viện chuẩn. Nguồn bytes trước được đóng băng tại `e_mask/docs/SHA-NGUON-MASK-B5-TRUOC.json`; mọi nguồn liệt kê bên dưới giữ nguyên bytes sau lát.

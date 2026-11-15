@@ -1,3 +1,10 @@
+## Chưa phát hành — 16/11/2026, MASK-B5b
+
+- Sửa miễn trừ ngày dùng chung cho Word và văn bản: phải hợp lệ theo lịch, năm 1900–2100; không suy năm hai chữ số. Giữ ngày thật, kể cả năm nhuận, ngày ISO và ngày viết bằng chữ.
+- Nhãn tài khoản/giấy tờ/MST trong 120 ký tự trước số thắng hình dạng ngày; dò không phân biệt hoa/thường, có/không dấu, NFD/Cf, dấu hai chấm hoặc không. Dừng tại biên đoạn hoặc trường `;`, tab, `|`; không mượn nhãn từ trường tài khoản để chặn ngày ở trường kế tiếp.
+- Giữ cảnh báo độc lập cho chuỗi dạng ngày có nhãn, kể cả khi detector cũ bỏ sót; Word dùng cùng tiêu chí khi đối chiếu cảnh báo R5. Vùng được R5 gắn nhãn vẫn thắng ngày khi nhãn cách số quá cửa sổ gần vì nhiều khoảng trắng. Không đổi API v1, vòng đời RAM, Core hoặc mã Excel. Bổ sung regression sáu ca lọt, biến thể nhãn, ngày thật/không hợp lệ, tách run và held-out MASK-2c giữ SHA.
+- Đã kiểm bằng Core giả (CoreGia); kết quả thật và giới hạn CLI quyền cũ tại VIEC.md. PR: chờ lead mở.
+
 ## Chưa phát hành — 16/11/2026, MASK-B5
 
 - Thêm logic nội bộ `tep_word.py` nối B1/B2/B4, ứng viên R2/R3, hậu kiểm MASK-2b/R5 và kho R4. Che mọi vùng Word trong whitelist đã đọc, gồm run tách, chữ ẩn, bảng/ô gộp, đầu/chân, footnote/endnote, metadata và attribute tự do. Không ghép qua ô/story; vùng hoặc markup chưa hiểu từ chối toàn tệp.

@@ -86,6 +86,7 @@ def kiem_ten(ten, ma):
             {".txt", ".json", ".xml", ".pdf", ".png", ".jpg", ".jpeg", ".docx", ".xlsx", ".zip", ".md"})
         or (p.parts[0] == "ui" and duoi in {".js", ".css", ".html"})
         or (p.parts[0] == "tai_nguyen" and duoi in {".txt", ".json", ".ttf", ".otf", ".md"})
+        or (len(p.parts) == 2 and p.parts[0].startswith("tham_chieu_") and duoi == ".py")
         or (len(p.parts) == 2 and p.parts[0] == "sql" and
             (p.name == "kiem_ke.json" or re.fullmatch(r"[0-9]{3}_[a-z0-9_]+\.sql", p.name)))
     ):

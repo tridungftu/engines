@@ -1,0 +1,5 @@
+# Chep nguyen dependency can dung tu e_ocr/goi/e_ocr/requirements.lock.
+# CPython 3.13; Windows x64 va Linux x86_64. SDK cai wheel noi bo rieng.
+Pillow==12.3.0 \
+    --hash=sha256:0847a763afefb695bc912d7c131e7e0632d4edc1d8698f58ddabec8e46b8b6d3 \
+    --hash=sha256:1cca606cd25738df4ed873d5ad46bbdb3d83b5cbca291f6b4ff13a4df6b0bbe8

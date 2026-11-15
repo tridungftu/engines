@@ -1,4 +1,19 @@
 # Đối chiếu bản ký — SDK 2.0, đến DC-5
+# Đối chiếu bản ký — DC-8, phiên bản 0.4.8 chưa phát hành
+
+DC-8 thêm `doi_chieu.phat_hien_sua_tay@1`: `ho_so_doi_chieu` → cùng loại,
+quét ảnh qua SDK, phát hiện ứng viên gạch/chèn, tải PNG vùng có ngữ cảnh và
+snapshot lên Core. Cần Pillow 12.3.0 theo `requirements.lock`, cấu hình
+`phuong_phap_detector=net_de_vung_chu`, `phien_ban_detector=DC-8.1-thu-nghiem`
+trong ngăn; Core cấp metadata ảnh tin cậy. Không đọc máy hoặc gọi AI/OCR.
+
+Phương pháp **chỉ thử nghiệm**: DEMO 12 ca có 3 TP/0 FP/3 FN, recall 50%.
+Đã quét pixel vẫn giữ `sua_tay=chua_kiem`, `da_kiem_du=false`, đề nghị chặn;
+không kết luận sạch. Vùng ký/dấu chưa đủ căn cứ hoặc chồng nội dung được giữ
+để xem, tách nguồn `metadata_can_xem` khỏi phát hiện pixel. Local vision
+chưa đo. Quy ước nguồn/biến đổi, đầu ra và số đo tại
+`../../docs/DC-8-KHAO-SAT.md`, `DC-8-SO-DO-DEMO.json`. Các mục DC-3/DC-4 dưới
+đây ghi phạm vi từng bước trước đó, không phải kết luận cuối hồ sơ.
 
 `doi_chieu.doc_docx@1` nhận DOCX qua `viec.mo_tep`, kiểm bản đã chốt và
 trả `van_ban_tai_lieu`. Đọc trong RAM bằng SDK và thư viện chuẩn, không

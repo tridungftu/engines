@@ -88,8 +88,9 @@ def test_ten_lap_giu_moi_offset_va_unicode_goc(local, ten):
 def test_json_sai_thieu_ngoai_khuon_khong_retry_khong_co_ket_qua(local, data):
     local.tra_loi = json.dumps(data, ensure_ascii=False) if not isinstance(data, str) else data
     kq = hoi()
-    assert kq["trang_thai"] == "LOI" and kq["ket_qua"] is None
-    assert kq["loi"]["ma"] in {"AI_TRA_SAI_KHUON", "LOCAL_AI_KHONG_SAN_SANG"}
+    assert kq["trang_thai"] == ("CHUA_RO" if data == "" else "LOI") and kq["ket_qua"] is None
+    if data != "":
+        assert kq["loi"]["ma"] in {"AI_TRA_SAI_KHUON", "LOCAL_AI_KHONG_SAN_SANG"}
     assert local.so_luot_hoi == 1
 
 

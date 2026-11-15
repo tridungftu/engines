@@ -44,6 +44,54 @@ SHA-256 hiện hành UTF-8 sau CRLF→LF (các bảng lát trước là lịch s
 
 Hai bản chép NGAN-0 và mọi schema chung giữ nguyên; test so băm LF vẫn
 đạt. SDK offline/wheel/phiên bản và giấy phép nguồn giữ theo DC-4 bên dưới.
+## DC-8 — 15/11/2026 · 0.4.8 chưa phát hành
+
+- `anh.py`, `sua_tay.py` viết mới trong lát DC-8; `chay.py` chỉ thêm khối
+  đăng ký DC-8 riêng. Tái dùng kiểm snapshot/băm/quyền/giới hạn của `ho_so.py`
+  trong cùng gói. Không sửa `quy_tac.py`, `tien_chu.py`, nguồn OCR hoặc
+  `ma-nguon/`; không chép detector/model từ ngoài workspace.
+- Dependency runtime bổ sung duy nhất: **Pillow 12.3.0**. Chép nguyên ba dòng
+  phiên bản/hash từ `e_ocr/goi/e_ocr/requirements.lock` sang lock của engine;
+  test so nguyên đoạn. SHA-256 wheel Windows x64 CPython 3.13:
+  `0847a763afefb695bc912d7c131e7e0632d4edc1d8698f58ddabec8e46b8b6d3`;
+  Linux x86_64 CPython 3.13:
+  `1cca606cd25738df4ed873d5ad46bbdb3d83b5cbca291f6b4ff13a4df6b0bbe8`.
+  Không chép các dependency PDF/OCR khác. Nguồn phân phối đã ghim theo lock
+  OCR; dự án Pillow, giấy phép chính **MIT-CMU**, kiểm từ metadata/LICENSE
+  của bản 12.3.0 có sẵn. Thư viện native đi kèm wheel có giấy phép riêng
+  trong LICENSE của distribution; engine không vendor hay tải thêm chúng.
+- Môi trường kiểm dùng Pillow 12.3.0 có sẵn qua venv system-site-packages;
+  không có wheel Pillow trong repo để cài lại/hash wheel tại đây. Hai hash
+  trên là nguồn pin của OCR, **không khẳng định đã kiểm wheel cài máy sạch**.
+  Runtime từ chối phiên bản Pillow khác; kiểm máy sạch/offline bằng wheel
+  đúng hash và kiểm Linux vẫn là phần cần lead thực hiện trước phát hành.
+- `tests/demo_sua_tay.py` tự dựng raster và đáp án từ nội dung DEMO, nét
+  polyline/ellipse bằng Pillow; chữ dùng `ImageFont.load_default(size=22)`
+  đóng gói sẵn trong Pillow, không đọc font máy hoặc phân phối tệp TTF mới.
+  Hộp OCR/nguồn loại trừ là fixture giả. Không có hồ sơ khách hàng, ảnh
+  scanner/OCR thực hoặc nhãn do model tạo. Bộ 12 ca có 11 raster khác nhau.
+- `cong-cu/do_sua_tay_demo.py` và `.cmd` viết mới, ngoài gói runtime; đo pixel
+  thật và chấm file export DEMO của Core, không gọi AI/engine khác/mạng.
+  Adapter CoreGia và detector giả chỉ trong tests, không được dùng tính
+  accuracy. Báo cáo `DC-8-SO-DO-DEMO.json`: TP=3, FP=0, FN=3; Local vision
+  chưa đo để null. Chi tiết giới hạn/phương pháp tại `docs/DC-8-KHAO-SAT.md`.
+- Hai bản chép NGAN-0 và bốn schema giữ nguyên; test so SHA-256 LF tiếp tục
+  chạy. API/SDK 2.0.0 không đổi; chỉ mở thêm năng lực vào manifest SDK 2.0.
+
+SHA-256 hiện hành DC-8, bytes UTF-8 sau CRLF→LF; bảng các lát cũ bên dưới
+là lịch sử. Đường tương đối từ thư mục gói, trừ mục có tiền tố `repo:`:
+
+| Tệp | SHA-256 LF |
+|---|---|
+| `e_doi_chieu/anh.py` | `2358268bca79589385e904909ab32d5bdaa43d3ebf5097776698e91a0c5f7dbe` |
+| `e_doi_chieu/sua_tay.py` | `29a63bdfa9306c748a6a6bc4808f85206dfc69e9f94d816c52c6a22d369528d0` |
+| `e_doi_chieu/chay.py` | `e2dd667fd9f7d104d38daea9c0f6d5206344f0a65a77e26894fc9d69e303fda0` |
+| `engine.json` | `98408586a788d3db1c79478a7e157fce3c9858a96cec6c1ebbd2e18d8db379ee` |
+| `requirements.lock` | `7f3beb0824f3d20e086b4c3d27c9b84d65b456fe05a3232d042a804de06b3d07` |
+| `repo: e_doi_chieu/cong-cu/do_sua_tay_demo.py` | `5e1dba3361a9136b9bd55031580de852385a57461cc6aa4ebc754895730713a1` |
+| `repo: e_doi_chieu/cong-cu/DO-SUA-TAY-DEMO.cmd` | `4c75fafea6907dcdb989e8f6ed6f2ddbf7405afa81bc992be0a247008c63440c` |
+| `repo: e_doi_chieu/tests/demo_sua_tay.py` | `557cd576de4f5966ab00fa0baefefaf075e98916bc6c2abe8e1b21019ea3d52f` |
+| `repo: e_doi_chieu/docs/DC-8-SO-DO-DEMO.json` | `684e3ce25e28c37ae4135eb516b32ee7bb07fc15a9ec59064c29791a81d799f2` |
 
 ## DC-4 — 15/11/2026
 

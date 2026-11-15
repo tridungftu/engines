@@ -302,6 +302,41 @@ Trần thử nghiệm: container vào/ra 1 MiB riêng mỗi chiều; 8 MiB giả
 
 Dữ liệu việc chỉ RAM, không thêm trạng thái bền hoặc bảng ngăn. Buffer/bảng tạm dọn `finally`; dữ liệu cần giữ ở lát sau dùng Ngan/kho tệp Core đúng mẫu. Lỗi parse/trần chỉ hai mã và câu Việt cố định, không tên/path/nội dung; hủy/mất lease/ChuaRo truyền nguyên. Từng lỗi DEMO kiểm không trả một phần, không ghi đĩa, không mạng hoặc in log. Không thêm dependency/PDF/Office automation. Gói hiện có đã kiểm bằng Core giả (CoreGia); cổng B1 kiểm trực tiếp RAM, **chưa nối năng lực tệp, Core thật, Word/Excel hay Local thật**, Cloud giữ tắt.
 
+
+## MASK-B2 — reader Word nội bộ, 15/11/2026
+
+Quyền tái dùng: lệnh giao MASK-B2 của Anh/lead cho phép CHÉP chọn lọc nội repo. Theo DC-2 trong `e_doi_chieu/goi/e_doi_chieu/NGUON.md` và TX-1 trong `e_trich_xuat/goi/e_trich_xuat/NGUON.md`: nguồn nội bộ, SDK 2.0.0 và thư viện chuẩn, không bổ sung giấy phép bên thứ ba hoặc suy quyền phân phối ngoài tổ chức. Không sửa hoặc import engine nguồn.
+
+| Đường nguồn từ gốc repo | Symbol chép/chuyển có sửa | Đích và khác biệt |
+|---|---|---|
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/doc_docx.py` | `doc_bytes`: vòng story/containers notes, kiểm ID/tham chiếu note, main/type/root/relationship; `_quet_chua_chot` làm căn cứ chặn sửa đổi | `doc_word.py::_DocWord.doc`, `xml_word.py::kiem_cay_word`: giữ mọi story/note đã nhận, không bỏ vùng/metadata/Accept All; B1 giữ cổng XML/graph, B2 siết cấu trúc/giá trị |
+| `e_trich_xuat/goi/e_trich_xuat/e_trich_xuat/docx.py` | `_val`, `_DocNoiDung._chu`, `khoi`, `_bang`: run/ký hiệu/bảng/gridSpan/vMerge | `doc_word.py::{_val,_DocWord._doan,_khoi,_bang}`: giữ mọi ô vật lý và chữ ở ô nối, không ghép qua ô/đoạn/story, không mang cảnh báo bỏ vùng, Accept All, Numbering/DTO của TX |
+| B1 trong chính gói e_mask | `_kiem_danh_muc`, `_kiem_ten`, `doc_zip`, `GoiZip`, `PhanZip`, `doc_xml` | Khối MASK-B2 riêng cuối `doc_tep.py`; không sửa hai tệp ZIP/XML B1. Chỉ chiếu byte RAM sau kiểm header/descriptor gốc rồi để B1 kiểm lại payload/EOF/CRC/trần; trả nguyên bytes và offset ZIP gốc |
+
+Closure dừng tại các symbol trên, không chép/import `.cau_truc` hoặc kéo thêm thư viện. Bộ profile/metadata/theme và lexical map là phần mới trong `xml_word.py`, chỉ đi trên cây đã được Expat B1 kiểm, đối chiếu từng giá trị với cây; không dùng regex thay parser. Hai nguồn trước = sau, kiểm lại với `e_mask/docs/SHA-NGUON-MASK-B2-TRUOC.json`. LF chỉ đổi CRLF thành LF:
+
+| Nguồn | SHA-256 bytes trước = sau | SHA-256 LF trước = sau |
+|---|---|---|
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/doc_docx.py` | `5d261c682d130a7cc5fba80759d9a94512ba773e6d463af5b16a9a58592d476c` | `7e63532c8ae2358ccc1b90a1bb65cb85e83c5c743fb3d8d9287fb2ed3cce3945` |
+| `e_trich_xuat/goi/e_trich_xuat/e_trich_xuat/docx.py` | `165e4da8a5f791aa49ee2f4c2525b2f32e25b17c3cc33eea0facfa01c83a6ef2` | `4290748070f8d5a8deee8a051c9ccdb384b1cb3ee8780e833d2781e5f84f1653` |
+
+Băm toàn tệp đích, bản chuyển có sửa. doc_tep trước là checkout B1 có CRLF; hai đích mới chưa có:
+
+| Đích từ gốc repo | SHA bytes trước | SHA LF trước | SHA bytes sau | SHA LF sau |
+|---|---|---|---|---|
+| `e_mask/goi/e_mask/e_mask/doc_tep.py` | `77e3b72b743e6c239f7b416eb017b8add2ecccd4e8ffdd45f1baeb95f31eb655` | `9050f061dab051b69fd0ca7d383edf0850aeb74ee7bf560f95da00eef8186e1c` | `fb58024cdb07b232a99cbd06c9c9e2e3caed40789f62c895db76d2246c915fdb` | `4aa66b7ca7429dbd59082775b29f2e11dd14e0bbc068a4adda40f9ff75275360` |
+| `e_mask/goi/e_mask/e_mask/doc_word.py` | `chưa có` | `chưa có` | `ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77` | `ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77` |
+| `e_mask/goi/e_mask/e_mask/xml_word.py` | `chưa có` | `chưa có` | `b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08` | `b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08` |
+
+Profile: WordprocessingML transitional thân/bảng/run/đầu-chân/notes/chữ ẩn, core/app/custom scalar có kiểu, styles/numbering/settings/fontTable/webSettings và theme chuẩn trong phạm vi đã kiểm. Text metadata/custom property name, tên style/latent style/lvlText/theme/scheme đều có map, bắt buộc qua hai lớp sau này. **Mọi scalar custom**, kể cả số/bool/ngày, cũng có map và vào tổng quét: kiểu hợp lệ chưa chứng minh không chứa mã định danh. Writer sau phải từ chối nếu cần thay alias làm sai kiểu, không tự đổi kiểu property. Style ID chỉ tập builtin hữu hạn, typeface chỉ tập font hằng; giá trị cấu trúc số/hex/ngày/bool/enum phải qua kiểm profile trước coi bất biến. Giá trị chưa phân loại từ chối, không miễn vì không ở w:t.
+
+Kết quả chỉ TaiLieuWord nội bộ, không cờ đã che/chuỗi nối mọi vùng. Từng VungWord có text gốc, SHA UTF-8 riêng, story/đoạn/ô vật lý/note; từng ManhWord có node path/run/style/cờ ẩn/attribute và khoảng Unicode code point nửa mở trong vùng. Mỗi code point có khoảng byte trong part XML giải nén NGUYÊN GỐC, không phải byte trong DEFLATE; ZIP gốc/local record/payload nén/offset vẫn giữ riêng. Entity/CR/CRLF/CDATA/UTF-8/BOM/UTF-16/surrogate pair có map; giữ nguyên NFD/Cf. Tab/br/note có manh ky_hieu; note đọc một lần mỗi part/note và giữ đủ tham chiếu lặp. Không ghép qua đoạn/ô/story.
+
+Tổng text logic gồm metadata/style/theme và ký hiệu đếm khi dựng vùng, không quá 500.000. B1 vẫn đếm bảo thủ cả text/tail/attribute kỹ thuật nên có thể từ chối sớm hơn tổng logic; test biên ghi đúng tổng B1 và tổng logic riêng. Word thêm trần 20.000 ô vật lý kể cả trống/ô nối; các trần ZIP/XML khác giữ nguyên B1. Dữ liệu việc chỉ RAM, bảng/buffer tạm dọn finally; không thêm bảng/trạng thái Ngan. Snapshot ở lát B7/B9 qua Core ACL, chỉ mục qua Ngan mẫu hiện có.
+
+Comments/revision/author markup, field/textbox/content control/extension, nhúng/media/macro/customXml/binary, part mồ côi/đánh tráo type/root/relationship đều từ chối cả gói. Không Accept All, không cảnh báo thay quét. ZIP bit 1–2 chỉ DEFLATE; bit 3 có descriptor 12/16 byte đúng CRC/size central và local header tương thích. le_cuoi bao cả descriptor; payload chỉ dài so_byte_nen. Hủy/ChuaRo truyền nguyên; không I/O/mạng/log/output một phần.
+
+Giữ đúng ba tệp runtime. Nợ tên dài hơn 256 được chặn tại wrapper `_kiem_ten`/`doc_zip` trong doc_tep, không sửa tệp ZIP thứ tư; hàm độc lập trong zip_an_toan giữ nguyên B1. Khối ZIP chung dùng được XLSX tối thiểu; reader/theme/calcChain Excel thuộc B3, B2 không sửa doc_excel/xml_excel. Chưa writer/upload/năng lực tệp hoặc MASK-2b + Local trên tệp. Đã kiểm bằng Core giả (CoreGia) gói văn bản; reader B2 kiểm trực tiếp RAM, chưa Core/Office/Local thật hoặc Linux thực tế. Cloud tắt.
 ## MASK-B3 — reader Excel nội bộ, 15/11/2026
 
 **Quyền tái dùng:** lệnh giao MASK-B3 của Anh/lead cho phép CHÉP chọn lọc `xlsx_toi_thieu.py` trong repo. `e_hoa_don/goi/e_hoa_don/NGUON.md` HD-7 ghi writer Python stdlib tự viết; bằng chứng CD-096 A1 ở đó dành cho nguồn Node nội bộ chỉ tham chiếu, không tự suy thành giấy phép Python hoặc quyền phân phối ngoài. Không thêm giấy phép/dependency. Mã mới B3 chỉ SDK 2.0.0 và thư viện chuẩn Python.
@@ -340,3 +375,30 @@ Mỗi shared string có vùng gốc kể cả chưa được dùng; mỗi ô dù
 ZIP Office: B1 giải nén bounded/CRC/EOF thật sau kiểm descriptor CRC/size khớp central directory; hỗ trợ cờ nén 0x0006, bit UTF-8 và bit 3, descriptor cổ điển 12/16 bytes. Các cờ khác/extra/comment/overlap/gap/ZIP64/nhúng/part lạ vẫn chặn. `PhanZip.le_cuoi` kết thúc payload, `PhanZipExcel.le_cuoi_ban_ghi` bao descriptor; B4 phải dùng đúng hai mốc khi chép record nguyên trạng. Không sửa hoặc nén lại bytes trong B3.
 
 Chỉ RAM, không bảng ngăn mới; giữ nguyên Ngan theo mẫu và không tạo tệp tạm. Bảng làm việc dọn `finally`. Chưa phát hành năng lực tệp, chưa nối writer hoặc hai lớp/Local cho tệp. Gói văn bản đã kiểm bằng Core giả (CoreGia); reader B3 kiểm trực tiếp RAM, chưa Excel/Core/Local thật. Cloud giữ tắt, không import engine khác, Core, nguồn cũ hoặc dependency mới. B2/B3 để lead gộp khối riêng, B3 không sửa mã Word.
+
+## Gộp MASK-B2 + MASK-B3 — SHA hiện hành, 15/11/2026
+
+Giữ nguyên mọi dòng provenance/băm lịch sử B1/B2/B3 ở trên. Bảng này thay băm hiện hành của các tệp cùng tên sau gộp; LF chỉ đổi CRLF thành LF, không chuẩn hóa Unicode. Không băm chính NGUON.md để tránh tự tham chiếu.
+
+Giữ hai khối reader và cổng ZIP, không sửa `doc_word.py`, `xml_word.py`, `doc_excel.py`, `xml_excel.py`. Cổng chung B2 cũng nhận XLSX cờ 0x0006/descriptor có kiểm; cổng B3 gọi wrapper `_kiem_ten` chung tối đa 256. Quy ước offset mỗi reader giữ nguyên. Test gộp tự soạn theo fixture DEMO B1/B3 trong RAM, kiểm cả hai cổng; không thêm nguồn ngoài/dependency.
+
+| Tệp từ gốc repo (bản hợp nhất) | SHA-256 LF hiện hành |
+|---|---|
+| `e_mask/cong-cu/THU-MASK-LOCAL-AI-THAT.cmd` | `7e41c1bf14a0a1a045ce4462ed55fa259fe795fa8f83cdd8676ddcef1382b723` |
+| `e_mask/cong-cu/mask_2c_4_ung_vien_demo.json` | `b3569b357132a7f7e0a7202b6e3d3c0b5fec2228c6ebd09604e7d05092485dd8` |
+| `e_mask/cong-cu/thu_mask_local_ai_that.py` | `27a2f63e05519ddb8ab227c107a829b3b615f8cd5ad423a341d5d70b9939ee05` |
+| `e_mask/docs/BAO-CAO-MASK-2c-4.md` | `b4c41ca97fc61b1d8d0faa6e8aa24ed24d5b2ff86e11fe77769851a5a29deed4` |
+| `e_mask/docs/BAO-CAO-MASK-B3.md` | `80ede4fbb44b9412d5bde46b28f4c41f89efb2b658caab088ca56c48d6f8ac46` |
+| `e_mask/docs/KET-QUA-KIEM-MASK-2c-4.txt` | `4e55ac28e7b986cab7d88dc4bcbd1ab693b81431ccd81e6e9d3fa639776154c0` |
+| `e_mask/docs/KET-QUA-KIEM-MASK-B3.txt` | `924dceabea41bba01ef31050eeda1cb8682427ce4b6c1207fe31198667ec3d8d` |
+| `e_mask/docs/VIEC.md` | `5d85d30fd1e058ed74cd68ac0f7d2295ab60caaa7b5e52131a484f96b00b6506` |
+| `e_mask/goi/e_mask/CHANGELOG.md` | `482684dcb0d8a95f61d2e2b1fa7806f307f47d6763fc8c23aeb3189fd895b26b` |
+| `e_mask/goi/e_mask/e_mask/doc_excel.py` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` |
+| `e_mask/goi/e_mask/e_mask/doc_tep.py` | `7169ad765f8566479e9b88f4907be2d37e70fbaded112f2ced6dd75e18567646` |
+| `e_mask/goi/e_mask/e_mask/doc_word.py` | `ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77` |
+| `e_mask/goi/e_mask/e_mask/xml_excel.py` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` |
+| `e_mask/goi/e_mask/e_mask/xml_word.py` | `b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08` |
+| `e_mask/tests/ho_tro_mask_b3.py` | `c64ff8e1e27f8a8b34512adf81a79f41de69a91b6e5460c8fed513c179ed7f51` |
+| `e_mask/tests/test_gop_mask_b2_b3.py` | `58976f10be12beb8d7a4b8001e7856d49017cd3784c2230888c30c9733c95d28` |
+| `e_mask/tests/test_mask_2c_4.py` | `aaeb93c259f68e943d4ae212791e40c15909072f6d57afc1faef3cc214992510` |
+| `e_mask/tests/test_mask_b3.py` | `4f5dc6876b1ffe359c13a8aa3cc5aa938245b153fd2c923ec95d93fad3e9cd68` |

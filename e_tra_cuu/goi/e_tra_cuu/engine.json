@@ -1,0 +1,26 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_tra_cuu",
+  "ten": "Tra cứu tài liệu",
+  "phien_ban": "0.1.0",
+  "tuong_thich": {"core": ">=2.0.0 <3.0.0", "api": "v1", "sdk": ">=2.0.0 <3.0.0"},
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {"lenh": ["{python}", "-m", "e_tra_cuu.chay"], "thu_muc": "."},
+  "nang_luc": [{
+    "ma": "tra_cuu.kiem_khung@1",
+    "ten": "Kiểm khung nội bộ (chưa phát hành)",
+    "nhan": ["tep"],
+    "tra": "truong",
+    "truong_ra": [{"ma": "trang_thai", "ten": "Trạng thái", "kieu": "van_ban"}],
+    "gioi_han": {"tep_toi_da_mib": 1, "mime": ["application/json"], "thoi_han_giay": 30},
+    "huy_duoc": true,
+    "tham_so": []
+  }],
+  "loai_du_lieu_rieng": [],
+  "tai_nguyen": {"so_viec_dong_thoi": 1},
+  "readiness": {"thoi_han_giay": 30},
+  "chay_thu_demo": [],
+  "bi_mat": [],
+  "webhook": null
+}

@@ -22,6 +22,7 @@ def test_goi_that_ast_va_tien_trinh_sach():
     assert kiem_tien_trinh_sach() == []
     assert {p.name for p in (THU_MUC_GOI / "e_hoa_don").glob("*.py")} == {
         "__init__.py", "cau_hinh_may.py", "chay.py", "doc.py", "hoa_don_xml.py", "zip.py",
+        "bang_ke.py", "xlsx_toi_thieu.py",
     }
 
 

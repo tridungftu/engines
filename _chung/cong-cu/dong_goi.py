@@ -76,7 +76,7 @@ def kiem_ten(ten, ma):
             raise LoiDongGoi("Gói có tên tệp hoặc thư mục bị cấm.")
     if ten in TEP_GOC:
         return
-    if len(p.parts) == 1 and (p.name == ".gitattributes" or p.name.endswith(".schema.json")):
+    if len(p.parts) == 1 and (p.name in (".gitattributes", "KHAI-SDK-2.1.json") or p.name.endswith(".schema.json")):
         return
     duoi = p.suffix.lower()
     if len(p.parts) > 1 and (

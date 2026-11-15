@@ -744,31 +744,10 @@ def _che(van_ban, da_biet, kho, *, noi_bo=False):
     return (ket_qua, anh_xa) if noi_bo else ket_qua
 
 
-def mo_che(van_ban_co_bi_danh: str, ma_yeu_cau: str, kho: Kho,
-           *, dong_viec: bool = False) -> dict:
-    """Mẫu 3–4: tra toàn bảng sau kiểm quyền; không đoán bí danh hỏng.
-
-    Vị trí trong đầu vào: offset ký tự [bat_dau, ket_thuc), dòng/cột từ 1.
-    Chỉ đóng việc theo yêu cầu rõ ràng và khi không còn bí danh chưa mở.
-    """
-    _kiem_van_ban(van_ban_co_bi_danh, cho_rong=True)
-    if not isinstance(ma_yeu_cau, str) or not ma_yeu_cau or type(dong_viec) is not bool:
-        raise LoiCheVanBan('Yêu cầu mở che chưa hợp lệ.')
-    try:
-        with kho.giao_dich():
-            yeu_cau = kho.doc_yeu_cau(ma_yeu_cau)
-            if yeu_cau['trang_thai'] != 'DANG_XU_LY':
-                raise ValueError('Yêu cầu đã đóng.')
-            return _mo_che(van_ban_co_bi_danh, ma_yeu_cau, kho, dong_viec)
-    except Exception:
-        raise LoiCheVanBan('Không thể mở che. Yêu cầu không hợp lệ hoặc không thuộc phiên hiện tại.') from None
-
-
 def _manh_bi_danh_con_lai(van_ban, cac_ma, da_xet):
     """Dò trên bản bỏ khoảng trắng, trả tọa độ đầu vào, không đoán giá trị gốc.
 
-    Kho chỉ lưu tham chiếu bí danh tạm theo yêu cầu; dò cả mã chính thức trong
-    bảng cùng vùng đã được kho xác minh để không bỏ lọt mã của yêu cầu này.
+    cac_ma chỉ là map RAM đã kiểm của yêu cầu, không danh mục để tra ngược.
     Các vùng đã mở/đã báo được ngăn bằng NUL, không nối nhầm qua chúng.
     """
     phan = list(van_ban)
@@ -825,36 +804,17 @@ def _manh_bi_danh_con_lai(van_ban, cac_ma, da_xet):
     return [(toa_do[a], toa_do[b - 1] + 1) for a, b in gop]
 
 
-def _mo_che(van_ban, ma, kho, dong_viec):
-    chua_mo, da_dung = [], []
-    so_cho, cuoi = 0, 0
-    phan, da_xet = [], []
-    xuong_dong = [i for i, ky_tu in enumerate(van_ban) if ky_tu == '\n']
-    for m in _VUNG_BI_DANH.finditer(van_ban) if '[' in van_ban or ']' in van_ban else ():
-        da_xet.append(m.span())
-        bi_danh = chuan_bi_danh(m.group())
-        goc = kho.tra_dinh_danh(bi_danh) if _BI_DANH.fullmatch(bi_danh) else None
-        phan.append(van_ban[cuoi:m.start()])
-        if goc is None:
-            phan.append(m.group())
-            chua_mo.append({'bi_danh': m.group(), 'vi_tri': _vi_tri(m.start(), m.end(), xuong_dong)})
-        else:
-            phan.append(goc)
-            da_dung.append(bi_danh)
-            so_cho += 1
-        cuoi = m.end()
-    phan.append(van_ban[cuoi:])
-    cac_ma = [b for muc in kho.liet_ke_dinh_danh()
-              for b in (muc['bi_danh'], muc.get('bi_danh_tam')) if b]
-    for a, b in _manh_bi_danh_con_lai(van_ban, cac_ma, da_xet):
-        chua_mo.append({'bi_danh': van_ban[a:b], 'vi_tri': _vi_tri(a, b, xuong_dong)})
-    chua_mo.sort(key=lambda m: m['vi_tri']['bat_dau'])
-    da_mo = ''.join(phan)
-    kiem_tien_ngay = _kiem_tien_ngay(van_ban, da_mo)
-    kho.ghi_bi_danh_da_dung(ma, da_dung)
-    if dong_viec and not chua_mo and kiem_tien_ngay:
-        kho.dong_yeu_cau(ma)
-    return {'van_ban_da_mo_che': da_mo if kiem_tien_ngay else None, 'so_cho_mo': so_cho,
-            'bi_danh_khong_ro': chua_mo, 'mo_day_du': not chua_mo and kiem_tien_ngay,
-            'kiem_tien_ngay': kiem_tien_ngay,
-            'trang_thai_ma_yeu_cau': 'DA_DONG' if dong_viec and not chua_mo and kiem_tien_ngay else 'DANG_XU_LY'}
+def mo_che(van_ban_co_bi_danh, ma_yeu_cau, kho, *, dong_viec=False):
+    """Chỉ nhận handle RAM R4; kho tra ngược lịch sử không còn hợp lệ.
+
+    Vòng đời/tiêu thụ thuộc handler R6, không do dong_viec điều khiển.
+    Hàm này không đọc ngăn, không tìm alias ngoài map bản cuối của chuỗi.
+    """
+    from .kho_anh_xa_ram import _BuocRAM
+    from .mo_che_ram import mo_van_ban
+    from .quyen_yeu_cau import loi_ram, loi_kho
+    if type(kho) is not _BuocRAM:
+        raise loi_ram('MASK_ANH_XA_KHONG_CON')
+    if ma_yeu_cau != kho._ctx.quyen.ma_yeu_cau:
+        raise loi_kho('MASK_MA_YEU_CAU')
+    return mo_van_ban(van_ban_co_bi_danh, kho)

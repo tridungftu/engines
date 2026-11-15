@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 import unicodedata
 
+from ho_tro_mo_lich_su import mo_che as mo_che_lich_su
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "goi/e_mask"))
@@ -140,7 +141,7 @@ def test_ma_chu_thuong_cham_gach_khong_bat_nham_van_xuoi(demo_tu_vung, ma):
     kq = xu_ly.che(TEN, [], kho)
     assert kq["van_ban_da_che"] == "[[" + ma + "]]"
     chu = "[[ " + ma.upper() + " ]] ; x" + ma + "y"
-    mo = xu_ly.mo_che(chu, kq["ma_yeu_cau"], kho)
+    mo = mo_che_lich_su(chu, kq["ma_yeu_cau"], kho)
     assert mo["so_cho_mo"] == 1
     assert mo["mo_day_du"] is True
     assert mo["van_ban_da_mo_che"] == TEN + " ; x" + ma + "y"
@@ -150,7 +151,7 @@ def test_so_tien_thay_doi_khi_mo_khong_tra_van_ban_khong_dong(demo_tu_vung, monk
     kho = KhoBoNho([{"gia_tri": TEN, "nhom": "CONG_TY", "ma_junsky": "KH-DEMO-001"}])
     kq = xu_ly.che(TEN, [], kho)
     monkeypatch.setattr(kho, "tra_dinh_danh", lambda _: "1.000.000 VND")
-    mo = xu_ly.mo_che(kq["van_ban_da_che"], kq["ma_yeu_cau"], kho, dong_viec=True)
+    mo = mo_che_lich_su(kq["van_ban_da_che"], kq["ma_yeu_cau"], kho, dong_viec=True)
     assert mo["van_ban_da_mo_che"] is None
     assert mo["kiem_tien_ngay"] is False
     assert mo["mo_day_du"] is False

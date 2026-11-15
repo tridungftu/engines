@@ -15,7 +15,8 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "goi/e_mask"))
 
 from e_mask import che_van_ban as xu_ly
-from e_mask.che_van_ban import LoiCheVanBan, che, mo_che
+from e_mask.che_van_ban import LoiCheVanBan, che
+from ho_tro_mo_lich_su import mo_che
 from ho_tro_kho_demo import KhoBoNho
 from e_mask.nguon.privacy import detectors, leftovers
 

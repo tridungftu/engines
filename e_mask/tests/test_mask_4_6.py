@@ -11,7 +11,7 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu, ViecDaHuy
 from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_mask import phong_bi, che_van_ban
-from e_mask.chay import tao_app
+from ho_tro_van_ban_lich_su import tao_app
 from e_mask.ngan import CauHinhKhongHopLe
 from ho_tro_duyet_lich_su import DuyetDinhDanh
 from e_mask.kho_dinh_danh import KhoDinhDanh

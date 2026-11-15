@@ -1,0 +1,132 @@
+MASK-R6 — 16/11/2026
+Đã kiểm bằng Core giả (CoreGia); chỉ DEMO; chưa Core/Local/Office/Linux thật; không Cloud.
+Python 3.13.14; SDK 2.2.0; pytest 9.1.1; .venv riêng (--system-site-packages), SDK cài offline --no-index --no-deps.
+SHA-256 wheel SDK khớp SHA256SUMS: 0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984
+Biến môi trường kiểm: PYTHONUTF8=1, PYTHONDONTWRITEBYTECODE=1; mọi Python dùng -B.
+
+LENH: .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+MA THOAT: 1
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.4.0: có ví dụ chạy thử DEMO chưa đạt.
+
+LENH: .venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+MA THOAT: 1
+[LỖI] Không kiểm được một mục trong gói.
+
+LENH: git diff --check
+MA THOAT: 0
+warning: in the working copy of 'e_mask/tests/chay_demo.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/demo_mask_r3.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/do_mask_7.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_che_van_ban.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_2.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_2b.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_2b_rv.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_2c_1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_3.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_4_6.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_s22.py', LF will be replaced by CRLF the next time Git touches it
+
+LENH: Bản sao gói chỉ thay bằng KIEM-KE-MASK-R6-DE-NGHI.json; chạy bộ kiểm độc lập nguyên trạng
+MA THOAT: 0
+Ban sao chi thay kiem ke: 53/53 tep; MA THOAT: 0
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+
+KIỂM R6 RIÊNG SAU SỬA CUỐI: .venv/Scripts/python -B -m pytest e_mask/tests/test_mask_r6.py -q --tb=short
+124 passed, 0 failed/skip/xfail; 2,19 giây; mã 0.
+Trong đó weakref/GC tắt: 4/4 (thành công/lỗi/hủy/ChuaRo).
+Kiểm CoreGia bổ sung: alias tạm và mã Junsky case/space mềm 2/2 đạt; map dọn một lần.
+AST mười test/công cụ lịch sử: 10/10 giữ nguyên thân hàm/assertion, chỉ đổi import/điểm gọi mở.
+Phạm vi runtime: 4/4 đúng bảng P4; không đổi Core/SDK/dependency/manifest/schema/migration/kiểm kê gói/nguồn cũ.
+
+FULL PYTEST SAU SUA CUOI:
+LENH: .venv/Scripts/python -B -m pytest e_mask/tests -q
+BAT DAU: 2026-11-16T01:31:00.538850+07:00
+.......................................................... [  2%]
+........................................ [  3%]
+........................................................................ [  6%]
+........................................................................ [  9%]
+........................................................................ [ 11%]
+....xxxx................................................................ [ 14%]
+........................................................................ [ 17%]
+........................................................................ [ 19%]
+........................................................................ [ 22%]
+........................................................................ [ 25%]
+........................................................................ [ 28%]
+........................................................................ [ 30%]
+........................................................................ [ 33%]
+........................................................................ [ 36%]
+........................................................................ [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 44%]
+........................................................................ [ 47%]
+........................................................................ [ 49%]
+........................................................................ [ 52%]
+........................................................................ [ 55%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 63%]
+........................................................................ [ 66%]
+........................................................................ [ 68%]
+........................................................................ [ 71%]
+........................................................................ [ 74%]
+........................................................................ [ 77%]
+......................F................................................. [ 79%]
+........................................................................ [ 82%]
+........................................................................ [ 85%]
+........................................................................ [ 87%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 96%]
+........................................................................ [ 98%]
+.................................                                        [100%]
+================================== FAILURES ===================================
+__________________ test_kiem_ke_day_du_bytes_va_sha_tung_tep __________________
+
+    def test_kiem_ke_day_du_bytes_va_sha_tung_tep():
+>       _kiem_ke(GOI, (GOI / 'sql/kiem_ke.json').read_text(encoding='utf-8'))
+
+e_mask\tests\test_mask_r1.py:259: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+goi = WindowsPath('D:/Claude/engines-wt/e_mask-mask-r6/e_mask/goi/e_mask')
+noi_dung = '{\n  "phien_ban": "1.4.0",\n  "tep": [\n    {\n      "duong_dan": "cau_hinh.schema.json",\n      "bytes": 657,\n     ...   "bytes": 7272,\n      "sha256": "c066412eb8fb39aaa021b6160a6c27a9e4ef3945899f0882c457eb65ffd84f08"\n    }\n  ]\n}\n'
+
+    def _kiem_ke(goi, noi_dung):
+        """Kiểm bytes thật, không chuẩn hóa xuống dòng trước khi băm."""
+        kk = json.loads(noi_dung)
+        phieu = json.loads((goi / 'engine.json').read_text(encoding='utf-8'))
+        if (not _co_migration(goi) or set(kk) != {'phien_ban', 'tep'}
+                or kk['phien_ban'] != phieu['phien_ban'] or not isinstance(kk['tep'], list)):
+            raise ValueError
+        da_co = set()
+        for muc in kk['tep']:
+            if not isinstance(muc, dict) or set(muc) != {'duong_dan', 'bytes', 'sha256'}:
+                raise ValueError
+            ten = muc['duong_dan']
+            if (not isinstance(ten, str) or '\\' in ten or not ten
+                    or PurePosixPath(ten).is_absolute() or ':' in ten
+                    or '..' in PurePosixPath(ten).parts or PurePosixPath(ten).as_posix() != ten
+                    or ten in da_co or ten == 'sql/kiem_ke.json'):
+                raise ValueError
+            tep = goi / ten
+            if (not tep.resolve().is_relative_to(goi.resolve()) or tep.is_symlink()
+                    or getattr(tep.lstat(), 'st_file_attributes', 0) & 0x400):
+                raise ValueError
+            du_lieu = tep.read_bytes()
+            if (type(muc['bytes']) is not int or muc['bytes'] != len(du_lieu)
+                    or muc['sha256'] != hashlib.sha256(du_lieu).hexdigest()):
+>               raise ValueError
+E               ValueError
+
+e_mask\tests\kiem_doc_lap.py:50: ValueError
+=========================== short test summary info ===========================
+FAILED e_mask/tests/test_mask_r1.py::test_kiem_ke_day_du_bytes_va_sha_tung_tep
+1 failed, 2646 passed, 4 xfailed, 190 subtests passed in 390.44s (0:06:30)
+KET THUC: 2026-11-16T01:37:32.145959+07:00
+MA THOAT: 1
+THOI GIAN: 391.61 giay
+
+THỜI GIAN THỰC TẾ: 00:52:00–01:41:32 ngày 16/11/2026 (UTC+07), 0,83 giờ tại mốc chốt kiểm/báo cáo; phiếu 4–6 giờ ƯỚC TÍNH.
+PR: chờ lead mở. Không commit/push/Core/SDK/dependency. Gói gốc chưa đạt vì CLI thiếu quyền và kiểm kê ngoài closure; không dùng bản sao thay kết quả gói gốc.

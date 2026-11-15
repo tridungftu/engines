@@ -205,7 +205,11 @@ def test_spy_moi_cua_khong_map_ho_so_log_stderr_tep(monkeypatch, capsys):
 
 def test_runtime_chua_noi_ram_khong_nhan_adapter_snapshot_cu():
     b = bo()
-    b.app = tao_app(quyen=b.q, cong_chuan_bi_ai=b.cong, cong_hau_kiem_ai=b.cong)
+    # R6 đã nối RAM thật vào chay.py; adapter RAM mới không còn là
+    # snapshot cũ. Giữ mục tiêu chặn bằng port chỉ có cửa snapshot.
+    from types import SimpleNamespace
+    cu = SimpleNamespace(luu=lambda *a, **k: True, doc=lambda *a, **k: {})
+    b.app = tao_app(quyen=b.q, cong_chuan_bi_ai=cu, cong_hau_kiem_ai=cu)
     chan(chay(b))
     assert not b.cong.giao and not b.c._tep
 

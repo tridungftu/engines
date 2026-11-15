@@ -1,3 +1,11 @@
+## Chưa phát hành — 16/11/2026, MASK-B5
+
+- Thêm logic nội bộ `tep_word.py` nối B1/B2/B4, ứng viên R2/R3, hậu kiểm MASK-2b/R5 và kho R4. Che mọi vùng Word trong whitelist đã đọc, gồm run tách, chữ ẩn, bảng/ô gộp, đầu/chân, footnote/endnote, metadata và attribute tự do. Không ghép qua ô/story; vùng hoặc markup chưa hiểu từ chối toàn tệp.
+- Patch theo khoảng byte có băm; đọc lại bytes kết quả và so từng vùng. Giữ nguyên markup/style/bảng, bytes ngoài patch và local record/payload nén của part không đổi. Giữ NFD ngoài vùng thay, nguyên văn NFD/Cf trong map và tiền/ngày. Cf ngoài alias được bỏ theo chính sách; Cf biểu diễn bằng markup mà không patch text được thì chặn. Trường hợp báo trùng số bên trong ngày ISO được đối chiếu đúng vùng ngày MASK-2b và kiểm số/tiền/ngày lại, không miễn vùng kế bên.
+- Toàn bộ gốc/map/bytes/patch/cache ứng viên chỉ trong handle RAM đúng scope/instance của R4; TTL snapshot 600 giây, nguyên 60–900, không gia hạn khi retry. Điểm ghi trạng thái khóa cùng timer/hủy R4 để không dựng lại map sau khi đã dọn. Chỉ tìm ứng viên chính xác qua ngăn bí mật SDK, không đọc danh mục/bản rõ. Cùng alias khác nguyên văn, lỗi/hủy/TTL hoặc thiếu quyền/RAM chặn và dọn; không ghi ngăn/tệp/hồ sơ, không upload/log/chuyển tiếp map.
+- `che_word`/`che_them_word` chỉ trả băm/số đếm; primitive che bổ sung nhận vị trí gốc, vẫn ở `CHO_LOCAL`, không chứng thực nguồn Local. B7/B9 còn phải nối SDK, đủ hai lớp Local và cửa phát hành; B8 mở che tệp chưa triển khai. Giữ cửa chất lượng R3/tên mới C-P4-03 đóng. Trần B1/B4 áp cả hai chiều; reader đọc lại hiện bảo thủ 500.000 ký tự, có thể chặn sớm hơn trần ra 2 triệu.
+- Đã kiểm bằng Core giả (CoreGia), chưa Core/Office/Local/Linux thật; Cloud tắt. Chỉ thêm một runtime trong bốn tệp cho phép; kiểm kê đóng gói tự sinh lại do thêm tệp/tài liệu. Chi tiết kiểm, thời gian và C-P4-01…05 tại VIEC/báo cáo B5; PR chờ lead mở.
+
 ## Chưa phát hành — 16/11/2026, MASK-R6b
 
 - Thay dò từng alias bằng automaton chung cho alias/mảnh alias; tái dùng bộ dò trong mỗi lượt mở. Gom tiền tố thành cây regex, chỉ dò cạnh ngoặc trong cửa sổ hữu hạn. Kiểm hạn/hủy mỗi 2.048 ký tự và trong các vòng dựng/duyệt; không cache bộ dò giữa các chuỗi.

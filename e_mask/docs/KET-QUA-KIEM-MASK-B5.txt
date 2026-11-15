@@ -1,0 +1,19 @@
+Lenh: .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.4.0: có ví dụ chạy thử DEMO chưa đạt.
+
+Ma thoat: 1
+Giay: 1.04
+
+Lenh: .venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+
+Ma thoat: 0
+Giay: 0.64
+
+Lenh: git diff --check
+warning: in the working copy of 'e_mask/tests/demo_mask_r3.json', LF will be replaced by CRLF the next time Git touches it
+
+Ma thoat: 0
+Giay: 0.22

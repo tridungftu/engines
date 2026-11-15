@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| TC-10 | DEMO toàn tuyến, đáp án/bốn chỉ số, adapter Core, máy sạch offline | Lead giao 15/11/2026, 18:45; sau TC-3…9 và TC-S22; 4 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | 38 ca có đáp án riêng chưa duyệt nghiệp vụ; bốn chỉ số DEMO 12/12, 12/12, 6/6, 20/20; pytest 1330 passed, 0 skipped; harness 55/55, Node 30/30; độc lập mã 0, kiểm kê 141/141 tệp. CLI chuẩn 0/12/mã 1 (5 CHUA_CAU_HINH, 7 TC_CHUA_CO_CUA_CORE); chưa đạt cổng chung. Đã kiểm bằng Core giả (CoreGia), chưa Core/RLS/Linux/model thật; không kích hoạt nhóm. PR: **chờ lead mở**. |
 | TC-S22 | Chuyển SDK 2.2.0, ngăn/cấu hình/SQL/CoreGia và vai trò AI-12 | Lead giao 15/11/2026, 17:51; xếp trên TC-9; phiếu chưa ghi giờ ước tính TC-S22 | Chờ Core — 15/11/2026 | Đã chuyển runtime/gói/test; pytest 1268 passed, 0 skipped; UI 29/29, hồi quy DEMO 43/43; độc lập mã 0, kiểm kê 38 tệp khớp. CLI chuẩn 0/5 CHUA_CAU_HINH/mã 1 do giới hạn wheel; không cổng thay thế. Xem Cần Core TC-S22 và biên bản cuối tệp. PR: **chờ lead mở**. |
 | TC-9 | Màn cấu hình/trạng thái, CAS và bài đo DEMO theo pháp nhân | Lead giao 15/11/2026, 16:33; sau TC-8; 3 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | Đã làm đúng 4 tệp mã, kiểm CoreGia/NganBoNho/KttCore giả; chưa kiểm trình duyệt thật. CLI chuẩn vẫn 0/5 CHUA_CAU_HINH/mã 1; số kiểm và giới hạn tại biên bản TC-9 cuối tệp. PR: **chờ lead mở**. |
 | TC-7 | Soạn/kiểm chứng Python và Local, nhãn TC-Q14, mâu thuẫn và phụ thuộc nguồn | Lead giao 15/11/2026, 15:16; sửa sau kiểm độc lập KHÔNG ĐẠT từ 15:52; phiếu 5 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | Đã sửa 4 lỗi kiểm độc lập trong 2 tệp runtime; thêm 258 ca hồi quy. Tổng 1210 passed, 0 skipped; độc lập mã 0, harness 36/36. CLI chuẩn 0/5 CHUA_CAU_HINH/mã 1. Đã kiểm bằng Core giả (CoreGia)/NganBoNho/Local giả theo protocol; 0 Cloud/model thật. TC-Q14 đã duyệt. PR: **chờ lead mở**; xem biên bản sửa TC-7 mới nhất và Cần Core dưới. |
@@ -36,6 +37,39 @@ là nơi theo dõi; các dòng “chưa duyệt” trong biên bản TC-P/TC-0 d
 **Kiểm TC-P:** theo ngoại lệ riêng của lát chỉ tài liệu, không áp dụng ba lệnh engine AGENTS.md §5 khi chưa có gói/tests. Kiểm 12/12 khối lệnh §4 bằng regex Anh yêu cầu (fence mở ``` trơn), đủ TC-0…TC-11, không trùng, tổng giờ bảng = 45; `git diff --check` không lỗi. SDK 2.0.0 cài offline trong `.venv`, SHA-256 wheel khớp SHA256SUMS.txt. Chỉ kiểm tài liệu và đọc mã SDK, **chưa chạy engine/CoreGia**. Không commit/push; không tạo `goi/`, không sửa nguồn cũ.
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+### Cập nhật TC-10 — 15/11/2026
+
+- **C-TC-01/02/05, còn chặn cổng chuẩn:** `chay_thu_demo` hiện có **12 ví
+  dụ** đủ tám năng lực: năm ví dụ nhận cũ + bảy ví dụ có snapshot/AI/tệp con
+  thật. CLI `thu` chuẩn trả 0/12, mã 1; năm `CHUA_CAU_HINH`, bảy
+  `TC_CHUA_CO_CUA_CORE`. Cần cửa chính thức nạp cấu hình DEMO, quyền nguồn,
+  tệp con/metadata/băm và pháp nhân; lead review loader đóng băng ở
+  `tests/vi_du_cong_chuan_tc_10.py` cùng fixture trong gói. Không sửa API v1,
+  SDK hoặc thêm default runtime để làm xanh. Harness cùng 12 ví dụ đạt đủ;
+  55/55 là hồi quy bổ sung, không thay cổng chuẩn.
+- **C-TC-03/04:** `tests/core_hop_dong_tc_10.py` mô phỏng hợp đồng dừng tầng
+  1/2, tầng 3 nền 202, cache đúng thực thể/pháp nhân/phạm vi, kiểm quyền
+  **mọi** nguồn, sự kiện phiên bản/đổi nhóm/duyệt/công bố/thu quyền/hiệu lực,
+  nút `bo_qua_cache`, không cache câu phụ thuộc thời điểm. Nguồn ngoài quyền
+  bị lọc trước đọc nội dung/dựng AI; M9/07 luôn Local. Đây chỉ adapter test;
+  **Core thật/RLS/cache/K5/runner/HTTP nghiệp vụ chưa kiểm**. Core cần chạy
+  lại trên dịch vụ thật trước nghiệm thu; engine không làm bù các phần này.
+- **C-TC-05:** đã kiểm hai ca bootstrap stdin/MayChuGia HTTP loopback thật:
+  thiếu cấu hình/cửa nguồn từ chối đúng, không nộp kết quả XONG giả. Mất
+  lease/hủy/mất ACK/ChuaRo được kiểm qua CoreGia; chưa chứng nhận log/lease
+  hoặc truyền quyền tệp con trên Core thật. Không có phép đo thật thì giữ
+  trạng thái chưa kiểm.
+- **L-TC-02 / TC-Q15:** quyết định nguyên tắc đã duyệt; bộ 38 ca do Codex
+  tạo **chưa được nghiệp vụ duyệt**, chưa phải bộ nghiệm thu. Cần lead/Anh
+  duyệt bộ nguồn/đáp án nhóm 02 và đo model/ngưỡng theo TC-11 trước bật nhóm.
+  Các điểm 0.95/ngưỡng 0.8/0.9 ở fixture chỉ mô phỏng; không accuracy hoặc
+  ngưỡng thật. Không kích hoạt nhóm 05 nhựa/điện hoặc nhóm nào khác.
+- **Môi trường:** venv sạch Windows chỉ SDK đã cài offline/import riêng/
+  không bytecode; CLI vẫn lỗi như trên. Không có WSL/Linux nên **chưa kiểm
+  Linux**; Git Bash chỉ kiểm cú pháp `.sh`. Harness/pytest có dependency test
+  đã ghim chạy riêng. Trình duyệt Core thật, model, vector, tải 20/150 người
+  và lưu bền chưa kiểm. TC-Q06 tiếp tục không tự xóa.
 
 ### Cập nhật TC-S22 — SDK 2.2.0, 15/11/2026
 
@@ -1356,3 +1390,23 @@ TC-S22, không tuyên bố đã nối Core thật hoặc đo model.
 phiên bản cấu hình trên Viec, kiểu ngăn cấu trúc/tham chiếu, đăng ký UI/
 quyền host và cursor; tiếp tục C-TC-02/03/04/05. Không có câu hỏi mới chờ
 Anh. Lead đồng bộ main mới, kiểm độc lập, commit và mở PR: **chờ lead mở**.
+
+## Biên bản TC-10 — DEMO toàn tuyến, 15/11/2026
+
+PR: **chờ lead mở**. Bắt đầu **18:45** theo lead; kết thúc **15/11/2026 19:25:59 (UTC+07:00)**, **0.68 giờ** so với **4 giờ ƯỚC TÍNH**.
+Phạm vi: 0 tệp Python/JS runtime thay đổi; chỉ DEMO,
+`engine.json.chay_thu_demo`, tests/công cụ offline, kiểm kê và tài liệu.
+
+- Pytest **1330 passed, 0 skipped, 80.06 giây**, mã 0; kiểm độc lập mã 0; kiểm kê **141/141** tệp khớp bytes/SHA.
+- Harness **55/55** hồi quy + bộ đáp án **38/38** ca, không gộp hai mẫu số.
+  Bốn chỉ số DEMO: **12/12 trả lời, 12/12 trích dẫn, 6/6 từ chối, 20/20
+  phân loại**; riêng nhóm 02 **11/11, 11/11, 6/6, 2/2**. Không ca skip/chưa
+  đo trong bộ DEMO đã chạy; accuracy model thật/null, không ngưỡng thật.
+- Ghi một bài `DEMO-TC10` qua `viec.ngan` thật trên CoreGia; báo cáo Core
+  có bytes/băm thật, gửi lại không nhân đếm. Node/KttCore giả **30/30**.
+- CLI chuẩn **0/12/mã 1**: giữ năm ca cũ thiếu cấu hình; bảy ca tệp con thiếu
+  cửa Core. Máy sạch Windows import/cài SDK/không bytecode đạt, vẫn CLI
+  0/12/mã 1. Không tính cổng lỗi là đạt; Linux/Core thật chưa kiểm.
+- Artifact: `TC-10-KET-QUA-DEMO.json`, `TC-10-MAY-SACH-WINDOWS.json`,
+  `TC-10-KIEM-CHUNG.md`. Đã kiểm bằng Core giả (CoreGia); 0 Cloud/provider
+  thật. Không sửa Core/SDK/schema chung/ma-nguon, không commit/push.

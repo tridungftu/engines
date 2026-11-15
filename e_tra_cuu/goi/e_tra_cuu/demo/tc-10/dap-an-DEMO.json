@@ -1,0 +1,850 @@
+{
+  "phien_ban": 1,
+  "nhan": "DEMO",
+  "da_duyet_nghiep_vu": false,
+  "nguong_that_da_duyet": false,
+  "nhom_duoc_kich_hoat": [],
+  "ghi_chu": "Đáp án kiểm cơ chế, chưa nghiệm thu nghiệp vụ hoặc accuracy model thật.",
+  "dap_an": {
+    "PL-phap_ly_du_an": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "01",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "01",
+      "loai_de_xuat": "DEMO-phap_ly_du_an",
+      "ly_do": []
+    },
+    "PL-vay": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "02",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "02",
+      "loai_de_xuat": "DEMO-vay",
+      "ly_do": []
+    },
+    "PL-mua_hang": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "03",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "03",
+      "loai_de_xuat": "DEMO-mua_hang",
+      "ly_do": []
+    },
+    "PL-thue_may": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "03",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "03",
+      "loai_de_xuat": "DEMO-thue_may",
+      "ly_do": []
+    },
+    "PL-cong_trinh": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "04",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "04",
+      "loai_de_xuat": "DEMO-cong_trinh",
+      "ly_do": []
+    },
+    "PL-thiet_bi_lap_dat": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "04",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "04",
+      "loai_de_xuat": "DEMO-thiet_bi_lap_dat",
+      "ly_do": []
+    },
+    "PL-vat_tu_cdt_cap": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "04",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "04",
+      "loai_de_xuat": "DEMO-vat_tu_cdt_cap",
+      "ly_do": []
+    },
+    "PL-sua_chua_bao_tri": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "04",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "04",
+      "loai_de_xuat": "DEMO-sua_chua_bao_tri",
+      "ly_do": []
+    },
+    "PL-ban_nha": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "05",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "05",
+      "loai_de_xuat": "DEMO-ban_nha",
+      "ly_do": []
+    },
+    "PL-kcn": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "05",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "05",
+      "loai_de_xuat": "DEMO-kcn",
+      "ly_do": []
+    },
+    "PL-ban_nhua": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "05",
+      "giai_doan": "cho_phan_loai",
+      "nhom_de_xuat": "05",
+      "loai_de_xuat": null,
+      "ly_do": [
+        "CHO_KICH_HOAT"
+      ]
+    },
+    "PL-ban_dien_doc_lap": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "05",
+      "giai_doan": "cho_phan_loai",
+      "nhom_de_xuat": "05",
+      "loai_de_xuat": null,
+      "ly_do": [
+        "CHO_KICH_HOAT"
+      ]
+    },
+    "PL-cp": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "06",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "06",
+      "loai_de_xuat": "DEMO-cp",
+      "ly_do": []
+    },
+    "PL-tnhh": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "06",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "06",
+      "loai_de_xuat": "DEMO-tnhh",
+      "ly_do": []
+    },
+    "PL-quy_che_lao_dong": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "07",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "07",
+      "loai_de_xuat": "DEMO-quy_che_lao_dong",
+      "ly_do": []
+    },
+    "PL-nhan_su": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "07",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "07",
+      "loai_de_xuat": "DEMO-nhan_su",
+      "ly_do": []
+    },
+    "PL-quy_che_khac": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "08",
+      "giai_doan": "da_phan_loai",
+      "nhom_de_xuat": "08",
+      "loai_de_xuat": "DEMO-quy_che_khac",
+      "ly_do": []
+    },
+    "PL-vat-tu-thieu-cong-trinh": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "04",
+      "giai_doan": "cho_phan_loai",
+      "nhom_de_xuat": "04",
+      "loai_de_xuat": "DEMO-vat_tu_cdt_cap",
+      "ly_do": [
+        "THIEU_CONG_TRINH"
+      ]
+    },
+    "PL-sua-chua-thieu-cong-trinh": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "04",
+      "giai_doan": "cho_phan_loai",
+      "nhom_de_xuat": "04",
+      "loai_de_xuat": "DEMO-sua_chua_bao_tri",
+      "ly_do": [
+        "THIEU_CONG_TRINH"
+      ]
+    },
+    "PL-vay-chua-do": {
+      "chi_so": [
+        "phan_loai_dung"
+      ],
+      "nhom": "02",
+      "giai_doan": "cho_phan_loai",
+      "nhom_de_xuat": "02",
+      "loai_de_xuat": "DEMO-vay",
+      "ly_do": [
+        "CHUA_DO"
+      ]
+    },
+    "TL-Python-A": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 1000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "ngay",
+          "gia_tri": "2026-10-30",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        }
+      ],
+      "nhan": "xanh",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-VAY-A): 1.000.000 VND.\nNgày (DEMO-VAY-A): 2026-10-30."
+    },
+    "TL-Python-B": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-B",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 2000000,
+            "tien_te": "USD"
+          },
+          "don_vi": "USD",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-B có giá trị 2.000.000 USD, ngày 2026-11-01.",
+              "bat_dau": 109,
+              "ket_thuc": 172
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-B",
+          "truong": "ngay",
+          "gia_tri": "2026-11-01",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-B có giá trị 2.000.000 USD, ngày 2026-11-01.",
+              "bat_dau": 109,
+              "ket_thuc": 172
+            }
+          ]
+        }
+      ],
+      "nhan": "xanh",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-VAY-B): 2.000.000 USD.\nNgày (DEMO-VAY-B): 2026-11-01."
+    },
+    "TL-Local-A": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 1000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "ngay",
+          "gia_tri": "2026-10-30",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        }
+      ],
+      "nhan": "vang",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-VAY-A): 1.000.000 VND.\nNgày (DEMO-VAY-A): 2026-10-30."
+    },
+    "TL-Local-B": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-B",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 2000000,
+            "tien_te": "USD"
+          },
+          "don_vi": "USD",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-B có giá trị 2.000.000 USD, ngày 2026-11-01.",
+              "bat_dau": 109,
+              "ket_thuc": 172
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-B",
+          "truong": "ngay",
+          "gia_tri": "2026-11-01",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-B có giá trị 2.000.000 USD, ngày 2026-11-01.",
+              "bat_dau": 109,
+              "ket_thuc": 172
+            }
+          ]
+        }
+      ],
+      "nhan": "vang",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-VAY-B): 2.000.000 USD.\nNgày (DEMO-VAY-B): 2026-11-01."
+    },
+    "TL-Local-tang-1": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 1000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "ngay",
+          "gia_tri": "2026-10-30",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        }
+      ],
+      "nhan": "vang",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-VAY-A): 1.000.000 VND.\nNgày (DEMO-VAY-A): 2026-10-30."
+    },
+    "TL-Local-tang-3": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 1000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "ngay",
+          "gia_tri": "2026-10-30",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        }
+      ],
+      "nhan": "vang",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-VAY-A): 1.000.000 VND.\nNgày (DEMO-VAY-A): 2026-10-30."
+    },
+    "TL-khong-dap-an": {
+      "chi_so": [
+        "tu_choi_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [],
+      "nhan": null,
+      "co_mau_thuan": false,
+      "tra_loi": null
+    },
+    "TL-het-hieu-luc": {
+      "chi_so": [
+        "tu_choi_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [],
+      "nhan": null,
+      "co_mau_thuan": false,
+      "tra_loi": null
+    },
+    "TL-phien-ban-moi": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 2000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "2",
+              "bam_goc": "sha256:7098f18fd1eea997a81157a4b15a0d5c70a7dea917cd5f7078531c1b27c625c9",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 2.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "ngay",
+          "gia_tri": "2026-10-30",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "2",
+              "bam_goc": "sha256:7098f18fd1eea997a81157a4b15a0d5c70a7dea917cd5f7078531c1b27c625c9",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 2.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        }
+      ],
+      "nhan": "xanh",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-VAY-A): 2.000.000 VND.\nNgày (DEMO-VAY-A): 2026-10-30."
+    },
+    "TL-van-ban-cho-duyet": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 1000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "ngay",
+          "gia_tri": "2026-10-30",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        }
+      ],
+      "nhan": "vang",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-VAY-A): 1.000.000 VND.\nNgày (DEMO-VAY-A): 2026-10-30."
+    },
+    "TL-nhan-su-Local": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "07",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-NS-01",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 1000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:4f2656525d6a252f1a21e3ce4ae993064d6992d5370b20b2373976316801641c",
+              "cau": "Nhân sự DEMO-NS-01 có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 106
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-NS-01",
+          "truong": "ngay",
+          "gia_tri": "2026-10-30",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:4f2656525d6a252f1a21e3ce4ae993064d6992d5370b20b2373976316801641c",
+              "cau": "Nhân sự DEMO-NS-01 có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 106
+            }
+          ]
+        }
+      ],
+      "nhan": "vang",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-NS-01): 1.000.000 VND.\nNgày (DEMO-NS-01): 2026-10-30."
+    },
+    "TL-mau-thuan-Python": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 1000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 2000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-2",
+              "phien_ban_nguon": "2",
+              "bam_goc": "sha256:7098f18fd1eea997a81157a4b15a0d5c70a7dea917cd5f7078531c1b27c625c9",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 2.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        }
+      ],
+      "nhan": "vang",
+      "co_mau_thuan": true,
+      "tra_loi": "Có mâu thuẫn trong bằng chứng; Anh cần duyệt các giá trị sau.\nGiá trị (DEMO-VAY-A): 1.000.000 VND.\nGiá trị (DEMO-VAY-A): 2.000.000 VND."
+    },
+    "TL-mau-thuan-Local": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 1000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 2000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-2",
+              "phien_ban_nguon": "2",
+              "bam_goc": "sha256:7098f18fd1eea997a81157a4b15a0d5c70a7dea917cd5f7078531c1b27c625c9",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 2.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        }
+      ],
+      "nhan": "vang",
+      "co_mau_thuan": true,
+      "tra_loi": "Có mâu thuẫn trong bằng chứng; Anh cần duyệt các giá trị sau.\nGiá trị (DEMO-VAY-A): 1.000.000 VND.\nGiá trị (DEMO-VAY-A): 2.000.000 VND."
+    },
+    "TL-phu-thuoc-thoi-diem": {
+      "chi_so": [
+        "tra_loi_dung",
+        "trich_dan_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "gia_tri",
+          "gia_tri": {
+            "so": 1000000,
+            "tien_te": "VND"
+          },
+          "don_vi": "VND",
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        },
+        {
+          "thuc_the": "DEMO-VAY-A",
+          "truong": "ngay",
+          "gia_tri": "2026-10-30",
+          "don_vi": null,
+          "can_cu": [
+            {
+              "ma_nguon": "DEMO-NGUON-1",
+              "phien_ban_nguon": "1",
+              "bam_goc": "sha256:1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf",
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 45,
+              "ket_thuc": 108
+            }
+          ]
+        }
+      ],
+      "nhan": "vang",
+      "co_mau_thuan": false,
+      "tra_loi": "Giá trị (DEMO-VAY-A): 1.000.000 VND.\nNgày (DEMO-VAY-A): 2026-10-30."
+    },
+    "TL-tu-choi-gia_tri": {
+      "chi_so": [
+        "tu_choi_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [],
+      "nhan": null,
+      "co_mau_thuan": false,
+      "tra_loi": null
+    },
+    "TL-tu-choi-offset": {
+      "chi_so": [
+        "tu_choi_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [],
+      "nhan": null,
+      "co_mau_thuan": false,
+      "tra_loi": null
+    },
+    "TL-tu-choi-ngay": {
+      "chi_so": [
+        "tu_choi_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [],
+      "nhan": null,
+      "co_mau_thuan": false,
+      "tra_loi": null
+    },
+    "TL-tu-choi-quote": {
+      "chi_so": [
+        "tu_choi_dung"
+      ],
+      "nhom": "02",
+      "khang_dinh": [],
+      "nhan": null,
+      "co_mau_thuan": false,
+      "tra_loi": null
+    }
+  }
+}

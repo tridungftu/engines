@@ -1,4 +1,59 @@
-# Nguồn và phụ thuộc hiện hành — TC-S22, 15/11/2026
+# Nguồn và phụ thuộc hiện hành — TC-10, 15/11/2026
+
+TC-10 chỉ sửa DEMO/manifest, tests/công cụ kiểm và tài liệu; **0 tệp Python/JS
+runtime thay đổi**. Không sửa Core, SDK, schema chung hoặc nguồn cũ. Các bảng
+TC-S22 và những lát trước bên dưới là lịch sử tại thời điểm tương ứng.
+
+- `requirements.lock` giữ nguyên: duy nhất SDK 2.2.0 wheel repo, SHA nguyên
+  bytes `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`,
+  đã khớp `SHA256SUMS.txt`. Runtime còn lại chỉ thư viện chuẩn Python. Không
+  thêm dependency, nguồn ngoài, model, giấy phép mới hoặc tải mạng.
+- Dependency test giữ đúng `tests/requirements.lock` đã có ở TC-S22; phiên này
+  chép offline distribution đã cài trên máy vào venv sau khi đối chiếu từng
+  version, không `--system-site-packages`, không cài thư viện mới. Venv máy
+  sạch riêng chỉ SDK/pip và thư viện chuẩn, không giả có pytest/jsonschema.
+- Bộ `demo/tc-10/` do công cụ `tests/tao_bo_demo_tc_10.py` tạo từ giá trị DEMO
+  đặt trước; generator không import engine/model hoặc đọc đáp án runtime.
+  Đáp án riêng `dap-an-DEMO.json` **chưa được nghiệp vụ duyệt**. Băm raw bytes
+  của nguồn/ca/đáp án ở `bam-DEMO.json`; không đổi CRLF khi kiểm dữ liệu.
+- `demo/tc-10/cong-chuan/` do `tests/dong_goi_vi_du_tc_10.py` đóng băng từ
+  CoreGia + Local giả, qua handler Hỏi AI AI-12 trong repo; không sửa consumer
+  hoặc ép lại phong bì sau kiểm. `bam-DEMO.json` ở đó ghim bytes thật mọi
+  tệp fixture/snapshot/nguồn. Cấu hình và quyền giả được loader trong tests
+  cấp ngoài payload, không thành default runtime. Giữ năm ví dụ nhận; thêm
+  bảy ví dụ tệp con, đủ tám năng lực. CLI chuẩn vẫn lỗi 0/12 như biên bản.
+- Hai mẫu NGAN-0 **tiếp tục nguyên trạng trong LUU-TRU/TC-S22** theo chuyển
+  SDK 2.2.0; không đưa cổng tạm vào gói. CoreGia dùng ngăn SDK thật trong RAM
+  và `dat_cau_hinh`; bài đo chỉ ghi metadata/bốn cặp tử mẫu/tham chiếu báo cáo
+  vào `dot_kiem`. Không đặt thời hạn/xóa khi TC-Q06 chưa chốt.
+- Bộ chấm độc lập kiểm giá trị, thực thể, tiền tệ, ngày, câu trích/offset,
+  nguồn/phiên bản/băm và hàng chờ. 12/12 trả lời, 12/12 trích dẫn, 6/6 từ chối,
+  20/20 phân loại là số đo **cơ chế DEMO giả**, không accuracy model thật,
+  không trung bình hoặc ngưỡng kích hoạt. `accuracy_model_that=null`.
+- Kiểm cuối TC-10: **1330 passed, 0 skipped**; kiểm độc lập mã **0**, kiểm kê
+  **141/141** tệp khớp bytes nguyên trạng; Node/KttCore giả **30/30**. Đã kiểm
+  bằng Core giả (CoreGia); không lấy số test này làm độ chính xác nghiệp vụ.
+- Công cụ máy sạch `.cmd/.sh` ASCII dùng cùng Python thư viện chuẩn, venv và
+  staging tạm được kiểm nằm trong workspace, dọn trong `finally`. Windows
+  cài offline/import gói riêng/không bytecode đạt; CLI 0/12/mã 1. Git Bash
+  chỉ kiểm cú pháp `.sh`; Linux/WSL không có, **chưa kiểm Linux**. Pytest,
+  harness và Node/KttCore giả chạy riêng; chưa Core/RLS/model/trình duyệt thật.
+
+Bảng so băm hiện hành TC-10 dưới đây **chỉ thay CRLF→LF**, không strip,
+không đổi Unicode/khoảng trắng. Test kiểm cả sáu cặp; hai bản ngăn ở lưu trữ,
+bốn schema ở gói. `sql/kiem_ke.json` có bytes + SHA-256 **nguyên trạng** mọi
+tệp gói trừ chính kiểm kê, cập nhật sau khi tài liệu/DEMO thay đổi.
+
+| Nguồn repo | Bản chép | SHA-256 sau CRLF→LF |
+|---|---|---|
+| `_chung/mau-ma/ngan.py` | `e_tra_cuu/LUU-TRU/TC-S22/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
+| `_chung/mau-ma/cau_hinh.py` | `e_tra_cuu/LUU-TRU/TC-S22/cau_hinh.py` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
+| `_chung/contract/van_ban_tai_lieu.schema.json` | `contract/van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
+| `_chung/contract/yeu_cau_ai.schema.json` | `contract/yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
+| `_chung/contract/tra_loi_ai.schema.json` | `contract/tra_loi_ai.schema.json` | `5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f` |
+| `_chung/contract/ho_so_tra_cuu.schema.json` | `contract/ho_so_tra_cuu.schema.json` | `2364deaf44c8fe4923640f77523e5b82c91daca27d90d7c7a6c018921df28ea9` |
+
+## Nguồn và phụ thuộc TC-S22 (lịch sử trước TC-10)
 
 Phần này thay thông tin cổng tạm/SDK 2.0 trong lịch sử bên dưới. Gói 0.2.0
 chỉ dùng thư viện chuẩn Python ≥3.11 và `kho_tri_thuc_sdk==2.2.0`.

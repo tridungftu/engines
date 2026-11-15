@@ -358,6 +358,396 @@
       "tham_so": {
         "bam_yeu_cau": "sha256:8e1c38792aa61b489b1ef9f7271fa9ce7d3b8b28a2e43dd0dc8d3770f33e0cec"
       }
+    },
+    {
+      "nang_luc": "tra_cuu.cat_doan@1",
+      "ten": "TC10 DEMO tệp con — cat-doan",
+      "dau_vao": {
+        "loai": "ho_so_tra_cuu",
+        "ho_so_tra_cuu": {
+          "phien_ban": 1,
+          "ma_yeu_cau": "DEMO-YC-cat_doan",
+          "tac_vu": "cat_doan",
+          "giai_doan": "da_nhan",
+          "ho_so": {
+            "tep_id": "tep-6",
+            "ten": "ho-so-tra-cuu.json",
+            "mime": "application/json",
+            "kich_thuoc": 2458
+          },
+          "bam_ho_so": "sha256:3c83d66338e75e3ff8a42e47ff21801179a36df7900c25b20a70473e2d041c37",
+          "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+          "bam_danh_muc": null,
+          "phien_ban_engine": "e_tra_cuu 0.2.0",
+          "tom_tat": {
+            "trang_thai": null,
+            "so_doan": null,
+            "so_ung_vien": null,
+            "tang": null,
+            "co_can_cu": null,
+            "co_mau_thuan": null,
+            "can_duyet": null,
+            "nhan": null
+          },
+          "canh_bao": []
+        }
+      },
+      "tham_so": {
+        "do_dai_muc_tieu": 200
+      }
+    },
+    {
+      "nang_luc": "tra_cuu.chuan_bi_ai@1",
+      "ten": "TC10 DEMO tệp con — chuan-bi-ai",
+      "dau_vao": {
+        "loai": "ho_so_tra_cuu",
+        "ho_so_tra_cuu": {
+          "phien_ban": 1,
+          "ma_yeu_cau": "DEMO-YC-phan_loai",
+          "tac_vu": "phan_loai",
+          "giai_doan": "da_nhan",
+          "ho_so": {
+            "tep_id": "tep-6",
+            "ten": "ho-so-tra-cuu.json",
+            "mime": "application/json",
+            "kich_thuoc": 2928
+          },
+          "bam_ho_so": "sha256:e957bd3ba0ad6c126fc22ccdc5379a98d211306873143cb6db086b1e6e06b6b9",
+          "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+          "bam_danh_muc": "sha256:f9d4e2e697ff78b3d90f221ecb1363f06d552950abbbdc0aad18a9a832865735",
+          "phien_ban_engine": "e_tra_cuu 0.2.0",
+          "tom_tat": {
+            "trang_thai": null,
+            "so_doan": null,
+            "so_ung_vien": null,
+            "tang": null,
+            "co_can_cu": null,
+            "co_mau_thuan": null,
+            "can_duyet": null,
+            "nhan": null
+          },
+          "canh_bao": []
+        }
+      },
+      "tham_so": {
+        "ma_prompt": "demo.tra_cuu",
+        "phien_ban_prompt": "DEMO-1",
+        "prompt": "DEMO: Đề xuất theo tác vụ và khuôn, dẫn chứng nguyên văn; thiếu thì để trống.",
+        "model_uu_tien": "DEMO-model-local",
+        "tac_vu": "phan_loai"
+      }
+    },
+    {
+      "nang_luc": "tra_cuu.phan_tich_cau_hoi@1",
+      "ten": "TC10 DEMO tệp con — phan-tich-cau-hoi",
+      "dau_vao": {
+        "loai": "tra_loi_ai",
+        "tra_loi_ai": {
+          "phien_ban": 1,
+          "trang_thai": "co_can_cu",
+          "tra_loi": "DEMO",
+          "du_lieu": {
+            "ham_de_xuat": [
+              {
+                "phien_ban": "1",
+                "ten": "m9.gia_tri",
+                "tham_so": {
+                  "ma_khoan_vay": "DEMO-VAY-A"
+                }
+              }
+            ],
+            "phu_thuoc_thoi_diem": false,
+            "thoi_diem": "2026-11-15T12:51:00+07:00",
+            "thuc_the": [
+              {
+                "gia_tri": "DEMO-VAY-A",
+                "loai": "khoan_vay",
+                "ma": "DEMO-VAY-A"
+              }
+            ],
+            "y_dinh": "gia_tri"
+          },
+          "trich_dan": [
+            {
+              "cau": "Giá trị hợp đồng DEMO-VAY-A là bao nhiêu VND?",
+              "bat_dau": 585,
+              "ket_thuc": 630
+            }
+          ],
+          "kiem_trich_dan": {
+            "dat": true,
+            "loi": []
+          },
+          "nha_cung_cap": "local",
+          "model": "DEMO-model-local",
+          "ly_do_chon_model": "DEMO-do-Core-dieu-phoi",
+          "ma_prompt": "demo.tra_cuu",
+          "phien_ban_prompt": "DEMO-1",
+          "phien_ban_engine": "e_hoi_ai 0.12.0",
+          "bam_dau_vao": "sha256:5484f6928ae3622db83c0309534270647323d72c18b63ead7956cc52c0bb8ff4",
+          "chuyen_tiep": {
+            "tra_cuu": {
+              "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+              "bam_ho_so": "sha256:a489c230e3820c47db089449c4cceec6cf07b0bda0bdfea0d37af72b2af1101c",
+              "bam_ngu_canh_ai": "sha256:4c951124d9a8cb7ef159bfded0330e29ebd08acc2baf04741f6eb48c3f982275",
+              "ho_so": {
+                "kich_thuoc": 4565,
+                "mime": "application/json",
+                "ten": "ho-so-chuan-bi-ai.json",
+                "tep_id": "tep-8"
+              },
+              "ma_yeu_cau": "DEMO-YC-phan_tich_cau_hoi",
+              "phien_ban": 1,
+              "tac_vu": "phan_tich_cau_hoi"
+            }
+          },
+          "canh_bao": []
+        }
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "tra_cuu.xep_hang_lai@1",
+      "ten": "TC10 DEMO tệp con — xep-hang-lai",
+      "dau_vao": {
+        "loai": "tra_loi_ai",
+        "tra_loi_ai": {
+          "phien_ban": 1,
+          "trang_thai": "co_can_cu",
+          "tra_loi": "DEMO",
+          "du_lieu": {
+            "xep_hang": [
+              {
+                "diem": 0.5,
+                "ma_ung_vien": "DEMO-UV-1"
+              }
+            ]
+          },
+          "trich_dan": [
+            {
+              "cau": "Công ty DEMO Ánh Dương\nHợp đồng DEMO-VAY-A.\nGiá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 1179,
+              "ket_thuc": 1262
+            }
+          ],
+          "kiem_trich_dan": {
+            "dat": true,
+            "loi": []
+          },
+          "nha_cung_cap": "local",
+          "model": "DEMO-model-local",
+          "ly_do_chon_model": "DEMO-do-Core-dieu-phoi",
+          "ma_prompt": "demo.tra_cuu",
+          "phien_ban_prompt": "DEMO-1",
+          "phien_ban_engine": "e_hoi_ai 0.12.0",
+          "bam_dau_vao": "sha256:8c83912e81426551d14bdaea7e45f1f5369c99ea0a0018709a6e342b47225c53",
+          "chuyen_tiep": {
+            "tra_cuu": {
+              "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+              "bam_ho_so": "sha256:867c3371a4df4fbea09feb196c0827832c213d6ae3afbcce8236b3c114159e66",
+              "bam_ngu_canh_ai": "sha256:2dd4253db4993826088187a8377c35f78e8c1e59631a90a2ebe124a7d51aeba8",
+              "ho_so": {
+                "kich_thuoc": 6626,
+                "mime": "application/json",
+                "ten": "ho-so-chuan-bi-ai.json",
+                "tep_id": "tep-8"
+              },
+              "ma_yeu_cau": "DEMO-YC-xep_hang_lai",
+              "phien_ban": 1,
+              "tac_vu": "xep_hang_lai"
+            }
+          },
+          "canh_bao": []
+        }
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "tra_cuu.phan_loai_tai_lieu@1",
+      "ten": "TC10 DEMO tệp con — phan-loai",
+      "dau_vao": {
+        "loai": "tra_loi_ai",
+        "tra_loi_ai": {
+          "phien_ban": 1,
+          "trang_thai": "co_can_cu",
+          "tra_loi": "DEMO",
+          "du_lieu": {
+            "can_cu": [
+              {
+                "bat_dau": 2991,
+                "cau": "Bên ký: Công ty DEMO Ánh Dương (DEMO-P).\nHợp đồng tín dụng DEMO.\nĐối tượng DEMO-DT; Công trình DEMO-CT-01 tại địa điểm DEMO.",
+                "ket_thuc": 3115,
+                "ma_doan": "tc-ai-02615e84e4b354f229984d7fefb083eea530636509253b1862a14c320e706ff0",
+                "ma_nguon": "DEMO-NGUON-1"
+              }
+            ],
+            "de_nghi_chuyen_bo": false,
+            "diem": 0.95,
+            "doi_tuong": "DEMO-DT",
+            "loai_de_xuat": "DEMO-vay",
+            "ly_do_cho": [],
+            "nhom_de_xuat": "02"
+          },
+          "trich_dan": [
+            {
+              "cau": "Bên ký: Công ty DEMO Ánh Dương (DEMO-P).\nHợp đồng tín dụng DEMO.\nĐối tượng DEMO-DT; Công trình DEMO-CT-01 tại địa điểm DEMO.",
+              "bat_dau": 2991,
+              "ket_thuc": 3115
+            }
+          ],
+          "kiem_trich_dan": {
+            "dat": true,
+            "loi": []
+          },
+          "nha_cung_cap": "local",
+          "model": "DEMO-model-local",
+          "ly_do_chon_model": "DEMO-do-Core-dieu-phoi",
+          "ma_prompt": "demo.tra_cuu",
+          "phien_ban_prompt": "DEMO-1",
+          "phien_ban_engine": "e_hoi_ai 0.12.0",
+          "bam_dau_vao": "sha256:5f66341c0f8584cc8dd944a322ec9fb82973b095c32a63bdf22b3306923d6a35",
+          "chuyen_tiep": {
+            "tra_cuu": {
+              "bam_cau_hinh": "sha256:9a61d918147c16a4c872da562fd8ea2338d9730b64e305410fb1ae06be76cee4",
+              "bam_ho_so": "sha256:8f978ee4ba093147017d04d7cc446ffd522680cd576e66a69bcfec38549276d7",
+              "bam_ngu_canh_ai": "sha256:d421735aff88abc96bcfb892e7fd9296572b4fda09e21ae51fc0a92de4e037aa",
+              "ho_so": {
+                "kich_thuoc": 11451,
+                "mime": "application/json",
+                "ten": "ho-so-chuan-bi-ai.json",
+                "tep_id": "tep-10"
+              },
+              "ma_yeu_cau": "DEMO-YC-phan_loai",
+              "phien_ban": 1,
+              "tac_vu": "phan_loai"
+            }
+          },
+          "canh_bao": []
+        }
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "tra_cuu.soan_tra_loi@1",
+      "ten": "TC10 DEMO tệp con — soan-tra-loi",
+      "dau_vao": {
+        "loai": "tra_loi_ai",
+        "tra_loi_ai": {
+          "phien_ban": 1,
+          "trang_thai": "co_can_cu",
+          "tra_loi": "DEMO",
+          "du_lieu": {
+            "co_mau_thuan": false,
+            "khang_dinh": [
+              {
+                "can_cu": [
+                  {
+                    "bat_dau": 1173,
+                    "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+                    "ket_thuc": 1236,
+                    "ma_doan": "tc-ai-b8b1bbff2f0af7e598ccab8c2017e5492676306f4ed4bed6137e4bea7196f1ec",
+                    "ma_nguon": "DEMO-NGUON-1"
+                  }
+                ],
+                "don_vi": "VND",
+                "gia_tri": {
+                  "so": 1000000,
+                  "tien_te": "VND"
+                },
+                "thuc_the": "DEMO-VAY-A",
+                "truong": "gia_tri"
+              },
+              {
+                "can_cu": [
+                  {
+                    "bat_dau": 1173,
+                    "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+                    "ket_thuc": 1236,
+                    "ma_doan": "tc-ai-b8b1bbff2f0af7e598ccab8c2017e5492676306f4ed4bed6137e4bea7196f1ec",
+                    "ma_nguon": "DEMO-NGUON-1"
+                  }
+                ],
+                "don_vi": null,
+                "gia_tri": "2026-10-30",
+                "thuc_the": "DEMO-VAY-A",
+                "truong": "ngay"
+              }
+            ],
+            "tra_loi": "Giá trị (DEMO-VAY-A): 1.000.000 VND.\nNgày (DEMO-VAY-A): 2026-10-30."
+          },
+          "trich_dan": [
+            {
+              "cau": "Khoản vay DEMO-VAY-A có giá trị 1.000.000 VND, ngày 2026-10-30.",
+              "bat_dau": 1173,
+              "ket_thuc": 1236
+            }
+          ],
+          "kiem_trich_dan": {
+            "dat": true,
+            "loi": []
+          },
+          "nha_cung_cap": "local",
+          "model": "DEMO-model-local",
+          "ly_do_chon_model": "DEMO-do-Core-dieu-phoi",
+          "ma_prompt": "demo.tra_cuu",
+          "phien_ban_prompt": "DEMO-1",
+          "phien_ban_engine": "e_hoi_ai 0.12.0",
+          "bam_dau_vao": "sha256:00d757703b63e54cf650fc8470d2709dc0b89543ab8c82326f93144e36c6d104",
+          "chuyen_tiep": {
+            "tra_cuu": {
+              "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+              "bam_ho_so": "sha256:ef9f0a50a5590fef9d47c0cb095abe49651788c106e13481caa9f6a46d1a7121",
+              "bam_ngu_canh_ai": "sha256:f582ce86d690b6840b19fb1074a5003c32a8f4e0a74c02550bdc1d15da675096",
+              "ho_so": {
+                "kich_thuoc": 8318,
+                "mime": "application/json",
+                "ten": "ho-so-chuan-bi-ai.json",
+                "tep_id": "tep-8"
+              },
+              "ma_yeu_cau": "DEMO-YC-soan_tra_loi",
+              "phien_ban": 1,
+              "tac_vu": "soan_tra_loi"
+            }
+          },
+          "canh_bao": []
+        }
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "tra_cuu.xuat_ket_qua@1",
+      "ten": "TC10 DEMO tệp con — xuat-ket-qua",
+      "dau_vao": {
+        "loai": "ho_so_tra_cuu",
+        "ho_so_tra_cuu": {
+          "phien_ban": 1,
+          "ma_yeu_cau": "DEMO-YC-soan_tra_loi",
+          "tac_vu": "soan_tra_loi",
+          "giai_doan": "da_soan",
+          "ho_so": {
+            "tep_id": "tep-11",
+            "ten": "ho-so-tra-loi.json",
+            "mime": "application/json",
+            "kich_thuoc": 12787
+          },
+          "bam_ho_so": "sha256:48b90bd2e7a27d319e4016ba5e9ecf636ae8a8235b461ed11eba4af559e59b23",
+          "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+          "bam_danh_muc": null,
+          "phien_ban_engine": "e_tra_cuu 0.2.0",
+          "tom_tat": {
+            "trang_thai": "co_can_cu",
+            "so_doan": null,
+            "so_ung_vien": null,
+            "tang": 2,
+            "co_can_cu": true,
+            "co_mau_thuan": false,
+            "can_duyet": true,
+            "nhan": "vang"
+          },
+          "canh_bao": []
+        }
+      },
+      "tham_so": {}
     }
   ],
   "bi_mat": [],

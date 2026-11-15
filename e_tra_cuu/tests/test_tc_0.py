@@ -62,7 +62,7 @@ def chay_cong_cau_hinh(gia_tri=None, *, hong=None):
 
 def test_phieu_khung_va_khai_sdk_rieng():
     assert kiem_phieu(chay.app.phieu, GOI) == []
-    assert len(chay.app.phieu["chay_thu_demo"]) == 5
+    assert len(chay.app.phieu["chay_thu_demo"]) == 12  # TC-10 giữ 5 ca nhận, thêm 7 ca tệp con.
     assert len(chay.app.phieu["loai_du_lieu_rieng"]) == 4
     assert len(chay.app.phieu["nang_luc"]) == 8
     assert chay.app.phieu["tuong_thich"]["sdk"] == ">=2.2.0 <3.0.0"

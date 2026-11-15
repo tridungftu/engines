@@ -486,3 +486,277 @@ def ma_hoa_json_noi_bo(gia_tri, *, loai, kiem_huy):
         return bytes(dem)
     finally:
         dem.clear()
+
+
+# MASK-B2 — khối mở rộng riêng, B3 không sửa khối này.
+# Giữ nguyên cổng ZIP/XML B1 và ba tệp runtime theo phiếu. Bản chiếu ZIP chỉ
+# dùng RAM để B1 kiểm lại payload; kết quả luôn giữ bytes/offset ZIP GỐC.
+# Không sửa hoặc monkey-patch module zip_an_toan/xml_an_toan.
+_doc_zip_truoc_b2 = doc_zip
+_loai_phan_truoc_b2 = _loai_phan
+_kiem_node_truoc_b2 = _kiem_node
+_kiem_thuoc_tinh_truoc_b2 = _kiem_thuoc_tinh
+_kiem_ten_truoc_b2 = _kiem_ten
+
+
+def _kiem_ten(ten):
+    # Nợ giới hạn tên B1 được chặn tại cổng chung và relationship trước đọc.
+    if len(ten) > 256:
+        _sai()
+    return _kiem_ten_truoc_b2(ten)
+
+
+def doc_zip(du_lieu, kiem_huy):
+    """Thêm bit 1–2 DEFLATE và bit 3 descriptor cổ điển có đối chiếu.
+
+    Không bỏ header lạ để làm hợp lệ: mọi trường gốc phải bằng nhau trước
+    khi chiếu. B1 kiểm lại EOF, CRC, kích thước, ratio, symlink, tên và trần.
+    le_cuoi trong kết quả bao cả descriptor; payload nén chỉ dài so_byte_nen.
+    """
+    import struct
+    from .zip_an_toan import _kiem_danh_muc, GoiZip, PhanZip
+
+    le, so = _kiem_danh_muc(du_lieu, kiem_huy)
+    muc, chieu, pos = [], bytearray(), le
+    try:
+        for _ in range(so):
+            kiem_huy()
+            (_, tao, can, co, cach, gio, ngay, crc, nen, dai,
+             n, x, c, dia, noi_bo, ngoai, dau) = struct.unpack_from("<4s6H3I5H2I", du_lieu, pos)
+            if co & ~0x80e or cach != 8 and co & 6:
+                _sai()
+            if dau + 30 > le or du_lieu[dau:dau + 4] != b"PK\x03\x04":
+                _sai()
+            (_, lcan, lco, lcach, lgio, lngay, lcrc, lnen,
+             ldai, ln, lx) = struct.unpack_from("<4s5H3I2H", du_lieu, dau)
+            if (lcan, lco, lcach, lgio, lngay, ln, lx) != (can, co, cach, gio, ngay, n, 0):
+                _sai()
+            ten_raw = du_lieu[pos + 46:pos + 46 + n]
+            try:
+                _kiem_ten(ten_raw.decode("utf-8" if co & 0x800 else "ascii"))
+            except UnicodeError:
+                _sai()
+            bat = dau + 30 + ln
+            het = bat + nen
+            if het > le or du_lieu[dau + 30:bat] != ten_raw:
+                _sai()
+            if co & 8:
+                if can != 20 or (lcrc, lnen, ldai) not in ((0, 0, 0), (crc, nen, dai)):
+                    _sai()
+                # Descriptor có/không chữ ký đều phải khớp cả ba trường.
+                ds = []
+                if het + 16 <= le and du_lieu[het:het + 4] == b"PK\x07\x08" and struct.unpack_from("<3I", du_lieu, het + 4) == (crc, nen, dai):
+                    ds.append(het + 16)
+                if het + 12 <= le and struct.unpack_from("<3I", du_lieu, het) == (crc, nen, dai):
+                    ds.append(het + 12)
+                if len(ds) != 1:
+                    _sai()
+                cuoi = ds[0]
+            else:
+                if (lcrc, lnen, ldai) != (crc, nen, dai):
+                    _sai()
+                cuoi = het
+            muc.append((pos, dau, bat, het, cuoi, co, crc, nen, dai, n))
+            pos += 46 + n
+        # Không để phép chiếu che gap/overlap/record mồ côi của bản gốc.
+        cuoi = 0
+        vi_tri = {}
+        for p in sorted(muc, key=lambda p: p[1]):
+            kiem_huy()
+            cp, dau, bat, het, end, co, crc, nen, dai, n = p
+            if dau != cuoi:
+                _sai()
+            vi_tri[dau] = len(chieu)
+            header = bytearray(du_lieu[dau:bat])
+            struct.pack_into("<H", header, 6, co & 0x800)
+            struct.pack_into("<3I", header, 14, crc, nen, dai)
+            chieu.extend(header)
+            chieu.extend(du_lieu[bat:het])
+            cuoi = end
+        if cuoi != le:
+            _sai()
+        le_moi = len(chieu)
+        for cp, dau, bat, het, end, co, crc, nen, dai, n in muc:
+            kiem_huy()
+            header = bytearray(du_lieu[cp:cp + 46 + n])
+            struct.pack_into("<H", header, 8, co & 0x800)
+            struct.pack_into("<I", header, 42, vi_tri[dau])
+            chieu.extend(header)
+        chieu.extend(struct.pack("<4s4H2IH", b"PK\x05\x06", 0, 0, so, so,
+                                 len(chieu) - le_moi, le_moi, 0))
+        goi = _doc_zip_truoc_b2(bytes(chieu), kiem_huy)
+        phan = tuple(PhanZip(p.ten, p.phuong_thuc, p.crc, p.so_byte_nen, p.so_byte,
+                            m[1], m[2], m[4], m[0], m[0] + 46 + m[9], p.du_lieu)
+                     for p, m in zip(goi.phan, muc))
+        kiem_huy()
+        return GoiZip(du_lieu, phan, le)
+    finally:
+        chieu.clear()
+        muc.clear()
+
+
+def _loai_phan(ten):
+    from .xml_an_toan import A_NS
+    if ten == "word/theme/theme1.xml":
+        return _loai("theme_word", _CT_CHUNG + "theme+xml", A_NS, "theme", R_NS + "/theme")
+    return _loai_phan_truoc_b2(ten)
+
+
+def _kiem_node(root, spec, kiem_huy):
+    from .xml_word import kiem_cay_word, kiem_theme
+    if root.tag != spec.root:
+        _sai()
+    if spec.loai == "word":
+        kiem_cay_word(root, kiem_huy)
+    elif spec.loai == "theme_word":
+        kiem_theme(root, kiem_huy)
+    else:
+        _kiem_node_truoc_b2(root, spec, kiem_huy)
+
+
+def _kiem_thuoc_tinh(root, spec, kiem_huy):
+    # app chuẩn Word có bốn cờ bool và HyperlinkBase rỗng. Chỉ mở có kiểm,
+    # không nhận HyperlinkBase có URL hoặc text/attribute chưa phân loại.
+    if spec.loai == "app":
+        from .xml_word import kiem_properties
+        kiem_properties(root, "app", kiem_huy)
+    else:
+        _kiem_thuoc_tinh_truoc_b2(root, spec, kiem_huy)
+
+
+# MASK-B3: khối Excel riêng để lead gộp độc lập với reader Word MASK-B2.
+@dataclass(frozen=True, repr=False)
+class PhanZipExcel:
+    """le_cuoi là cuối payload; cuối local record gồm cả descriptor nếu có."""
+
+    phan: object = field(repr=False)
+    le_cuoi_ban_ghi: int
+    co: int
+
+
+@dataclass(frozen=True, repr=False)
+class GoiExcel:
+    goi: GoiTep = field(repr=False)
+    ban_ghi: tuple[PhanZipExcel, ...] = field(repr=False)
+
+
+def _doc_zip_excel(raw, kiem_huy):
+    """Dùng tiền kiểm/giải nén B1; kiểm thêm cờ nén và descriptor Office.
+
+    Không sửa bytes đầu vào hoặc thay cổng B1 toàn cục. B4 phải chép local
+    record tới le_cuoi_ban_ghi, không nhầm descriptor là payload DEFLATE.
+    """
+    import struct
+    from . import zip_an_toan as z
+
+    le, so = z._kiem_danh_muc(raw, kiem_huy)
+    muc, ban_ghi, da_co, tong, pos = [], [], set(), 0, le
+    try:
+        for _ in range(so):
+            kiem_huy()
+            (_, tao, can, co, cach, gio, ngay, crc, nen, dai,
+             n, x, c, dia, noi_bo, ngoai, dau) = struct.unpack_from('<4s6H3I5H2I', raw, pos)
+            if co & ~0x80e or (cach != 8 and co & 6):
+                _sai()
+            z._kiem_header(tao, can, co & 0x800, cach, gio, ngay, dia, noi_bo, ngoai)
+            if 0xffffffff in (nen, dai, dau):
+                _sai()
+            tong += dai
+            if (dai > z.PHAN_TOI_DA or tong > z.TONG_GIAI_NEN_TOI_DA
+                    or dai > z.TY_LE_TOI_DA * nen):
+                _vuot()
+            if cach == 0 and nen != dai:
+                _sai()
+            ten_byte = raw[pos + 46:pos + 46 + n]
+            try:
+                ten = ten_byte.decode('utf-8' if co & 0x800 else 'ascii')
+            except UnicodeError:
+                _sai()
+            chuan = _kiem_ten(ten)
+            if chuan in da_co:
+                _sai()
+            da_co.add(chuan)
+            if dau + 30 > le or raw[dau:dau + 4] != b'PK\x03\x04':
+                _sai()
+            (_, lc, lf, lm, lt, ld, lcrc, ln, ls, lten, lx) = struct.unpack_from('<4s5H3I2H', raw, dau)
+            if (lc, lf, lm, lt, ld, lten, lx) != (can, co, cach, gio, ngay, n, 0):
+                _sai()
+            if (lcrc, ln, ls) not in (((0, 0, 0), (crc, nen, dai)) if co & 8 else ((crc, nen, dai),)):
+                _sai()
+            bat_dau, het = dau + 30 + n, dau + 30 + n + nen
+            if het > le or raw[dau + 30:bat_dau] != ten_byte:
+                _sai()
+            cuoi = het
+            if co & 8:
+                # Descriptor cổ điển: có/không chữ ký; cả CRC và hai size phải khớp.
+                if raw[het:het + 4] == b'PK\x07\x08':
+                    cuoi += 4
+                if cuoi + 12 > le or struct.unpack_from('<3I', raw, cuoi) != (crc, nen, dai):
+                    _sai()
+                cuoi += 12
+            p = z.PhanZip(ten, cach, crc, nen, dai, dau, bat_dau, het, pos, pos + 46 + n)
+            muc.append(p)
+            ban_ghi.append(PhanZipExcel(p, cuoi, co))
+            pos += 46 + n
+        cuoi = 0
+        for b in sorted(ban_ghi, key=lambda b: b.phan.le_dau):
+            kiem_huy()
+            if b.phan.le_dau != cuoi:
+                _sai()
+            cuoi = b.le_cuoi_ban_ghi
+        if cuoi != le:
+            _sai()
+        ds, thuc = [], [0]
+        for p in muc:
+            data = z._giai_nen(raw, p, thuc, kiem_huy)
+            ds.append(z.PhanZip(p.ten, p.phuong_thuc, p.crc, p.so_byte_nen,
+                               p.so_byte, p.le_dau, p.le_du_lieu, p.le_cuoi,
+                               p.le_danh_muc, p.cuoi_danh_muc, data))
+        kiem_huy()
+        return z.GoiZip(raw, tuple(ds), le), tuple(ban_ghi)
+    finally:
+        muc.clear()
+        ban_ghi.clear()
+
+
+def doc_goi_excel(du_lieu, *, kiem_huy):
+    """Cổng B1 mở rộng có kiểm cho B3, chưa thay reader ngữ nghĩa Excel."""
+    from .xml_an_toan import A_NS
+
+    zip_goi, ban_ghi = _doc_zip_excel(du_lieu, kiem_huy)
+    loai, cay = {}, {}
+    try:
+        for p in zip_goi.phan:
+            kiem_huy()
+            if p.ten == 'xl/theme/theme1.xml':
+                spec = _loai('theme', _CT_CHUNG + 'theme+xml', A_NS, 'theme', R_NS + '/theme')
+            elif p.ten == 'xl/calcChain.xml':
+                spec = _loai('calcChain', _CT_S + 'calcChain+xml', S_NS, 'calcChain', R_NS + '/calcChain')
+            else:
+                spec = _loai_phan(p.ten)
+            if p.ten.startswith('word/'):
+                _sai()
+            loai[p.ten] = spec
+        if not {'[Content_Types].xml', '_rels/.rels', 'xl/workbook.xml',
+                'xl/_rels/workbook.xml.rels'} <= set(loai):
+            _sai()
+        ngan_sach = NganSachXML()
+        for p in zip_goi.phan:
+            spec = loai[p.ten]
+            root = doc_xml(p.du_lieu, namespace=spec.namespace,
+                           ngan_sach=ngan_sach, kiem_huy=kiem_huy)
+            if root.tag != spec.root:
+                _sai()
+            cay[p.ten] = root
+        _kieu_noi_dung(cay, loai)
+        qh = _quan_he(cay, loai, 'xl/workbook.xml', kiem_huy)
+        kiem_huy()
+        goi = GoiTep('xlsx', zip_goi, MappingProxyType(dict(cay)),
+                     MappingProxyType({k: MappingProxyType(v) for k, v in qh.items()}),
+                     MappingProxyType({'so_nut': ngan_sach.so_nut,
+                                       'so_ky_tu': ngan_sach.so_ky_tu,
+                                       'so_sheet': ngan_sach.so_sheet, 'so_o': ngan_sach.so_o}))
+        return GoiExcel(goi, ban_ghi)
+    finally:
+        loai.clear()
+        cay.clear()

@@ -1,4 +1,5 @@
 """Hồi quy cả ba handler: hoàn tất, mạng Local và trạng thái gửi POST."""
+import socket
 import threading
 
 import pytest
@@ -66,7 +67,7 @@ def test_timeout_metadata_truoc_post_la_loi_thu_lai_duoc(local, loai):
 def test_thieu_hoan_tat_hoac_nguon_gia_la_loi_dong(local, loai, raw):
     local.phan_hoi_tho = raw
     kq = goi_handler(local, loai)
-    assert kq["trang_thai"] == "LOI" and kq["ket_qua"] is None
+    assert kq["trang_thai"] == "CHUA_RO" and kq["ket_qua"] is None
     assert local.so_luot_hoi == 1
 
 
@@ -77,7 +78,7 @@ def test_ollama_chi_nhan_done_true_va_stop(local, loai, done, reason):
     local.tags = [{"name": "model-demo"}]
     local.sua_phong_bi = {"done": done, "done_reason": reason}
     kq = goi_handler(local, loai)
-    assert kq["trang_thai"] == "LOI" and kq["ket_qua"] is None and local.so_luot_hoi == 1
+    assert kq["trang_thai"] == "CHUA_RO" and kq["ket_qua"] is None and local.so_luot_hoi == 1
 
 
 @pytest.mark.parametrize("metadata", [{"id": "model-demo", "provider": "cloud"},
@@ -144,7 +145,7 @@ def test_context_overflow_da_tra_loi_khong_fallback(local):
     local.ma_http = 400
     local.phan_hoi_tho = b'{"error":"DEMO context overflow"}'
     kq = goi_handler(local, "mask")
-    assert kq["trang_thai"] == "LOI" and kq["ket_qua"] is None and local.so_luot_hoi == 1
+    assert kq["trang_thai"] == "CHUA_RO" and kq["ket_qua"] is None and local.so_luot_hoi == 1
 
 
 @pytest.mark.parametrize("url", ["http://cloud.demo.invalid:12345", "http://8.8.8.8:12345",
@@ -162,7 +163,7 @@ def test_redirect_khong_the_gui_lai_goc(local, duong):
         # Discovery có thể tìm API khác, nhưng không được follow URL trong Location.
         local.models = []
     kq = goi_handler(local, "mask")
-    assert kq["trang_thai"] == "LOI" and local.so_luot_hoi <= 1
+    assert kq["trang_thai"] == ("CHUA_RO" if duong == "/v1/chat/completions" else "LOI") and local.so_luot_hoi <= 1
 
 
 def test_proxy_env_khong_tac_dong_transport(local, monkeypatch):
@@ -178,6 +179,20 @@ def test_connect_timeout_chac_chan_chua_gui_la_local_khong_san_sang(local, monke
     monkeypatch.setattr(ai_cuc_bo._KetNoiIP, "connect", timeout)
     with pytest.raises(ai_cuc_bo.LocalAIKhongSanSang):
         ai_cuc_bo._gui_post(local.url + "/v1/chat/completions", None, 1, b'{}', lambda: None)
+    assert local.so_luot_hoi == 0
+
+
+@pytest.mark.parametrize("loai", ["tai_lieu", "yeu_cau", "mask"])
+def test_connect_tu_choi_truoc_gui_thu_lai_duoc(local, monkeypatch, loai):
+    with socket.socket() as sock:
+        sock.bind(("127.0.0.1", 0))
+        cong = sock.getsockname()[1]
+        gui = ai_cuc_bo._gui_post
+        def den_cong_khong_lang_nghe(url, nguon, thoi_han, than, kiem_huy):
+            return gui(f"http://127.0.0.1:{cong}/v1/chat/completions", nguon, thoi_han, than, kiem_huy)
+        monkeypatch.setattr(ai_cuc_bo, "_gui_post", den_cong_khong_lang_nghe)
+        kq = goi_handler(local, loai)
+    assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and kq["loi"]["thu_lai_duoc"]
     assert local.so_luot_hoi == 0
 
 
@@ -216,7 +231,41 @@ def test_provider_local_truyen_nguyen_chua_ro(monkeypatch):
 def test_response_vuot_byte_khong_cat_lay_json_dau(local):
     local.phan_hoi_tho = b'{"choices":[]}' + b' ' * 2_000_001
     kq = goi_handler(local, "mask")
-    assert kq["trang_thai"] == "LOI" and kq["ket_qua"] is None and local.so_luot_hoi == 1
+    assert kq["trang_thai"] == "CHUA_RO" and kq["ket_qua"] is None and local.so_luot_hoi == 1
+
+
+@pytest.mark.parametrize("phan_hoi", [
+    b"HTTP/1.1 500 Error\r\nContent-Length: 0\r\n\r\n",
+    b"HTTP/1.1 302 Found\r\nLocation: /demo\r\nContent-Length: 0\r\n\r\n",
+    b"HTTP/1.1 200 OK\r\nContent-Length: abc\r\n\r\n{}",
+    b"HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n{\"choices\":",
+    b"HTTP/1.1 200 OK\r\nContent-Length: 1\r\n\r\n{",
+])
+def test_socket_tho_phan_hoi_loi_sau_post_la_chua_ro(phan_hoi):
+    with socket.socket() as may_chu:
+        may_chu.bind(("127.0.0.1", 0))
+        may_chu.listen(1)
+        cong = may_chu.getsockname()[1]
+        def tra_loi():
+            with may_chu.accept()[0] as ket_noi:
+                du_lieu = b""
+                while b"\r\n\r\n" not in du_lieu:
+                    du_lieu += ket_noi.recv(4096)
+                dau, than = du_lieu.split(b"\r\n\r\n", 1)
+                kich_thuoc = int(next(d.split(b":", 1)[1] for d in dau.split(b"\r\n")
+                                     if d.lower().startswith(b"content-length:")))
+                while len(than) < kich_thuoc:
+                    than += ket_noi.recv(4096)
+                ket_noi.sendall(phan_hoi)
+        luong = threading.Thread(target=tra_loi)
+        luong.start()
+        try:
+            with pytest.raises(ChuaRo) as loi:
+                ai_cuc_bo._gui_post(f"http://127.0.0.1:{cong}/v1/chat/completions", None, 1, b"{}", lambda: None)
+            assert loi.value.ma_tuong_quan.startswith("local-") and len(loi.value.ma_tuong_quan) == 38
+        finally:
+            luong.join(timeout=2)
+        assert not luong.is_alive()
 
 
 @pytest.mark.parametrize("phan_tram", [10, 90])

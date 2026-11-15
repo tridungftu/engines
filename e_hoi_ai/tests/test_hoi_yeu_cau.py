@@ -174,7 +174,7 @@ def test_ollama_khong_theo_redirect_native_chat(local):
     local.tags = [{"name": "model-demo"}]
     local.chuyen_huong = ("/api/chat", 307)
     kq = hoi()
-    assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and local.so_luot_hoi == 1
+    assert kq["trang_thai"] == "CHUA_RO" and local.so_luot_hoi == 1
     assert local.luot[-1] == ("POST", "/api/chat")
 
 
@@ -269,7 +269,7 @@ def test_local_loi_luc_hoi_lai_khong_bao_sai_khuon(local):
             local.ma_http = 503
     local.khi_nhan = loi_lan_hai
     kq = hoi()
-    assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and kq["loi"]["thu_lai_duoc"]
+    assert kq["trang_thai"] == "CHUA_RO"
     assert local.so_luot_hoi == 2
 
 

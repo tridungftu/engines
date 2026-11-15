@@ -1,0 +1,70 @@
+MASK-B3 — kết quả thật ngày 15/11/2026, UTC+07
+Nhánh: codex/e_mask-mask-b3. PR: chờ lead mở. Không commit/push.
+Phạm vi: 3 tệp runtime được giao, chỉ DEMO; Cloud tắt.
+Mốc chốt kết quả: 15:36:14. Bắt đầu theo handoff: 14:47:00; 0,82 giờ.
+Phiếu: 6–8 giờ ƯỚC TÍNH, độ khó kho.
+
+Môi trường
+python --version
+Python 3.13.14
+python -m venv --system-site-packages .venv
+Mã thoát 0; dùng pytest có sẵn, không thêm dependency cho gói.
+.venv/Scripts/python -B -m pip install --no-index --no-deps docs/goi-gui-engine/sdk-2.0.0/kho_tri_thuc_sdk-2.0.0-py3-none-any.whl
+Successfully installed kho-tri-thuc-sdk-2.0.0
+Mã thoát 0. SDK import in 2.0.0.
+SHA-256 wheel: a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
+Khớp SHA256SUMS.txt; không mạng.
+
+Lượt cuối của các lệnh bắt buộc
+
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.2.0: có ví dụ chạy thử DEMO chưa đạt.
+0/2 ĐẠT; mã thoát 1. CLI chuẩn thiếu nguồn quyền như B1; không nới handler.
+
+.venv/Scripts/python -B -m pytest e_mask/tests -q
+1684 passed, 4 xfailed, 190 subtests passed in 156.15s (0:02:36)
+Mã thoát 0; 0 skipped. Bốn xfail strict held-out lớp quy tắc giữ nguyên.
+Trong tổng có 299 test mới B3; không coi xfail là kết quả Local hoặc quyền bật Cloud.
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+2/2 ĐẠT; mã thoát 0. Adapter quyền/ngăn DEMO ngoài gói.
+
+git diff --check
+Không có đầu ra; mã thoát 0.
+
+Lượt mục tiêu cuối sau bổ sung chặn CDATA
+.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_1.py::test_nguon_sha_truoc_sau_va_nguon_cu_nguyen_ven e_mask/tests/test_mask_b3.py -q --maxfail=3 --tb=short
+300 passed in 5.54s
+Mã thoát 0, gồm 299 B3 + 1 test nguồn cũ.
+
+Các lượt lỗi trung gian đã giải quyết, không giấu bằng bỏ test
+- Lượt B3 đầu: 179 failed, 65 passed, 33.05s; assertion mới so str(LoiNghiepVu) với riêng thong_diep nên nhiều ca chặn đúng bị ghi lỗi. Sửa assertion dùng thong_diep.
+- Lượt kế: 2 failed, 242 passed, 13.08s; oracle byte đảo lấy byte ngoài CR một byte, và fixture thêm nơi dùng shared chưa cập nhật count. Sửa oracle/fixture, giữ kiểm runtime.
+- Lượt B3 tiếp theo: 244 passed, 7.41s. Khi thêm fixture rich shared, có 1 failed, 281 passed, 8.72s do chuỗi thay fixture thiếu dấu cách trong XML; sửa fixture đầy đủ.
+- Sau bổ sung kiểm miền số/style: 295 passed, 4.49s. Sau rà lexical, thêm 4 ca CDATA phải chặn, tổng B3 thành 299.
+- Toàn bộ lượt đầu: 1 failed, 1668 passed, 4 xfailed, 190 subtests passed, 182.51s, mã 1; test B1 phát hiện NGUON chưa có SHA doc_tep mới. Cập nhật bảng B3, giữ bảng B1 lịch sử và test cũ.
+- Toàn bộ lượt kế: 1 failed, 1679 passed, 4 xfailed, 190 subtests passed, 148.37s, mã 1; test nguồn cũ đếm nhầm bốn dòng bảng B3 vào danh mục bảy nguồn MASK-1. Ghi đường nguồn B3 với tiền tố tương đối ./, giữ đúng đường/SHA và không sửa test cũ. Lượt cuối đạt như trên.
+
+Kiểm bổ sung
+- SHA bytes thực và LF trước–sau: 3 nguồn không đổi, 3 đích hiện hành khớp NGUON.
+- AST B1: 37/37 định nghĩa/câu lệnh trước khối B3 giữ nguyên.
+- UTF-8/AST/whitespace của 3 runtime + 2 test/helper: 5/5.
+- Fixture ZIP Office cờ 0x0006 và bit 3, descriptor có/không chữ ký, shared/styles/theme/core/app/custom/calcChain rỗng đọc qua; descriptor CRC/size/flags sai bị chặn.
+- Đúng/vượt thật 50/51 sheet, 20000/20001 ô nhiều sheet, 100000/100001 node tổng; 32767/32768 UTF-16 code unit không cắt.
+- Tất cả blocker không output một phần, lỗi Việt cố định không tên/path; hủy/ChuaRo truyền nguyên; không I/O/log/trạng thái bền trong reader, Ngan theo mẫu không đổi.
+
+Gói văn bản đã kiểm bằng Core giả (CoreGia). Reader B3 chỉ kiểm trực tiếp RAM,
+chưa nối hai lớp cho tệp, Core thật, Excel/Local thật hoặc Linux thực tế.
+Chưa benchmark RAM/thời gian từng giai đoạn ở biên trên máy đích; B10 còn phải đo.
+Cloud giữ tắt; không có lời gọi model/engine khác/mạng ngoài trong reader.

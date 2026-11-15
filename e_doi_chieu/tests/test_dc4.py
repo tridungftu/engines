@@ -147,9 +147,13 @@ def snapshot_so(m, r):
 def test_cap_giong_nhau_chua_ket_luan_sach(mau):
     r = so(mau)
     s = snapshot_so(mau, r)
-    assert s["giai_doan"] == "da_so" and s["diem_lech"] == []
-    assert s["tom_tat"]["so_diem"] == 0
-    assert all(v is None for k, v in s["tom_tat"].items() if k != "so_diem")
+    # DC-5 tiếp nối: nguyên văn giống nhau nhưng thiếu tiền bằng chữ,
+    # phải có điểm cần xem nội bộ thay vì hiểu danh sách rỗng là sạch.
+    assert s["giai_doan"] == "da_so"
+    assert all(d["nhom"] == "tien_trong_ban_ky" and d["muc_san"] == "can_xem" for d in s["diem_lech"])
+    assert s["tom_tat"]["so_diem"] == s["tom_tat"]["so_can_xem"] == 1
+    assert s["tom_tat"]["so_nghiem_trong"] == s["tom_tat"]["so_hinh_thuc"] == s["tom_tat"]["so_nhieu_ocr"] == 0
+    assert s["tom_tat"]["so_vung_sua_tay"] is None and s["tom_tat"]["so_trang_ocr_kem"] is None
     assert s["kiem_tra"]["so_van_ban"] == "dat" and s["kiem_tra"]["quy_tac_cung"] == "chua_kiem"
     assert s["kiem_tra"]["trang"] == "chua_kiem"
     assert s["ket_luan"] is None and not s["da_kiem_du"] and s["de_nghi_chan"]
@@ -170,7 +174,8 @@ def test_cau_truc_khong_lam_mat_doan(mau, trai, phai, phep, can_cu):
     dat_cap(mau, trai, phai)
     s = snapshot_so(mau, so(mau))
     assert any(d["phep"] == phep and d["can_cu"]["phuong_phap"] == can_cu for d in s["diem_lech"])
-    assert all(d["cho_phan_loai"] and d["muc_san"] is None and d["muc"] is None for d in s["diem_lech"])
+    assert all(d["muc_san"] == d["muc"] == "nghiem_trong" for d in s["diem_lech"])
+    assert any("DC_CAU_TRUC" in d["quy_tac_trung"] for d in s["diem_lech"])
 
 
 @pytest.mark.parametrize("trai,phai", [
@@ -196,7 +201,11 @@ def test_lech_dau_chi_gan_nhom_khong_xoa(mau, a, b):
     dat_cap(mau, "DEMO " + a, "DEMO " + b)
     s = snapshot_so(mau, so(mau))
     points = [d for d in s["diem_lech"] if d["nhom"] == "chi_lech_dau"]
-    assert points and all(d["cho_phan_loai"] and d["muc"] is None for d in points)
+    assert points and all(d["muc"] == d["muc_san"] for d in points)
+    if a == "không":
+        assert all(d["muc"] == "nghiem_trong" and "DC_PHU_DINH_BAT_BUOC" in d["quy_tac_trung"] for d in points)
+    else:
+        assert all(d["cho_phan_loai"] and d["muc"] == "can_xem" for d in points)
     assert s["kiem_tra"]["lech_dau"] == "chua_kiem"
 
 
@@ -213,7 +222,12 @@ def test_matrix_dc3_van_tao_diem(mau, a, b):
 def test_tuong_duong_duoc_duyet_van_tai_dung_nguyen_van(mau, a, b):
     dat_cap(mau, a, b)
     s = snapshot_so(mau, so(mau))
-    assert not s["diem_lech"] and any(x["phep"] == "tuong_duong_chuan_hoa" for x in s["edit_script"])
+    assert any(x["phep"] == "tuong_duong_chuan_hoa" for x in s["edit_script"])
+    if "1" in a:
+        # DC-5: bộ DC-3 cũ chưa khai quy ước phân cách số, không được ẩn.
+        assert s["diem_lech"] and all(d["muc_san"] == "nghiem_trong" for d in s["diem_lech"])
+    else:
+        assert not s["diem_lech"]
 
 
 def dat_ocr_bang(m, word):
@@ -229,7 +243,7 @@ def test_bang_o_rong_gop_nhieu_dong_o_giu_day_du(mau):
     w, _ = dat_cap(mau, "", body=p("DEMO bảng") + table_demo() + p("DEMO cuối"))
     dat_ocr_bang(mau, w)
     s = snapshot_so(mau, so(mau))
-    assert not s["diem_lech"]
+    assert not [d for d in s["diem_lech"] if d["nhom"] != "tien_trong_ban_ky"]
     assert any(o["van_ban"] == "" for o in s["van_ban"]["ban_ky"]["van_ban_tai_lieu"]["trang"][0]["khoi"][1]["o"])
 
 
@@ -275,7 +289,7 @@ def test_bang_ocr_mo_ho_tu_choi_khong_doan(mau):
 def test_bang_lap_co_offset_nguon_da_kiem_giu_ca_hai(mau):
     w, _ = dat_cap(mau, "", body=table_demo() + table_demo())
     dat_ocr_bang(mau, w)
-    assert not snapshot_so(mau, so(mau))["diem_lech"]
+    assert not [d for d in snapshot_so(mau, so(mau))["diem_lech"] if d["nhom"] != "tien_trong_ban_ky"]
 
 
 def test_bang_long_can_tung_dong_o_va_khong_bo_duoi(mau):

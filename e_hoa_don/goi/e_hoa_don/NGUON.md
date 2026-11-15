@@ -167,3 +167,15 @@ SHA triển khai HD-7 đo trên bytes thực tại bàn giao, không phải băm
 ## HD-8 ? ??i chi?u ngu?n 15/11/2026
 
 ??i chi?u l?i quy?n CD-096 A1 trong `ma-nguon/NGUON.md`: ch? d?ng n?i b?; ngu?n Node ch? ??c t?nh, kh?ng ch?y v? kh?ng c?p quy?n ph?n ph?i. Test ??i chi?u SHA bytes th?c v? d?ng LF c?a `bang_ke.cjs`, `vendor/config.js`, `vendor/build.js`, `NGUON.md` v?i b?ng HD-7; c?c SHA theo t?p kh?ng ph?i m? b?m g?i ph?t h?nh. Kh?ng th?m runtime hay dependency.
+## HD-9 — SDK 2.2.0, 15/11/2026
+
+Wheel nội bộ `kho_tri_thuc_sdk-2.2.0-py3-none-any.whl`, SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` (đối chiếu SHA256SUMS.txt; không thêm phụ thuộc runtime). Theo quyết định lead, hạ trần đầu vào ZIP và JSON bảng kê qua `mo_tep` xuống 20 MiB; giữ trần đầu ra. Các bảng lịch sử giữ nguyên. SHA dưới đây đo bytes thực và chuẩn LF, hai giá trị giống nhau tại thời điểm kiểm; không tự băm NGUON.md.
+
+| Tệp | SHA-256 bytes thực / chuẩn LF |
+|---|---|
+| `engine.json` | `912414e9926bbe24e978d4e165722e93d66761c19b4a2d4089ec5019c421433f` |
+| `requirements.lock` | `ab043bbb337b669c302791d26eb214ca9e5812e304c169e356bc3e3d5eb5e13a` |
+| `README.md` | `27275f0a84d31262179ef5f1ac22d28cece8e94121e21430fd5a70a74e450e9d` |
+| `CHANGELOG.md` | `5e8c5d56a1d9677e817544f7c192f759d87d0b14caa9c9ef05ea4c0a20758ded` |
+| `e_hoa_don/bang_ke.py` | `9893619ff051f77a7235073ce8ffc165958c3b0dfaf3626fa087ba602632d342` |
+| `e_hoa_don/zip.py` | `5b60d342be6f9e109c75df7b266e779a0aa389c0937288f7e7ed77e992685e52` |

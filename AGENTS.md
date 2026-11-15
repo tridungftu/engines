@@ -6,21 +6,21 @@ Mọi tài liệu, thông báo lỗi, báo cáo bằng **tiếng Việt**; tên 
 ## 1. Đọc trước khi code (theo thứ tự)
 
 1. `docs/goi-gui-engine/API-ENGINE-v1.md` — hợp đồng API v1 + `engine.json` 2.0. **Đã khóa, không được đổi.**
-2. `docs/goi-gui-engine/sdk-2.0.0/HUONG-DAN-VIET-ENGINE.md` và `MAU-PHIEU-ENGINE.md`.
+2. `docs/goi-gui-engine/sdk-2.2.0/HUONG-DAN-VIET-ENGINE.md`, `MAU-PHIEU-ENGINE.md`, `THAY-DOI-2.2.0.md` (SDK hiện hành từ 15/11/2026; bản 2.0.0 giữ để tra cứu). Cách chuyển: `_chung/docs/CHUYEN-SDK-2.2.md`.
 3. `_chung/docs/QUYET-DINH-ANH-20261115.md`, `_chung/docs/QUYET-DINH-ANH-20261115-CHIEU.md` và `_chung/docs/GIAO-CODEX-DOT-2.md` — **quyết định của Anh 15/11 (thắng các quyết định tạm cũ)**; `_chung/docs/GIAO-CODEX-THU-TU.md` — thứ tự engine, phần còn thiếu phía Core; `_chung/docs/DE-NGHI-SDK-2.1.md` — API ngăn/cấu hình/màn engine mà mã phải bám.
 4. `_chung/docs/LOAI-DU-LIEU-RIENG.md` — loại dữ liệu riêng dùng chung giữa các engine.
 5. `<engine>/docs/GIAO-CODEX-<engine>.md` — lát đang được giao.
 6. `<engine>/CLAUDE.md`, `<engine>/docs/YEU-CAU-VA-HIEN-TRANG.md`, quyết định cuối của engine.
 
-Khi hai tài liệu mâu thuẫn: **API-ENGINE-v1 + SDK 2.0.0 thắng** về kỹ thuật cổng; **quyết định cuối của engine thắng** về nghiệp vụ. `_chung/docs/YEU-CAU-CHUNG-ENGINE.md` (08/11) là bản trước SDK 2.0, chỉ dùng làm nguyên tắc.
+Khi hai tài liệu mâu thuẫn: **API-ENGINE-v1 + SDK 2.2.0 thắng** về kỹ thuật cổng; **quyết định cuối của engine thắng** về nghiệp vụ. `_chung/docs/YEU-CAU-CHUNG-ENGINE.md` (08/11) là bản trước SDK 2.0, chỉ dùng làm nguyên tắc.
 
 ## 2. Môi trường
 
 ```bash
 python -m venv .venv && . .venv/bin/activate        # Windows: .venv\Scripts\activate
-python -m pip install --no-index --no-deps docs/goi-gui-engine/sdk-2.0.0/kho_tri_thuc_sdk-2.0.0-py3-none-any.whl
-python -c "import kho_tri_thuc_sdk; print(kho_tri_thuc_sdk.__version__)"   # phải in 2.0.0
-sha256sum docs/goi-gui-engine/sdk-2.0.0/kho_tri_thuc_sdk-2.0.0-py3-none-any.whl  # so với SHA256SUMS.txt
+python -m pip install --no-index --no-deps docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl
+python -c "import kho_tri_thuc_sdk; print(kho_tri_thuc_sdk.__version__)"   # phải in 2.2.0 (engine chưa chuyển vẫn dùng 2.0.0)
+sha256sum docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl  # so với SHA256SUMS.txt
 ```
 - Python ≥ 3.11. Máy đích là Windows x64; **test phải chạy được trên Linux** (mock phần Windows: ABBYY Hot Folder, tesseract.exe, ACL).
 - Thư viện ngoài SDK: chỉ thêm khi phiếu lát cho phép, ghim trong `requirements.lock`, ghi `NGUON.md`.
@@ -45,7 +45,7 @@ sha256sum docs/goi-gui-engine/sdk-2.0.0/kho_tri_thuc_sdk-2.0.0-py3-none-any.whl 
 ## 4. Quy tắc cứng (vi phạm = lát không đạt)
 
 1. Chỉ import `kho_tri_thuc_sdk` và thư viện đã ghim. **Không import `kho_tri_thuc.*`**, không dùng kênh socket cũ (`kenh_engine`, `SDKEngine`, `Bootstrap`).
-2. Engine **không gọi engine khác**, không kết nối CSDL, không SQL.
+2. Engine **không gọi engine khác**, không kết nối CSDL, không gửi SQL lúc chạy. Ngoại lệ duy nhất: `sql/` migration tạo bảng ngăn riêng trong schema `eng_<ma>` kèm `sql/kiem_ke.json`, đúng mẫu SDK 2.2.0 (`_chung/docs/CHUYEN-SDK-2.2.md`).
 3. Không đọc, in, sửa: `.env`, `cau_hinh.that.toml`, `var/plhn-that`, `var/web-that`, `D:\DU-LIEU-KE-TOAN\bi-mat`, thư mục `in/ out/ jobs/ state/` của abbyy-hotfolder.
 4. Không ghi khóa, mật khẩu, đường dẫn máy thật vào mã, phiếu, log, test, git.
 5. **Chỉ dữ liệu DEMO** (ví dụ "Công ty DEMO Ánh Dương", 1.000.000 VND, 30/10/2026). Không dùng hồ sơ thật.
@@ -55,7 +55,7 @@ sha256sum docs/goi-gui-engine/sdk-2.0.0/kho_tri_thuc_sdk-2.0.0-py3-none-any.whl 
 9. Cloud AI chỉ nhận nội dung đã qua Mask (xem `LOAI-DU-LIEU-RIENG.md`, loại `van_ban_da_che`).
 10. **Không sửa** `docs/goi-gui-engine/**`, `_chung/tham-chieu-cong-hien-tai/**`, mã Core. Thiếu gì phía Core/SDK → ghi mục "Cần Core" trong `<engine>/docs/VIEC.md`, làm tiếp bằng lớp bọc tạm như phiếu chỉ dẫn.
 11. Không xóa tệp. Không push lên nhánh `main`.
-12. **Engine không lưu gì trên máy** (Anh chốt 15/11): không tệp cấu hình, không sổ, không đệm bền. Dữ liệu cần giữ và cấu hình đi qua cổng `Ngan` (`_chung/mau-ma/ngan.py`, tạm chạy RAM tới khi có SDK 2.1); tệp tạm của một việc xóa trong `finally`.
+12. **Engine không lưu gì trên máy** (Anh chốt 15/11): không tệp cấu hình, không sổ, không đệm bền. Dữ liệu cần giữ và cấu hình đi qua ngăn của Core `viec.ngan`/`app.ngan` và `viec.cau_hinh` (SDK 2.2.0); engine chưa chuyển còn dùng cổng tạm `_chung/mau-ma/ngan.py`; tệp tạm của một việc xóa trong `finally`.
 13. Cấu hình thuộc engine: màn cấu hình của engine ở `goi/<ma>/ui/`, nạp như màn module, dùng `KttCore.engine(ma)`; không gọi mạng ngoài, không `eval`/`innerHTML` chưa lọc.
 
 ## 5. Cách làm một lát

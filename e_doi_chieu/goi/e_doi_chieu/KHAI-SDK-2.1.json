@@ -43,6 +43,26 @@
         {
           "ma": "phien_ban_engine",
           "kieu": "van_ban"
+        },
+        {
+          "ma": "trang_thai",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "chu_so_huu",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "luc_chiem",
+          "kieu": "so"
+        },
+        {
+          "ma": "han_chiem",
+          "kieu": "so"
+        },
+        {
+          "ma": "phong_bi",
+          "kieu": "json"
         }
       ]
     },

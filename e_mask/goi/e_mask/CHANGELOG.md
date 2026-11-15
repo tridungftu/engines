@@ -1,3 +1,12 @@
+## Chưa phát hành — 15/11/2026, MASK-R2 adapter nhận diện bí mật
+
+- Thêm `KhoNganBiMat` dùng đúng `viec.ngan.doc/tim/lo` SDK 2.2.0. Ứng viên chỉ tìm bằng giá trị chính xác ở cột bí mật, cùng vùng và phiên bản chuẩn hóa; trả ID/alias/metadata/null+cờ, không băm tên công khai hoặc nạp danh mục bản rõ. Số gặp đọc theo chuỗi thập phân của SDK.
+- `KhoDinhDanh.mo_kho_nhan_dien` và `KhoNhanDienQuaCore` kiểm nguồn quyền trước/sau truy cập. Dùng lại alias chính thức qua nhiều việc; không giữ ứng viên/map/alias tạm hoặc snapshot. Mở che từ kho bị chặn; ánh xạ thuộc R4/R6.
+- Bản vá metadata bỏ hoàn toàn khóa bí mật và cờ mã hóa. Primitive cho R7 duyệt trên cùng ID bằng CAS, tạo alias chính thức trong cùng lô với ràng buộc duy nhất; từ chối bằng trạng thái, không xóa. Primitive nội bộ chưa thay cửa xác minh biên nhận Admin C-P4-06.
+- Lô metadata tối đa 100 lệnh; vượt từ chối trước khi gửi, không chia giả nguyên tử. SDK gửi lại cùng khóa lô; mất mọi ACK chuyển `ChuaRo`, khóa đối tượng ghi chưa rõ, không tự thử lô mới/cấp alias hoặc tăng đếm lại. Giao lại dùng ID và phiên bản cũ chịu CAS.
+- **C-P4-03 còn mở:** R1 chưa có duy nhất/`lay_hoac_tao` theo bí mật + vùng + phiên bản chuẩn hóa hoặc dấu gặp chống lặp xuyên lần giao việc. Tạo tên mới và tăng số gặp bị chặn `MASK_KHO_CAN_CORE`; không thêm cờ cấu hình để bỏ chặn. Hạn mức dò/không log ứng viên và bảo đảm Core thật vẫn cần xác nhận.
+- Đúng bốn tệp runtime của R2; phần RAM lịch sử giữ nguyên hành vi hồi quy, chặn nhận `NganEngine` tại mọi cửa snapshot/dấu/liệt kê cũ. R3/R4/R5 chuyển consumer/handler theo phiếu, không sửa `chay.py` của R4. Kiểm kê gói được sinh lại theo bytes thực tế. Test và số kiểm thật ở VIEC, đã kiểm bằng Core giả (CoreGia), chưa Core/Local/Office/Linux thật. Cloud tắt; PR chờ lead mở, không commit/push.
+
 ## 1.4.0 — 15/11/2026, MASK-R1 (chưa phát hành)
 
 - Khai kho nhận diện `dinh_danh` và kho bí danh chính thức/lịch sử `bi_danh` theo SDK 2.2.0; khóa ID opaque, không trường JSON hoặc quan hệ yêu cầu–alias–tên. Hai cột `gia_tri_goc`/`gia_tri_chuan` đều bí mật; không giải mã hoặc tự giữ khóa/băm tên.

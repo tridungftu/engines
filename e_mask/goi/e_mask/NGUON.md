@@ -490,3 +490,14 @@ Băm bản checkout MASK-B4 hiện tại, mã LF không đổi; bytes khác do c
 | `ghi_zip.py` | `c98b6d8ad273ca9d6946c0362446f292cf40e8b871b01a3d4aa5054a7f44a470` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` |
 | `va_xml.py` | `6b826f350c567b04587bd4f6e227af136037a28400fabd38a131fb37e7b48f17` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` |
 | `zip_an_toan.py` | `d55a1555fd3fb05aed323b3fd9146d26e773c19bfcd57ac32d836905b53880db` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` |
+
+## MASK-R2 — adapter ngăn bí mật, 15/11/2026
+
+Viết tiếp mã nội bộ được phép tái dùng của dự án, không chép nguồn ngoài hoặc thêm dependency. Bốn runtime theo bảng P4; giữ các khối RAM lịch sử cho hồi quy, chặn chúng với NganEngine. Phần mới chỉ gọi SDK 2.2.0 từ wheel đã đối chiếu SHA phát hành; không import Core/engine khác. Không thay nguồn cũ hay các bằng chứng SHA lịch sử.
+
+| Tệp | SHA-256 bytes hiện tại | SHA-256 LF hiện tại |
+|---|---|---|
+| `e_mask/kho_ngan.py` | `5c418ce07372449ec3c7a7948a4e3c1887e1cdb202671c8dd2d517d076a72583` | `83c6cce6a586ae2901f3e5a40161e917999d8eeb8951b501d580e3db6b262fde` |
+| `e_mask/kho_dinh_danh.py` | `23f7a23450d80bfc11c004f2db210c14601b105be7374b2396b5109646bf821b` | `fd8633450de5ae85484d78d74a8583b3efd5078f19a27221f14326975b16ecb9` |
+| `e_mask/kho_qua_core.py` | `01b0004bd18c5680b77dbc2c5d2369993f78a2a27a81bfacd859ab4401fa2299` | `1b7f9023d4e73b5ac45df98988ef2bea4085db1532c2a7361e9d0f799159129d` |
+| `e_mask/khoi_tao_ngan.py` | `c23071dcf0b924f56ad794484b2338a71db9074cb670ce85d2c5aa28f20f3f91` | `4fcc71ef714b867eac854ada233d38fc2b22c29e39d1baedbe44131563569bad` |

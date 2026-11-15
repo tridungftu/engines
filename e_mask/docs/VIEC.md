@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-R2 | Adapter nhận diện SDK chỉ bí mật/metadata, không snapshot/map | MASK-P4 §2–5; sau R1; CĐ-36 | Xong phần adapter / Chờ Core — 15/11/2026; chưa đạt nghiệm thu chung | Đúng bốn runtime; R2 32/32, full 2260 passed, 4 xfailed cũ, 190 subtests passed, 0 failed/skip. Độc lập/diff mã 0; CLI chuẩn 0/2 thiếu quyền, C-P4-03 còn mở, tạo tên/tăng đếm bị chặn. PR: **chờ lead mở**; chi tiết ở mục MASK-R2 bên dưới. |
 | MASK-R1 | Khai ngăn bí mật/alias, TTL SDK 2.2 và migration/kiểm kê | MASK-P4 §1–5; CĐ-36; câu 10 tối 15/11 | Xong sửa hồi quy / Chờ Core — 15/11/2026; **chưa đạt nghiệm thu chung** | Ngoại lệ lead cho sửa thêm chay.py/test: full pytest 2228 passed, 4 xfailed cũ, 190 subtests passed, 0 failed/skip; R1 46/46; độc lập mã 0, kiểm kê 50/50. CLI 0/2 thiếu quyền Core, C-P4-03 còn mở; kho RAM cũ giữ tới R2/R4. PR: **chờ lead mở**; kết quả thật ở mục MASK-R1 bên dưới. |
 | MASK-P4 | Lập lại phiếu mở che cùng chu kỳ, map chỉ RAM và kho bí danh kín; chỉ tài liệu | Quyết định Anh tối 15/11 câu 10; CĐ-36 | Xong tài liệu — 15/11/2026; kiểm nền gói chưa đạt / Chờ Core | [Phiếu RAM](MASK-P4-MO-CHE-RAM.md): R1…R7 32–46 giờ ƯỚC TÍNH, B5…B10 sửa 36–56 giờ ƯỚC TÍNH, mỗi lát ≤5 tệp; TTL đề xuất 600 giây, cấu hình 60–900. Không code/commit/push; PR: **chờ lead mở**. P3 A không dùng; kết quả kiểm thật và C-P4-01…06 ở mục MASK-P4 bên dưới. |
 | MASK-P3 | Thiết kế lại mở che/kho bí danh cho SDK 2.2.0, chỉ tài liệu | **CĐ-36 — Anh, 15/11/2026 16:28** | Xong tài liệu lịch sử — 15/11/2026; **A không dùng theo quyết định Anh 15/11 tối** | [Thiết kế P3 giữ truy vết](MASK-P3-MO-CHE-SDK-2.2.md): A/lát A/Q1…Q4 không còn giao/chờ chọn; MASK-P4 thay bằng B chỉ RAM, không hồ sơ Core, không giải mã bi_mat. Kết quả kiểm P3 giữ nguyên lịch sử. PR: **chờ lead mở**. |
@@ -33,6 +34,44 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-2c-2 | Chuẩn bị yêu cầu Local, khuôn/profile/budget và kế hoạch đoạn | MASK-2c-1; profile kỹ thuật lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.1.0; 972 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-2.md); PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## MASK-R2 — adapter nhận diện chỉ bí mật/metadata, 15/11/2026
+
+**Kết luận: Chưa đạt nghiệm thu chung — adapter R2 và full test đạt, CLI chuẩn vẫn thiếu cửa quyền và C-P4-03 còn mở.** PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); không commit/push.
+
+**Đã làm:** đúng bốn runtime `kho_ngan.py`, `kho_dinh_danh.py`, `kho_qua_core.py`, `khoi_tao_ngan.py`. `KhoDinhDanh.mo_kho_nhan_dien(viec)` trả `KhoNhanDienQuaCore`; chỉ dùng `viec.ngan` kiểu `NganEngine` SDK 2.2.0, kiểm lại nguồn quyền trước/sau đọc. `tim_ung_vien(gia_tri, nhom)` chuẩn hóa trong RAM theo phiên bản `NFC_CF_KHOANG_TRANG_LOWER_1`, tìm đúng giá trị bí mật cùng vùng/phiên bản, không lọc tên một phần/liệt kê danh mục hoặc băm tên không khóa. Phát hiện nhiều ID cùng giá trị hoặc nhóm mâu thuẫn thì chặn, không chọn dòng đầu hay gom null.
+
+Kết quả chỉ ID, alias chính thức, nhóm/trạng thái/phiên bản/số gặp, null+cờ mã hóa. Alias đã có được tìm lại qua hai việc độc lập, không ghi thêm alias/đếm/map. Cột số của SDK trả chuỗi thập phân được kiểm là số nguyên không âm rồi chuyển về số đếm; không mock ngăn trả kiểu khác để làm xanh. Không giữ ứng viên/map/alias tạm, không tạo `cum`, `dau_gap`, JSON lồng hoặc snapshot phục hồi. Phần tìm ứng viên trong luồng che thuộc R3; RAM/consumer MASK-2c/handler thuộc R4/R5, mở che thuộc R6.
+
+`KhoNganBiMat.sua_metadata` chỉ nhận ID opaque/phiên bản và allowlist nhãn/trạng thái, bỏ hẳn khóa bí mật/cờ/đếm/JSON. Primitive `duyet_cung_id` cho R7 đổi trạng thái trên chính ID, thêm alias chính thức trong cùng lô có CAS và duy nhất alias; không đọc-sao bí mật, không null đè bí mật. Không dùng `lay_hoac_tao` alias để âm thầm nhận alias thuộc ID khác. Từ chối bằng trạng thái, không xóa. Primitive này chưa là cửa Admin hoạt động: R7/C-P4-06 phải xác minh biên nhận xem/duyệt trước khi gọi, không có cờ tự khai quyền trong R2.
+
+Lô tối đa 100 thay đổi, vượt chặn trước gửi và không chia giả nguyên tử. SDK retry giữ nguyên khóa lô; mất mọi ACK, kể cả HTTP 408 hoặc lỗi `NGAN_*` chưa xác định sau ghi, trả `ChuaRo` với mã tương quan an toàn. Đối tượng đã chưa rõ không gửi lô mới; giao lại đối tượng mới với phiên bản cũ chịu CAS, không cấp thêm alias hoặc tăng đếm. Không lưu kết quả/bản rõ để phục hồi. Mã tương quan/thông điệp từ nguồn không được đưa nguyên ra ngoài.
+
+**C-P4-03 chặn tạo tên/tăng số gặp:** R1 hiện chỉ khai duy nhất ID/alias. SDK thật từ chối `lay_hoac_tao` theo bộ bí mật + vùng + phiên bản vì chưa khai ràng buộc đó; hai ID cùng bí mật vẫn ghi được trong CoreGia. R2 không giả có bảo đảm: `lay_hoac_tao`, `ghi_cho_duyet`, `ghi_nhan_gap_lai`/chốt snapshot mới trả `MASK_KHO_CAN_CORE`, không ghi gì. Không nhận cờ cấu hình/payload để mở khóa. Mọi cửa `AnhNgan`, `DauNgan`, `PortNgan`, `doc_het` lịch sử đều chặn `NganEngine`; chỉ giữ hành vi RAM cũ cho hồi quy tới khi R3/R4/R5 thay consumer, không sửa `chay.py` của R4.
+
+**Môi trường:** `.venv` riêng trong worktree, Python 3.13.14, pytest 9.1.1, SDK 2.2.0 cài offline từ wheel repo với `--no-index --no-deps`; SHA-256 **0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984** khớp SHA256SUMS. Có `jsonschema` qua gói đã cài sẵn của máy (`--system-site-packages`), không thêm dependency chạy/khóa phụ thuộc. Các lệnh dùng `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`, `-B`.
+
+**Kết quả kiểm:** đã kiểm bằng Core giả (CoreGia), [nguyên kết quả lệnh](KET-QUA-KIEM-MASK-R2.txt).
+
+| Lệnh / phép kiểm | Kết quả thật cuối |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**. Cả hai DEMO: “Chưa xác minh được phiên và quyền xử lý yêu cầu.” Giữ nguyên cửa quyền; không nhận cấu hình/payload tự khai làm quyền. Kế thừa C-MS22-01. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q` | **2260 passed, 4 xfailed cũ, 190 subtests passed, 0 failed, 0 skipped; 150,03 giây; mã 0**. Bốn xfail strict của MASK-2b giữ nguyên lý do “giới hạn quy tắc, nợ CAO”; không thêm skip/xfail hoặc sửa test an toàn cũ. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**; không tham chiếu cấm, bytecode/symlink trong gói. |
+| Kiểm riêng R2 trước lượt full cuối | **32 passed, 1,16 giây; mã 0**, không skip/xfail. |
+| Kiểm kê và `git diff --check` | **50/50 tệp** đủ bytes/SHA thực, trừ chính kiểm kê; **diff mã 0**. |
+
+Ca R2 gồm null+cờ/tìm đúng, không lộ tên/băm ở khóa/metadata/log, hai việc CoreGia tranh cùng ID, DEMO–thật, CAS/duy nhất/rollback, lô 100/101, retry cùng khóa, mất mọi ACK/408 và không mở ngược kho. Wrapper chỉ spy/gây lỗi sau ngăn SDK thật, không mock kết quả trả tên thay null+cờ. Lượt full trước hai ca 408: **2258 passed, 4 xfailed cũ, 190 subtests passed, 151,77 giây; mã 0**. Lượt full đầu **2256 passed, 1 failed, 4 xfailed, 190 subtests, 122,40 giây**: phần bổ sung NGUON bị PowerShell đổi mã tiếng Việt; đã sửa và kiểm lại, không bỏ test. Lượt chốt 2260 là sau mọi sửa runtime.
+
+**Thời gian thực tế:** **20:10:00–20:43:12 ngày 15/11/2026 (UTC+07), 0,55 giờ**, tại mốc chốt báo cáo; bắt đầu theo mốc lead. Phiếu **5–7 giờ ƯỚC TÍNH**, độ khó `kho`; không quy đổi ước tính thành thời gian thực tế.
+
+**Lệch khỏi phiếu / quyết định tạm:** không đổi nghiệp vụ/API/SDK, không tự nhận bảo đảm Core còn thiếu. Ngoài bốn runtime có test/tài liệu và **sinh lại `sql/kiem_ke.json` theo bytes/SHA thực của 50 tệp**, bắt buộc khi đổi gói đã khai migration R1; không sửa nội dung migration, manifest, schema, nguồn cũ, Core/SDK hoặc dependency. Không nối luồng che mới/màn Admin ngoài R2, không dùng fallback RAM để tuyên bố hỗ trợ ngăn SDK. Cloud tắt; chưa kiểm Core/PostgreSQL/Local/Office/Linux thật.
+
+### Cần Core — MASK-R2
+
+- **C-P4-03 / duy nhất bí mật:** cần xác nhận bằng chứng và khai báo/chỉ mục duy nhất đúng bộ `(vung_du_lieu, phien_ban_chuan_hoa, gia_tri_chuan)` với băm do Core quản; `lay_hoac_tao` nguyên tử theo bộ đó, CAS/lô ≤100, quy tắc chuẩn hóa và hạn mức dò. Test hiện chứng minh khoảng thiếu, không chứng minh Core thật đã bảo đảm. Không xin giải mã hoặc tự tính băm công khai để lấp chỗ thiếu.
+- **C-P4-03 / đếm gặp, giao lại:** cần dấu/lượt nguyên tử do Core cấp hoặc xác nhận để không tăng số gặp/tạo tên hai lần khi giao lại việc sau mất ACK. Khóa ngẫu nhiên theo mỗi lô của SDK chỉ bảo vệ gửi lại cùng lô, không tự bảo vệ lần chạy handler mới. Tới khi có bảo đảm này, đường tạo và đếm vẫn chặn; không ghi map/tên/snapshot vào dấu.
+- Cần Core xác nhận quota/không log ứng viên hoặc băm, quyền theo vùng và bảo đảm trên Core thật. R2 mới kiểm CoreGia; giữ C-P4-01/02/04/05/06. R7 phải nối quyền/biên nhận Admin trước khi dùng primitive metadata; R3/R4/R5/R6 tích hợp theo closure riêng. Không phát sinh câu Chờ Anh chọn lại nghiệp vụ.
 
 ## MASK-R1 — khai ngăn bí mật và cấu hình SDK 2.2, 15/11/2026
 

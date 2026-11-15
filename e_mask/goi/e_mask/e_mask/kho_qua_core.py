@@ -1,10 +1,7 @@
-"""Port Kho: chuyển từ nguồn cũ, giữ snapshot/nhật ký/chốt trong RAM.
+"""KhoNhanDienQuaCore dùng SDK, chỉ trả metadata/null+cờ.
 
-Chỉ tái dùng hai thao tác nội bộ snapshot_luot/chot_luot. Đây chưa phải API
-ngăn hoặc transport SDK. Callable phải gắn phiên/lease tin cậy, kiểm quyền
-trong cùng giao dịch phía kho, CAS và duy nhất trước trả chốt. Snapshot có
-da_chot=False phải xác nhận không còn chốt đang chờ; nếu chưa biết, port ném
-ChuaRo. Nhật ký chứa cụm gốc chỉ gửi vào kho được phép, không phải log.
+KhoQuaCore/PortKho lịch sử giữ cho hồi quy RAM; không nối ngăn SDK vào
+snapshot/nhật ký cũ. R3/R4/R5 thay các consumer này trước khi phát hành.
 """
 from __future__ import annotations
 
@@ -19,6 +16,7 @@ from uuid import uuid4
 from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu, ViecDaHuy
 
 from .che_van_ban import _kiem_dinh_danh, chuan_bi_danh, chuan_hoa
+from .khoi_tao_ngan import can_bao_dam_core
 from .ngan import CauHinhKhongHopLe, NganKhongHopLe, NganXungDot
 from .nguon.privacy.core import CATEGORIES
 from .quyen_yeu_cau import loi_kho, xac_minh
@@ -26,6 +24,68 @@ from .quyen_yeu_cau import loi_kho, xac_minh
 
 # Anh chốt 15/11/2026: MASKTAM cho tạm; mã Junsky không dùng họ này.
 TIEN_TO_TU_SINH = 'MASK'
+
+
+class KhoNhanDienQuaCore:
+    """Quyền tin cậy trước mỗi truy cập, không snapshot hay map yêu cầu."""
+    def __init__(self, *, viec, quyen, loai='che', ma_yeu_cau=None):
+        from .kho_ngan import KhoNganBiMat
+        self._viec, self._quyen = viec, quyen
+        self._loai = loai
+        self._ctx = xac_minh(quyen, viec, loai=loai, ma_yeu_cau=ma_yeu_cau)
+        if loai != 'che':
+            self.tra_dinh_danh(None)
+        self._kho = KhoNganBiMat(viec, vung=self._ctx.vung)
+        self.da_chot = False
+
+    def __repr__(self):
+        return 'KhoNhanDienQuaCore(<ẩn>)'
+
+    def _kiem(self):
+        ctx = xac_minh(self._quyen, self._viec, loai=self._loai,
+                       ma_yeu_cau=self._ctx.ma_yeu_cau)
+        if ctx != self._ctx:
+            raise loi_kho('MASK_NGU_CANH_CHUA_XAC_MINH')
+
+    def doc(self, id_dinh_danh):
+        self._kiem()
+        ket_qua = self._kho.doc(id_dinh_danh)
+        self._kiem()
+        return ket_qua
+
+    def tim_ung_vien(self, gia_tri, nhom):
+        self._kiem()
+        ket_qua = self._kho.tim_ung_vien(gia_tri, nhom)
+        self._kiem()
+        return ket_qua
+
+    def liet_ke_dinh_danh(self):
+        # Không nạp danh mục bản rõ cho matcher cũ; R3 chuyển sang ứng viên.
+        self._kiem()
+        can_bao_dam_core()
+
+    def tra_dinh_danh(self, *args, **kwargs):
+        raise LoiNghiepVu('MASK_ANH_XA_KHONG_CON',
+            'Không còn dữ liệu mở che của chuỗi này. Anh hãy chạy lại toàn bộ chuỗi che và hỏi AI.') from None
+
+    def ghi_cho_duyet(self, *args, **kwargs):
+        self._kiem()
+        can_bao_dam_core()
+
+    def ghi_nhan_gap_lai(self, *args, **kwargs):
+        self._kiem()
+        can_bao_dam_core()
+
+    def chot(self, *args, **kwargs):
+        self._kiem()
+        can_bao_dam_core()
+
+    @contextmanager
+    def giao_dich(self):
+        # Mã cũ không được bắt đầu giao dịch snapshot/map bằng ngăn SDK.
+        self._kiem()
+        can_bao_dam_core()
+        yield self
 
 
 class PortKho(Protocol):

@@ -1,5 +1,40 @@
 # Nguồn và phụ thuộc — TC-0, 15/11/2026
 
+## TC-7 — Sửa sau kiểm độc lập KHÔNG ĐẠT, 15/11/2026
+
+Căn cứ bốn lỗi lead giao lúc 15:52, phiếu TC-7, TC-7-KIEM-CHUNG và quyết
+định TC-Q14 đã duyệt. Vòng sửa chỉ thay `kiem_chung.py`, `tra_loi.py`; đọc
+và giữ nguyên `bang_chung.py`, `chay.py`. Chỉ dùng thư viện chuẩn/SDK và
+mô-đun cùng gói, không mã/thuật toán/dependency bên ngoài hoặc mạng.
+
+Ngữ pháp giới hạn mới dùng thực thể/nhãn gần nhất trước giá trị trong
+đoạn/ô đã kiểm. Các nhãn cạnh tranh và hậu tố đơn vị là quy tắc Python tự
+viết cho lát này, không là schema/registry hoặc chính sách mới của Core.
+Không rõ thì không căn cứ; trạng thái cần duyệt ở tầng 2/3 chỉ Vàng với
+lý do/cảnh báo, không làm nhẹ lỗi giá trị/quan hệ/nguồn. Chi tiết ranh giới
+và việc quote số/tiền phải đủ ngữ cảnh ở `docs/TC-7-KIEM-CHUNG.md`.
+
+258 ca test mới là dữ liệu DEMO tự tạo, có bytes/metadata/băm thật nạp
+CoreGia, không hồ sơ hoặc provider thật. Tổng 1210 passed, 0 skipped;
+harness 36/36, độc lập mã 0; CLI chuẩn 0/5 CHUA_CAU_HINH/mã 1. Đã kiểm
+bằng Core giả (CoreGia), NganBoNho/Local giả; 0 Cloud/model thật. Giữ
+nguyên `_chung/**`, hai mẫu NGAN-0, bốn schema, DEMO đã ghim và
+requirements.lock. Không sửa Core/SDK/engine khác; PR: **chờ lead mở**.
+
+Bảng mới nhất dưới đây tính SHA-256 **chỉ thay CRLF→LF**, giữ nguyên
+Unicode/khoảng trắng; gồm cả sáu tệp sửa/thêm ngoài NGUON.md. Không tự băm
+NGUON.md vì tệp chứa chính bảng băm. Bảng của các lần gộp bên dưới giữ làm
+lịch sử, không thay bảng mới nhất này.
+
+| Tệp (từ gốc repo) | SHA-256 LF sau sửa TC-7 |
+|---|---|
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/kiem_chung.py` | `2dc177ae26f99bcd2180f724164c236bbfd99db183ca1d640d12c942d09dffff` |
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/tra_loi.py` | `9925a6ac867fd09c25a3a096baba78f125a3440a6d43c170e96d0cfc41de8752` |
+| `e_tra_cuu/tests/test_kiem_chung_tc_7.py` | `bd265c9b968c3a7b6f048b8d692fb759f4be3ab3ec0a087a6ac4b3cd6215793b` |
+| `e_tra_cuu/docs/TC-7-KIEM-CHUNG.md` | `33f161e2540361614deca2d670480ec3f4d3489056aaa2f5bbe520504f7a5dd3` |
+| `e_tra_cuu/docs/VIEC.md` | `0bf42c434172447398cbfa741faa47668f8aea1e10065eba596b50f87d58f3c6` |
+| `e_tra_cuu/goi/e_tra_cuu/CHANGELOG.md` | `9f2c630b31951c326aba02804f69bc76c5b7746b88661537bca53cb7fb62076b` |
+
 ## TC-5 — 15/11/2026
 
 Viết mới `phan_loai.py`, `quy_tac_nhom.py` và thêm đăng ký trong `chay.py`:

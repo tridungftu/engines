@@ -1,18 +1,19 @@
-# Tra cứu tài liệu — TC-5, TC-6: hậu kiểm phân loại, câu hỏi và xếp hạng
+# Tra cứu tài liệu — TC-7: trả lời có kiểm chứng
 
 Phiên bản 0.1.0, SDK 2.0.0, chưa phát hành. TC-Q13 đã duyệt chiều 15/11/2026.
 Manifest đăng ký tám năng lực và bốn loại đúng phiếu §2.1; stub nội bộ
 `kiem_khung` đã bỏ. `tra_cuu.nhan_yeu_cau@1` nhận tệp JSON, kiểm và ghim dữ liệu
 thành `ho_so_tra_cuu` ở giai đoạn `da_nhan`. `tra_cuu.cat_doan@1` chuyển hồ sơ
 `cat_doan/da_nhan` sang `da_cat_doan`. TC-4 chuẩn bị bốn tác vụ Local AI;
-TC-5 hậu kiểm phân loại; TC-6 hậu kiểm câu hỏi/hàm và xếp hạng. Soạn trả lời
-và xuất còn `CHUA_LAM`, chờ TC-7/8. Mọi phân loại máy chỉ là đề xuất cho Core.
+TC-5 hậu kiểm phân loại; TC-6 hậu kiểm câu hỏi/hàm và xếp hạng; TC-7 soạn/kiểm
+chứng câu trả lời hai đường Python/Local. Xuất còn `CHUA_LAM`, chờ TC-8.
+Mọi phân loại máy chỉ là đề xuất cho Core.
 Các trạng thái trung gian không xác nhận đã có câu trả lời tầng 1.
 
 Có **5 ví dụ chay_thu_demo**, tệp và băm thật trong `demo/`. Cổng bổ sung ở
 `tests/chay_demo_voi_core_gia.py` nạp ngăn/cấu hình, nguồn, giấy cấp quyền giả
-rồi chạy 28 DEMO (5 nhận, 4 cắt, 4 chuẩn bị, 11 phân loại/hàng chờ TC-5,
-4 hậu kiểm TC-6). **Đã kiểm bằng Core giả (CoreGia)**; chưa chứng nhận
+rồi chạy 36 DEMO (5 nhận, 4 cắt, 4 chuẩn bị, 11 phân loại/hàng chờ TC-5,
+4 hậu kiểm TC-6, 8 trả lời/từ chối TC-7). **Đã kiểm bằng Core giả (CoreGia)**; chưa chứng nhận
 quyền Core thật. CLI SDK gốc thiếu cấu hình vẫn lỗi `CHUA_CAU_HINH`, không tự
 khởi tạo dữ liệu DEMO hoặc đọc cấu hình từ môi trường để vượt cổng.
 
@@ -400,13 +401,52 @@ $env:PYTHONDONTWRITEBYTECODE='1'
 ```
 
 Linux đổi `Scripts/python` thành `bin/python`, đặt hai biến môi trường tương ứng.
-Test chặn mạng, chỉ DEMO. Handler nhận/cắt/chuẩn bị/hậu kiểm TC-5 và TC-6, stub và cổng cấu hình
+Test chặn mạng, chỉ DEMO. Handler nhận/cắt/chuẩn bị/hậu kiểm TC-5…7, stub và cổng cấu hình
 **đã kiểm bằng Core giả (CoreGia)**; adapter quyền/tệp con chỉ trong tests.
 CAS/unique/rollback/pháp nhân/cursor kiểm trực tiếp trên `NganBoNho`.
 Symlink của bộ quét kiểm bằng giả lập cờ, không yêu cầu Windows cấp quyền tạo symlink.
 Chưa kiểm Core thật, lưu bền, UI thật hoặc Linux.
 
 **Cổng CLI chuẩn chưa đạt:** SDK 2.0.0 chạy cả 5 demo và trả mã 1 vì thiếu
-ngăn/cấu hình (`CHUA_CAU_HINH`). Harness bổ sung có 28/28 ĐẠT, không
+ngăn/cấu hình (`CHUA_CAU_HINH`). Harness bổ sung có 36/36 ĐẠT, không
 thay kết quả CLI chuẩn. Cần Core C-TC-01/02/03/05; số kiểm thật ở VIEC.md ngoài
 gói. Chưa nối Core thật, chưa kiểm RLS/AI/UI/Linux hoặc chất lượng tra cứu.
+
+## TC-7 — Bằng chứng trả lời do Core cấp
+
+TC-Q14 đã duyệt 15/11 chiều: Xanh chỉ Python tầng 1 đã duyệt/còn hiệu lực,
+đủ ngưỡng đo đã duyệt và đúng trường/thực thể. Có LLM hoặc văn bản mới chờ
+duyệt tối đa Vàng. Không căn cứ/số sai/trích sai thì bỏ lời đề xuất, trả câu
+Việt không số và nhãn null. Mâu thuẫn hợp lệ giữ cả hai nguồn/giá trị, cờ
+cần duyệt; dữ liệu mới tầng 2/3 chỉ đề nghị K5, chưa xác nhận lưu/duyệt.
+
+Seam tạm C-TC-03 `doc_quyen(viec_id)` cần cấp ngoài payload thêm
+`kiem_chung_tra_loi` với các khóa đóng `phien_ban=1`, `trang_thai_nguon=da_tra`,
+`bam_du_lieu`, `truong_can_tra_loi`, `nguong_tin_cay`,
+`phu_thuoc_thoi_diem`, `bang_chung`. Thiếu seam trả lỗi, không tin cờ caller.
+Ngưỡng null/chưa đo/chưa duyệt không đủ tầng 1; cấu hình engine vẫn từ Ngan,
+không tự tạo ngưỡng hoặc tệp cấu hình riêng. Đây chưa phải API SDK thật.
+
+Mỗi quan hệ bằng chứng có đúng các khóa `nguon`, `thuc_the`, `truong`,
+`kieu`, `gia_tri`, `don_vi`, `quy_tac`, `hien_thi`, `cau`, `bat_dau`,
+`ket_thuc`, `vi_tri_gia_tri`, `vi_tri`, `trang_thai_duyet`, `con_hieu_luc`,
+`do_tin_cay`, `moc_cong_bo`, `moc_duyet`, `hieu_luc_tu`, `hieu_luc_den`.
+`truong_can_tra_loi` là các `{ma,ten,kieu,don_vi}`; ngưỡng là null hoặc
+`{trang_thai,gia_tri,bam_bo_do,da_duyet}`. Mỗi locator `vi_tri` chứa
+`{trang,hop,dieu}`, `vi_tri_gia_tri=[a,z]` là offset nguồn Unicode tuyệt đối.
+Tầng 1 dùng quote/locator đã duyệt đi cùng trường Core, không mở lại tệp.
+Tầng 2/3 tự map quote/offset và trang/hộp/Điều về nguồn thực.
+
+Chỉ nhận mẫu `Tên trường (thực thể): giá trị.`; ví dụ
+`Giá trị (DEMO-VAY-A): 1.000.000 VND.`. Cụm thực thể và nhãn trường phải có
+trong quote. Các quy tắc khai rõ: `tien_chuan`, `tien_nhom_ba`, `so_chuan`,
+`ngay_iso`, `ngay_viet`, `nguyen_van`, `co_khong`. Tiền int/chuỗi Decimal
+kèm tiền tệ, không float/tỷ giá/tổng/tỷ lệ hoặc đổi đơn vị tự suy. Diễn giải
+ngoài mẫu hoặc binding thiếu không được xem là đã chứng minh ngữ nghĩa.
+Không lấy văn bản tự do ngoài `du_lieu` của Hỏi AI làm câu trả lời nghiệp vụ.
+
+Lớp bọc chuẩn bị AI tầng 1 chỉ mở khi Core cấp profile đủ điều kiện, ghim nó
+trong snapshot `kiem_chung_core`, kiểm lại khi hậu kiểm; đầu ra vẫn Vàng.
+Tập nguồn/phiên bản/mốc duyệt/công bố, thực thể/phạm vi/cờ thời điểm xuất cho
+Core quản cache; engine không tạo cache/K5 hay tự chạy tầng tiếp. Adapter
+tầng 3 DEMO không chứng minh OCR/TX hoặc ba tầng thật đã chạy.

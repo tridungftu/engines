@@ -1,5 +1,49 @@
 # Thay đổi
 
+## 0.1.0 — 15/11/2026 — TC-7 sửa sau kiểm độc lập KHÔNG ĐẠT
+
+- Sửa hai tệp runtime `kiem_chung.py`, `tra_loi.py`: giá trị phải gắn với
+  thực thể và nhãn trường gần nhất đứng trước trong cùng dòng/mệnh đề/ô
+  bảng. Xét nhãn cạnh tranh dù không phải trường được hỏi; không lấy ngày
+  ký làm hạn trả, không lấy tiền của khoản vay khác. Mơ hồ thì không căn cứ.
+- Tầng 2/3 kiểm cả trạng thái duyệt/mốc duyệt/độ tin cậy/ngưỡng. `tu_choi`
+  bị loại cả khỏi mâu thuẫn; chờ duyệt/dưới ngưỡng/thiếu ngưỡng chỉ Vàng
+  khi căn cứ đúng, có `ly_do` và cảnh báo Việt. Tầng 1 vẫn chặn khi chưa đủ.
+- Chặn số mất %, ‰, quy mô, tiền tệ hoặc đơn vị đo; kiểm hậu tố toàn văn ở
+  tầng 2/3 và từ chối quote số/tiền bị cắt ngay cuối giá trị. Đơn vị tường
+  minh viết sát số/cách một dấu trắng vẫn được nhận nếu khớp nguyên nguồn.
+- Thêm bộ test tham số hóa kiểm độc lập, gồm hai thực thể trong ô, đảo vị
+  trí, ba ngày, trạng thái/ngưỡng và ca đúng giữ Xanh/Vàng: 258 ca mới,
+  tổng 1210 passed, 0 skipped; harness 36/36, độc lập mã 0. Kết quả lệnh
+  kiểm thật ở `docs/VIEC.md`; đã kiểm bằng Core giả (CoreGia), 0 Cloud/model
+  thật. CLI chuẩn 0/5 CHUA_CAU_HINH/mã 1 (C-TC-01); không thêm dependency
+  hoặc sửa Core/SDK.
+
+## 0.1.0 — 15/11/2026 — TC-7 (chưa phát hành)
+
+- Thực thi `soan_tra_loi@1` hai đường Python/Local, đúng bốn tệp runtime
+  tra_loi.py/kiem_chung.py/bang_chung.py/chay.py. Kiểm lại snapshot/quyền,
+  tác vụ, prompt/phiên bản/khuôn/map/ngân sách và băm toàn yêu cầu AI.
+- Quan hệ từng trường/thực thể/đơn vị/hiệu lực do cửa Core cấp độc lập;
+  quote/offset map về đúng nguồn/phiên bản/trang/hộp/Điều. Tiền int/Decimal
+  kèm tiền tệ, không khớp một phần, đổi tỷ lệ/đơn vị/tính số mới; giữ mã 0 đầu.
+  Sai căn cứ thì bỏ lời đề xuất, câu trả lời không số/nhãn null.
+- TC-Q14 đã duyệt: Python tầng 1 đủ duyệt/hiệu lực/ngưỡng đo/đúng trường mới
+  Xanh; mọi câu LLM và văn bản mới chờ duyệt tối đa Vàng. Tầng 1 không đọc
+  ngược tệp; thiếu điều kiện trả lý do, Core chọn bước tiếp.
+- Lớp bọc chuẩn bị AI tầng 1 chỉ mở khi Core cấp đủ profile đã kiểm, ghim
+  profile/quote vào snapshot; kết quả vẫn Vàng. Mẫu trả lời xác định, chưa
+  nhận diễn giải văn xuôi tự do như ngữ nghĩa đã chứng minh.
+- Giữ cả hai nguồn/giá trị mâu thuẫn hiện hành, cờ cần duyệt và đề nghị K5;
+  xuất tập nguồn/phiên bản/mốc duyệt/công bố/thực thể/phạm vi/cờ thời điểm.
+  Không tạo cache/K5 hoặc dữ liệu đã duyệt; không đĩa bền/tệp tạm.
+- Đã kiểm bằng Core giả (CoreGia), NganBoNho, Local giả theo protocol;
+  0 Cloud/model thật. 952 passed (138 TC-7), 0 skipped; harness 36/36,
+  độc lập mã 0. CLI chuẩn vẫn 0/5 CHUA_CAU_HINH/mã 1.
+  Test consumer Hỏi AI hiện có với Local giả xác nhận nhánh khuôn bị từ
+  chối và TC-7 không làm xanh; chờ lead Hỏi AI/Core rà cách kiểm metadata.
+  Thời gian/chi tiết kiểm tại docs/VIEC.md; chưa kiểm Core/RLS/AI thật/Linux.
+
 ## 0.1.0 — 15/11/2026 — Gộp TC-6 với TC-5 (chưa phát hành)
 
 - Giải sáu tệp xung đột khi gộp origin/main; giữ cả ba hậu kiểm Local của

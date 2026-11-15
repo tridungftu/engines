@@ -17,6 +17,7 @@ from ho_tro_tc_3 import BoCatDoan, bang_demo, kiem_phu_nguon, phong_bi_trang
 from ho_tro_tc_4 import chay_demo_ai
 from ho_tro_tc_6 import chay_demo_hau_kiem
 from ho_tro_tc_5 import chay_demo_phan_loai
+from ho_tro_tc_7 import chay_demo_tra_loi
 
 
 def chay_demo():
@@ -69,7 +70,7 @@ def main():
     with patch.object(socket.socket, "connect", cam_mang), patch.object(socket.socket, "connect_ex", cam_mang), \
             patch.object(socket, "create_connection", cam_mang), patch.object(socket, "getaddrinfo", cam_mang):
         kq = (chay_demo() + chay_demo_cat_doan() + chay_demo_ai()
-              + chay_demo_phan_loai() + chay_demo_hau_kiem())
+              + chay_demo_phan_loai() + chay_demo_hau_kiem() + chay_demo_tra_loi())
     for k in kq:
         dat = k["trang_thai"] == "XONG"
         print(f'[{"ĐẠT" if dat else "LỖI"}] {k["ten"]}' + ("" if dat else ": " + str(k["loi"]["ma"])))

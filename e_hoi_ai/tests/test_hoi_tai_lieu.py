@@ -174,12 +174,11 @@ def test_ollama_remote_bi_chan_du_v1_models_khong_khai(local):
 
 
 @pytest.mark.parametrize("ma_http", [400, 404, 429, 500, 503])
-def test_local_tu_choi_tra_loi_bao_thu_lai_khong_tu_gui_lai(local, ma_http):
+def test_local_tu_choi_tra_loi_chua_ro_khong_tu_gui_lai(local, ma_http):
     local.ma_http = ma_http
     local.tra_loi = "DEMO nội dung lỗi máy AI không được lộ"
     kq = hoi()
-    assert kq["trang_thai"] == "LOI" and kq["loi"]["thu_lai_duoc"]
-    assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG"
+    assert kq["trang_thai"] == "CHUA_RO" and kq["ma_tuong_quan"].startswith("local-")
     assert "nội dung lỗi" not in str(kq["loi"])
     assert local.so_luot_hoi == 1
 
@@ -190,7 +189,7 @@ def test_local_tu_choi_tra_loi_bao_thu_lai_khong_tu_gui_lai(local, ma_http):
 def test_phan_hoi_http_hong_hoac_vuot_tran(local, raw):
     local.phan_hoi_tho = raw
     kq = hoi()
-    assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and kq["loi"]["thu_lai_duoc"]
+    assert kq["trang_thai"] == "CHUA_RO" and kq["ma_tuong_quan"].startswith("local-")
     assert kq["ket_qua"] is None
 
 
@@ -343,7 +342,10 @@ def test_proxy_moi_truong_khong_duoc_su_dung(local, monkeypatch):
 def test_khong_theo_redirect_ke_ca_post(local, ma_http, duong):
     local.chuyen_huong = duong, ma_http
     kq = hoi()
-    assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and kq["loi"]["thu_lai_duoc"]
+    if duong.endswith("completions"):
+        assert kq["trang_thai"] == "CHUA_RO"
+    else:
+        assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and kq["loi"]["thu_lai_duoc"]
     assert local.so_luot_hoi == (1 if duong.endswith("completions") else 0)
     assert all(p in ("/v1/models", "/api/tags", "/api/v1/models", "/api/v0/models",
                      "/v1/chat/completions") for _, p in local.luot)

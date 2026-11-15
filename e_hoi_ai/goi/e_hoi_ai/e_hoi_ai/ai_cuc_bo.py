@@ -171,20 +171,19 @@ def _gui_post(url, nguon, thoi_han, than, kiem_huy):
             ket_noi.request("POST", parsed.path, body=than,
                             headers={"Content-Type": "application/json"})
             phan_hoi = ket_noi.getresponse()
-            if phan_hoi.status == 202:
-                raise ChuaRo("local-" + uuid.uuid4().hex)
             if phan_hoi.status != 200:
-                raise LocalAIKhongSanSang("Máy Local AI chưa trả được kết quả hợp lệ.")
+                raise ChuaRo("local-" + uuid.uuid4().hex)
             raw = phan_hoi.read(GIOI_HAN_PHAN_HOI + 1)
             if len(raw) > GIOI_HAN_PHAN_HOI:
-                raise LocalAIKhongSanSang("Phản hồi Local AI vượt giới hạn cho phép.")
+                raise ChuaRo("local-" + uuid.uuid4().hex)
             kich_thuoc = phan_hoi.getheader("Content-Length")
             if kich_thuoc is not None and len(raw) < int(kich_thuoc):
                 raise ChuaRo("local-" + uuid.uuid4().hex)
-        except (OSError, http.client.HTTPException):
+            ket_qua = _giai_json(raw)
+        except (OSError, http.client.HTTPException, ValueError, TypeError, RecursionError, OverflowError):
             raise ChuaRo("local-" + uuid.uuid4().hex) from None
         kiem_huy()
-        return _giai_json(raw)
+        return ket_qua
     finally:
         try:
             ket_noi.close()
@@ -302,7 +301,10 @@ def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None, khuon=None, nga
         if ngan_sach_mask:
             _kiem_budget_mask(bo_mo, goc, model, thoi_han, than, loai_api, kiem_huy)
         phan_hoi = _gui_post(url, nguon, thoi_han, than, kiem_huy)
-        return _noi_dung_hoan_tat(phan_hoi, ollama=khuon is not None and loai_api == "ollama", model=model)
+        try:
+            return _noi_dung_hoan_tat(phan_hoi, ollama=khuon is not None and loai_api == "ollama", model=model)
+        except (ValueError, KeyError, IndexError, TypeError, AttributeError, RecursionError, OverflowError):
+            raise ChuaRo("local-" + uuid.uuid4().hex) from None
     except urllib.error.HTTPError as exc:
         exc.close()
         raise LocalAIKhongSanSang("Máy Local AI chưa sẵn sàng. Hãy thử lại.") from None

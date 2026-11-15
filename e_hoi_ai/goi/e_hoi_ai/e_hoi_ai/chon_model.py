@@ -1,6 +1,7 @@
 """Catalog Local theo API, lưu trong bộ nhớ; không xếp hạng chất lượng model."""
 from collections import OrderedDict
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from fnmatch import fnmatchcase
 import http.client
 import time
@@ -11,6 +12,8 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
 from . import ai_cuc_bo
 from .dto import MA_MODEL
+from .ngan import NganXungDot
+from .ngan_engine import tao_ngan_bo_nho
 
 THOI_GIAN_DEM = 300
 CAC_API = (
@@ -131,9 +134,64 @@ class BoPhatHienModel:
 bo_phat_hien = BoPhatHienModel()
 
 
-def chon_model(yeu_cau, cau_hinh, *, kiem_huy=lambda: None):
+def _doc_models(ngan, url):
+    ds, tiep = [], None
+    while True:
+        trang = ngan.tim("model_phat_hien", loc={"url": url}, gioi_han=500, tiep=tiep)
+        ds.extend(trang.danh_sach)
+        tiep = trang.tiep
+        if tiep is None:
+            return ds
+
+
+def _luu_catalog(ngan, url, catalog):
+    """Không ghi nội dung tài liệu; CAS tranh chấp thử lại tối đa ba lần."""
+    models = catalog.models if catalog else ()
+    luc = datetime.now(timezone.utc).isoformat()
+    for thu in range(3):
+        try:
+            for m in models:
+                with ngan.lo() as lo:
+                    lo.lay_hoac_tao("model_phat_hien", {"id_model": m.ma}, {
+                        "url": url, "kha_dung": False, "thu_tu": 0,
+                    })
+            moi = {m.ma: (i, m) for i, m in enumerate(models)}
+            # Có thể quá 100 model, mỗi lô luôn dưới trần hợp đồng.
+            for ban in _doc_models(ngan, url):
+                gt = ban.gia_tri
+                muc = moi.get(gt["id_model"])
+                gia_tri = {**gt, "kha_dung": bool(muc and muc[1].kha_dung),
+                           "kiem_luc": luc, "phat_hien_dat": catalog is not None}
+                if muc:
+                    gia_tri.update(thu_tu=muc[0], loai=catalog.loai, api=list(catalog.api))
+                with ngan.lo() as lo:
+                    lo.sua("model_phat_hien", {"id_model": gt["id_model"]}, gia_tri,
+                           row_version=ban.row_version)
+            # Một ID có thể xuất hiện lại ở cổng Local mới sau khi Admin đổi cấu hình.
+            for i, m in enumerate(models):
+                ban = ngan.doc("model_phat_hien", {"id_model": m.ma})
+                if ban.gia_tri.get("url") != url:
+                    with ngan.lo() as lo:
+                        lo.sua("model_phat_hien", {"id_model": m.ma}, {
+                            "url": url, "kha_dung": m.kha_dung, "thu_tu": i,
+                            "loai": catalog.loai, "api": list(catalog.api),
+                            "kiem_luc": luc, "phat_hien_dat": True,
+                        }, row_version=ban.row_version)
+            return
+        except NganXungDot:
+            if thu == 2:
+                raise LoiNghiepVu("NGAN_XUNG_DOT", "Danh sách model vừa thay đổi. Hãy thử lại.",
+                                  thu_lai_duoc=True) from None
+
+
+def chon_model(yeu_cau, cau_hinh, *, kiem_huy=lambda: None, ngan=None):
+    # Công cụ độc lập AI-7 có thể không có app; vẫn chỉ dùng RAM, không đọc tệp.
+    ngan = tao_ngan_bo_nho() if ngan is None else ngan
     catalog = bo_phat_hien.kha_dung_hien_tai(cau_hinh["local_ai"], kiem_huy=kiem_huy)
-    cac_ma = [m.ma for m in catalog.models if m.kha_dung] if catalog else []
+    url = cau_hinh["local_ai"]["url"]
+    _luu_catalog(ngan, url, catalog)
+    cac_ma = [b.gia_tri["id_model"] for b in sorted(_doc_models(ngan, url),
+              key=lambda b: b.gia_tri["thu_tu"]) if b.gia_tri["kha_dung"]]
     if yeu_cau.model_uu_tien in cac_ma:
         return yeu_cau.model_uu_tien, "model_uu_tien"
     for quy_tac in cau_hinh.get("quy_tac_model", []):

@@ -54,12 +54,14 @@ def test_toan_bo_demo_dung_dap_an_va_khuon(local):
 @pytest.mark.parametrize("thanh_cong", [True, False, None], ids=["dat", "loi", "rong"])
 def test_cong_demo_ma_thoat_va_cau_hinh_trong_tests(monkeypatch, thanh_cong):
     chay_goc = CoreGia.chay_thu_demo
+    from e_hoi_ai.cau_hinh import doc_cau_hinh
     cau_hinh_da_dung = []
+    ngan_cu = app.ngan
 
     def chay_demo(core, ung_dung):
-        tep = Path(os.environ["KTT_ENGINE_CAU_HINH"])
-        assert tep.is_relative_to(bo_demo.THU_MUC_TEST) and tep.is_file()
-        cau_hinh_da_dung.append(tep)
+        ch = app.ngan.doc("cau_hinh", {}).gia_tri
+        assert ch["local_ai"]["url"].startswith("http://127.0.0.1:")
+        cau_hinh_da_dung.append(ch)
         ket_qua = chay_goc(core, ung_dung)
         if thanh_cong is None:
             return []
@@ -67,12 +69,11 @@ def test_cong_demo_ma_thoat_va_cau_hinh_trong_tests(monkeypatch, thanh_cong):
             ket_qua[-1]["trang_thai"] = "LOI"
         return ket_qua
 
-    # Biến ban đầu có thể trỏ máy thật: bộ chạy phải thay trước khi đọc cấu hình.
-    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", "cau-hinh-DEMO-ban-dau.json")
+    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", "khong-doc-tep-DEMO.json")
     monkeypatch.setattr(CoreGia, "chay_thu_demo", chay_demo)
     assert bo_demo.main() == (0 if thanh_cong else 1)
-    assert os.environ["KTT_ENGINE_CAU_HINH"] == "cau-hinh-DEMO-ban-dau.json"
-    assert cau_hinh_da_dung and not cau_hinh_da_dung[0].exists()
+    assert os.environ["KTT_ENGINE_CAU_HINH"] == "khong-doc-tep-DEMO.json"
+    assert cau_hinh_da_dung and app.ngan is ngan_cu
 
 
 def test_app_chay_doc_stdin_qua_may_chu_gia_http(local):
@@ -91,6 +92,9 @@ import ipaddress
 import socket
 from e_hoi_ai import chay
 from e_hoi_ai.cong_ai import CongAI, NhaCungCapLocal
+# Dùng ngăn engine đã khởi tạo từ KHAI-SDK-2.1.json.
+with chay.app.ngan.lo() as lo:
+    lo.them("cau_hinh", {}, CAU_HINH_DEMO)
 
 ket_noi_goc = socket.socket.connect
 def chi_loopback(self, dia_chi):
@@ -108,6 +112,7 @@ chay.bo_hoi.cong_ai = CongAI(nha_cung_cap={"local": NhaCungCapLocal(), "cloud": 
 chay.app.chay(dung_khi_het_viec=True)
 assert cloud.so_luot == 0, "Có lượt Cloud ngoài phạm vi."
 '''
+    ma_chay = ma_chay.replace('CAU_HINH_DEMO', repr(app.ngan.doc('cau_hinh', {}).gia_tri))
     with MayChuGia(core, {app.ma: khoa_demo}) as may:
         dong = json.dumps({"core_url": may.url, "khoa": khoa_demo, "instance": instance}) + "\n"
         tien_trinh = subprocess.run(

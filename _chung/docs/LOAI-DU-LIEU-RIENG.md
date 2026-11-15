@@ -214,3 +214,84 @@ T3(a) dùng nguyên `yeu_cau_ai` phiên bản 1. Đề xuất dùng khóa riêng
 Đây là quy ước nội bộ của bước chuẩn bị/hậu kiểm, **không phải thêm trường bắt buộc vào loại chung**. Hỏi AI giữ nguyên phần này trong `tra_loi_ai`, không đưa nó vào prompt gửi model. Nội dung bộ/văn bản/vị trí nằm trong hồ sơ hậu kiểm tạm tại Core; kiểm byte để phần chuyển tiếp không vượt 64 KiB (mục tiêu riêng ≤ 4 KiB). Cần Core xác nhận quyền/vòng đời tệp giữa các bước; SDK có thao tác tệp không tự chứng minh yêu cầu này đã được Core thật thực hiện.
 
 Nếu T3(b) được chọn sau này, phải trình riêng request/result batch, giới hạn số lượt, cách hợp nhất, hủy/lỗi/chưa rõ và tương thích; không thêm mảng câu hỏi vào schema v1 rồi coi consumer cũ hỗ trợ.
+
+## 5. ĐỀ XUẤT DC-P, chờ Anh — `ho_so_doi_chieu`
+
+*Lập 15/11/2026 · Codex · Theo `e_doi_chieu/docs/GIAO-CODEX-e_doi_chieu.md` §2 và DC-Q17. Đây là đề xuất mới, **chưa duyệt/kích hoạt**, không thuộc bốn loại đã duyệt ở §1–3. Không tạo schema/gói ở DC-P, không đổi loại/schema hiện có.*
+
+### 5.1 Mục đích và lựa chọn tái dùng
+
+Đề xuất đúng một loại mới:
+
+```json
+{"ma": "ho_so_doi_chieu", "ten": "Hồ sơ đối chiếu bản ký"}
+```
+
+- Tái dùng **nguyên phong bì** `van_ban_tai_lieu` cho mỗi tài liệu; tái dùng `yeu_cau_ai`/`tra_loi_ai` cho bước Local AI do Core điều phối. Không sửa chúng để nhét hai tài liệu vào một trường vốn mang nghĩa một tài liệu.
+- `bang_trich_xuat` là bảng trường theo bộ, không mang edit script toàn văn, vùng sửa tay hoặc trạng thái kiểm hai bản; không đổi nghĩa loại đó để phục vụ Đối chiếu.
+- Dùng `tep` cho Word/PDF/ảnh/JSON snapshot do Core giữ. Đã cân nhắc trả `tep` JSON ở mọi bước; đề xuất loại hồ sơ để Core phân biệt chỗ nối nghiệp vụ, không chỉ kiểm tệp bất kỳ. Chỉ dùng một loại xuyên các giai đoạn; engine kiểm giai đoạn sâu vì Core chỉ khớp chuỗi mã loại.
+- Nguồn tạo/nhận: `e_doi_chieu` ở `nhan_cap`, `so_van_ban`, `phat_hien_sua_tay`, `chuan_bi_ai`, `phan_loai_diem_lech`, `xuat_ket_qua` (đều tiền tố `doi_chieu.`, hậu tố `@1`). Module đọc JSON đã xuất; không có engine nào khác mặc nhiên được khai nhận loại này. Thêm consumer phải cập nhật hợp đồng sau duyệt.
+- Phiên bản payload `1`; thêm tùy chọn giữ số, đổi không tương thích tạo mã `ho_so_doi_chieu_2`. Schema nguồn dự kiến `_chung/contract/ho_so_doi_chieu.schema.json`, tạo ở DC-1 **sau duyệt**, chép vào gói và test so SHA-256.
+- Loại này là trung gian, **không ghép trực tiếp vào cột ngăn** theo API v1. Bước xuất trả `truong` tĩnh gồm tệp JSON/PDF, kết luận, số đếm và cờ kiểm/chặn (§2.1 phiếu DC-P).
+
+### 5.2 Phong bì đề xuất
+
+Mẫu DEMO dưới đây chỉ minh họa, `tep_id`, băm và kích thước phải được thay bằng giá trị đo từ tệp thật trong CoreGia khi viết fixture. Không dùng mẫu như kết quả đã tải tệp thành công.
+
+```json
+{"loai": "ho_so_doi_chieu", "ho_so_doi_chieu": {
+  "phien_ban": 1,
+  "ma_cap": "DEMO-cap-001",
+  "giai_doan": "da_so",
+  "nguon": {
+    "word": {"tep_id": "DEMO-word", "phien_ban": "DEMO-1", "bam": "<sha256 bytes DOCX>"},
+    "ban_ky": {"tep_id": "DEMO-ban-ky", "phien_ban": "DEMO-1", "bam": "<sha256 bytes PDF>"}
+  },
+  "ho_so": {"tep_id": "DEMO-ho-so", "ten": "DEMO-ho-so.json", "mime": "application/json", "kich_thuoc": 0},
+  "bam_ho_so": "<sha256 bytes JSON ho so>",
+  "bam_bo_quy_tac": "<sha256 snapshot bo>",
+  "phien_ban_engine": "e_doi_chieu 0.1.0",
+  "tom_tat": {
+    "so_diem": 1, "so_nghiem_trong": 1, "so_can_xem": 0,
+    "so_hinh_thuc": 0, "so_nhieu_ocr": 0,
+    "so_vung_sua_tay": null, "so_trang_ocr_kem": null
+  },
+  "kiem_tra": {
+    "doc_hai_ban": "dat", "so_van_ban": "dat", "quy_tac_cung": "dat",
+    "trang": "chua_kiem", "lech_dau": "chua_kiem",
+    "sua_tay": "chua_kiem", "phan_loai_ai": "chua_kiem"
+  },
+  "da_kiem_du": false,
+  "ket_luan": null,
+  "de_nghi_chan": true,
+  "canh_bao": ["DEMO; chưa kiểm vùng sửa tay và chưa đủ căn cứ phân trang bản Word."]
+}}
+```
+
+`giai_doan` dự kiến: `da_nhan`, `da_so`, `da_quet_anh`, `cho_ai`, `da_hau_kiem`, `da_tong_hop`. `kiem_tra` dùng `dat`, `khong_dat`, `chua_kiem`, `khong_ap_dung`; `khong_ap_dung` chỉ khi bộ chính sách được duyệt cho phép, có lý do trong snapshot. Không dùng nó để lách kiểm bắt buộc. `ket_luan` là `null` trước tổng hợp hoặc một trong năm mã ở phiếu §2.1. Đã biết lệch nghiêm trọng giữ nguyên trong snapshot và số đếm ngay cả khi chưa kiểm đủ.
+
+Trần phong bì ≤ 64 KiB JSON UTF-8; snapshot JSON ≤ 20 MiB, tối đa 10.000 điểm. Không nhét toàn văn, ảnh base64, toàn bộ điểm hoặc prompt vào phong bì. Mọi băm runtime dạng `sha256:<64 hex>`, mọi tham chiếu tệp có metadata thật; thiếu/sai thì lỗi, không chấp nhận placeholder như mẫu. Phong bì không tự khai danh tính người dùng/quyền bằng `ma_cap` hoặc metadata nguồn.
+
+### 5.3 Snapshot và quan hệ kiểm bằng Python
+
+Tệp `ho_so` trong kho Core chứa dữ liệu đủ để tái lập kết quả; không phải tệp bền trên máy engine:
+
+| Thành phần | Nội dung / ràng buộc |
+|---|---|
+| Hai bản nguồn | Tham chiếu Word/PDF gốc và phiên bản/băm; hai phong bì `van_ban_tai_lieu` nguyên vẹn hoặc tham chiếu+băm JSON của chúng; ảnh trang/bản chuẩn phân trang nếu có. Kiểm quan hệ tới bytes nguồn và quyền Core cấp |
+| Văn bản/cấu trúc | Nguyên văn bất biến, bản chuẩn hóa và ánh xạ offset Unicode `[bat_dau, ket_thuc)` về nguồn, bảng/ô rỗng/ô gộp; không bịa số trang/hộp cho DOCX chưa render |
+| `diem_lech` | Mã ổn định, phép so, nguyên văn/offset/vị trí hai bên, nhóm lệch dấu, vùng bảo vệ, quy tắc trúng, `muc_san` Python, mức cuối/lý do/nguồn. Mức: `nghiem_trong`, `can_xem`, `hinh_thuc`, `nhieu_ocr`; ứng viên chưa phân loại giữ cờ rõ |
+| Bằng chứng OCR/AI | Đúng mã điểm, băm cặp/trang/vùng; trích dẫn hai bên kiểm lại được, model/nguồn Local, phiên bản prompt; cờ nghi ngờ không thay kết quả OCR lại. Không cho AI thay sàn/quyền/băm |
+| Sửa tay/trang OCR kém | Danh sách vùng, trang và hộp đúng hệ tọa độ, ảnh cắt có quyền; nhật ký trang thực sự đã quét, phương pháp/phiên bản detector, mẫu số/ngưỡng đã đo. Không đọc chữ tay, không coi chưa quét là không có vùng |
+| Bộ và nguồn gốc | Snapshot/băm bộ quy tắc, từ điển, ngưỡng và phiên bản cấu hình; băm tệp gốc khác băm văn bản; dữ liệu kiểu tiền luôn `{so, tien_te}`, ngày `YYYY-MM-DD` |
+| Kết luận/số đếm | Khớp phong bì và mọi điểm; chỉ Khớp khi kiểm bắt buộc đầy đủ. Thiếu kiểm → chưa đối chiếu được và đề nghị chặn bảo thủ; lỗi OCR/nguồn không được đổi thành Khớp |
+
+Không ghép danh sách điểm theo vị trí mảng hoặc để mất đoạn không căn được; edit script phải tái dựng được hai bên. Không dùng `muc_san` để hạ mức cứng bằng AI; điểm còn lại chỉ được xếp nhiễu khi có bằng chứng theo DAC-TA §4. Vùng quy tắc cứng không bao giờ thành nhiễu. Không tự xóa điểm khi gom trang OCR kém hoặc ẩn bộ lọc UI.
+
+### 5.4 Qua Local AI, đầu vào cặp và quyền Core
+
+Trong phần **đã cho phép mở** `yeu_cau_ai.chuyen_tiep`, dùng khóa `doi_chieu` gồm `phien_ban`, `ma_cap`, tham chiếu+băm tệp hồ sơ, băm bộ và băm ngữ cảnh AI. Mục tiêu ≤ 4 KiB, trần chung vẫn 64 KiB. Hỏi AI giữ nguyên sang `tra_loi_ai`; model không được sinh lại metadata này. `tai_lieu` chứa ngữ cảnh có phân biệt trái/phải, hậu kiểm kiểm offset tại đó rồi ánh xạ về nguồn. Không đổi schema `yeu_cau_ai`/`tra_loi_ai`, không gửi Cloud.
+
+API v1 mỗi bước chỉ nhận một phong bì. Đầu vào cặp đề xuất là `tep` JSON do Core/module lập chứa tham chiếu+băm các tệp được cấp cho việc, **không phải** phong bì hai đầu vào mới. Cần Core chốt cửa chung ghép nguồn/quyền mở tệp con và vòng đời giữa các bước (C-DC-02); SDK có `mo_tep` không chứng minh tệp bất kỳ đều được mở. Test CoreGia không chứng nhận quyền thật. Chưa có cửa thì runtime từ chối; không đọc đường máy, gọi engine khác hoặc truy cập CSDL.
+
+Snapshot/kết quả/ảnh lưu qua kho tệp Core, chỉ mục/cấu hình qua `Ngan`; RAM tạm khi chưa có SDK 2.1, không đệm bền. Nhật ký xác nhận thuộc ngăn/cửa Core chỉ-thêm có danh tính/quyền/CAS, **không** đặt trong hồ sơ máy rồi coi là đã xác nhận hợp đồng. Module sở hữu chặn/mở hiệu lực và sự kiện nghiệp vụ.

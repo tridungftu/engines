@@ -17,6 +17,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | TC-2 | Nhận JSON, kiểm nguồn/quyền/phạm vi, ghim cấu hình và snapshot Core | Lead giao 15/11/2026, 12:51; phiếu TC-2 §4 | Chờ Core — 15/11/2026 | Đã làm đúng 3 tệp mã; 315 passed, 0 skipped; độc lập mã 0; harness 5/5 ĐẠT. CLI SDK gốc 0/5 ĐẠT, mã 1 do CHUA_CAU_HINH. Đã kiểm bằng Core giả (CoreGia), chưa chứng nhận quyền Core thật. PR: **chờ lead mở** |
 | TC-3 | Cắt Điều/Khoản/bảng, giữ nguyên nguồn/offset/vị trí; đóng ba nợ TC-2 | Lead giao 15/11/2026, 13:33; phiếu TC-3 §4 | Chờ Core — 15/11/2026 | Đã làm 3 tệp TC-3 + kiem_dau_vao.py cho nợ TC-2 (4 tệp mã); 457 passed, 0 skipped; độc lập mã 0; harness 9/9 ĐẠT. CLI SDK chuẩn 0/5, mã 1 do CHUA_CAU_HINH. Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật. PR: **chờ lead mở** |
 | TC-4 | Chuẩn bị bốn tác vụ Local AI, snapshot/map/khuôn/chuyển tiếp/ngân sách | Lead giao 15/11/2026, 14:11; phiếu TC-4 §4 | Chờ Core — 15/11/2026 | Đã làm đúng 3 tệp mã; 548 passed, 0 skipped; độc lập mã 0, harness 13/13 ĐẠT. CLI chuẩn 0/5 do CHUA_CAU_HINH/mã 1; còn giới hạn SDK chặn tham số trước handler. Đã kiểm bằng Core giả (CoreGia), consumer AI-2/Local giả trong tests, 0 Cloud. PR: **chờ lead mở** |
+| TC-6 | Hậu kiểm câu hỏi/hàm/ý định/thực thể và xếp hạng Local | Lead giao 15/11/2026, 14:34; sau TC-4, 4 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | Đã làm đúng 3 tệp mã; 688 passed, 0 skipped; độc lập mã 0, harness 17/17. CLI chuẩn 0/5 CHUA_CAU_HINH/mã 1. Đã kiểm bằng Core giả (CoreGia), Local giả theo protocol, 0 model/provider thật; chưa chứng nhận RLS. PR: **chờ lead mở** |
 
 **Phạm vi sau TC-P (15/11/2026):** các mã TC ở dòng 1–5 của bảng cũ là mã lịch sử từ DAC-TA §14, không phải lát code mới. Dùng bảng §3 của `GIAO-CODEX-e_tra_cuu.md` làm phiếu giao mới: TC-0 = khung SDK 2.0 + Ngan/cấu hình + kiem_doc_lap + KHAI-SDK-2.1; khảo sát PostgreSQL/kho/cache/SDK JS/nạp hàng loạt vẫn thuộc Core. Tại thời điểm TC-P chưa giao hoặc làm TC-0…TC-11; cập nhật TC-0 ở dưới. Tại TC-P không có `ma-nguon/`, `goi/`, `tests/`, quyết định cuối/phiếu riêng trong worktree; không tạo chúng ở TC-P. TC-0 đã tạo goi/tests, tiếp tục không tạo ma-nguon.
 
@@ -85,6 +86,36 @@ là nơi theo dõi; các dòng “chưa duyệt” trong biên bản TC-P/TC-0 d
   bytes, token thực null/chưa đo; không coi đủ context hoặc chất lượng thật.
   TC-5…7 phải tự kiểm quote/map/nguồn/thực thể/đơn vị, không tin riêng cờ
   AI-2; chữ nhãn kỹ thuật trong ngữ cảnh không là bằng chứng nguồn.
+
+### Bổ sung từ TC-6 — 15/11/2026
+
+- **C-TC-01:** CLI chuẩn chạy đủ 5 ví dụ nhưng 0/5 ĐẠT, `CHUA_CAU_HINH`,
+  mã 1. Cổng bổ sung §2.5 nay 17/17 DEMO; cần lead review, không thay cổng
+  chuẩn và không tự nạp cấu hình DEMO vào runtime.
+- **C-TC-02/03:** Core cấp `dau_vao` nguyên phản hồi Local và quyền sống của
+  snapshot/gốc/OCR xuyên bước. TC-6 tái dựng nguyên yêu cầu TC-4, đối chiếu
+  băm/prompt/khuôn/map/tác vụ/ngữ cảnh. Cửa này vẫn chỉ adapter CoreGia;
+  runtime thiếu trả `TC_CHUA_CO_CUA_CORE`.
+- **C-TC-03 — quy ước phân giải cần lead/Core review:** giấy cấp ngoài payload
+  có `phan_giai_cau_hoi={bam_cau_hoi,thuc_the,y_dinh,can_lam_ro,ham}`. Core
+  cấp danh mục thực thể đúng quyền/đủ câu hỏi, bộ ý định có cụm từ/cờ thời điểm;
+  binding tham số thực thể/ngữ cảnh/tập giá trị, ý định được phép cho từng
+  hàm, trạng thái module và mốc công bố. Định dạng chi tiết và giới hạn ở
+  README gói. Chưa là API Core/SDK thật, không tin model tự khai metadata.
+  Kiểm literal bảo thủ: thiếu/đa nghĩa cần làm rõ, chưa chứng minh hiểu ngữ
+  nghĩa tổng quát hoặc chất lượng AI. Core phải đánh dấu tham chiếu chưa
+  phân giải; thiếu căn cứ không chọn bừa hợp đồng/khoản vay.
+- **C-TC-03/04:** RLS pháp nhân/nhóm/người phải lọc trước ứng viên vào engine/
+  AI; giả lập lọc/tệp con không chứng minh RLS thật. Module chưa chạy hiển
+  thị chờ, Core chọn tầng 2; engine chỉ đề xuất hàm. Câu có 0 ứng viên rẽ
+  nhánh từ hồ sơ `da_nhan` không AI. Xếp hạng ghim cờ thời điểm Core, xuất
+  nguyên tập nguồn/thực thể/phạm vi/hàm/phiên bản/mốc cho Core quản cache;
+  câu thời điểm không tái dùng bản đầu, TC-Q06 tiếp tục không tự xóa.
+- **C-TC-05/L-TC-01:** log an toàn/lease/ACK và token/context/model thật vẫn
+  chờ Core/Hỏi AI; TC-6 không sửa SDK hoặc chạy model/provider thật. Các
+  bộ đếm token TC-4 giữ null/chưa đo, không thay bằng số giả.
+- Không phát sinh câu cần Anh quyết định thêm; không mở Core/SQL/kho/cache
+  hoặc sửa TC-5 (phan_loai.py/quy_tac_nhom.py).
 
 ### TC-0 — biên bản bàn giao ngày 15/11/2026
 
@@ -577,3 +608,110 @@ gói; tệp lớn nhất 25137 bytes. Chỉ thay đổi trong `e_tra_cuu/` tại
 kiểm bàn giao **14:32:43 (UTC+07:00)**, khoảng **0,36 giờ**; phiếu **4 giờ
 ƯỚC TÍNH**. Gồm đọc tài liệu, cài venv/SDK offline, triển khai, kiểm và tài
 liệu; không gồm thời gian chờ Core/model thật hay đo chất lượng thực tế.
+
+### TC-6 — biên bản bàn giao ngày 15/11/2026
+
+**Kết luận: Chưa đạt cổng kiểm chung AGENTS.md §5** — TC-6 đã hoàn thành
+trong phạm vi adapter CoreGia, nhưng CLI SDK chuẩn 0/5 ĐẠT/mã 1 do thiếu
+cấu hình Ngan. PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), không
+chứng nhận RLS/Core/AI thật; không commit/push.
+
+**Đã làm:** đúng ba tệp mã `cau_hoi.py`, `xep_hang.py`, `chay.py`:
+
+- `tra_cuu.phan_tich_cau_hoi@1`: Local → `da_phan_tich`; kiểm cùng snapshot/
+  nguồn/băm/prompt/tác vụ/chuyển tiếp và căn cứ câu hỏi. Thực thể giữ đúng
+  mã/loại/giá trị, kể cả 0 đầu; VAY-A/B không trùng theo ngữ nghĩa. Ý định và
+  tập thực thể bám danh mục Core ngoài payload, không để model tự cấp quyền.
+  Mơ hồ đánh dấu cần làm rõ và bỏ hàm, không chọn bừa hợp đồng/khoản vay.
+- Cờ thời điểm từ câu hỏi/ý định Core; “tháng này” lấy mốc Core có múi giờ,
+  kiểm cả tháng nhuận và mốc khác năm, không dùng đồng hồ máy/model. Giữ
+  bằng chứng Unicode code point, không đổi NFD/NFC hoặc số 0 đầu.
+- Hàm đúng allowlist tên/phiên bản/schema/ý định/binding tham số/phạm vi.
+  Từ chối SQL/code/URL/khóa thừa kể cả object con/schema mở. Không bỏ tham
+  số thực thể/ngữ cảnh để mở rộng phạm vi. Module chưa chạy ghi chờ/không
+  khả dụng, Core chọn tầng 2; không thực thi hàm hay trả dữ liệu tầng 1 giả.
+- `tra_cuu.xep_hang_lai@1`: Local → `da_xep_hang`; đủ đúng tập mã, mỗi mã
+  một lần, điểm hữu hạn trong thang ghim. Điểm giảm, tie giữ thứ tự tập gốc
+  Core. Giữ nguyên ứng viên/nội dung/vị trí/nguồn/phiên bản, không top-k.
+  0 ứng viên chặn nhánh chuẩn bị AI sau kiểm nguồn, Core rẽ nhánh không AI.
+- Snapshot kết quả chỉ tải Core, kiểm ACK/hủy. Xuất nguyên tập nguồn phụ
+  thuộc/thực thể/phạm vi/hàm/phiên bản/mốc cho downstream/cache; điểm chỉ
+  sắp thứ tự, không độ tin cậy được duyệt. Token thực vẫn null/chưa đo.
+- Không tệp tạm hoặc lưu bền/cấu hình/cache/chỉ mục/nhật ký trên máy. Cấu
+  hình giữ snapshot Ngan, hai mẫu NGAN-0 và bốn schema giữ nguyên. Không
+  sửa ma-nguon, Core, SDK hoặc mã TC-5; không thêm dependency.
+
+**Kết quả kiểm thực:** Windows, Python 3.13.14, pytest 9.1.1, venv
+`--system-site-packages`; SDK 2.0.0 cài offline `--no-index --no-deps`,
+SHA-256 wheel khớp SHA256SUMS.txt. PYTHONUTF8/PYTHONDONTWRITEBYTECODE=1.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_tra_cuu/goi/e_tra_cuu
+[LỖI] Nhận DEMO — Phân loại: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+[LỖI] Nhận DEMO — Cắt đoạn: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+[LỖI] Nhận DEMO — Phân tích câu hỏi: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+[LỖI] Nhận DEMO — Xếp hạng lại: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+[LỖI] Nhận DEMO — Soạn trả lời tầng 1: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+Engine e_tra_cuu 0.1.0: có ví dụ chạy thử DEMO chưa đạt.
+0/5 ĐẠT; CHUA_CAU_HINH; mã thoát 1.
+
+.venv/Scripts/python -B -m pytest e_tra_cuu/tests -q
+688 passed in 18.10s
+0 failed, 0 skipped; mã thoát 0.
+
+.venv/Scripts/python -B e_tra_cuu/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập; không import cấm, bytecode hoặc liên kết.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_tra_cuu/tests/chay_demo_voi_core_gia.py
+[ĐẠT] Nhận DEMO — Phân loại
+[ĐẠT] Nhận DEMO — Cắt đoạn
+[ĐẠT] Nhận DEMO — Phân tích câu hỏi
+[ĐẠT] Nhận DEMO — Xếp hạng lại
+[ĐẠT] Nhận DEMO — Soạn trả lời tầng 1
+[ĐẠT] DOCX DEMO không trang
+[ĐẠT] Điều/Khoản DEMO xuyên trang rỗng
+[ĐẠT] Bảng DEMO ô gộp/trống
+[ĐẠT] Bảng DOCX DEMO không trang
+[ĐẠT] Chuẩn bị AI DEMO — phan_loai
+[ĐẠT] Chuẩn bị AI DEMO — phan_tich_cau_hoi
+[ĐẠT] Chuẩn bị AI DEMO — xep_hang_lai
+[ĐẠT] Chuẩn bị AI DEMO — soan_tra_loi
+[ĐẠT] Câu hỏi VAY-A DEMO
+[ĐẠT] Câu hỏi VAY-B DEMO
+[ĐẠT] Mã giữ 0 đầu DEMO
+[ĐẠT] Xếp hạng tie giữ toàn nguồn DEMO
+17/17 DEMO ĐẠT; mạng ngoài/lượt provider/Cloud=0 (không có provider trong harness).
+Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật; ngăn RAM mất khi dừng.
+Mã thoát 0.
+```
+
+Cảnh báo RAM ra stderr đúng mẫu: “Đang lưu tạm trong bộ nhớ; khởi động lại
+sẽ mất hạn mức/dấu chống trùng”. Test gồm **548 hồi quy + 140 ca TC-6**:
+thực thể A/B/AB/0007/007/mơ hồ, ý định/thời điểm/Unicode, hàm lạ/sai version/
+SQL/code/URL/kiểu/schema/ref/nested/khóa thừa/ràng buộc/ngữ cảnh/module chưa
+chạy; đổi/trùng/thiếu/thêm mã, NaN/Infinity/bool/điểm ngoài thang/thang khác,
+tie, 0/50/51 ứng viên/ngân sách; hai nguồn và thu quyền, khác pháp nhân/
+nhóm 07/Cloud, nguồn/prompt/băm/chuyển tiếp/snapshot/khuôn/map/quote giả;
+hủy theo cụm/từng ứng viên/trước/sau upload, mất lease/ACK/ChuaRo và chặn ghi
+đĩa/mạng. Ca lọc giả trước ứng viên chỉ kiểm adapter, không chứng nhận RLS.
+
+**Lệch khỏi phiếu / quyết định tạm:** đúng ba tệp mã. Mã chung hậu kiểm/khuôn
+đặt trong `cau_hoi.py` để `xep_hang.py` tái dùng trong phạm vi ba tệp. Bổ sung
+quy ước metadata phân giải tại seam chưa phát hành (README và Cần Core),
+thiếu metadata từ chối rõ. Đây là kiểm literal bảo thủ; chưa đo semantic
+accuracy/model/context, chưa kiểm Core thật hoặc Linux. Test TC-2 chỉ bỏ
+hai handler TC-6 khỏi danh sách stub CHUA_LAM; không bỏ ca hồi quy nghiệp vụ.
+
+**Cần Core / Chờ Anh:** C-TC-01/02/03/04/05 và L-TC-01 như mục bổ sung
+TC-6. Core/lead review metadata phân giải/allowlist/binding, cấp quyền sống/
+RLS trước AI, trạng thái module/thời điểm và nhánh không AI. Lead review
+cổng bổ sung §2.5 rồi mở PR. Không phát sinh câu hỏi mới cần Anh; TC-Q06
+tiếp tục không tự xóa.
+
+**Kiểm bàn giao:** `git diff --check` mã 0; 6/6 cặp mẫu/schema SHA-256 LF
+khớp, 5/5 băm yêu cầu DEMO khớp bytes. Không bytecode/liên kết trong gói;
+tệp lớn nhất 27044 bytes. Mọi thay đổi trong worktree này, nhánh
+`codex/e_tra_cuu-tc-6`; không commit/push.
+
+**Thời gian thực tế TC-6:** bắt đầu **15/11/2026 14:34** theo lead; kết thúc **15:06:11 (UTC+07:00)**, khoảng **0,54 giờ**; phiếu **4 giờ ƯỚC TÍNH**. Gồm đọc tài liệu, cài venv/SDK offline, triển khai, kiểm và tài liệu; không gồm chờ Core/model thật hoặc đo chất lượng thực tế.

@@ -1,5 +1,26 @@
 # Thay đổi
 
+## 0.1.0 — 15/11/2026 — TC-6 (chưa phát hành)
+
+- Thực thi hai hậu kiểm Local `phan_tich_cau_hoi@1`, `xep_hang_lai@1`, đúng
+  3 tệp mã cau_hoi.py/xep_hang.py/chay.py. Đọc lại snapshot/nguồn/quyền,
+  tái dựng prompt/khuôn/map/ngân sách và băm toàn yêu cầu AI; tự kiểm quote.
+- Tập thực thể/ý định bám căn cứ câu hỏi và danh mục Core cấp ngoài payload;
+  giữ mã 0 đầu. Mơ hồ cần làm rõ, không chọn bừa khoản vay/hợp đồng. Cờ
+  thời điểm từ câu hỏi/chính sách Core; “tháng này” theo mốc Core có múi giờ.
+- Hàm đúng tên/phiên bản/schema/ý định/binding tham số/phạm vi Core; từ chối
+  SQL/code/URL/khóa thừa. Module chưa chạy ghi chờ, không dữ liệu tầng 1 giả;
+  Core chọn tầng tiếp, engine không thực thi hàm hoặc truy vấn.
+- Xếp hạng đủ hoán vị mã, điểm hữu hạn đúng thang, tie giữ thứ tự Core.
+  Giữ nguyên mọi ứng viên/nguồn/phiên bản/nội dung, không top-k ngầm.
+  Chặn nhánh chuẩn bị AI khi 0 ứng viên; Core rẽ nhánh không AI.
+- Snapshot kết quả và nguyên tập phụ thuộc/thực thể gửi Core, kiểm ACK/hủy;
+  không cache/chỉ mục/nhật ký/cấu hình bền/tệp tạm. Mẫu Ngan/schema giữ nguyên.
+- Đã kiểm bằng Core giả (CoreGia), Local giả theo protocol, 0 model/provider
+  thật/Cloud. Seam phân giải chỉ là quy ước tạm C-TC-03, không chứng nhận RLS.
+  Harness 17/17; CLI chuẩn vẫn 0/5 CHUA_CAU_HINH/mã 1. Số kiểm thực và thời
+  gian ở docs/VIEC.md; chưa kiểm Core thật/AI thật/Linux.
+
 ## 0.1.0 — 15/11/2026 — TC-4 (chưa phát hành)
 
 - Thực thi `tra_cuu.chuan_bi_ai@1` cho bốn tác vụ Local; kiểm lại snapshot,

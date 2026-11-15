@@ -1,7 +1,7 @@
 {
   "ngan_du_lieu": [
     {
-      "ma": "dinh_danh",
+      "bang": "dinh_danh",
       "pham_vi": "engine",
       "khoa": [
         "vung",
@@ -45,7 +45,7 @@
       ]
     },
     {
-      "ma": "bi_danh_tam",
+      "bang": "bi_danh_tam",
       "pham_vi": "engine",
       "khoa": [
         "vung",
@@ -85,7 +85,7 @@
       ]
     },
     {
-      "ma": "cho_duyet",
+      "bang": "cho_duyet",
       "pham_vi": "engine",
       "khoa": [
         "vung",
@@ -129,7 +129,7 @@
       ]
     },
     {
-      "ma": "ma_yeu_cau",
+      "bang": "ma_yeu_cau",
       "pham_vi": "engine",
       "khoa": [
         "vung",
@@ -164,7 +164,7 @@
       ]
     },
     {
-      "ma": "dau_gap",
+      "bang": "dau_gap",
       "pham_vi": "engine",
       "khoa": [
         "vung",

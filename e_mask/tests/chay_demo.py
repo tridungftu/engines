@@ -7,6 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'goi/e_mask'))
 from kho_tri_thuc_sdk.thu import CoreGia
 from e_mask.chay import tao_app
 from e_mask.duyet_dinh_danh import DuyetDinhDanh
+from e_mask.kho_ngan import KHAI_NGAN
 from e_mask.ngan import NganBoNho
 from ho_tro_ngan import ADMIN, QuyenNganDemo, TEN
 
@@ -26,7 +27,7 @@ class CoreDemo(CoreGia):
 
 
 def chay():
-    ngan, quyen = NganBoNho(), QuyenNganDemo()
+    ngan, quyen = NganBoNho(KHAI_NGAN), QuyenNganDemo()
     # Danh mục/mã yêu cầu DEMO cấp từ bên tin cậy, không có cờ DEMO trong engine.
     DuyetDinhDanh(ngan, ADMIN).nhap_demo([{'gia_tri': TEN, 'nhom':'CONG_TY', 'ma_junsky':'KH-DEMO-001'}], thuc_hien=True)
     with ngan.lo() as lo:

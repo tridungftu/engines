@@ -16,9 +16,11 @@ from re import fullmatch
 from typing import Protocol
 from uuid import uuid4
 
-from kho_tri_thuc_sdk.engine import ChuaRo, ViecDaHuy
+from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu, ViecDaHuy
 
 from .che_van_ban import _kiem_dinh_danh, chuan_bi_danh, chuan_hoa
+from .cau_hinh import CauHinhKhongHopLe
+from .ngan import NganKhongHopLe, NganXungDot
 from .nguon.privacy.core import CATEGORIES
 from .quyen_yeu_cau import loi_kho, xac_minh
 
@@ -149,6 +151,9 @@ class KhoQuaCore:
             raise ChuaRo('mask-' + self._dau['tuong_quan']) from None
         except ViecDaHuy:
             raise
+        except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
+            raise LoiNghiepVu(exc.ma, exc.thong_diep,
+                             thu_lai_duoc=exc.thu_lai_duoc) from None
         except Exception as exc:
             ma = getattr(exc, 'ma', None)
         raise loi_kho(ma) from None

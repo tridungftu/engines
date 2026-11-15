@@ -7,6 +7,7 @@ lại, không lưu văn bản hoặc kết quả AI. Mọi ghi nghiệp vụ tro
 from copy import deepcopy
 from hashlib import sha256
 import json
+from pathlib import Path
 from uuid import uuid4
 
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
@@ -20,6 +21,8 @@ BANG = ('dinh_danh', 'bi_danh_tam', 'cho_duyet', 'ma_yeu_cau', 'dau_gap')
 TIEN_TO = {'CONG_TY': 'MASKCT', 'CA_NHAN': 'MASKCN', 'DIA_CHI': 'MASKDC',
            'MA_SO_THUE': 'MASKMST', 'TAI_KHOAN': 'MASKTK'}
 CAC_TIEN_TO = frozenset((*TIEN_TO.values(), 'MASKKHAC', 'MASKTAM'))
+KHAI_NGAN = json.loads((Path(__file__).resolve().parents[1] / 'KHAI-SDK-2.1.json')
+                       .read_text(encoding='utf-8'))['ngan_du_lieu']
 
 
 def khoa_dau(*phan):
@@ -43,9 +46,9 @@ def doc_het(ngan, bang, vung):
     ds, tiep = {}, None
     while True:
         trang = ngan.tim(bang, loc={'vung': vung}, gioi_han=500, tiep=tiep)
-        for muc in trang['danh_sach']:
+        for muc in trang.danh_sach:
             ds[muc.gia_tri['khoa']] = muc
-        tiep = trang['tiep']
+        tiep = trang.tiep
         if tiep is None:
             return ds
 
@@ -75,7 +78,11 @@ class AnhNgan:
                 if cu is not None and cu.gia_tri == moi:
                     continue
                 lenh.append((b, k, cu, moi))
-        if len(lenh) + 1 > 100:
+        # sua là bản vá: bỏ trường phải xóa/tạo lại trong cùng lô có CAS.
+        so_lenh = sum(2 if cu is not None and moi is not None
+                      and cu.gia_tri.keys() - moi.keys() else 1
+                      for _, _, cu, moi in lenh)
+        if so_lenh + 1 > 100:
             raise LoiNghiepVu('MASK_QUA_GIOI_HAN', 'Số thay đổi vượt giới hạn một giao dịch. Cần chia nhỏ yêu cầu.')
         try:
             with self.ngan.lo() as lo:
@@ -87,6 +94,9 @@ class AnhNgan:
                         lo.them(b, khoa, moi)
                     elif moi is None:
                         lo.xoa(b, khoa, row_version=cu.row_version)
+                    elif cu.gia_tri.keys() - moi.keys():
+                        lo.xoa(b, khoa, row_version=cu.row_version)
+                        lo.them(b, khoa, moi)
                     else:
                         lo.sua(b, khoa, moi, row_version=cu.row_version)
         except NganXungDot:

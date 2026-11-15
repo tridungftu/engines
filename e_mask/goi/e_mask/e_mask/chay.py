@@ -1,12 +1,26 @@
 """Hai năng lực văn bản SDK; kho qua ngăn, quyền từ bên tích hợp tin cậy."""
 from copy import deepcopy
+from functools import wraps
 from pathlib import Path
 
 from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
 
 from . import che_van_ban as loi_che, phong_bi, tai_nguyen
 from .kho_dinh_danh import KhoDinhDanh
-from .ngan import chon_ngan
+from .cau_hinh import CauHinhKhongHopLe
+from .kho_ngan import KHAI_NGAN
+from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
+
+
+def _loi_cong(ham):
+    @wraps(ham)
+    def goi(viec):
+        try:
+            return ham(viec)
+        except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
+            raise LoiNghiepVu(exc.ma, exc.thong_diep,
+                             thu_lai_duoc=exc.thu_lai_duoc) from None
+    return goi
 
 
 def _mo_ai(chu, ma, dong, ai, kho, viec):
@@ -56,13 +70,18 @@ def _mo_ai(chu, ma, dong, ai, kho, viec):
 def tao_app(*, ngan=None, quyen=None):
     """Chỉ bên tích hợp truyền port; dữ liệu việc không thể cấp quyền này."""
     ung_dung = Engine.tu_khai_bao(str(Path(__file__).resolve().parents[1] / 'engine.json'))
-    if ngan is None:
-        chon_ngan(ung_dung)
+    if ngan is not None:
+        ung_dung.ngan = ngan
+    elif getattr(ung_dung, 'ngan', None) is None:
+        ung_dung.ngan = NganBoNho(KHAI_NGAN)
+    ngan = chon_ngan(ung_dung)
 
     def ngan_cua_viec(viec):
-        return getattr(viec, 'ngan', None) or ngan or chon_ngan(ung_dung)
+        ngan_viec = getattr(viec, 'ngan', None)
+        return ngan if ngan_viec is None else ngan_viec
 
     @ung_dung.nang_luc('mask.che_van_ban@1')
+    @_loi_cong
     def che(viec):
         chu, ds = phong_bi.doc_che(viec)
         viec.tien_do(10, 'Đang kiểm tra văn bản.')
@@ -83,6 +102,7 @@ def tao_app(*, ngan=None, quyen=None):
         return phong_bi.ket_qua_che(kq, chu)
 
     @ung_dung.nang_luc('mask.mo_che_van_ban@1')
+    @_loi_cong
     def mo(viec):
         chu, ma, dong, ai = phong_bi.doc_mo(viec)
         viec.tien_do(10, 'Đang kiểm tra quyền mở che.')

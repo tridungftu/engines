@@ -14,7 +14,7 @@ Chạy DEMO có port tin cậy, từ thư mục repo:
 
 Linux dùng Python trong môi trường tương ứng. Đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1` trước khi kiểm gói. Adapter DEMO chỉ ở `tests/`, không có chế độ mở kho giả trong gói.
 
-Bốn từ điển sạch đã được lead cấp theo lệnh giao 15/11, nằm tại `e_mask/tu_dien/`; kiểm SHA khi nạp. Thiếu/sai SHA bị chặn. Test so băm với nguồn tham chiếu ngoài gói; test so băm `ngan.py`, `cau_hinh.py` tạm skip “chờ NGAN-0 gộp”.
+Bốn từ điển sạch đã được lead cấp theo lệnh giao 15/11, nằm tại `e_mask/tu_dien/`; kiểm SHA khi nạp. Thiếu/sai SHA bị chặn. Đã nối ngăn chung NGAN-0; hai tệp `ngan.py`, `cau_hinh.py` giữ nguyên bản chung. Test so băm hai mẫu và từ điển sau đổi CRLF thành LF, không skip. Bảng RAM được khai báo từ `KHAI-SDK-2.1.json/ngan_du_lieu`.
 
 Trần văn bản 500.000 ký tự, danh sách đã biết 500 mục, giá trị 300 ký tự, nhóm 20 ký tự. Không cắt ngầm. Lô ngăn hiện tối đa 100 lệnh: nếu toàn bộ thay đổi vượt mức này, từ chối cả việc; cần Core hỗ trợ giao dịch lớn để xử lý nhiều cụm. JSON tệp đầu vào tạm có trần kỹ thuật 4 MiB, chưa phải trần tệp nghiệp vụ đã được Anh chốt. Không dùng trần đầu vào làm trần đầu ra.
 

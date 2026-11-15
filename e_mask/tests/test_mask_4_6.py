@@ -12,10 +12,12 @@ from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_mask import phong_bi, che_van_ban
 from e_mask.chay import tao_app
+from e_mask.cau_hinh import CauHinhKhongHopLe
 from e_mask.duyet_dinh_danh import DuyetDinhDanh
 from e_mask.kho_dinh_danh import KhoDinhDanh
 from e_mask.kho_ngan import AnhNgan, khoa_muc
-from e_mask.ngan import NganBoNho
+from e_mask.kho_ngan import KHAI_NGAN
+from e_mask.ngan import NganBoNho, NganKhongHopLe, NganXungDot
 from ho_tro_ngan import ADMIN, QuyenNganDemo, TEN, VAN_BAN, ai_demo, viec_demo
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -63,7 +65,7 @@ def test_schema_co_an_toan_khong_chap_nhan_gia():
 
 
 def ghep():
-    n,q,c = NganBoNho(),QuyenNganDemo(),CoreGia()
+    n,q,c = NganBoNho(KHAI_NGAN),QuyenNganDemo(),CoreGia()
     return n,q,c,tao_app(ngan=n,quyen=q)
 
 
@@ -150,6 +152,7 @@ def test_duyet_tu_choi_don_hai_yeu_cau_va_giao_lai():
     assert mo['ket_qua']['truong']['van_ban_da_mo_che']==TEN and admin.don()==0
     admin.dong(ctx2.ma_yeu_cau)
     assert admin.don()==1
+    assert 'bi_danh_tam' not in n.tim('dinh_danh').danh_sach[0].gia_tri
     # Giao lại lượt che vẫn trả đúng bí danh tạm ban đầu, không tăng đếm.
     with c._lock:
         c._viec[a]['trang_thai']='CHO'; c._hang.append(a)
@@ -181,7 +184,7 @@ def test_admin_quyen_cas_nhap_lap_va_don_tranh_chot():
     assert e.value.ma=='MASK_XUNG_DOT'
     ds=[{'gia_tri':'Công ty DEMO Bình Minh','nhom':'CONG_TY','ma_junsky':'KH-DEMO-002'}]
     assert admin.nhap_demo(ds)['so_dong_them']==1
-    assert n.tim('dinh_danh')['danh_sach']==[]
+    assert n.tim('dinh_danh').danh_sach==[]
     admin.nhap_demo(ds,thuc_hien=True)
     assert admin.nhap_demo(ds,thuc_hien=True)['so_dong_them']==0
 
@@ -195,11 +198,11 @@ def test_sdk_mat_ack_giao_lai_khong_dem_lap(thao_tac):
         c._viec[v]['trang_thai']='CHO'; c._hang.append(v)
     c.chay(tao_app(ngan=n,quyen=q))
     assert c.xem(v)['ket_qua']['van_ban_da_che']==che
-    assert n.tim('cho_duyet')['danh_sach'][0].gia_tri['so_lan_gap']==1
+    assert n.tim('cho_duyet').danh_sach[0].gia_tri['so_lan_gap']==1
 
 
 def test_huy_truoc_chot_khong_ghi_nghiep_vu():
-    n,q=NganBoNho(),QuyenNganDemo(); v=viec_demo(); q.cap(v.id)
+    n,q=NganBoNho(KHAI_NGAN),QuyenNganDemo(); v=viec_demo(); q.cap(v.id)
     def ham(kho):
         from e_mask import tai_nguyen
         tai_nguyen.nap_tu_goi()
@@ -208,7 +211,7 @@ def test_huy_truoc_chot_khong_ghi_nghiep_vu():
         return kq
     with pytest.raises(ViecDaHuy):
         KhoDinhDanh(ngan=n,quyen=q).xu_ly(v,ham)
-    assert n.tim('cho_duyet')['danh_sach']==[] and n.tim('ma_yeu_cau')['danh_sach']==[]
+    assert n.tim('cho_duyet').danh_sach==[] and n.tim('ma_yeu_cau').danh_sach==[]
 
 
 def test_moi_vi_du_bang_core_gia():
@@ -239,18 +242,18 @@ def test_bien_noi_dung_handler(loai):
 
 def test_nhieu_cum_vuot_100_lenh_tu_choi_toan_bo():
     from e_mask.kho_ngan import BANG
-    n=NganBoNho(); anh=AnhNgan(n,'DEMO')
+    n=NganBoNho(KHAI_NGAN); anh=AnhNgan(n,'DEMO')
     for i in range(100):
         anh.dat('cho_duyet',f'demo-{i}',{'gia_tri':f'DEMO {i}'})
     with pytest.raises(LoiNghiepVu) as e:
         anh.chot()
     assert e.value.ma=='MASK_QUA_GIOI_HAN'
-    assert n.tim('cho_duyet')['danh_sach']==[]
+    assert n.tim('cho_duyet').danh_sach==[]
 
 
 def test_replay_khong_am_tham_doi_ket_qua_da_chot():
     from e_mask import tai_nguyen
-    n,q=NganBoNho(),QuyenNganDemo(); v=viec_demo(); q.cap(v.id)
+    n,q=NganBoNho(KHAI_NGAN),QuyenNganDemo(); v=viec_demo(); q.cap(v.id)
     k=KhoDinhDanh(ngan=n,quyen=q)
     def ham(kho):
         tai_nguyen.nap_tu_goi()
@@ -262,3 +265,62 @@ def test_replay_khong_am_tham_doi_ket_qua_da_chot():
     with pytest.raises(LoiNghiepVu) as e:
         k.xu_ly(v,ham_doi)
     assert e.value.ma=='MASK_XUNG_DOT'
+
+
+def test_app_tu_khai_bao_ngan_ram_va_giu_ngan_duoc_cap():
+    q,c=QuyenNganDemo(),CoreGia()
+    app=tao_app(quyen=q)
+    n=app.ngan
+    che_demo(n,q,c,app)
+    assert n.tim('cho_duyet').danh_sach[0].gia_tri['so_lan_gap']==1
+    assert tao_app(ngan=n,quyen=q).ngan is n
+
+
+@pytest.mark.parametrize('loai_loi', [NganXungDot, NganKhongHopLe, CauHinhKhongHopLe])
+@pytest.mark.parametrize('nang_luc', [CHE, MO])
+def test_loi_cong_chung_thanh_loi_nghiep_vu(monkeypatch, loai_loi, nang_luc):
+    n,q,c,app=ghep()
+    def loi_demo(*args, **kw):
+        raise loai_loi()
+    monkeypatch.setattr(KhoDinhDanh,'xu_ly',loi_demo)
+    dau=({'loai':'van_ban','van_ban':VAN_BAN} if nang_luc==CHE else
+         {'loai':'tra_loi_ai','tra_loi_ai':ai_demo('DEMO','ma-DEMO')})
+    kq=c.chay_thu(app,nang_luc,dau)
+    assert kq['trang_thai']=='LOI' and kq['ket_qua'] is None
+    assert kq['loi']['ma']==loai_loi.ma
+    assert kq['loi']['thong_diep']==loai_loi.thong_diep
+    assert kq['loi']['thu_lai_duoc']==loai_loi.thu_lai_duoc
+
+
+def test_xoa_truong_van_chiu_cas_va_tran_lo():
+    n=NganBoNho(KHAI_NGAN)
+    with n.lo() as lo:
+        for i in range(50):
+            lo.them('dau_gap',khoa_muc('DEMO',f'demo-{i}'),{'so':i,'cu':True})
+    anh=AnhNgan(n,'DEMO')
+    for i in range(50):
+        anh.dat('dau_gap',f'demo-{i}',{'so':i})
+    with pytest.raises(LoiNghiepVu) as e:
+        anh.chot()
+    assert e.value.ma=='MASK_QUA_GIOI_HAN'
+    assert all(m.gia_tri['cu'] for m in n.tim('dau_gap',loc={'cu':True}).danh_sach)
+    del anh.moi['dau_gap']['demo-49']
+    anh.chot()  # 49 cặp xóa/thêm + 1 xóa + 1 CAS = 100 lệnh.
+    assert not n.tim('dau_gap',loc={'cu':True}).danh_sach
+    assert n.doc('dau_gap',khoa_muc('DEMO','demo-49')) is None
+    with pytest.raises(LoiNghiepVu) as e:
+        anh.chot()
+    assert e.value.ma=='MASK_XUNG_DOT'
+
+
+def test_loi_ngan_khi_doc_snapshot_khong_bi_mat_ma():
+    class NganLoi(NganBoNho):
+        def tim(self, *args, **kw):
+            raise NganKhongHopLe()
+    q,c=QuyenNganDemo(),CoreGia()
+    app=tao_app(ngan=NganLoi(KHAI_NGAN),quyen=q)
+    v=c.giao_viec(CHE,{'loai':'van_ban','van_ban':VAN_BAN}); q.cap(v)
+    c.chay(app)
+    kq=c.xem(v)
+    assert kq['trang_thai']=='LOI' and kq['ket_qua'] is None
+    assert kq['loi']['ma']=='NGAN_KHONG_HOP_LE'

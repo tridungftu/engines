@@ -13,12 +13,45 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 6 | Lát 6: 8 contract (Anh duyệt tên) → lát 7: bài 11 bước | — | Chờ làm |  |
 | MASK-P | Lập phiếu giao Codex theo SDK 2.0; chỉ tài liệu, không tạo gói/không sửa nguồn | MK-1…6, 10…22 | Xong — 14/11/2026 | [Phiếu giao](GIAO-CODEX-e_mask.md): 14 lát, 52–62 giờ ước tính có điều kiện. Regex 14/14 khối đạt; 5 mục/bảng lát/tổng giờ khớp; UTF-8/NFC và kiểm khoảng trắng đạt, `git diff --check` mã 0. Ba lệnh kiểm gói AGENTS.md §5 không áp dụng theo ngoại lệ lát chỉ tài liệu; không chạy hoặc nhận là đã kiểm bằng CoreGia. Đề xuất `van_ban_da_che` ở cuối sổ chung mang nhãn **ĐỀ XUẤT MASK-P, chờ Anh**. Không commit/push; PR: **chờ lead mở** |
 | MASK-3 | Port kho/quyền, kho tạm và chống trùng sau MASK-2 | MK-10…13, 16…19 | Xong phạm vi port/CoreGia — 14/11/2026 | Chỉ DEMO; đúng bốn tệp mã. Pytest 225 passed, 190 subtests passed; kiểm độc lập ĐẠT. CLI SDK 0/2 ĐẠT do handler MASK-5 còn stub; chưa đạt nghiệm thu chung. PR: **chờ lead mở** |
-| MASK-3b | Kho MASK-3 qua Ngan, tiền tố MASK, bản khai SDK 2.1 | Quyết định 15/11 câu 2, 8 | Xong phạm vi CoreGia — 15/11/2026; chờ NGAN-0/Core | Không ghi kho JSON; CAS nguyên tử; giữ ChuaRo khi ghi dấu lỗi. PR: **chờ lead mở** |
+| MASK-3b | Kho MASK-3 qua Ngan, tiền tố MASK, bản khai SDK 2.1 | Quyết định 15/11 câu 2, 8 | Xong — 15/11/2026; đã nối ngăn chung NGAN-0; chờ Core thật | Không ghi kho JSON; CAS nguyên tử; giữ ChuaRo khi ghi dấu lỗi. PR: **chờ lead mở** |
 | MASK-4 | Phong bì và schema ba loại riêng | MK-20 | Xong phạm vi CoreGia — 15/11/2026 | Schema chung/bản gói so SHA; kiểm UTF-8/JSON/trần lồng. PR: **chờ lead mở** |
 | MASK-5 | Hai handler văn bản SDK và mở che dữ liệu/trích dẫn AI | MK-12…14, 18, 20, 21 | Xong phạm vi CoreGia — 15/11/2026; chờ quyền thật | DEMO qua port ngoài gói; CLI chuẩn vẫn bị chặn do thiếu quyền. PR: **chờ lead mở** |
 | MASK-6 | Duyệt/từ chối, đóng/dọn, chuyển DEMO và màn Admin | MK-11, 15…19, 22 | Xong phạm vi CoreGia/KttCore giả — 15/11/2026 | Màn trong gói; chưa nạp trong Core thật. PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## MASK-3b — nối ngăn chung NGAN-0, 15/11/2026
+
+- **Xong phạm vi nối NGAN-0; đã nối ngăn chung NGAN-0** (PR chung #34 đã gộp). PR: **chờ lead mở**; không commit/push. Giữ nguyên `_chung/**`, hai tệp mẫu trong gói và các test an toàn MASK-5; 0 lượt Cloud.
+- Khai báo đủ năm bảng từ `KHAI-SDK-2.1.json/ngan_du_lieu`, dùng khóa `bang`; đọc TrangNgan/KetQuaLenh, view pháp nhân và cấu hình dict/None theo mẫu. RAM mặc định có khai báo, giữ ngăn được cấp; không thay đổi phạm vi engine của bảng định danh chung.
+- Giữ mã/thông điệp/khả năng thử lại của ngoại lệ chung tại biên SDK và khi đọc snapshot. Xung đột nghiệp vụ vẫn `MASK_XUNG_DOT`. Mất ACK vẫn `ChuaRo`, giao lại không đếm lặp. Dọn trường cũ bằng xóa/tạo lại có CAS trong cùng lô; tính đủ trần 100 lệnh.
+- Bật cả hai test so băm mẫu; mẫu và bốn từ điển đều so sau đổi CRLF thành LF, không skip. Chỉ sửa năm tệp mã/khai báo (chưa tính test/tài liệu), không thêm dependency.
+- **Đã kiểm bằng Core giả (CoreGia)** trên Windows/Python 3.13.14, SDK 2.0.0 từ wheel offline đã khớp SHA256SUMS; pytest 9.1.1 có sẵn. Chưa kiểm Linux thực tế/Core thật. Phiên nối này **08:10:00–08:19:24 ngày 15/11/2026 (UTC+07), khoảng 0.16 giờ**, so với MASK-3b **3 giờ ước tính** trong phiếu; không có dự toán riêng cho lần nối lại.
+
+Kết quả thật, dùng `.venv/Scripts/python`, `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`:
+
+```text
+python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+0/2 ĐẠT; mã thoát 1: CLI SDK 2.0 chưa tiêm quyền tin cậy.
+
+python e_mask/tests/chay_demo.py
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+2/2 ĐẠT; mã thoát 0: cổng thay thế có sẵn, tiêm ngăn/quyền DEMO ngoài gói.
+
+python -m pytest e_mask/tests -q --basetemp=.pytest-tmp
+280 passed, 190 subtests passed in 33.00s
+Mã thoát 0; 0 skipped, gồm test Node/KttCore giả và các test an toàn cũ.
+
+python e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát 0.
+```
+
+Lệch/giới hạn: dùng cổng DEMO thay thế theo lệnh giao, không coi CLI SDK chuẩn đã đạt. Cần Core mới: không; các việc ngăn thật/quyền/mã ổn định/lease, HMAC, lô lớn và nạp màn vẫn ở mục Cần Core bên dưới. SHA-256 LF của tệp bàn giao ghi trong `goi/e_mask/NGUON.md`.
 
 ## MASK-0 — 14/11/2026
 
@@ -130,7 +163,7 @@ Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã
 
 ### Bổ sung MASK-3b → MASK-6 — 15/11/2026
 
-- **NGAN-0:** lead thay hai bản bọc tạm trong gói bằng mẫu chung, bật lại hai test so băm đang skip “chờ NGAN-0 gộp”. Không tạo/sửa `_chung/mau-ma/**` trong worktree này. API/tham số đã dùng ghi trong [báo cáo bàn giao](BAO-CAO-MASK-3b-6.md).
+- **NGAN-0:** đã nối ngăn chung NGAN-0 ngày 15/11/2026; hai bản trong gói giữ nguyên mẫu, hai test so băm đã bật và chuẩn hóa LF. Không sửa `_chung/**`. Phần còn chờ là ngăn/quyền thật SDK/Core 2.1, không còn chờ mẫu chung.
 - **Ngăn SDK 2.1:** cấp `app.ngan`/`viec.ngan`, giao dịch nguyên tử, CAS/duy nhất và quyền trên cả năm bảng engine. Bản khai tại `goi/e_mask/KHAI-SDK-2.1.json`; phiếu SDK 2.0 không thêm trường. RAM mất dữ liệu khi khởi động lại.
 - **Quyền/mã yêu cầu:** Core cấp module/người gửi/tài liệu/vùng cùng mã ổn định theo việc/bước; kiểm lease và quyền tại đọc/chốt, kể cả đọc kết quả/tệp đã đóng. SDK 2.0 chưa có nguồn này. CLI chuẩn 0/2 ĐẠT là chặn thiếu quyền; adapter `tests/chay_demo.py` tiêm quyền DEMO mới kiểm được nghiệp vụ.
 - **Khóa HMAC do Core cấp:** dấu/băm nội bộ hiện vẫn SHA-256 không muối; chưa tự tạo khóa hoặc đổi băm công bố theo hợp đồng. Cần cổng bí mật/khóa HMAC của Core trước khi làm. Nợ mất ChuaRo khi ghi dấu lỗi đã đóng bằng test lỗi sau khi nguồn nhận chốt.

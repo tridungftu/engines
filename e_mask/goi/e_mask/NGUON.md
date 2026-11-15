@@ -93,3 +93,32 @@ Kho mới giữ nguyên nguyên tắc snapshot/chốt của MASK-3, chuyển th�
 Schema van_ban_da_che tạo theo phần đã duyệt của sổ loại riêng, chép nguyên byte vào gói; hai schema van_ban_tai_lieu/tra_loi_ai chép từ sổ chung, không sửa nguồn. Test so SHA cả ba. Bản khai chờ 2.1 độc lập phiếu 2.0. Màn duyệt viết bằng JavaScript chuẩn, chỉ gọi KttCore, Node dùng riêng cho kiểm với bản giả. Công cụ chuyển DEMO chỉ nhận danh sách giả tích hợp sẵn, không đọc danh mục thật.
 
 Đã kiểm bằng Core giả (CoreGia) và KttCore giả; chưa kiểm Core thật, Linux thực tế hoặc Cloud. CLI SDK chuẩn chưa được tiêm quyền Mask nên từ chối xử lý; adapter DEMO có port nằm ngoài gói. Trần 100 lệnh/lô và trần kỹ thuật JSON 4 MiB được ghi ở README; băm nội bộ chưa có khóa HMAC từ Core.
+
+## Nối ngăn chung NGAN-0 — 15/11/2026
+
+Đã nối ngăn chung NGAN-0 (PR chung #34 đã gộp). Mục này cập nhật các ghi chú chờ mẫu/skip ở các lần bàn giao trước: hai tệp mẫu đã do lead chép, phiên này giữ nguyên, không sửa `_chung/**`. Khai báo RAM lấy từ `KHAI-SDK-2.1.json/ngan_du_lieu`, đổi tên bảng từ `ma` sang `bang` đúng hợp đồng chung; không đổi engine.json 2.0. Không thêm thư viện chạy. Các test an toàn MASK-5 giữ nguyên hành vi và xanh; không gọi Cloud.
+
+**Quy ước SHA-256 LF:** tính trên `read_bytes().replace(b'\r\n', b'\n')`, không bỏ BOM/khoảng trắng hoặc đổi ký tự khác. Đây là băm hiện tại thay cho số băm lịch sử của các tệp cùng tên. Test so mẫu và từ điển dùng cùng quy ước. NGUON.md tự mô tả nên không tự ghi băm chính nó.
+
+| Tệp (từ gốc repo) | SHA-256 LF |
+|---|---|
+| `e_mask/cong-cu/chuyen_danh_muc_demo.py` | `3ffb0fad8b709bde45371aee785b3d5a9d7da8540e328e8a21c83b2c0fd56db3` |
+| `e_mask/docs/VIEC.md` | `3149d77f73a087d2eaa74a1f9094eae05b4a7b74a1d55ffea2bcb1bbfbdb2ef6` |
+| `e_mask/goi/e_mask/CHANGELOG.md` | `ed0336adbdab30e8b7eb003f00949291d2d82810f8a042d87c2fae48f44a039f` |
+| `e_mask/goi/e_mask/KHAI-SDK-2.1.json` | `db2ca7378f08d4d5c9fd60d77d79b403c4c1f9b8ea80a5f26e796c5349306cb5` |
+| `e_mask/goi/e_mask/README.md` | `c0f5ac5ca80ec15a7b65ed5509c50ea6630ab8029bb22264a44fa1b7794eb99b` |
+| `e_mask/goi/e_mask/e_mask/chay.py` | `8dc482087369008156f8ef8152f53099cbd105fa7354947bc0ac8e21b70078c1` |
+| `e_mask/goi/e_mask/e_mask/kho_ngan.py` | `1af99d85fa88dab83b434a0ca2d6c574603cb4cc18aa314f0146a8f30d0d9022` |
+| `e_mask/goi/e_mask/e_mask/kho_qua_core.py` | `875173885704f8199a95e81a1bd55c52982383fd6de80751d1ef3707df72f3ff` |
+| `e_mask/tests/chay_demo.py` | `edbfe964c6d628435a068ca2965189c617964cd913c69d7b3e8dbc16a06ef58c` |
+| `e_mask/tests/test_mask_3b.py` | `17f3e02d383eb1a936de33f7fd7ebd69e8eb93682921e3f87ac69dcec856606c` |
+| `e_mask/tests/test_mask_4_6.py` | `a2b170ec12434e73cd7df713096e582d9005fa62e63280f48b3d6aa80b27eb3e` |
+
+Hai mẫu chung được giữ nguyên, kiểm đối chiếu nguồn → bản gói sau chuẩn hóa LF:
+
+| Nguồn | Bản gói | SHA-256 LF của cả hai |
+|---|---|---|
+| `_chung/mau-ma/ngan.py` | `e_mask/goi/e_mask/e_mask/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
+| `_chung/mau-ma/cau_hinh.py` | `e_mask/goi/e_mask/e_mask/cau_hinh.py` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
+
+Đã kiểm bằng Core giả (CoreGia): cổng thay thế trong tests đạt 2/2 DEMO; CLI SDK chuẩn chặn thiếu nguồn quyền. Pytest 280 passed, 190 subtests passed, 0 skipped; kiểm độc lập đạt. RAM không bền qua khởi động lại, quyền/ngăn thật vẫn chờ Core.

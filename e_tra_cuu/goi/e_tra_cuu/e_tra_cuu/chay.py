@@ -9,7 +9,9 @@ from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
 from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
 from .ho_so import nhan_yeu_cau
 from .cat_doan import cat_doan
-from .chuan_bi_ai import chuan_bi_ai
+from .chuan_bi_ai import chuan_bi_ai, doc_snapshot_ai
+from .cau_hoi import phan_tich_cau_hoi
+from .xep_hang import xep_hang_lai
 from .phan_loai import phan_loai_tai_lieu
 from .kiem_dau_vao import doi_tuong, loi
 
@@ -126,6 +128,13 @@ def dang_ky_nang_luc(ung_dung):
     @ung_dung.nang_luc("tra_cuu.chuan_bi_ai@1")
     def chuan_bi(viec):
         try:
+            h = viec.dau_vao.get("ho_so_tra_cuu", {})
+            if (h.get("tac_vu") == "xep_hang_lai"
+                    and h.get("tom_tat", {}).get("so_ung_vien") == 0):
+                # Kiểm nguồn trước khi từ chối nhánh AI rỗng. Core rẽ từ da_nhan.
+                doc_snapshot_ai(viec, getattr(ung_dung, "cua_nguon", None),
+                                ung_dung.phien_ban, kiem_cau_hinh_da_chup)
+                loi("TC_SAI_GIAI_DOAN")
             return chuan_bi_ai(viec, getattr(ung_dung, "cua_nguon", None),
                                ung_dung.phien_ban, kiem_cau_hinh_da_chup)
         except (LoiNghiepVu, LoiDuongTruyen, ChuaRo, ViecDaHuy):
@@ -134,6 +143,22 @@ def dang_ky_nang_luc(ung_dung):
             loi()
         except Exception:
             raise LoiNghiepVu("ENGINE_LOI_XU_LY", "Engine gặp lỗi khi xử lý việc này.") from None
+
+    def hau_kiem_tc_6(ham):
+        def xu_ly(viec):
+            try:
+                return ham(viec, getattr(ung_dung, "cua_nguon", None),
+                           ung_dung.phien_ban, kiem_cau_hinh_da_chup)
+            except (LoiNghiepVu, LoiDuongTruyen, ChuaRo, ViecDaHuy):
+                raise
+            except (ValueError, TypeError, KeyError, AttributeError, RecursionError, OverflowError):
+                raise LoiNghiepVu("TC_AI_SAI_KHUON", "Phản hồi AI chưa đúng khuôn hoặc căn cứ tra cứu. Anh thử lại từ hồ sơ.") from None
+            except Exception:
+                raise LoiNghiepVu("ENGINE_LOI_XU_LY", "Engine gặp lỗi khi xử lý việc này.") from None
+        return xu_ly
+
+    ung_dung.nang_luc("tra_cuu.phan_tich_cau_hoi@1")(hau_kiem_tc_6(phan_tich_cau_hoi))
+    ung_dung.nang_luc("tra_cuu.xep_hang_lai@1")(hau_kiem_tc_6(xep_hang_lai))
 
     @ung_dung.nang_luc("tra_cuu.phan_loai_tai_lieu@1")
     def phan_loai(viec):
@@ -148,7 +173,9 @@ def dang_ky_nang_luc(ung_dung):
             raise LoiNghiepVu("ENGINE_LOI_XU_LY", "Engine gặp lỗi khi xử lý việc này.") from None
 
     for nang_luc in ung_dung.phieu["nang_luc"]:
-        if nang_luc["ma"] not in {"tra_cuu.nhan_yeu_cau@1", "tra_cuu.cat_doan@1", "tra_cuu.chuan_bi_ai@1", "tra_cuu.phan_loai_tai_lieu@1"}:
+        if nang_luc["ma"] not in {"tra_cuu.nhan_yeu_cau@1", "tra_cuu.cat_doan@1", "tra_cuu.chuan_bi_ai@1",
+                                 "tra_cuu.phan_loai_tai_lieu@1", "tra_cuu.phan_tich_cau_hoi@1",
+                                 "tra_cuu.xep_hang_lai@1"}:
             ung_dung.nang_luc(nang_luc["ma"])(chua_lam)
 
 

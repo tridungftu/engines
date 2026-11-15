@@ -1,5 +1,36 @@
 # Thay đổi
 
+## 0.1.0 — 15/11/2026 — Gộp TC-6 với TC-5 (chưa phát hành)
+
+- Giải sáu tệp xung đột khi gộp origin/main; giữ cả ba hậu kiểm Local của
+  TC-5/TC-6 và chỉ để soạn/xuất ở CHUA_LAM. Giữ riêng cách xử lý lỗi từng lát.
+- Harness chạy đủ 28 DEMO: 13 ca nền + 11 phân loại/hàng chờ + 4 câu hỏi/xếp hạng.
+  Giữ nguyên test TC-5/TC-6 và toàn bộ hai biên bản bàn giao; cập nhật SHA-256 LF.
+- Đã kiểm bằng Core giả (CoreGia): 814 passed, 0 skipped; harness 28/28, độc lập
+  mã 0. CLI SDK vẫn 0/5 CHUA_CAU_HINH/mã 1 (C-TC-01), chưa đạt cổng chung.
+  Không phát sinh phụ thuộc Core/SDK mới; chưa nối Core/RLS/model thật.
+
+## 0.1.0 — 15/11/2026 — TC-6 (chưa phát hành)
+
+- Thực thi hai hậu kiểm Local `phan_tich_cau_hoi@1`, `xep_hang_lai@1`, đúng
+  3 tệp mã cau_hoi.py/xep_hang.py/chay.py. Đọc lại snapshot/nguồn/quyền,
+  tái dựng prompt/khuôn/map/ngân sách và băm toàn yêu cầu AI; tự kiểm quote.
+- Tập thực thể/ý định bám căn cứ câu hỏi và danh mục Core cấp ngoài payload;
+  giữ mã 0 đầu. Mơ hồ cần làm rõ, không chọn bừa khoản vay/hợp đồng. Cờ
+  thời điểm từ câu hỏi/chính sách Core; “tháng này” theo mốc Core có múi giờ.
+- Hàm đúng tên/phiên bản/schema/ý định/binding tham số/phạm vi Core; từ chối
+  SQL/code/URL/khóa thừa. Module chưa chạy ghi chờ, không dữ liệu tầng 1 giả;
+  Core chọn tầng tiếp, engine không thực thi hàm hoặc truy vấn.
+- Xếp hạng đủ hoán vị mã, điểm hữu hạn đúng thang, tie giữ thứ tự Core.
+  Giữ nguyên mọi ứng viên/nguồn/phiên bản/nội dung, không top-k ngầm.
+  Chặn nhánh chuẩn bị AI khi 0 ứng viên; Core rẽ nhánh không AI.
+- Snapshot kết quả và nguyên tập phụ thuộc/thực thể gửi Core, kiểm ACK/hủy;
+  không cache/chỉ mục/nhật ký/cấu hình bền/tệp tạm. Mẫu Ngan/schema giữ nguyên.
+- Đã kiểm bằng Core giả (CoreGia), Local giả theo protocol, 0 model/provider
+  thật/Cloud. Seam phân giải chỉ là quy ước tạm C-TC-03, không chứng nhận RLS.
+  Harness 17/17; CLI chuẩn vẫn 0/5 CHUA_CAU_HINH/mã 1. Số kiểm thực và thời
+  gian ở docs/VIEC.md; chưa kiểm Core thật/AI thật/Linux.
+
 ## 0.1.0 — 15/11/2026 — TC-5 (chưa phát hành)
 
 - Thực thi `tra_cuu.phan_loai_tai_lieu@1`: nguồn Local, request/prompt/version/

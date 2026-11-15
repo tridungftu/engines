@@ -126,3 +126,35 @@ DEMO nguồn so với SHA đã ghim. `e_tra_cuu/.gitattributes` cố định LF 
 bytes LF hiện tại khớp nguyên bytes HEAD và băm đã đăng ký, không sửa băm hay
 canonical hóa trong runtime để bỏ qua sai nguồn. Đã kiểm bằng Core giả (CoreGia),
 AI/Cloud=0; chưa kiểm Linux/RLS/Core thật/UI/chất lượng model.
+
+## TC-6 và việc gộp TC-5 — 15/11/2026
+
+TC-6 viết mới `cau_hoi.py`, `xep_hang.py`, đăng ký trong `chay.py`, theo phiếu
+TC-6 và TC-1-CONTRACT. Chỉ thư viện chuẩn/SDK, không nguồn hoặc dependency mới.
+Các seam phân giải câu hỏi/allowlist/binding là quy ước adapter CoreGia, cần
+Core/lead review; không là API SDK mới hoặc số đo chất lượng model thật.
+
+Việc gộp giữ nguyên bốn mô-đun nghiệp vụ và hai bộ test TC-5/TC-6; chỉ hợp nhất
+đăng ký/handler, danh sách stub, harness và tài liệu. Hai biên bản cũ và hai
+mục CHANGELOG giữ nguyên số liệu lịch sử (17/17 TC-6, 24/24 TC-5); kết quả
+sau gộp là 814 passed, 0 skipped, harness 28/28 và độc lập mã 0. Đã kiểm bằng
+Core giả (CoreGia), 0 Cloud/model/provider thật; CLI chuẩn vẫn 0/5 lỗi
+CHUA_CAU_HINH/mã 1, C-TC-01 đã ghi trong VIEC; chưa kiểm Core/RLS/Linux thật.
+
+Bảng kiểm sau gộp dưới đây tính SHA-256 **chỉ thay CRLF→LF**, giữ nguyên
+Unicode/khoảng trắng. Gồm sáu tệp giải xung đột và bốn mô-đun nghiệp vụ được
+giữ lại; không tự băm NGUON.md vì tệp này chứa chính bảng băm. Hai mẫu NGAN-0,
+bốn schema, DEMO và dependency giữ nguyên các băm/nguồn đã ghi phía trên.
+
+| Tệp (từ gốc repo) | SHA-256 LF sau gộp |
+|---|---|
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/chay.py` | `13e3033d7e8d3232c36d30229bb28f7eb958ee6b880a5773c59aa9f5bf03d411` |
+| `e_tra_cuu/tests/chay_demo_voi_core_gia.py` | `d16feb580d37ac7fbf8ed72280588c905e2790e62f322c2ceeb0c84fd7676012` |
+| `e_tra_cuu/tests/test_tc_2.py` | `93a5723fc29927e7d3684d0913693defe37b701f40c41f41ace6906cbab5a084` |
+| `e_tra_cuu/goi/e_tra_cuu/README.md` | `69e301a02aeed82aa1918d429682dc45846865333043794175a4fca6298b64ec` |
+| `e_tra_cuu/goi/e_tra_cuu/CHANGELOG.md` | `9c8d962bf1a5525c9670f7063f75d80a325ad6efc5aacf1ce1935101ba97c1de` |
+| `e_tra_cuu/docs/VIEC.md` | `af235c956873d24782bb68ddccea6e66c4b3d95737bdb3265d41593982c84cda` |
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/phan_loai.py` | `9e36a2a06d3b97613ec7d07237c6d9abb76039526adcd16758579e502d561632` |
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/quy_tac_nhom.py` | `aa787e8fef6cca744c777a3bf820350f5947a40cadfc3b15db2f9cc9a271c793` |
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/cau_hoi.py` | `c58c2aa90d1784933960d39d5797a7e575642475d45e12f3372ee8784e08c50f` |
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/xep_hang.py` | `6d062ebd1bbd67cd554d7d7f1404caa6ddc05d1860692446d1f20358e9018c02` |

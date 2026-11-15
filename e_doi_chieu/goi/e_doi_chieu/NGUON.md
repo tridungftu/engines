@@ -12,7 +12,8 @@
 - Chưa đưa từ điển, detector, model, font hoặc dependency ngoài SDK/thư viện
   chuẩn vào runtime. Nguồn/phiên bản/giấy phép/băm cần lead cấp ở lát sau.
 - Công cụ kiểm: pytest 9.1.1 có sẵn qua venv system-site-packages; bộ kiểm
-  tập con schema chỉ ở tests, dùng thư viện chuẩn. Không tải gói/mạng.
+  tập con schema dùng thư viện chuẩn (từ DC-3 có ở runtime cho hai schema
+  đã ghim, không phải triển khai đầy đủ JSON Schema). Không tải gói/mạng.
 
 ## DC-2 — 15/11/2026
 
@@ -52,3 +53,50 @@ Băm mã nguồn sau CRLF→LF; không gồm NGUON.md.
 | `e_doi_chieu/doc_docx.py` | `7e63532c8ae2358ccc1b90a1bb65cb85e83c5c743fb3d8d9287fb2ed3cce3945` |
 | `e_doi_chieu/cau_truc.py` | `ddde14383f97bf5c1fa1a2161aed7db8f3ea1e36004c16350a2db52018c2d333` |
 | `e_doi_chieu/chay.py` | `0544a6a7dae1cca5a0331383349d7d5c781500f6b1fd4bf8c63820b1aeaf4246` |
+
+## DC-3 — 15/11/2026
+
+- `ho_so.py`, `chuan_hoa.py`, `vi_tri.py`: viết trong lát này bằng thư viện
+  chuẩn Python và SDK 2.0.0; tái dùng trực tiếp bộ đọc/kiểm ZIP của DC-2
+  trong cùng gói. Không import/gọi engine khác, không thêm dependency.
+- Test cặp dùng DOCX từ generator DEMO DC-2, PDF một trang có xref do test
+  tạo và PNG grayscale thực do test dựng; OCR/phân quyền là adapter giả
+  ghi rõ trong `tests/test_dc3.py`, không phân phối trong gói runtime.
+- Test parser ảnh còn đọc hai tệp DEMO đã có của OCR:
+  `e_ocr/goi/e_ocr/demo/DEMO-1-trang.jpg` và `DEMO-1-trang.png`.
+  Chỉ dùng bytes fixture để kiểm PNG/JPEG; không chạy hoặc import OCR.
+- Không cấp bộ quy tắc/từ điển/detector thật trong lát này. Bộ JSON DEMO
+  chỉ kiểm hợp đồng ghim băm/cấu hình và phép chuẩn hóa, không thay phê duyệt
+  nguồn nghiệp vụ. Chi tiết quy ước tại README; Cần Core tại VIEC.md.
+- Băm `chay.py` ở bảng DC-2 là ảnh lịch sử của DC-2; tệp đã được mở rộng
+  handler nhận cặp/lớp bọc lỗi an toàn trong DC-3. Hai bản chép NGAN-0 và
+  bốn schema dữ liệu tiếp tục giữ nguyên, test so băm LF.
+
+## DC-3 — sửa theo kiểm độc lập lead, 15/11/2026
+
+Sửa trong worktree theo 6 điểm lead giao; không chép nguồn mới, không tải
+mạng hoặc thêm dependency. Ba tệp runtime sửa: `ho_so.py`, `chuan_hoa.py`,
+`chay.py`; `vi_tri.py` đã đọc/kiểm và giữ nguyên. Bổ sung hạn giữ vào schema
+cấu hình/bản khai ngăn dự kiến, không đổi hợp đồng API v1/SDK 2.0 hoặc
+`engine.json` 0.3.0 chưa phát hành. `_chung/**`, hai mẫu `ngan.py` và
+`cau_hinh.py`, bốn schema dữ liệu tiếp tục nguyên bản, test so băm LF đạt.
+
+Fixture hiệu năng sinh trong test: 60 trang, 100 dòng lề DEMO/trang, mỗi
+dòng có nút khối và nút dòng (12.000 nút); không dữ liệu thật và không phải
+số đo chất lượng OCR. Có test hủy ở lúc lập chỉ mục/duyệt/gom vùng bỏ.
+Hai bảng chuẩn hóa dùng đủ 14 cặp cần phân biệt và 7 cặp bằng nhau theo
+bộ ghim, kiểm lại sự khác biệt khi tắt từng quy tắc. Các ca lease/CAS/
+phục hồi tệp vẫn dùng CoreGia, NganBoNho và adapter tệp con DEMO trong tests.
+
+SHA-256 **hiện hành**, chuẩn hóa CRLF→LF trên bytes UTF-8, không đổi nội
+dung khác; đường dẫn tương đối từ thư mục gói, trừ dòng test ghi từ repo:
+
+| Tệp | SHA-256 LF |
+|---|---|
+| `e_doi_chieu/ho_so.py` | `f0360c89d29af6a655935f48350552e200c6227604d12e84a940d0a214830e88` |
+| `e_doi_chieu/chuan_hoa.py` | `a427053b5465450e838c274589d7d4b91fa86f69817414854a16cce2028bfe1b` |
+| `e_doi_chieu/vi_tri.py` (giữ nguyên) | `0efdfb41d3cc56e857ab74e49c8f8cbaa7f0d075267581f60ffb33232d148a97` |
+| `e_doi_chieu/chay.py` | `77896e602d97029b07b8fd1f9cfcc235a012b77d3c6f729e796752a90c3d70e4` |
+| `cau_hinh.schema.json` | `e9febae882011886023f8d5efb3d7465b4b22dcb15bcc543ae8238f11015916a` |
+| `KHAI-SDK-2.1.json` | `bacf0508ef7fef6c4ce7565dddc7535df9b5604da86bddba2c98a592949a333e` |
+| Repo: `e_doi_chieu/tests/test_dc3.py` | `55618c6e0cd46695719a71ca31e34d633213750e5e8a485157bfb60bc411e6ab` |

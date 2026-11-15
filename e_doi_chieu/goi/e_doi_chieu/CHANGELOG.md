@@ -1,5 +1,49 @@
 # Thay đổi
 
+## DC-3 — 15/11/2026 · 0.3.0 chưa phát hành
+
+Sửa theo kiểm độc lập lead, cùng phạm vi DC-3:
+
+- Thêm hạn chiếm lượt trong ngăn, cấu hình thời hạn riêng hoặc mặc định
+  thời hạn bước + 60 giây; CAS chiếm lại lượt quá hạn, mã chủ riêng ngăn
+  worker cũ chốt/cleanup đè chủ mới. Chưa quá hạn trả `DC_DANG_XU_LY`.
+- Hồ sơ Core cũ không đọc được chuyển `can_thu_lai` bằng CAS rồi dựng lại
+  từ nguồn hiện tại đã kiểm quyền/băm/trần; sai băm vẫn từ chối.
+- Khóa chống trùng ghim mã cặp, cảnh báo và băm cấu hình (gồm trần).
+- Dựng chỉ mục văn bản → tập trang một lần, kiểm hủy trong vòng dài;
+  12.000 nút OCR lề lặp đo riêng **0,1190 giây**, test `< 2 giây` đạt.
+- Soft hyphen chỉ gom khoảng trắng liền kề, map không qua vùng đã bỏ.
+  Bảng test 14 cặp vẫn phân biệt, 7 cặp bằng nhau theo bộ ghim và kiểm
+  tắt từng quy tắc; thêm ca phục hồi, tranh lượt, chủ cũ quay lại và hủy.
+- Đã kiểm bằng Core giả (CoreGia): pytest **297 passed, 0 skipped**
+  (144 ca DC-3); DEMO Word **1/1 ĐẠT**; kiểm độc lập mã 0. Chưa kiểm
+  Core thật/Linux; ngăn RAM/quyền tệp/đồng hồ/lease thật còn theo VIEC.
+  SHA-256 LF hiện hành tại NGUON; PR: **chờ lead mở**, không commit/push.
+
+Bản bàn giao trước kiểm độc lập:
+
+- Thêm `doi_chieu.nhan_cap@1`: băm bytes yêu cầu trước parse JSON nghiêm,
+  kiểm nguồn/tham chiếu/phiên bản/quyền qua SDK, đọc lại Word bằng DC-2,
+  từ chối OCR rỗng/lỗi, thiếu tệp/quyền, sai băm và vượt trần.
+- Snapshot đầy đủ tải Core, phong bì schema chỉ tham chiếu/băm/trạng thái;
+  mới `da_nhan`, các số chưa đo null, không kết luận Khớp. Cấu hình/bộ đã
+  ghim qua ngăn, thiếu cấu hình trả `CHUA_CAU_HINH`.
+- NFC/khoảng trắng/nháy/gạch/ngắt dòng có map Unicode về nguyên văn/cấu
+  trúc, giữ dấu/ô rỗng/gộp, không bịa trang Word; đầu/chân/số trang chỉ bỏ
+  có căn cứ/whitelist, tiền/mã và nội dung thân giống header vẫn giữ.
+- Ngăn chống trùng `lay_hoac_tao`, CAS chốt/nhường thử lại không đè chủ
+  khác; cùng bytes với ID mới vẫn một lượt nhưng tái dùng phải có quyền
+  tới snapshot và mọi tham chiếu cũ. Không lưu sổ đĩa/Cloud/engine khác.
+- PNG kiểm CRC/DEFLATE/dòng/pixel; JPEG kiểm khung/kích thước, chưa giải mã
+  DCT/quét. Giới hạn, nguồn gốc tệp và phục hồi chủ lượt theo lease còn
+  cần Core/DC-8; chi tiết README/VIEC, không sửa API/SDK/schema chung.
+- Khép test nợ DC-2: handler ném lỗi lạ chứa bí mật DEMO không lộ stderr
+  khi chạy end-to-end CoreGia; ghi nợ field/AlternateContent từ chối toàn
+  tài liệu, không nới trong lát này.
+- Đã kiểm bằng Core giả (CoreGia): SDK DEMO Word 1/1 ĐẠT; pytest
+  **237 passed, 0 skipped** (84 ca DC-3); kiểm độc lập mã 0. Chưa kiểm
+  Core thật/Linux; PR: **chờ lead mở**; không commit/push.
+
 ## DC-2 — 15/11/2026 · 0.2.0 chưa phát hành
 
 - Triển khai đọc DOCX trong RAM qua SDK, SHA-256 bytes thật, giữ nguyên văn,

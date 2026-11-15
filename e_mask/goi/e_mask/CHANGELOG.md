@@ -1,5 +1,14 @@
 # Thay đổi
 
+## 1.2.0 — 15/11/2026, MASK-2c-3 hậu kiểm Local và che bổ sung
+
+- Thêm `mask.hau_kiem_ai_cuc_bo@1`: một đầu vào `tra_loi_ai`, đầu ra cố định `van_ban_da_che`. Chỉ đọc snapshot/tập phản hồi qua tham chiếu có quyền của Core; thiếu port chứng thực nguồn AI-9/Local, hoàn tất hoặc đủ đoạn thì từ chối.
+- Kiểm bytes/SHA snapshot, map, toàn yêu cầu AI JSON chuẩn, prompt/khuôn/profile và chuyển tiếp nguyên vẹn. Mảng rỗng không được thay chứng cứ; kiểm lại schema/span/trích dẫn từng vị trí, cả NFD/Cf/selector. Một đoạn Cloud, sai quyền, phản hồi cắt, overlap mâu thuẫn hoặc prefix che một phần đều chặn.
+- Giữ alias lớp 1; che thêm thực thể chắc theo vị trí phải → trái, gom đúng span và giữ các lần xuất hiện khác. Dùng nguyên kho alias/hàng chờ/CAS/chống lặp; hậu kiểm cũ và kiểm tiền/ngày toàn văn phải đạt trước chốt. Vượt 100 lệnh từ chối toàn bộ, không chia lô.
+- Core ghi chứng cứ nguồn bước 3 và băm kết quả cuối trước trả. Hủy/mất lease/quyền, hết hạn hoặc mất ACK không phát hành; nguồn đã nhận chưa trả giữ `ChuaRo`. Không mở che, không gọi engine/model, không lưu bền tại máy engine.
+
+Đã kiểm bằng Core giả (CoreGia): 1109 passed, 4 xfailed giữ nguyên, 190 subtests passed; 0 skipped. DEMO có quyền 2/2, kiểm độc lập đạt; CLI chuẩn 0/2 thiếu quyền. Chưa kiểm Core/model thật hoặc Linux thực tế, chưa đo held-out hai lớp. Cloud vẫn tắt; đúng năm tệp mã, không dependency/Core/SDK/schema chung/nguồn cũ.
+
 ## 1.1.0 — 15/11/2026, MASK-2c-2 chuẩn bị Local AI
 
 - Thêm `mask.chuan_bi_ai_cuc_bo@1`, nhận cùng ba loại đầu vào che văn bản và chỉ trả `yeu_cau_ai`. Hai năng lực cũ giữ nguyên `tra`. Lớp MASK-2b chạy đầy đủ; còn sót, thiếu từ điển hoặc lỗi vẫn chặn.

@@ -233,12 +233,12 @@ def doc_mo(viec):
     return chu, ma, dong, ai
 
 
-def ket_qua_che(kq, chu):
+def ket_qua_che(kq, chu, *, phien_ban_engine='e_mask 1.0.0'):
     # Dùng danh sách trường cho phép; không chép metadata nguồn/OCR/nhật ký kho.
     muc = dict(phien_ban=1, van_ban=kq['van_ban_da_che'], ma_yeu_cau=kq['ma_yeu_cau'],
                con_sot=kq['con_sot'], kiem_tien_ngay=kq['kiem_tien_ngay'], chuyen_tiep={},
                so_cho_thay=kq['so_cho_thay'], bi_danh=kq['bi_danh'], cho_duyet=kq['cho_duyet'],
-               vung_da_quet=['than_van_ban'], phien_ban_engine='e_mask 1.0.0',
+               vung_da_quet=['than_van_ban'], phien_ban_engine=phien_ban_engine,
                bam_dau_vao='sha256:' + sha256(chu.encode('utf-8')).hexdigest(), canh_bao=kq['canh_bao'])
     dau = {'loai': 'van_ban_da_che', 'van_ban_da_che': muc}
     kiem_loai(dau, 'van_ban_da_che')
@@ -275,3 +275,22 @@ def kiem_yeu_cau_ai(dau):
             or v['chuyen_tiep']['mask_2c'].get('nha_cung_cap_bat_buoc') != 'local'):
         raise loi()
     json_chu(dau).encode('utf-8')
+
+
+def doc_hau_kiem_ai(dau):
+    """Một đầu vào duy nhất; không dùng doc_mo hoặc nhận văn bản caller."""
+    if len(json_chu(dau).encode('utf-8')) > 1048576:
+        raise loi('MASK_QUA_GIOI_HAN')
+    ai = kiem_loai(dau, 'tra_loi_ai')
+    tiep = ai['chuyen_tiep']
+    if type(tiep) is not dict or set(tiep) != {'mask_2c'} or type(tiep['mask_2c']) is not dict:
+        raise loi()
+    meta = tiep['mask_2c']
+    khoa = set(('phien_ban ma_yeu_cau nha_cung_cap_bat_buoc ho_so bam_ho_so bam_goc '
+                'bam_da_che_quy_tac phien_ban_map chi_so_doan so_doan bat_dau_doan '
+                'ket_thuc_doan bam_doan he_offset bam_prompt bam_khuon bam_profile '
+                'tap_phan_hoi bam_tap_phan_hoi').split())
+    if (set(meta) != khoa or type(meta['ma_yeu_cau']) is not str or not meta['ma_yeu_cau'].strip()
+            or meta['nha_cung_cap_bat_buoc'] != 'local' or ai['nha_cung_cap'] != 'local'):
+        raise loi()
+    return ai

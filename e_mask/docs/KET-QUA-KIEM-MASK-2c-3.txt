@@ -1,0 +1,43 @@
+Kết quả kiểm MASK-2c-3 — 15/11/2026
+Đã kiểm bằng Core giả (CoreGia); chưa kiểm Core/model thật hoặc Linux thực tế.
+Windows x64, Python 3.13.14; SDK 2.0.0 offline; pytest 9.1.1 có sẵn.
+PYTHONUTF8=1; PYTHONDONTWRITEBYTECODE=1; pytest: PYTEST_DISABLE_PLUGIN_AUTOLOAD=1.
+SHA256 wheel khớp SHA256SUMS: a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892.
+
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.2.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát: 1; 0/2 ĐẠT, thiếu quyền tin cậy ở CLI chuẩn.
+
+.venv/Scripts/python -B -m pytest e_mask/tests -q
+1109 passed, 4 xfailed, 190 subtests passed in 128.47s (0:02:08)
+Mã thoát: 0; 0 skipped. Bốn xfail strict held-out lớp 1 giữ nguyên.
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát: 0.
+
+.venv/Scripts/python -B e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[ĐẠT] Che văn bản DEMO XONG 
+[ĐẠT] Mở che DEMO XONG 
+Đã kiểm bằng Core giả (CoreGia).
+Mã thoát: 0; 2/2 ĐẠT.
+
+git diff --check
+Không có đầu ra; mã thoát: 0.
+
+Lượt riêng cuối: .venv/Scripts/python -B -m pytest e_mask/tests/test_mask_2c_3.py -q --tb=short
+137 passed in 37.93s; mã thoát 0.
+
+Các lượt phát triển trước (không phải kết quả cuối):
+96 failed, 1 passed in 21.60s: fixture dùng trùng chữ ký ban_giao của hai port.
+18 failed, 79 passed in 47.02s: kỳ vọng số đếm chưa cộng lớp 1, vị trí fixture chưa nằm overlap;
+ca AI bỏ sót lần tên lặp phải bị hậu kiểm cũ chặn, không được replace toàn cục để giấu.
+Đã sửa fixture/chữ ký/offset và kỳ vọng theo điều kiện an toàn; không nới xfail hoặc detector cũ.
+97 passed in 44.02s; 132 passed in 45.33s; sau bổ sung Cf/selector đạt 137 passed.
+
+Không commit/push; PR: chờ lead mở.
+

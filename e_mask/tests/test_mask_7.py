@@ -126,4 +126,4 @@ def test_do_zip_ky_tu_va_chua_co_nang_luc_tep_trong_goi():
     assert so_zip(data)['byte_zip'] == len(data) and chu_xml(data) > 0
     manifest = json.loads((Path(__file__).resolve().parents[1] / 'goi/e_mask/engine.json').read_text(encoding='utf-8'))
     assert {n['ma'] for n in manifest['nang_luc']} == {'mask.che_van_ban@1', 'mask.mo_che_van_ban@1',
-                                                   'mask.chuan_bi_ai_cuc_bo@1'}
+                                                   'mask.chuan_bi_ai_cuc_bo@1', 'mask.hau_kiem_ai_cuc_bo@1'}

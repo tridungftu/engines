@@ -1,0 +1,658 @@
+{
+  "type": "object",
+  "properties": {
+    "phien_ban": {
+      "const": 1
+    },
+    "nguon_doc": {
+      "const": "xml_strict"
+    },
+    "phien_ban_engine": {
+      "type": "string"
+    },
+    "bam_dau_vao": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "tep_xml": {
+      "$ref": "#/$defs/tep"
+    },
+    "chi_tiet_nguon": {
+      "$ref": "#/$defs/result"
+    },
+    "van_de_phep_chieu": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/issue"
+      }
+    }
+  },
+  "required": [
+    "phien_ban",
+    "nguon_doc",
+    "phien_ban_engine",
+    "bam_dau_vao",
+    "tep_xml",
+    "chi_tiet_nguon"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Báo cáo kỹ thuật đọc XML hóa đơn phiên bản 1",
+  "$defs": {
+    "tep": {
+      "type": "object",
+      "properties": {
+        "tep_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ten": {
+          "type": "string"
+        },
+        "mime": {
+          "type": "string"
+        },
+        "kich_thuoc": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "tep_id"
+      ],
+      "additionalProperties": true
+    },
+    "occurrence": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "ABSENT",
+            "EMPTY",
+            "TEXT"
+          ]
+        },
+        "lexeme": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lexeme_basis": {
+          "const": "XML_DECODED_CHARACTER_DATA_NO_TRIM"
+        }
+      },
+      "required": [
+        "state",
+        "lexeme",
+        "lexeme_basis"
+      ],
+      "additionalProperties": false
+    },
+    "field": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "occurrences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/occurrence"
+          }
+        },
+        "mixed_content": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "locator",
+        "occurrences",
+        "mixed_content"
+      ],
+      "additionalProperties": false
+    },
+    "issue": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "ERROR",
+            "WARNING"
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "locator",
+        "severity"
+      ],
+      "additionalProperties": false
+    },
+    "decimal": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "EXACT",
+            "ABSENT",
+            "EMPTY",
+            "INVALID",
+            "OVER_DOMAIN",
+            "PRECISION_UNDECLARED"
+          ]
+        },
+        "exact_value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^-?[0-9]+(?:\\.[0-9]+)?$"
+        },
+        "exact_text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lexical_digits": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "scale": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "exact_value",
+        "exact_text",
+        "lexical_digits",
+        "scale"
+      ],
+      "additionalProperties": false
+    },
+    "raw_ref": {
+      "type": "object",
+      "properties": {
+        "native_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "media_type": {
+          "type": "string"
+        },
+        "container_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "entry_ordinal": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "entry_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "native_sha256",
+        "byte_length",
+        "media_type",
+        "container_sha256",
+        "entry_ordinal",
+        "entry_name"
+      ],
+      "additionalProperties": false
+    },
+    "line": {
+      "type": "object",
+      "properties": {
+        "source_ordinal": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source_locator": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "nature": {
+          "type": "string"
+        },
+        "quantity": {
+          "$ref": "#/$defs/decimal"
+        },
+        "unit_price": {
+          "$ref": "#/$defs/decimal"
+        },
+        "source_amount": {
+          "$ref": "#/$defs/decimal"
+        },
+        "normalized_quantity_text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit_definition_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "logical_line_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "crosswalk_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "continuity_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issue"
+          }
+        },
+        "row_raw_sha256": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "source_ordinal",
+        "source_locator",
+        "fields",
+        "nature",
+        "quantity",
+        "unit_price",
+        "source_amount",
+        "normalized_quantity_text",
+        "unit_definition_ref",
+        "logical_line_ref",
+        "crosswalk_ref",
+        "continuity_ref",
+        "issues",
+        "row_raw_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "tax_component": {
+      "type": "object",
+      "properties": {
+        "source_locator": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "rate": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "net_amount": {
+          "$ref": "#/$defs/decimal"
+        },
+        "tax_amount": {
+          "$ref": "#/$defs/decimal"
+        }
+      },
+      "required": [
+        "source_locator",
+        "fields",
+        "rate",
+        "net_amount",
+        "tax_amount"
+      ],
+      "additionalProperties": false
+    },
+    "money": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "net_amount": {
+          "$ref": "#/$defs/decimal"
+        },
+        "tax_amount": {
+          "$ref": "#/$defs/decimal"
+        },
+        "non_taxable_amount": {
+          "$ref": "#/$defs/decimal"
+        },
+        "total_amount": {
+          "$ref": "#/$defs/decimal"
+        },
+        "tax_components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tax_component"
+          }
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issue"
+          }
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "state",
+        "fields",
+        "currency",
+        "net_amount",
+        "tax_amount",
+        "non_taxable_amount",
+        "total_amount",
+        "tax_components",
+        "issues",
+        "reasons"
+      ],
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string"
+        },
+        "source_locator": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "relation_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "original_model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "original_series": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "original_number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "original_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issue"
+          }
+        }
+      },
+      "required": [
+        "state",
+        "source_locator",
+        "fields",
+        "relation_type",
+        "original_model",
+        "original_series",
+        "original_number",
+        "original_date",
+        "issues"
+      ],
+      "additionalProperties": false
+    },
+    "relations": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relation"
+          }
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issue"
+          }
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "state",
+        "items",
+        "issues",
+        "reasons"
+      ],
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "raw_ref": {
+          "$ref": "#/$defs/raw_ref"
+        },
+        "artifact_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "shape": {
+          "const": "SUPPORTED_SUBSET"
+        },
+        "source_instance": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_profile_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_document_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_payload_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "header_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/field"
+          }
+        },
+        "header_total_section": {
+          "$ref": "#/$defs/occurrence"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/line"
+          }
+        },
+        "canonical_identity": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "semantic_envelope": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "semantic_digest": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issue"
+          }
+        },
+        "candidate_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "native_fiscal_status": {
+          "const": "UNKNOWN"
+        },
+        "business_promotion": {
+          "const": "NOT_PERFORMED"
+        },
+        "current_DB_basis_sha256": {
+          "type": "null"
+        },
+        "L11_eligibility": {
+          "type": "string"
+        },
+        "request_digest": {
+          "type": "string"
+        },
+        "profile_payload_binding": {
+          "type": "string"
+        },
+        "money": {
+          "$ref": "#/$defs/money"
+        },
+        "relations": {
+          "$ref": "#/$defs/relations"
+        }
+      },
+      "required": [
+        "raw_ref",
+        "artifact_name",
+        "shape",
+        "source_instance",
+        "source_profile_ref",
+        "profile_document_sha256",
+        "profile_payload_sha256",
+        "header_fields",
+        "header_total_section",
+        "lines",
+        "canonical_identity",
+        "semantic_envelope",
+        "semantic_digest",
+        "issues",
+        "candidate_reasons",
+        "native_fiscal_status",
+        "business_promotion",
+        "current_DB_basis_sha256",
+        "L11_eligibility",
+        "request_digest",
+        "profile_payload_binding",
+        "money",
+        "relations"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

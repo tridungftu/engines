@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cấu hình máy e_hoa_don HD-0, không chứa bí mật",
+  "type": "object",
+  "required": [
+    "phien_ban"
+  ],
+  "properties": {
+    "phien_ban": {
+      "type": "integer",
+      "const": 1
+    }
+  },
+  "additionalProperties": false
+}

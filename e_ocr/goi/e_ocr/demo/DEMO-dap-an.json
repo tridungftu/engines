@@ -1,0 +1,129 @@
+{
+  "nhan": "DEMO — HỒ SƠ HOÀN TOÀN GIẢ",
+  "truong": {
+    "cong_ty": "Công ty DEMO Ánh Dương",
+    "so_tien": {
+      "so": 1000000,
+      "tien_te": "VND"
+    },
+    "ngay": "2026-10-30"
+  },
+  "nguyen_van": [
+    "Công ty DEMO Ánh Dương",
+    "1.000.000 VND",
+    "30/10/2026"
+  ],
+  "trang": [
+    {
+      "so_trang": 1,
+      "dong": [
+        "DEMO — HỒ SƠ HOÀN TOÀN GIẢ",
+        "Công ty DEMO Ánh Dương",
+        "1.000.000 VND",
+        "30/10/2026",
+        "BẢNG DEMO — ô gộp ba cột",
+        "Nội dung Số tiền / ngày Ghi chú",
+        "Khoản DEMO 1.000.000 VND",
+        "Ngày DEMO 30/10/2026 DEMO",
+        "DEMO — Trang 1"
+      ]
+    },
+    {
+      "so_trang": 2,
+      "dong": [
+        "DEMO — HỒ SƠ HOÀN TOÀN GIẢ",
+        "Công ty DEMO Ánh Dương",
+        "1.000.000 VND",
+        "30/10/2026",
+        "BẢNG DEMO — ô gộp ba cột",
+        "Nội dung Số tiền / ngày Ghi chú",
+        "Khoản DEMO 1.000.000 VND",
+        "Ngày DEMO 30/10/2026 DEMO",
+        "DEMO — Trang 2"
+      ]
+    },
+    {
+      "so_trang": 3,
+      "dong": [
+        "DEMO — HỒ SƠ HOÀN TOÀN GIẢ",
+        "Công ty DEMO Ánh Dương",
+        "1.000.000 VND",
+        "30/10/2026",
+        "BẢNG DEMO — ô gộp ba cột",
+        "Nội dung Số tiền / ngày Ghi chú",
+        "Khoản DEMO 1.000.000 VND",
+        "Ngày DEMO 30/10/2026 DEMO",
+        "DEMO — Trang 3"
+      ]
+    }
+  ],
+  "bang": {
+    "so_hang": 4,
+    "so_cot": 3,
+    "hang": [
+      [
+        "BẢNG DEMO — ô gộp ba cột",
+        null,
+        null
+      ],
+      [
+        "Nội dung",
+        "Số tiền / ngày",
+        "Ghi chú"
+      ],
+      [
+        "Khoản DEMO",
+        "1.000.000 VND",
+        ""
+      ],
+      [
+        "Ngày DEMO",
+        "30/10/2026",
+        "DEMO"
+      ]
+    ],
+    "o_trong": [
+      [
+        2,
+        2
+      ]
+    ],
+    "o_gop": [
+      {
+        "hang": 0,
+        "cot": 0,
+        "so_cot": 3,
+        "so_hang": 1
+      }
+    ]
+  },
+  "vung": {
+    "bon_diem": [
+      [
+        80,
+        70
+      ],
+      [
+        1160,
+        70
+      ],
+      [
+        1160,
+        410
+      ],
+      [
+        80,
+        410
+      ]
+    ],
+    "kich_thuoc_cat": [
+      1080,
+      340
+    ],
+    "van_ban": "DEMO — HỒ SƠ HOÀN TOÀN GIẢ\nCông ty DEMO Ánh Dương\n1.000.000 VND\n30/10/2026"
+  },
+  "word": {
+    "da_tao": true,
+    "ghi_chu": "Word chỉ là đáp án, không phải kết quả OCR."
+  }
+}

@@ -1,0 +1,4 @@
+# Kịch bản: cố định xuống dòng để chạy đúng trên Linux CI và Windows
+*.sh text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf

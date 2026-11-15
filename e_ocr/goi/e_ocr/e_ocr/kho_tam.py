@@ -1,7 +1,7 @@
 """Kho JSON tạm cho mã, băm, số đếm; không nhận nội dung tài liệu.
 
-Mỗi ghi khóa cả chu kỳ đọc–sửa–thay tệp. doc/ghi là các thao tác riêng lẻ,
-không cung cấp CAS hay giao dịch nhiều lời gọi.
+Mỗi ghi khóa cả chu kỳ đọc–sửa–thay tệp. cap_nhat/cap_nhat_nhieu cập
+nhật một/nhiều khóa trong một lần ghi; không có giao dịch nhiều lời gọi.
 """
 
 from __future__ import annotations
@@ -101,10 +101,10 @@ class KhoTam:
             ) from None
 
     @contextmanager
-    def _khoa_tep(self):
+    def _khoa_tep(self, ten_tep="kho.khoa", *, cho=True):
         try:
             self.thu_muc.mkdir(parents=True, exist_ok=True)
-            tep_khoa = self.thu_muc / "kho.khoa"
+            tep_khoa = self.thu_muc / ten_tep
             tep_du_lieu = self.thu_muc / "kho.json"
             if tep_khoa.is_symlink() or tep_du_lieu.is_symlink():
                 raise OSError("Không dùng liên kết tượng trưng trong kho.")
@@ -125,7 +125,7 @@ class KhoTam:
                     except OSError as loi:
                         if loi.errno not in (errno.EACCES, errno.EAGAIN, errno.EDEADLK):
                             raise
-                        if time.monotonic() >= han:
+                        if not cho or time.monotonic() >= han:
                             raise LoiNghiepVu(
                                 "KHO_TAM_DANG_BAN", "Dữ liệu tạm đang được sử dụng. Hãy thử lại.",
                                 thu_lai_duoc=True,
@@ -175,6 +175,12 @@ class KhoTam:
             return self._doc_toan_bo().get(khoa, mac_dinh)
 
     def ghi(self, khoa, gia_tri):
+        # Kiểm trước khi mở kho để giữ hành vi từ chối dữ liệu không hợp lệ.
+        self._kiem_gia_tri(khoa, gia_tri)
+        self.cap_nhat(khoa, lambda cu: gia_tri)
+
+    @staticmethod
+    def _kiem_gia_tri(khoa, gia_tri):
         try:
             _kiem_ma(khoa)
             _kiem_du_lieu(gia_tri)
@@ -184,9 +190,39 @@ class KhoTam:
             raise LoiNghiepVu(
                 "KHO_TAM_DU_LIEU_SAI", "Kho tạm chỉ nhận mã, băm và số đếm; không nhận nội dung tài liệu."
             ) from None
+
+    def cap_nhat(self, khoa, sua):
+        """Đọc–sửa–ghi một khóa nguyên tử; callback chỉ xử lý metadata.
+
+        Callback không được gọi lại kho hay thực hiện I/O. Ngoại lệ của
+        callback giữ nguyên bản cũ và nhả khóa. Trả giá trị đã ghi.
+        """
+        return self.cap_nhat_nhieu([khoa], lambda cu: {khoa: sua(cu[khoa])})[khoa]
+
+    def khoa_luot(self, ma_tuong_quan):
+        """Khóa không chờ, tự nhả khi tiến trình chết; không phải dấu chống trùng."""
+        if not isinstance(ma_tuong_quan, str) or re.fullmatch(r"[a-f0-9]{32}", ma_tuong_quan) is None:
+            raise LoiNghiepVu("KHO_TAM_KHOA_SAI", "Mã tra cứu dữ liệu tạm không hợp lệ.")
+        return self._khoa_tep(f"luot-{ma_tuong_quan}.khoa", cho=False)
+
+    def cap_nhat_nhieu(self, cac_khoa, sua):
+        """Đọc–sửa nhiều khóa trong một lần thay tệp, không I/O trong callback."""
+        try:
+            cac_khoa = tuple(cac_khoa)
+            if not cac_khoa or len(set(cac_khoa)) != len(cac_khoa):
+                raise ValueError
+            for khoa in cac_khoa:
+                _kiem_ma(khoa)
+        except (TypeError, ValueError):
+            raise LoiNghiepVu("KHO_TAM_KHOA_SAI", "Mã tra cứu dữ liệu tạm không hợp lệ.") from None
         with self._khoa_tep():
             du_lieu = self._doc_toan_bo()
-            du_lieu[khoa] = gia_tri
+            cac_gia_tri = sua({khoa: du_lieu.get(khoa) for khoa in cac_khoa})
+            if type(cac_gia_tri) is not dict or set(cac_gia_tri) != set(cac_khoa):
+                raise LoiNghiepVu("KHO_TAM_DU_LIEU_SAI", "Chưa xác định đủ dữ liệu cần cập nhật trong kho tạm.")
+            for khoa, gia_tri in cac_gia_tri.items():
+                self._kiem_gia_tri(khoa, gia_tri)
+            du_lieu.update(cac_gia_tri)
             noi_dung = _thanh_json(du_lieu)
             if len(noi_dung) > _KHO_TOI_DA_BYTE:
                 raise LoiNghiepVu("KHO_TAM_QUA_LON", "Kho dữ liệu tạm đã vượt giới hạn lưu trữ.")
@@ -210,3 +246,4 @@ class KhoTam:
                 # Chỉ dọn tệp tạm do chính lượt ghi này vừa tạo.
                 if tep_tam is not None:
                     tep_tam.unlink(missing_ok=True)
+            return cac_gia_tri

@@ -1,0 +1,56 @@
+{
+  "chung": {
+    "mau_so": "1", "ky_hieu": "C26TAA", "so_hoa_don": "0000123",
+    "ngay_lap": "2026-10-30", "ma_so_thue_ban": "0100000001", "ma_so_thue_mua": "0100000002",
+    "don_vi_tien": "VND", "so_dong": 1, "can_kiem_tra": true,
+    "nguon_doc": "xml_strict", "phien_ban_engine": "e_hoa_don 1.0.0"
+  },
+  "header": {
+    "PBan": [["TEXT", "DEMO"]], "KHMSHDon": [["TEXT", "1"]], "KHHDon": [["TEXT", "C26TAA"]],
+    "SHDon": [["TEXT", "0000123"]], "NLap": [["TEXT", "2026-10-30"]], "DVTTe": [["TEXT", "VND"]],
+    "NBan/MST": [["TEXT", "0100000001"]], "NMua/MST": [["TEXT", "0100000002"]]
+  },
+  "dong": {
+    "STT": [["TEXT", "1"]], "TChat": [["TEXT", "1"]], "MHHDVu": [["TEXT", "DEMO-01"]],
+    "THHDVu": [["TEXT", "Hàng hóa DEMO Ánh Dương"]], "DVTinh": [["TEXT", "CAI"]],
+    "SLuong": [["TEXT", "1"]], "TSuat": [["TEXT", "10%"]]
+  },
+  "canh_bao_chung": [
+    "TOTAL_SECTION_UNSUPPORTED", "UNIT_UNPROVEN",
+    "CONTEXT_ABSENT", "CONTENT_OUTSIDE_SUPPORTED_ENVELOPE", "IDENTITY_UNRESOLVED"
+  ],
+  "ca": [
+    {
+      "tep": "hoa-don-DEMO.xml",
+      "truong": {
+        "tien_truoc_thue": {"so": "1000000", "tien_te": "VND"},
+        "tien_thue": {"so": "100000", "tien_te": "VND"},
+        "tong_thanh_toan": {"so": "1100000", "tien_te": "VND"}
+      },
+      "header": {}, "net": "1000000", "thue": "100000", "tong": "1100000",
+      "tong_state": "PRECISION_UNDECLARED", "money_state": "EXACT", "canh_bao_them": []
+    },
+    {
+      "tep": "hoa-don-le-DEMO.xml",
+      "truong": {
+        "tien_truoc_thue": {"so": "1000000.123456", "tien_te": "VND"},
+        "tien_thue": {"so": "100000.012345", "tien_te": "VND"},
+        "tong_thanh_toan": {"so": "1100000.135801", "tien_te": "VND"}
+      },
+      "header": {}, "net": "1000000.123456", "thue": "100000.012345", "tong": "1100000.135801",
+      "tong_state": "PRECISION_UNDECLARED", "money_state": "EXACT", "canh_bao_them": []
+    },
+    {
+      "tep": "hoa-don-thieu-DEMO.xml",
+      "truong": {
+        "ky_hieu": null, "ma_so_thue_mua": null,
+        "tien_truoc_thue": {"so": "1000000", "tien_te": "VND"},
+        "tien_thue": {"so": "100000", "tien_te": "VND"}, "tong_thanh_toan": null
+      },
+      "header": {"KHHDon": [["ABSENT", null]], "NMua/MST": [["EMPTY", ""]]},
+      "net": "1000000", "thue": "100000", "tong": null,
+      "tong_state": "ABSENT", "money_state": "HOLD",
+      "canh_bao_them": ["SERIES_ABSENT", "BUYER_TAX_ID_EMPTY", "MONEY_ABSENT", "HD_MONEY_HOLD"]
+    }
+  ]
+}

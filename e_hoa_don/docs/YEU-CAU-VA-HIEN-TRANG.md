@@ -9,11 +9,15 @@
 
 **Ký hiệu:** ✅ có / 🟡 một phần / ❌ chưa có.
 
-## 0. Kết luận
-- Engine **đọc hóa đơn điện tử XML/ZIP, xuất bảng kê và tải hóa đơn từ cổng thuế** (tải thật cần lệnh riêng của Anh).
-- **Năng lực công bố hiện chỉ có `hoa_don.doc_xml@1`.** ZIP, bảng kê và tải chưa được công bố là đã kiểm.
-- Còn **9 lát, 29 giờ công ước tính** theo phiếu. Phiếu chưa duyệt, chưa có quyết định cuối.
-- **Ba kết quả khác nhau, không được gộp:** đọc XML, tải về, và nhận vào nghiệp vụ kế toán. Tải xong không có nghĩa là đã đọc hay đã hạch toán.
+## 0. Kết luận cập nhật HD-3 (mốc 14/11/2026, kiểm 15/11/2026)
+
+- Gói SDK 2.0 tại `goi/e_hoa_don/` chỉ đăng ký `hoa_don.doc_xml@2`: một XML → đủ 18 trường + tệp JSON chi tiết. HD-0…HD-3 đã kiểm bằng Core giả (CoreGia); bằng chứng HD-3 và kết quả lệnh tại `VIEC.md`, `PR-HD-3.md`, CHANGELOG gói. Chưa nghiệm thu Core thật/quyền kho tệp, chưa chạy Linux hoặc bài Core thật 120 phút.
+- HD-3 có ba XML DEMO độc lập: tiền nguyên, tiền lẻ exact và nguồn thiếu/null; đáp án literal + pin bytes tại `tests/demo/`. Fixture lớn 1.000/1.001 dòng chỉ sinh trong thư mục DEMO tạm. Tất cả mẫu handler thiếu context đều cần kiểm tra; TToan ngoài semantic envelope V1 không thành bằng chứng nội dung đầy đủ.
+- Đợt XML theo `GIAO-CODEX-e_hoa_don.md`: 5 lát HD-0…HD-4, tổng **15 giờ ước tính**; HD-4 ghim nguồn/cài máy sạch còn chờ làm. Không dùng số 9 lát/29 giờ của phiếu cũ làm tiến độ đợt này.
+- XML đã kiểm bằng Core giả (CoreGia) khác với ZIP/bảng kê/tải/Node/Cloud/Windows: các phần mở rộng còn chờ Anh chốt và cửa chung Core, chưa có năng lực công bố trong gói mới. Không dùng tài khoản/cổng thuế thật.
+- Đọc XML, tải về và nhận vào nghiệp vụ kế toán là ba kết quả riêng: thuế UNKNOWN, ghi nhận NOT_PERFORMED. Lead/Core giữ và chuyển quy trình @1 → @2; bản @1 trong ma-nguon không bị sửa.
+
+Các mục 1–5 dưới đây là lịch sử phiếu 08/11/2026, giữ để đối chiếu; mã HD-n ở đó là mã yêu cầu cũ, không đồng nhất với lát SDK 2.0 HD-n.
 
 ## 1. Yêu cầu (theo phiếu, chờ Anh chốt)
 

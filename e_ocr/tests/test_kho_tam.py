@@ -240,3 +240,30 @@ def test_tu_choi_kho_trong_goi_va_bien_rong(monkeypatch, thu_muc):
     with pytest.raises(LoiNghiepVu) as loi:
         KhoTam()
     assert loi.value.ma == "KHO_TAM_CHUA_CAU_HINH"
+
+
+def test_cap_nhat_nhieu_rollback_ca_lo_va_nha_khoa(tmp_path):
+    kho = KhoTam(tmp_path)
+    kho.ghi("A", 1)
+    kho.ghi("B", 2)
+
+    def hong(cu):
+        cu["A"] = 3
+        raise ValueError("Lỗi DEMO.")
+
+    with pytest.raises(ValueError):
+        kho.cap_nhat_nhieu(["A", "B"], hong)
+    assert kho.doc("A") == 1 and kho.doc("B") == 2
+    kho.cap_nhat_nhieu(["A", "B"], lambda cu: {"A": cu["A"] + 1, "B": cu["B"] + 1})
+    assert kho.doc("A") == 2 and kho.doc("B") == 3
+
+
+def test_cap_nhat_nhieu_kiem_du_ca_lo_truoc_ghi(tmp_path):
+    kho = KhoTam(tmp_path)
+    kho.ghi("A", 1)
+    with pytest.raises(LoiNghiepVu):
+        kho.cap_nhat_nhieu(["A", "B"], lambda cu: {"A": 3, "B": {"van_ban": "DEMO"}})
+    assert kho.doc("A") == 1 and kho.doc("B") is None
+    with pytest.raises(LoiNghiepVu):
+        kho.cap_nhat_nhieu(["A", "B"], lambda cu: {"A": 3})
+    assert kho.doc("A") == 1 and kho.doc("B") is None

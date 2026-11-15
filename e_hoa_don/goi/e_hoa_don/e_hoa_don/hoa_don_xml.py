@@ -23,6 +23,8 @@ from __future__ import annotations
 
 import io
 import re
+import stat
+import unicodedata
 import zipfile
 import zlib
 from dataclasses import dataclass, fields as _dc_fields, is_dataclass
@@ -61,6 +63,8 @@ _ENCODING_DECL = re.compile(rb"^(?:\xef\xbb\xbf)?\s*<\?xml[^>]*?encoding\s*=\s*[
 MAX_XML_BYTES = 16 * 1024 * 1024
 MAX_ZIP_BYTES = 64 * 1024 * 1024
 MAX_ZIP_ENTRIES = 1000
+MAX_ZIP_TOTAL_BYTES = 128 * 1024 * 1024
+MAX_ZIP_RATIO = 1000
 
 _PATH_DLHDON = "/HDon/DLHDon"
 _PATH_TTCHUNG = "/HDon/DLHDon/TTChung"
@@ -1188,7 +1192,8 @@ def doc_hoa_don_xml(raw: bytes, context: InvoiceReadContext | None = None, *, ar
     return _doc(raw, ctx, ref, _ten(artifact_name, "artifact_name"))
 
 
-def doc_goi_hoa_don_zip(raw_zip: bytes, contexts: tuple = (), *, archive_name: str | None = None) -> InvoiceZipReadResult:
+def doc_goi_hoa_don_zip(raw_zip: bytes, contexts: tuple = (), *, archive_name: str | None = None,
+                      kiem_xml=None, kiem_huy=None) -> InvoiceZipReadResult:
     """Đọc ZIP qua infolist()+open(ZipInfo) — mỗi entry giữ ordinal 1-based + tên + SHA/độ dài thực; tên trùng KHÔNG gộp. Context chỉ áp
     khi khớp đúng (container SHA, ordinal, tên entry); raw ref đầy đủ (SHA entry) được reader so lại. Coverage chỉ nói về bundle này."""
     raw = _bytes(raw_zip, "raw_zip")
@@ -1201,58 +1206,149 @@ def doc_goi_hoa_don_zip(raw_zip: bytes, contexts: tuple = (), *, archive_name: s
     def ket_qua(entries, coverage):
         return InvoiceZipReadResult(raw, csha, len(raw), name, tuple(entries), coverage, tuple(issues))
 
+    def vuot_tran():
+        _loi("ZIP_LIMIT", "Gói ZIP vượt giới hạn xử lý.")
+
     if len(raw) > MAX_ZIP_BYTES:
-        issues.append(g.issue("ZIP_TOO_LARGE", "/"))
-        return ket_qua((), "PARTIAL")
+        vuot_tran()
     try:
         zf = zipfile.ZipFile(io.BytesIO(raw))
-    except (zipfile.BadZipFile, zipfile.LargeZipFile, ValueError, OSError, EOFError, NotImplementedError):
+    except (zipfile.BadZipFile, zipfile.LargeZipFile, ValueError, OSError, EOFError,
+            NotImplementedError, UnicodeError, OverflowError):
         issues.append(g.issue("ZIP_MALFORMED", "/"))
         return ket_qua((), "PARTIAL")
     with zf:
         try:
             infos = zf.infolist()
+            cuoi = zipfile._EndRecData(io.BytesIO(raw))
         except Exception:  # noqa: BLE001 — central directory hỏng: giữ container
             issues.append(g.issue("ZIP_MALFORMED", "/"))
             return ket_qua((), "PARTIAL")
         if len(infos) > MAX_ZIP_ENTRIES:
-            issues.append(g.issue("ZIP_TOO_MANY_ENTRIES", "/"))
+            vuot_tran()
+        if cuoi is not None and cuoi[zipfile._ECD_ENTRIES_TOTAL] > MAX_ZIP_ENTRIES:
+            vuot_tran()
+        if (cuoi is None or cuoi[zipfile._ECD_DISK_NUMBER] != 0 or cuoi[zipfile._ECD_DISK_START] != 0
+                or cuoi[zipfile._ECD_ENTRIES_TOTAL] != len(infos)
+                or cuoi[zipfile._ECD_ENTRIES_THIS_DISK] != len(infos)):
+            issues.append(g.issue("ZIP_MALFORMED", "/"))
             return ket_qua((), "PARTIAL")
+        # Metadata chỉ dùng để từ chối sớm; vẫn đếm byte thật khi đọc.
+        if sum(i.file_size for i in infos) > MAX_ZIP_TOTAL_BYTES:
+            vuot_tran()
+        for i in infos:
+            if (i.file_size > MAX_XML_BYTES
+                    or i.file_size > max(1, i.compress_size) * MAX_ZIP_RATIO):
+                vuot_tran()
         dem: dict[str, int] = {}
         for info in infos:
-            dem[info.filename] = dem.get(info.filename, 0) + 1
-        for ten_trung in sorted(n for n, c in dem.items() if c > 1):
-            issues.append(g.issue("ZIP_DUPLICATE_ENTRY_NAME", f"/{ten_trung}"))
+            ten_chuan = unicodedata.normalize("NFC", info.orig_filename).casefold()
+            dem[ten_chuan] = dem.get(ten_chuan, 0) + 1
         # gán context theo khe (container, ordinal, tên) — không wildcard, không theo tên một mình
         khe: dict[tuple[int, str], list[InvoiceReadContext]] = {}
         for k, c in enumerate(ctxs):
             r = c.expected_raw_ref
             if (r is None or r.container_sha256 != csha or r.entry_ordinal is None or r.entry_ordinal > len(infos)
-                    or infos[r.entry_ordinal - 1].filename != r.entry_name):
+                    or infos[r.entry_ordinal - 1].orig_filename != r.entry_name):
                 issues.append(g.issue("CONTEXT_UNMATCHED", f"/contexts[{k}]")); continue
             khe.setdefault((r.entry_ordinal, r.entry_name), []).append(c)
-        entries, du = [], True
-        for ordinal, info in enumerate(infos, 1):
-            ten = info.filename
-            eg = _Ghi(f"zip:{csha}!{ordinal}:{ten}")
-            if info.is_dir() or not ten.casefold().endswith(".xml"):
-                entries.append(ZipEntryResult(ordinal, ten, None, None, None, (eg.issue("ZIP_ENTRY_IGNORED_NON_XML", "/"),), "IGNORED_NON_XML"))
-                continue
-            if info.file_size > MAX_XML_BYTES:
-                du = False
-                entries.append(ZipEntryResult(ordinal, ten, None, None, None, (eg.issue("ZIP_MEMBER_TOO_LARGE", "/"),), "READ_ERROR"))
-                continue
+        entries, du, tong_byte = [], bool(infos), 0
+
+        class LoiDocEntry(Exception):
+            pass
+
+        def doc_entry(thao_tac, *args):
+            # Chỉ bọc lỗi I/O ZIP, không nuốt ngoại lệ hủy/mất lease của caller.
             try:
-                with zf.open(info) as fh:
-                    data = fh.read(MAX_XML_BYTES + 1)
+                return thao_tac(*args)
+            except DataError:
+                raise
             except (zipfile.BadZipFile, RuntimeError, NotImplementedError, OSError, EOFError, zlib.error, ValueError):
+                raise LoiDocEntry from None
+
+        for ordinal, info in enumerate(infos, 1):
+            if kiem_huy is not None:
+                kiem_huy()
+            ten = info.orig_filename
+            eg = _Ghi(f"zip:{csha}!{ordinal}:{ten}")
+            ei = []
+            if info.is_dir():
+                ei.append(eg.issue("ZIP_ENTRY_DIRECTORY", "/"))
+            if dem[unicodedata.normalize("NFC", ten).casefold()] > 1:
+                ei.append(eg.issue("ZIP_DUPLICATE_ENTRY_NAME", "/"))
+            # Chỉ xét tên như metadata, không resolve/open thành đường máy.
+            duong = ten.replace("\\", "/")
+            nguy_hiem = (duong.startswith("/") or ".." in duong.split("/")
+                         or bool(re.match(r"^[A-Za-z]:", duong)) or "\x00" in info.orig_filename)
+            bo_qua = None
+            if nguy_hiem:
+                bo_qua = "ZIP_ENTRY_UNSAFE_NAME"
+            elif stat.S_ISLNK(info.external_attr >> 16):
+                bo_qua = "ZIP_ENTRY_SYMLINK"
+            elif info.is_dir():
+                bo_qua = "ZIP_ENTRY_DIRECTORY"
+            elif not ten.casefold().endswith(".xml"):
+                bo_qua = "ZIP_ENTRY_IGNORED_NON_XML"
+            da_doc = 0
+
+            def dem_byte(data):
+                nonlocal da_doc, tong_byte
+                da_doc += len(data)
+                tong_byte += len(data)
+                if (da_doc > MAX_XML_BYTES or tong_byte > MAX_ZIP_TOTAL_BYTES
+                        or da_doc > max(1, info.compress_size) * MAX_ZIP_RATIO):
+                    vuot_tran()
+
+            try:
+                # Các method khác có thể giải nén một khối không có trần RAM.
+                if info.compress_type not in (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED):
+                    du = False
+                    ei.append(eg.issue("ZIP_MEMBER_METHOD_UNSUPPORTED", "/"))
+                    entries.append(ZipEntryResult(ordinal, ten, None, None, None, tuple(ei), "IGNORED_NON_XML"))
+                    continue
+                with doc_entry(zf.open, info) as fh:
+                    # ZipExtFile mặc định cắt theo file_size không tin cậy trước
+                    # CRC. Đặt trần thật + 1 và đếm tại hook CRC, kể cả chunk
+                    # cuối bị lỗi CRC. Không cấp SHA cho dữ liệu đọc thiếu.
+                    fh._left = MAX_XML_BYTES + 1
+                    cap_nhat_crc = fh._update_crc
+
+                    def kiem_crc(chunk):
+                        dem_byte(chunk)
+                        cap_nhat_crc(chunk)
+
+                    fh._update_crc = kiem_crc
+                    chunks = []
+                    while True:
+                        if kiem_huy is not None:
+                            kiem_huy()
+                        chunk = doc_entry(fh.read, 64 * 1024)
+                        if not chunk:
+                            break
+                        chunks.append(chunk)
+                    # DEFLATE chưa tới EOF thì CRC của tiền tố chưa đủ chứng cứ.
+                    if (da_doc != info.file_size or not fh._eof
+                            or fh._compress_left != 0
+                            or (info.compress_type == zipfile.ZIP_DEFLATED
+                                and not fh._decompressor.eof)):
+                        raise LoiDocEntry
+                    data = b"".join(chunks)
+            except LoiDocEntry:
                 du = False
-                entries.append(ZipEntryResult(ordinal, ten, None, None, None, (eg.issue("ZIP_MEMBER_READ_ERROR", "/"),), "READ_ERROR"))
+                ei.append(eg.issue("ZIP_MEMBER_READ_ERROR", "/"))
+                entries.append(ZipEntryResult(ordinal, ten, None, None, None, tuple(ei), "READ_ERROR"))
                 continue
-            if len(data) > MAX_XML_BYTES:
+            if data.startswith((b"PK\x03\x04", b"PK\x05\x06", b"PK\x07\x08")):
+                bo_qua = "ZIP_ENTRY_NESTED_ZIP"
+            if info.is_dir() and data:
+                ei.append(eg.issue("ZIP_DIRECTORY_HAS_DATA", "/"))
+            if bo_qua is not None:
                 du = False
-                entries.append(ZipEntryResult(ordinal, ten, None, None, None, (eg.issue("ZIP_MEMBER_TOO_LARGE", "/"),), "READ_ERROR"))
+                ei.append(eg.issue(bo_qua, "/"))
+                entries.append(ZipEntryResult(ordinal, ten, len(data), sha256(data), None, tuple(ei), "IGNORED_NON_XML"))
                 continue
+            if kiem_xml is not None:
+                kiem_xml(data)
             ref = XmlRawRef(sha256(data), len(data), MEDIA_XML, csha, ordinal, ten)
             cs = khe.get((ordinal, ten), [])
             ctx = None
@@ -1264,7 +1360,7 @@ def doc_goi_hoa_don_zip(raw_zip: bytes, contexts: tuple = (), *, archive_name: s
             state = "PARSED" if res.shape == "SUPPORTED_SUBSET" else "CANDIDATE"
             if state != "PARSED":
                 du = False
-            entries.append(ZipEntryResult(ordinal, ten, len(data), ref.native_sha256, res, (), state))
+            entries.append(ZipEntryResult(ordinal, ten, len(data), ref.native_sha256, res, tuple(ei), state))
     return ket_qua(entries, "COMPLETE" if du else "PARTIAL")
 
 

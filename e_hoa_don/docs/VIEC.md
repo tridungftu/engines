@@ -2,7 +2,7 @@
 
 Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ Core / Xong** (ghi ngày và bằng chứng).
 
-Các dòng 0–5 giữ dấu vết phiếu cũ. **Cập nhật 15/11/2026:** Anh đã chốt Q1–Q3: XML mốc 1; mở ZIP + bảng kê XLSX, PDF/tải cổng thuế để sau. Phiếu HD-P2 bổ sung HD-5…HD-8; các lát mới chưa triển khai. Các ghi chú “ZIP/bảng kê chờ Anh” và cấu hình/sổ JSON trên đĩa trong lịch sử bên dưới được thay bởi quyết định 15/11 và `GIAO-CODEX-DOT-2.md` §2: không lưu gì trên máy engine.
+Các dòng 0–5 giữ dấu vết phiếu cũ. **Cập nhật 15/11/2026:** Anh đã chốt Q1–Q3: XML mốc 1; mở ZIP + bảng kê XLSX, PDF/tải cổng thuế để sau. HD-5/HD-6 đã hoàn tất lõi và cổng SDK ZIP trong RAM; HD-7/HD-8 chưa triển khai. HD-6 đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật/quyền kho tệp. Các ghi chú “ZIP/bảng kê chờ Anh” và cấu hình/sổ JSON trên đĩa trong lịch sử bên dưới được thay bởi quyết định 15/11 và `GIAO-CODEX-DOT-2.md` §2: không lưu gì trên máy engine.
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
@@ -19,8 +19,8 @@ Các dòng 0–5 giữ dấu vết phiếu cũ. **Cập nhật 15/11/2026:** Anh
 | 10 | HD-3 — Bộ XML DEMO có đáp án và regression | HD-3 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 3/3 DEMO ĐẠT; pytest 283 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia); 0 tệp runtime sửa. PR: **chờ lead mở**; xem Bàn giao HD-3 và `PR-HD-3.md`. |
 | 11 | HD-4 — Ghim nguồn và cài sạch XML | HD-4 | Đang làm — 15/11/2026 (sửa CI Linux) | Mốc đầu: Windows đạt, 284 test. Lượt sửa: SDK 3/3 ĐẠT; pytest 298 passed, 0 skipped; kiểm độc lập và cài sạch Windows đạt. Đã kiểm bằng Core giả (CoreGia); chờ CI Linux/Python 3.11 xác nhận, Core thật chưa kiểm. PR: **chờ lead cập nhật mã**. |
 | 12 | HD-P2 — Phiếu ZIP + bảng kê XLSX, chỉ tài liệu | HD-P2 | Xong — 15/11/2026 | Q1–Q3 đã chốt; thêm HD-5…HD-8, tổng **14 giờ ước tính**. SDK 3/3 DEMO ĐẠT; pytest **298 passed in 39.00s, 0 skipped**; kiểm độc lập ĐẠT. Đã kiểm bằng Core giả (CoreGia), chỉ hồi quy XML hiện có. PR: **chờ lead mở**. |
-| 13 | HD-5 — Lõi ZIP, báo cáo từng entry, xác nhận không cấu hình tệp trên đường chạy | HD-5 | Chờ làm — 15/11/2026 | Sau HD-4; 4 giờ ước tính; điều kiện đạt/lệnh giao tại phiếu §2.4, §4. Không mã ZIP mới trong HD-P2. |
-| 14 | HD-6 — Công bố `hoa_don.doc_zip@1`, JSON qua Core | HD-6 | Chờ làm — 15/11/2026 | Sau HD-5; 3 giờ ước tính; có lỗi/không hỗ trợ thì không gọi đầy đủ, giữ từng bản trùng. |
+| 13 | HD-5 — Lõi ZIP, báo cáo từng entry, xác nhận không cấu hình tệp trên đường chạy | HD-5 | Xong — 15/11/2026 | SDK 3/3 DEMO ĐẠT; pytest 367 passed in 45.80s, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia); 69 ca HD-5, 2/4 tệp runtime. Chưa đăng ký ZIP. PR: **chờ lead mở**; xem Bàn giao HD-5. |
+| 14 | HD-6 — Công bố `hoa_don.doc_zip@1`, JSON qua Core | HD-6 | Xong — 15/11/2026 | SDK 4/4 DEMO ĐẠT; pytest 472 passed in 79.93s, 0 skipped; kiểm độc lập mã 0. 105 ca HD-6, 2/2 runtime; đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật/quyền kho tệp. PR: **chờ lead mở**; xem Bàn giao HD-6. |
 | 15 | HD-7 — `hoa_don.bang_ke_xlsx@1`, tiền text exact + currency | HD-7 | Chờ làm — 15/11/2026 | Sau HD-6; 5 giờ ước tính; Python stdlib, OOXML tối thiểu; tham chiếu tĩnh nguồn cũ theo CD-096 A1, không thêm dependency. |
 | 16 | HD-8 — Oracle ZIP/XLSX, nguồn và cài sạch | HD-8 | Chờ làm — 15/11/2026 | Sau HD-7; 2 giờ ước tính; Windows/Linux ghi đúng môi trường thực chạy, không suy thành kiểm Core thật. |
 
@@ -53,6 +53,8 @@ Lệch khỏi phiếu / quyết định tạm đã dùng: không mở rộng san
 Cần Core / Chờ Anh mới phát sinh: fixture DEMO tệp lồng trong truong (ghi chi tiết ở mục Cần Core); không chặn hoàn tất tài liệu. Không hỏi lại Q1–Q3 hoặc quyền nội bộ A1. Chưa chạy Linux/Core thật/Excel app; không dùng tài khoản/cổng thuế hay nguồn ngoài worktree.
 
 ## Cần Core (chuyển lead Core qua Anh)
+- **HD-6 — 15/11/2026:** không phát sinh cửa Core/SDK mới. Chỉ đã kiểm bằng Core giả (CoreGia) và HTTP loopback giả; chưa nghiệm thu Core thật/quyền kho tệp theo pháp nhân. Giữ nợ hook nhật ký SDK công khai, context tin cậy và fixture chuỗi XLSX đã ghi; không tạo ngăn/cấu hình khi XML/ZIP chưa cần.
+- **HD-5 — 15/11/2026:** không phát sinh yêu cầu Core/SDK mới. Giữ `context=None`, thuế UNKNOWN, ghi nhận NOT_PERFORMED; chưa nghiệm thu Core thật/quyền kho tệp. XML/ZIP không cần ngăn/cấu hình. Giữ nguyên `cau_hinh_may.py`, schema và `tests/test_cau_hinh_may.py` làm lịch sử, chờ chuyển `LUU-TRU/` ở lát riêng; đã kiểm `chay.py` không import/nạp cấu hình tệp. Không xóa hoặc chuyển tệp trong HD-5.
 - **HD-P2 — 15/11/2026:** XML/ZIP/XLSX không cần ngăn hay cấu hình. `cau_hinh_may.py` còn là tệp tham chiếu trong gói, `chay.py` hiện không import/nạp nó; HD-5 phải giữ điều này và cập nhật hồ sơ, không xóa tệp. Khi phát sinh dữ liệu cần giữ, dùng `Ngan` (`app.ngan`, tạm `NganBoNho` RAM theo DOT-2 §2); không quay lại JSON ngoài gói/sổ/đệm bền. Chưa thêm trường SDK 2.1 vào manifest 2.0.
 - **HD-P2 — fixture tệp tham chiếu trong `truong`:** đã đọc `CoreGia.chay_thu_demo` của SDK wheel 2.0.0: chỉ đổi `tep_demo` thành tham chiếu khi đầu vào là `loai=tep`, chưa cấp fixture lồng trong `truong.chi_tiet_nguon`. Cần cơ chế fixture/chuỗi DEMO chung để thử XLSX sau đọc XML/ZIP; trong lúc chờ, pytest dùng `CoreGia.them_tep`/kết quả bước đọc thật. Không tự tạo ID, sửa SDK hoặc khai DEMO XLSX thành công giả. Bộ DEMO XML/ZIP đang khai vẫn phải đạt; mức phủ XLSX ghi riêng.
 - HD-4: SDK cần hook nhật ký công khai, không in traceback ra stderr; fail-closed khi thiếu `_ghi` là giải pháp tạm.
@@ -251,3 +253,56 @@ Thời gian thực tế: **0.208 giờ** (02:08:00–02:20:27, 15/11/2026, UTC+0
 Lệch khỏi phiếu / quyết định tạm đã dùng: **không mở rộng phạm vi**, giữ context=None, tiền exact, identity/digest null, trạng thái thuế UNKNOWN/ghi nhận NOT_PERFORMED. Oracle lượt đầu được sửa sau đối chiếu định nghĩa lõi: TToan có TOTAL_SECTION_UNSUPPORTED (không thêm UNSUPPORTED_ELEMENT), quan hệ không có là ABSENT; không sửa runtime hoặc thêm cảnh báo để né lỗi cấu trúc. Pin chỉ xác nhận ba fixture mới có bytes hiện hữu, không chứng minh tương thích corpus/golden cũ.
 
 Cần Core / Chờ Anh mới phát sinh: **không có**. Giữ nợ context tin cậy, quyền tệp theo pháp nhân, hook log/seam lease SDK và corpus cũ tại mục Cần Core. XML **đã kiểm bằng Core giả (CoreGia)**; ZIP/bảng kê/tải và quyền/Core thật còn chờ Anh/Core theo phiếu; HD-4 ghim nguồn/cài sạch chưa làm. Chưa chạy Linux, máy sạch HD-4 hoặc bài Core thật 120 phút. Không dùng tài khoản/cổng thuế thật.
+
+### Bàn giao HD-5 — 15/11/2026, PR: chờ lead mở
+
+Kết luận: **Đạt phạm vi HD-5** — lõi kiểm kê ZIP và hồi quy XML đã kiểm bằng Core giả (CoreGia); chưa nối Core thật.
+
+Đã làm: thêm `zip.py` và `contract/bao_cao_zip.schema.json`; sửa đúng cổng `doc_goi_hoa_don_zip` trong `hoa_don_xml.py` (2/4 tệp runtime). Giữ nguyên parser XML/DTO/phép chiếu XML và `hoa_don.doc_xml@2`; không đổi manifest, `doc.py`, `chay.py`, dependency hoặc nguồn tham chiếu. Tên entry giữ gốc, ordinal 1-based và mở bằng ZipInfo; giữ mọi entry/trùng tên/trùng bytes, thư mục riêng. SHA-256 chỉ khi đọc hết và CRC đúng; đọc thiếu giữ băm/kích thước null với lý do. PDF/non-XML đọc có trần để băm; tên nguy hiểm/symlink/ZIP lồng không vào parser.
+
+Kiểm metadata và byte thật: ZIP 64 MiB, 1.000 entry, 16 MiB/tệp, tổng giải nén 128 MiB, gate 1.000 HHDVu trước DTO, JSON UTF-8 32 MiB. Đối chiếu EOCD/central directory, kể cả ZIP nhiều đĩa và số entry giả. Vượt trần từ chối toàn việc; CRC/mã hóa/entry không mở được báo cục bộ. Không dùng COMPLETE của lõi để kết luận đã đọc hết; giữ UNKNOWN/NOT_PERFORMED/context=None, không suy đủ kỳ hoặc gộp trùng. Tất cả trong RAM; không tệp tạm, cấu hình, sổ, cache bền, ngăn hoặc gọi mạng.
+
+Bổ sung 69 ca HD-5 với oracle độc lập: gói hỗn hợp, thứ tự khác từ điển, PDF/XML hỏng/ngoài profile, CRC/mã hóa/method, tên trùng khác bytes/NFC/casefold, tên gốc backslash, symlink/ZIP lồng, rỗng/chỉ thư mục, băm null và đọc tiếp sau lỗi, metadata giả/EOCD, biên thật 64/16/128 MiB và JSON vượt 32 MiB, 1.000/1.001 HHDVu trước DTO, hủy/mất lease và chặn filesystem. Điều chỉnh hai test lịch sử để thêm đúng zip.py và chỉ miễn phần cổng ZIP trong so sánh AST nguồn; toàn bộ parser XML/DTO còn lại phải nguyên AST. Nợ UTF-8 ở test_hd_2: giữ encoding=utf-8, thêm PYTHONUTF8=1/PYTHONIOENCODING=utf-8 cho subprocess.
+
+Kết quả kiểm Windows/Python 3.13.14, SDK 2.0.0 (wheel offline, SHA-256 khớp SHA256SUMS), pytest 9.1.1 có sẵn qua venv system-site-packages; không thêm dependency runtime:
+
+| Lệnh | Kết quả | Mã thoát |
+|---|---|---:|
+| `.venv\Scripts\python -B -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_hoa_don` | **3/3 DEMO ĐẠT** | 0 |
+| `.venv\Scripts\python -B -m pytest e_hoa_don/tests -q --basetemp=.pytest-tmp` | **367 passed in 45.80s, 0 skipped** | 0 |
+| `.venv\Scripts\python -B e_hoa_don/tests/kiem_doc_lap.py` | **ĐẠT AST/import, cây gói, tiến trình sạch** | 0 |
+
+Mọi kết quả qua cổng engine là **đã kiểm bằng Core giả (CoreGia)**. Kiểm ZIP HD-5 là unit tests thuần, chưa có handler/DEMO ZIP đăng ký; không gán kết quả unit thành nghiệm thu Core thật. Chưa chạy Linux/CPython 3.11 hoặc cài sạch ZIP (HD-8).
+
+Thời gian thực tế: **07:51:00–08:15:19, 15/11/2026 UTC+07; 0.406 giờ** (mốc bắt đầu theo lead); phiếu **4 giờ ước tính**. PR: **chờ lead mở**. Không git add/commit/push.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: theo ghi chú lead bổ sung trần tỉ lệ nén **1.000:1**, lựa chọn kỹ thuật chưa đo corpus; chỉ đọc STORED/DEFLATE có trần, method khác báo chưa hỗ trợ/băm null. Dùng hook ZipExtFile `_left`/`_update_crc` để không cắt theo file_size giả và đếm cả chunk lỗi CRC; `_EndRecData` để đối chiếu metadata. Các hook stdlib phải kiểm lại khi nâng Python; chưa thay đổi API/SDK đã khóa. Không viết parser XML thứ hai: tái dùng nguyên gate HD-1 và parser strict hiện có.
+
+Cần Core / Chờ Anh mới phát sinh: **không**; giữ các nợ context tin cậy/quyền tệp/hook nhật ký/fixture đã có. `cau_hinh_may.py`, schema và test cấu hình lịch sử vẫn nguyên, ngoài đường chạy chay.py; ghi việc chuyển `LUU-TRU/` sau ở mục Cần Core, không xóa/di chuyển. Chưa đăng ký `hoa_don.doc_zip@1`; phần nối cổng thuộc HD-6. Không suy đã kiểm Core thật, Excel app hoặc bài nghiệp vụ 120 phút.
+
+
+### Bàn giao HD-6 — 15/11/2026, PR: chờ lead mở
+
+Kết luận: **Đạt phạm vi HD-6** — đã kiểm bằng Core giả (CoreGia); chưa nghiệm thu Core thật/quyền kho tệp.
+
+Đã làm: đăng ký `hoa_don.doc_zip@1`, đủ 13 trường tĩnh §2.4, nhận tệp ZIP/64 MiB/600 giây/hủy được; khai báo, ba DEMO và AST handler `doc_xml@2` giữ nguyên so HEAD. Handler đọc qua `viec.mo_tep`, kiểm bytes thật kể cả metadata giả/khối ngắn, truyền kiểm hủy giữa entry/chunk, trước upload/trả. Chỉ bàn giao trường sau khi upload `hoa-don-goi-chi-tiet.json` thành công; không cấp tep_id cho entry, không gọi engine khác, không ghi nhận nghiệp vụ. Không lưu tệp/cấu hình/sổ/cache; xử lý trong RAM, chưa cần Ngan. Giữ UNKNOWN/NOT_PERFORMED/context=None.
+
+Đã đóng ba nợ HD-5: bọc warnings bằng `catch_warnings`, đổi UserWarning mở/đọc entry thành `BadZipFile` cố định để lõi giữ entry lỗi, băm/kích thước null và không lộ tên ra stderr; test chốt API riêng zipfile + CRC/EOF/EOCD và ghi lưu ý nâng Python trong NGUON; README ghi một entry vượt tỉ lệ nén 1.000:1, kể cả non-XML, từ chối cả việc.
+
+DEMO ZIP dương: 6 entry gồm XML tốt/thư mục/XML hỏng/PDF/trùng bytes/trùng tên khác bytes; đủ 5 tệp, 3 đọc được/1 lỗi/1 chưa hỗ trợ/1 trùng nội dung. SDK XONG chỉ đã trả báo cáo, `da_doc_het=false`, `can_kiem_tra=true`. Oracle tự dựng từ literal, không lấy output bộ đọc làm expected: đối chiếu toàn JSON/DTO/occurrence/locator/từng băm/ordinal/đếm qua SDK bộ nhớ và HTTP. 105 ca HD-6 gồm ZIP rỗng/hỏng/trần/metadata giả/bytes thực 64 MiB+1/khối ngắn; hủy/mất lease giữa entry qua gia hạn và tại mốc upload/trả; mất ACK 1/3 lượt cùng Idempotency-Key; upload lỗi/thiếu tham chiếu; canary cho warning/exception/tiến độ/câu lỗi; không filesystem; API riêng trên STORED/DEFLATE. Điều chỉnh ba assertion lịch sử chỉ-XML để nhận ZIP, không bỏ hồi quy XML.
+
+Kết quả thật trên **Windows, Python 3.13.14**, venv riêng worktree, SDK 2.0.0 cài offline `--no-index --no-deps`; SHA wheel `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892` khớp SHA256SUMS.txt. pytest 9.1.1/phụ thuộc kiểm thử chép offline từ Python có sẵn, không thêm dependency runtime.
+
+| Lệnh AGENTS.md §5 | Kết quả thật | Mã thoát |
+|---|---|---:|
+| `.venv\Scripts\python -B -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_hoa_don` | **4/4 DEMO [ĐẠT]**: 3 XML + 1 ZIP | 0 |
+| `.venv\Scripts\python -B -m pytest e_hoa_don/tests -q --basetemp=.pytest-tmp` | **472 passed in 79.93s, 0 skipped** | 0 |
+| `.venv\Scripts\python -B e_hoa_don/tests/kiem_doc_lap.py` | **[ĐẠT] AST/import, cây gói và tiến trình sạch** | 0 |
+
+Lượt kiểm ban đầu từng phát hiện assertion lịch sử yêu cầu manifest chỉ có XML (1 failed/459 passed); đã sửa assertion theo phạm vi HD-6 và chạy lại toàn bộ đạt như bảng trên. Không che lỗi hay báo skip. Kiểm độc lập gồm DEMO trong tiến trình cô lập `-I -B -S`; không bytecode/symlink trong gói. Chưa chạy Linux; test không phụ thuộc Windows, cần CI Linux xác nhận. Không chạy Core thật/Excel app hoặc thử quyền kho tệp thật; không suy thành nghiệm thu nghiệp vụ.
+
+Thời gian thực tế: **0.230 giờ**, 08:21:00–08:34:48, ngày 15/11/2026 UTC+07 (bắt đầu theo lead); ước tính phiếu **3 giờ**.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: 2/2 runtime `chay.py`/`zip.py`; không sửa `hoa_don_xml.py`, `doc.py`, Core/SDK/ma-nguon, không thêm dependency. Bọc cảnh báo tại `zip.py` để giữ trần hai runtime; dùng hook showwarning trong phạm vi `catch_warnings` cho lõi bắt BadZipFile cục bộ (không sửa stdlib). Không thay quyết định nghiệp vụ; giữ phiên bản gói 1.0.0 hiện có tới bước ghim phát hành của lead/HD-8. Mọi bytes nghiệp vụ chỉ trong RAM/kho Core; không sổ JSON, chưa cần ngăn.
+
+Cần Core / Chờ Anh mới phát sinh: **không**; giữ nợ Core chung ở mục Cần Core. Không commit/push, không xóa tệp; chỉ sửa trong worktree được giao. PR: **chờ lead mở**.

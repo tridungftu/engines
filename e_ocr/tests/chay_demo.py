@@ -5,10 +5,9 @@ CI, vẫn đi qua render PDF, đọc PNG/JPEG, TSV và ba action SDK thật.
 """
 
 from contextlib import ExitStack
-import os
+import json
 from pathlib import Path
 import sys
-from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -22,6 +21,7 @@ from kho_tri_thuc_sdk.thu import CoreGia, nap_engine_tu_goi
 
 from demo.tao_bo_demo import KICH_THUOC, _phong_chu, _trang
 from e_ocr import tesseract
+from e_ocr.ngan import NganBoNho
 
 
 class TesseractGia:
@@ -60,12 +60,14 @@ class TesseractGia:
 
 
 def chay_demo(*, gia=False):
-    with TemporaryDirectory(prefix="e-ocr-DEMO-") as tam, ExitStack() as stack:
-        # Cách ly cả cấu hình và dữ liệu: không đọc cấu hình OCR của máy.
-        stack.enter_context(patch.dict(os.environ, {
-            "PROGRAMDATA": tam, "KTT_ENGINE_DU_LIEU": str(Path(tam) / "du-lieu-DEMO"),
-            "KTT_ENGINE_CAU_HINH": str(Path(tam) / "khong-co-cau-hinh-DEMO.json"),
-        }))
+    with ExitStack() as stack:
+        # Cấu hình và dấu lượt DEMO đều nằm trong ngăn RAM riêng.
+        app = nap_engine_tu_goi(GOI)
+        khai = json.loads((GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))
+        ngan = NganBoNho(khai["ngan_du_lieu"])
+        with ngan.lo() as lo:
+            lo.them("cau_hinh", {}, {"abbyy": {"bat": False}, "tesseract": {}})
+        stack.enter_context(patch.object(app, "ngan", ngan, create=True))
         if not gia:
             try:
                 tesseract._kiem_bo_doc({}, SimpleNamespace(kiem_huy=lambda: None))
@@ -78,7 +80,7 @@ def chay_demo(*, gia=False):
             print("Đã kiểm bằng Core giả (CoreGia) + Tesseract giả; không đo độ chính xác OCR.")
         else:
             print("Đã kiểm bằng Core giả (CoreGia) + Tesseract thật (vie+eng); chỉ dữ liệu DEMO.")
-        ket_qua = CoreGia().chay_thu_demo(nap_engine_tu_goi(GOI), GOI)
+        ket_qua = CoreGia().chay_thu_demo(app, GOI)
         for kq in ket_qua:
             print(f"[{'ĐẠT' if kq['trang_thai'] == 'XONG' else 'LỖI'}] {kq['ten']}")
         return ket_qua

@@ -1,5 +1,37 @@
 # Thay đổi
 
+## 1.0.8 — 15/11/2026 — OCR-8
+
+- Sửa theo kiểm độc lập của lead: màn Admin đọc tổng hợp chưa rõ cấp engine,
+  chỉ số đếm/ngày, cập nhật cùng lô với lượt; ba phần hiển thị bắt lỗi riêng.
+  KttCore giả kiểm phạm vi pháp nhân theo NganBoNho.
+- Dọn dần hàng hạn mức hết cửa sổ 30 ngày trong cùng lô; giữ nguyên chỗ giữ
+  còn dở, khai lưu tối đa 45 ngày. Ngôn ngữ Tesseract dùng enum/ô chọn bốn giá trị.
+- README cấm chạy thật trên RAM, ghi quyền thư mục cha Hot Folder và cách dọn
+  tạm `.e-ocr-…`; phân biệt công cụ OCR-7 đọc JSON qua `--cau-hinh` do Anh tự chạy.
+- Đã nối ngăn chung NGAN-0 (PR #34), giữ nguyên hai tệp mẫu chung.
+  Khai báo bảng truyền vào RAM từ `KHAI-SDK-2.1.json`, khóa cấu hình `{}`;
+  đọc `TrangNgan` và `KetQuaLenh` theo API chung, kết quả lô chỉ đọc sau commit.
+- Dùng pháp nhân trong khóa/bộ lọc hoặc ngăn theo việc; chuyển ngoại lệ
+  ngăn/cấu hình chung thành `LoiNghiepVu`, giữ mã và khả năng thử lại.
+- Bật hai test băm mẫu sau chuẩn hóa CRLF→LF; sửa fixture và test cạnh
+  tranh qua API public. Giữ phương án B, chống gửi ABBYY hai lần và lô
+  nguyên tử giữ trang/lượt. Đã kiểm bằng Core giả (CoreGia): 273 passed,
+  0 skipped; SDK DEMO 6/6 ĐẠT, kiểm độc lập đạt.
+- Chuyển cấu hình, sổ hạn mức và lượt ABBYY sang cổng `Ngan`; SDK 2.0
+  tạm dùng `NganBoNho`, không ghi cấu hình/sổ trên máy. Giữ nguyên tệp cũ
+  để lead chuyển lưu trữ. Hai mẫu dùng chung đã nối NGAN-0.
+- `lay_hoac_tao` theo pháp nhân + băm, giữ trang và ghi lượt trong một lô;
+  CAS có thử lại, mốc dùng chung qua nửa đêm. Đóng khe đua OCR-4 số 1
+  bằng kiểm lại quyết định đọc cũ và quyền xử lý có CAS.
+- Giữ phương án B: lượt chưa rõ không gửi lại, không tự hết hạn/hoàn
+  trang; chốt/hoàn đúng một lần khi có kết quả hoặc bằng chứng từ chối.
+- Thêm màn cấu hình ABBYY/Tesseract, hạn mức 30 ngày, trạng thái ngăn
+  cập nhật định kỳ và lượt chờ đối chiếu; lưu cấu hình bằng CAS.
+- Khai SDK 2.1 riêng trong `KHAI-SDK-2.1.json`, giữ hợp đồng manifest 2.0.
+- Đã kiểm bằng Core giả (CoreGia), ABBYY giả và KttCore/DOM giả của Node;
+  chưa kiểm Core/ABBYY hoặc màn trình duyệt thật. RAM mất sau khởi động lại.
+
 ## OCR-6 — 14/11/2026
 
 - Ghim hash wheel Windows/Linux, bổ sung kiểm máy sạch và cập nhật nguồn gói.

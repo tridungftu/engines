@@ -200,8 +200,8 @@ def test_upload_that_bai_khong_xong(xml_demo, monkeypatch):
     assert core.so_lan_ghi["ket_qua"] == 0
 
 
-def test_manifest_chi_xml_va_demo_that():
-    assert len(app.phieu["nang_luc"]) == 1
+def test_manifest_xml_khong_doi_va_demo_that():
+    assert [n["ma"] for n in app.phieu["nang_luc"]] == ["hoa_don.doc_xml@2", "hoa_don.doc_zip@1"]
     nl = app.phieu["nang_luc"][0]
     assert nl["ma"] == "hoa_don.doc_xml@2" and nl["nhan"] == ["tep"] and nl["tra"] == "truong"
     assert nl["tham_so"] == app.phieu["loai_du_lieu_rieng"] == []
@@ -213,7 +213,21 @@ def test_manifest_chi_xml_va_demo_that():
 
 
 def test_loi_parser_khong_doi_thuat_toan():
+    import ast
     nguon = (GOI.parents[1] / "ma-nguon/lib/hoa_don_xml.py").read_text(encoding="utf-8")
     mong_doi = nguon.replace("from kho_tri_thuc.sdk_core.primitives import", "from kho_tri_thuc_sdk.primitives import").replace(
         "from kho_tri_thuc.sdk_core.engine_legacy import Issue", "from kho_tri_thuc_sdk.engine_legacy import Issue")
-    assert (GOI / "e_hoa_don/hoa_don_xml.py").read_text(encoding="utf-8") == mong_doi
+    thuc = (GOI / "e_hoa_don/hoa_don_xml.py").read_text(encoding="utf-8")
+    # HD-5 được đổi đúng cổng ZIP và thêm hai hằng số/hai import bảo vệ ZIP.
+    # Mọi DTO, parser XML và thuật toán tiền/nghiệp vụ phải giữ nguyên AST.
+    def phan_xml(source):
+        tree = ast.parse(source)
+        tree.body = [n for n in tree.body if not (
+            isinstance(n, ast.FunctionDef) and n.name == "doc_goi_hoa_don_zip"
+            or isinstance(n, ast.Import) and all(a.name in {"stat", "unicodedata"} for a in n.names)
+            or isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id in {
+                "MAX_ZIP_TOTAL_BYTES", "MAX_ZIP_RATIO",
+            } for t in n.targets)
+        )]
+        return ast.dump(tree)
+    assert phan_xml(thuc) == phan_xml(mong_doi)

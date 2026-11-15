@@ -138,7 +138,7 @@ def test_json_nguon_co_dap_an_literal(ca):
 
 
 def test_manifest_chay_dung_ba_fixture_khong_cau_hinh():
-    demo = app.phieu["chay_thu_demo"]
+    demo = [c for c in app.phieu["chay_thu_demo"] if c["nang_luc"] == "hoa_don.doc_xml@2"]
     assert len(demo) == 3
     assert {c["dau_vao"]["tep_demo"] for c in demo} == {"demo/" + c["tep"] for c in CA}
     assert all(c["nang_luc"] == "hoa_don.doc_xml@2" and c["tham_so"] == {} for c in demo)

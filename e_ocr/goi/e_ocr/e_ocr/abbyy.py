@@ -10,7 +10,6 @@ from uuid import uuid4
 
 from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu, ViecDaHuy
 
-from .cau_hinh_may import _khong_lap_khoa
 from .lop_chu import MAX_BYTES
 
 
@@ -23,6 +22,15 @@ class LoiABBYYChuaNhan(LoiNghiepVu):
 
 class LoiABBYYTuChoi(LoiNghiepVu):
     """Nguồn xác nhận đúng mã: từ chối và không tiêu trang."""
+
+
+def _khong_lap_khoa(cac_cap):
+    ket_qua = {}
+    for khoa, gia_tri in cac_cap:
+        if khoa in ket_qua:
+            raise ValueError("JSON có khóa lặp.")
+        ket_qua[khoa] = gia_tri
+    return ket_qua
 
 
 def _rut_tep(tep):

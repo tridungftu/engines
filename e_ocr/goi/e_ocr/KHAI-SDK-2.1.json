@@ -1,0 +1,25 @@
+{
+  "ngan_du_lieu": [
+    {"bang": "cau_hinh", "ten": "Cấu hình OCR", "pham_vi": "engine", "khoa": [],
+     "truong": [{"ma": "abbyy", "kieu": "json"}, {"ma": "tesseract", "kieu": "json"}]},
+    {"bang": "han_muc_ngay", "ten": "Hạn mức ABBYY theo ngày", "pham_vi": "engine", "khoa": ["ngay"],
+     "giu_toi_da_ngay": 45,
+     "truong": [{"ma": "ngay", "kieu": "ngay"}, {"ma": "da_nhan", "kieu": "json"}, {"ma": "dang_giu", "kieu": "json"}]},
+    {"bang": "luot_abbyy", "ten": "Lượt gửi ABBYY", "pham_vi": "phap_nhan", "khoa": ["ma_tuong_quan"],
+     "duy_nhat": [["phap_nhan_id", "bam_noi_dung"]],
+     "truong": [
+       {"ma": "ma_tuong_quan", "kieu": "van_ban"}, {"ma": "phap_nhan_id", "kieu": "van_ban"},
+       {"ma": "bam_noi_dung", "kieu": "van_ban"}, {"ma": "so_trang", "kieu": "so"},
+       {"ma": "lan_gui", "kieu": "so"}, {"ma": "trang_thai", "kieu": "van_ban"},
+       {"ma": "da_nhan", "kieu": "co_khong"}, {"ma": "da_hoan", "kieu": "co_khong"},
+       {"ma": "luc_giu", "kieu": "so"}, {"ma": "luc_nhan", "kieu": "so"},
+       {"ma": "chu_xu_ly", "kieu": "van_ban"}, {"ma": "han_xu_ly", "kieu": "so"}
+     ]},
+    {"bang": "trang_thai_engine", "ten": "Trạng thái ABBYY và mốc CAS hạn mức", "pham_vi": "engine", "khoa": ["ma"],
+     "truong": [{"ma": "ma", "kieu": "van_ban"}, {"ma": "abbyy_bat", "kieu": "co_khong"},
+                {"ma": "ly_do", "kieu": "van_ban"}, {"ma": "luc_kiem", "kieu": "van_ban"}, {"ma": "lan", "kieu": "so"},
+                {"ma": "so_luot", "kieu": "so"}, {"ma": "theo_ngay", "kieu": "json"}]}
+  ],
+  "cau_hinh": {"schema": "cau_hinh.schema.json"},
+  "giao_dien_quan_tri": [{"ma": "cau_hinh", "ten": "Cấu hình và hạn mức", "tep": "ui/cau_hinh.js", "quyen": "admin_core"}]
+}

@@ -1,0 +1,4 @@
+# Chỉ phục vụ kiểm thử; dùng bản có sẵn trên máy, không thêm runtime engine.
+pytest==9.1.1
+# Dependency có sẵn của SDK 2.0; kiểm schema tài liệu đầy đủ ($defs/$ref/type).
+jsonschema==4.26.0

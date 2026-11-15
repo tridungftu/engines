@@ -5,13 +5,18 @@ Bỏ tham chiếu/UUID, parser DOCX và cổng lib.cong_ocr cũ. PDF có chữ �
 """
 
 import hashlib
+import json
+from pathlib import Path
 
-from .cau_hinh_may import doc_cau_hinh
+from .cau_hinh import doc_cau_hinh
 from .chon_nguon import doc_theo_nguon
 from .lop_chu import MAX_BYTES, LoiLopChu, dem_trang, doc_lop_chu
 
 
-def trich_van_ban(viec, *, phien_ban_engine):
+SCHEMA = json.loads((Path(__file__).resolve().parents[1] / "cau_hinh.schema.json").read_text(encoding="utf-8"))
+
+
+def trich_van_ban(viec, *, phien_ban_engine, ngan):
     tep = viec.dau_vao["tep"]
     viec.tien_do(5, "Đang đọc tệp tài liệu.")
     with viec.mo_tep(tep["tep_id"]) as f:
@@ -30,8 +35,8 @@ def trich_van_ban(viec, *, phien_ban_engine):
     nguon_doc = "lop_chu_san"
     ly_do = None
     if ket_qua is None:
-        cau_hinh = doc_cau_hinh(bat_buoc=False) or {}
-        chon = doc_theo_nguon(raw, tep["mime"], so_trang, viec=viec, cau_hinh=cau_hinh)
+        cau_hinh = doc_cau_hinh(ngan, SCHEMA) or {}
+        chon = doc_theo_nguon(raw, tep["mime"], so_trang, viec=viec, cau_hinh=cau_hinh, ngan=ngan)
         ket_qua, nguon_doc, ly_do = chon.ket_qua, chon.nguon_doc, chon.ly_do_chuyen_nguon
     viec.tien_do(95, "Đang hoàn tất văn bản và vị trí trang.")
     du_lieu = {

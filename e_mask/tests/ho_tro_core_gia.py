@@ -248,7 +248,7 @@ class KhoCoreGia:
 
     def __init__(self):
         self.khoa = RLock()
-        self.bang = {v: dict(danh_muc={}, cho_duyet={}, yeu_cau={}, luot={}, phien_ban=0)
+        self.bang = {v: dict(danh_muc={}, cho_duyet={}, bi_danh_tam={}, yeu_cau={}, luot={}, phien_ban=0)
                      for v in ('DEMO', 'THAT')}
         self.ma_da_cap = {}
         self.cac_goi = []
@@ -277,10 +277,19 @@ class KhoCoreGia:
                     if ctx.ma_luot in self.dang_cho:
                         raise ChuaRo('cho-demo')
                     yc = dl['yeu_cau'].get(ctx.ma_yeu_cau)
+                    tam_duoc_dung = set() if yc is None else yc['bi_danh_tam_da_dung']
+                    danh_muc = deepcopy([*dl['danh_muc'].values(), *dl['cho_duyet'].values()])
+                    for i, muc in enumerate(danh_muc):
+                        if muc['nguon'] == 'tam':
+                            rieng = next((m for b, m in dl['bi_danh_tam'].items()
+                                          if b in tam_duoc_dung and chuan_hoa(m['gia_tri']) == chuan_hoa(muc['gia_tri'])), None)
+                            if rieng:
+                                danh_muc[i] = dict(muc, bi_danh=rieng['bi_danh'])
                     return deepcopy(dict(da_chot=ctx.ma_luot in dl['luot'], phien_ban=dl['phien_ban'],
-                                         danh_muc=[*dl['danh_muc'].values(), *dl['cho_duyet'].values()],
+                                         danh_muc=danh_muc, bi_danh_tam_duoc_dung=sorted(tam_duoc_dung),
                                          yeu_cau=None if yc is None else {'trang_thai': yc['trang_thai']},
-                                         cum_cho_toan_vung={}, bi_danh_bo_sung={}))
+                                         cum_cho_toan_vung={}, bi_danh_bo_sung={b: m['gia_tri'] for b, m in dl['bi_danh_tam'].items()
+                                                                                  if b in tam_duoc_dung}))
                 if thao_tac != 'chot_luot':
                     raise AssertionError('Thao tác port chưa được giao.')
                 if ctx.ma_luot in dl['luot']:
@@ -324,11 +333,18 @@ class KhoCoreGia:
         nk = p['nhat_ky']
         cac_bi_danh = {chuan_bi_danh(b) for muc in [*dl['danh_muc'].values(), *dl['cho_duyet'].values()]
                       for b in (muc['bi_danh'], muc.get('bi_danh_tam')) if b}
+        cac_bi_danh.update(dl['bi_danh_tam'])
         for muc in nk['cum']:
             khoa = chuan_hoa(muc['gia_tri'])
             co = dl['danh_muc'].get(khoa) or dl['cho_duyet'].get(khoa)
+            b = chuan_bi_danh(muc['bi_danh'])
+            if not muc['chi_gap_lai']:
+                if muc['bi_danh'] not in nk['bi_danh_tam_moi'] or b in cac_bi_danh:
+                    raise loi_kho('MASK_XUNG_DOT')
+                dl['bi_danh_tam'][b] = dict(muc, nguon='tam')
+                cac_bi_danh.add(b)
             if co is None:
-                if muc['chi_gap_lai'] or chuan_bi_danh(muc['bi_danh']) in cac_bi_danh:
+                if muc['chi_gap_lai']:
                     raise loi_kho('MASK_XUNG_DOT')
                 if muc['bi_danh'] not in nk['bi_danh_tam_moi']:
                     raise loi_kho()
@@ -336,7 +352,7 @@ class KhoCoreGia:
                           nguon='tam', so_lan_gap=0)
                 dl['cho_duyet'][khoa] = co
                 cac_bi_danh.add(chuan_bi_danh(co['bi_danh']))
-            elif co['nhom'] != muc['nhom'] or co['bi_danh'] != muc['bi_danh']:
+            elif co['nhom'] != muc['nhom'] or (co['nguon'] == 'chinh_thuc' and co['bi_danh'] != muc['bi_danh']):
                 raise loi_kho('MASK_XUNG_DOT')
             moc('alias')
             if co['nguon'] == 'tam' and khoa not in yc['cum_da_gap']:
@@ -347,6 +363,10 @@ class KhoCoreGia:
         for bi_danh in nk['bi_danh_da_dung']:
             if chuan_bi_danh(bi_danh) not in cac_bi_danh:
                 raise loi_kho()
+            if chuan_bi_danh(bi_danh) in dl['bi_danh_tam']:
+                if bi_danh not in nk['bi_danh_tam_moi'] and chuan_bi_danh(bi_danh) not in yc['bi_danh_tam_da_dung']:
+                    raise loi_kho('MASK_MA_YEU_CAU')
+                yc['bi_danh_tam_da_dung'].add(chuan_bi_danh(bi_danh))
             for muc in [*dl['danh_muc'].values(), *dl['cho_duyet'].values()]:
                 if ((muc['nguon'] == 'tam' and chuan_bi_danh(muc['bi_danh']) == chuan_bi_danh(bi_danh))
                         or (muc.get('bi_danh_tam') and chuan_bi_danh(muc['bi_danh_tam']) == chuan_bi_danh(bi_danh))):

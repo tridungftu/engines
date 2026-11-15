@@ -1,0 +1,18 @@
+{
+  "ngan_du_lieu": [
+    {
+      "bang": "cau_hinh",
+      "ten": "Cấu hình engine",
+      "pham_vi": "engine",
+      "khoa": [],
+      "duy_nhat": [],
+      "truong": [
+        {"ma": "ngan_sach_token_vao_toi_da", "kieu": "so"}
+      ]
+    }
+  ],
+  "cau_hinh": {"schema": "cau_hinh.schema.json"},
+  "giao_dien_quan_tri": [
+    {"ma": "cau_hinh", "ten": "Cấu hình", "tep": "ui/cau_hinh.js", "quyen": "admin_core"}
+  ]
+}

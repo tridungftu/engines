@@ -1,0 +1,262 @@
+{
+  "ngan_du_lieu": [
+    {
+      "bang": "dinh_danh",
+      "pham_vi": "engine",
+      "khoa": [
+        "vung",
+        "khoa"
+      ],
+      "duy_nhat": [
+        [
+          "vung",
+          "bi_danh"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "vung",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "khoa",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "gia_tri",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nhom",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bi_danh",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bi_danh_tam",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nguon",
+          "kieu": "van_ban"
+        }
+      ]
+    },
+    {
+      "bang": "bi_danh_tam",
+      "pham_vi": "engine",
+      "khoa": [
+        "vung",
+        "khoa"
+      ],
+      "duy_nhat": [
+        [
+          "vung",
+          "bi_danh"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "vung",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "khoa",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "gia_tri",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nhom",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bi_danh",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nguon",
+          "kieu": "van_ban"
+        }
+      ]
+    },
+    {
+      "bang": "cho_duyet",
+      "pham_vi": "engine",
+      "khoa": [
+        "vung",
+        "khoa"
+      ],
+      "duy_nhat": [
+        [
+          "vung",
+          "bi_danh"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "vung",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "khoa",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "gia_tri",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nhom",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bi_danh",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nguon",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so_lan_gap",
+          "kieu": "so"
+        }
+      ]
+    },
+    {
+      "bang": "ma_yeu_cau",
+      "pham_vi": "engine",
+      "khoa": [
+        "vung",
+        "khoa"
+      ],
+      "duy_nhat": [],
+      "truong": [
+        {
+          "ma": "vung",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "khoa",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "module",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nguoi_gui",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "tai_lieu",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "trang_thai",
+          "kieu": "van_ban"
+        }
+      ]
+    },
+    {
+      "bang": "dau_gap",
+      "pham_vi": "engine",
+      "khoa": [
+        "vung",
+        "khoa"
+      ],
+      "duy_nhat": [],
+      "truong": [
+        {
+          "ma": "vung",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "khoa",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so",
+          "kieu": "so"
+        },
+        {
+          "ma": "yeu_cau",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "dau_vao",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "chot",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "tuong_quan",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "trang_thai",
+          "kieu": "so"
+        },
+        {
+          "ma": "bam",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ma_yeu_cau",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "loai",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so_moi",
+          "kieu": "so"
+        },
+        {
+          "ma": "cum",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "loai_dau",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ma_luot",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "de_che",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "bi_danh",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "dinh_danh",
+          "kieu": "json"
+        },
+        {
+          "ma": "bam_ket_qua",
+          "kieu": "van_ban"
+        }
+      ]
+    }
+  ],
+  "giao_dien_quan_tri": [
+    {
+      "ma": "duyet_dinh_danh",
+      "ten": "Duyệt danh sách chờ",
+      "tep": "ui/duyet_dinh_danh.js",
+      "quyen": "admin_core"
+    }
+  ]
+}

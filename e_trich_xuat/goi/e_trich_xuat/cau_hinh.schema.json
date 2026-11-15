@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cấu hình Trích thông tin hợp đồng",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ngan_sach_token_vao_toi_da"],
+  "properties": {
+    "ngan_sach_token_vao_toi_da": {
+      "type": "integer",
+      "title": "Trần ngân sách đầu vào AI (token ước lượng)",
+      "minimum": 1024,
+      "maximum": 100000,
+      "default": 16000
+    }
+  }
+}

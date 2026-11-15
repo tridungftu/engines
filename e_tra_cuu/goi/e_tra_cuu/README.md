@@ -1,14 +1,15 @@
-# Tra cứu tài liệu — TC-2: nhận yêu cầu
+# Tra cứu tài liệu — TC-3: nhận và cắt cấu trúc
 
 Phiên bản 0.1.0, SDK 2.0.0, chưa phát hành. TC-Q13 đã duyệt chiều 15/11/2026.
 Manifest đăng ký tám năng lực và bốn loại đúng phiếu §2.1; stub nội bộ
 `kiem_khung` đã bỏ. `tra_cuu.nhan_yeu_cau@1` nhận tệp JSON, kiểm và ghim dữ liệu
-thành `ho_so_tra_cuu` ở giai đoạn `da_nhan`. Bảy năng lực còn lại luôn báo
-`CHUA_LAM`, chờ TC-3…8. Nhận thành công không có nghĩa đã phân loại/trả lời.
+thành `ho_so_tra_cuu` ở giai đoạn `da_nhan`. `tra_cuu.cat_doan@1` chuyển hồ sơ
+`cat_doan/da_nhan` sang `da_cat_doan`. Sáu năng lực còn lại luôn báo `CHUA_LAM`,
+chờ TC-4…8. Nhận/cắt thành công không có nghĩa đã phân loại hoặc trả lời.
 
 Có **5 ví dụ chay_thu_demo**, tệp và băm thật trong `demo/`. Cổng bổ sung ở
 `tests/chay_demo_voi_core_gia.py` nạp ngăn/cấu hình, nguồn, giấy cấp quyền giả
-rồi chạy đúng các ví dụ. **Đã kiểm bằng Core giả (CoreGia)**; chưa chứng nhận
+rồi chạy đúng các ví dụ và bốn ca nhận → cắt (9/9). **Đã kiểm bằng Core giả (CoreGia)**; chưa chứng nhận
 quyền Core thật. CLI SDK gốc thiếu cấu hình vẫn lỗi `CHUA_CAU_HINH`, không tự
 khởi tạo dữ liệu DEMO hoặc đọc cấu hình từ môi trường để vượt cổng.
 
@@ -52,9 +53,10 @@ JSON chính có `phien_ban=1,ma_yeu_cau,tac_vu,ngu_canh_core,du_lieu`; xem năm 
 
 - Tham số `bam_yeu_cau` băm bytes chính xác trước parse. JSON chính ≤1 MiB;
   manifest khai **20 MiB** vì SDK dùng trần đó cho mọi `mo_tep` trong bước.
-- Từ chối khóa trùng, NaN/Infinity/overflow, UTF-8/surrogate hỏng; không nhận
-  URL/đường máy/base64/SQL/mã thực thi hay cờ `da_loc_quyen` trong JSON yêu cầu.
-  Văn bản OCR được giữ nguyên như chứng cứ bất hoạt, không dùng làm kênh đọc dữ liệu.
+- Từ chối khóa trùng, NaN/Infinity/overflow, UTF-8/surrogate hỏng. Kiểm đường máy/
+  URL/base64 ở khóa, định danh/tham chiếu; khóa mở kênh ngoài/SQL/mã thực thi/cờ
+  `da_loc_quyen` bị từ chối. Câu hỏi, nguyên văn và giá trị là dữ liệu bất hoạt:
+  cho phép URL trong hợp đồng hoặc dấu `/` trong “Chi phí / doanh thu”.
 - Tham chiếu `{tep:{tep_id,ten,mime,kich_thuoc},bam}` phải khớp metadata/băm Core.
   Tệp con ≤20 MiB, tổng tệp con thực đọc ≤64 MiB; còn kiểm ngân sách cấu hình
   thấp hơn nếu có. Không cắt ngầm. Nguồn gồm `ma_nguon,phien_ban_nguon,goc,van_ban`;
@@ -94,6 +96,68 @@ Không ghi câu hỏi/toàn văn vào log. Không tạo tệp tạm hoặc kho/c
 Hủy/mất lease/ACK do SDK xử lý; không nhận ACK tải tệp thì không nộp hồ sơ giả.
 Tệp đã tải mà việc chưa xong thuộc vòng đời kho Core, chờ C-TC-02.
 
+## Cắt cấu trúc và vị trí nguồn — TC-3
+
+`tra_cuu.cat_doan@1` chỉ nhận `cat_doan/da_nhan`. Cửa `doc_quyen(viec_id)` của
+**bên chủ Core** cần cấp lại giấy cho việc mới, có `dau_vao` là nguyên phong bì
+đã nhận ở bước trước, `metadata_core` tin cậy, cùng ngữ cảnh/tập `tep`/`nguon`
+như trên. Đây là seam chờ C-TC-02/03 review, **chưa là API SDK đã phát hành**.
+Không đưa adapter trong tests vào runtime. Thiếu cửa/quyền từ chối
+`TC_CHUA_CO_CUA_CORE`; đổi ref/băm/phiên bản/nội dung trả `TC_SAI_NGUON`.
+
+Snapshot, gốc và JSON OCR đều mở bằng `mo_tep`, kiểm băm bytes/kích thước thực.
+Giữ nguyên toàn phong bì `van_ban_tai_lieu`; băm bytes gốc riêng với băm UTF-8
+toàn văn. Cấu hình dùng `{gia_tri,row_version}` đã ghim từ Ngan ở bước nhận,
+không đọc lại cấu hình mới giữa chuỗi. Tham số mục tiêu do SDK cấp (mặc định
+2000, nguyên 200…8000); trần đơn vị và số đoạn lấy cấu hình đã ghim.
+
+- Nhận Điều/Khoản, kể cả Unicode NFC/NFD; nhóm các đơn vị cùng Điều tới mục
+  tiêu. Đơn vị dài được tách theo câu/khối/xuống dòng/trang; bảng theo nhóm
+  hàng không xuyên ô gộp. Không cắt tại ký tự thứ N. Không chia an toàn dưới
+  trần đơn vị (mặc định 8000) → `TC_KHONG_CAT_DUOC`; quá 5000 đoạn/ngân sách
+  đã ghim → `TC_QUA_GIOI_HAN`, không upload kết quả thiếu đuôi.
+- Khối chữ có thể khai `bat_dau,ket_thuc` toàn cục; thiếu thì căn tuần tự
+  trong đúng trang, chỉ đi qua khoảng trắng. Số lần xuất hiện trùng không
+  được tìm lại từ đầu tài liệu. Trang phân định bằng `\f`; map khối/dòng/từ
+  không khớp chữ nguồn bị từ chối. Không bỏ dấu hoặc chuẩn hóa nguyên văn.
+- Bảng giữ ô gốc với `hang,cot,gop_hang,gop_cot,van_ban`; phải đủ lưới, kể cả
+  ô trống, không chồng ô. Dùng `bat_dau,ket_thuc` của bảng và từng ô, hoặc chỉ
+  suy map khi phép chiếu xác định khớp toàn bộ nguồn: ô gốc cùng hàng nối TAB,
+  hàng nối LF/CRLF (hàng không có ô gốc là dòng rỗng). Kiểu chiếu khác cần map
+  tường minh của Core; không tìm từng giá trị ô rời rạc để đoán vị trí.
+- `hang_tieu_de` tùy chọn là danh sách hàng đầu liên tục do nguồn xác định,
+  ví dụ `[0]`. Không có thì không tự lấy hàng đầu làm tiêu đề. Tiêu đề lặp có
+  `vai_tro=ngu_canh_lap`, cùng map về nguồn; nội dung lần đầu là `noi_dung`.
+  Hàng có ô gộp dọc giữ chung. Các trường offset/tiêu đề nằm trong phần mở
+  sẵn có của loại v1; không sửa schema chung. DOCX có cấu trúc có thể mang
+  `khoi` ở payload, giữ `so_trang=0,trang=[]`, hộp/trang mọi đoạn đều null.
+
+Kết quả ở `snapshot.ket_qua={doan,ban_thuat_toan,do_dai_muc_tieu}`. Mã đoạn là
+SHA-256 canonical JSON của phiên bản thuật toán `tc3-cau-truc-1`, descriptor
+nguồn (mã/tệp/phiên bản/băm bytes/băm toàn văn) và danh sách vùng + vai trò;
+không phụ thuộc mã việc. Mỗi đoạn có nguyên văn, loại khối, nhãn Điều/Khoản,
+`nhan_cau_truc`, nguồn và `metadata_core` (nhóm/loại/hiệu lực/duyệt). Không đưa
+đề xuất phân loại vào metadata, không tạo confidence hoặc chỉ mục bỏ dấu/vector.
+
+`map_nguon[]` gồm `doan_bat_dau,doan_ket_thuc,ma_nguon,nguon_bat_dau,
+nguon_ket_thuc,vai_tro`; mỗi lát Python phải bằng lát toàn văn nguồn tương ứng.
+`bat_dau,ket_thuc` trên đoạn chỉ có số khi là **một lát liên tục**; đoạn tổng
+hợp tiêu đề lặp dùng null và map từng phần. Ô bảng giữ cả offset toàn văn và
+offset trong đoạn. Ghép các vùng `noi_dung` theo thứ tự phải tái dựng đúng đủ
+toàn văn, kể cả khoảng trắng/cuối tài liệu/trang rỗng; không tính ngữ cảnh hai lần.
+
+`so_trang` và `vi_tri.trang` là số trang thực hoặc null. Hộp chỉ lấy từ khối/ô
+nguồn, không ghép bao hoặc suy hộp từ số ký tự. `vung_vi_tri` giữ từng vùng và
+`muc_hop=khoi`: hộp khối có thể bao cả câu, không khẳng định hộp riêng của chữ.
+Đoạn qua nhiều trang/khối không có một hộp chung thì để null. Hộp ô thiếu để
+null, không mượn hộp bảng. Không phân trang hoặc bịa tọa độ DOCX.
+
+Snapshot đầy đủ/danh sách đoạn chỉ gửi Core bằng `tai_tep_ra`; tóm tắt
+`so_doan=len(doan)`, trạng thái `da_cat_doan`, các kết quả chưa chạy giữ null.
+Kiểm hủy theo cụm và báo tiến độ câu cố định không nội dung. Chỉ RAM, không tạo
+tệp tạm, cấu hình bền, chỉ mục hoặc gọi AI/tìm kiếm. DEMO cố định LF bằng
+`e_tra_cuu/.gitattributes` vì băm tệp luôn tính trên bytes, không chữa băm khi đọc.
+
 ## Bản khai dự kiến SDK 2.1
 
 `KHAI-SDK-2.1.json` tách khỏi manifest 2.0:
@@ -125,13 +189,13 @@ $env:PYTHONDONTWRITEBYTECODE='1'
 ```
 
 Linux đổi `Scripts/python` thành `bin/python`, đặt hai biến môi trường tương ứng.
-Test chặn mạng, chỉ DEMO. Handler nhận, stub và cổng cấu hình
+Test chặn mạng, chỉ DEMO. Handler nhận/cắt, stub và cổng cấu hình
 **đã kiểm bằng Core giả (CoreGia)**; adapter quyền/tệp con chỉ trong tests.
 CAS/unique/rollback/pháp nhân/cursor kiểm trực tiếp trên `NganBoNho`.
 Symlink của bộ quét kiểm bằng giả lập cờ, không yêu cầu Windows cấp quyền tạo symlink.
 Chưa kiểm Core thật, lưu bền, UI thật hoặc Linux.
 
 **Cổng CLI chuẩn chưa đạt:** SDK 2.0.0 chạy cả 5 demo và trả mã 1 vì thiếu
-ngăn/cấu hình (`CHUA_CAU_HINH`). Harness bổ sung có 5/5 ĐẠT ở bước nhận, không
+ngăn/cấu hình (`CHUA_CAU_HINH`). Harness bổ sung có 9/9 ĐẠT (5 nhận, 4 nhận → cắt), không
 thay kết quả CLI chuẩn. Cần Core C-TC-01/02/03/05; số kiểm thật ở VIEC.md ngoài
 gói. Chưa nối Core thật, chưa kiểm RLS/AI/UI/Linux hoặc chất lượng tra cứu.

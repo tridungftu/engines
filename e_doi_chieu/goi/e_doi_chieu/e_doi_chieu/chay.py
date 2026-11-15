@@ -1,11 +1,13 @@
 """Cổng SDK của engine Đối chiếu bản ký."""
 import json
+from functools import wraps
 from pathlib import Path
 
-from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
-from .ngan import NganBoNho, chon_ngan
+from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu, LoiDuongTruyen, ViecDaHuy, ChuaRo
+from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
 from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
 from .doc_docx import doc_docx as _doc_docx
+from .ho_so import nhan_cap as _nhan_cap
 
 _GOI = Path(__file__).resolve().parent.parent
 app = Engine.tu_khai_bao(str(_GOI / "engine.json"))
@@ -16,10 +18,10 @@ if getattr(app, "ngan", None) is None:
 ngan = chon_ngan(app)
 
 
-def can_cau_hinh():
+def can_cau_hinh(ngan_doc=None):
     """Dùng cho các việc cần cấu hình trong những lát tiếp theo."""
     try:
-        cau_hinh = doc_cau_hinh(ngan, _schema)
+        cau_hinh = doc_cau_hinh(ngan if ngan_doc is None else ngan_doc, _schema)
     except CauHinhKhongHopLe as exc:
         raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None
     if cau_hinh is None:
@@ -27,9 +29,38 @@ def can_cau_hinh():
     return cau_hinh
 
 
+def _an_toan(ham):
+    """SDK 2.0 ghi traceback lỗi lạ; chỉ đổi lỗi bên trong handler thành câu cố định."""
+    @wraps(ham)
+    def goi(*args, **kwargs):
+        try:
+            return ham(*args, **kwargs)
+        except (LoiNghiepVu, LoiDuongTruyen, ViecDaHuy, ChuaRo):
+            raise
+        except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
+            raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None
+        except Exception:
+            raise LoiNghiepVu("DC_LOI_XU_LY", "Chưa xử lý được hồ sơ đối chiếu. Anh thử lại hoặc liên hệ quản trị viên.") from None
+    return goi
+
+
 @app.nang_luc("doi_chieu.doc_docx@1")
+@_an_toan
 def doc_docx(viec):
     return _doc_docx(viec, phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"])
+
+
+@app.nang_luc("doi_chieu.nhan_cap@1")
+@_an_toan
+def nhan_cap(viec):
+    ngan_viec = getattr(viec, "ngan", None)
+    if ngan_viec is None:
+        ngan_viec = ngan
+    cau_hinh = can_cau_hinh(ngan_viec)
+    thoi_han = next(n["gioi_han"]["thoi_han_giay"] for n in app.phieu["nang_luc"]
+                   if n["ma"] == "doi_chieu.nhan_cap@1")
+    return _nhan_cap(viec, ngan_viec, cau_hinh,
+                     phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
 
 
 if __name__ == "__main__":

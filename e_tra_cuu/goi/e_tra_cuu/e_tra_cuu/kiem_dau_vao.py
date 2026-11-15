@@ -22,6 +22,8 @@ CAU_LOI = {
     "TC_THIEU_NGU_CANH": "Chưa đủ ngữ cảnh tra cứu. Anh gửi lại yêu cầu từ hồ sơ.",
     "TC_CHUA_CO_CUA_CORE": "Core chưa cấp đủ cửa nguồn và quyền tra cứu. Anh nhờ quản trị viên kiểm tra.",
     "TC_QUA_GIOI_HAN": "Yêu cầu vượt giới hạn xử lý. Anh chia lại hồ sơ trước khi gửi.",
+    "TC_SAI_GIAI_DOAN": "Hồ sơ chưa ở đúng bước xử lý. Anh chạy lại từ bước nhận yêu cầu.",
+    "TC_KHONG_CAT_DUOC": "Có đơn vị cấu trúc quá dài chưa thể chia an toàn. Anh kiểm tra lại cấu trúc tài liệu.",
 }
 TAC_VU = {"phan_loai", "cat_doan", "phan_tich_cau_hoi", "xep_hang_lai", "soan_tra_loi"}
 _BAM = re.compile(r"sha256:[0-9a-fA-F]{64}\Z")
@@ -94,6 +96,7 @@ def chuoi(v, toi_da=None):
 def ma(v):
     if type(v) is not str or not _ID.fullmatch(v) or v in {".", ".."}:
         loi()
+    kiem_tham_chieu(v)
     return v
 
 
@@ -121,11 +124,25 @@ def thoi_diem(v):
         loi()
 
 
-def kiem_noi_dung_json(v):
-    """Cấm kênh lấy dữ liệu/mã inline trong JSON yêu cầu và tài nguyên cấu trúc.
+def kiem_tham_chieu(v):
+    """Chỉ áp cho định danh/tham chiếu, không áp cho chứng cứ hoặc giá trị."""
+    if _CAM.search(v):
+        loi()
+    if (len(v) >= 16 and ("=" in v or len(v) >= 64)
+            and re.fullmatch(r"[A-Za-z0-9+/]+={0,2}", v)):
+        try:
+            base64.b64decode(v, validate=True)
+        except ValueError:
+            pass
+        else:
+            loi()
 
-    Toàn văn OCR là chứng cứ bất hoạt, kiểm riêng, giữ nguyên phong bì. Nó
-    không được dùng làm URL/path hay mã thực thi ngay cả khi có chữ như vậy.
+
+def kiem_noi_dung_json(v):
+    """Cấm khóa mở kênh ngoài; chuỗi nội dung luôn là dữ liệu bất hoạt.
+
+    Regex đường dẫn/base64 chỉ chạy trên khóa và trường định danh/tham chiếu.
+    Câu hỏi, nguyên văn trích dẫn, mô tả và giá trị được giữ nguyên.
     """
     try:
         cho = [v]
@@ -135,22 +152,14 @@ def kiem_noi_dung_json(v):
                 for k, con in x.items():
                     if k.lower() in _KHOA_CAM or "base64" in k.lower():
                         loi()
-                    cho.extend((k, con))
+                    kiem_tham_chieu(k)
+                    if (type(con) is str and (k in {"tep_id", "ten", "phien_ban", "phien_ban_nguon"}
+                            or k.startswith("ma_") or k == "ma")):
+                        kiem_tham_chieu(con)
+                    # MIME/hash không phải đường dẫn hoặc payload base64.
+                    cho.append(con)
             elif type(x) is list:
                 cho.extend(x)
-            elif type(x) is str:
-                if _CAM.search(x):
-                    loi()
-                # Không suy ID ngắn là base64. Chuỗi có padding hoặc payload
-                # dài đúng bảng mã bị từ chối; SHA/ID có '-' không bị nhầm.
-                if (len(x) >= 16 and ("=" in x or len(x) >= 64)
-                        and re.fullmatch(r"[A-Za-z0-9+/]+={0,2}", x)):
-                    try:
-                        base64.b64decode(x, validate=True)
-                    except ValueError:
-                        pass
-                    else:
-                        loi()
     except (RecursionError, UnicodeError):
         loi()
 
@@ -169,6 +178,7 @@ class DocNguonCore:
         doi_tuong(tep, ("tep_id", "ten", "mime", "kich_thuoc"), ())
         ma(tep["tep_id"])
         ten = chuoi(tep["ten"])
+        kiem_tham_chieu(ten)
         if len(ten) > 255 or any(c in ten for c in '/\\:\0') or any(ord(c) < 32 for c in ten):
             loi("TC_SAI_NGUON")
         if type(tep["mime"]) is not str or not _MIME.fullmatch(tep["mime"]):
@@ -197,7 +207,18 @@ class DocNguonCore:
         self.viec.kiem_huy()
         try:
             with self.viec.mo_tep(tep["tep_id"]) as f:
-                noi_dung = f.read(tran + 1)
+                # Luồng có thể trả ít hơn số byte yêu cầu mà chưa tới EOF.
+                cac_phan, da_doc = [], 0
+                while da_doc <= tran:
+                    self.viec.kiem_huy()
+                    phan = f.read(min(65536, tran + 1 - da_doc))
+                    if type(phan) is not bytes:
+                        loi("TC_SAI_NGUON")
+                    if not phan:
+                        break
+                    cac_phan.append(phan)
+                    da_doc += len(phan)
+                noi_dung = b"".join(cac_phan)
         except LoiDuongTruyen as exc:
             if exc.http_status == 413:
                 loi("TC_QUA_GIOI_HAN")
@@ -397,7 +418,7 @@ def kiem_danh_muc(v, tran):
         tong += len(ds)
         cac_ma = []
         for muc in ds:
-            doi_tuong(muc, ("ma", "ten"))
+            doi_tuong(muc, ("ma", "ten", "nhom", "trang_thai") if ten == "loai" else ("ma", "ten"), ())
             cac_ma.append(ma(muc["ma"]))
             chuoi(muc["ten"])
             if ten == "loai" and muc.get("trang_thai") not in {"hoat_dong", "cho_kich_hoat", "ngung_nhan_moi"}:
@@ -410,9 +431,9 @@ def kiem_danh_muc(v, tran):
         loi()
 
 
-def kiem_doan(doc, d):
+def kiem_doan(doc, d, tuy_chon=()):
     doi_tuong(d, ("ma_nguon", "phien_ban_nguon", "bam_goc", "bam_van_ban",
-                    "nguyen_van", "bat_dau", "ket_thuc", "vi_tri"))
+                    "nguyen_van", "bat_dau", "ket_thuc", "vi_tri"), tuy_chon)
     n = doc.nguon.get(d["ma_nguon"])
     if n is None:
         loi("TC_SAI_NGUON")
@@ -423,7 +444,7 @@ def kiem_doan(doc, d):
     a, z = so(d["bat_dau"], 0, nguyen=True), so(d["ket_thuc"], 0, nguyen=True)
     if not a < z <= len(vb["van_ban"]) or vb["van_ban"][a:z] != d["nguyen_van"]:
         loi("TC_SAI_NGUON")
-    vt = doi_tuong(d["vi_tri"], ("trang", "hop"))
+    vt = doi_tuong(d["vi_tri"], ("trang", "hop"), ())
     if vt["trang"] is None:
         if vt["hop"] is not None:
             loi("TC_SAI_NGUON")
@@ -493,7 +514,7 @@ def kiem_du_lieu(doc, yc):
     if "tai_lieu" in d:
         d["tai_lieu"] = doc.tai_lieu(d["tai_lieu"])
     if "metadata_core" in d:
-        m = doi_tuong(d["metadata_core"], ("nhom", "loai", "trang_thai_duyet", "con_hieu_luc"))
+        m = doi_tuong(d["metadata_core"], ("nhom", "loai", "trang_thai_duyet", "con_hieu_luc"), ())
         if m["nhom"] not in yc["ngu_canh_core"]["nhom"]:
             loi("TC_CHUA_CO_CUA_CORE")
         ma(m["loai"])
@@ -534,7 +555,7 @@ def kiem_du_lieu(doc, yc):
         so(thang["toi_da"], thang["toi_thieu"])
         cac_ma = []
         for uv in ds:
-            kiem_doan(doc, uv)
+            kiem_doan(doc, uv, ("ma_ung_vien", "diem_tim_kiem"))
             cac_ma.append(ma(uv.get("ma_ung_vien")))
             so(uv.get("diem_tim_kiem"), thang["toi_thieu"], thang["toi_da"])
         if len(set(cac_ma)) != len(cac_ma):
@@ -546,7 +567,7 @@ def kiem_du_lieu(doc, yc):
         for bc in danh_sach(d["bang_chung"], ns["so_ung_vien_toi_da"]):
             if d["tang"] == 1:
                 doi_tuong(bc, ("nguon", "thuc_the", "truong", "kieu", "gia_tri", "don_vi",
-                               "trang_thai_duyet", "con_hieu_luc", "do_tin_cay", "moc_cong_bo"))
+                               "trang_thai_duyet", "con_hieu_luc", "do_tin_cay", "moc_cong_bo"), ())
                 n = doc.kiem_nguon_da_cap(bc["nguon"])
                 doc.nguon[n["ma_nguon"]] = n
                 ma(bc["truong"])

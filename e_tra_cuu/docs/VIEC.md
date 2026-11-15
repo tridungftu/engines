@@ -15,6 +15,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | TC-0 | Khung SDK 2.0 + Ngan/cấu hình + kiểm độc lập | Lead giao 15/11/2026, 12:17; phiếu TC-0 §4 | Chờ Core — 15/11/2026 | Đã làm đủ phạm vi 5 tệp mã; pytest/độc lập đạt. CLI SDK 2.0 trả 1 vì 0 demo, chưa đạt cổng chung; xem biên bản dưới. PR: **chờ lead mở** |
 | TC-1 | Contract hồ sơ và chỗ nối dữ liệu | Lead giao 15/11/2026, 12:36; TC-Q13 đã duyệt chiều 15/11 | Chờ Core — 15/11/2026 | Hoàn thành schema/tài liệu/test trong phạm vi TC-1; 192 passed, độc lập mã 0, CLI mã 1 vì 0 demo. Giữ khung đến TC-2 theo lệnh mới nhất; chưa đạt cổng chung/nghiệp vụ. PR: **chờ lead mở** |
 | TC-2 | Nhận JSON, kiểm nguồn/quyền/phạm vi, ghim cấu hình và snapshot Core | Lead giao 15/11/2026, 12:51; phiếu TC-2 §4 | Chờ Core — 15/11/2026 | Đã làm đúng 3 tệp mã; 315 passed, 0 skipped; độc lập mã 0; harness 5/5 ĐẠT. CLI SDK gốc 0/5 ĐẠT, mã 1 do CHUA_CAU_HINH. Đã kiểm bằng Core giả (CoreGia), chưa chứng nhận quyền Core thật. PR: **chờ lead mở** |
+| TC-3 | Cắt Điều/Khoản/bảng, giữ nguyên nguồn/offset/vị trí; đóng ba nợ TC-2 | Lead giao 15/11/2026, 13:33; phiếu TC-3 §4 | Chờ Core — 15/11/2026 | Đã làm 3 tệp TC-3 + kiem_dau_vao.py cho nợ TC-2 (4 tệp mã); 457 passed, 0 skipped; độc lập mã 0; harness 9/9 ĐẠT. CLI SDK chuẩn 0/5, mã 1 do CHUA_CAU_HINH. Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật. PR: **chờ lead mở** |
 
 **Phạm vi sau TC-P (15/11/2026):** các mã TC ở dòng 1–5 của bảng cũ là mã lịch sử từ DAC-TA §14, không phải lát code mới. Dùng bảng §3 của `GIAO-CODEX-e_tra_cuu.md` làm phiếu giao mới: TC-0 = khung SDK 2.0 + Ngan/cấu hình + kiem_doc_lap + KHAI-SDK-2.1; khảo sát PostgreSQL/kho/cache/SDK JS/nạp hàng loạt vẫn thuộc Core. Tại thời điểm TC-P chưa giao hoặc làm TC-0…TC-11; cập nhật TC-0 ở dưới. Tại TC-P không có `ma-nguon/`, `goi/`, `tests/`, quyết định cuối/phiếu riêng trong worktree; không tạo chúng ở TC-P. TC-0 đã tạo goi/tests, tiếp tục không tạo ma-nguon.
 
@@ -317,3 +318,131 @@ mô hình test TC-1 như bằng chứng lịch sử. Bản 0.1.0 còn nội bộ
 tệp con/xuyên bước/vòng đời/ACK; C-TC-03 ngữ cảnh/dữ liệu/quyền Core thật;
 C-TC-05 an toàn SDK ngoài handler/loại riêng/lỗi trần/lease. Chưa chứng nhận
 quyền Core thật; không phát sinh câu hỏi cần Anh, TC-Q06 giữ không tự xóa.
+
+### TC-3 — biên bản bàn giao ngày 15/11/2026
+
+**Kết luận: Chưa đạt cổng chung AGENTS.md §5** — hoàn thành phần TC-3 được giao
+và ba nợ TC-2, **đã kiểm bằng Core giả (CoreGia)**. CLI SDK chuẩn vẫn lỗi
+`CHUA_CAU_HINH`/mã 1 theo giới hạn phiếu §2.5; không thay bằng kết quả harness.
+Nhánh `codex/e_tra_cuu-tc-3`; PR: **chờ lead mở**; không commit/push.
+
+**Đã làm:**
+
+- `cat_doan.py`, `vi_tri.py`, `chay.py`: đăng ký `tra_cuu.cat_doan@1`, chỉ nhận
+  hồ sơ `cat_doan/da_nhan`; kiểm lại snapshot/băm bytes/phiên bản/quyền sống
+  từng tệp và metadata Core, trả cùng loại `da_cat_doan`. Giữ nguyên phong bì
+  `van_ban_tai_lieu`, tách băm bytes gốc và băm UTF-8 toàn văn. Cấu hình và
+  row_version lấy bản Ngan đã ghim, không đọc lại bản hiện tại giữa chuỗi.
+- Cắt Điều/Khoản rồi câu/khối/xuống dòng/trang, ghép tới mục tiêu; không cắt
+  từng N ký tự. Mã ổn định theo nguồn/phiên bản/offset/bản thuật toán. Đơn vị
+  không chia an toàn vượt 8000 → `TC_KHONG_CAT_DUOC`; quá số đoạn/ngân sách →
+  `TC_QUA_GIOI_HAN`, không bỏ đuôi hoặc nộp kết quả dở.
+- Bảng giữ hàng/cột, ô gộp/ô rỗng, tiêu đề do nguồn khai, map từng ô. Dùng
+  offset tường minh hoặc phép chiếu TAB + LF/CRLF khớp toàn bộ nguồn; không
+  kiểm được map thì từ chối. Tiêu đề lặp là `ngu_canh_lap`, đoạn tổng hợp có
+  offset tổng null và map từng phần. Vùng `noi_dung` phủ toàn văn đúng một
+  lần, kể cả khoảng trắng/trang rỗng/cuối tài liệu. Giữ dấu/NFC/NFD, tiền/ngày.
+- Hộp chỉ lấy từ khối/ô nguồn ở đúng cấp; không tạo confidence/hộp bao hoặc
+  mượn hộp bảng cho ô. DOCX chưa render giữ `so_trang=0,trang=[]`, vị trí đoạn
+  null. Nhóm/loại/hiệu lực/tình trạng duyệt giữ từ metadata tin cậy, không
+  nâng phân loại đề xuất thành đã duyệt. Snapshot/danh sách đoạn gửi bằng
+  `tai_tep_ra`, `so_doan=len(doan)`; hủy theo cụm, tiến độ không có nội dung.
+- `kiem_dau_vao.py` đóng nợ TC-2: regex đường dẫn/URL/base64 chỉ ở khóa và
+  định danh/tham chiếu, không chặn câu hỏi/quote/giá trị hợp lệ; object
+  metadata/ứng viên/bằng chứng/mục danh mục từ chối trường thừa (loại văn bản
+  chung vẫn cho phần mở); luồng đọc ngắn đọc tiếp tới EOF/trần và đóng handle.
+- Bổ sung test/harness và hướng dẫn README/CHANGELOG/NGUON. Cố định LF cho DEMO
+  có băm bytes bằng `.gitattributes` cục bộ; nội dung LF bằng nguyên bytes
+  HEAD, không đổi băm hoặc chữa nguồn ở runtime. Giữ nguyên mẫu NGAN-0/schema/
+  requirements.lock; chỉ thư viện chuẩn + SDK. Không chỉ mục/vector/cache/AI,
+  không lưu bền hoặc tạo tệp tạm nên không có tệp tạm cần dọn.
+
+**Kết quả kiểm thực** trên Windows, Python 3.13.14, pytest 9.1.1 qua venv
+`--system-site-packages`; SDK 2.0.0 cài offline `--no-index --no-deps`, SHA-256
+wheel khớp SHA256SUMS.txt. Không tải mạng hoặc thêm dependency.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_tra_cuu/goi/e_tra_cuu
+[LỖI] Nhận DEMO — Phân loại: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+[LỖI] Nhận DEMO — Cắt đoạn: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+[LỖI] Nhận DEMO — Phân tích câu hỏi: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+[LỖI] Nhận DEMO — Xếp hạng lại: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+[LỖI] Nhận DEMO — Soạn trả lời tầng 1: "Engine chưa được cấu hình. Admin vào Quản lý engine › Tra cứu tài liệu › Cấu hình."
+Engine e_tra_cuu 0.1.0: có ví dụ chạy thử DEMO chưa đạt.
+0/5 ĐẠT; mã thoát 1; mã lỗi mỗi ca CHUA_CAU_HINH.
+
+.venv/Scripts/python -B -m pytest e_tra_cuu/tests -q
+457 passed in 9.17s
+0 failed, 0 skipped; mã thoát 0.
+
+.venv/Scripts/python -B e_tra_cuu/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập; không import cấm, bytecode hoặc liên kết.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_tra_cuu/tests/chay_demo_voi_core_gia.py
+[ĐẠT] Nhận DEMO — Phân loại
+[ĐẠT] Nhận DEMO — Cắt đoạn
+[ĐẠT] Nhận DEMO — Phân tích câu hỏi
+[ĐẠT] Nhận DEMO — Xếp hạng lại
+[ĐẠT] Nhận DEMO — Soạn trả lời tầng 1
+[ĐẠT] DOCX DEMO không trang
+[ĐẠT] Điều/Khoản DEMO xuyên trang rỗng
+[ĐẠT] Bảng DEMO ô gộp/trống
+[ĐẠT] Bảng DOCX DEMO không trang
+9/9 DEMO ĐẠT; mạng ngoài/AI/Cloud=0 (không có provider trong harness).
+Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật; ngăn RAM mất khi dừng.
+Mã thoát 0.
+```
+
+Cả CLI/harness đều có cảnh báo mẫu ngăn ra stderr một lần: “Đang lưu tạm
+trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng”. CLI không tự nạp
+cấu hình DEMO để làm xanh. Harness giữ năm ví dụ nhận của manifest và bốn ca
+nhận → cắt bổ sung, Core cấp snapshot/tệp con cho việc kế tiếp.
+
+457 tests gồm 315 hồi quy và 142 ca TC-3/nợ TC-2: Điều/Khoản xuyên trang,
+tiêu đề trùng/trang rỗng/đuôi; bảng gộp ngang/dọc/ô rỗng/tiêu đề lặp, phép
+chiếu LF/CRLF và DOCX không trang; source/map/hộp sai bị từ chối; Unicode
+NFC/NFD/emoji, quote/offset lát Python, tái dựng đủ nguồn; đơn vị đúng 8000
+và 8001 ký tự, Điều dài chia được theo câu, hàng bảng không chia an toàn;
+5001 đoạn và trần cấu hình thấp hơn; trần snapshot kết quả; sửa băm/nguồn/
+phiên bản/config/metadata, thiếu quyền/pháp nhân/cửa Core; hủy lúc đọc/cắt,
+mất lease/ACK, ChuaRo; log không chứa nội dung, 0 AI/Cloud/ghi đĩa. Ba nợ
+TC-2 có kiểm nội dung hợp lệ/traversal/khóa thừa và đọc ngắn 1/7/97 bytes.
+Không lấy số test làm độ chính xác nghiệp vụ hoặc bằng chứng RLS thật.
+
+Lượt đầu TC-3 phát hiện regex Khoản chưa nhận dấu chấm sau số; đã sửa và kiểm
+lại xuyên trang. Hồi quy TC-0 còn coi cắt đoạn là stub; chuyển kiểm stub sang
+`xuat_ket_qua` chưa triển khai. Baseline trước sửa có 314 passed/1 failed do
+auto-CRLF DEMO; đã sửa quy tắc checkout, không đổi tiêu chí/băm cho test qua.
+
+**Lệch khỏi phiếu / quyết định tạm:** 4 tệp mã thay vì 3 do lead giao thêm
+`kiem_dau_vao.py` để đóng nợ TC-2, vẫn trong trần khoảng 5. Thêm metadata
+`.gitattributes` cho DEMO; không mở năng lực mới ngoài TC-3. RAM và seam Core
+giả theo phiếu; cổng bổ sung không thay CLI chuẩn. Bản 0.1.0 chưa phát hành.
+
+**Cần Core (bổ sung TC-3):**
+
+- **C-TC-01:** ngăn/cấu hình/CLI SDK thật; cổng chuẩn còn chưa đạt, cần lead
+  review cổng bổ sung §2.5. Không đổi AGENTS/API/SDK để làm xanh.
+- **C-TC-02/03:** Core phải ghim nguyên phong bì bước trước vào giấy cấp
+  `dau_vao`, cung cấp `metadata_core` tin cậy, cùng scope và quyền sống từng
+  snapshot/gốc/OCR xuyên bước/vòng đời/ACK. Seam này mới kiểm bằng adapter
+  tests, chưa là API SDK đã phát hành. Ref/băm/cờ caller không thay quyền.
+- **C-TC-02/03, L-TC-01:** nguồn bảng ngoài phép chiếu TAB + LF/CRLF phải có
+  map Unicode tường minh cho khối và từng ô, kể cả ô trống; nguồn cấp nhãn
+  hàng tiêu đề. DOCX có cấu trúc dùng phần mở `khoi`, giữ phong bì không trang.
+  Chưa có map kiểm được thì từ chối, không tự viết reader/render/OCR mới.
+- **C-TC-05:** an toàn log/loại riêng/lease ngoài handler còn thuộc SDK/Core.
+  Chưa kiểm Linux, Core/RLS thật, UI, model hoặc chất lượng nghiệp vụ.
+
+**Chờ Anh mới phát sinh:** không có; TC-Q06 giữ **không tự xóa**.
+
+**Kiểm bàn giao:** `git diff --check` mã 0; 6/6 cặp mẫu/schema băm LF khớp,
+5/5 băm yêu cầu DEMO khớp; nguồn DEMO LF bằng nguyên bytes HEAD. Không có
+bytecode/liên kết trong gói; tệp lớn nhất 25137 bytes. Tất cả thay đổi thuộc
+`e_tra_cuu/` trong worktree này; không sửa ma-nguon/Core/SDK hoặc contract chung.
+
+**Thời gian thực tế TC-3:** bắt đầu 15/11/2026 **13:33** theo lead; kết thúc
+kiểm bàn giao **14:09:46 (UTC+07:00)**, khoảng **0,61 giờ**. Phiếu **4 giờ
+ƯỚC TÍNH**. Gồm đọc tài liệu, tạo venv/cài SDK offline, triển khai, kiểm và
+tài liệu; không phải thời gian vận hành hoặc đo chất lượng model.

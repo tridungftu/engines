@@ -1,0 +1,4 @@
+/* Màn module DEMO: dùng biến và bảng của Core, chỉ thêm khoảng cách. */
+.demo-ho-so { display: grid; gap: 12px; }
+.demo-ho-so h2 { margin: 0; font-size: 1.1rem; }
+.demo-ho-so-nut:empty { display: none; }

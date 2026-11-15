@@ -1,4 +1,4 @@
-"""Năng lực văn bản SDK; kho qua ngăn, quyền từ bên tích hợp tin cậy."""
+"""Năng lực SDK 2.2.0; kho bí danh RAM riêng trong lúc chờ MASK-P3."""
 from copy import deepcopy
 from functools import wraps
 from pathlib import Path
@@ -7,9 +7,8 @@ from kho_tri_thuc_sdk.engine import ChuaRo, Engine, LoiDuongTruyen, LoiNghiepVu,
 
 from . import che_van_ban as loi_che, phong_bi, tai_nguyen
 from .kho_dinh_danh import KhoDinhDanh
-from .cau_hinh import CauHinhKhongHopLe
 from .kho_ngan import KHAI_NGAN
-from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
+from .ngan import CauHinhKhongHopLe, NganBoNho, NganKhongHopLe, NganXungDot
 from .quyen_yeu_cau import loi_kho
 
 
@@ -17,6 +16,10 @@ def _loi_cong(ham):
     @wraps(ham)
     def goi(viec):
         try:
+            # Snapshot SDK đã kiểm schema; không đọc bảng cấu hình của kho RAM.
+            # Mask hiện không có trường cấu hình engine bắt buộc.
+            if viec.cau_hinh:
+                raise CauHinhKhongHopLe()
             return ham(viec)
         except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
             lop = type(exc)
@@ -76,16 +79,15 @@ def _mo_ai(chu, ma, dong, ai, kho, viec):
 def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None, cong_hau_kiem_ai=None):
     """Chỉ bên tích hợp truyền port; dữ liệu việc không thể cấp quyền này."""
     ung_dung = Engine.tu_khai_bao(str(Path(__file__).resolve().parents[1] / 'engine.json'))
-    if ngan is not None:
-        ung_dung.ngan = ngan
-    elif getattr(ung_dung, 'ngan', None) is None:
+    if ngan is None:
         from .chuan_bi_ai import KHAI_NGAN_CHUAN_BI_AI
-        ung_dung.ngan = NganBoNho([*KHAI_NGAN, *KHAI_NGAN_CHUAN_BI_AI])
-    ngan = chon_ngan(ung_dung)
+        ngan = NganBoNho([*KHAI_NGAN, *KHAI_NGAN_CHUAN_BI_AI])
+    # Không ghi đè app.ngan của SDK, không chọn viec.ngan cho kho bí danh.
+    # CĐ-36 chưa cho chuyển kho này sang ngăn Core; MASK-P3 thiết kế lại.
+    ung_dung.kho_bi_danh_ram = ngan
 
     def ngan_cua_viec(viec):
-        ngan_viec = getattr(viec, 'ngan', None)
-        return ngan if ngan_viec is None else ngan_viec
+        return ngan
 
     @ung_dung.nang_luc('mask.hau_kiem_ai_cuc_bo@1')
     @_loi_cong

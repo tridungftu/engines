@@ -12,7 +12,7 @@ from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_mask import phong_bi, che_van_ban
 from e_mask.chay import tao_app
-from e_mask.cau_hinh import CauHinhKhongHopLe
+from e_mask.ngan import CauHinhKhongHopLe
 from e_mask.duyet_dinh_danh import DuyetDinhDanh
 from e_mask.kho_dinh_danh import KhoDinhDanh
 from e_mask.kho_ngan import AnhNgan, khoa_muc
@@ -270,10 +270,10 @@ def test_replay_khong_am_tham_doi_ket_qua_da_chot():
 def test_app_tu_khai_bao_ngan_ram_va_giu_ngan_duoc_cap():
     q,c=QuyenNganDemo(),CoreGia()
     app=tao_app(quyen=q)
-    n=app.ngan
+    n=app.kho_bi_danh_ram
     che_demo(n,q,c,app)
     assert n.tim('cho_duyet').danh_sach[0].gia_tri['so_lan_gap']==1
-    assert tao_app(ngan=n,quyen=q).ngan is n
+    assert tao_app(ngan=n,quyen=q).kho_bi_danh_ram is n
 
 
 @pytest.mark.parametrize('loai_loi', [NganXungDot, NganKhongHopLe, CauHinhKhongHopLe])

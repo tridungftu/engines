@@ -1,0 +1,116 @@
+Ghi chú: đường tuyệt đối workspace/Python thay bằng nhãn; giữ nguyên kết quả và mã thoát.
+MASK-S22 — lượt chốt sau sửa đồng hồ fixture deadline
+Đã kiểm bằng Core giả (CoreGia).
+.venv/Scripts/python -m pytest e_mask/tests -q --basetemp=.pytest-tmp
+.......................................................... [  2%]
+........................................ [  4%]
+........................................................................ [  7%]
+........................................................................ [ 11%]
+........................................................................ [ 14%]
+....xxxx................................................................ [ 17%]
+........................................................................ [ 20%]
+........................................................................ [ 24%]
+........................................................................ [ 27%]
+........................................................................ [ 30%]
+........................................................................ [ 34%]
+........................................................................ [ 37%]
+........................................................................ [ 40%]
+........................................................................ [ 44%]
+........................................................................ [ 47%]
+........................................................................ [ 50%]
+........................................................................ [ 53%]
+........................................................................ [ 57%]
+........................................................................ [ 60%]
+........................................................................ [ 63%]
+........................................................................ [ 67%]
+........................................................................ [ 70%]
+........................................................................ [ 73%]
+........................................................................ [ 77%]
+........................................................................ [ 80%]
+........................................................................ [ 83%]
+........................................................................ [ 86%]
+........................................................................ [ 90%]
+........................................................................ [ 93%]
+........................................................................ [ 96%]
+.....................................................................    [100%]
+================================== FAILURES ===================================
+_ CheVanBanDemoTests.test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu (mau='1 ') _
+
+self = <test_che_van_ban.CheVanBanDemoTests testMethod=test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu>
+
+    def test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu(self):
+        mau_con = os.environ.get('MASK_3A_MAU_HIEU_NANG')
+        if mau_con is not None:
+            chu = (mau_con * (500_000 // len(mau_con) + 1))[:500_000]
+            bat_dau = perf_counter()
+            kq = che(chu, [], KhoBoNho())
+            giay = perf_counter() - bat_dau
+            self.assertLessEqual(giay, 5, f'{mau_con!r}: {giay:.3f} giây')
+            self.assertTrue(kq['kiem_tien_ngay'])
+            self.assertEqual(kq['so_cho_thay'], 0)
+            if mau_con == '1 ':
+                self.assertFalse(kq['gui_duoc'])
+                self.assertIsNone(kq['van_ban_da_che'])
+                self.assertIn({'nhom': 'TAI_KHOAN', 'vi_tri': {
+                    'bat_dau': 0, 'ket_thuc': 499_999, 'dong': 1, 'cot': 1}}, kq['con_sot'])
+                self.assertTrue(all('nhom' in m for m in kq['con_sot']))
+            else:
+                self.assertTrue(kq['gui_duoc'])
+                self.assertEqual(kq['van_ban_da_che'], chu)
+                self.assertEqual(kq['con_sot'], [])
+            print(f'Hiệu năng {mau_con!r}: {giay:.3f} giây')
+            return
+        # Chỉ tiến trình test con bị giới hạn; không thao tác dịch vụ/PG.
+        for mau in ('1; ', '1, ', '1 '):
+            with self.subTest(mau=mau):
+                moi_truong = dict(os.environ, MASK_3A_MAU_HIEU_NANG=mau)
+                try:
+                    chay = subprocess.run(
+                        [sys.executable, '-X', 'utf8', '-B', '-m', 'unittest', 'discover',
+                         '-s', str(Path(__file__).parent), '-p', Path(__file__).name,
+                         '-k', 'test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu'],
+                        env=moi_truong, capture_output=True, text=True, encoding='utf-8', timeout=12)
+                except subprocess.TimeoutExpired:
+                    self.fail(f'{mau!r}: vượt 12 giây kể cả khởi tạo tiến trình; ngưỡng xử lý là 5 giây')
+>               self.assertEqual(chay.returncode, 0, chay.stdout + chay.stderr)
+E               AssertionError: 1 != 0 : F
+E               ======================================================================
+E               FAIL: test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu (test_che_van_ban.CheVanBanDemoTests.test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu)
+E               ----------------------------------------------------------------------
+E               Traceback (most recent call last):
+E                 File "<WORKTREE>\e_mask\tests\test_che_van_ban.py", line 620, in test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+E                   self.assertLessEqual(giay, 5, f'{mau_con!r}: {giay:.3f} giây')
+E                   ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AssertionError: 7.61920749998535 not less than or equal to 5 : '1 ': 7.619 giây
+E               
+E               ----------------------------------------------------------------------
+E               Ran 1 test in 7.632s
+E               
+E               FAILED (failures=1)
+
+e_mask\tests\test_che_van_ban.py:647: AssertionError
+=========================== short test summary info ===========================
+SUBFAILED(mau='1 ') e_mask/tests/test_che_van_ban.py::CheVanBanDemoTests::test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+1 failed, 2179 passed, 4 xfailed, 189 subtests passed in 376.45s (0:06:16)
+
+Mã thoát: 1
+
+.venv/Scripts/python -c import kho_tri_thuc_sdk; print(kho_tri_thuc_sdk.__version__)
+2.2.0
+Mã thoát: 0
+
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.3.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát: 1
+
+.venv/Scripts/python e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát: 0
+
+SHA256 wheel đã so SHA256SUMS.txt: KHỚP 0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984.
+Băm LF đích 8/8 khớp; AST/JSON đạt; chỉ thay đổi e_mask.
+Không có bảng ngăn/migration: kiểm kê không áp dụng theo ngoại lệ Lead.
+git diff --check: mã 0.
+Thời gian công việc: 18:04:00–18:45:35 ngày 15/11/2026 (UTC+07), 0.69 giờ. Ước tính riêng MASK-S22 chưa có trong phiếu.

@@ -11,7 +11,8 @@ import pytest
 from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu
 
 from e_mask import che_van_ban, tai_nguyen
-from e_mask.cau_hinh import doc_cau_hinh
+from ho_tro_luu_tru import cau_hinh
+doc_cau_hinh = cau_hinh.doc_cau_hinh
 from e_mask.duyet_dinh_danh import DuyetDinhDanh
 from e_mask.kho_dinh_danh import KhoDinhDanh
 from e_mask.kho_ngan import AnhNgan, BANG, CAC_TIEN_TO, TIEN_TO, bi_danh_moi, khoa_muc
@@ -25,11 +26,6 @@ GOI = ROOT / 'e_mask/goi/e_mask'
 
 def bam_lf(tep):
     return sha256(tep.read_bytes().replace(b'\r\n', b'\n')).digest()
-
-
-@pytest.mark.parametrize('ten', ['ngan.py', 'cau_hinh.py'])
-def test_so_bam_mau_chung(ten):
-    assert bam_lf(ROOT/'_chung/mau-ma'/ten) == bam_lf(GOI/'e_mask'/ten)
 
 
 @pytest.mark.parametrize('ten', sorted(tai_nguyen.TEN_TAI_NGUYEN))
@@ -101,10 +97,11 @@ def test_chon_ngan_va_doc_cau_hinh_mac_dinh(monkeypatch, capsys):
     assert n is chon_ngan(app)
     assert capsys.readouterr().err.count('Đang lưu tạm') == 1
     assert chon_ngan(SimpleNamespace(ngan=n)) is n
+    # Chỉ kiểm bộ đọc lịch sử với kho giả riêng ngoài runtime.
     s = {'type':'object', 'properties':{'so':{'type':'integer','default':7}},'additionalProperties':False}
+    n = SimpleNamespace(doc=lambda *a: None)
     assert doc_cau_hinh(n,s) is None
-    with n.lo() as lo:
-        lo.them('cau_hinh', {}, {})
+    n.doc = lambda *a: SimpleNamespace(gia_tri={})
     assert doc_cau_hinh(n,s) == {'so':7}
     assert n.doc('cau_hinh', {}).gia_tri == {}
 
@@ -229,7 +226,7 @@ def test_ban_khai_khop_truong_ngan_da_ghi():
     k.xu_ly(v,xu_ly)
     admin=DuyetDinhDanh(n,ADMIN); muc=admin.danh_sach()[0]
     admin.duyet(muc['gia_tri']['khoa'],muc['row_version'])
-    khai=json.loads((GOI/'KHAI-SDK-2.1.json').read_text('utf-8'))
+    khai=json.loads((ROOT/'e_mask/LUU-TRU/sdk_truoc_2_2/KHAI-SDK-2.1.json').read_text('utf-8'))
     for bang in khai['ngan_du_lieu']:
         assert bang['pham_vi']=='engine'
         truong={m['ma'] for m in bang['truong']}

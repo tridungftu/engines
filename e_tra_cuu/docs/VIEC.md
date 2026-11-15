@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| TC-11 | Công cụ thử DEMO ngoài runtime, báo cáo số đo thiếu và chốt cửa thật | Lead giao 15/11/2026, 19:53; sau TC-10; 4 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | Công cụ Python + .cmd ASCII, mặc định chạy khô không mạng/ghi bền; adapter giả kiểm bốn tỷ lệ từng model và các chốt an toàn. Cửa thật còn khóa C-TC-06, không có adapter HTTP thực thi đo thật; phép đo thật **CHỜ ANH TỰ CHẠY** sau khi Core công bố đủ cửa. Kết quả kiểm xem biên bản TC-11 cuối tệp. PR: **chờ lead mở**. |
 | TC-10 | DEMO toàn tuyến, đáp án/bốn chỉ số, adapter Core, máy sạch offline | Lead giao 15/11/2026, 18:45; sau TC-3…9 và TC-S22; 4 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | 38 ca có đáp án riêng chưa duyệt nghiệp vụ; bốn chỉ số DEMO 12/12, 12/12, 6/6, 20/20; pytest 1330 passed, 0 skipped; harness 55/55, Node 30/30; độc lập mã 0, kiểm kê 141/141 tệp. CLI chuẩn 0/12/mã 1 (5 CHUA_CAU_HINH, 7 TC_CHUA_CO_CUA_CORE); chưa đạt cổng chung. Đã kiểm bằng Core giả (CoreGia), chưa Core/RLS/Linux/model thật; không kích hoạt nhóm. PR: **chờ lead mở**. |
 | TC-S22 | Chuyển SDK 2.2.0, ngăn/cấu hình/SQL/CoreGia và vai trò AI-12 | Lead giao 15/11/2026, 17:51; xếp trên TC-9; phiếu chưa ghi giờ ước tính TC-S22 | Chờ Core — 15/11/2026 | Đã chuyển runtime/gói/test; pytest 1268 passed, 0 skipped; UI 29/29, hồi quy DEMO 43/43; độc lập mã 0, kiểm kê 38 tệp khớp. CLI chuẩn 0/5 CHUA_CAU_HINH/mã 1 do giới hạn wheel; không cổng thay thế. Xem Cần Core TC-S22 và biên bản cuối tệp. PR: **chờ lead mở**. |
 | TC-9 | Màn cấu hình/trạng thái, CAS và bài đo DEMO theo pháp nhân | Lead giao 15/11/2026, 16:33; sau TC-8; 3 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | Đã làm đúng 4 tệp mã, kiểm CoreGia/NganBoNho/KttCore giả; chưa kiểm trình duyệt thật. CLI chuẩn vẫn 0/5 CHUA_CAU_HINH/mã 1; số kiểm và giới hạn tại biên bản TC-9 cuối tệp. PR: **chờ lead mở**. |
@@ -37,6 +38,32 @@ là nơi theo dõi; các dòng “chưa duyệt” trong biên bản TC-P/TC-0 d
 **Kiểm TC-P:** theo ngoại lệ riêng của lát chỉ tài liệu, không áp dụng ba lệnh engine AGENTS.md §5 khi chưa có gói/tests. Kiểm 12/12 khối lệnh §4 bằng regex Anh yêu cầu (fence mở ``` trơn), đủ TC-0…TC-11, không trùng, tổng giờ bảng = 45; `git diff --check` không lỗi. SDK 2.0.0 cài offline trong `.venv`, SHA-256 wheel khớp SHA256SUMS.txt. Chỉ kiểm tài liệu và đọc mã SDK, **chưa chạy engine/CoreGia**. Không commit/push; không tạo `goi/`, không sửa nguồn cũ.
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+### Cập nhật TC-11 — 15/11/2026
+
+- **C-TC-06 mới, chặn đo thật:** hợp đồng public cho công cụ đo qua cửa chung:
+  discovery đúng ID/runtime/version/context của ba họ model và embedding
+  tiếng Việt lead chọn; tokenizer đếm đầy đủ khung trước gửi; nguồn DEMO/
+  danh mục/prompt/cấu hình ghim; ghép chuỗi/tệp con/quyền; nộp/đối soát lượt
+  bằng mã tương quan; đọc JSON/số đo không cắt; giữ báo cáo tại Core.
+  API-CORE-v1 §5 đã có chạy nút module nhưng chưa đủ hợp đồng các phần này;
+  API-ENGINE-v1 là cửa engine nhận việc, không tự dùng để nộp bài đo.
+  `cong-cu/thu_tra_cuu_that.py::CoreThat` hiện từ chối đúng
+  `TC_CHUA_CO_MOI_TRUONG_THU` **trước mạng/nhập khóa**. Không có adapter HTTP
+  thật hoặc đường bỏ chốt; không sửa Core/Hỏi AI để làm bù. Hợp đồng seam
+  giả và yêu cầu lead nối sau ở `docs/TC-11-ADAPTER.md`.
+- **C-TC-03/04, L-TC-01/02 vẫn chờ:** RLS/cache/mọi nguồn/ba tầng/202/K5/
+  trang trích dẫn/UI host thật; PostgreSQL/extension và tải riêng 20 đồng
+  thời/150 người thuộc lead Core. Công cụ chỉ nhận biên bản có băm, thiếu để
+  chưa kiểm. Không suy tải/model/ngưỡng từ một lượt hoặc từ CoreGia.
+- **Bộ đo:** TC-10 ghim 38 ca hiện chưa duyệt nghiệp vụ. Bốn tỷ lệ chấm từng
+  model; ba tác vụ cắt đoạn/vị trí, câu hỏi/hàm và xếp hạng cần lead ghim thêm
+  đáp án `du_lieu` đầy đủ trước phép đo thật. Thiếu để chưa đo; runtime thiếu
+  token/thời gian/số đoạn/ứng viên để null + lý do. Ký tự/4 không là token đo.
+- Không phát sinh câu hỏi mới chờ Anh. Bảng chọn duy nhất vẫn phiếu §5.2:
+  TC-Q08/15 chưa có số đo thật; TC-Q06 giữ **không tự xóa**. Không chốt model,
+  ngưỡng hoặc kích hoạt nhóm. Đã kiểm bằng Core giả (CoreGia)/adapter giả;
+  phép đo thật **CHỜ ANH TỰ CHẠY**; Linux/trình duyệt thật chưa kiểm.
 
 ### Cập nhật TC-10 — 15/11/2026
 
@@ -1410,3 +1437,92 @@ Phạm vi: 0 tệp Python/JS runtime thay đổi; chỉ DEMO,
 - Artifact: `TC-10-KET-QUA-DEMO.json`, `TC-10-MAY-SACH-WINDOWS.json`,
   `TC-10-KIEM-CHUNG.md`. Đã kiểm bằng Core giả (CoreGia); 0 Cloud/provider
   thật. Không sửa Core/SDK/schema chung/ma-nguon, không commit/push.
+
+## Biên bản TC-11 — công cụ đo DEMO ngoài runtime, 15/11/2026
+
+**Kết luận: Chưa đạt cổng nghiệm thu chung.** Phần công cụ chạy khô và seam
+đo đã kiểm; CLI chuẩn còn lỗi đã biết, adapter thật khóa C-TC-06. Phép đo thật
+**CHỜ ANH TỰ CHẠY** sau khi Core công bố đủ hợp đồng và lead nối adapter.
+PR: **chờ lead mở**.
+
+**Đã làm:** `cong-cu/thu_tra_cuu_that.py`, `THU-TRA-CUU-THAT.cmd` ASCII và
+README; 2 tệp mã ngoài runtime. Chỉ đọc đúng bộ DEMO đã ghim, JSON nghiêm và
+băm nguồn/đáp án/phiên bản. Manifest ghim bài đo chỉ tham chiếu phiên bản/băm
+trên Core, không giá trị cấu hình trên đĩa. Chạy khô không tạo adapter/mạng/
+tệp; tùy chọn artifact có workspace, không ghi đè/thoát phạm vi/ghi goi/.
+Không tạo tệp tạm; không có tệp tạm runtime cần dọn.
+
+Bộ chấm lấy kết quả xuất thật của TC-10 trên CoreGia, kiểm riêng từng model:
+12/12 trả lời, 12/12 trích dẫn, 6/6 từ chối, 20/20 phân loại. Ba ID trong test
+đều DEMO giả, **không** là gpt-oss/Qwen/Gemma đã phát hiện thật. Đếm số này chỉ
+kiểm cơ chế bộ chấm, không chất lượng model. Bổ sung chấm đoạn/vị trí,
+câu hỏi/hàm/xếp hạng theo đáp án ghim; thiếu đáp án để chưa đo. Kiểm tiền/
+ngày/thực thể/nguồn/bản/offset, context/tokenizer đầy đủ, không dùng ký tự/4
+làm số runtime, không cắt/chuyển Cloud/batch. ChuaRo/202/mất ACK dừng nộp,
+không gửi lại mù; hủy không khẳng định Core đã hủy việc. Telemetry thiếu
+null + lý do, thời gian công cụ tính giây riêng. Biên bản Core/tải không có
+bằng chứng giữ chưa kiểm. Báo cáo allowlist không nội dung nguồn/đáp án/
+đường máy/URL/khóa; ưu tiên RAM/Core.
+
+**Kết quả kiểm thực chạy** trên Windows, venv worktree Python 3.13.14,
+SDK **2.2.0** cài wheel offline; SHA-256
+`0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`
+khớp `SHA256SUMS.txt`. Dependency test chép offline từ bản đã cài, theo
+`tests/requirements.lock`, không thêm dependency runtime.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_tra_cuu/goi/e_tra_cuu
+0/12 ĐẠT, mã thoát 1:
+5 CHUA_CAU_HINH: Engine chưa được cấu hình.
+7 TC_CHUA_CO_CUA_CORE: Core chưa cấp đủ cửa nguồn và quyền tra cứu.
+Giới hạn CLI theo phiếu §2.5; chưa đạt, không thay cổng.
+
+.venv/Scripts/python -B -m pytest e_tra_cuu/tests -q
+1431 passed in 164.53s (0:02:44); 0 failed, 0 skipped; mã 0.
+Trong đó TC-11: 101 ca; không bỏ/skip ca cũ.
+
+.venv/Scripts/python -B e_tra_cuu/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập; không import cấm, bytecode hoặc liên kết. Mã 0.
+
+.venv/Scripts/python -B e_tra_cuu/tests/chay_demo_voi_core_gia.py
+55/55 DEMO ĐẠT; bộ đáp án 38/38 ca, 31 lượt Local giả.
+Trả lời 12/12; trích dẫn 12/12; từ chối 6/6; phân loại 20/20.
+Ngăn SDK trên CoreGia: 1 bài DEMO-TC10, gửi lại không nhân số đếm.
+Mạng ngoài/provider thật/Cloud=0; mã 0. Không thay CLI chuẩn.
+
+node --test e_tra_cuu/tests/ui/*.test.js
+30 passed, 0 failed, 0 skipped; mã 0.
+
+.venv/Scripts/python -B e_tra_cuu/cong-cu/thu_tra_cuu_that.py
+CHẠY KHÔ: đã kiểm băm bộ DEMO; không mạng/ghi bền mặc định.
+Phép đo thật CHỜ ANH TỰ CHẠY. Mã 0.
+
+Kiểm kê: 141/141 tệp khớp bytes/SHA-256; chỉ đổi mục CHANGELOG.md.
+CMD ASCII, bytecode trong goi/=0; git diff --check mã 0.
+```
+
+**Đã kiểm bằng Core giả (CoreGia)/adapter giả/KttCore giả.** Không chạy
+CLI `--that`, không provider/Cloud/máy thật, không thay đổi Windows, không
+đo PostgreSQL/extension/tải/model/RLS/UI host thật. Linux chưa kiểm. Test
+CoreThat chỉ dùng địa chỉ `.invalid` và seam từ chối trước mạng/nhập khóa.
+
+**Thời gian thực tế:** bắt đầu **15/11/2026 19:53**, kết thúc **20:16
+(UTC+07:00)**, khoảng **0,38 giờ**, so với **4 giờ ƯỚC TÍNH** trong phiếu.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** chưa triển khai adapter HTTP
+đo thật vì không có hợp đồng public đủ các cửa, không tự đoán route/schema
+hoặc sửa Core/Hỏi AI. Chốt thiếu môi trường là hành vi từ chối theo phiếu,
+không báo đã nối Core. Ba tác vụ bổ sung cần lead cấp đáp án; không lấy
+assert đơn vị thay chất lượng thật. Không sửa Python/JS runtime, SQL DDL,
+manifest năng lực, SDK/Core/engine khác/ma-nguon; CHANGELOG và kiểm kê gói
+chỉ metadata tài liệu. Không commit/push.
+
+**Cần Core / Chờ Anh mới phát sinh:** C-TC-06 như mục Cần Core; tiếp tục
+C-TC-01…05, L-TC-01/02. TC-Q08/15 cập nhật tại **bảng chọn duy nhất** phiếu
+§5.2; TC-Q06 không tự xóa; không có câu hỏi mới. Chưa chốt model/ngưỡng
+hoặc công bố accuracy thật. Lead review biên bản và nối adapter sau khi
+có hợp đồng; Anh tự chạy công cụ trên môi trường thật khi đủ cửa.
+
+Tại kiểm cuối: HEAD `e17bf86`, origin/main `e84e83f` tiến thêm 4 commit chỉ
+ở e_mask; chưa đổi mã TC/Hỏi AI. Các số kiểm trên HEAD hiện tại; lead đồng
+bộ main trước mở PR. Codex không merge/commit/push hoặc sửa tệp ngoài phạm vi.

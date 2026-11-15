@@ -3,12 +3,13 @@ from dataclasses import replace
 from types import SimpleNamespace
 
 from e_mask.quyen_yeu_cau import NguCanhTinCay, loi_kho
+from ho_tro_ram import VongDoiCoreGia
 
 TEN = 'Công ty DEMO Ánh Dương'
 VAN_BAN = TEN + '; 1.000.000 VND ngày 30/10/2026.'
 
 
-class QuyenNganDemo:
+class QuyenNganDemo(VongDoiCoreGia):
     def __init__(self):
         self.ve, self.thu_hoi = {}, False
         self.module, self.nguoi_gui, self.tai_lieu, self.vung = 'module-demo', 'nguoi-demo', 'tai-lieu-demo', 'DEMO'

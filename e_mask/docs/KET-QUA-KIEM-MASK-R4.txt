@@ -1,0 +1,31 @@
+MASK-R4 — kết quả chốt, 15/11/2026; đã kiểm bằng Core giả (CoreGia).
+Các dòng pytest dưới đây là trích kết quả cuối; không phải toàn bộ progress/traceback.
+
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.4.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát: 1
+
+.venv/Scripts/python -B -m pytest e_mask/tests -q
+FAILED e_mask/tests/test_mask_r1.py::test_kiem_ke_day_du_bytes_va_sha_tung_tep
+1 failed, 2305 passed, 4 xfailed, 190 subtests passed in 147.49s (0:02:27)
+Mã thoát: 1
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[LỖI] Không kiểm được một mục trong gói.
+Mã thoát: 1
+
+.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_r4.py -q --tb=short
+78 passed in 1.12s
+Mã thoát: 0
+
+git diff --check
+Mã thoát: 0
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py .dong-goi-thu/mask-r4-761d634f/e_mask
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát: 0. Chỉ bản sao với kiểm kê đề nghị; không thay kết quả gói gốc.
+Kiểm kê đề nghị: 51/51 tệp; SHA-256 31f7269fd61a99bda673430dd7b222c474588c4575040da3b9050d952c859054.
+Gói gốc chưa sửa kiểm kê vì chưa có ngoại lệ giới hạn ba tệp mã/khai báo.
+

@@ -1,3 +1,10 @@
+## Chưa phát hành — 15/11/2026, MASK-R4
+
+- Thêm kho `KhoAnhXaRAM` một chuỗi theo mã Core cấp, kiểm quyền module/người/tài liệu/pháp nhân/DEMO, ghim instance và phiên RAM. Một bước sở hữu; mở tiêu thụ một lần, không phục hồi khi restart/đổi instance hoặc cache bản rõ sau mở.
+- TTL chụp đầu chuỗi từ cấu hình SDK (600 giây, số nguyên 60–900), đồng hồ monotonic, lấy deadline Core nếu sớm hơn, không trượt khi retry/đổi cấu hình. Đầu vào cùng lượt đổi thì từ chối. Trả handler sau bước che nhưng giữ RAM tới bước tiếp theo; chuỗi khác không đẩy map đang sống ra.
+- Timer daemon dọn cả khi chờ AI; `finally` dọn khi mở/hủy/lỗi/kết thúc/mất quyền/lease. Đồng bộ timer và tín hiệu kết thúc với khởi tạo/mở/chốt kết quả, chặn phát hành nếu RAM đã mất; lỗi cố định `MASK_ANH_XA_KHONG_CON` yêu cầu chạy lại cả chuỗi. Không ghi map/gốc/bytes vào ngăn/tệp/tạm/hồ sơ/log/stderr/chuyen_tiep.
+- Cửa ghim/vòng đời là protocol nội bộ còn thiếu ở SDK/Core (C-P4-01/02); handler từ chối khi thiếu, không suy quyền từ dữ liệu việc hoặc `so_viec_dong_thoi=1`. Adapter CoreGia chỉ ngoài gói. Chuyển nghiệp vụ cũ khỏi kho/snapshot và nối mở che mới thuộc R2/R5/R6/B7, chưa thực hiện trong R4.
+- Đã kiểm bằng Core giả (CoreGia); chưa Core/Local/Office/Linux thật. Kết quả kiểm và giới hạn kiểm kê/CLI ghi tại `e_mask/docs/VIEC.md` và `e_mask/docs/BAO-CAO-MASK-R4.md`. PR: chờ lead mở.
 ## Chưa phát hành — 15/11/2026, MASK-R2 adapter nhận diện bí mật
 
 - Thêm `KhoNganBiMat` dùng đúng `viec.ngan.doc/tim/lo` SDK 2.2.0. Ứng viên chỉ tìm bằng giá trị chính xác ở cột bí mật, cùng vùng và phiên bản chuẩn hóa; trả ID/alias/metadata/null+cờ, không băm tên công khai hoặc nạp danh mục bản rõ. Số gặp đọc theo chuỗi thập phân của SDK.

@@ -1,4 +1,4 @@
-"""Năng lực SDK 2.2.0; kho bí danh RAM riêng trong lúc chờ MASK-P3."""
+"""Năng lực SDK 2.2.0; cửa vòng đời RAM P4, nối nghiệp vụ ở R5/R6."""
 from copy import deepcopy
 from functools import wraps
 from pathlib import Path
@@ -7,6 +7,7 @@ from kho_tri_thuc_sdk.engine import ChuaRo, Engine, LoiDuongTruyen, LoiNghiepVu,
 
 from . import che_van_ban as loi_che, phong_bi, tai_nguyen
 from .kho_dinh_danh import KhoDinhDanh
+from .kho_anh_xa_ram import KhoAnhXaRAM
 from .kho_ngan import KHAI_NGAN
 from .ngan import CauHinhKhongHopLe, NganBoNho, NganKhongHopLe, NganXungDot
 from .quyen_yeu_cau import loi_kho
@@ -81,28 +82,39 @@ def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None, cong_hau_kiem_ai=No
         from .chuan_bi_ai import KHAI_NGAN_CHUAN_BI_AI
         ngan = NganBoNho([*KHAI_NGAN, *KHAI_NGAN_CHUAN_BI_AI])
     # Không ghi đè app.ngan của SDK, không chọn viec.ngan cho kho bí danh.
-    # CĐ-36 chưa cho chuyển kho này sang ngăn Core; MASK-P3 thiết kế lại.
+    # Adapter nghiệp vụ cũ chờ R2/R5/R6; CĐ-36 không cho giải mã ngăn Core.
+    # Handler thật còn bị chặn nếu thiếu cửa ghim/lifecycle P4 bên dưới.
     ung_dung.kho_bi_danh_ram = ngan
+    ung_dung.kho_anh_xa_ram = ram = KhoAnhXaRAM(quyen=quyen)
+
+    def bao_ve(ham):
+        @wraps(ham)
+        def goi(viec):
+            # SDK 2.2.0 chưa cấp cổng ghim/lifecycle C-P4-01/02.
+            # Không suy khả năng này từ so_viec_dong_thoi hoặc dữ liệu việc.
+            ram.kiem_san_sang()
+            return ham(viec)
+        return _loi_cong(goi)
 
     def ngan_cua_viec(viec):
         return ngan
 
     @ung_dung.nang_luc('mask.hau_kiem_ai_cuc_bo@1')
-    @_loi_cong
+    @bao_ve
     def hau_kiem_ai(viec):
         from .hau_kiem_ai import HauKiemAI
         return HauKiemAI(ngan=ngan_cua_viec(viec), quyen=quyen, cong=cong_hau_kiem_ai,
                          phien_ban_engine='e_mask ' + ung_dung.phieu['phien_ban']).hau_kiem(viec)
 
     @ung_dung.nang_luc('mask.chuan_bi_ai_cuc_bo@1')
-    @_loi_cong
+    @bao_ve
     def chuan_bi_ai(viec):
         from .chuan_bi_ai import ChuanBiAI
         return ChuanBiAI(ngan=ngan_cua_viec(viec), quyen=quyen, cong=cong_chuan_bi_ai,
                          phien_ban_engine='e_mask ' + ung_dung.phieu['phien_ban']).chuan_bi(viec)
 
     @ung_dung.nang_luc('mask.che_van_ban@1')
-    @_loi_cong
+    @bao_ve
     def che(viec):
         chu, ds = phong_bi.doc_che(viec)
         viec.tien_do(10, 'Đang kiểm tra văn bản.')
@@ -123,7 +135,7 @@ def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None, cong_hau_kiem_ai=No
         return phong_bi.ket_qua_che(kq, chu)
 
     @ung_dung.nang_luc('mask.mo_che_van_ban@1')
-    @_loi_cong
+    @bao_ve
     def mo(viec):
         chu, ma, dong, ai = phong_bi.doc_mo(viec)
         viec.tien_do(10, 'Đang kiểm tra quyền mở che.')

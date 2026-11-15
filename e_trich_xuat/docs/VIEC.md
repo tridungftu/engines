@@ -482,3 +482,20 @@ C-TX-01/02/04/A-TX-01 và chờ duyệt TX-3. Lead cấp nguồn/bản vàng đ�
 trong biên bản; trình lựa chọn làm lại riêng batch **12–18 giờ ước tính**
 hoặc lặp v1 **18–24 giờ ước tính**, chưa gồm Core/module/AI. Không tự mở code
 batch/nhiều vòng hoặc chuyển bộ trước E6 đạt.
+
+## Bàn giao TX-5 — 15/11/2026, PR: chờ lead mở
+
+Kết luận: **Chưa đạt điều kiện kiểm chung CLI** do SDK 2.0 CLI chưa cấp ngăn cấu hình (C-TX-04); phần bàn giao module và kiểm Core giả đã thực hiện.
+
+Đã làm: `ban-giao-module/` có helper thuần gọi trực tiếp E1, chuyển snapshot giữ đủ 10 cột/dòng ngừng dùng/quy tắc và ba băm; tài liệu ánh xạ nguồn E1/U1a/U1b, trách nhiệm và quyền module/Core, ví dụ nạp/lỗi/ghim việc. Không chép E1, không thay bộ 37, không mở route/SQL/UI/kho engine. Test DEMO đối chiếu SDK, lỗi Excel/hash và hai module đổi bộ với việc cũ; **đã kiểm bằng Core giả (CoreGia)**, ngăn RAM chỉ chứa cấu hình engine.
+
+Kiểm Windows, Python venv / SDK 2.0.0 offline, SHA-256 wheel khớp SHA256SUMS; 0 Cloud, không mạng/dependency runtime mới:
+
+- `python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat`: **2/3 ĐẠT, exit 1**, DEMO chuẩn bị thiếu cấu hình `CHUA_CAU_HINH`; giới hạn CLI SDK 2.0/C-TX-04 như TX-2.
+- `python -B -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp`: **381 passed, 0 skipped, exit 0**.
+- `python -B e_trich_xuat/tests/kiem_doc_lap.py`: **ĐẠT, exit 0**.
+- `python -B e_trich_xuat/tests/chay_demo_voi_ngan_gia.py`: **5/5 ĐẠT, exit 0**; hai năng lực TX-3 đăng ký chỉ trong RAM.
+
+Linux và Core thật chưa chạy. Thời gian 15/11/2026 **10:15–10:19 UTC+07**, khoảng **0,07 giờ**, ước tính **3 giờ công**. Không sửa Core/SDK/nguồn cũ, không commit/push.
+
+Cần Core: giữ C-TX-01 (xác thực module/pháp nhân, ghim snapshot và prompt theo từng việc, giới hạn thực), C-TX-04 (ngăn cấu hình trong cổng chạy thử); giữ các mục C-TX-02/03 và A-TX-01 đã nêu. Module tự triển khai kho bộ, phân quyền, lịch sử, so sánh, chạy thử và kích hoạt; chưa khẳng định đã cài. E6, payload hậu kiểm/xuất và năng lực chưa đăng ký vẫn chờ quyết định/duyệt như TX-4.

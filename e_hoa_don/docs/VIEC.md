@@ -2,7 +2,7 @@
 
 Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ Core / Xong** (ghi ngày và bằng chứng).
 
-Các dòng 0–5 giữ dấu vết phiếu cũ, không tự mở các lát mở rộng. Phần SDK 2.0 được giao trong HD-P chỉ gồm XML; điều kiện chờ Anh/Core theo phiếu giao mới.
+Các dòng 0–5 giữ dấu vết phiếu cũ. **Cập nhật 15/11/2026:** Anh đã chốt Q1–Q3: XML mốc 1; mở ZIP + bảng kê XLSX, PDF/tải cổng thuế để sau. Phiếu HD-P2 bổ sung HD-5…HD-8; các lát mới chưa triển khai. Các ghi chú “ZIP/bảng kê chờ Anh” và cấu hình/sổ JSON trên đĩa trong lịch sử bên dưới được thay bởi quyết định 15/11 và `GIAO-CODEX-DOT-2.md` §2: không lưu gì trên máy engine.
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
@@ -18,14 +18,45 @@ Các dòng 0–5 giữ dấu vết phiếu cũ, không tự mở các lát mở 
 | 9 | HD-2 — Bàn giao tệp, hủy, mất lease và gửi lại qua SDK | HD-2 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 1/1 DEMO ĐẠT; pytest 259 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia) và MayChuGia loopback. PR: **chờ lead mở**; xem Bàn giao HD-2 và `PR-HD-2.md`. |
 | 10 | HD-3 — Bộ XML DEMO có đáp án và regression | HD-3 | Xong — 14/11/2026 (mốc giao việc) | Kiểm thực tế 15/11/2026: SDK 3/3 DEMO ĐẠT; pytest 283 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia); 0 tệp runtime sửa. PR: **chờ lead mở**; xem Bàn giao HD-3 và `PR-HD-3.md`. |
 | 11 | HD-4 — Ghim nguồn và cài sạch XML | HD-4 | Đang làm — 15/11/2026 (sửa CI Linux) | Mốc đầu: Windows đạt, 284 test. Lượt sửa: SDK 3/3 ĐẠT; pytest 298 passed, 0 skipped; kiểm độc lập và cài sạch Windows đạt. Đã kiểm bằng Core giả (CoreGia); chờ CI Linux/Python 3.11 xác nhận, Core thật chưa kiểm. PR: **chờ lead cập nhật mã**. |
+| 12 | HD-P2 — Phiếu ZIP + bảng kê XLSX, chỉ tài liệu | HD-P2 | Xong — 15/11/2026 | Q1–Q3 đã chốt; thêm HD-5…HD-8, tổng **14 giờ ước tính**. SDK 3/3 DEMO ĐẠT; pytest **298 passed in 39.00s, 0 skipped**; kiểm độc lập ĐẠT. Đã kiểm bằng Core giả (CoreGia), chỉ hồi quy XML hiện có. PR: **chờ lead mở**. |
+| 13 | HD-5 — Lõi ZIP, báo cáo từng entry, xác nhận không cấu hình tệp trên đường chạy | HD-5 | Chờ làm — 15/11/2026 | Sau HD-4; 4 giờ ước tính; điều kiện đạt/lệnh giao tại phiếu §2.4, §4. Không mã ZIP mới trong HD-P2. |
+| 14 | HD-6 — Công bố `hoa_don.doc_zip@1`, JSON qua Core | HD-6 | Chờ làm — 15/11/2026 | Sau HD-5; 3 giờ ước tính; có lỗi/không hỗ trợ thì không gọi đầy đủ, giữ từng bản trùng. |
+| 15 | HD-7 — `hoa_don.bang_ke_xlsx@1`, tiền text exact + currency | HD-7 | Chờ làm — 15/11/2026 | Sau HD-6; 5 giờ ước tính; Python stdlib, OOXML tối thiểu; tham chiếu tĩnh nguồn cũ theo CD-096 A1, không thêm dependency. |
+| 16 | HD-8 — Oracle ZIP/XLSX, nguồn và cài sạch | HD-8 | Chờ làm — 15/11/2026 | Sau HD-7; 2 giờ ước tính; Windows/Linux ghi đúng môi trường thực chạy, không suy thành kiểm Core thật. |
 
-HD-P không thay quyết định cuối của Anh cho phiếu 9 lát/29 giờ cũ. Bản giao mới dùng `hoa_don.doc_xml@2` vì đổi phong bì nhận/trả, không tự chuyển quy trình `@1`. Không cần thêm/đổi loại dữ liệu riêng: dùng `tep` → `truong` + tệp JSON chi tiết. Các câu Q1–Q8 và điều kiện mở lát tiếp theo ở `GIAO-CODEX-e_hoa_don.md` §5.2.
+HD-P không thay quyết định cuối của Anh cho phiếu 9 lát/29 giờ cũ; **quyết định Anh 15/11 là căn cứ mới cho HD-P2**. Bản SDK 2.0 dùng `hoa_don.doc_xml@2`, không tự chuyển quy trình `@1`; ZIP `tep` → `truong` + JSON, XLSX nhận `truong` từ bước đọc rồi trả `truong` + tệp. Không loại dữ liệu riêng mới. XML 15 + ZIP/XLSX 14 = **29 giờ triển khai ước tính**, không gồm HD-P2 (1 giờ ước tính), PDF/portal hoặc thời gian chờ. Q1–Q3 đã chốt tại phiếu §5.2; Q5–Q8 tải/Windows/màn nghiệp vụ để sau.
 
 Kiểm HD-P ngày 14/11/2026: regex theo đầu bài trích đủ **5/5 khối lệnh §4**, dòng mở khối là ba backtick trơn; khớp 5 mã lát HD-0…HD-4 và tổng 4 + 3 + 3 + 3 + 2 = **15 giờ ước tính**; `git diff --check` mã 0, phạm vi đúng hai tệp tài liệu. Ba lệnh kiểm engine AGENTS.md §5 **không áp dụng** theo đầu bài chỉ tài liệu. Chưa chạy kiểm chức năng engine hoặc CoreGia trong HD-P; các lệnh kiểm trong phiếu là yêu cầu của lát tương lai.
 
+### Bàn giao HD-P2 — 15/11/2026, PR: chờ lead mở
+
+**Điều chỉnh theo lead 15/11:** Python stdlib, đối chiếu nguồn cũ bằng đọc tĩnh. SDK 3/3 ĐẠT; pytest 298 passed, 0 skipped (39.33s); kiểm độc lập ĐẠT; regex 9/9; git diff --check đạt. Đã kiểm bằng Core giả (CoreGia), chỉ hồi quy XML; ZIP/XLSX chưa triển khai. PR: chờ lead mở. Cần Core: fixture tệp lồng trong truong. Thời gian điều chỉnh: 07:43–07:49, khoảng 0,10 giờ; ước tính HD-P2: 1 giờ.
+
+Kết luận: **Đạt phạm vi tài liệu HD-P2** — đã kiểm bằng Core giả (CoreGia) đối với gói XML hiện có; chưa triển khai/nghiệm thu ZIP hoặc XLSX.
+
+Đã làm: cập nhật phiếu với HD-5 (4 giờ), HD-6 (3 giờ), HD-7 (5 giờ), HD-8 (2 giờ), tổng **14 giờ triển khai ước tính**; đủ lệnh giao, phụ thuộc, trần tệp mã và điều kiện đạt. Thiết kế hai năng lực riêng, JSON từng entry + dấu trùng, XLSX hai sheet, cell tiền text exact/currency/số 0 đầu. Lead chốt Python stdlib; tham chiếu tĩnh cách chiếu cột/định dạng nguồn cũ theo CD-096 A1 chỉ nội bộ. Q1–Q3 đã chốt; PDF/portal để sau. Không lưu cấu hình/sổ/cache trên máy; khi cần giữ dữ liệu dùng Ngan/RAM. Bổ sung CHANGELOG theo AGENTS.md §5 và SHA tài liệu mới trong NGUON, giữ bảng hash lịch sử.
+
+Kết quả thật trên Windows/Python 3.13.14: venv riêng worktree; SDK 2.0.0 cài wheel offline `--no-index --no-deps`, SHA-256 khớp SHA256SUMS.txt; pytest 9.1.1 và phụ thuộc kiểm thử chép offline từ môi trường có sẵn. Không thêm dependency runtime. Ba lệnh đặt `PYTHONDONTWRITEBYTECODE=1`:
+
+| Lệnh | Kết quả | Mã thoát |
+|---|---|---:|
+| `.venv\Scripts\python -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_hoa_don` | **3/3 DEMO [ĐẠT]** | 0 |
+| `.venv\Scripts\python -m pytest e_hoa_don/tests -q --basetemp=.pytest-tmp` | **298 passed in 39.00s, 0 skipped** | 0 |
+| `.venv\Scripts\python e_hoa_don/tests/kiem_doc_lap.py` | **[ĐẠT] AST/import, cây gói và tiến trình sạch** | 0 |
+
+Kiểm tài liệu: trích **9/9 khối lệnh HD-0…HD-8** bằng regex, bốn lát mới đủ giờ/điều kiện đạt và quy tắc tạm/finally; tổng 4 + 3 + 5 + 2 = 14 giờ. Đối chiếu SHA CHANGELOG bytes thực và chuẩn LF với NGUON; `git diff --check` đạt. Chỉ bốn tệp Markdown thay đổi; không sửa mã/manifest/schema/lock/DEMO, không commit/push. Thư mục DEMO tạm do pytest sinh đã chuyển nguyên vào venv được Git bỏ qua; không xóa tệp.
+
+Thời gian thực tế: **0.214 giờ** (07:29:00–07:41:49, 15/11/2026, UTC+07; bắt đầu theo mốc lead). Ước tính HD-P2 trong DOT-2: **1 giờ**; không cộng 14 giờ các lát triển khai tương lai vào thời gian HD-P2.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: không mở rộng sang mã; các trần tổng giải nén/XLSX/cell là **đề xuất kỹ thuật, chưa đo corpus**, cần kiểm ở HD-5…HD-8. Không sửa quyết định của Anh; lead chọn Python stdlib, không thêm dependency.
+
+Cần Core / Chờ Anh mới phát sinh: fixture DEMO tệp lồng trong truong (ghi chi tiết ở mục Cần Core); không chặn hoàn tất tài liệu. Không hỏi lại Q1–Q3 hoặc quyền nội bộ A1. Chưa chạy Linux/Core thật/Excel app; không dùng tài khoản/cổng thuế hay nguồn ngoài worktree.
+
 ## Cần Core (chuyển lead Core qua Anh)
+- **HD-P2 — 15/11/2026:** XML/ZIP/XLSX không cần ngăn hay cấu hình. `cau_hinh_may.py` còn là tệp tham chiếu trong gói, `chay.py` hiện không import/nạp nó; HD-5 phải giữ điều này và cập nhật hồ sơ, không xóa tệp. Khi phát sinh dữ liệu cần giữ, dùng `Ngan` (`app.ngan`, tạm `NganBoNho` RAM theo DOT-2 §2); không quay lại JSON ngoài gói/sổ/đệm bền. Chưa thêm trường SDK 2.1 vào manifest 2.0.
+- **HD-P2 — fixture tệp tham chiếu trong `truong`:** đã đọc `CoreGia.chay_thu_demo` của SDK wheel 2.0.0: chỉ đổi `tep_demo` thành tham chiếu khi đầu vào là `loai=tep`, chưa cấp fixture lồng trong `truong.chi_tiet_nguon`. Cần cơ chế fixture/chuỗi DEMO chung để thử XLSX sau đọc XML/ZIP; trong lúc chờ, pytest dùng `CoreGia.them_tep`/kết quả bước đọc thật. Không tự tạo ID, sửa SDK hoặc khai DEMO XLSX thành công giả. Bộ DEMO XML/ZIP đang khai vẫn phải đạt; mức phủ XLSX ghi riêng.
 - HD-4: SDK cần hook nhật ký công khai, không in traceback ra stderr; fail-closed khi thiếu `_ghi` là giải pháp tạm.
-- HD-4 phần cũ không dùng: `ma-nguon/chay.py`, `tai.py`, `phien.py`, `bang_ke.cjs`, `portal.cjs`, `vendor/`, Node lock, contract cũ, shim và test tham chiếu; giữ nguyên, chưa xóa hoặc chuyển `LUU-TRU/`. Cần Core context tin cậy, quyền tệp và lead/Core chuyển `@1` → `@2` giữ bản cũ. ZIP/bảng kê/tải chờ Anh; nếu mở tải cần phiếu riêng.
+- HD-4 phần cũ không dùng cho XML: `ma-nguon/chay.py`, `tai.py`, `phien.py`, `bang_ke.cjs`, `portal.cjs`, `vendor/`, Node lock, contract cũ, shim và test tham chiếu; giữ nguyên, chưa xóa hoặc chuyển `LUU-TRU/`. HD-7 chỉ tham chiếu tĩnh cách chiếu cột/định dạng bảng kê theo phiếu mới. Cần Core context tin cậy, quyền tệp và lead/Core chuyển `@1` → `@2` giữ bản cũ; tải cần phiếu riêng sau này.
 - HD-4 kiểm Windows/Python 3.13.14: SDK 3/3 DEMO, pytest 284 passed/0 skipped, kiểm độc lập và cài sạch Windows đạt, các mã thoát 0; đã kiểm bằng Core giả (CoreGia). Chưa kiểm Linux/Core thật. Venv chính dùng pytest có sẵn; venv cài sạch chỉ cài wheel SDK offline. Thời gian thực tế khoảng 0,12 giờ (02:22–02:29, 15/11/2026 UTC+07), phiếu 2 giờ ước tính; PR: chờ lead mở.
 - Cổng engine chung: API HTTP v1, webhook, bộ cài engine từ thư mục/gói riêng (bỏ tiền tố `kho_tri_thuc.engines.`), K1–K5.
 - Màn Chạy thử chung và màn cấu hình dựng từ schema; nạp giao diện quản trị của engine.
@@ -54,7 +85,7 @@ Thời gian thực tế: không ghi nhận mốc bắt đầu nên không báo g
 
 Lệch khỏi phiếu / quyết định tạm: không mở rộng nghiệp vụ; chỉ sửa công cụ kiểm và bổ sung bằng chứng. Cần Core / Chờ Anh mới phát sinh: **không có**; giữ nợ context/quyền tệp/hook nhật ký cũ. Linux/Python 3.11 còn chờ CI xác nhận.
 
-### Bổ sung HD-P — 14/11/2026
+### Bổ sung HD-P — 14/11/2026 (lịch sử, cấu hình tệp đã bị quyết định 15/11 thay thế)
 
 - Các dòng cổng ở trên là yêu cầu lịch sử; API v1/SDK 2.0.0 đã khóa theo bộ gửi engine hiện tại. Việc nối/vận hành Core thật chưa được kiểm trong HD-P. Không lấy mô tả socket/SDK cũ làm hợp đồng triển khai mới.
 - Cấu hình máy: SDK đợt 1 chưa đưa `cau_hinh` cho engine; dùng lớp JSON ngoài gói theo `GIAO-CODEX-THU-TU.md` §2. XML thuần không cần cấu hình, không bị chặn vì thiếu tệp.

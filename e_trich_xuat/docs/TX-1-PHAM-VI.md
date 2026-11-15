@@ -13,10 +13,10 @@ lead quyết định tách commit/PR. Codex chỉ làm trong worktree đã giao,
 không commit/push. `chay.py` của TX-1a nối hàm đã hoàn thành ở TX-1b;
 phiếu bàn giao chỉ công bố `trich.doc_docx@1`, không có năng lực giả.
 
-NGAN-0 chưa có trong worktree. Theo ghi chú lead kèm lệnh giao, hai tệp
-`ngan.py`, `cau_hinh.py` trong gói là bản tạm theo API đề nghị SDK 2.1;
-không tạo/sửa `_chung/mau-ma/`. Test so SHA để skip với lý do
-`chờ NGAN-0 gộp`; lead đối chiếu API và thay bằng mẫu chính thức khi gộp.
+Đã nối ngăn chung NGAN-0 — 15/11/2026 (PR #34 đã gộp main): lead đã chép
+hai tệp `ngan.py`, `cau_hinh.py` vào gói, Codex giữ nguyên. Sửa tích hợp trong
+`chay.py` và khai báo SDK 2.1; cấu hình khóa `{}`, dict trực tiếp; test so
+SHA-256 cả hai tệp sau chuẩn hóa CRLF→LF, không skip. Không sửa `_chung/**`.
 
 DOCX độc lập với cấu hình ngân sách AI. Chỉ bước cần ngân sách (TX-2)
 mới bắt buộc bản ghi cấu hình; không tự tạo bản ghi để làm xanh DEMO.

@@ -4,11 +4,10 @@
       "bang": "cau_hinh",
       "ten": "Cấu hình engine",
       "pham_vi": "engine",
-      "khoa": ["ma"],
+      "khoa": [],
       "duy_nhat": [],
       "truong": [
-        {"ma": "ma", "kieu": "van_ban"},
-        {"ma": "gia_tri", "kieu": "json"}
+        {"ma": "ngan_sach_token_vao_toi_da", "kieu": "so"}
       ]
     }
   ],

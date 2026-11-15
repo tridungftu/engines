@@ -10,11 +10,11 @@ from types import SimpleNamespace
 import zipfile
 
 import pytest
+from jsonschema import Draft202012Validator
 from kho_tri_thuc_sdk.engine import LoiNghiepVu, ViecDaHuy
 from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_trich_xuat import docx
-from e_trich_xuat.cau_hinh import kiem_schema
 from e_trich_xuat.chay import tao_app
 from e_trich_xuat.ngan import NganBoNho
 from mau_docx import CT, NUM, REL, W_NS, bang_demo, goi_docx, mau_thuong, mau_track, o, p, so
@@ -22,6 +22,8 @@ from mau_docx import CT, NUM, REL, W_NS, bang_demo, goi_docx, mau_thuong, mau_tr
 
 GOI = Path(__file__).resolve().parents[1] / "goi/e_trich_xuat"
 SCHEMA = json.loads((GOI / "contract/van_ban_tai_lieu.schema.json").read_text(encoding="utf-8"))
+Draft202012Validator.check_schema(SCHEMA)
+BO_KIEM_SCHEMA = Draft202012Validator(SCHEMA)
 
 
 def chay(raw, *, mime=docx.MIME_DOCX, sua_tep=None, core=None):
@@ -37,7 +39,7 @@ def chay(raw, *, mime=docx.MIME_DOCX, sua_tep=None, core=None):
 def doc(raw):
     kq, _ = chay(raw)
     assert kq["trang_thai"] == "XONG", kq
-    kiem_schema(kq["ket_qua"], SCHEMA)
+    BO_KIEM_SCHEMA.validate(kq["ket_qua"])
     return kq["ket_qua"]["van_ban_tai_lieu"]
 
 
@@ -45,13 +47,13 @@ def test_demo_sdk_phan_bo_dung_schema_va_khong_tu_cau_hinh():
     app, core = tao_app(), CoreGia()
     app.ngan = NganBoNho()
     assert app.cac_nang_luc == ("trich.doc_docx@1",)
-    assert app.ngan.doc("cau_hinh", {"ma": "mac_dinh"}) is None
+    assert app.ngan.doc("cau_hinh", {}) is None
     ds = core.chay_thu_demo(app)
     assert len(ds) == 2
     for kq in ds:
         assert kq["trang_thai"] == "XONG"
-        kiem_schema(kq["ket_qua"], SCHEMA)
-    assert app.ngan.doc("cau_hinh", {"ma": "mac_dinh"}) is None
+        BO_KIEM_SCHEMA.validate(kq["ket_qua"])
+    assert app.ngan.doc("cau_hinh", {}) is None
     assert (GOI / "demo/DEMO-hop-dong.docx").read_bytes() == mau_thuong()
     assert (GOI / "demo/DEMO-track-changes.docx").read_bytes() == mau_track()
 

@@ -41,9 +41,9 @@ def test_schema_chung_khop_tung_byte_va_sha():
 @pytest.mark.parametrize("ten", ["ngan.py", "cau_hinh.py"])
 def test_sha_mau_ngan_0(ten):
     mau = GOC / "_chung/mau-ma" / ten
-    if not mau.is_file():
-        pytest.skip("chờ NGAN-0 gộp")
-    assert hashlib.sha256(mau.read_bytes()).digest() == hashlib.sha256((GOI / "e_trich_xuat" / ten).read_bytes()).digest()
+    a = mau.read_bytes().replace(b"\r\n", b"\n")
+    b = (GOI / "e_trich_xuat" / ten).read_bytes().replace(b"\r\n", b"\n")
+    assert hashlib.sha256(a).digest() == hashlib.sha256(b).digest()
 
 
 def test_goi_doc_lap_va_import_chi_sdk_thu_vien_chuan():

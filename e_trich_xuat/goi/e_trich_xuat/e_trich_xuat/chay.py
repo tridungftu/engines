@@ -7,12 +7,13 @@ from types import SimpleNamespace
 
 from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
 
-from .cau_hinh import doc_cau_hinh
-from .ngan import chon_ngan
+from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
+from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
 
 
 GOC_GOI = Path(__file__).resolve().parents[1]
 SCHEMA_CAU_HINH = json.loads((GOC_GOI / "cau_hinh.schema.json").read_text(encoding="utf-8"))
+KHAI_BAO_NGAN = json.loads((GOC_GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))["ngan_du_lieu"]
 CAU_CHUA_CAU_HINH = (
     "Engine chưa được cấu hình. Admin vào Quản lý engine › "
     "Trích thông tin hợp đồng › Cấu hình."
@@ -33,20 +34,19 @@ def ghim_cau_hinh(viec, app):
     SDK lo engine.cau_hinh_doi; mỗi việc tiếp tục giữ bản chụp cũ.
     Không tự tạo bản ghi khi thiếu và không lưu giá trị vào tài nguyên gói.
     """
-    if hasattr(viec, "cau_hinh") and hasattr(viec, "phien_ban_cau_hinh"):
-        v, phien_ban = viec.cau_hinh, viec.phien_ban_cau_hinh
-        ban_ghi = (SimpleNamespace(gia_tri={"gia_tri": deepcopy(v)}, row_version=phien_ban)
-                   if v is not None and phien_ban is not None else None)
-    else:
-        ngan = getattr(viec, "ngan", None)
-        if ngan is None:
-            ngan = chon_ngan(app)
-        ban_ghi = ngan.doc("cau_hinh", {"ma": "mac_dinh"})
     try:
+        if hasattr(viec, "cau_hinh") and hasattr(viec, "phien_ban_cau_hinh"):
+            v, phien_ban = viec.cau_hinh, viec.phien_ban_cau_hinh
+            ban_ghi = (SimpleNamespace(gia_tri=deepcopy(v), row_version=phien_ban)
+                       if v is not None and phien_ban is not None else None)
+        else:
+            ngan = getattr(viec, "ngan", None)
+            if ngan is None:
+                ngan = chon_ngan(app)
+            ban_ghi = ngan.doc("cau_hinh", {})
         gia_tri = doc_cau_hinh(_BanChup(ban_ghi), SCHEMA_CAU_HINH)
-    except ValueError:
-        raise LoiNghiepVu("CAU_HINH_KHONG_HOP_LE",
-                          "Cấu hình engine không hợp lệ. Admin hãy kiểm tra lại mục Cấu hình.") from None
+    except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
+        raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None
     if gia_tri is None:
         raise LoiNghiepVu("CHUA_CAU_HINH", CAU_CHUA_CAU_HINH)
     return {"gia_tri": gia_tri, "phien_ban_cau_hinh": ban_ghi.row_version}
@@ -75,6 +75,8 @@ class EngineTrichXuat(Engine):
 
 def tao_app():
     app = EngineTrichXuat.tu_khai_bao(GOC_GOI / "engine.json")
+    if getattr(app, "ngan", None) is None:
+        app.ngan = NganBoNho(KHAI_BAO_NGAN)
     chon_ngan(app)
 
     @app.nang_luc("trich.doc_docx@1")

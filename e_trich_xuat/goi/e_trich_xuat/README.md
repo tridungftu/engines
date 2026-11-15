@@ -32,8 +32,8 @@ hoặc phương pháp nén chưa hỗ trợ bị từ chối. Không chuyển `.
 dùng Word, không OCR/AI hoặc gọi engine khác. Số lượt Cloud: **0**.
 
 `cau_hinh.schema.json` chỉ là tài nguyên khai cấu trúc. Giá trị nằm trong
-bảng `cau_hinh`, phạm vi `engine`, duy nhất bản hệ thống `ma=mac_dinh`,
-trường JSON `gia_tri` ≤64 KiB, không hết hạn; cập nhật bằng CAS `row_version`.
+bảng `cau_hinh`, phạm vi `engine`, khóa `{}`, giá trị trực tiếp là dict cấu
+hình, không hết hạn; cập nhật bằng CAS `row_version`.
 Màn `ui/cau_hinh.js` dùng `KttCore.engine("e_trich_xuat").cau_hinh.doc/luu`;
 đầu vào/đầu ra cổng màn là `{gia_tri, phien_ban_cau_hinh}`. Export `nap`
 (đồng thời default) nhận `{goc, KttCore}` và trả hàm tháo màn. Cần lead Core
@@ -49,9 +49,10 @@ chụp của việc cũ. Chưa có API/sự kiện này trong SDK 2.0.0.
 
 Khai ngăn/cấu hình/màn dự kiến nằm riêng ở `KHAI-SDK-2.1.json`, không thêm
 khóa vào phiếu 2.0. `chon_ngan(app)` ưu tiên `app.ngan`; tạm dùng RAM và cảnh
-báo stderr một lần. Khởi động lại sẽ mất cấu hình. Hai tệp ngăn/cấu hình
-là bản tạm theo chỉ dẫn lead vì NGAN-0 chưa gộp; test SHA đang chờ NGAN-0,
-lead phải đối chiếu và thay bằng mẫu chung. Không lưu cấu hình/bộ/log/kết quả
+báo stderr một lần. Khởi động lại sẽ mất cấu hình. Đã nối ngăn chung NGAN-0
+(PR #34): hai tệp ngăn/cấu hình giữ nguyên bản chung, test so SHA-256 sau
+khi đổi CRLF thành LF. RAM nhận khai báo từ `KHAI-SDK-2.1.json/ngan_du_lieu`.
+Không lưu cấu hình/bộ/log/kết quả
 trên máy. Đường DOCX không tạo tệp tạm.
 
 SDK 2.0 kiểm MIME/kích thước trước handler với câu lỗi khác phiếu TX-1.
@@ -65,7 +66,7 @@ Từ gốc repo, dùng `.venv/Scripts/python -B` trên Windows hoặc
 
 ```text
 python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat
-python -B -m pytest e_trich_xuat/tests -q
+python -B -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp
 python -B e_trich_xuat/tests/kiem_doc_lap.py
 node --test e_trich_xuat/tests/ui/cau_hinh.test.mjs
 ```

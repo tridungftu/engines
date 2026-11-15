@@ -109,6 +109,16 @@ def tao_app():
         cau_hinh = ghim_cau_hinh(viec, app)
         return chuan_bi(viec, cau_hinh, phien_ban_engine=f"{app.ma} {app.phien_ban}")
 
+    @app.nang_luc("trich.hau_kiem@1")
+    def hau_kiem_ai(viec):
+        from .hau_kiem import hau_kiem
+        return hau_kiem(viec, phien_ban_engine=f"{app.ma} {app.phien_ban}")
+
+    @app.nang_luc("trich.xuat_ket_qua@1")
+    def xuat_bang(viec):
+        from .xuat import xuat_ket_qua
+        return xuat_ket_qua(viec)
+
     return app
 
 

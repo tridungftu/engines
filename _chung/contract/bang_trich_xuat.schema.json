@@ -1,0 +1,701 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ktt:contract:bang_trich_xuat:1",
+  "title": "Bảng thông tin trích xuất",
+  "$comment": "Anh duyệt 15/11/2026: LOAI-DU-LIEU-RIENG.md §4 và TX-3-REVIEW.md. Thêm trường tùy chọn tương thích v1. Runtime kiểm phong bì JSON UTF-8 <=20 MiB, danh sách/thứ tự/mỗi mã đúng một dòng, tổng hợp khớp bảng, logic nằm trong lý do, offset/độ dài/nguyên văn/băm/snapshot và tệp thực. Schema không chứng minh các quan hệ này, quyền Core hoặc quy tắc chuyển kiểu đã duyệt. Không đưa toàn văn/cấu trúc nguồn vào bảng.",
+  "type": "object",
+  "required": [
+    "loai",
+    "bang_trich_xuat"
+  ],
+  "properties": {
+    "loai": {
+      "const": "bang_trich_xuat"
+    },
+    "bang_trich_xuat": {
+      "type": "object",
+      "required": [
+        "phien_ban",
+        "don_vi_offset",
+        "module",
+        "loai_hop_dong",
+        "phien_ban_bo",
+        "bam_bo_tham_so",
+        "ma_bam_noi_dung",
+        "bam_tep_goc",
+        "ma_prompt",
+        "phien_ban_prompt",
+        "phien_ban_engine",
+        "ma_truong_can_trich",
+        "nguon",
+        "ai",
+        "bang",
+        "tom_tat",
+        "canh_bao"
+      ],
+      "properties": {
+        "phien_ban": {
+          "type": "integer",
+          "const": 1
+        },
+        "don_vi_offset": {
+          "const": "unicode",
+          "description": "Unicode code point Python; không phải byte hoặc UTF-16."
+        },
+        "module": {
+          "$ref": "#/$defs/ma"
+        },
+        "loai_hop_dong": {
+          "$ref": "#/$defs/ma"
+        },
+        "phien_ban_bo": {
+          "$ref": "#/$defs/ma"
+        },
+        "bam_bo_tham_so": {
+          "$ref": "#/$defs/sha256"
+        },
+        "ma_bam_noi_dung": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{64}$",
+          "description": "Băm nội dung E1, không có tiền tố sha256:; khác băm snapshot."
+        },
+        "bam_tep_goc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Băm bytes XLSX gốc của bộ; null nếu snapshot không có băm này, khác nguon.bam_dau_vao."
+        },
+        "ma_prompt": {
+          "$ref": "#/$defs/ma"
+        },
+        "phien_ban_prompt": {
+          "$ref": "#/$defs/ma"
+        },
+        "phien_ban_engine": {
+          "$ref": "#/$defs/chu"
+        },
+        "ma_truong_can_trich": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/chu"
+          },
+          "minItems": 1,
+          "maxItems": 200,
+          "uniqueItems": true
+        },
+        "nguon": {
+          "$ref": "#/$defs/nguon"
+        },
+        "ai": {
+          "$ref": "#/$defs/ai"
+        },
+        "bang": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dong"
+          },
+          "minItems": 1,
+          "maxItems": 200
+        },
+        "tom_tat": {
+          "$ref": "#/$defs/tom_tat"
+        },
+        "canh_bao": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "nguon": {
+                "properties": {
+                  "nguon_doc": {
+                    "const": "docx"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "bang": {
+                "items": {
+                  "properties": {
+                    "dan_chung": {
+                      "items": {
+                        "properties": {
+                          "vi_tri": {
+                            "properties": {
+                              "loai": {
+                                "const": "doan"
+                              },
+                              "so_trang": {
+                                "type": "null"
+                              },
+                              "hop": {
+                                "type": "null"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "chu": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "ma": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,200}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "tep": {
+      "type": "object",
+      "required": [
+        "tep_id",
+        "ten",
+        "mime",
+        "kich_thuoc"
+      ],
+      "properties": {
+        "tep_id": {
+          "$ref": "#/$defs/chu"
+        },
+        "ten": {
+          "$ref": "#/$defs/chu"
+        },
+        "mime": {
+          "$ref": "#/$defs/chu"
+        },
+        "kich_thuoc": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "tien": {
+      "type": "object",
+      "required": [
+        "so",
+        "tien_te"
+      ],
+      "properties": {
+        "so": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string",
+              "pattern": "^-?[0-9]+(?:\\.[0-9]+)?$"
+            }
+          ]
+        },
+        "tien_te": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "vi_tri": {
+      "type": "object",
+      "required": [
+        "loai",
+        "nhan",
+        "so_trang",
+        "hop"
+      ],
+      "properties": {
+        "loai": {
+          "enum": [
+            "doan",
+            "trang"
+          ]
+        },
+        "nhan": {
+          "$ref": "#/$defs/chu"
+        },
+        "so_trang": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "hop": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        }
+      }
+    },
+    "dan_chung": {
+      "type": "object",
+      "required": [
+        "cau",
+        "bat_dau",
+        "ket_thuc",
+        "vi_tri"
+      ],
+      "properties": {
+        "cau": {
+          "$ref": "#/$defs/chu"
+        },
+        "bat_dau": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ket_thuc": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "vi_tri": {
+          "$ref": "#/$defs/vi_tri"
+        }
+      },
+      "description": "Nguyên văn đã kiểm; offset Unicode code point Python nửa mở [bat_dau, ket_thuc), thuộc văn bản có nguon.bam_van_ban."
+    },
+    "nguon": {
+      "type": "object",
+      "required": [
+        "nguon_doc",
+        "bam_dau_vao",
+        "bam_van_ban",
+        "ho_so_hau_kiem",
+        "bam_ho_so_hau_kiem",
+        "phien_ban_engine_doc",
+        "phien_ban_engine_chuan_bi"
+      ],
+      "properties": {
+        "nguon_doc": {
+          "enum": [
+            "docx",
+            "abbyy",
+            "tesseract",
+            "lop_chu_san"
+          ]
+        },
+        "bam_dau_vao": {
+          "$ref": "#/$defs/sha256"
+        },
+        "bam_van_ban": {
+          "$ref": "#/$defs/sha256"
+        },
+        "ho_so_hau_kiem": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/tep"
+            },
+            {
+              "properties": {
+                "mime": {
+                  "const": "application/json"
+                }
+              }
+            }
+          ]
+        },
+        "bam_ho_so_hau_kiem": {
+          "$ref": "#/$defs/sha256"
+        },
+        "phien_ban_engine_doc": {
+          "$ref": "#/$defs/chu"
+        },
+        "phien_ban_engine_chuan_bi": {
+          "$ref": "#/$defs/chu"
+        }
+      }
+    },
+    "ai": {
+      "type": "object",
+      "required": [
+        "nha_cung_cap",
+        "model",
+        "phien_ban_engine",
+        "bam_dau_vao",
+        "trang_thai",
+        "kiem_trich_dan"
+      ],
+      "properties": {
+        "nha_cung_cap": {
+          "const": "local"
+        },
+        "model": {
+          "$ref": "#/$defs/chu"
+        },
+        "phien_ban_engine": {
+          "$ref": "#/$defs/chu"
+        },
+        "bam_dau_vao": {
+          "$ref": "#/$defs/sha256"
+        },
+        "trang_thai": {
+          "enum": [
+            "co_can_cu",
+            "khong_thay_can_cu"
+          ]
+        },
+        "kiem_trich_dan": {
+          "type": "object",
+          "required": [
+            "dat",
+            "loi"
+          ],
+          "properties": {
+            "dat": {
+              "type": "boolean"
+            },
+            "loi": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "description": "Metadata kiểm toán AI; cờ kiểm chung không xác nhận từng ô."
+    },
+    "tom_tat": {
+      "type": "object",
+      "required": [
+        "so_tham_so",
+        "so_can_soat",
+        "co_can_cu"
+      ],
+      "properties": {
+        "so_tham_so": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "so_can_soat": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 200
+        },
+        "co_can_cu": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "dong": {
+      "type": "object",
+      "required": [
+        "ma",
+        "ten",
+        "kieu",
+        "kieu_da_chuyen",
+        "gia_tri",
+        "nguyen_van",
+        "don_vi_nguyen_van",
+        "ghi_chu",
+        "dan_chung",
+        "can_soat",
+        "ly_do",
+        "kiem_tra_logic",
+        "dau_kiem_tam_e6",
+        "phan_hoi_ai"
+      ],
+      "properties": {
+        "ma": {
+          "$ref": "#/$defs/chu"
+        },
+        "ten": {
+          "$ref": "#/$defs/chu"
+        },
+        "kieu": {
+          "enum": [
+            "van_ban",
+            "so",
+            "so_tien",
+            "ngay",
+            "co_khong",
+            "tep"
+          ]
+        },
+        "kieu_da_chuyen": {
+          "type": "boolean",
+          "description": "false khi chưa có quy tắc chuyển kiểu; chỉ van_ban được giữ false. true không thay bằng chứng quy tắc nghiệp vụ đã duyệt."
+        },
+        "gia_tri": {},
+        "nguyen_van": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "don_vi_nguyen_van": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ghi_chu": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dan_chung": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dan_chung"
+          }
+        },
+        "can_soat": {
+          "type": "boolean"
+        },
+        "ly_do": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "kiem_tra_logic": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dau_kiem_tam_e6": {
+          "type": "string",
+          "description": "Dấu kiểm TẠM của cách chấm cũ, chỉ dùng đối chiếu E6; không xác nhận giá trị."
+        },
+        "phan_hoi_ai": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "CHỈ KIỂM TOÁN: ô AI trước hậu kiểm (null khi bỏ sót), có thể chứa dẫn chứng giả/nội dung tài liệu. Module không hiển thị mặc định và không ghép cột từ đây."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kieu": {
+                "const": "van_ban"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "gia_tri": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/chu"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kieu": {
+                "const": "so"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "gia_tri": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "kieu_da_chuyen": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kieu": {
+                "const": "so_tien"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "gia_tri": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tien"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "kieu_da_chuyen": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kieu": {
+                "const": "ngay"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "gia_tri": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "kieu_da_chuyen": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kieu": {
+                "const": "co_khong"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "gia_tri": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "kieu_da_chuyen": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kieu": {
+                "const": "tep"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "gia_tri": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tep"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "kieu_da_chuyen": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "gia_tri": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "can_soat": {
+                "const": true
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "dan_chung": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "can_soat": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "ly_do": {
+                "maxItems": 0
+              },
+              "kiem_tra_logic": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "ly_do": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -307,7 +307,7 @@ def test_chuoi_docx_hoac_ocr_gia_chuan_bi_ai_gia_hau_kiem_xuat(nguon):
     assert kq["trang_thai"] == "XONG" and kq["ket_qua"]["loai"] == "truong"
 
 
-def test_hai_demo_de_xuat_chay_du_va_chua_dang_ky():
+def test_hai_demo_da_dang_ky_chay_du():
     ds = chay_demo_tx3()
     assert len(ds) == 2 and all(x["trang_thai"] == "XONG" for x in ds)
 

@@ -73,7 +73,9 @@ def thuc_hien(url):
     cong_cu = bo_hoi.cong_ai
     try:
         bo_hoi.cong_ai = cong
-        with patch("e_hoi_ai.hoi.yeu_cau_cau_hinh", return_value=cau_hinh), patch("e_hoi_ai.hoi_yeu_cau.yeu_cau_cau_hinh", return_value=cau_hinh):
+        core = CoreGia(app)
+        core.dat_cau_hinh(app.ma, cau_hinh)
+        if catalog is not None:
             for model in catalog.models if catalog else []:
                 for vd_goc in demos:
                     vd = deepcopy(vd_goc)
@@ -84,7 +86,7 @@ def thuc_hien(url):
                         else:
                             vd["dau_vao"]["yeu_cau_ai"]["model_uu_tien"] = model.ma
                         start = time.perf_counter()
-                        kq = CoreGia().chay_thu(app, vd["nang_luc"], vd["dau_vao"], vd.get("tham_so"))
+                        kq = core.chay_thu(app, vd["nang_luc"], vd["dau_vao"], vd.get("tham_so"))
                         row["thoi_gian_ms"] = round((time.perf_counter() - start) * 1000)
                         row["trang_thai"] = kq["trang_thai"]
                         row["dung"], row["co_trich_dan"] = kiem_demo(vd, kq)

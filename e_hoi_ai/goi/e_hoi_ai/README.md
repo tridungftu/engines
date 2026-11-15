@@ -1,6 +1,6 @@
-# e_hoi_ai — Hỏi AI (AI-1…AI-9)
+# e_hoi_ai — Hỏi AI (AI-11)
 
-Gói SDK 2.0.0, phiên bản 0.5.0, dùng lại khung AI-0 và lõi AI-1. Chỉ dùng thư viện chuẩn Python (Python ≥ 3.11) và `kho_tri_thuc_sdk` 2.0.0. Gọi Local theo API OpenAI-compatible hoặc Ollama native khi có khuôn; mọi đường bản 1 chỉ dùng provider Local.
+Gói SDK 2.2.0, phiên bản 0.11.0, dùng lại khung AI-0 và lõi AI-1. Chỉ dùng thư viện chuẩn Python (Python ≥ 3.11) và `kho_tri_thuc_sdk` 2.2.0. Gọi Local theo API OpenAI-compatible hoặc Ollama native khi có khuôn; mọi đường bản 1 chỉ dùng provider Local.
 
 - `ai.hoi_tai_lieu@1`: nhận `van_ban` hoặc `van_ban_tai_lieu`, trả bộ trường `tra_loi`, `co_can_cu`, `trich_dan`, `model`, `ly_do_chon_model`.
 - `ai.hoi_theo_yeu_cau@1`: nhận `yeu_cau_ai`, trả `tra_loi_ai`.
@@ -49,15 +49,17 @@ Hậu kiểm nguyên văn và token số giống AI-1. Kiểm thêm mọi giá t
 
 Trần `chuyen_tiep` 64 KiB, khuôn 32 KiB, đo bằng byte JSON UTF-8 chuẩn hóa: khóa sắp xếp, không khoảng trắng phân cách, `ensure_ascii=false`, `allow_nan=false`. Đúng ngưỡng được nhận, vượt một byte trả `VUOT_GIOI_HAN` trước mạng, không cắt. `chuyen_tiep` được sao lại theo JSON và test so byte chuẩn hóa; không đưa trường này vào prompt, yêu cầu Local hoặc nhật ký.
 
-## Cấu hình trong ngăn — AI-8, 15/11/2026
+## Cấu hình và ngăn SDK 2.2.0 — AI-11, 15/11/2026
 
-Engine đọc bản ghi duy nhất bảng `cau_hinh`, khóa `{}`, qua `doc_cau_hinh(ngan, schema)`. Schema trong gói là `cau_hinh.schema.json`: `local_ai.url`, `local_ai.timeout_giay` bắt buộc (số dương, tối đa 600 giây), `quy_tac_model` mặc định `[]`. Đọc mới từng việc; thiếu thì trả `CHUA_CAU_HINH`, hướng dẫn Admin vào Quản lý engine › Hỏi AI › Cấu hình. Không lưu cấu hình hay catalog xuống đĩa, không đọc biến cấu hình máy cũ.
+Cấu hình đọc từ bản chụp `viec.cau_hinh` do Core kiểm theo `cau_hinh.schema.json`; không còn bảng `cau_hinh`. `local_ai.url` và `local_ai.timeout_giay` bắt buộc cho việc cần Local AI (số dương, tối đa 600 giây), `quy_tac_model` mặc định `[]`. Chưa khai `local_ai` thì vẫn khởi động được; khi nhận việc trả `CHUA_CAU_HINH`, hướng dẫn Admin vào Quản lý engine › Hỏi AI › Cấu hình. Hook `@app.khi_doi_cau_hinh` xóa đệm discovery khi Core báo cấu hình thay đổi.
 
-Engine giữ `app.ngan` nếu SDK đã cấp; khi thiếu thì tạo `NganBoNho` với `ngan_du_lieu` đọc từ `KHAI-SDK-2.1.json`, rồi gọi `chon_ngan(app)` và cảnh báo RAM một lần ra stderr. `viec.ngan` được ưu tiên khi SDK cung cấp. Công cụ độc lập dùng cùng khai báo bảng khi tạo RAM. Với SDK 2.0, RAM không giữ cấu hình sau khởi động lại. `cau_hinh_may.py` cùng schema cũ còn nguyên để lead chuyển LUU-TRU; không còn được import bởi đường chạy engine.
+Catalog dùng `viec.ngan` của SDK, bảng `model_phat_hien` phạm vi engine, khai trực tiếp trong `engine.json`; không có fallback RAM. Các trường ngăn chỉ dùng kiểu SDK hỗ trợ: `api` là chuỗi JSON (`van_ban`/SQL `text`); thứ tự số được đọc bằng `int` vì SDK trả `so` dạng chuỗi. Khi cập nhật chỉ gửi trường nghiệp vụ, không gửi lại cột hệ thống. Không có lệnh xóa; model mất được đánh dấu không khả dụng. `sql/001_tao_model_phat_hien.sql` chỉ tạo bảng trong `eng_e_hoi_ai`; Core thực hiện migration, engine không chạy SQL.
 
-Đã nối ngăn chung NGAN-0 (PR #34). Hai tệp `ngan.py` và `cau_hinh.py` giữ nguyên bản chung; test so SHA-256 sau chuẩn hóa CRLF thành LF, không skip. `tim` trả `TrangNgan.danh_sach/tiep`, lệnh lô trả `KetQuaLenh` chỉ đọc sau commit; `doc_cau_hinh` trả dict hoặc `None`. Ngoại lệ ngăn/cấu hình được chuyển thành `LoiNghiepVu` tại biên SDK.
+`sql/kiem_ke.json` kiểm byte và SHA-256 của mọi tệp gói trừ chính nó. Các tệp gói dùng LF (quy định tại `e_hoi_ai/.gitattributes`). `NGUON.md` băm LF, trừ chính nó và kiểm kê sinh cuối để tránh vòng tự tham chiếu; kiểm kê cuối bao gồm cả `NGUON.md`.
 
-`KHAI-SDK-2.1.json` khai hai bảng, schema cấu hình và màn quản trị, chưa ghép vào `engine.json` 2.0. Màn `ui/cau_hinh.js` xuất hàm mặc định `async (goc, KttCore = globalThis.KttCore)`, dùng DOM an toàn, kế thừa font Core; Core cần thống nhất cách nạp module. Chỉ gọi `.cau_hinh.doc/luu` và `.ngan.tim`. Cổng Cloud chỉ hiện “Chưa áp dụng ở bản 1”, không có nút bật. Trạng thái/model là kết quả kiểm gần nhất khi engine xử lý việc, không phải kết nối tức thời; chưa có nút discovery do API quản trị SDK chưa phát hành.
+Cổng tạm `ngan.py`, `cau_hinh.py`, `ngan_engine.py` và `KHAI-SDK-2.1.json` đã chuyển nguyên byte vào `e_hoi_ai/LUU-TRU/AI-11/`, ngoài gói chạy. `cau_hinh_may.py` cùng schema cũ giữ để công cụ/test lịch sử tham chiếu; runtime không import hay đọc tệp cấu hình máy.
+
+Màn `ui/cau_hinh.js` vẫn xuất hàm mặc định `async (goc, KttCore = globalThis.KttCore)`, dùng DOM an toàn. Chỉ gọi `KttCore.engine("e_hoi_ai").cau_hinh.doc/luu` và `.ngan.tim` cho catalog. Cloud chỉ hiện “Chưa áp dụng ở bản 1”. SDK 2.2.0 chưa nhận khai báo `giao_dien_quan_tri` trong phiếu engine: cần Core xác nhận cách nạp và quyền Admin, không thêm trường ngoài hợp đồng. Trạng thái/model là kết quả kiểm gần nhất, không phải kết nối tức thời.
 
 URL nhận địa chỉ gốc, `/v1` hoặc `/v1/chat/completions`, bắt buộc `http://<IP>:<cổng>`; `localhost` được đổi thẳng thành `127.0.0.1`. Chỉ loopback, RFC1918 và Tailscale (`100.64.0.0/10`, `fd7a:115c:a1e0::/48`); chặn IP công cộng, link-local, DNS, HTTPS, proxy và redirect. Đích Tailscale phải có IP nguồn Tailscale và socket được ghim IP nguồn. Discovery và kiểm khả dụng dùng cùng các ràng buộc mạng này.
 
@@ -78,7 +80,7 @@ Thứ tự chọn: `model_uu_tien` khả dụng → duyệt `quy_tac_model` theo
 
 Kết quả có `ly_do_chon_model`: `model_uu_tien`, `quy_tac_ma_prompt`, `du_phong_quy_tac_ma_prompt` hoặc `model_dau_tien_kha_dung`. AI-2 dùng lại `CongAI.chon_model(..., kiem_huy=...)` và trường lý do đã có trong `KetQuaAI`; luồng `chay.py` không thay đổi.
 
-Ví dụ dưới đây chỉ là cấu hình DEMO để nạp qua ngăn hoặc màn cấu hình:
+Ví dụ dưới đây chỉ là cấu hình DEMO để nạp qua `CoreGia.dat_cau_hinh("e_hoi_ai", ...)` hoặc màn cấu hình:
 
 ```json
 {
@@ -91,7 +93,7 @@ Ví dụ dưới đây chỉ là cấu hình DEMO để nạp qua ngăn hoặc m
 
 ## Contract
 
-Ba schema `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai` trong `contract/` là bản sao nguyên byte từ `_chung/contract/` trong repo. Pytest kiểm SHA-256 từng cặp; gói chạy độc lập không truy cập thư mục `_chung/`.
+Ba schema `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai` trong `contract/` giữ nội dung từ `_chung/contract/` trong repo, chỉ chuẩn hóa xuống dòng LF. Pytest kiểm SHA-256 LF từng cặp; gói chạy độc lập không truy cập thư mục `_chung/`.
 
 Các schema dùng Draft 2020-12, cho phép thêm trường tùy chọn để giữ tương thích phiên bản 1. `dong`, `tu`, `nghi_ngo` không bắt buộc; ô bảng trống và ô gộp được giữ lại. Giới hạn dung lượng JSON UTF-8 của `khuon_tra_loi` (32 KiB) và `chuyen_tiep` (64 KiB) được AI-2 kiểm khi xử lý.
 
@@ -107,7 +109,10 @@ $env:PYTHONDONTWRITEBYTECODE = '1'
 .venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
 ```
 
-`chay_demo_voi_local_gia.py` là **cổng đạt thay cho** `python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai` theo phiếu AI-4/AI-8. Bộ chạy bật Local giả trên loopback, nạp cấu hình DEMO qua `NganBoNho.lo().them`, rồi gọi `CoreGia().chay_thu_demo(app)`. Không tạo tệp cấu hình hoặc dùng `KTT_ENGINE_CAU_HINH`; khôi phục ngăn ban đầu trong `finally`. Mọi ví dụ phải `XONG`, bộ ví dụ khác rỗng và số lượt Local khớp thì mã thoát bằng 0. Dùng thêm `--sdk-thu` để chạy đúng hàm CLI SDK thu với cùng cấu hình/ngăn/Local giả. Lệnh SDK thu chạy riêng không được cấp cấu hình nên trả `CHUA_CAU_HINH` (hành vi có chủ đích), không được tự mặc định DEMO vào đường chạy thật.
+Lệnh nghiệm thu chuẩn vẫn là `.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai`. Wheel 2.2.0 hiện tự tạo `CoreGia()` rỗng trong CLI, không có tham số/fixture cấu hình DEMO hay dịch vụ Local giả; ba ví dụ nhận `CHUA_CAU_HINH`. Đây là điểm **Cần Core**, nên AI-11 chưa đạt toàn bộ điều kiện nghiệm thu. Không thay cổng hoặc gắn nhánh giả lập vào runtime.
+
+`chay_demo_voi_local_gia.py` chỉ là hồi quy bổ sung: bật Local giả trên loopback, gọi `CoreGia(app).dat_cau_hinh(...)`, chạy nguyên ba ví dụ và một ca AI-9. Không còn tùy chọn `--sdk-thu`. Test khác dùng CoreGia riêng mỗi ca, ngăn thật của SDK, `gay_xung_dot_ngan` và `xem_ngan`; không còn test so băm cổng tạm. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core thật/model thật/Linux.
+
 
 Bộ UI `node --test e_hoi_ai/tests/ui/cau_hinh.test.mjs` được pytest gọi tự động; cần Node có sẵn, không cài thư viện hoặc gọi mạng. Kiểm lưu CAS, xung đột tiếng Việt, giữ dự phòng, phân trang, thêm/bỏ quy tắc, lỗi đọc và Cloud không có công tắc. Đây là DOM/KttCore giả, chưa nghiệm thu trình duyệt/Core thật. Công cụ AI-7 giữ nguyên `--url`, không đọc tệp cấu hình.
 

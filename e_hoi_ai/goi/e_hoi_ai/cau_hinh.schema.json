@@ -1,12 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:ktt:e_hoi_ai:cau_hinh:1",
-  "title": "Cấu hình Hỏi AI trong ngăn — không chứa bí mật",
+  "title": "Cấu hình Hỏi AI do Core quản — không chứa bí mật",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "local_ai"
-  ],
   "properties": {
     "local_ai": {
       "type": "object",
@@ -62,5 +59,6 @@
       },
       "default": []
     }
-  }
+  },
+  "description": "Chưa khai local_ai thì engine vẫn khởi động; việc cần Local AI trả CHUA_CAU_HINH."
 }

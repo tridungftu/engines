@@ -5,6 +5,7 @@ import json
 
 import pytest
 from kho_tri_thuc_sdk.thu import CoreGia
+from local_gia import core_demo
 from kho_tri_thuc_sdk.engine import LoiNghiepVu, Viec, ViecDaHuy
 
 from e_hoi_ai import chay
@@ -28,7 +29,7 @@ YEU_CAU = {"phien_ban": 1, "ma_prompt": "demo.hoi", "phien_ban_prompt": "3",
 
 
 def hoi(*, core=None, **sua):
-    return (core or CoreGia()).chay_thu(chay.app, "ai.hoi_theo_yeu_cau@1",
+    return (core or core_demo()).chay_thu(chay.app, "ai.hoi_theo_yeu_cau@1",
                                        {"loai": "yeu_cau_ai", "yeu_cau_ai": deepcopy({**YEU_CAU, **sua})})
 
 
@@ -274,7 +275,7 @@ def test_local_loi_luc_hoi_lai_khong_bao_sai_khuon(local):
 
 
 def test_huy_truoc_lan_hoi_lai_khong_post_them(local, monkeypatch):
-    core = CoreGia()
+    core = core_demo()
     local.tra_loi = {**PHAN_HOI, "du_lieu": {}}
     goc = core._tien_do
     def huy(ma, viec_id, pt, cau):
@@ -289,7 +290,7 @@ def test_huy_truoc_lan_hoi_lai_khong_post_them(local, monkeypatch):
 
 def test_mat_xac_nhan_khong_goi_lai_local(local):
     local.tra_loi = PHAN_HOI
-    core = CoreGia()
+    core = core_demo()
     core.gay_mat_xac_nhan("ket_qua")
     assert hoi(core=core)["trang_thai"] == "XONG"
     assert local.so_luot_hoi == 1 and core.so_lan_ghi["ket_qua"] == core.so_lan_ghi["ket_thuc"] == 1

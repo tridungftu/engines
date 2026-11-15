@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| DC-6 (phiếu mới) | Chuẩn bị yêu cầu Local AI, ghim hồ sơ Core và hậu kiểm độc lập nguồn/trích dẫn/sàn Python | DC-h | Xong phạm vi CoreGia — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 796 passed, 0 skipped (88 ca DC-6); kiểm độc lập ĐẠT, ba mã thoát 0. Provider Cloud = 0. Tích hợp Hỏi AI còn C-DC-07, giữ Cần xem bảo thủ. |
 | DC-5 (phiếu mới) | Quy tắc cứng, bảo vệ số/định danh và kiểm tiền bằng số ↔ chữ trong bản ký | DC-g | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã sửa ba điểm kiểm độc lập lead. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 629 passed, 0 skipped (222 ca DC-5); kiểm độc lập ĐẠT; cả ba lệnh mã 0. Bộ quét tiền 400.000–500.000 ký tự <2 giây và hủy giữa chừng đạt. Thiếu nhận diện/phân tích giữ chưa đủ kiểm. |
 | DC-8 (phiếu mới) | Khảo sát và bản đầu vùng nghi sửa tay, ảnh cắt Core, so sánh phương pháp và đo DEMO | DC-j; Q04/07/08/13 | Xong phạm vi khảo sát/bản đầu — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **486 passed, 0 skipped** (79 ca DC-8); kiểm độc lập mã 0. Thuật toán thật 12 ca: TP=3/FP=0/FN=3, recall 50%; **chưa đạt vận hành**, giữ chặn/chưa kiểm đủ. Local vision chưa đo. |
 | DC-4 (phiếu mới) | Căn cấu trúc, so hai lượt, edit script đầy đủ và kiểm thứ tự trang có bằng chứng | DC-c, e | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 407 passed, 0 skipped (110 ca DC-4); kiểm độc lập mã 0. Lõi 450.000 ký tự lặp: 1,1848 giây; 500 bảng: 0,1856 giây. Tích hợp phân trang tin cậy vẫn chờ C-DC-05. |
@@ -24,6 +25,120 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Đề xuất loại `ho_so_doi_chieu` đã ghi **ĐỀ XUẤT DC-P, chờ Anh** ở cuối `_chung/docs/LOAI-DU-LIEU-RIENG.md` §5; chưa tạo schema/kích hoạt. Tái dùng nguyên ba loại `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`; không đổi `bang_trich_xuat`.
 - Quy tắc mới: không lưu gì bền trên máy engine; cấu hình/chỉ mục/danh mục/xác nhận qua `Ngan`, snapshot/ảnh/báo cáo qua kho tệp Core; màn trong `goi/e_doi_chieu/ui/`. Không dùng `cau_hinh_may`/`kho_tam` cũ.
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
+
+## DC-6 — 15/11/2026
+
+**Kết luận: Đạt phạm vi DC-6 kiểm CoreGia; chưa khép tích hợp Hỏi AI
+C-DC-07. PR: chờ lead mở.** Thời gian **16:20–16:58 ngày 15/11/2026
+(UTC+7), khoảng 0,64 giờ**; phiếu ước tính **5 giờ**.
+Đã kiểm bằng Core giả (CoreGia), NganBoNho và adapter
+quyền/tệp con DEMO; chưa kiểm Core thật/Linux/OCR/model thật.
+
+- Thêm `chuan_bi_ai.py`, `hau_kiem_ai.py`; đăng ký hai handler trong
+  `chay.py`. Manifest SDK 2.0 phiên bản `0.6.0` thêm hai năng lực đúng
+  phiếu; không thêm khóa SDK 2.1, sửa API/schema chung, mẫu NGAN-0,
+  DC-5/DC-8, `ma-nguon/` hoặc engine khác. Hai test manifest cũ cập
+  nhật danh sách năng lực; test DC-6 do Core giả điều phối.
+- Prompt/module/mã/phiên bản bắt buộc nghiệp vụ từ `tham_so`, không
+  mặc định; thiếu/rỗng → `THIEU_PROMPT`, thiếu cấu hình → `CHUA_CAU_HINH`.
+  Module khớp ngữ cảnh Core, không là quyền do caller/model tự cấp.
+  SDK 2.0 còn chặn mã lỗi trước handler khi `bat_buoc=true`, nên manifest
+  ghi bắt buộc ở nhãn/mô tả và handler kiểm; nợ C-DC-06 giữ nguyên.
+- Snapshot `cho_ai` trong kho Core giữ nguyên hồ sơ, yêu cầu/khuôn,
+  ngữ cảnh nguyên văn có định danh trái/phải, bản đồ Unicode AI→nguồn,
+  phạm vi tin cậy và tham chiếu bản DC-5. `chuyen_tiep.doi_chieu` chỉ mã
+  cặp/phiên bản/tham chiếu/băm, ≤4 KiB trong DEMO kể cả 100 điểm; trần
+  chung 64 KiB. Hỏi AI phải chép nguyên, model không tạo metadata này.
+- Đọc lại bản ghim Ngan/tệp Core cùng snapshot DC-5 độc lập, kiểm bằng
+  `kiem_bat_bien(out,goc)`. Đúng provider Local, cặp/nguồn/bộ/băm và
+  prompt/phiên bản, đủ mã điểm, đúng khuôn chặt; model thêm quyền/nguồn/
+  sàn/nguyên văn thay thế bị từ chối. Không ghép điểm theo vị trí mảng.
+- Kiểm câu trích trong đúng block AI/đúng phía/đúng điểm, ánh xạ về
+  nguyên văn và phủ vị trí lệch. Sai trích/offset, không chắc hoặc
+  `khong_thay_can_cu` giữ Cần xem. Chỉ nâng Nghiêm trọng khi có căn cứ;
+  điểm cứng và nhật ký Python giữ nguyên. Hình thức/nhiễu là đề nghị
+  `ai.ket_qua[].cho_dc7`, chưa hạ sàn; chờ đủ bằng chứng DC-7.
+- Trần 100 điểm/500.000 ký tự ngữ cảnh/32 KiB khuôn/64 KiB chuyển tiếp;
+  quá → `DC_QUA_NGAN_SACH_AI`, không cắt hoặc chia nhiều lượt. Core giả
+  kiểm nhánh không AI và từ chối gọi nhầm `DC_KHONG_CAN_AI`, không dựng
+  `tra_loi_ai` giả cho trường hợp này. Lượt ngoài chưa trả thuộc Hỏi AI
+  báo `ChuaRo`, không dùng nó cho thiếu cấu hình.
+- Giữ/chốt lượt bằng Ngan `lay_hoac_tao`/CAS có pháp nhân từng lệnh.
+  Cùng đầu vào giao lại dùng cùng tham chiếu; ACK tệp/kết quả/kết thúc
+  SDK gửi lại cùng khóa, mỗi việc chỉ một bản `ket_qua`. Không sổ/kho/
+  cấu hình/đệm bền ở engine; toàn văn tại Core/RAM, không tạo tệp tạm.
+- Bộ DEMO gồm phản hồi đúng, giữ điểm Nghiêm trọng khi AI đề nghị hạ,
+  nâng có căn cứ, thiếu/thừa/trùng mã, Cloud, sửa chuyển tiếp/băm/cặp/
+  prompt/phiên bản, trích sai phía/offset/header/vị trí lặp, prompt
+  injection, không chắc/không căn cứ, Unicode/emoji, thiếu phía nguồn,
+  NaN/Infinity/surrogate, thiếu cấu hình, quyền/pháp nhân/module, tự băm
+  lại sàn, đúng 100/vượt 101 điểm, biên 500.000 ký tự, ngân sách và CAS,
+  hủy, mất ACK và giao lại không nộp trùng. Đếm provider **Cloud = 0**.
+- Test thêm **handler Hỏi AI-2 hiện tại**, provider Local DEMO không mạng,
+  Cloud bị cấm: giữ nguyên chuyển tiếp và băm toàn phong bì; `ChuaRo`
+  đúng tầng sở hữu lượt. Phát hiện nợ kiểm metadata trong khuôn phân
+  loại, ghi rõ bên dưới; không sửa engine Hỏi AI hoặc lách dẫn chứng.
+
+### Kết quả kiểm DC-6
+
+Đã chạy đủ ba lệnh bằng `.venv/Scripts/python`, Python 3.13.14,
+SDK 2.0.0 cài offline, SHA wheel khớp `SHA256SUMS.txt`, pytest 9.1.1,
+Pillow 12.3.0 theo lock đã có. `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`.
+
+Kết quả cuối, **đã kiểm bằng Core giả (CoreGia)**:
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.6.0: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q
+796 passed in 58.04s
+0 skipped; 88 ca DC-6; mã thoát 0.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0.
+```
+
+Không commit/push. Không lệch số tệp runtime (đúng ba tệp); cách kiểm
+bắt buộc prompt ở handler là lớp bọc cho hạn chế SDK 2.0, đã nêu ở
+C-DC-06. Không phát sinh Chờ Anh. Băm LF hiện hành tại NGUON.md.
+
+Lượt tổng trước nghiệm thu cuối: **794 passed, 1 failed**; ca hiệu năng
+DC-5 `nhieu_cum` đo **2,2455 giây**, vượt ngưỡng 2 giây. Không sửa bộ quét
+hoặc ngưỡng. Chạy riêng lại cả sáu ca hiệu năng đạt **6 passed in 13.92s**:
+`nam` 0,1218; `mot_tram` 0,1501; `nhieu_cum` 1,0163;
+`nhieu_cum_mot_dong` 0,1087; `so_thieu_don_vi` 1,1415;
+`so_co_don_vi` 1,1693 giây. Có dao động thời gian trên máy dùng chung;
+không suy các số này thành tốc độ toàn tuyến hoặc chất lượng OCR/AI.
+
+### Cần Core / Hỏi AI — cập nhật DC-6
+
+- **C-DC-02:** cấp `ngu_canh.module`/pháp nhân tin cậy, quyền tất cả tệp
+  con/snapshot/ảnh và vòng đời xuyên chuẩn bị→Hỏi AI→hậu kiểm, cả lúc
+  gửi lại/ACK. Core bảo đảm phản hồi thực sự do bước Hỏi AI Local tạo;
+  chuỗi `nha_cung_cap=local` hay băm không tự chứng minh provenance.
+  Adapter CoreGia chỉ là test. Thiếu quyền/module từ chối, không fallback.
+- **C-DC-02 — nhánh không AI:** runner dùng bỏ qua bước hoặc chuỗi riêng
+  khi không còn ứng viên. Đã kiểm lựa chọn nhánh bằng điều phối test;
+  bước xuất DC-9 chưa được triển khai trong DC-6. Không tạo phản hồi AI
+  hoặc kết luận cuối giả để làm chuỗi chạy qua.
+- **C-DC-07 / lead Hỏi AI (mới):** `hoi_yeu_cau._kiem_tra_loi` của AI-2
+  kiểm tất cả lá `du_lieu` như giá trị trích xuất, gồm mã điểm, nhãn,
+  lý do và offset. Test handler hiện tại + provider DEMO trả khuôn đúng/
+  câu trích đúng vẫn bị `DU_LIEU_NGOAI_TRICH_DAN`, `khong_thay_can_cu`.
+  Cần cách phân biệt metadata điều khiển với bằng chứng trong profile
+  Đối chiếu, giữ nguyên loại/schema/API chung và kiểm span độc lập.
+  Không nhét nhãn/offset vào câu trích để qua kiểm. DC-6 hiện giữ Cần xem;
+  chưa khép tích hợp phân loại có căn cứ qua handler Hỏi AI hiện tại.
+- **C-DC-01/06:** cần ngăn bền/CAS và mã lỗi tham số do handler quyết
+  định. RAM mất chỉ mục khi khởi động lại thì hồ sơ chưa chứng thực lại
+  bị từ chối; không suy quyền từ tệp/băm còn tồn tại. Nợ SDK log/lease/
+  trần đọc tệp giữ theo mục chung. Chưa phát sinh câu Chờ Anh.
+- **C-DC-05 / DC-7:** từ điển và OCR lại đúng vùng/nguồn còn là điều kiện
+  quyết định nhiễu/hình thức. DC-6 không đóng nợ này hoặc hạ điểm cứng.
 
 ## DC-5 — 15/11/2026
 

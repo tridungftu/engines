@@ -10,6 +10,8 @@ from .doc_docx import doc_docx as _doc_docx
 from .ho_so import nhan_cap as _nhan_cap
 # DC-5 — khối nối riêng; không đổi đăng ký/cổng của lát ảnh DC-8.
 from .quy_tac import so_van_ban as _so_van_ban
+from .chuan_bi_ai import chuan_bi_ai as _chuan_bi_ai, kiem_prompt
+from .hau_kiem_ai import phan_loai_diem_lech as _phan_loai_diem_lech
 
 _GOI = Path(__file__).resolve().parent.parent
 app = Engine.tu_khai_bao(str(_GOI / "engine.json"))
@@ -96,6 +98,25 @@ def phat_hien_sua_tay(viec):
                    if n["ma"] == "doi_chieu.phat_hien_sua_tay@1")
     return _phat_hien_sua_tay(viec, cau_hinh,
         phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
+
+
+@app.nang_luc("doi_chieu.chuan_bi_ai@1")
+@_an_toan
+def chuan_bi_ai(viec):
+    kiem_prompt(viec.tham_so)  # SDK 2.0 chưa cho handler đặt mã lỗi tham số bắt buộc.
+    ngan_viec = getattr(viec, "ngan", None)
+    ngan_doc = ngan if ngan_viec is None else ngan_viec
+    return _chuan_bi_ai(viec, ngan_doc, can_cau_hinh(ngan_doc),
+                       phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"])
+
+
+@app.nang_luc("doi_chieu.phan_loai_diem_lech@1")
+@_an_toan
+def phan_loai_diem_lech(viec):
+    ngan_viec = getattr(viec, "ngan", None)
+    ngan_doc = ngan if ngan_viec is None else ngan_viec
+    return _phan_loai_diem_lech(viec, ngan_doc, can_cau_hinh(ngan_doc),
+                              phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"])
 
 
 if __name__ == "__main__":

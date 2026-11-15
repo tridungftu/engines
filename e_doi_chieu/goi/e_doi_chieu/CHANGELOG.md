@@ -1,5 +1,33 @@
 # Thay đổi
 
+## DC-6 — 15/11/2026 · 0.6.0 chưa phát hành
+
+- Thêm chuẩn bị `ho_so_doi_chieu → yeu_cau_ai` và hậu kiểm
+  `tra_loi_ai → ho_so_doi_chieu`, ba tệp runtime theo phiếu. Prompt/
+  module/phiên bản bắt buộc nghiệp vụ, thiếu `THIEU_PROMPT`; giữ API/
+  schema chung, hai mẫu NGAN-0 và DC-5/DC-8. Không thêm dependency.
+- Ngữ cảnh nguyên văn có mã điểm/trái/phải; khuôn chặt không cho model
+  cấp nguồn/quyền/sàn. Snapshot/bản đồ Unicode/yêu cầu ở tệp Core,
+  chuyển tiếp chỉ tham chiếu/băm (DEMO ≤4 KiB); giữ nguyên qua Hỏi AI.
+- Kiểm Local/cặp/băm/prompt/phiên bản, đủ mã không thừa/trùng, câu trích
+  thuộc đúng block AI và quay đúng nguồn/điểm. Giữ sàn/Nghiêm trọng bằng
+  snapshot DC-5 đọc lại độc lập từ Core; không chắc/trích sai giữ Cần xem.
+  Hình thức/nhiễu lưu đề nghị chờ DC-7, chưa hạ sàn hoặc xóa điểm.
+- Trần 100 điểm, ngữ cảnh 500.000 ký tự, khuôn 32 KiB/chuyển tiếp 64 KiB;
+  vượt `DC_QUA_NGAN_SACH_AI`, không cắt/chia lượt. Không ứng viên thì
+  Core chọn chuỗi không AI; gọi nhầm bị từ chối, không tạo phản hồi giả.
+- Giữ/chốt/chống trùng bằng Ngan/CAS, tệp chỉ ở Core/RAM; kiểm hủy,
+  mất ACK/giao lại cùng tham chiếu và một bản kết quả mỗi việc. Provider
+  Cloud = 0, không gọi máy thật, không commit/push; PR: **chờ lead mở**.
+- Đã kiểm bằng Core giả (CoreGia). Test handler Hỏi AI-2 hiện tại giữ
+  đúng chuyển tiếp/băm và `ChuaRo`, nhưng còn lỗi coi metadata phân
+  loại là giá trị trích xuất: phản hồi giữ thiếu căn cứ/Cần xem. Cần
+  lead Hỏi AI khép C-DC-07; chi tiết/kết quả nghiệm thu tại VIEC.
+- Kết quả cuối bằng venv: DEMO **1/1 ĐẠT**, pytest **796 passed,
+  0 skipped** (88 ca DC-6), kiểm độc lập **ĐẠT**; cả ba mã thoát 0.
+  Một lượt hiệu năng DC-5 từng vượt 2 giây; sáu ca chạy riêng lại và
+  bộ tổng cuối đều đạt, không sửa bộ quét/ngưỡng. Số đo và giới hạn ở VIEC.
+
 ## DC-5 — sửa theo kiểm độc lập lead, 15/11/2026 · chưa phát hành
 
 - Bỏ ReDoS ở nhận diện tiền chữ; quét token tuyến tính và kiểm hủy trong

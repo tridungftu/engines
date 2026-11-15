@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ktt:contract:ho_so_tra_cuu:1",
+  "title": "Hồ sơ tính toán tra cứu",
+  "$comment": "TC-Q13 được Anh duyệt chiều 15/11/2026. Phong bì <=64 KiB JSON UTF-8 kiểm bằng Python; schema không chứng minh quyền Core, bytes/băm snapshot hoặc quan hệ nghiệp vụ. Cho phép trường tùy chọn tương thích phiên bản 1.",
+  "type": "object",
+  "required": ["loai", "ho_so_tra_cuu"],
+  "properties": {
+    "loai": {"const": "ho_so_tra_cuu"},
+    "ho_so_tra_cuu": {
+      "type": "object",
+      "required": ["phien_ban", "ma_yeu_cau", "tac_vu", "giai_doan", "ho_so", "bam_ho_so", "bam_cau_hinh", "bam_danh_muc", "phien_ban_engine", "tom_tat", "canh_bao"],
+      "properties": {
+        "phien_ban": {"type": "integer", "const": 1},
+        "ma_yeu_cau": {"type": "string", "minLength": 1, "pattern": "\\S", "description": "Mã opaque do Core cấp/ghim; không phải quyền. Trần nằm trong 64 KiB toàn phong bì."},
+        "tac_vu": {"enum": ["phan_loai", "cat_doan", "phan_tich_cau_hoi", "xep_hang_lai", "soan_tra_loi"]},
+        "giai_doan": {"enum": ["da_nhan", "cho_ai", "cho_phan_loai", "da_phan_loai", "da_cat_doan", "da_phan_tich", "da_xep_hang", "da_soan"]},
+        "ho_so": {"$ref": "#/$defs/tep_snapshot"},
+        "bam_ho_so": {"$ref": "#/$defs/bam"},
+        "bam_cau_hinh": {"$ref": "#/$defs/bam"},
+        "bam_danh_muc": {"oneOf": [{"$ref": "#/$defs/bam"}, {"type": "null"}]},
+        "phien_ban_engine": {"type": "string", "pattern": "^e_tra_cuu [0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "tom_tat": {"$ref": "#/$defs/tom_tat"},
+        "canh_bao": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Chỉ câu Việt cố định từ mã engine, không nguyên văn/tên riêng/path/khóa; Python kiểm allowlist ở tác vụ tương ứng."}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "bam": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+    "tep_snapshot": {
+      "type": "object",
+      "required": ["tep_id", "ten", "mime", "kich_thuoc"],
+      "properties": {
+        "tep_id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "ten": {"type": "string", "minLength": 1, "description": "Tên kỹ thuật an toàn do Core trả, không đường máy hoặc tên hồ sơ thật."},
+        "mime": {"const": "application/json"},
+        "kich_thuoc": {"type": "integer", "minimum": 1, "maximum": 20971520}
+      },
+      "additionalProperties": true
+    },
+    "tom_tat": {
+      "type": "object",
+      "required": ["trang_thai", "so_doan", "so_ung_vien", "tang", "co_can_cu", "co_mau_thuan", "can_duyet", "nhan"],
+      "properties": {
+        "trang_thai": {"enum": [null, "da_cat_doan", "cho_phan_loai", "da_phan_loai", "da_phan_tich", "da_xep_hang", "co_can_cu", "khong_thay_can_cu"]},
+        "so_doan": {"type": ["integer", "null"], "minimum": 0, "maximum": 5000},
+        "so_ung_vien": {"type": ["integer", "null"], "minimum": 0, "maximum": 50},
+        "tang": {"enum": [null, 1, 2, 3]},
+        "co_can_cu": {"type": ["boolean", "null"]},
+        "co_mau_thuan": {"type": ["boolean", "null"]},
+        "can_duyet": {"type": ["boolean", "null"]},
+        "nhan": {"enum": [null, "xanh", "vang"]}
+      },
+      "additionalProperties": true
+    }
+  }
+}

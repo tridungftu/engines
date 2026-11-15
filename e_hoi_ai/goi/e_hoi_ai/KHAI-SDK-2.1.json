@@ -1,0 +1,79 @@
+{
+  "ngan_du_lieu": [
+    {
+      "bang": "cau_hinh",
+      "ten": "Cấu hình Hỏi AI",
+      "pham_vi": "engine",
+      "khoa": [],
+      "duy_nhat": [],
+      "truong": [
+        {
+          "ma": "local_ai",
+          "kieu": "json"
+        },
+        {
+          "ma": "quy_tac_model",
+          "kieu": "json"
+        }
+      ]
+    },
+    {
+      "bang": "model_phat_hien",
+      "ten": "Model Local đã phát hiện",
+      "pham_vi": "engine",
+      "khoa": [
+        "id_model"
+      ],
+      "duy_nhat": [
+        [
+          "id_model"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "id_model",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "url",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "kha_dung",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "loai",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "api",
+          "kieu": "json"
+        },
+        {
+          "ma": "thu_tu",
+          "kieu": "so"
+        },
+        {
+          "ma": "kiem_luc",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phat_hien_dat",
+          "kieu": "co_khong"
+        }
+      ]
+    }
+  ],
+  "cau_hinh": {
+    "schema": "cau_hinh.schema.json"
+  },
+  "giao_dien_quan_tri": [
+    {
+      "ma": "cau_hinh",
+      "ten": "Cấu hình",
+      "tep": "ui/cau_hinh.js",
+      "quyen": "admin_core"
+    }
+  ]
+}

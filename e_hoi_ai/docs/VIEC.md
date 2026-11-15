@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| AI-8 | Cấu hình/model vào ngăn, màn Cổng Local AI/Cổng Cloud AI | AI-10, AI-11; quyết định 15/11 | Xong — 15/11/2026, đã kiểm bằng Core giả (CoreGia) | pytest 360 passed, 2 skipped (chờ NGAN-0 gộp); DEMO 3/3; UI Node 4/4; kiểm độc lập mã 0; Cloud 0 lượt. PR: **chờ lead mở** |
 | 0 | Đọc tài liệu bắt buộc; đối chiếu kế hoạch lát AI-0 đã giao | — | Xong — 14/11/2026 | Phạm vi, kiến trúc và cách triển khai theo `GIAO-CODEX-e_hoi_ai.md` và lệnh giao của Anh |
 | 1 | Đóng gói độc lập theo cổng chung: bỏ shim, chỉ import SDK, build/cài wheel trên máy sạch | AI-13 | Đang làm — 14/11/2026 | Khung AI-0 xong; ghim đầy đủ và kiểm máy sạch thuộc AI-5 |
 | 2 | Chạy thử DEMO khai trong phiếu; màn cấu hình/trạng thái Local/Cloud dùng cửa chung của Core | AI-10, 11, 12 | Đang làm — 14/11/2026 | AI-4 xong phần engine: ba DEMO đã kiểm bằng Core giả (CoreGia); màn chung/phân quyền Admin chờ nghiệm thu Core thật. Bản cũ chỉ tham chiếu ở `tu-core-cu\phia-core\` |
@@ -24,6 +25,12 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | AI-7 | Công cụ thử Local thật bằng DEMO | AI-14, AI-8 | Đang làm — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia), Local giả và mock; chưa có AI-4 trên nhánh, tạm dùng ca manifest AI-1; Anh tự chạy máy thật. PR: **chờ lead mở** |
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+- **AI-8 — 15/11/2026:** cần SDK 2.1 cấp `app.ngan`/`viec.ngan`, ngăn hệ thống cấu hình, schema/CAS và nạp màn module qua `KttCore.engine`. Khai dự kiến ở `goi/e_hoi_ai/KHAI-SDK-2.1.json`, không đổi manifest 2.0. Với SDK 2.0 chưa thể cấu hình/lưu bền qua Core thật; RAM khởi động lại sẽ rỗng.
+- **AI-8 — đối chiếu NGAN-0:** hai tệp gói `ngan.py`, `cau_hinh.py` là bản tạm viết theo đặc tả, chưa sao từ mẫu. Lead thay nguyên hai tệp sau khi NGAN-0 gộp và bật hai test so băm. Thống nhất bản ghi `cau_hinh` khóa `{}` chứa trực tiếp `local_ai`/`quy_tac_model`; kết quả `tim` và chữ ký trình duyệt được ghi trong phần bàn giao AI-8. Không tạo/sửa `_chung/mau-ma/**`.
+- **AI-8 — màn quản trị:** Core cần xác nhận cách nạp ES module xuất hàm mặc định `(goc, KttCore)`. Trình duyệt giả dùng `cau_hinh.doc()` → `{cau_hinh, phien_ban_cau_hinh}`, `luu(gia_tri, phien_ban_cau_hinh)` → phiên bản mới; `ngan.tim(bang, {loc, gioi_han, tiep})`. Phần giá trị/phiên bản này chưa được đặc tả đầy đủ ở SDK trình duyệt phát hành; cần đối chiếu khi nối. Chưa có thao tác discovery quản trị nên màn chỉ hiện kết quả kiểm gần nhất khi xử lý việc.
+- **AI-8 thay quyết định tạm cũ:** các mục AI-0…AI-3 dưới đây nói đọc JSON ngoài gói chỉ còn giá trị lịch sử; đường chạy hiện tại đã bỏ hoàn toàn cách đó.
+
 
 - AI-6 (14/11/2026), bản 2: Core cần cấp bí mật theo tên trong `bi_mat[]` qua kênh bộ nhớ SDK; engine không tự đọc khóa từ env/tệp/đĩa. Cần công tắc Cloud theo từng module, mặc định tắt; **M9 và nhóm 07-Nhân sự luôn chỉ Local**. Cần điều phối Mask → Cloud → mở che, bảo đảm chỉ nội dung đã che ra ngoài. Không thêm năng lực/loại Cloud hoặc tên bí mật vào manifest ở AI-6.
 - AI-6, bản 2: cần **ngăn dữ liệu engine** để giữ số đếm/độ chính xác Local theo function, lịch kiểm xác suất **20% → 10% → 5%**, không về 0; dưới 90% quay lại 20%. Chưa làm định tuyến hoặc đo thật ở lát khung này; giữ Cloud tắt đến khi có các cửa chung của Core và Mask.
@@ -410,3 +417,77 @@ Kết luận: Đạt phạm vi công cụ; đã kiểm bằng Core giả (CoreGi
 Kiểm: chạy khô mã 0; cổng DEMO Core giả 3/3 ĐẠT; pytest 284 passed, 0 skipped; kiểm độc lập mã 0. Codex không chạy Local thật. Git index vẫn chờ lead stage và hoàn tất merge.
 
 Thời gian bổ sung: khoảng 0,07 giờ; ước tính AI-7 trong phiếu 2 giờ. Lệch phiếu / quyết định tạm: không; Cần Core / Chờ Anh mới phát sinh: không.
+
+
+## Bàn giao AI-8 — 15/11/2026
+
+**Kết luận:** Đạt phạm vi AI-8 theo cổng DEMO thay thế được phiếu AI-4/AI-8 cho phép; **đã kiểm bằng Core giả (CoreGia)**, Local HTTP giả và KttCore/DOM giả. Chưa kiểm Core thật, trình duyệt thật, model thật hoặc chạy thực tế Linux.
+
+**PR:** chờ lead mở. Nhánh `codex/e_hoi_ai-ai-8`. Không commit/push.
+
+**Đã làm:**
+
+- Thêm `ngan.py` và `cau_hinh.py` trong gói, chỉ thư viện chuẩn. Ngăn RAM khóa luồng, lô tối đa 100 lệnh, nguyên tử, CAS/duy nhất, phạm vi pháp nhân, phân trang tối đa 500 bản ghi. Có kiểm rollback, hai luồng lấy/tạo chỉ một bản, không đọc/ghi chéo pháp nhân và CAS cũ sau xóa/tạo lại.
+- Hai năng lực đọc cấu hình qua ngăn/schema; ưu tiên `viec.ngan`, rồi `chon_ngan(app)`. Thiếu cấu hình → `CHUA_CAU_HINH`; đọc lại mỗi việc để nhận thay đổi. Schema không chứa bí mật, timeout dương tối đa 600 giây, quy tắc mặc định `[]`.
+- Model lấy/tạo theo `id_model`, cập nhật metadata bằng CAS, đọc ngăn để chọn; đệm discovery RAM 300 giây giữ nguyên. Vẫn đọc metadata mới mỗi lượt và trước POST, không dùng model mất hoặc nguồn discovery lỗi. Xung đột ghi model thử lại tối đa ba lần; hết lượt báo lỗi có thể thử lại, không gửi tài liệu.
+- Thêm màn Local (địa chỉ/thời hạn/trạng thái/model/quy tắc/lưu CAS) và Cloud (“Chưa áp dụng ở bản 1”, không nút bật). Màn chỉ dùng KttCore và DOM `textContent`, không gọi mạng ngoài hay lưu trình duyệt. Trạng thái có thời điểm và chỉ mô tả lần kiểm gần nhất.
+- Giữ `engine.json` SDK 2.0 nguyên trạng; thêm `KHAI-SDK-2.1.json`. Cổng DEMO nạp cấu hình RAM, không ghi tệp hoặc dùng biến cấu hình. Công cụ AI-7 giữ nguyên `--url`; đã kiểm chạy khô và ca Local giả, không gọi thật.
+- Cập nhật README, CHANGELOG, NGUON (băm toàn gói) và hiện trạng. Giữ nguyên mọi mã nguồn cũ.
+
+**Chờ chuyển LUU-TRU (không xóa):** `goi/e_hoi_ai/e_hoi_ai/cau_hinh_may.py`, `goi/e_hoi_ai/contract/cau_hinh_may.schema.json`. Hai tệp và test lịch sử bộ đọc cũ giữ nguyên; test độc lập xác nhận đường chạy engine không import mô-đun cũ.
+
+**Kết quả kiểm thật:** Windows/Python 3.13.14, Node v24.18.0. `.venv` trong worktree; SDK 2.0.0 cài wheel `--no-index --no-deps`, SHA-256 trùng `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`. Venv dùng `--system-site-packages` để chạy pytest đã cài, không mạng; test gói cách ly chạy `-I -S -B`. Đặt `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+3/3 ví dụ trả CHUA_CAU_HINH; 0/3 ĐẠT, mã thoát 1.
+Lý do: SDK 2.0 CLI riêng không được cấp ngăn/cấu hình hoặc Local giả.
+
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+[ĐẠT] Hỏi người bảo lãnh không có trong tài liệu DEMO
+[ĐẠT] Trích tiền và ngày theo khuôn DEMO
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia); 3/3 DEMO, 3 lượt Local HTTP giả.
+Mã thoát 0.
+
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py --sdk-thu
+3/3 [ĐẠT], mọi ví dụ chạy thử DEMO đều đạt; mã thoát 0.
+Gọi đúng hàm CLI kho_tri_thuc_sdk.thu.main với cấu hình đã nạp qua ngăn RAM.
+
+.venv/Scripts/python -m pytest e_hoi_ai/tests -q
+360 passed, 2 skipped in 51.77s; mã thoát 0; không warning.
+Hai skip: test so băm ngan.py/cau_hinh.py, lý do “chờ NGAN-0 gộp”.
+
+.venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát 0.
+
+node --test e_hoi_ai/tests/ui/cau_hinh.test.mjs
+4 passed, 0 failed, 0 skipped; mã thoát 0.
+
+.venv/Scripts/python e_hoi_ai/cong-cu/thu_local_ai_that.py
+CHẠY KHÔ: không dò model, không gọi mạng. Dùng --that và --url để chạy thật.
+Mã thoát 0.
+```
+
+Các test hai năng lực đếm provider Cloud **0 lượt**, chặn DNS và kết nối ngoài loopback. Test khung Cloud chỉ giả trong RAM, không gọi dịch vụ Cloud thật.
+
+**Hàm/tham số Ngan đã dùng — để lead đối chiếu NGAN-0:**
+
+| Nơi dùng | Chữ ký / dạng dữ liệu |
+|---|---|
+| Engine | `chon_ngan(app)`; ưu tiên `viec.ngan` khi có |
+| Đọc cấu hình | `doc_cau_hinh(ngan, schema_dict)`; bên trong `ngan.doc("cau_hinh", {})` → `None` hoặc bản ghi `.gia_tri`, `.row_version` |
+| Đọc model | `ngan.doc("model_phat_hien", {"id_model": id})`; `ngan.tim("model_phat_hien", loc={"url": url}, gioi_han=500, tiep=None_or_token)` → `{"danh_sach": [BanGhi], "tiep": token_or_None}` |
+| Ghi model | `with ngan.lo() as lo`; `lo.lay_hoac_tao("model_phat_hien", {"id_model": id}, gia_tri)`; `lo.sua(..., gia_tri, row_version=ban.row_version)`; bắt `NganXungDot` |
+| Nạp DEMO | `NganBoNho()` hoặc `NganBoNho(khai_bao)`; `lo.them("cau_hinh", {}, gia_tri)` / `lo.sua(..., row_version=...)` |
+| Test hợp đồng | `NganBoNho(khai_bao, phap_nhan_id=...)`; `.voi_phap_nhan(id)` dùng chung kho/khóa; `lo.xoa(bang, khoa, row_version=...)`; `lo.ket_qua` là danh sách `{row_version, da_tao}` |
+
+**Lệch khỏi phiếu / quyết định tạm:**
+
+- Theo lệnh bổ sung của lead, không chờ/chỉnh `_chung/mau-ma`: viết hai bản tạm trong gói và skip so băm. Chưa thể khẳng định tương thích byte/API hoàn toàn với NGAN-0 chưa gộp; cần lead đối chiếu bảng trên khi thay mẫu.
+- Giữ cổng DEMO thay thế của AI-4, ghi trung thực lệnh SDK thu thiếu cấu hình mã 1. Không tự nạp DEMO vào engine thật để làm xanh lệnh.
+- Phạm vi AI-8 được chia hai phần review: **AI-8a** hai tệp cổng dùng chung tạm; **AI-8b** năm tệp nối engine/UI (`hoi.py`, `hoi_yeu_cau.py`, `cong_ai.py`, `chon_model.py`, `ui/cau_hinh.js`). Tổng bảy tệp mã do cần hai cổng tạm trong lúc NGAN-0 làm song song; bàn giao chung theo lệnh Anh, lead có thể tách hai commit review. Chưa tạo commit/PR.
+- Không phát sinh câu Chờ Anh. Cần Core/SDK và đồng bộ NGAN-0 như mục Cần Core phía trên. Chưa chạy Linux thực tế; mã/test không phụ thuộc Windows ngoài kịch bản chạy có sẵn.
+
+**Thời gian thực tế:** bắt đầu **15/11/2026 07:38:00 +07:00** (theo lead), kết thúc **15/11/2026 07:55:09 +0700**; **0.29 giờ** theo đồng hồ. Ước tính phiếu AI-8: **4 giờ**.

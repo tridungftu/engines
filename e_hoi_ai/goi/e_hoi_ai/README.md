@@ -34,13 +34,15 @@ Hậu kiểm nguyên văn và token số giống AI-1. Kiểm thêm mọi giá t
 
 Trần `chuyen_tiep` 64 KiB, khuôn 32 KiB, đo bằng byte JSON UTF-8 chuẩn hóa: khóa sắp xếp, không khoảng trắng phân cách, `ensure_ascii=false`, `allow_nan=false`. Đúng ngưỡng được nhận, vượt một byte trả `VUOT_GIOI_HAN` trước mạng, không cắt. `chuyen_tiep` được sao lại theo JSON và test so byte chuẩn hóa; không đưa trường này vào prompt, yêu cầu Local hoặc nhật ký.
 
-## Cấu hình máy
+## Cấu hình trong ngăn — AI-8, 15/11/2026
 
-`e_hoi_ai.cau_hinh_may.doc_cau_hinh()` đọc JSON ngoài gói theo biến `KTT_ENGINE_CAU_HINH`. Khi biến chưa đặt, dùng `%PROGRAMDATA%\KhoTriThuc\engines\e_hoi_ai\cau_hinh.json`. Khi không có `PROGRAMDATA` (ví dụ Linux), không tự tìm tệp khác.
+Engine đọc bản ghi duy nhất bảng `cau_hinh`, khóa `{}`, qua `doc_cau_hinh(ngan, schema)`. Schema trong gói là `cau_hinh.schema.json`: `local_ai.url`, `local_ai.timeout_giay` bắt buộc (số dương, tối đa 600 giây), `quy_tac_model` mặc định `[]`. Đọc mới từng việc; thiếu thì trả `CHUA_CAU_HINH`, hướng dẫn Admin vào Quản lý engine › Hỏi AI › Cấu hình. Không lưu cấu hình hay catalog xuống đĩa, không đọc biến cấu hình máy cũ.
 
-Thiếu tệp: trả `None`, không làm engine dừng khởi động. Việc hỏi tài liệu trả lỗi nghiệp vụ `CHUA_CAU_HINH` khi chưa có cấu hình. Đọc lại tệp ở mỗi lần gọi, không ghi tệp hoặc nhật ký nội dung cấu hình.
+`chon_ngan(app)` dùng `app.ngan` nếu có, nếu chưa có thì tạo RAM dùng chung trong phiên chạy và cảnh báo một lần ra stderr. `viec.ngan` được ưu tiên khi SDK cung cấp. Với SDK 2.0, RAM chỉ phục vụ kiểm thử và không giữ cấu hình sau khởi động lại. `cau_hinh_may.py` cùng schema cũ còn nguyên để lead chuyển LUU-TRU; không còn được import bởi đường chạy engine.
 
-Schema ở `contract/cau_hinh_may.schema.json`. `local_ai.url` và `local_ai.timeout_giay` là bắt buộc; thời hạn phải là số dương. `quy_tac_model` tùy chọn, mỗi mục phải có đủ mẫu prompt, model ưu tiên và danh sách dự phòng. Các trường lạ, JSON lỗi hoặc trùng khóa bị từ chối bằng thông báo tiếng Việt không chứa dữ liệu đầu vào. Không chứa bí mật; URL không được có thông tin đăng nhập, query hoặc fragment.
+Hai tệp `ngan.py` và `cau_hinh.py` là bản tạm theo đặc tả NGAN-0, chưa phải bản sao chính thức. Test so băm đã viết, skip với lý do **chờ NGAN-0 gộp**. Khi có mẫu, lead thay nguyên hai tệp và bật test; đối chiếu các chữ ký trong VIEC.md trước khi thay.
+
+`KHAI-SDK-2.1.json` khai hai bảng, schema cấu hình và màn quản trị, chưa ghép vào `engine.json` 2.0. Màn `ui/cau_hinh.js` xuất hàm mặc định `async (goc, KttCore = globalThis.KttCore)`, dùng DOM an toàn, kế thừa font Core; Core cần thống nhất cách nạp module. Chỉ gọi `.cau_hinh.doc/luu` và `.ngan.tim`. Cổng Cloud chỉ hiện “Chưa áp dụng ở bản 1”, không có nút bật. Trạng thái/model là kết quả kiểm gần nhất khi engine xử lý việc, không phải kết nối tức thời; chưa có nút discovery do API quản trị SDK chưa phát hành.
 
 URL nhận địa chỉ gốc, `/v1` hoặc `/v1/chat/completions`, bắt buộc `http://<IP>:<cổng>`; `localhost` được đổi thẳng thành `127.0.0.1`. Chỉ loopback, RFC1918 và Tailscale (`100.64.0.0/10`, `fd7a:115c:a1e0::/48`); chặn IP công cộng, link-local, DNS, HTTPS, proxy và redirect. Đích Tailscale phải có IP nguồn Tailscale và socket được ghim IP nguồn. Discovery và kiểm khả dụng dùng cùng các ràng buộc mạng này.
 
@@ -55,13 +57,13 @@ AI-3 đặt logic trong `e_hoi_ai/chon_model.py`. Thử lần lượt các API t
 
 Không suy loại phần mềm hoặc chất lượng từ tên model/cổng. Catalog rỗng hợp lệ là kết quả có thẩm quyền, không chuyển API để tìm cách dùng model đã bị loại. Metadata chỉ rõ model từ xa, `type` khác `llm`, `state=not-loaded` hoặc `loaded_instances=[]` thì không khả dụng. Ollama tải model khi hỏi nên danh sách `/api/tags` không có cờ tải vẫn được xét; không khẳng định model đang chạy.
 
-Catalog và loại API lưu trong bộ nhớ 300 giây theo URL gốc, tối đa 64 endpoint; không lưu xuống đĩa. Mỗi lượt đọc metadata mới từ API đã nhận diện để chọn theo trạng thái hiện tại và kiểm lại trước POST chứa nội dung. Việc kiểm trạng thái không kéo dài TTL discovery. Nếu API cũ lỗi thì phát hiện lại; lỗi không được cache, không làm engine chết. Model mất giữa hai lượt được bỏ qua ngay khi cache còn hạn; model mất sau khi chọn thì từ chối trước POST. Không tự gửi lại POST.
+Catalog và loại API có đệm RAM 300 giây theo URL gốc, tối đa 64 endpoint. Kết quả discovery được lấy hoặc tạo theo `id_model` vào bảng `model_phat_hien`, cập nhật trạng thái bằng CAS, rồi đọc từ ngăn để chọn. Mỗi ID giữ địa chỉ, loại API, thứ tự, thời điểm và khả dụng; model mất/lỗi discovery được đánh dấu không khả dụng. Không lưu xuống đĩa. Mỗi lượt đọc metadata mới từ API đã nhận diện để chọn theo trạng thái hiện tại và kiểm lại trước POST chứa nội dung. Việc kiểm trạng thái không kéo dài TTL discovery. Nếu API cũ lỗi thì phát hiện lại; lỗi không được cache, không làm engine chết. Model mất giữa hai lượt được bỏ qua ngay khi cache còn hạn; model mất sau khi chọn thì từ chối trước POST. Không tự gửi lại POST.
 
 Thứ tự chọn: `model_uu_tien` khả dụng → duyệt `quy_tac_model` theo thứ tự cấu hình, mỗi quy tắc khớp `ma_prompt` xét `uu_tien` rồi từng `du_phong` → model khả dụng đầu tiên theo thứ tự API. Mẫu `m4.*` và `*` phân biệt hoa/thường. Không còn model thì trả `LOCAL_AI_KHONG_SAN_SANG`, có thể thử lại. Quy tắc được đọc riêng từng lượt, không thay cấu hình chung.
 
 Kết quả có `ly_do_chon_model`: `model_uu_tien`, `quy_tac_ma_prompt`, `du_phong_quy_tac_ma_prompt` hoặc `model_dau_tien_kha_dung`. AI-2 dùng lại `CongAI.chon_model(..., kiem_huy=...)` và trường lý do đã có trong `KetQuaAI`; luồng `chay.py` không thay đổi.
 
-Ví dụ dưới đây chỉ là cấu hình DEMO; chép vào tệp **ngoài gói** nếu cần kiểm bộ đọc:
+Ví dụ dưới đây chỉ là cấu hình DEMO để nạp qua ngăn hoặc màn cấu hình:
 
 ```json
 {
@@ -90,7 +92,9 @@ $env:PYTHONDONTWRITEBYTECODE = '1'
 .venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
 ```
 
-`chay_demo_voi_local_gia.py` là **cổng đạt thay cho** `python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai` của engine này: lệnh SDK riêng không cung cấp máy AI. Bộ chạy bật Local giả ở `127.0.0.1` trên cổng do hệ điều hành chọn, ghi `cau_hinh_DEMO.json` vào thư mục tạm `tests/ktt-ai-4-demo-*/`, đặt `KTT_ENGINE_CAU_HINH` trỏ tệp đó, rồi gọi trực tiếp `CoreGia().chay_thu_demo(app)` với các handler thật. Mọi ví dụ phải `XONG`, bộ ví dụ phải khác rỗng và số lượt Local phải khớp thì mã thoát mới bằng 0. Server và cấu hình tạm được dọn sau kiểm, biến cấu hình ban đầu được khôi phục. Không cần máy AI thật hoặc mạng ngoài.
+`chay_demo_voi_local_gia.py` là **cổng đạt thay cho** `python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai` theo phiếu AI-4/AI-8. Bộ chạy bật Local giả trên loopback, nạp cấu hình DEMO qua `NganBoNho.lo().them`, rồi gọi `CoreGia().chay_thu_demo(app)`. Không tạo tệp cấu hình hoặc dùng `KTT_ENGINE_CAU_HINH`; khôi phục ngăn ban đầu trong `finally`. Mọi ví dụ phải `XONG`, bộ ví dụ khác rỗng và số lượt Local khớp thì mã thoát bằng 0. Dùng thêm `--sdk-thu` để chạy đúng hàm CLI SDK thu với cùng cấu hình/ngăn/Local giả. Lệnh SDK thu chạy riêng không được cấp cấu hình nên trả `CHUA_CAU_HINH` (hành vi có chủ đích), không được tự mặc định DEMO vào đường chạy thật.
+
+Bộ UI `node --test e_hoi_ai/tests/ui/cau_hinh.test.mjs` được pytest gọi tự động; cần Node có sẵn, không cài thư viện hoặc gọi mạng. Kiểm lưu CAS, xung đột tiếng Việt, giữ dự phòng, phân trang, thêm/bỏ quy tắc, lỗi đọc và Cloud không có công tắc. Đây là DOM/KttCore giả, chưa nghiệm thu trình duyệt/Core thật. Công cụ AI-7 giữ nguyên `--url`, không đọc tệp cấu hình.
 
 Phiếu có ba ví dụ chỉ dùng hợp đồng GIẢ DEMO của Công ty DEMO Ánh Dương, mã DEMO-001: hỏi 1.000.000 VND và 30/10/2026 có trích dẫn; hỏi người bảo lãnh không có trong tài liệu → `không thấy căn cứ`; `ai.hoi_theo_yeu_cau@1` có khuôn tiền `{"so": 1000000, "tien_te": "VND"}` và ngày `2026-10-30`. Ngày DD/MM/YYYY chỉ nằm trong văn bản nguồn/trích dẫn, dữ liệu có kiểu dùng YYYY-MM-DD.
 

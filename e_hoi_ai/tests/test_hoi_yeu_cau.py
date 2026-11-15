@@ -10,7 +10,7 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu, Viec, ViecDaHuy
 from e_hoi_ai import chay
 from e_hoi_ai import chon_model
 from e_hoi_ai.khuon_json import boc_khuon, doc_json, json_chuan, khop, kiem_khuon
-from local_gia import LocalGia, TAI_LIEU, TRA_LOI, ghi_cau_hinh
+from local_gia import LocalGia, TAI_LIEU, TRA_LOI, nap_cau_hinh
 from test_hoi_tai_lieu import khong_mang_ngoai_va_khong_cloud, local
 
 KHUON = {"type": "object", "required": ["so_tien", "ngay"], "additionalProperties": False,
@@ -82,10 +82,9 @@ def test_gop_ai2_ai3_khuon_dung_catalog_va_du_phong_khong_do_api_them(
         local.native_v0 = muc
     else:
         local.models = muc
-    tep = ghi_cau_hinh(tmp_path, local.url, quy_tac=[{
+    nap_cau_hinh(local.url, quy_tac=[{
         "mau_ma_prompt": "demo.*", "uu_tien": "model-demo-tu-xa", "du_phong": [ma],
     }])
-    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
     local.tra_loi = PHAN_HOI
     for lan in range(2):
         kq = hoi(model_uu_tien="model-demo-khong-co")
@@ -258,8 +257,7 @@ def test_vuot_tran_van_ban_loai_rieng(local, khoa):
 
 def test_local_tat_khong_cloud(tmp_path, monkeypatch):
     with LocalGia() as may:
-        tep = ghi_cau_hinh(tmp_path, may.url, thoi_han=0.1)
-    monkeypatch.setenv("KTT_ENGINE_CAU_HINH", str(tep))
+        nap_cau_hinh(may.url, thoi_han=0.1)
     kq = hoi()
     assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and kq["loi"]["thu_lai_duoc"]
 

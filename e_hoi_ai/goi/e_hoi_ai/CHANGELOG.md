@@ -1,3 +1,11 @@
+## AI-8 — 15/11/2026 (chờ lead mở PR)
+
+- Cấu hình Local/quy tắc model đọc từ ngăn; thiếu trả CHUA_CAU_HINH. Ngừng dùng cau_hinh_may.py, giữ nguyên tệp để chuyển LUU-TRU.
+- Cổng Ngan/NganBoNho tạm theo SDK 2.1: lô nguyên tử, CAS, duy nhất, phạm vi pháp nhân; chờ NGAN-0 thay hai tệp và bật test so băm.
+- Model phát hiện ghi/đọc qua ngăn theo id_model; giữ cache RAM 5 phút và kiểm metadata trước khi gửi nội dung.
+- Màn Cổng Local AI/Cổng Cloud AI dùng KttCore giả để kiểm lưu và CAS. Cloud tắt; manifest 2.0 giữ nguyên, khai dự kiến ở KHAI-SDK-2.1.json.
+- Cổng DEMO nạp cấu hình RAM, không tạo tệp cấu hình. Đã kiểm bằng Core giả (CoreGia); xem VIEC.md cho kết quả cuối.
+
 # Thay đổi
 
 ## AI-4 — 14/11/2026 — DEMO và kiểm khởi động (trên gói 0.4.0)

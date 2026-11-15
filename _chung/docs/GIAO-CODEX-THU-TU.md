@@ -12,6 +12,8 @@
 
 ## 2. SDK 2.0 đợt 1 chưa có gì — và cách Codex làm tạm
 
+> **15/11/2026: Anh đã chốt lại — xem `QUYET-DINH-ANH-20261115.md`.** Bỏ tệp cấu hình ngoài gói và `kho_tam` trên đĩa; thay bằng màn cấu hình của engine + cổng `Ngan` (tạm RAM), theo `GIAO-CODEX-DOT-2.md`. Bảng dưới chỉ còn giá trị lịch sử.
+
 SDK 2.0 đợt 1 **chưa có**: kênh cấu hình tới engine (`san-sang` trả `cau_hinh: {}`, `Engine` không đưa ra), bí mật, ngăn dữ liệu engine, lượt bền giữ/chốt/đọc (đợt 2, migration 135), nhật ký kỹ thuật, màn trạng thái engine.
 
 | Thiếu | Quyết định tạm cho Codex (Anh đổi được) | Khi Core có thì |
@@ -36,6 +38,8 @@ SDK 2.0 đợt 1 **chưa có**: kênh cấu hình tới engine (`san-sang` trả
 7. Thẻ "Trạng thái" engine (`trang_thai_schema`) để thay màn Cổng Local AI, hạn mức ABBYY.
 
 ## 4. Chờ Anh (không chặn Codex — Codex làm theo quyết định tạm ở mục 2)
+
+> **Đã trả lời 15/11/2026** (`QUYET-DINH-ANH-20261115.md`): Q1 không — cấu hình ở màn của engine; Q2 không lưu trên máy — dùng ngăn, tạm RAM; Q3 duyệt 4 tên; Q4 đồng ý.
 
 | # | Câu | Lead đề xuất |
 |---|---|---|

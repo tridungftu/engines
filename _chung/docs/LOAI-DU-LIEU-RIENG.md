@@ -1,4 +1,6 @@
-# Loại dữ liệu riêng dùng chung giữa các engine — ĐỀ XUẤT, chờ Anh duyệt tên (Q3)
+# Loại dữ liệu riêng dùng chung giữa các engine — ĐÃ DUYỆT 15/11/2026
+
+> Anh duyệt cả 4 tên (§1–2) và phần chi tiết `van_ban_da_che` (§3, đề xuất MASK-P) ngày 15/11/2026 — `QUYET-DINH-ANH-20261115.md` câu 3, 11. Các nhãn "đề xuất / chờ Anh" bên dưới chỉ còn giá trị lịch sử.
 
 *Lập 14/11/2026 (Claude, lead). Căn cứ: `API-ENGINE-v1.md` b.2–b.3 (Core chỉ có 3 loại gốc `tep`, `van_ban`, `truong`; engine khai thêm ở `loai_du_lieu_rieng`, Core chỉ so khớp chuỗi `ma`).*
 

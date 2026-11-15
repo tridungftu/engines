@@ -7,12 +7,14 @@ Kết quả bị chặn không công bố văn bản chưa kiểm đạt (giá t
 from __future__ import annotations
 
 from bisect import bisect_right
-from collections import Counter
+from collections import Counter, deque
 from contextlib import AbstractContextManager
 from dataclasses import dataclass
 import re
 from typing import Protocol
 import unicodedata
+
+from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
 from .nguon.privacy import core, detectors, leftovers
 from .nguon.privacy.types import bo_ky_tu_vo_hinh, chuan_hoa_vi_tri
@@ -744,64 +746,130 @@ def _che(van_ban, da_biet, kho, *, noi_bo=False):
     return (ket_qua, anh_xa) if noi_bo else ket_qua
 
 
-def _manh_bi_danh_con_lai(van_ban, cac_ma, da_xet):
-    """Dò trên bản bỏ khoảng trắng, trả tọa độ đầu vào, không đoán giá trị gốc.
+TRAN_NUT_DO_MANH = 200000
 
-    cac_ma chỉ là map RAM đã kiểm của yêu cầu, không danh mục để tra ngược.
-    Các vùng đã mở/đã báo được ngăn bằng NUL, không nối nhầm qua chúng.
+
+class _DoManhBiDanh:
+    """Một automaton dùng chung cho mọi alias và dạng hỏng một ký tự lạ.
+
+    Chỉ dò dấu vết, không dùng dạng hỏng để mở tên. Không cache giữa các
+    chuỗi; công dựng bảng phụ thuộc độ dài alias, không nhân độ dài văn bản.
     """
-    phan = list(van_ban)
-    for a, b in da_xet:
-        phan[a:b] = '\x00' * (b - a)
-    toa_do = [i for i, c in enumerate(phan) if not c.isspace()]
-    chu = ''.join(phan[i].lower() for i in toa_do)
-    ma = {chuan_bi_danh(m)[2:-2] for m in cac_ma if m and _BI_DANH.fullmatch(m)}
-    vung = set()
-    for muc in ma:
-        dau = 0
-        while (a := chu.find(muc, dau)) >= 0:
-            b = a + len(muc)
-            goc_a, goc_b = toa_do[a], toa_do[b - 1] + 1
-            if not ((goc_a and (van_ban[goc_a - 1].isalnum() or van_ban[goc_a - 1] == '_'))
-                    or (goc_b < len(van_ban) and (van_ban[goc_b].isalnum() or van_ban[goc_b] == '_'))):
-                vung.add((a, b))
-            dau = a + len(muc)
-        # Chỉ nhận một ký tự lạ thay/chen trong mã đã được kho cấp, kể cả
-        # mất hết ngoặc. Không coi chữ/số khác là wildcard (mã chưa cấp).
-        # NUL và ngoặc không được khớp để khỏi nối qua vùng đã xét.
-        if len(muc) < 2:
-            continue
-        ky_tu_la = r'[^\x00a-z0-9_.\[\]-]'
-        dang_hong = []
-        for i in range(len(muc)):
-            truoc, sau = re.escape(muc[:i]), re.escape(muc[i + 1:])
-            if i:
-                dang_hong.append(truoc + ky_tu_la + re.escape(muc[i:]))
-            dang_hong.append(truoc + ky_tu_la + sau)
-        for m in re.finditer('|'.join(dang_hong), chu):
-            a, b = toa_do[m.start()], toa_do[m.end() - 1] + 1
-            # Không lấy một phần của mã dài hơn hoặc chữ thường liền cạnh.
-            # Kiểm trên đầu vào để khoảng trắng ngăn văn xuôi vẫn có hiệu lực.
-            if ((a and (van_ban[a - 1].isalnum() or van_ban[a - 1] == '_'))
-                    or (b < len(van_ban) and (van_ban[b].isalnum() or van_ban[b] == '_'))):
-                continue
-            vung.add(m.span())
-    tien_to = {'maskct-', 'maskcn-', 'maskdc-', 'maskmst-', 'masktk-', 'maskkhac-', 'masktam-'}
-    tien_to.update(m.rsplit('-', 1)[0] + '-' for m in ma if '-' in m)
-    # Dấu ? chỉ báo mã hỏng, tuyệt đối không dùng nó làm wildcard để tra kho.
-    mau_tien_to = '|'.join(''.join('[%s?]' % c if c.isalnum() else re.escape(c) for c in p)
-                          for p in sorted(tien_to))
-    mau_ma = rf'(?:{mau_tien_to})[a-z0-9?_.-]{{1,100}}'
-    for mau in (rf'[\[\]]+{mau_ma}', rf'{mau_ma}[\[\]]+'):
-        vung.update(m.span() for m in re.finditer(mau, chu))
-    # Gộp các dấu vết cùng mảnh, tránh báo lặp mã trần và ngoặc cạnh mã.
-    gop = []
-    for a, b in sorted(vung):
-        if gop and a <= gop[-1][1]:
-            gop[-1][1] = max(gop[-1][1], b)
-        else:
-            gop.append([a, b])
-    return [(toa_do[a], toa_do[b - 1] + 1) for a, b in gop]
+    def __init__(self, cac_ma, kiem=lambda: None):
+        self.kiem = kiem
+        self.nut, self.lui, self.ra = [{}], [0], [set()]
+        ma = {chuan_bi_danh(m)[2:-2] for m in cac_ma if m and _BI_DANH.fullmatch(m)}
+        for muc in ma:
+            kiem()
+            dang = [muc]
+            if len(muc) >= 2:
+                for i in range(len(muc)):
+                    dang.append(muc[:i] + '?' + muc[i + 1:])
+                    if i:
+                        dang.append(muc[:i] + '?' + muc[i:])
+            for chu in dang:
+                n = 0
+                for c in chu:
+                    if c not in self.nut[n]:
+                        if len(self.nut) >= TRAN_NUT_DO_MANH:
+                            raise LoiNghiepVu('MASK_QUA_GIOI_HAN',
+                                'Nội dung vượt giới hạn cho phép. Cần chia nhỏ yêu cầu.')
+                        self.nut[n][c] = len(self.nut)
+                        self.nut.append({})
+                        self.lui.append(0)
+                        self.ra.append(set())
+                    n = self.nut[n][c]
+                self.ra[n].add(len(chu))
+        cho = deque(self.nut[0].values())
+        dem = 0
+        while cho:
+            n = cho.popleft()
+            dem += 1
+            if dem % 2048 == 0:
+                kiem()
+            for c, con in self.nut[n].items():
+                f = self.lui[n]
+                while f and c not in self.nut[f]:
+                    f = self.lui[f]
+                self.lui[con] = self.nut[f].get(c, 0)
+                self.ra[con].update(self.ra[self.lui[con]])
+                cho.append(con)
+        tien_to = {'maskct-', 'maskcn-', 'maskdc-', 'maskmst-', 'masktk-', 'maskkhac-', 'masktam-'}
+        tien_to.update(m.rsplit('-', 1)[0] + '-' for m in ma if '-' in m)
+        cay = {}
+        for p in tien_to:
+            n = cay
+            for c in p:
+                n = n.setdefault(c, {})
+            n[''] = {}
+
+        def mau(n):
+            cac = [('[' + c + '?]' if c.isalnum() else re.escape(c)) + mau(con)
+                   for c, con in n.items() if c]
+            if '' in n:
+                cac.append('')
+            return '(?:' + '|'.join(cac) + ')' if len(cac) > 1 else ''.join(cac)
+
+        p = mau(cay) + r'[a-z0-9?_.-]{1,100}'
+        self.tien_to = re.compile(p)
+        self.tien_to_ket = re.compile(p + '$')
+        self.do_dai_ma = max(map(len, tien_to)) + 100
+        kiem()
+
+    def quet(self, van_ban, da_xet, *, ma_mask_roi=False):
+        kiem = self.kiem
+        phan = list(van_ban)
+        for a, b in da_xet:
+            phan[a:b] = '\x00' * (b - a)
+        toa_do, gon = [], []
+        for i, c in enumerate(phan):
+            if i % 2048 == 0:
+                kiem()
+            if not c.isspace():
+                toa_do.append(i)
+                thuong = c.lower()
+                gon.append(thuong if len(thuong) == 1 else c)
+        chu, vung, n = ''.join(gon), set(), 0
+        for i, c in enumerate(chu):
+            if i % 2048 == 0:
+                kiem()
+            if not (c in '\x00[]_.-' or 'a' <= c <= 'z' or '0' <= c <= '9'):
+                c = '?'
+            while n and c not in self.nut[n]:
+                n = self.lui[n]
+            n = self.nut[n].get(c, 0)
+            for do_dai in self.ra[n]:
+                a, b = i + 1 - do_dai, i + 1
+                x, y = toa_do[a], toa_do[b - 1] + 1
+                if not ((x and (van_ban[x - 1].isalnum() or van_ban[x - 1] == '_'))
+                        or (y < len(van_ban) and (van_ban[y].isalnum() or van_ban[y] == '_'))):
+                    vung.add((a, b))
+        # Chỉ thử cây tiền tố cạnh một dãy ngoặc, trong cửa sổ dài hữu hạn.
+        # Không chạy alternation tiền tố trên toàn văn hoặc thử lại tại
+        # từng ngoặc trong một dãy ngoặc dài.
+        for ngoac in re.finditer(r'[\[\]]+', chu):
+            kiem()
+            m = self.tien_to.match(chu, ngoac.end())
+            if m:
+                vung.add((ngoac.start(), m.end()))
+            a = max(0, ngoac.start() - self.do_dai_ma)
+            for m in self.tien_to_ket.finditer(chu[a:ngoac.start()]):
+                vung.add((a + m.start(), ngoac.end()))
+        if ma_mask_roi:
+            vung.update(m.span() for m in re.finditer(r'mask(?:ct|cn|dc|mst|tk|khac|tam)-[a-z0-9?_.-]+', chu))
+        kiem()
+        gop = []
+        for a, b in sorted(vung):
+            if gop and a <= gop[-1][1]:
+                gop[-1][1] = max(gop[-1][1], b)
+            else:
+                gop.append([a, b])
+        return [(toa_do[a], toa_do[b - 1] + 1) for a, b in gop]
+
+
+def _manh_bi_danh_con_lai(van_ban, cac_ma, da_xet):
+    """Dò chung trên bản bỏ khoảng trắng; vùng đã xét được ngăn bằng NUL."""
+    return _DoManhBiDanh(cac_ma).quet(van_ban, da_xet)
 
 
 def mo_che(van_ban_co_bi_danh, ma_yeu_cau, kho, *, dong_viec=False):

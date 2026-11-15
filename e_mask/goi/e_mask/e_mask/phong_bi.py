@@ -11,6 +11,8 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 from .che_van_ban import _kiem_dinh_danh, LoiCheVanBan
 from .nguon.privacy.types import PrivacyError, bo_ky_tu_vo_hinh, chuan_hoa_vi_tri, la_ky_tu_vo_hinh
 
+TRAN_CHUOI_MO = 10000
+
 
 # Bộ kiểm loại riêng thuộc engine; không phụ thuộc helper riêng của NGAN-0.
 def _kiem_schema(gia_tri, schema, *, goc=None):
@@ -143,6 +145,8 @@ def _doc_json(viec):
         return kq
     except (KeyError, ValueError, TypeError, UnicodeError, RecursionError):
         raise loi() from None
+    finally:
+        raw = kq = None
 
 
 def kiem_loai(dau, ma):
@@ -194,43 +198,52 @@ def doc_che(viec):
     return chu, ds
 
 
-def cac_chu(gia_tri, duong=()):
+def cac_chu(gia_tri, duong=(), *, gom_khoa=False):
     if isinstance(gia_tri, str):
         yield duong, gia_tri
     elif isinstance(gia_tri, dict):
         for k, v in gia_tri.items():
-            yield from cac_chu(v, duong + (k,))
+            if gom_khoa:
+                yield duong + (k,), k
+            yield from cac_chu(v, duong + (k,), gom_khoa=gom_khoa)
     elif isinstance(gia_tri, list):
         for i, v in enumerate(gia_tri):
-            yield from cac_chu(v, duong + (i,))
+            yield from cac_chu(v, duong + (i,), gom_khoa=gom_khoa)
 
 
 def doc_mo(viec):
-    dau, ai = viec.dau_vao, None
-    dong = viec.tham_so.get('dong_viec', False)
-    if dau.get('loai') == 'tep':
-        muc = _doc_json(viec)
-        if set(muc) - {'van_ban', 'ma_yeu_cau', 'dong_viec'}:
+    try:
+        dau, ai = viec.dau_vao, None
+        dong = viec.tham_so.get('dong_viec', False)
+        if dau.get('loai') == 'tep':
+            muc = _doc_json(viec)
+            if set(muc) - {'van_ban', 'ma_yeu_cau', 'dong_viec'}:
+                raise loi()
+            ma, chu = muc.get('ma_yeu_cau'), muc.get('van_ban')
+            dong = muc.get('dong_viec', dong)
+            kiem_van_ban(chu, cho_rong=True, cho_dinh_dang=True)
+        elif dau.get('loai') == 'tra_loi_ai':
+            ai = kiem_loai(dau, 'tra_loi_ai')
+            kiem_chuyen_tiep(ai['chuyen_tiep'])
+            ma, chu = ai['chuyen_tiep'].get('ma_yeu_cau'), ai['tra_loi']
+            tong = 0
+            for so, (_, c) in enumerate(cac_chu([chu, ai['du_lieu'], ai['trich_dan']], gom_khoa=True), 1):
+                if so > TRAN_CHUOI_MO:
+                    raise loi('MASK_QUA_GIOI_HAN')
+                kiem_van_ban(c, cho_rong=True, cho_dinh_dang=True)
+                tong += len(c)
+                if tong > 500000:
+                    raise loi('MASK_QUA_GIOI_HAN')
+        else:
             raise loi()
-        ma, chu = muc.get('ma_yeu_cau'), muc.get('van_ban')
-        dong = muc.get('dong_viec', dong)
-        kiem_van_ban(chu, cho_rong=True, cho_dinh_dang=True)
-    elif dau.get('loai') == 'tra_loi_ai':
-        ai = kiem_loai(dau, 'tra_loi_ai')
-        kiem_chuyen_tiep(ai['chuyen_tiep'])
-        ma, chu = ai['chuyen_tiep'].get('ma_yeu_cau'), ai['tra_loi']
-        chuoi = [chu] + [c for _, c in cac_chu(ai['du_lieu'])] + [m['cau'] for m in ai['trich_dan']]
-        for c in chuoi:
-            kiem_van_ban(c, cho_rong=True, cho_dinh_dang=True)
-        if sum(map(len, chuoi)) > 500000:
-            raise loi('MASK_QUA_GIOI_HAN')
-    else:
-        raise loi()
-    if not isinstance(ma, str) or not ma:
-        raise loi('MASK_MA_YEU_CAU')
-    if type(dong) is not bool:
-        raise loi()
-    return chu, ma, dong, ai
+        if not isinstance(ma, str) or not ma:
+            raise loi('MASK_MA_YEU_CAU')
+        if type(dong) is not bool:
+            raise loi()
+        return chu, ma, dong, ai
+    finally:
+        chu = ai = muc = c = None
+
 
 
 def ket_qua_che(kq, chu, *, phien_ban_engine='e_mask 1.0.0'):

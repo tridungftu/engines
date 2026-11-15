@@ -183,3 +183,4 @@ khuôn do bộ kiểm metadata/giá trị nguyên văn; TC-7 giữ không căn c
 nhánh trả lời thành công trong harness dùng fixture Local theo protocol,
 chưa chứng nhận consumer/model thật trả lời thành công; cần lead Hỏi AI/Core
 rà giới hạn giống TC-5, không sửa engine Hỏi AI trong TC-7.
+- Giới hạn đã biết (kiểm độc lập 15/11): thực thể đứng SAU giá trị, bảng văn bản thuần dùng dấu |, và từ viết tắt (HT:) đang bị chặn kể cả ca đúng (trả không thấy căn cứ); nhãn trường tự nhận diện theo danh sách _NHAN_TRUONG cố định + tên trường Core khai.

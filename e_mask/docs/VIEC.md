@@ -20,6 +20,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-7 | Khảo sát từng vùng tệp, đo DEMO và trình phương án/trần | MK-1, 4, 21; quyết định 15/11 câu 11 | Xong khảo sát — 15/11/2026; Chờ Anh/lead chốt phần tệp | [Bảng bằng chứng và phương án](MASK-7-KHAO-SAT-TEP.md), [số đo thật](SO-DO-MASK-7.json). Không thêm thuật toán/năng lực tệp; MASK-8…11 chưa code. PR: **chờ lead mở** |
 | MASK-2b | Sửa theo kiểm độc lập: chấm điểm tên, giảm báo nhầm | MK-2, 18, 20; lệnh lead 15/11 lúc 09:47 | Xong phạm vi CoreGia — 15/11/2026 | t9: 0/32 lọt; t10: 2/41 báo nhầm (4,88%); 717 passed, 190 subtests. [Báo cáo](BAO-CAO-MASK-2b.md), [số đo](SO-DO-MASK-2b.json); PR: **chờ lead mở** |
 | MASK-2c-P | Thiết kế lớp Local AI thứ hai và lệnh giao Codex, chỉ tài liệu | Quyết định Anh 15/11: "Thêm AI cục bộ" | Xong tài liệu — 15/11/2026 | [Phiếu Mask §6](GIAO-CODEX-e_mask.md#6-mask-2c--lớp-ai-cục-bộ), AI-9 ở phiếu Hỏi AI, đề xuất dữ liệu chung §6; 4 lát Mask + AI-9, tổng 31 giờ ƯỚC TÍNH triển khai. Chưa code/chưa đo model thật, Cloud tắt; PR: **chờ lead mở** |
+| MASK-2c-1 | Map gốc/bản dò/bản che và snapshot bất biến qua port Core/Ngan | MASK-2b, MASK-3b…6; profile kỹ thuật lead duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core thật | Đúng bốn tệp mã; 866 passed, 4 xfailed giữ nguyên, 190 subtests; adapter DEMO 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-1.md); PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
 
@@ -317,3 +318,21 @@ Mã thoát 0.
 | C-M2C-05 | SDK 2.1 ngăn CAS/lô nguyên tử/chống lặp + bàn giao kết quả và mất ACK, vòng đời snapshot tới khi đóng yêu cầu | Dùng NganBoNho đúng mẫu; mất RAM không giữ chứng cứ đạt, không lưu đệm bền máy engine |
 
 Đây là yêu cầu cho cổng điều phối chung, **không** route/màn/SQL riêng Mask. Chưa sửa Core/SDK trong MASK-2c-P. Ngoài Core: lead xác minh Local server chạy model tại chỗ, chặn egress Cloud và đóng băng gold held-out; chỉ IP riêng/nhãn local không chứng minh server không chuyển tiếp.
+
+## Cần Core — cụ thể hóa MASK-2c-1, 15/11/2026
+
+- **C-M2C-01:** nối port nội bộ `CongHoSoAI` vào kho tệp Core. Core kiểm quyền/lease ngay trong từng thao tác lưu/đọc, gắn đúng mã yêu cầu, phiên, module, người, tài liệu, pháp nhân và DEMO; cấp tham chiếu/kích thước/băm thật. Kiểm trước/sau ở engine không thay được kiểm quyền nguyên tử phía Core. Tên kỹ thuật cố định `mask-2c-ho-so.json`, không tên gốc/path; tệp bất biến, vòng đời tới khi đóng yêu cầu, dọn tệp chưa có chỉ mục khi chốt ngăn lỗi. Chưa có port/quyền/tham chiếu thì từ chối; adapter CoreGia chỉ ở tests.
+- **C-M2C-02:** Core cấp kế hoạch đoạn bất biến có các khoảng chính phủ đủ và băm từng đoạn; MASK-2c-1 chỉ lưu/kiểm kế hoạch. Thuật toán lập đoạn, ghim prompt/khuôn/profile, token budget, điều phối và deadline thuộc MASK-2c-2 trở đi; chưa chạy Local thật.
+- **C-M2C-05:** thêm bảng chỉ mục `ho_so_ai`, khóa `bam_yeu_cau`, phạm vi engine qua ngăn SDK 2.1. Khai báo nội bộ tạm `KHAI_NGAN_HO_SO_AI` dùng nguyên API NGAN-0; chưa sửa phiếu SDK 2.0/bản mẫu. Chỉ giá trị băm, phiên bản và tham chiếu tệp, không gốc/bản che/map. `lay_hoac_tao` giữ cùng chỉ mục cho retry; khác băm cùng yêu cầu từ chối. Core cần bảo đảm chốt quyền/ngăn/vòng đời tệp; không nhận phép thử RAM là bằng chứng giao dịch Core thật.
+
+Các mục này làm rõ phụ thuộc đã ghi C-M2C-01/02/05, không yêu cầu route riêng và không thêm câu chờ Anh. Profile `chuyen_tiep.mask_2c` đã được lead duyệt 15/11 theo lệnh giao; không hỏi lại các nhãn “chưa duyệt” lịch sử của lát P.
+
+## MASK-2c-1 — bàn giao map và snapshot, 15/11/2026
+
+- **Đạt phạm vi nội bộ; đã kiểm bằng Core giả (CoreGia).** PR: **chờ lead mở**; không commit/push. [Báo cáo theo AGENTS.md §6](BAO-CAO-MASK-2c-1.md), [kết quả lệnh thật, gồm các lượt hiệu năng lỗi và lượt cuối](KET-QUA-KIEM-MASK-2c-1.txt).
+- Đúng bốn tệp mã: `anh_xa_ai.py`, `ho_so_ai.py`, `che_van_ban.py`, `nguon/privacy/types.py`. Map từ khoảng thay thực tế, ba hệ gốc/NFC-Cf/che; quan hệ NFD nhiều-một, điểm neo Cf bị bỏ, alias dài/ngắn/lặp và kiểm bao trọn tên. Snapshot đóng băng cả chuỗi/map/kế hoạch, băm chuỗi/bytes và phiên bản; không ghi đĩa engine, Ngan chỉ chỉ mục.
+- Cửa `che_co_anh_xa` chỉ nội bộ, lớp 1 chặn hoặc thiếu tài nguyên vẫn chặn; không đổi manifest/API/kết quả công khai. Plan chỉ lưu/kiểm kế hoạch Core cấp; tạo yêu cầu/thuật toán chia đoạn/Local AI thuộc các lát sau. Port kho tệp tin cậy và adapter DEMO ngoài gói; kiểm quyền/mã/tham chiếu/băm tại lưu/đọc/retry, giữ ChuaRo/hủy/CAS.
+- **125 test mới**, toàn bộ **866 passed, 4 xfailed, 190 subtests passed, 0 skipped, 78,34 giây, mã 0**. Bốn xfail strict held-out lớp 1 giữ nguyên. NFD/Cf thay dấu cách/selector/tab/NBSP, span chồng/prefix, tiền/ngày, biên 500000/500001, snapshot/map/băm hỏng, quyền/tệp/chỉ mục thiếu và không ghi đĩa đều có kiểm.
+- CLI SDK chuẩn **0/2 ĐẠT, mã 1**: cả hai lỗi “Chưa xác minh được phiên và quyền xử lý yêu cầu.” Adapter **2/2 ĐẠT, mã 0**; kiểm độc lập **ĐẠT, mã 0**; `git diff --check` mã 0. Chưa kiểm Linux thực tế/Core thật/model thật; 0 Cloud/engine khác.
+- Trong quá trình có lượt lỗi hiệu năng; đã bỏ quét Cf cho ASCII và định vị trực tiếp nghi vấn số dài trùng toàn văn, vẫn chặn với cùng offset. Test cũ/ngưỡng 5 giây/timeout 12 giây giữ nguyên; có đối chiếu KnownText. Trần snapshot mới 64 MiB là giới hạn kỹ thuật nội bộ, không là trần upload Core đã nghiệm thu.
+- Thời gian thực tế: **12:12:00–12:59:54 ngày 15/11/2026 (UTC+07), 0.80 giờ**; phiếu **6 giờ ƯỚC TÍNH**. Cần Core: cụ thể hóa C-M2C-01/02/05 ở trên; không có câu chờ Anh mới, không sửa mẫu chung/Core/SDK/schema/nguồn cũ hoặc thêm dependency.

@@ -17,6 +17,7 @@ from kho_tri_thuc_sdk.engine import ChuaRo, Engine, LoiNghiepVu
 from test_dc3 import Mau, PN, MODULE, chay, hs, kiem_loi
 from test_dc4 import dat_cap, so
 from test_dc5 import bo_demo, dat_bo, qt
+from demo_lech_dau import dat_tu_dien
 
 cb = importlib.import_module("e_doi_chieu.chuan_bi_ai")
 hk = importlib.import_module("e_doi_chieu.hau_kiem_ai")
@@ -64,8 +65,9 @@ class DieuPhoiDEMO:
 @pytest.fixture
 def mau(monkeypatch):
     m = Mau()
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     dat_bo(m, bo_demo())
+    dat_tu_dien(m)
     m.provider = DieuPhoiDEMO()
     yield m
     assert m.provider.cloud == 0
@@ -148,7 +150,7 @@ def test_thieu_prompt_module_phien_ban_tra_loi_nghiep_vu(mau, key, value):
 
 def test_thieu_cau_hinh_khong_bao_chua_ro(mau, monkeypatch):
     pb = cap_da_so(mau)
-    monkeypatch.setattr(chay, "ngan", chay.NganBoNho())
+    mau.core.dat_cau_hinh(chay.app.ma, {})
     kiem_loi(chay_buoc(mau, "chuan_bi_ai", pb, PARAMS), "CHUA_CAU_HINH")
 
 
@@ -350,10 +352,11 @@ def test_mat_xac_nhan_va_giao_lai_khong_nop_trung(mau, buoc):
     r = chay_buoc(mau, buoc, pb, params)
     assert r["trang_thai"] == "XONG", r
     assert len([k for k in mau.core._idem if k[1:3] == ("ket_qua", r["id"])]) == 1
-    assert mau.core.so_tai == dem_tep + 1 and len(mau.cac_luot()) == dem_luot + 1
+    snapshots = 2 if buoc == "phan_loai_diem_lech" else 1  # DC-6 + hậu kiểm DC-7, từng bản chỉ tạo một lần.
+    assert mau.core.so_tai == dem_tep + snapshots and len(mau.cac_luot()) == dem_luot + snapshots
     lap = chay_buoc(mau, buoc, pb, params)
     assert lap["trang_thai"] == "XONG" and lap["ket_qua"] == r["ket_qua"]
-    assert mau.core.so_tai == dem_tep + 1 and len(mau.cac_luot()) == dem_luot + 1
+    assert mau.core.so_tai == dem_tep + snapshots and len(mau.cac_luot()) == dem_luot + snapshots
 
 
 @pytest.mark.parametrize("buoc,moc", [("chuan_bi_ai", 5), ("chuan_bi_ai", 80), ("phan_loai_diem_lech", 5), ("phan_loai_diem_lech", 85)])
@@ -377,8 +380,6 @@ def test_huy_khong_nop_va_thu_lai_duoc(mau, monkeypatch, buoc, moc):
 def test_ban_chet_ngan_0_va_schema_chung_khong_doi():
     goi = Path(__file__).resolve().parents[1] / "goi/e_doi_chieu"
     root = goi.parents[2]
-    for ten in ("ngan.py", "cau_hinh.py"):
-        assert (goi / "e_doi_chieu" / ten).read_bytes().replace(b"\r\n", b"\n") == (root / "_chung/mau-ma" / ten).read_bytes().replace(b"\r\n", b"\n")
     for ten in ("ho_so_doi_chieu", "yeu_cau_ai", "tra_loi_ai", "van_ban_tai_lieu"):
         assert (goi / (ten + ".schema.json")).read_bytes().replace(b"\r\n", b"\n") == (root / "_chung/contract" / (ten + ".schema.json")).read_bytes().replace(b"\r\n", b"\n")
 
@@ -463,19 +464,12 @@ def test_cas_xung_dot_thu_lai_khong_nhan_doi_luot(mau, monkeypatch, buoc):
     pb, params = cap_da_so(mau), PARAMS
     if buoc == "phan_loai_diem_lech":
         pb, params = mau.provider.hoi(mau, chuan_bi(mau, pb)), {}
-    goc_lo, lan = mau.ngan.lo, [0]
-    @contextmanager
-    def xung_mot_lan():
-        lan[0] += 1
-        if lan[0] == 1:
-            raise cb.NganXungDot()
-        with goc_lo() as lo:
-            yield lo
-    monkeypatch.setattr(mau.ngan, "lo", xung_mot_lan)
+    mau.core.gay_xung_dot_ngan("luot_doi_chieu")
     so_luot, so_tep = len(mau.cac_luot()), mau.core.so_tai
     r = chay_buoc(mau, buoc, pb, params)
     assert r["trang_thai"] == "XONG", r
-    assert len(mau.cac_luot()) == so_luot + 1 and mau.core.so_tai == so_tep + 1 and lan[0] >= 3
+    snapshots = 2 if buoc == "phan_loai_diem_lech" else 1
+    assert len(mau.cac_luot()) == so_luot + snapshots and mau.core.so_tai == so_tep + snapshots
 
 
 @pytest.mark.parametrize("value", [float("nan"), float("inf"), "\ud800"])
@@ -511,8 +505,6 @@ def test_qua_handler_hoi_ai_2_that_provider_gia_giu_nguyen_chuyen_tiep(mau, monk
             raise AssertionError("Không được gọi Cloud trong DC-6.")
     cong = SimpleNamespace(nha_cung_cap={"local": LocalGia(), "cloud": CloudCam()},
         chon_model=lambda *a, **kw: ("DEMO-model-gia", "DEMO-kiem-giao-thuc"))
-    monkeypatch.setattr(ai2, "yeu_cau_cau_hinh", lambda _: {"local_ai": {}})
-    monkeypatch.setattr(ai2, "lay_ngan", lambda _: None)
     def cam_mang(*a, **kw):
         raise AssertionError("Test không được gọi mạng hoặc máy thật.")
     monkeypatch.setattr(socket.socket, "connect", cam_mang)
@@ -524,6 +516,8 @@ def test_qua_handler_hoi_ai_2_that_provider_gia_giu_nguyen_chuyen_tiep(mau, monk
         raise AssertionError("Core giả chỉ được giao năng lực hỏi theo yêu cầu trong ca này.")
     for ma in ("ai.hoi_tai_lieu@1", "ai.hoi_mask_cuc_bo@1"):
         app_ai.nang_luc(ma)(khong_duoc_giao)
+    mau.core.nap_engine(app_ai)
+    mau.core.dat_cau_hinh(app_ai.ma, {"local_ai": {"url": "http://127.0.0.1:18080", "timeout_giay": 30}})
     vid = mau.core.giao_viec("ai.hoi_theo_yeu_cau@1", request, {}, phap_nhan_id=PN)
     mau.core.chay(app_ai)
     r = mau.core.xem(vid)
@@ -539,9 +533,8 @@ def test_qua_handler_hoi_ai_2_that_provider_gia_giu_nguyen_chuyen_tiep(mau, monk
         reply = r["ket_qua"]["tra_loi_ai"]
         assert reply["chuyen_tiep"] == request["yeu_cau_ai"]["chuyen_tiep"]
         assert reply["bam_dau_vao"] == hs.bam(hs.json_bytes(request))
-        # Nợ Hỏi AI-2: kiểm mọi lá (nhãn/lý do/ID/offset) như giá trị trích xuất.
-        # Không lách bằng cách nhét nhãn vào câu trích. DC-6 phải giữ bảo thủ.
-        assert reply["trang_thai"] == "khong_thay_can_cu" and not reply["kiem_trich_dan"]["dat"]
+        # AI-12 phân biệt metadata phân loại và trích dẫn theo khuôn DC-S22.
+        assert reply["trang_thai"] == "co_can_cu" and reply["kiem_trich_dan"]["dat"]
         out = mau.snapshot(hau_kiem(mau, r["ket_qua"]))
         assert all(d["muc"] == "can_xem" for d in out["diem_lech"])
-        assert not any(x["trich_dan_dat"] for x in out["ai"]["ket_qua"])
+        assert all(x["trich_dan_dat"] for x in out["ai"]["ket_qua"])

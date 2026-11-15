@@ -8,6 +8,8 @@ import threading
 import time
 import zlib
 
+from ngan_demo import sua_ngan
+
 import pytest
 from kho_tri_thuc_sdk.engine import LoiNghiepVu, ViecDaHuy, ChuaRo
 
@@ -25,8 +27,8 @@ class CorePhanTrangDEMO(CoreTepConDEMO):
         super().__init__()
         self.phan_trang_do_core = {}
 
-    def _nhan_viec(self, ma):
-        data = super()._nhan_viec(ma)
+    def _nhan_viec(self, ma, instance=None):
+        data = super()._nhan_viec(ma, instance)
         if data and data["id"] in self.phan_trang_do_core:
             data["ngu_canh"]["doi_chieu_phan_trang"] = deepcopy(self.phan_trang_do_core[data["id"]])
         return data
@@ -124,7 +126,7 @@ def so(m, pb=None, **kw):
 @pytest.fixture
 def mau(monkeypatch):
     m = Mau(CorePhanTrangDEMO())
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     return m
 
 
@@ -157,7 +159,7 @@ def test_cap_giong_nhau_chua_ket_luan_sach(mau):
     assert s["kiem_tra"]["so_van_ban"] == "dat" and s["kiem_tra"]["quy_tac_cung"] == "chua_kiem"
     assert s["kiem_tra"]["trang"] == "chua_kiem"
     assert s["ket_luan"] is None and not s["da_kiem_du"] and s["de_nghi_chan"]
-    assert len(mau.cac_luot()) == 2
+    assert len(mau.cac_luot()) == 3  # Nhận cặp, so DC-5 và kiểm trang DC-7, mỗi bước một bản.
     row = [b.gia_tri for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"][0]
     assert len(hs.json_bytes(row)) < 65536 and "Công ty" not in hs.json_bytes(row).decode()
 
@@ -379,7 +381,6 @@ def test_id_on_dinh_lap_lai_va_nguon_id_moi(mau):
     # Một phiên Core khác có ID tệp mới vẫn cho cùng mã điểm nghiệp vụ.
     m = Mau()
     dat_cap(m, "DEMO thuê", "DEMO thuế")
-    chay.ngan = m.ngan
     assert [d["ma_diem"] for d in snapshot_so(m, so(m))["diem_lech"]] == old
 
 
@@ -431,7 +432,7 @@ def test_khong_doc_cheo_phap_nhan_module(mau, pn, module):
 
 def test_thieu_cau_hinh(mau, monkeypatch):
     pb = mau.chay()["ket_qua"]
-    monkeypatch.setattr(chay, "ngan", ng.NganBoNho(chay._khai["ngan_du_lieu"]))
+    mau.core.dat_cau_hinh(chay.app.ma, {})
     kiem_loi(so(mau, pb), "CHUA_CAU_HINH")
 
 
@@ -576,15 +577,15 @@ def test_snapshot_ra_vuot_tran_khong_tai_ban_cat(mau):
 @pytest.mark.parametrize("so_lan", [1, 3])
 def test_cas_so_xung_dot_khong_tai_lai_tep(mau, monkeypatch, so_lan):
     pb = mau.chay()["ket_qua"]
-    original = mau.ngan._thuc_hien
-    dem = 0
-    def conflict(du_lieu, chi_muc, phien_ban, lenh):
+    original, dem = mau.core._ngan_ghi_lo, 0
+    def conflict(ma, instance, lenh, khoa, *, viec_id=None):
         nonlocal dem
-        if lenh[0] == "sua" and lenh[3].get("trang_thai") == "da_so" and dem < so_lan:
+        l = lenh[0]
+        if l["thao_tac"] == "sua" and l["gia_tri"].get("trang_thai") == "da_so" and dem < so_lan:
             dem += 1
-            raise ng.NganXungDot()
-        return original(du_lieu, chi_muc, phien_ban, lenh)
-    monkeypatch.setattr(mau.ngan, "_thuc_hien", conflict)
+            mau.core.gay_xung_dot_ngan("luot_doi_chieu")
+        return original(ma, instance, lenh, khoa, viec_id=viec_id)
+    monkeypatch.setattr(mau.core, "_ngan_ghi_lo", conflict)
     count = mau.core.so_tai
     r = so(mau, pb)
     if so_lan == 1:
@@ -592,23 +593,21 @@ def test_cas_so_xung_dot_khong_tai_lai_tep(mau, monkeypatch, so_lan):
     else:
         kiem_loi(r, "NGAN_XUNG_DOT")
         assert any(b.gia_tri["trang_thai"] == "can_thu_lai" for b in mau.cac_luot())
-    assert mau.core.so_tai == count + 1
+    assert mau.core.so_tai == count + (2 if so_lan == 1 else 1)
 
 
 def test_cas_chu_cu_khong_chot_cleanup_de_chu_moi(mau, monkeypatch):
     pb = mau.chay()["ket_qua"]
-    original = mau.ngan._thuc_hien
-    chen = False
-    def conflict(du_lieu, chi_muc, phien_ban, lenh):
+    original, chen = mau.core._ngan_ghi_lo, False
+    def conflict(ma, instance, lenh, khoa, *, viec_id=None):
         nonlocal chen
-        if lenh[0] == "sua" and lenh[3].get("trang_thai") == "da_so" and not chen:
+        l = lenh[0]
+        if l["thao_tac"] == "sua" and l["gia_tri"].get("trang_thai") == "da_so" and not chen:
             chen = True
-            # Thay chủ trước CAS chốt của worker cũ; thực hiện bằng API ngăn.
-            with mau.ngan.lo() as lo:
-                lo.sua("luot_doi_chieu", lenh[2], {"chu_so_huu": "DEMO-chu-moi"}, row_version=lenh[4])
-            raise ng.NganXungDot()
-        return original(du_lieu, chi_muc, phien_ban, lenh)
-    monkeypatch.setattr(mau.ngan, "_thuc_hien", conflict)
+            original(ma, instance, [{**l, "gia_tri": {"chu_so_huu": "DEMO-chu-moi"}}],
+                     "DEMO-chen-chu-khac", viec_id=viec_id)
+        return original(ma, instance, lenh, khoa, viec_id=viec_id)
+    monkeypatch.setattr(mau.core, "_ngan_ghi_lo", conflict)
     kiem_loi(so(mau, pb), "NGAN_XUNG_DOT")
     rows = [b.gia_tri for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "dang_so"]
     assert len(rows) == 1 and rows[0]["chu_so_huu"] == "DEMO-chu-moi"
@@ -635,7 +634,7 @@ def test_hai_viec_so_dong_thoi_mot_luot_va_co_the_thu_lai(mau, monkeypatch):
     assert sorted(r["trang_thai"] for r in rs) == ["LOI", "XONG"]
     kiem_loi(next(r for r in rs if r["trang_thai"] == "LOI"), "DC_DANG_XU_LY")
     assert so(mau, pb)["ket_qua"] == next(r for r in rs if r["trang_thai"] == "XONG")["ket_qua"]
-    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 1
+    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 2  # DC-5 và DC-7 không tạo trùng từng bước.
 
 
 def test_cache_mat_tep_so_duoc_dung_lai(mau):
@@ -645,7 +644,7 @@ def test_cache_mat_tep_so_duoc_dung_lai(mau):
     new = so(mau, pb)
     snapshot_so(mau, new)
     assert new["ket_qua"]["ho_so_doi_chieu"]["ho_so"]["tep_id"] != r["ket_qua"]["ho_so_doi_chieu"]["ho_so"]["tep_id"]
-    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 1
+    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 2
 
 
 def test_cache_sai_bam_khong_tu_bo_qua(mau):
@@ -654,8 +653,7 @@ def test_cache_sai_bam_khong_tu_bo_qua(mau):
     ban = next(b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so")
     value = ban.gia_tri
     value["phong_bi"]["ho_so_doi_chieu"]["bam_ho_so"] = "sha256:" + "0" * 64
-    with mau.ngan.lo() as lo:
-        lo.sua("luot_doi_chieu", {"phap_nhan_id": PN, "ma_luot": value["ma_luot"]}, value, row_version=ban.row_version)
+    sua_ngan(mau, {"ma_luot": value["ma_luot"]}, value, ban.row_version)
     kiem_loi(so(mau, pb), "DC_SAI_NGUON")
 
 
@@ -680,8 +678,8 @@ def test_mat_xac_nhan_tai_tep_ket_qua_khong_trung(mau):
     for tac in ("tep", "ket_qua", "ket_thuc"):
         mau.core.gay_mat_xac_nhan(tac)
     snapshot_so(mau, so(mau, pb))
-    assert mau.core.so_tai == 2
-    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 1
+    assert mau.core.so_tai == 3  # Hai snapshot bất biến DC-5/DC-7, một kết quả SDK.
+    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 2
 
 
 def test_loi_la_khong_lo_noi_dung_ngoai_le(mau, monkeypatch, capsys):
@@ -718,9 +716,15 @@ def test_so_khong_truy_cap_dia_mang_engine_khac(mau, monkeypatch):
     pb = mau.chay()["ket_qua"]
     def cam(*a, **kw):
         pytest.fail("Lượt so chỉ được dùng SDK/Core và RAM")
+    mo_goi = Path.open
+    def chi_schema(path, *a, **kw):
+        # CoreGia 2.2 nạp schema gói ở bước chuẩn bị, trước khi nhận việc.
+        if path == chay.app.thu_muc_goi / "cau_hinh.schema.json" and kw.get("mode", "r") == "r":
+            return mo_goi(path, *a, **kw)
+        return cam(path, *a, **kw)
     with monkeypatch.context() as mp:
         mp.setattr(builtins, "open", cam)
-        mp.setattr(Path, "open", cam)
+        mp.setattr(Path, "open", chi_schema)
         mp.setattr(subprocess, "Popen", cam)
         mp.setattr(urllib.request, "urlopen", cam)
         r = so(mau, pb)

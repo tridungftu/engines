@@ -8,8 +8,9 @@ from pathlib import Path
 import pytest
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
-from e_tra_cuu.cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
-from e_tra_cuu.ngan import NganBoNho
+from kho_tri_thuc_sdk.engine import LoiDuongTruyen
+from kho_tri_thuc_sdk.thu import CoreGia
+from e_tra_cuu import chay
 from mo_hinh_contract_tc_1 import (
     CAU_LOI, GIAI_DOAN, bam, doc_json, fixture_cat_doan, json_chuan,
     kiem_giai_doan, kiem_quan_he, kiem_schema_moi,
@@ -26,7 +27,8 @@ def test_schema_nguon_ban_chep_nguyen_trang(ten):
     nguon = (REPO / "_chung/contract" / (ten + ".schema.json")).read_bytes()
     chep = (GOI / "contract" / (ten + ".schema.json")).read_bytes()
     assert sha256(nguon.replace(b"\r\n", b"\n")).digest() == sha256(chep.replace(b"\r\n", b"\n")).digest()
-    assert nguon == chep
+    assert nguon.replace(b"\r\n", b"\n") == chep
+    assert b"\r" not in chep  # Gói giữ LF để kiểm kê bytes ổn định trên Windows/Linux.
     assert json.loads(chep)["$id"] == f"urn:ktt:contract:{ten}:1"
 
 
@@ -232,10 +234,8 @@ def test_json_nghiem(b):
 @pytest.mark.parametrize("ten", TEN)
 def test_bo_doc_cau_hinh_khong_gia_lam_validator_chung(ten):
     schema = json.loads((GOI / "contract" / (ten + ".schema.json")).read_bytes())
-    ngan = NganBoNho()
-    # Thiếu bản ghi trả None trước khi kiểm schema; phải có giá trị để kiểm
-    # đúng giới hạn bộ đọc, không sửa mẫu NGAN-0 vì giả định sai của test.
-    with ngan.lo() as lo:
-        lo.them("cau_hinh", {}, {"nhan": "DEMO"})
-    with pytest.raises(CauHinhKhongHopLe):
-        doc_cau_hinh(ngan, schema)
+    core = CoreGia(chay.app)
+    # Schema cấu hình thuộc gói, không nhận schema/phong bì khác làm giá trị cấu hình.
+    with pytest.raises(LoiDuongTruyen) as exc:
+        core.dat_cau_hinh(chay.app.ma, schema)
+    assert exc.value.ma == "NGAN_DU_LIEU_SAI"

@@ -30,6 +30,6 @@
   "cau_hinh": {"schema": "cau_hinh.schema.json"},
   "giao_dien_quan_tri": [
     {"ma": "cau_hinh", "ten": "Cấu hình", "tep": "ui/cau_hinh.js", "quyen": "admin_core"},
-    {"ma": "trang_thai", "ten": "Trạng thái bài đo", "tep": "ui/trang_thai.js", "quyen": "admin_core"}
+    {"ma": "trang_thai", "ten": "Trạng thái bài đo", "tep": "ui/trang_thai.js", "quyen": "xem_dot_kiem_theo_phap_nhan"}
   ]
 }

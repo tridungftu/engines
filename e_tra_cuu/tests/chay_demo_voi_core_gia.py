@@ -96,7 +96,7 @@ def main():
         print(f'[{"ĐẠT" if dat else "LỖI"}] {k["ten"]}' + ("" if dat else ": " + str(k["loi"]["ma"])))
     dat = sum(k["trang_thai"] == "XONG" for k in kq)
     print(f"{dat}/{len(kq)} DEMO ĐẠT; mạng ngoài/lượt provider/Cloud={dem_mang} (không có provider trong harness).")
-    print("Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật; ngăn RAM mất khi dừng.")
+    print("Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật; ngăn SDK được kiểm trong bộ nhớ CoreGia, chưa kiểm lưu bền thật.")
     return 0 if kq and dat == len(kq) and dem_mang == 0 else 1
 
 

@@ -14,7 +14,7 @@ from kho_tri_thuc_sdk.engine import ChuaRo, LoiDuongTruyen, LoiNghiepVu, ViecDaH
 
 from .chuan_hoa import chuan_hoa, kiem_bo
 from .doc_docx import MIME_DOCX, doc_bytes, _kiem_danh_muc, _kiem_zip
-from .ngan import NganKhongHopLe, NganXungDot
+from kho_tri_thuc_sdk.engine import NganXungDot
 from .vi_tri import kiem_anh, loi
 
 MIB = 1048576
@@ -215,6 +215,10 @@ class _DocTep:
                 if exc.http_status == 413:
                     loi("DC_QUA_GIOI_HAN")
                 raise
+            except LoiNghiepVu as exc:
+                if exc.ma == "VUOT_GIOI_HAN":
+                    loi("DC_QUA_GIOI_HAN")
+                raise
             except (FileNotFoundError, PermissionError):
                 loi("DC_THIEU_NGUON")
             if len(raw) > min(toi_da, con):
@@ -358,8 +362,31 @@ def _phong_bi(snapshot, tep, raw):
     return pb
 
 
+def dong_phong_bi(pb):
+    """SDK 2.2 chưa có kiểu cột json; chỉ giữ phong bì nhỏ, không toàn văn."""
+    raw = json_bytes(pb)
+    if len(raw) > 65536:
+        loi("DC_QUA_GIOI_HAN")
+    return raw.decode("utf-8")
+
+
+def mo_phong_bi(gia_tri):
+    if type(gia_tri) is not str:
+        loi()
+    return doc_json(gia_tri.encode("utf-8"), lambda: None)
+
+
+def doc_sau_lo(ngan, khoa, lo):
+    """Đọc lại theo API công khai, giữ phiên bản CAS của lô vừa hoàn tất."""
+    ban = ngan.doc("luot_doi_chieu", khoa)
+    if (ban is None or ban.id != lo.ket_qua[0].id
+            or ban.row_version != lo.ket_qua[0].row_version):
+        raise NganXungDot()
+    return ban
+
+
 def _lay_cu(doc, ban):
-    pb = ban.gia_tri["phong_bi"]
+    pb = mo_phong_bi(ban.gia_tri["phong_bi"])
     kiem_schema(pb, _SCHEMA_HS)
     p = pb["ho_so_doi_chieu"]
     raw = doc.doc({"tep": p["ho_so"], "bam": p["bam_ho_so"]}, doc.cau_hinh["ho_so_mib"] * MIB)
@@ -417,7 +444,7 @@ def nhan_cap(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
                "bang_chung_ocr_lai": [dau_ref(v) for v in cap["bang_chung_ocr_lai"]]}
     if "anh_trang_word" in cap:
         dau_cap["anh_trang_word"] = [dau_ref(v) for v in cap["anh_trang_word"]]
-    khoa = {"phap_nhan_id": phap_nhan, "bam_cap": bam(json_bytes(dau_cap)),
+    khoa = {"bam_cap": bam(json_bytes(dau_cap)),
             "bam_bo": _bam(cap["bo_quy_tac"]["bam"]), "phien_ban_engine": phien_ban_engine}
     chu_so_huu = str(viec.ngu_canh.get("viec_id", viec.id)) + ":" + str(viec.lan_thu) + ":" + uuid.uuid4().hex
     thoi_han_chiem = cau_hinh.get("thoi_han_chiem_luot_giay", thoi_han_viec_giay + 60)
@@ -430,9 +457,10 @@ def nhan_cap(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
                 chiem = {"trang_thai": "dang_nhan", "chu_so_huu": chu_so_huu,
                          "luc_chiem": luc_chiem, "han_chiem": luc_chiem + thoi_han_chiem}
                 with ngan.lo() as lo:
-                    kq = lo.lay_hoac_tao("luot_doi_chieu", khoa,
+                    lo.lay_hoac_tao("luot_doi_chieu", khoa,
                         {**khoa, "ma_luot": ma_luot, **chiem})
-                ban = kq.ban_ghi  # KetQuaLenh chỉ được đọc sau commit.
+                kq = lo.ket_qua[0]
+                ban = doc_sau_lo(ngan, khoa, lo)
                 if kq.da_tao:
                     giu = True
                     break
@@ -445,19 +473,19 @@ def nhan_cap(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
                     # Tệp Core cũ hết hạn/không còn quyền: dựng lại từ nguồn
                     # hiện tại đã kiểm ở trên; không trả phong bì cũ thiếu tệp.
                     with ngan.lo() as lo:
-                        kq = lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
+                        lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                                     {"trang_thai": "can_thu_lai"}, row_version=ban.row_version)
-                    ban = kq.ban_ghi
+                    ban = doc_sau_lo(ngan, khoa, lo)
                 if (ban.gia_tri["trang_thai"] == "can_thu_lai" or
-                        ban.gia_tri["trang_thai"] == "dang_nhan" and ban.gia_tri.get("han_chiem", 0) <= time.time()):
+                        ban.gia_tri["trang_thai"] == "dang_nhan" and float(ban.gia_tri.get("han_chiem") or 0) <= time.time()):
                     # Hàng cũ chưa có hạn cũng được thu hồi bằng CAS. Chủ cũ
                     # trở lại không thể chốt/cleanup đè row_version của chủ mới.
                     luc_chiem = time.time()
                     chiem.update(luc_chiem=luc_chiem, han_chiem=luc_chiem + thoi_han_chiem)
                     with ngan.lo() as lo:
-                        kq = lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
+                        lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                                     chiem, row_version=ban.row_version)
-                    ban, giu = kq.ban_ghi, True
+                    ban, giu = doc_sau_lo(ngan, khoa, lo), True
                     break
             except NganXungDot:
                 if lan == 49:
@@ -493,8 +521,8 @@ def nhan_cap(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
             viec.kiem_huy()
             try:
                 with ngan.lo() as lo:
-                    kq = lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
-                                {"trang_thai": "da_nhan", "phong_bi": pb}, row_version=ban.row_version)
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
+                                {"trang_thai": "da_nhan", "phong_bi": dong_phong_bi(pb)}, row_version=ban.row_version)
                 giu = False
                 break
             except NganXungDot:
@@ -511,7 +539,7 @@ def nhan_cap(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
             # Không xóa sổ; nhường lần thử mới bằng CAS. Không đè lỗi gốc/hủy.
             try:
                 with ngan.lo() as lo:
-                    lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                            {"trang_thai": "can_thu_lai"}, row_version=ban.row_version)
             except Exception:
                 pass

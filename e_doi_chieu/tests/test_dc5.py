@@ -38,7 +38,7 @@ def dat_bo(m, bo):
 @pytest.fixture
 def mau(monkeypatch):
     m = Mau()
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     dat_bo(m, bo_demo())
     return m
 

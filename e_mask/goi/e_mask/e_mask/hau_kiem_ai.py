@@ -322,7 +322,7 @@ class HauKiemAI:
         if (v.get('giai_doan_ai') != 'CHO_LOCAL'
                 or s['ket_qua_quy_tac']['ma_yeu_cau'] != ma
                 or set(v['da_giao']) != set(range(len(h.ke_hoach)))
-                or meta['ma_ho_so_ram'] != dau.ma_ho_so_ram
+                or meta['ho_so'] != cb.tham_chieu_ram(s, dau)
                 or meta['bam_ho_so'] != dau.bam_ho_so):
             raise loi('MASK_AI_NGUON')
         # Chỉ nguồn Local chưa rõ được giữ RAM; mọi lỗi xác định hoặc

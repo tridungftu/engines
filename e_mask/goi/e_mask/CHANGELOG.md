@@ -1,4 +1,10 @@
-## Chưa phát hành — 15/11/2026, MASK-R5
+## Chưa phát hành — 15/11/2026, MASK-R5 (tiếp lúc 23:50)
+
+- Phân loại đủ 216 test: 207 ca an toàn dùng RAM R4 và ngăn SDK 2.2.0; 9 ca lưu snapshot đổi sang kiểm không lưu và lỗi rõ khi mất RAM. Giữ bốn xfailed cũ; fixture/công cụ snapshot cũ được lưu nguyên bản ngoài gói ở LUU-TRU.
+- Theo chỉ dẫn tiếp lát, giữ hình dạng ho_so/bam_ho_so cho AI-9 bằng metadata ram-… không có tệp tương ứng. Validator chỉ nhận metadata RAM cố định và hậu kiểm đối chiếu đúng phiên/băm; không ghi/đọc hồ sơ Core. Không sửa e_hoi_ai hoặc schema/contract chung. Cần phối hợp AI-9: bỏ yêu cầu snapshot Core (AI-13).
+- Giữ nguồn Local/đủ đoạn/span/Unicode/tiền-ngày/retry/quyền/TTL và Cloud tắt. Thiếu tài nguyên trả đúng MASK_THIEU_TAI_NGUYEN, không phát hành. Chay.py/R6 và các cửa Core còn thiếu vẫn fail-closed; kết quả thật ở VIEC/báo cáo R5, PR chờ lead mở. Đã kiểm bằng Core giả (CoreGia), chưa Core/Local/Office/Linux thật.
+
+## Chưa phát hành — 15/11/2026, MASK-R5 (lượt đầu 22:17, lịch sử)
 
 - Chuyển hồ sơ MASK-2c (gốc, bản quy tắc, edit map/Unicode, kế hoạch, phiên bản, cấu hình đã ghim và phản hồi Local) sang handle `KhoAnhXaRAM` của R4. Đóng cửa lưu/đọc snapshot `KhoHoSoAI`; chuẩn bị và hậu kiểm không đọc/ghi chỉ mục hoặc hồ sơ Core. Kho nhận diện chỉ tìm chính xác qua R2, không phục hồi danh mục bản rõ hoặc dùng kho RAM lịch sử để chốt.
 - Chuyển tiếp nội bộ chỉ có mã RAM opaque, băm, chỉ số/biên đoạn và nhãn profile an toàn. Không `ho_so`/`tap_phan_hoi` tham chiếu tệp, không gốc/map. Core chọn từng đoạn qua port, Mask trả đúng một `yeu_cau_ai`; hậu kiểm nhận tập phản hồi Local tạm qua cửa tin cậy rồi kiểm nguồn và băm từng yêu cầu dựng lại từ RAM. Không gọi Hỏi AI/model từ Mask, không Cloud.

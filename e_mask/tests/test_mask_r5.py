@@ -26,7 +26,8 @@ def test_rong_day_du_ram_khong_snapshot_ngan_va_giu_han():
     b = bo()
     k = chuan_bi(b)
     meta = k['ket_qua']['yeu_cau_ai']['chuyen_tiep']['mask_2c']
-    assert 'ho_so' not in meta and 'tap_phan_hoi' not in meta
+    assert meta['ho_so']['tep_id'].startswith('ram-') and 'tap_phan_hoi' not in meta
+    assert meta['ho_so']['tep_id'] not in b.c._tep
     assert len(json_chuan(meta)) < 4096
     han = b.ram._ban_ghi.han
     du = b.ram._ban_ghi.du_lieu
@@ -65,6 +66,17 @@ def test_cua_snapshot_cu_dong_khong_goi_cong_ngan():
     for ham in (k.luu, k.doc):
         with pytest.raises(LoiNghiepVu):
             ham(None, 'DEMO', None)
+
+
+@pytest.mark.parametrize('ten', ['mạc đĩnh chi', 'orvella mivanta'])
+def test_truong_khac_xung_dot_nhom_da_duyet_van_fail_closed(ten):
+    # Không dùng đổi fixture sang gửi: để tuyên bố R3 đã hiểu nhóm trường
+    # không nhãn. Trường KHAC trùng tên CA_NHAN vẫn phải chặn thật sự.
+    b = bo(ten + '; nội dung.', seeds=[(ten, 'CA_NHAN', '[[MASKCN-R5-NHOM]]')])
+    k = chay(b)
+    chan(k)
+    assert k['loi']['ma'] == 'MASK_XUNG_DOT'
+    assert b.ram._ban_ghi is None and not b.c._tep and not b.cong.giao
 
 
 @pytest.mark.parametrize('goc', ['Nguyễn Văn An; NGUYỄN VĂN AN', 'a\u0301; á', 'a\u200bb; ab'])

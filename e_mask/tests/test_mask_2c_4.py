@@ -41,7 +41,7 @@ def chi_loopback_khong_cloud(monkeypatch):
 
 
 def ca_demo(ten='orvella linero', *, chu=None, nhom='nguoi'):
-    chu = 'DEMO; ' + ten + '; nội dung.' if chu is None else chu
+    chu = 'DEMO; gửi: ' + ten + '; nội dung.' if chu is None else chu
     gold = []
     start = 0
     while ten:
@@ -143,7 +143,7 @@ def test_toan_chuoi_model_va_network_checks_nguyen_ban(ollama):
 @pytest.mark.parametrize('ten', ['orvella linero', unicodedata.normalize('NFD', 'ánh veloria'),
                                 'orvella\u200b linero', 'orvella\u200f linero', 'orvella linero\ufe0f'])
 def test_nfd_cf_selector_lap(ten):
-    ca = ca_demo(ten, chu=ten+'; '+ten+'; nội dung DEMO.')
+    ca = ca_demo(ten, chu='gửi: '+ten+'; gửi: '+ten+'; nội dung DEMO.')
     with LocalGia() as may:
         tra_gold(may, [ten])
         k = do_gia(may, ca)
@@ -168,7 +168,7 @@ def test_nhieu_doan_overlap_du_va_khong_gui_gold():
 @pytest.mark.parametrize('ten,chu', [('mạc đĩnh chi','mạc đĩnh chi'), ('lương thế vinh','lương thế vinh'),
     ('từ minh tâm','từ minh tâm'), ('văn tiến dũng','phụ trách hạng mục: văn tiến dũng')])
 def test_hai_lop_bon_ca_lead_cu_ai_bao_du(ten, chu):
-    b = bo(chu + '; nội dung DEMO.')
+    b = bo('gửi: ' + chu + '; nội dung DEMO.')
     a = b.chu.index(ten)
     giao(b, tap_phan_hoi(b, [thuc_the(b, a, a + len(ten))]))
     k = chay(b)
@@ -177,7 +177,7 @@ def test_hai_lop_bon_ca_lead_cu_ai_bao_du(ten, chu):
 
 
 def test_ai_bao_thieu_mot_phan_ten_van_lot_khong_duoc_tuyen_bo_cuu_het():
-    ca = ca_demo('mạc đĩnh chi', chu='mạc đĩnh chi; nội dung DEMO.')
+    ca = ca_demo('mạc đĩnh chi', chu='gửi: mạc đĩnh chi; nội dung DEMO.')
     with LocalGia() as may:
         tra_gold(may, ['mạc đĩnh'])
         k = do_gia(may, ca)
@@ -188,7 +188,7 @@ def test_ai_bao_thieu_mot_phan_ten_van_lot_khong_duoc_tuyen_bo_cuu_het():
 
 
 def test_da_thay_lot_van_khong_dat_khi_ca_khac_loi_ky_thuat():
-    c1 = ca_demo('mạc đĩnh chi',chu='mạc đĩnh chi; nội dung DEMO.')
+    c1 = ca_demo('mạc đĩnh chi',chu='gửi: mạc đĩnh chi; nội dung DEMO.')
     c2 = ca_demo()
     with LocalGia() as may:
         tra_gold(may,['mạc đĩnh'])
@@ -487,7 +487,7 @@ def test_bao_cao_trong_repo_can_thu_muc_chi_dinh(tmp_path, monkeypatch):
 
 
 def test_che_thua_dinh_danh_qua_toan_chuoi_local_gia():
-    ca = ca_demo('linero',chu='DEMO; orvella linero; nội dung.')
+    ca = ca_demo('linero',chu='DEMO; gửi: orvella linero; nội dung.')
     with LocalGia() as may:
         tra_gold(may,['orvella linero'])
         k = do_gia(may,ca)
@@ -525,7 +525,7 @@ def test_ngoai_le_tien_trinh_cli_van_ghi_ca_truoc(tmp_path,monkeypatch,capsys):
 
 
 def test_timeout_cung_giu_dem_doan_ai_da_xong(tmp_path,monkeypatch):
-    ca = ca_demo(chu='DEMO; '+ 'nội dung tổng hợp; '*900+' orvella linero')
+    ca = ca_demo(chu='DEMO; '+ 'nội dung tổng hợp; '*900+' gửi: orvella linero')
     monkeypatch.setattr(tool,'doc_bo',lambda: bo_demo(ca))
     tep = tmp_path/'mot-phan-doan.json'
     cac_luot = gia_deadline_child(monkeypatch, so_doan_ai_xong=1)

@@ -106,6 +106,9 @@ def _bao_ve(ham):
                                 thu_lai_duoc=exc.thu_lai_duoc) from None
         except NganXungDot:
             raise loi('MASK_AI_XUNG_DOT') from None
+        except tai_nguyen.ThieuTaiNguyen:
+            raise LoiNghiepVu('MASK_THIEU_TAI_NGUYEN',
+                             'Chưa có đủ tài nguyên nhận diện được phê duyệt.') from None
         except LoiNghiepVu as exc:
             if exc.ma in {'MASK_ANH_XA_KHONG_CON', 'MASK_CHUOI_CHUA_GHIM',
                           'MASK_CHUOI_DANG_XU_LY', 'MASK_BUOC_DANG_XU_LY',
@@ -262,6 +265,16 @@ def doc_snapshot(raw):
     return v
 
 
+def tham_chieu_ram(snapshot, dau):
+    """Metadata tương thích AI-9; không phải tệp và không dùng để tải lại.
+
+    AI-9 cũ đòi hình dạng ho_so. Chỉ mã opaque/độ dài của dữ liệu RAM đi
+    qua cửa này; không tạo snapshot Core, kể cả khi mất RAM hoặc retry.
+    """
+    return dict(tep_id='ram-' + dau.ma_ho_so_ram, ten='mask-2c-ram.json',
+                mime='application/json', kich_thuoc=len(json_chuan(snapshot)))
+
+
 @_bao_ve
 def yeu_cau_cho_doan(snapshot, dau, chi_so=0):
     """Hàm nội bộ Mask dưới handle RAM; Core chỉ chọn chỉ số qua port."""
@@ -273,7 +286,7 @@ def yeu_cau_cho_doan(snapshot, dau, chi_so=0):
     dau.kiem()
     d, cfg = h.ke_hoach[chi_so], snapshot['cau_hinh']
     tiep = dict(phien_ban=1, ma_yeu_cau=snapshot['ket_qua_quy_tac']['ma_yeu_cau'],
-                nha_cung_cap_bat_buoc='local', ma_ho_so_ram=dau.ma_ho_so_ram, bam_ho_so=dau.bam_ho_so,
+                nha_cung_cap_bat_buoc='local', ho_so=tham_chieu_ram(snapshot, dau), bam_ho_so=dau.bam_ho_so,
                 bam_goc=h.anh_xa.bam_goc, bam_da_che_quy_tac=h.anh_xa.bam_da_che,
                 phien_ban_map=h.anh_xa.phien_ban, chi_so_doan=chi_so, so_doan=len(h.ke_hoach),
                 bat_dau_doan=d.bat_dau, ket_thuc_doan=d.ket_thuc, bam_doan=d.bam_doan,

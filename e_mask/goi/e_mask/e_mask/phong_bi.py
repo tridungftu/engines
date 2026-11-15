@@ -281,18 +281,17 @@ def kiem_yeu_cau_ai(dau):
 def kiem_meta_ram(meta):
     """Allowlist P4 trong trường mở; không đổi schema/contract chung.
 
-    Không nhận tham chiếu hồ sơ/tập phản hồi, object lồng hoặc bản gốc/map.
+    ho_so chỉ là metadata ram-… tương thích AI-9, không phải tệp Core.
+    Không nhận tập phản hồi, object nội dung hoặc bản gốc/map.
     Mã/băm chỉ để đối chiếu RAM, không tự chứng thực quyền/nguồn.
     """
     import re
-    khoa = set(('phien_ban ma_yeu_cau nha_cung_cap_bat_buoc ma_ho_so_ram bam_ho_so bam_goc '
+    khoa = set(('phien_ban ma_yeu_cau nha_cung_cap_bat_buoc ho_so bam_ho_so bam_goc '
                 'bam_da_che_quy_tac phien_ban_map chi_so_doan so_doan bat_dau_doan '
                 'ket_thuc_doan bam_doan he_offset bam_prompt bam_khuon bam_profile').split())
     if (type(meta) is not dict or set(meta) != khoa
             or type(meta['ma_yeu_cau']) is not str
             or re.fullmatch(r'[A-Za-z0-9_.:-]{1,200}', meta['ma_yeu_cau']) is None
-            or type(meta['ma_ho_so_ram']) is not str
-            or re.fullmatch(r'[0-9a-f]{32}', meta['ma_ho_so_ram']) is None
             or meta['nha_cung_cap_bat_buoc'] != 'local'
             or meta['he_offset'] != 'unicode_code_point'
             or type(meta['phien_ban']) is not int or meta['phien_ban'] != 1
@@ -304,6 +303,13 @@ def kiem_meta_ram(meta):
             or meta['ket_thuc_doan'] - meta['bat_dau_doan'] > 8000
             or any(type(meta[k]) is not str or re.fullmatch(r'sha256:[0-9a-f]{64}', meta[k]) is None
                    for k in khoa if k.startswith('bam_'))):
+        raise loi()
+    ref = meta['ho_so']
+    if (type(ref) is not dict or set(ref) != {'tep_id', 'ten', 'mime', 'kich_thuoc'}
+            or type(ref['tep_id']) is not str
+            or re.fullmatch(r'ram-[0-9a-f]{32}', ref['tep_id']) is None
+            or ref['ten'] != 'mask-2c-ram.json' or ref['mime'] != 'application/json'
+            or type(ref['kich_thuoc']) is not int or not 0 < ref['kich_thuoc'] <= 64 * 1024 * 1024):
         raise loi()
     kiem_chuyen_tiep({'mask_2c': meta})
 

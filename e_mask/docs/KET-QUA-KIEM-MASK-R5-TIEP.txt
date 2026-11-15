@@ -1,0 +1,75 @@
+MASK-R5 — lượt kiểm chốt; đã kiểm bằng Core giả (CoreGia).
+Python 3.13.14; SDK 2.2.0; jsonschema 4.26.0; pytest 9.1.1.
+SHA wheel: 0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984
+
+$ .venv\Scripts\python.exe -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.4.0: có ví dụ chạy thử DEMO chưa đạt.
+
+Mã thoát: 1; thời gian tiến trình: 1.04 giây.
+
+$ .venv\Scripts\python.exe -B -m pytest e_mask/tests -q
+.......................................................... [  2%]
+........................................ [  3%]
+........................................................................ [  6%]
+........................................................................ [  9%]
+........................................................................ [ 12%]
+....xxxx................................................................ [ 15%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 23%]
+........................................................................ [ 26%]
+........................................................................ [ 29%]
+........................................................................ [ 32%]
+........................................................................ [ 35%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 43%]
+........................................................................ [ 46%]
+........................................................................ [ 49%]
+........................................................................ [ 52%]
+........................................................................ [ 55%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 63%]
+........................................................................ [ 66%]
+........................................................................ [ 69%]
+........................................................................ [ 72%]
+........................................................................ [ 75%]
+........................................................................ [ 77%]
+........................................................................ [ 80%]
+........................................................................ [ 83%]
+........................................................................ [ 86%]
+........................................................................ [ 89%]
+........................................................................ [ 92%]
+........................................................................ [ 95%]
+........................................................................ [ 97%]
+.....................................................                    [100%]
+2523 passed, 4 xfailed, 190 subtests passed in 378.34s (0:06:18)
+
+Mã thoát: 0; thời gian tiến trình: 379.37 giây.
+
+$ .venv\Scripts\python.exe -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+
+Mã thoát: 0; thời gian tiến trình: 0.70 giây.
+
+Kiểm kê: 52/52 tệp bytes LF/SHA-256 khớp; mã 0.
+
+Collection: đủ 216/216 ca nền, không thiếu node ID; tổng 2527 ca.
+
+$ git diff --check
+warning: in the working copy of 'e_mask/docs/BAO-CAO-MASK-R5.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/docs/VIEC.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/ho_tro_chuan_bi_ai.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/ho_tro_hau_kiem_ai.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_2c_1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_2c_2.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_2c_3.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_2c_4.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_r5.py', LF will be replaced by CRLF the next time Git touches it
+
+Mã thoát: 0.
+
+Sau chốt BAO-CAO-MASK-R5.md/VIEC.md và bảng phân loại: git diff --check mã 0.

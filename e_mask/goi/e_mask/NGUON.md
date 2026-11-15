@@ -501,3 +501,16 @@ Viết tiếp mã nội bộ được phép tái dùng của dự án, không ch
 | `e_mask/kho_dinh_danh.py` | `23f7a23450d80bfc11c004f2db210c14601b105be7374b2396b5109646bf821b` | `fd8633450de5ae85484d78d74a8583b3efd5078f19a27221f14326975b16ecb9` |
 | `e_mask/kho_qua_core.py` | `01b0004bd18c5680b77dbc2c5d2369993f78a2a27a81bfacd859ab4401fa2299` | `1b7f9023d4e73b5ac45df98988ef2bea4085db1532c2a7361e9d0f799159129d` |
 | `e_mask/khoi_tao_ngan.py` | `c23071dcf0b924f56ad794484b2338a71db9074cb670ce85d2c5aa28f20f3f91` | `4fcc71ef714b867eac854ada233d38fc2b22c29e39d1baedbe44131563569bad` |
+
+## MASK-R5 — tiếp lát từ 23:50 ngày 15/11/2026
+
+Chỉ sửa tiếp nguồn nội bộ đã có, không chép mã ngoài/thêm dependency. Ba runtime của R5 giữ kho R4; công cụ CoreGia ngoài gói chuyển fixture snapshot sang RAM, catalogue DEMO khai trước chuỗi độc lập gold/Local. SDK 2.2.0 từ wheel repo đã kiểm SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`, jsonschema/pytest đã có trong venv. Không sửa e_hoi_ai/Core/SDK/schema chung/nguồn cũ, không commit/push.
+
+Các bản snapshot fixture và công cụ trước đổi được giữ nguyên ở `e_mask/LUU-TRU/mask_2c_snapshot_core/`, chỉ tham chiếu lịch sử; không nằm trong gói chạy. Metadata ho_so tương thích AI-9 chỉ là ram-… không có tệp, không mang map/gốc. Cần phối hợp AI-9: bỏ yêu cầu snapshot Core (AI-13).
+
+| Tệp sửa | SHA-256 bytes | SHA-256 LF |
+|---|---|---|
+| `e_mask/goi/e_mask/e_mask/chuan_bi_ai.py` | `f09adcb15b45882572ce6355203c94b256cf913808b98f2e5c7b7d79d8d8f8d5` | `f09adcb15b45882572ce6355203c94b256cf913808b98f2e5c7b7d79d8d8f8d5` |
+| `e_mask/goi/e_mask/e_mask/hau_kiem_ai.py` | `051f4eb324345cfe8a60b6146e0a26886ffe77348b877f28f2b75a19f10a4c46` | `051f4eb324345cfe8a60b6146e0a26886ffe77348b877f28f2b75a19f10a4c46` |
+| `e_mask/goi/e_mask/e_mask/phong_bi.py` | `f64f540e124da384bcbb166c5c68817fe15b67d1b693b8f75722f71cc826576e` | `f64f540e124da384bcbb166c5c68817fe15b67d1b693b8f75722f71cc826576e` |
+| `e_mask/cong-cu/thu_mask_local_ai_that.py` | `4071dfeee80ac208c3c059b88885aa65e366ecc8810504d9bc8e11b3d4866c23` | `20453f2d4bbe77b592ac8f1df0ba698a648266c328b0e3d4dcbb8536208ec192` |

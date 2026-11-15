@@ -16,7 +16,7 @@ from e_mask.ho_so_ai import (DoanAI, HoSoAI, KHAI_NGAN_HO_SO_AI,
                              KhoHoSoAI, bam_bytes, doc_bytes, json_chuan)
 from e_mask.kho_ngan import KHAI_NGAN
 from e_mask.ngan import NganBoNho, NganXungDot
-from ho_tro_ho_so_ai import CongHoSoCoreGiaDemo
+from ho_tro_ho_so_ram import bo_kho
 from ho_tro_kho_demo import KhoBoNho
 from ho_tro_ngan import QuyenNganDemo, viec_demo
 
@@ -36,16 +36,6 @@ def ho_so(m, ke_hoach=None):
     if ke_hoach is None:
         ke_hoach = (DoanAI(0, 0, len(m.goc), 0, len(m.goc), bam_chu(m.goc)),)
     return HoSoAI(m, ke_hoach, 'e_mask 1.0.0')
-
-
-def bo_kho():
-    viec, quyen = viec_demo(), QuyenNganDemo()
-    ctx = quyen.cap(viec.id)
-    cong = CongHoSoCoreGiaDemo()
-    cong.cap(viec, ctx)
-    ngan = NganBoNho(KHAI_NGAN_HO_SO_AI)
-    kho = KhoHoSoAI(ngan=ngan, quyen=quyen, cong=cong)
-    return SimpleNamespace(viec=viec, q=quyen, ctx=ctx, cong=cong, n=ngan, kho=kho)
 
 
 def mau():
@@ -314,39 +304,34 @@ def test_json_hong_trung_khoa_hang_khong_hop_le(raw):
 def test_core_gia_luu_doc_retry_chi_muc_khong_co_noi_dung(monkeypatch):
     b, h = bo_kho(), mau()
     def cam(*a, **kw):
-        raise AssertionError('DEMO cấm ghi đĩa')
+        raise AssertionError('DEMO cấm ghi đĩa hoặc snapshot Core')
     monkeypatch.setattr('builtins.open', cam)
     monkeypatch.setattr(Path, 'write_bytes', cam)
     monkeypatch.setattr(Path, 'write_text', cam)
+    monkeypatch.setattr(b.cong.core, 'them_tep', cam)
+    monkeypatch.setattr(b.cong.core, 'doc_tep', cam)
     dau = b.kho.luu(b.viec, b.ctx.ma_yeu_cau, h)
     assert b.kho.doc(b.viec, b.ctx.ma_yeu_cau, dau) == h
     assert b.kho.luu(b.viec, b.ctx.ma_yeu_cau, h) == dau
-    assert len(b.cong.core._tep) == 1
-    ds = b.n.tim('ho_so_ai').danh_sach
-    assert len(ds) == 1
-    chi = json.dumps(ds[0].gia_tri, ensure_ascii=False)
-    assert TEN not in chi and h.anh_xa.goc not in chi and 'goc_che' not in chi
-    assert dau.bam_ho_so == bam_bytes(b.cong.core.doc_tep(dau.ho_so.tep_id))
+    assert not b.cong.core._tep and not b.n.tim('ho_so_ai').danh_sach
+    assert dau.bam_ho_so == bam_bytes(h.thanh_bytes())
 
 
 @pytest.mark.parametrize('loai', ['quyen', 'cong', 'tham_chieu', 'chi_muc', 'tep', 'metadata', 'bam'])
 def test_thieu_quyen_tham_chieu_hash_phai_tu_choi(loai):
     b, h = bo_kho(), mau()
     dau = b.kho.luu(b.viec, b.ctx.ma_yeu_cau, h)
-    if loai == 'quyen':
-        b.q.thu_hoi = True
+    if loai == 'quyen': b.q.thu_hoi = True
     elif loai == 'cong':
-        b.kho = KhoHoSoAI(ngan=b.n, quyen=b.q)
-    elif loai == 'tham_chieu':
-        dau = None
-    elif loai == 'chi_muc':
-        b.kho = KhoHoSoAI(ngan=NganBoNho(KHAI_NGAN_HO_SO_AI), quyen=b.q, cong=b.cong)
-    elif loai == 'tep':
-        b.cong.core._tep.clear()
-    elif loai == 'metadata':
-        dau = replace(dau, ho_so=replace(dau.ho_so, kich_thuoc=dau.ho_so.kich_thuoc + 1))
-    else:
-        dau = replace(dau, bam_ho_so='sha256:' + '0' * 64)
+        from e_mask.kho_anh_xa_ram import KhoAnhXaRAM
+        b.kho.ram = KhoAnhXaRAM(quyen=b.q, dong_ho=b.dh, hen_gio=b.dh.hen_gio)
+    elif loai == 'tham_chieu': dau = None
+    elif loai in {'chi_muc', 'tep'}:
+        assert b.kho.doc(b.viec, b.ctx.ma_yeu_cau, dau) == h
+        assert not b.cong.core._tep and not b.n.tim('ho_so_ai').danh_sach
+        b.q.bao_ram(b.ctx.ma_yeu_cau, 'KET_THUC')
+    elif loai == 'metadata': dau = replace(dau, ma_ho_so_ram='a' * 32)
+    else: dau = replace(dau, bam_ho_so='sha256:' + '0' * 64)
     with pytest.raises(LoiNghiepVu):
         b.kho.doc(b.viec, b.ctx.ma_yeu_cau, dau)
 
@@ -367,16 +352,11 @@ def test_khong_doc_cheo_chu_yeu_cau(truong):
 def test_khong_co_cua_tin_cay_khong_luu(thieu):
     b = bo_kho()
     ma = b.ctx.ma_yeu_cau
-    if thieu == 'quyen':
-        b.kho = KhoHoSoAI(ngan=b.n, cong=b.cong)
-    elif thieu == 'port':
-        b.kho = KhoHoSoAI(ngan=b.n, quyen=b.q)
-    elif thieu == 've_core':
-        b.cong._ve.clear()
-    elif thieu == 'ma':
-        ma = 'DEMO-ma-khong-duoc-cap'
-    else:
-        b.viec.ngu_canh.pop('phap_nhan_id')
+    if thieu == 'quyen': b.q.thu_hoi = True
+    elif thieu == 'port': b.q.dang_ky_vong_doi_ram = None
+    elif thieu == 've_core': b.q.ram_ghim = False
+    elif thieu == 'ma': ma = 'DEMO-ma-khong-duoc-cap'
+    else: b.viec.ngu_canh.pop('phap_nhan_id')
     with pytest.raises(LoiNghiepVu):
         b.kho.luu(b.viec, ma, mau())
     assert not b.cong.core._tep and not b.n.tim('ho_so_ai').danh_sach
@@ -388,19 +368,23 @@ def test_snapshot_qua_hai_buoc_core_cung_quyen():
     viec2 = viec_demo('viec-demo-buoc-2')
     b.q.cap(viec2.id, ma_yeu_cau=b.ctx.ma_yeu_cau)
     assert b.kho.doc(viec2, b.ctx.ma_yeu_cau, dau) == mau()
+    assert not b.cong.core._tep and not b.n.tim('ho_so_ai').danh_sach
+    b.q.bao_ram(b.ctx.ma_yeu_cau, 'KET_THUC')
+    with pytest.raises(LoiNghiepVu) as loi:
+        b.kho.doc(viec2, b.ctx.ma_yeu_cau, dau)
+    assert loi.value.ma == 'MASK_ANH_XA_KHONG_CON'
 
 
 def test_bam_bytes_sai_va_map_sai_du_co_bam_moi_khong_doc():
     b, h = bo_kho(), mau()
     dau = b.kho.luu(b.viec, b.ctx.ma_yeu_cau, h)
-    ten, mime, raw = b.cong.core._tep[dau.ho_so.tep_id]
-    b.cong.core._tep[dau.ho_so.tep_id] = (ten, mime, raw.replace(b'DEMO', b'FAKE', 1))
+    b.ram._ban_ghi.du_lieu['ho_so'] = ho_so(tao_anh_xa('FAKE nội dung DEMO.', []))
     with pytest.raises(LoiNghiepVu):
         b.kho.doc(b.viec, b.ctx.ma_yeu_cau, dau)
-    v = json.loads(raw)
+    v = json.loads(h.thanh_bytes())
     v['anh_xa']['goc_che'][0]['goc'][1] += 1
-    with pytest.raises(LoiNghiepVu):
-        doc_bytes(json_chuan(v))
+    with pytest.raises(LoiNghiepVu): doc_bytes(json_chuan(v))
+    assert not b.cong.core._tep
 
 
 def test_khong_tai_dung_cung_ma_khi_noi_dung_doi():
@@ -408,65 +392,57 @@ def test_khong_tai_dung_cung_ma_khi_noi_dung_doi():
     b.kho.luu(b.viec, b.ctx.ma_yeu_cau, mau())
     with pytest.raises(LoiNghiepVu) as loi:
         b.kho.luu(b.viec, b.ctx.ma_yeu_cau, ho_so(tao_anh_xa('DEMO khác.', [])))
-    assert loi.value.ma == 'MASK_AI_XUNG_DOT' and len(b.cong.core._tep) == 1
+    assert loi.value.ma == 'MASK_AI_XUNG_DOT' and not b.cong.core._tep
+    assert b.ram._ban_ghi is None
 
 
 @pytest.mark.parametrize('moc', ['luu', 'doc', 'chot'])
 def test_thu_hoi_quyen_o_tung_cua_khong_phat_hanh(monkeypatch, moc):
     b = bo_kho()
-    if moc == 'luu':
-        that = b.cong.luu
-        def thu(*args):
-            ref = that(*args)
-            b.q.thu_hoi = True
-            return ref
-        monkeypatch.setattr(b.cong, 'luu', thu)
-    else:
-        that = b.cong.kiem_quyen
-        def kiem(viec, ctx, *, tham_chieu, thao_tac):
-            if thao_tac == ('doc_ho_so_ai' if moc == 'doc' else 'chot_ho_so_ai'):
-                b.cong.thu_hoi = True
-            return that(viec, ctx, tham_chieu=tham_chieu, thao_tac=thao_tac)
-        monkeypatch.setattr(b.cong, 'kiem_quyen', kiem)
+    dau = b.kho.luu(b.viec, b.ctx.ma_yeu_cau, mau()) if moc == 'doc' else None
+    def thu(ten, viec):
+        if ten == moc: b.q.thu_hoi = True
+    b.kho.moc = thu
     with pytest.raises(LoiNghiepVu):
-        b.kho.luu(b.viec, b.ctx.ma_yeu_cau, mau())
-    assert b.n.tim('ho_so_ai').danh_sach == []
+        if moc == 'doc': b.kho.doc(b.viec, b.ctx.ma_yeu_cau, dau)
+        else: b.kho.luu(b.viec, b.ctx.ma_yeu_cau, mau())
+    assert b.ram._ban_ghi is None
+    assert not b.n.tim('ho_so_ai').danh_sach and not b.cong.core._tep
 
 
 def test_chua_ro_cas_huy_va_loi_port_khong_lo_noi_dung(monkeypatch, capsys):
-    b = bo_kho()
-    that = b.cong.luu
-    def mat_ack(*args):
-        that(*args)
+    from ho_tro_mask_r5 import bo, chay, chuan_bi
+    b = bo()
+    that = b.cong.ban_giao
+    def mat_ack(*a, **kw):
+        that(*a, **kw)
         raise ChuaRo('tuong-quan-DEMO')
-    monkeypatch.setattr(b.cong, 'luu', mat_ack)
-    with pytest.raises(ChuaRo):
-        b.kho.luu(b.viec, b.ctx.ma_yeu_cau, mau())
-    assert b.n.tim('ho_so_ai').danh_sach == []
-    monkeypatch.setattr(b.cong, 'luu', that)
-    dau = b.kho.luu(b.viec, b.ctx.ma_yeu_cau, mau())
-    assert len(b.cong.core._tep) == 1  # retry cùng mã+băm, không tạo tệp lặp
-    def huy():
-        raise ViecDaHuy()
-    b.viec.kiem_huy = huy
-    with pytest.raises(ViecDaHuy):
-        b.kho.doc(b.viec, b.ctx.ma_yeu_cau, dau)
-    b.viec.kiem_huy = lambda: None
-    def hong(*args):
-        raise RuntimeError(TEN)
-    monkeypatch.setattr(b.cong, 'doc', hong)
-    with pytest.raises(LoiNghiepVu) as loi:
-        b.kho.doc(b.viec, b.ctx.ma_yeu_cau, dau)
+    b.cong.ban_giao = mat_ack
+    assert chay(b)['trang_thai'] == 'CHUA_RO'
+    assert b.ram._ban_ghi is not None and not b.c._tep
+    b.cong.ban_giao = that
+    b.c._viec[b.v]['trang_thai'] = 'CHO'; b.c._hang.append(b.v)
+    chuan_bi(b)
+    assert len(b.cong.giao) == 1
+    b = bo()
+    def hong(*a, **kw): raise RuntimeError(TEN)
+    b.cong.ban_giao = hong
+    k = chay(b)
+    assert k['trang_thai'] == 'LOI' and k['ket_qua'] is None
     log = capsys.readouterr()
-    assert TEN not in str(loi.value) + log.out + log.err
+    assert TEN not in log.out + log.err + json.dumps(k, ensure_ascii=False)
+    b = bo(); b.c.huy(b.v)
+    assert chay(b)['trang_thai'] == 'HUY'
 
 
 def test_xung_dot_ngan_khong_tra_tham_chieu(monkeypatch):
     b = bo_kho()
-    def xung_dot():
-        raise NganXungDot()
-    monkeypatch.setattr(b.n, 'lo', xung_dot)
-    with pytest.raises(LoiNghiepVu) as loi:
-        b.kho.luu(b.viec, b.ctx.ma_yeu_cau, mau())
-    assert loi.value.ma == 'MASK_AI_XUNG_DOT' and loi.value.thu_lai_duoc
-    assert b.n.tim('ho_so_ai').danh_sach == []
+    def cam(*a, **kw): raise AssertionError('Không có giao dịch chỉ mục snapshot.')
+    monkeypatch.setattr(b.cong.core, 'them_tep', cam)
+    h = mau()
+    dau = b.kho.luu(b.viec, b.ctx.ma_yeu_cau, h)
+    assert b.kho.doc(b.viec, b.ctx.ma_yeu_cau, dau) == h
+    assert not b.n.tim('ho_so_ai').danh_sach and not b.cong.core._tep
+    b.q.bao_ram(b.ctx.ma_yeu_cau, 'KET_THUC')
+    with pytest.raises(LoiNghiepVu) as loi: b.kho.doc(b.viec, b.ctx.ma_yeu_cau, dau)
+    assert loi.value.ma == 'MASK_ANH_XA_KHONG_CON'

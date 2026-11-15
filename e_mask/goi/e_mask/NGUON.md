@@ -1,5 +1,31 @@
 # NGUỒN — gói e_mask, MASK-1…7, MASK-2b và sửa an toàn
 
+## MASK-B6b l??t 2 ? 16/11/2026, quy?t ??nh lead v? ? ti?n
+
+**Ngu?n/quy?n:** ti?p t?c ??ng runtime n?i b? `e_mask/tep_excel.py` c?a l??t 1 theo l?nh lead 16/11; kh?ng ch?p ngu?n ngo?i/th?m dependency. Symbol s?a: `_kiem_so_bat_bien`, h?m l?ng `kiem_da_khai`; d?ng l?i `PHIEN_BAN_CHUAN_HOA` n?i b? v? `viec.ngan.tim` SDK 2.2.0. Format th?c t? TI?N/K? TO?N gi? s? c? ph?n l? kh?c 0 ho?c s? nguy?n ?12 ch? s?; ?13 ch? s? d?ng c?ng gate General. Kh?ng s?a reader, API v1, Core ho?c c?c t?p B7.
+
+??nh danh khai trong ds v?n qua ki?m ??u v?o; ? ti?n ???c mi?n detector ph?i tra ng?n b? m?t b?ng ??ng raw value/d?ng Decimal g?n, g?m d?u v? tr? tuy?t ??i. Serial ng?y h?p l? c?ng tra ??ng raw value. L?c ch?nh x?c gi? tr? chu?n h?a + phi?n b?n + v?ng tin c?y R4, ch? ki?m c? k?t qu?/tiep, kh?ng ??c b?n r? ho?c li?t k? kho, kh?ng ghi ng?n. Ki?m h?n/quy?n tr??c/sau t?ng truy v?n; cache ?ng vi?n ch? RAM, t?i ?a 2.000, v??t t? ch?i. Gi? nguy?n mi?n serial ng?y, General/0 v? gi?i h?n exponent `[-128,308]` t? l??t 1. Kh?ng g?i detector h?nh d?ng tr?n ? ti?n ???c mi?n theo quy?t ??nh m?i.
+
+| Runtime n?i b? | SHA-256 tr??c l??t 2 (bytes = LF) | SHA-256 sau l??t 2 (bytes = LF) |
+|---|---|---|
+| `e_mask/tep_excel.py` | `dc62e2b3f0f3de0351b45e87c7b81d7cdc8a0b76a4f89533582e2401cd24ebbb` | `b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972` |
+
+Ch? d? li?u DEMO, ?? ki?m b?ng Core gi? (CoreGia); ch?a Core/Local/Office/Linux th?t, Cloud t?t. Kh?ng s?a test B6 c?: k? v?ng ti?n `1000000000` gi? nguy?n nay ??ng quy?t ??nh lead. B6b b? sung ca 12/13/16 ch? s? v? ??nh danh ?? khai. R?i ro s? ??nh danh ch?a khai ?12 ch? s? c? ? ??nh d?ng ti?n ch? Anh x?c nh?n; k?t qu? v? gi? th?c t? ? VIEC.md. Ph?n l??t 1 b?n d??i gi? l?m l?ch s?.
+
+## MASK-B6b — 16/11/2026, kiểm ô số theo format và giá trị
+
+**Nguồn/quyền:** Anh/lead giao sửa `tep_excel.py` nội bộ của MASK-B6, tái dùng `_kiem_con_sot` và style hiệu lực từ reader B3 nguyên trạng. Không chép mã ngoài, không thêm dependency; `datetime.date` và `decimal.Decimal` thuộc thư viện chuẩn Python. Không sửa `xml_excel.py`, Core, API v1 hoặc tệp của B7; map và phép chuẩn hóa để kiểm chỉ trong RAM.
+
+**Symbol sửa/thêm:** `_kiem_so_bat_bien`, `_format_so`, `_FORMAT_SAN`, `_FORMAT_NGAY`, `_FORMAT_TIEN`. Ưu tiên `style['formatCode']` đã được reader lấy từ khai báo; builtin chỉ là bảng format mặc định khi không khai báo. Reader B3 vốn từ chối khai lại ID dưới 164: giữ nguyên chốt này. Dùng tập format chính xác của profile, không tìm ký tự y/d/h/s trong chuỗi bất kỳ. Ngày có cận trên loại trừ 01/01/2101: epoch 1900 `[1,73416)`, epoch 1904 `[0,71954)`; phần thập phân là giờ.
+
+Tiền không được miễn detector vì có style. Số nguyên từ 9 chữ số bị chặn, cả khi viết exponent/.0/dấu; chuẩn hóa Decimal chỉ để kiểm, giữ nguyên lexical đầu ra. Detector văn bản có thể nhận `1234567.89` như số tài khoản do ghép dấu chấm: chỉ dung sai cảnh báo thuộc nhóm số phủ toàn giá trị khi hai vế thập phân riêng đều qua cùng detector. Cảnh báo một phần/nhóm khác/chưa quét đủ vẫn từ chối. Exponent ngoài khoảng bảo thủ `[-128,308]` bị chặn trước khi mở rộng thành chuỗi; không cấp phát theo exponent cực đoan. Không suy mục đích số từ nhãn tiền.
+
+| Runtime nội bộ | SHA-256 trước (bytes = LF) | SHA-256 sau (bytes = LF) |
+|---|---|---|
+| `e_mask/tep_excel.py` | `ef670c9775ec5ea97981d181324490433fc44ea3779edc473a1f78a8911a796c` | `dc62e2b3f0f3de0351b45e87c7b81d7cdc8a0b76a4f89533582e2401cd24ebbb` |
+
+Held-out MASK-2c giữ nguyên blob Git LF `b3569b357132a7f7e0a7202b6e3d3c0b5fec2228c6ebd09604e7d05092485dd8`, băm nội dung `sha256:b720fb2d9a330110ed5c4d5fd777b9728887f863651a2b0c46dc395dc45c95ad`; gold R3 giữ SHA `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`. Chỉ trả CRLF checkout về byte LF đã khóa, không đổi nội dung/gold/assertion/ngưỡng. Đã kiểm bằng Core giả (CoreGia), không chứng nhận Local/Office/Core/Linux thật; Cloud tắt. Kết quả thật và giới hạn ở VIEC.md.
+
 ## MASK-B6 — 16/11/2026, Excel chỉ RAM
 
 **Quyền và nguồn gốc:** Anh/lead giao MASK-B6 cho phép tái dùng mã nội bộ B1/B3/B4, MASK-2b và R2…R6 trong chính gói Mask. Các mục tương ứng bên dưới ghi nguồn/giấy phép trước đó; không suy quyền phân phối ngoài tổ chức. Chuyển có sửa khung nội bộ B5 (`tep_word.py`) sang Excel để dùng cùng hợp đồng R4/R5; không gọi đường Word hoặc import engine khác. Không sửa nguồn cũ, Core, SDK, manifest hay dependency. Đóng băng 19 nguồn trước sửa tại `e_mask/docs/SHA-NGUON-MASK-B6-TRUOC.json`; cả 19 nguồn giữ nguyên bytes sau lát. `tep_excel.py` trước chưa tồn tại.

@@ -1,0 +1,35 @@
+{
+  "ngan_du_lieu": [
+    {
+      "bang": "cau_hinh", "ten": "Cấu hình Tra cứu tài liệu", "pham_vi": "engine",
+      "khoa": [], "duy_nhat": [],
+      "truong": [
+        {"ma": "phien_ban", "kieu": "so"},
+        {"ma": "quy_tac_nhom", "kieu": "json"},
+        {"ma": "phan_loai", "kieu": "json"},
+        {"ma": "cat_doan", "kieu": "json"},
+        {"ma": "ngan_sach", "kieu": "json"}
+      ]
+    },
+    {
+      "bang": "dot_kiem", "ten": "Bài đo DEMO", "pham_vi": "phap_nhan",
+      "khoa": ["ma_dot"], "duy_nhat": [["phap_nhan_id", "ma_dot"]],
+      "truong": [
+        {"ma": "phap_nhan_id", "kieu": "van_ban"},
+        {"ma": "ma_dot", "kieu": "van_ban"},
+        {"ma": "trang_thai", "kieu": "van_ban"},
+        {"ma": "bam_bo", "kieu": "van_ban"},
+        {"ma": "bam_cau_hinh", "kieu": "van_ban"},
+        {"ma": "phien_ban_engine", "kieu": "van_ban"},
+        {"ma": "chi_so", "kieu": "json"},
+        {"ma": "bao_cao", "kieu": "tep"},
+        {"ma": "bam_bao_cao", "kieu": "van_ban"}
+      ]
+    }
+  ],
+  "cau_hinh": {"schema": "cau_hinh.schema.json"},
+  "giao_dien_quan_tri": [
+    {"ma": "cau_hinh", "ten": "Cấu hình", "tep": "ui/cau_hinh.js", "quyen": "admin_core"},
+    {"ma": "trang_thai", "ten": "Trạng thái bài đo", "tep": "ui/trang_thai.js", "quyen": "admin_core"}
+  ]
+}

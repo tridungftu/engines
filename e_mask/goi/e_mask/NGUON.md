@@ -2,6 +2,49 @@
 
 Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Handler che/mở che hiện đã có nghiệp vụ qua ngăn; các mô tả stub/kho tệp dưới đây là lịch sử từng lát. Trạng thái và băm mới nhất của lượt sửa nằm tại mục Sửa MASK-2b theo kiểm độc lập ở cuối tài liệu. Đã kiểm bằng Core giả (CoreGia).
 
+## MASK-B5 — 16/11/2026, Word chỉ RAM
+
+**Quyền tái dùng:** Anh/lead giao MASK-B5 cho phép dùng B1/B2/B4, MASK-2b và R2…R6 trong chính gói này. Đây là mã nội bộ đã có nguồn/quyền ở các mục tương ứng của NGUON; không suy thêm quyền phân phối ngoài tổ chức. Không chép hoặc import engine khác, không sửa nguồn cũ, Core, SDK hoặc thêm dependency. Runtime mới chỉ dùng SDK 2.2.0 và thư viện chuẩn. Nguồn bytes trước được đóng băng tại `e_mask/docs/SHA-NGUON-MASK-B5-TRUOC.json`; mọi nguồn liệt kê bên dưới giữ nguyên bytes sau lát.
+
+| Nguồn trong gói Python | Symbol dùng lại / chuyển có sửa | Đích và khác biệt |
+|---|---|---|
+| `doc_word.py`, `xml_word.py` | `doc_word`, `TaiLieuWord`, `VungWord`, map lexical và whitelist | Gọi reader B2 nguyên trạng trước/sau patch; không tự mở rộng whitelist |
+| `va_xml.py`, `ghi_zip.py` | `bam`, `lap_kich_ban`, `ghi_goi` | Gọi writer B4 nguyên trạng; chuyển map gốc/che thành lệnh theo span, không serialize cây |
+| `che_van_ban.py`, `tra_cuu_dinh_danh.py` | `_kiem_dinh_danh`, `thu_thap_ung_vien`, `_kiem_con_sot`, `_kiem_tien_ngay`, `numeric_review`, `TraCuuDinhDanh`, `UngVien` | Detector riêng mỗi vùng; cache tìm chính xác, số ứng viên/vị trí/chi phí dùng chung mọi vùng trong RAM; không matcher danh mục |
+| `chuan_bi_ai.py`, `anh_xa_ai.py` | `ket_qua_ram`, `_kiem_span`, `tao_anh_xa`, `kiem_anh_xa`, `alias_nguyen_van` | Chép chọn lọc kiểm map/tiền/ngày vào `_kiem_vung`: khi R5 báo số nằm trọn ngày ISO mà MASK-2b đã nhận diện thì đối chiếu từng khoảng, vẫn kiểm đủ và số/tiền/ngày; nghi vấn ngoài ngày vẫn chặn. Không tạo phong bì có cờ phát hành |
+| `kho_anh_xa_ram.py`, `ho_so_ai.py`, `kho_dinh_danh.py` | `_BuocRAM`, `_bo_tham_chieu`, `json_chuan`, `KhoDinhDanh.mo_kho_nhan_dien` | Dùng handle R4 thật, lấy quyền từ chính kho sở hữu; dữ liệu tệp chỉ trong dictionary `tep_word`, không tạo hồ sơ hoặc mã yêu cầu riêng |
+| `hau_kiem_ai.py`, `mo_che_ram.py` | `_bien_thuc_the`, `_don_ngoai_le` | Kiểm biên primitive che bổ sung và bỏ frame lỗi nhạy cảm; không dùng primitive làm chứng thực Local hoặc đường mở tệp |
+
+| Tệp nguồn (từ gốc repo) | SHA-256 bytes trước = sau | SHA-256 LF trước = sau |
+|---|---|---|
+| `e_mask/goi/e_mask/e_mask/doc_word.py` | `ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77` | `ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77` |
+| `e_mask/goi/e_mask/e_mask/xml_word.py` | `b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08` | `b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08` |
+| `e_mask/goi/e_mask/e_mask/va_xml.py` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` |
+| `e_mask/goi/e_mask/e_mask/ghi_zip.py` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` |
+| `e_mask/goi/e_mask/e_mask/che_van_ban.py` | `90bc453bd4aa8fcca5d770d69f888d6ec6a779c718432433b6ccf16728fcce40` | `90bc453bd4aa8fcca5d770d69f888d6ec6a779c718432433b6ccf16728fcce40` |
+| `e_mask/goi/e_mask/e_mask/tra_cuu_dinh_danh.py` | `11ec834e6a181c2dcdcb625677f6920e1996aeceead7c4fe465f617d403f7ddf` | `11ec834e6a181c2dcdcb625677f6920e1996aeceead7c4fe465f617d403f7ddf` |
+| `e_mask/goi/e_mask/e_mask/chuan_bi_ai.py` | `f09adcb15b45882572ce6355203c94b256cf913808b98f2e5c7b7d79d8d8f8d5` | `f09adcb15b45882572ce6355203c94b256cf913808b98f2e5c7b7d79d8d8f8d5` |
+| `e_mask/goi/e_mask/e_mask/kho_anh_xa_ram.py` | `05449c3e3664b596fc567e355617db97d23935fc0d94d8bc5850b25dcef07f01` | `05449c3e3664b596fc567e355617db97d23935fc0d94d8bc5850b25dcef07f01` |
+| `e_mask/goi/e_mask/e_mask/ho_so_ai.py` | `17b86042a1f38159af789c2de746bfe68b98f2ea38de08a6dbd35330c8322b17` | `17b86042a1f38159af789c2de746bfe68b98f2ea38de08a6dbd35330c8322b17` |
+| `e_mask/goi/e_mask/e_mask/hau_kiem_ai.py` | `051f4eb324345cfe8a60b6146e0a26886ffe77348b877f28f2b75a19f10a4c46` | `051f4eb324345cfe8a60b6146e0a26886ffe77348b877f28f2b75a19f10a4c46` |
+| `e_mask/goi/e_mask/e_mask/mo_che_ram.py` | `0e2e43e91a90d668725fb3440300f4453447e8c37ce93d7d9560b48badfac87b` | `0e2e43e91a90d668725fb3440300f4453447e8c37ce93d7d9560b48badfac87b` |
+| `e_mask/goi/e_mask/e_mask/kho_dinh_danh.py` | `fd8633450de5ae85484d78d74a8583b3efd5078f19a27221f14326975b16ecb9` | `fd8633450de5ae85484d78d74a8583b3efd5078f19a27221f14326975b16ecb9` |
+| `e_mask/goi/e_mask/e_mask/anh_xa_ai.py` | `a507690ccb59886bfadc2723d49d5efe6ac2c99249dc3d5e029b8c4b64e4af82` | `a507690ccb59886bfadc2723d49d5efe6ac2c99249dc3d5e029b8c4b64e4af82` |
+
+| Tệp đích mới | SHA-256 bytes sau | SHA-256 LF sau |
+|---|---|---|
+| `e_mask/tep_word.py` | `cc46f3619c676ed5d7124387ee870e8a74f737baf55f07777a1b6b588e33eb0c` | `cc46f3619c676ed5d7124387ee870e8a74f737baf55f07777a1b6b588e33eb0c` |
+
+`tep_word.py` là tệp mới, trước lát chưa tồn tại. Ngoài tệp đó không sửa runtime nào trong bốn tệp được giao. Băm sau là toàn tệp, không phải băm artifact phát hành. LF chỉ thay CRLF thành LF, không chuẩn hóa Unicode. Các hàm gọi lại nguồn, không phải các bản chép nguyên tệp; phần kiểm ngày ISO được chuyển có sửa như mô tả trên.
+
+`che_word(bytes, buoc=handle_R4, dinh_danh=...)` và `che_them_word(((ma_vung, UngVien), ...), buoc=handle_R4)` chỉ trả `DauWordRAM` gồm băm và số đếm. Gốc, reader, bytes che, map Unicode/byte, script patch, alias → nguyên văn, cache và budget chỉ ở `buoc.du_lieu['tep_word']`. Trạng thái luôn `CHO_LOCAL`, tập vùng đã kiểm Local rỗng; không nhận cờ caller chứng nhận Local. B7 phải kiểm nguồn/đủ đoạn/span rồi mới gọi primitive; B9 kiểm lại nguồn/quyền trước upload. Không tự lấy nguyên văn model hoặc tên từ ngăn để lập map. Tên mới chưa có bảo đảm C-P4-03 bị chặn; chất lượng R3 vẫn chưa chứng minh.
+
+NFD ngoài vùng thay và tiền/ngày giữ nguyên; Cf/selector bỏ đúng map MASK-2b. Tên nhiều run chỉ trong cùng vùng logic; alias mới ghi vào span đầu, giữ các thẻ/format của mọi run. Không xóa markup Cf hoặc vùng chưa hiểu: từ chối toàn tệp. Phần bất biến giữ payload nén/local record gốc bằng B4; reader lại bytes và đối chiếu từng vùng. Kết quả băm/số vùng chỉ xác nhận xử lý nội bộ, không là báo cáo an toàn hai lớp.
+
+TTL/vòng đời theo R4, snapshot cấu hình SDK 600 giây trong 60–900; retry không kéo dài. Ghi hoặc cập nhật trạng thái tệp dưới cùng khóa timer/hủy R4, kiểm sở hữu/hạn ngay trong khóa; không gọi port dưới khóa và không dựng lại dictionary đã dọn sau checkpoint. Dọn dữ liệu ngay khi lỗi, chặn tái dùng bước lỗi và để R4 kết thúc bản ghi lúc ra `with`; timer/hủy/kết thúc/tiêu thụ bỏ cả bytes/map. Python không bảo đảm xóa vật lý mọi bản sao RAM. Không log/stderr/tệp tạm/ngăn/hồ sơ/chuyển tiếp map. Trần ZIP/XML vào/ra giữ nguyên B1/B4; reader đọc lại vẫn bảo thủ 500.000 ký tự trước trần ra 2 triệu, chưa mở rộng profile.
+
+Test Word nội bộ dùng ngăn SDK null+cờ/tìm chính xác thật với CoreGia và adapter quyền/vòng đời ngoài gói; không nguồn Local thật và không handler tệp. Đã kiểm bằng Core giả (CoreGia), chưa Core/Office/Local/Linux thật; Cloud tắt. C-P4-01…05 và kết quả thật tại VIEC/báo cáo B5. Không có quyền phục hồi từ Core hoặc giải mã trường bí mật.
+
 ## MASK-R1 — sửa tương thích cấu hình, 15/11/2026
 
 Sửa mã nội bộ `e_mask/chay.py` theo ngoại lệ lead cho phép thêm tệp ngoài giới hạn 5 tệp R1. Bỏ guard cấu hình phải rỗng đã lỗi thời; SDK 2.2.0 kiểm schema và điền TTL default 600 trước handler. Giữ nguyên các bước xác minh ngữ cảnh/port, mã lỗi, hậu kiểm và kho RAM vận hành cũ tới R2/R4. Không chép nguồn ngoài hoặc thêm dependency; schema đã có default cho mọi trường mới, TTL số nguyên 60–900. Test cập nhật ở `e_mask/tests/test_mask_s22.py`; đã kiểm bằng Core giả (CoreGia).

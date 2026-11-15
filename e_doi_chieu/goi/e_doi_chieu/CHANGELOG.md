@@ -1,5 +1,26 @@
 # Thay đổi
 
+## DC-9 — 15/11/2026 · 0.7.1 chưa phát hành
+
+- Thêm `doi_chieu.xuat_ket_qua@1`, trả đủ 11 trường tĩnh, JSON đầy đủ và
+  PDF trong kho Core. Kiểm schema, snapshot đã ghim Ngăn, băm/quyền mọi
+  nguồn, nguyên văn/offset/edit script, sàn mức, số đếm và giai đoạn.
+  Hồ sơ còn điểm chờ phân loại không được xuất thành kết quả cuối.
+- Tổng hợp năm kết luận; thiếu kiểm bắt buộc luôn Chưa đối chiếu được,
+  giữ mọi điểm Nghiêm trọng/vùng sửa tay đã biết và đề nghị chặn bảo thủ.
+  Cần xem khi đã kiểm đủ không tự chặn. Detector thử nghiệm DC-8 chưa
+  đủ điều kiện kết luận sạch; không dùng danh sách rỗng thay kiểm đủ.
+- Dùng lại validator DC-7 để tính lại ngoại lệ nhiễu từ nguồn; Core cần
+  chuyển tiếp manifest OCR vùng khi ngoại lệ cần bằng chứng này.
+- `chay.py` ghim cả đầu ra DC-8 bằng CAS/chống trùng để bước xuất kiểm
+  được nguồn tin cậy; chỉ ghim khi đầu vào cũng đã được engine ghim.
+- PDF tiếng Việt bằng Pillow đã ghim, font Roboto có nguồn/Apache 2.0
+  đóng trong gói. Phân trang theo độ rộng thật, giữ mọi điểm/nhiễu/ảnh.
+  Thiếu font/lỗi xuất trả lỗi nghiệp vụ; không thành công thiếu PDF.
+- Tệp chỉ ở RAM; chỉ mục lượt xuất qua `viec.ngan`, gửi lại dùng kết quả
+  đã chốt và kiểm lại quyền/băm hai tệp. Không sự kiện riêng/SQL/hiệu lực.
+  Đã kiểm bằng Core giả (CoreGia); chi tiết và giới hạn tại VIEC.md.
+
 ## DC-S22 — 15/11/2026 · 0.7.1 chưa phát hành
 
 - Chuyển sang SDK 2.2.0; cấu hình đọc bản chụp `viec.cau_hinh`, giữ

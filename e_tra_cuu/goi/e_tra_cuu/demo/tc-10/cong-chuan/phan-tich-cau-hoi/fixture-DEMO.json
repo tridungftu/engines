@@ -1,0 +1,362 @@
+{
+  "nhan": "DEMO",
+  "vi_du": {
+    "nang_luc": "tra_cuu.phan_tich_cau_hoi@1",
+    "ten": "TC10 DEMO tệp con — phan-tich-cau-hoi",
+    "dau_vao": {
+      "loai": "tra_loi_ai",
+      "tra_loi_ai": {
+        "phien_ban": 1,
+        "trang_thai": "co_can_cu",
+        "tra_loi": "DEMO",
+        "du_lieu": {
+          "ham_de_xuat": [
+            {
+              "phien_ban": "1",
+              "ten": "m9.gia_tri",
+              "tham_so": {
+                "ma_khoan_vay": "DEMO-VAY-A"
+              }
+            }
+          ],
+          "phu_thuoc_thoi_diem": false,
+          "thoi_diem": "2026-11-15T12:51:00+07:00",
+          "thuc_the": [
+            {
+              "gia_tri": "DEMO-VAY-A",
+              "loai": "khoan_vay",
+              "ma": "DEMO-VAY-A"
+            }
+          ],
+          "y_dinh": "gia_tri"
+        },
+        "trich_dan": [
+          {
+            "cau": "Giá trị hợp đồng DEMO-VAY-A là bao nhiêu VND?",
+            "bat_dau": 585,
+            "ket_thuc": 630
+          }
+        ],
+        "kiem_trich_dan": {
+          "dat": true,
+          "loi": []
+        },
+        "nha_cung_cap": "local",
+        "model": "DEMO-model-local",
+        "ly_do_chon_model": "DEMO-do-Core-dieu-phoi",
+        "ma_prompt": "demo.tra_cuu",
+        "phien_ban_prompt": "DEMO-1",
+        "phien_ban_engine": "e_hoi_ai 0.12.0",
+        "bam_dau_vao": "sha256:5484f6928ae3622db83c0309534270647323d72c18b63ead7956cc52c0bb8ff4",
+        "chuyen_tiep": {
+          "tra_cuu": {
+            "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+            "bam_ho_so": "sha256:a489c230e3820c47db089449c4cceec6cf07b0bda0bdfea0d37af72b2af1101c",
+            "bam_ngu_canh_ai": "sha256:4c951124d9a8cb7ef159bfded0330e29ebd08acc2baf04741f6eb48c3f982275",
+            "ho_so": {
+              "kich_thuoc": 4565,
+              "mime": "application/json",
+              "ten": "ho-so-chuan-bi-ai.json",
+              "tep_id": "tep-8"
+            },
+            "ma_yeu_cau": "DEMO-YC-phan_tich_cau_hoi",
+            "phien_ban": 1,
+            "tac_vu": "phan_tich_cau_hoi"
+          }
+        },
+        "canh_bao": []
+      }
+    },
+    "tham_so": {}
+  },
+  "cau_hinh": {
+    "phien_ban": 1,
+    "quy_tac_nhom": {
+      "tep_id": "tep-3",
+      "bam": "sha256:f9d4e2e697ff78b3d90f221ecb1363f06d552950abbbdc0aad18a9a832865735"
+    }
+  },
+  "giay_cap": {
+    "ma_yeu_cau": "DEMO-YC-phan_tich_cau_hoi",
+    "tac_vu": "phan_tich_cau_hoi",
+    "dau_vao": {
+      "loai": "tra_loi_ai",
+      "tra_loi_ai": {
+        "phien_ban": 1,
+        "trang_thai": "co_can_cu",
+        "tra_loi": "DEMO",
+        "du_lieu": {
+          "ham_de_xuat": [
+            {
+              "phien_ban": "1",
+              "ten": "m9.gia_tri",
+              "tham_so": {
+                "ma_khoan_vay": "DEMO-VAY-A"
+              }
+            }
+          ],
+          "phu_thuoc_thoi_diem": false,
+          "thoi_diem": "2026-11-15T12:51:00+07:00",
+          "thuc_the": [
+            {
+              "gia_tri": "DEMO-VAY-A",
+              "loai": "khoan_vay",
+              "ma": "DEMO-VAY-A"
+            }
+          ],
+          "y_dinh": "gia_tri"
+        },
+        "trich_dan": [
+          {
+            "cau": "Giá trị hợp đồng DEMO-VAY-A là bao nhiêu VND?",
+            "bat_dau": 585,
+            "ket_thuc": 630
+          }
+        ],
+        "kiem_trich_dan": {
+          "dat": true,
+          "loi": []
+        },
+        "nha_cung_cap": "local",
+        "model": "DEMO-model-local",
+        "ly_do_chon_model": "DEMO-do-Core-dieu-phoi",
+        "ma_prompt": "demo.tra_cuu",
+        "phien_ban_prompt": "DEMO-1",
+        "phien_ban_engine": "e_hoi_ai 0.12.0",
+        "bam_dau_vao": "sha256:5484f6928ae3622db83c0309534270647323d72c18b63ead7956cc52c0bb8ff4",
+        "chuyen_tiep": {
+          "tra_cuu": {
+            "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
+            "bam_ho_so": "sha256:a489c230e3820c47db089449c4cceec6cf07b0bda0bdfea0d37af72b2af1101c",
+            "bam_ngu_canh_ai": "sha256:4c951124d9a8cb7ef159bfded0330e29ebd08acc2baf04741f6eb48c3f982275",
+            "ho_so": {
+              "kich_thuoc": 4565,
+              "mime": "application/json",
+              "ten": "ho-so-chuan-bi-ai.json",
+              "tep_id": "tep-8"
+            },
+            "ma_yeu_cau": "DEMO-YC-phan_tich_cau_hoi",
+            "phien_ban": 1,
+            "tac_vu": "phan_tich_cau_hoi"
+          }
+        },
+        "canh_bao": []
+      }
+    },
+    "ngu_canh_core": {
+      "phap_nhan_id": "DEMO-P",
+      "module": "M9",
+      "nhom": [
+        "02"
+      ],
+      "nguoi_hoi_id": "DEMO-N",
+      "ma_pham_vi": "DEMO-PV",
+      "thoi_diem": "2026-11-15T12:51:00+07:00"
+    },
+    "tep": {
+      "tep-1": {
+        "tep": {
+          "tep_id": "tep-1",
+          "ten": "nguon-DEMO.txt",
+          "mime": "text/plain",
+          "kich_thuoc": 96
+        },
+        "bam": "sha256:c04d57101fd906afef0cbbce1c806168662d41fadeb7191a74410f696ba21778"
+      },
+      "tep-2": {
+        "tep": {
+          "tep_id": "tep-2",
+          "ten": "van-ban-DEMO.json",
+          "mime": "application/json",
+          "kich_thuoc": 377
+        },
+        "bam": "sha256:8b748f6b501d41a0e02a258ddfd0b9c88f733420bafb8aeeab799c43f257316c"
+      },
+      "tep-3": {
+        "tep": {
+          "tep_id": "tep-3",
+          "ten": "danh-muc-DEMO.json",
+          "mime": "application/json",
+          "kich_thuoc": 513
+        },
+        "bam": "sha256:f9d4e2e697ff78b3d90f221ecb1363f06d552950abbbdc0aad18a9a832865735"
+      },
+      "tep-4": {
+        "tep": {
+          "tep_id": "tep-4",
+          "ten": "yeu-cau-DEMO.json",
+          "mime": "application/json",
+          "kich_thuoc": 589
+        },
+        "bam": "sha256:77225331184e00ab132f2ce7f5d984382efaa18c5d79e7b481855cbcc1bc5bbe"
+      },
+      "tep-8": {
+        "tep": {
+          "kich_thuoc": 4565,
+          "mime": "application/json",
+          "ten": "ho-so-chuan-bi-ai.json",
+          "tep_id": "tep-8"
+        },
+        "bam": "sha256:a489c230e3820c47db089449c4cceec6cf07b0bda0bdfea0d37af72b2af1101c"
+      }
+    },
+    "nguon": {
+      "DEMO-NGUON-1": {
+        "ma_nguon": "DEMO-NGUON-1",
+        "phien_ban_nguon": "1",
+        "tep_id": "tep-1",
+        "bam_goc": "sha256:c04d57101fd906afef0cbbce1c806168662d41fadeb7191a74410f696ba21778",
+        "bam_van_ban": "sha256:c04d57101fd906afef0cbbce1c806168662d41fadeb7191a74410f696ba21778"
+      }
+    },
+    "phan_giai_cau_hoi": {
+      "bam_cau_hoi": "sha256:b059b5f2955bc093a421e3e5d88adb90f153c3a4cccabcfe420b0f1ccda2bd98",
+      "thuc_the": [
+        {
+          "loai": "khoan_vay",
+          "ma": "DEMO-VAY-A",
+          "gia_tri": "DEMO-VAY-A"
+        },
+        {
+          "loai": "khoan_vay",
+          "ma": "DEMO-VAY-B",
+          "gia_tri": "DEMO-VAY-B"
+        },
+        {
+          "loai": "khoan_vay",
+          "ma": "0007",
+          "gia_tri": "0007"
+        },
+        {
+          "loai": "khoan_vay",
+          "ma": "007",
+          "gia_tri": "007"
+        },
+        {
+          "loai": "khoan_vay",
+          "ma": "DEMO-VAY-AB",
+          "gia_tri": "DEMO-VAY-AB"
+        }
+      ],
+      "can_lam_ro": false,
+      "y_dinh": [
+        {
+          "ma": "gia_tri",
+          "cum_tu": [
+            "Giá trị",
+            "Số tiền"
+          ],
+          "phu_thuoc_thoi_diem": false
+        },
+        {
+          "ma": "lai_suat",
+          "cum_tu": [
+            "Lãi suất"
+          ],
+          "phu_thuoc_thoi_diem": true
+        }
+      ],
+      "ham": {
+        "m9.gia_tri": {
+          "phien_ban": "1",
+          "trang_thai": "chua_chay",
+          "moc_cong_bo": null,
+          "y_dinh": [
+            "gia_tri"
+          ],
+          "rang_buoc": {
+            "ma_khoan_vay": {
+              "loai": "thuc_the",
+              "loai_thuc_the": "khoan_vay",
+              "truong": "ma"
+            }
+          }
+        }
+      }
+    },
+    "phu_thuoc_thoi_diem": false
+  },
+  "tep": [
+    {
+      "tep": {
+        "tep_id": "tep-1",
+        "ten": "nguon-DEMO.txt",
+        "mime": "text/plain",
+        "kich_thuoc": 96
+      },
+      "bam": "sha256:c04d57101fd906afef0cbbce1c806168662d41fadeb7191a74410f696ba21778",
+      "duong_dan": "demo/tc-10/cong-chuan/phan-tich-cau-hoi/tep-1.txt"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-2",
+        "ten": "van-ban-DEMO.json",
+        "mime": "application/json",
+        "kich_thuoc": 377
+      },
+      "bam": "sha256:8b748f6b501d41a0e02a258ddfd0b9c88f733420bafb8aeeab799c43f257316c",
+      "duong_dan": "demo/tc-10/cong-chuan/phan-tich-cau-hoi/tep-2.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-3",
+        "ten": "danh-muc-DEMO.json",
+        "mime": "application/json",
+        "kich_thuoc": 513
+      },
+      "bam": "sha256:f9d4e2e697ff78b3d90f221ecb1363f06d552950abbbdc0aad18a9a832865735",
+      "duong_dan": "demo/tc-10/cong-chuan/phan-tich-cau-hoi/tep-3.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-4",
+        "ten": "yeu-cau-DEMO.json",
+        "mime": "application/json",
+        "kich_thuoc": 589
+      },
+      "bam": "sha256:77225331184e00ab132f2ce7f5d984382efaa18c5d79e7b481855cbcc1bc5bbe",
+      "duong_dan": "demo/tc-10/cong-chuan/phan-tich-cau-hoi/tep-4.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-5",
+        "ten": "vi-tri-ma-viec-DEMO.json",
+        "mime": "application/json",
+        "kich_thuoc": 87
+      },
+      "bam": "sha256:9386898a8d2daae704af2e99f9521365d93a90eec1a4c484ec333c77834f25d4",
+      "duong_dan": "demo/tc-10/cong-chuan/phan-tich-cau-hoi/tep-5.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-6",
+        "ten": "ho-so-tra-cuu.json",
+        "mime": "application/json",
+        "kich_thuoc": 1299
+      },
+      "bam": "sha256:e6147d0ad640f2548f5e70c6e6b5025d66856236ea165cf7c54c5b95114e780a",
+      "duong_dan": "demo/tc-10/cong-chuan/phan-tich-cau-hoi/tep-6.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-7",
+        "ten": "vi-tri-ma-viec-DEMO.json",
+        "mime": "application/json",
+        "kich_thuoc": 87
+      },
+      "bam": "sha256:9386898a8d2daae704af2e99f9521365d93a90eec1a4c484ec333c77834f25d4",
+      "duong_dan": "demo/tc-10/cong-chuan/phan-tich-cau-hoi/tep-7.json"
+    },
+    {
+      "tep": {
+        "tep_id": "tep-8",
+        "ten": "ho-so-chuan-bi-ai.json",
+        "mime": "application/json",
+        "kich_thuoc": 4565
+      },
+      "bam": "sha256:a489c230e3820c47db089449c4cceec6cf07b0bda0bdfea0d37af72b2af1101c",
+      "duong_dan": "demo/tc-10/cong-chuan/phan-tich-cau-hoi/tep-8.json"
+    }
+  ],
+  "da_duyet_nghiep_vu": false
+}

@@ -1,3 +1,23 @@
+# TC-10 — 15/11/2026: DEMO toàn tuyến và cổng đo độc lập
+
+- Giữ năm ví dụ nhận, thêm bảy ví dụ với snapshot/tệp con/băm thật, bao phủ
+  đủ tám năng lực trong `chay_thu_demo`; không sửa Python/JS runtime.
+- Bộ đáp án riêng 38 ca DEMO: tám nhóm, 03/04, CP/TNHH, nhựa/điện chờ,
+  VAY-A/B, phiên bản/hiệu lực, nhóm 07, mâu thuẫn, thời điểm và từ chối.
+  Đo riêng 12/12 trả lời, 12/12 trích dẫn, 6/6 từ chối, 20/20 phân loại;
+  không trung bình, không accuracy model thật, chưa duyệt bộ nghiệp vụ.
+- Harness CoreGia ngăn SDK/cấu hình/tệp thật đạt 55/55 hồi quy; kiểm năm tác
+  vụ và bài đo `dot_kiem` gửi lại không nhân số đếm. 31 lượt Local giả qua
+  consumer Hỏi AI trong bộ chấm, 0 Cloud/mạng ngoài/provider thật.
+- Bổ sung kiểm adapter hợp đồng ba tầng/cache/quyền, lọc nguồn trước AI,
+  M9/07 Local, hủy/mất lease/mất ACK/ChuaRo; hai ca MayChuGia bootstrap
+  stdin HTTP loopback. Không đưa cache/RLS/runner vào engine.
+- Node/KttCore giả 30/30; công cụ `.cmd/.sh` ASCII kiểm venv sạch offline,
+  import gói riêng và không bytecode; Windows đã chạy, Linux chưa kiểm.
+- CLI chuẩn **0/12, mã 1**: 5 `CHUA_CAU_HINH`, 7 `TC_CHUA_CO_CUA_CORE`.
+  Chưa đạt cổng chung; harness không thay CLI. Không kích hoạt nhóm; bộ mẫu
+  và ngưỡng thật chờ duyệt TC-Q15. Biên bản ở `docs/TC-10-KIEM-CHUNG.md`.
+
 # Thay đổi
 
 ## 0.2.0 — 15/11/2026 — TC-S22

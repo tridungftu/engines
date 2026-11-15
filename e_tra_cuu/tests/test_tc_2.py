@@ -65,7 +65,8 @@ def test_manifest_tam_nang_luc_va_stub_khong_xong_gia():
     bo = BoDemo()
     assert kiem_phieu(bo.app.phieu, GOI) == []
     assert len(bo.app.phieu["nang_luc"]) == 8
-    assert len(bo.app.phieu["chay_thu_demo"]) == 5
+    assert len(bo.app.phieu["chay_thu_demo"]) == 12
+    assert {v["nang_luc"] for v in bo.app.phieu["chay_thu_demo"]} == {n["ma"] for n in bo.app.phieu["nang_luc"]}
     assert len(bo.app.phieu["loai_du_lieu_rieng"]) == 4
     for n in bo.app.phieu["nang_luc"]:
         assert n["gioi_han"]["tep_toi_da_mib"] == 20 and n["huy_duoc"] is True
@@ -85,16 +86,18 @@ def test_manifest_tam_nang_luc_va_stub_khong_xong_gia():
 def test_cung_chay_thu_demo_trong_harness():
     from chay_demo_voi_core_gia import chay_demo
     kq = chay_demo()
-    assert len(kq) == 5 and all(k["trang_thai"] == "XONG" for k in kq)
+    assert len(kq) == 12 and all(k["trang_thai"] == "XONG" for k in kq)
 
 
 def test_cli_sdk_thieu_ngan_dung_chua_cau_hinh():
     # Cổng SDK gốc, không adapter/cấu hình test. Không làm xanh giả.
     core = CoreGia()
     kq = core.chay_thu_demo(chay.app)
-    assert len(kq) == 5
-    for k in kq:
+    assert len(kq) == 12
+    for k in kq[:5]:
         loi(k, "CHUA_CAU_HINH")
+    for k in kq[5:]:
+        loi(k, "TC_CHUA_CO_CUA_CORE")
     assert not any(b["bang"] == "cau_hinh" for b in chay.app.phieu["ngan_du_lieu"])
     assert core.so_lan_ghi["ket_qua"] == core.so_lan_ghi["tep"] == 0
 

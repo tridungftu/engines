@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "C?u h?nh ??i chi?u b?n k?",
+  "type": "object",
+  "properties": {
+    "phien_ban_cau_hinh": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ma_bo_chuan_hoa": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bam_bo_chuan_hoa": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ma_tu_dien": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bam_tu_dien": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phuong_phap_detector": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phien_ban_detector": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nguong_ocr_kem": {
+      "enum": [
+        null
+      ],
+      "default": null,
+      "description": "Ch?a ?o; ch?a ???c d?ng ?? k?t lu?n s?ch."
+    },
+    "so_trang_toi_da": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 60,
+      "default": 60
+    },
+    "ky_tu_moi_tai_lieu": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500000,
+      "default": 500000
+    },
+    "ky_tu_hai_tai_lieu": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000000,
+      "default": 1000000
+    },
+    "diem_lech_toi_da": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10000,
+      "default": 10000
+    },
+    "ho_so_mib": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 20
+    },
+    "tep_mib": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 20
+    },
+    "pixel_anh": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20000000,
+      "default": 20000000
+    },
+    "tong_byte_tep_con": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 134217728,
+      "default": 134217728
+    },
+    "docx_giai_nen_mib": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100,
+      "default": 100
+    },
+    "docx_so_muc": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2000,
+      "default": 2000
+    }
+  },
+  "required": [
+    "phien_ban_cau_hinh",
+    "ma_bo_chuan_hoa",
+    "bam_bo_chuan_hoa",
+    "ma_tu_dien",
+    "bam_tu_dien",
+    "phuong_phap_detector",
+    "phien_ban_detector"
+  ],
+  "additionalProperties": false
+}

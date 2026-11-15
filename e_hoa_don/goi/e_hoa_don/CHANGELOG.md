@@ -1,5 +1,13 @@
 # CHANGELOG — e_hoa_don
 
+## HD-P2 — Phiếu ZIP + bảng kê XLSX, 15/11/2026 (chỉ tài liệu)
+
+- Điều chỉnh theo lead: HD-7/HD-8 dùng Python stdlib, kiểm OOXML và đọc tĩnh nguồn đối chiếu. SDK 3/3 ĐẠT, pytest 298 passed (39.33s), kiểm độc lập ĐẠT; đã kiểm bằng Core giả (CoreGia), chưa triển khai ZIP/XLSX.
+
+- Cập nhật `docs/GIAO-CODEX-e_hoa_don.md` và `docs/VIEC.md` của engine theo quyết định Anh 15/11: Q1–Q3 đã chốt, XML mốc 1; thêm HD-5…HD-8 cho `hoa_don.doc_zip@1` và `hoa_don.bang_ke_xlsx@1`, tổng 14 giờ triển khai ước tính. Mỗi lát có lệnh giao và điều kiện đạt; PDF/tải cổng thuế để sau.
+- Thiết kế giữ từng entry ZIP với thứ tự/tên/SHA/trạng thái đọc và dấu trùng; không gọi đầy đủ khi có lỗi. XLSX hai sheet giữ tiền cell string exact + currency, số hóa đơn có số 0 đầu. Lead quyết định dùng Python stdlib với OOXML tối thiểu, tham chiếu tĩnh cách chiếu cột/định dạng nguồn cũ theo quyền CD-096 A1; không thêm dependency. Không cấu hình/sổ/cache bền trên máy; khi cần giữ dữ liệu dùng Ngan, tạm RAM.
+- Không sửa mã, manifest, dependency, DEMO hoặc kích hoạt ZIP/XLSX. Kiểm hồi quy Windows/Python 3.13.14/SDK 2.0.0: SDK 3/3 DEMO ĐẠT, pytest 298 passed in 39.00s/0 skipped, kiểm độc lập ĐẠT; đã kiểm bằng Core giả (CoreGia). Đây là bằng chứng XML hiện có, chưa kiểm ZIP/XLSX/Core thật. PR: chờ lead mở; không commit/push.
+
 ## Sửa HD-4 — CI Linux/Python 3.11, 15/11/2026
 
 - Sửa audit hook trong công cụ kiểm ngoài gói: từ chối import bằng `ModuleNotFoundError` để phép dò Jython tùy chọn của `copy.py` CPython 3.11 bắt được `ImportError`. Hook cũ ném `RuntimeError` khiến tiến trình sạch thất bại; Python 3.13 đã bỏ phép dò này. Giữ allowlist, `-I -B -S`, SDK nạp theo tệp cụ thể và chặn mạng/tiến trình; không thêm Core/shim/site-packages. Runtime, SDK, API và dependency không đổi.

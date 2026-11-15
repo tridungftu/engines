@@ -1,9 +1,7 @@
 """Cổng DEMO AI-4: đã kiểm bằng Core giả (CoreGia) và Local HTTP giả."""
 from copy import deepcopy
-import os
 from pathlib import Path
 import sys
-from tempfile import TemporaryDirectory
 
 sys.dont_write_bytecode = True
 THU_MUC_TEST = Path(__file__).resolve().parent
@@ -11,7 +9,7 @@ sys.path.insert(0, str(THU_MUC_TEST.parent / "goi" / "e_hoi_ai"))
 
 from kho_tri_thuc_sdk.thu import CoreGia
 from e_hoi_ai.chay import app
-from local_gia import LocalGia, TRA_LOI, ghi_cau_hinh
+from local_gia import LocalGia, TRA_LOI, nap_cau_hinh
 
 DU_LIEU_DEMO = {"so_tien": {"so": 1000000, "tien_te": "VND"}, "ngay": "2026-10-30"}
 
@@ -23,13 +21,18 @@ def chuan_bi_local_demo(local):
     ])
 
 
-def main():
-    cau_hinh_cu = os.environ.get("KTT_ENGINE_CAU_HINH")
+def main(*, sdk_thu=False):
+    from e_hoi_ai.ngan_engine import tao_ngan_bo_nho
+    import kho_tri_thuc_sdk.thu as thu
+    co_ngan = hasattr(app, "ngan")
+    ngan_cu = getattr(app, "ngan", None)
     try:
-        with TemporaryDirectory(prefix="ktt-ai-4-demo-", dir=THU_MUC_TEST) as thu_muc, LocalGia() as local:
-            tep = ghi_cau_hinh(thu_muc, local.url)
-            os.environ["KTT_ENGINE_CAU_HINH"] = str(tep)
+        app.ngan = tao_ngan_bo_nho()
+        with LocalGia() as local:
+            nap_cau_hinh(local.url)
             chuan_bi_local_demo(local)
+            if sdk_thu:
+                return thu.main([str(app.thu_muc_goi)])
             ket_qua = CoreGia().chay_thu_demo(app)
             dat = bool(ket_qua) and len(ket_qua) == len(app.phieu["chay_thu_demo"])
             for kq in ket_qua:
@@ -44,11 +47,11 @@ def main():
                       f"{local.so_luot_hoi} lượt Local HTTP giả.")
             return 0 if dat else 1
     finally:
-        if cau_hinh_cu is None:
-            os.environ.pop("KTT_ENGINE_CAU_HINH", None)
+        if co_ngan:
+            app.ngan = ngan_cu
         else:
-            os.environ["KTT_ENGINE_CAU_HINH"] = cau_hinh_cu
+            del app.ngan
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sdk_thu="--sdk-thu" in sys.argv))

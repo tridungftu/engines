@@ -17,7 +17,7 @@ import e_tra_cuu.ngan as mau_ngan
 from kiem_doc_lap import GOI, kiem_goi
 
 REPO = Path(__file__).resolve().parents[2]
-MA = "tra_cuu.cat_doan@1"  # TC-2 bỏ stub khung; năng lực này chờ TC-3.
+MA = "tra_cuu.xuat_ket_qua@1"  # TC-3 đã có cắt đoạn; năng lực này vẫn chờ TC-8.
 
 
 @pytest.fixture

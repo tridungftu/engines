@@ -1,0 +1,29 @@
+{
+  "phien_ban": 1,
+  "nhan": "DEMO",
+  "ma_bo": "DEMO-khung-chua-co-tep-core",
+  "dap_an_day_du": true,
+  "ca": [
+    {
+      "ma": "DEMO-tien-va-gach-tay",
+      "word": {
+        "tep_id": "DEMO-thay-bang-id-word-core",
+        "bam": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "mime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      },
+      "scan": {
+        "tep_id": "DEMO-thay-bang-id-scan-core",
+        "bam": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "mime": "application/pdf"
+      },
+      "so_trang": 1,
+      "so_vung_can_ocr": 1,
+      "diem": [
+        {"neo": {"bat_dau": 5, "ket_thuc": 14}, "nghiem_trong": true, "sua_that": true}
+      ],
+      "vung_sua_tay": [
+        {"trang": 1, "hop": [10, 10, 20, 20]}
+      ]
+    }
+  ]
+}

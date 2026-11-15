@@ -1,4 +1,4 @@
-# Đọc XML hóa đơn — HD-4
+# Đọc XML hóa đơn và lõi kiểm kê ZIP — HD-5
 
 Gói SDK 2.0.0, phiên bản 1.0.0; một năng lực `hoa_don.doc_xml@2` nhận `tep` XML và trả `truong`. Bộ đọc strict chỉ hỗ trợ profile `DEMO_M2_XML_QD1271_FIELDS_V1`. Đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật.
 
@@ -33,7 +33,21 @@ XML hỏng trả `HD_XML_KHONG_DOC_DUOC`; encoding/DOCTYPE/namespace/path ngoài
 
 XML không cần cấu hình. Không đọc cấu hình ở import/khởi động/handler XML, không tạo `kho_tam`, thư mục dữ liệu hoặc tệp cấu hình mặc định.
 
-Hàm `cau_hinh_may.doc_cau_hinh()` chỉ đọc khi tính năng cần: JSON ngoài gói từ `KTT_ENGINE_CAU_HINH`; mặc định Windows `%PROGRAMDATA%\KhoTriThuc\engines\e_hoa_don\cau_hinh.json`. Linux dùng đường DEMO test cấp; nếu không có `PROGRAMDATA` thì coi như thiếu cấu hình. Schema `contract/cau_hinh_may.schema.json` chỉ cho phép `{"phien_ban":1}`; không khóa lạ, bí mật hoặc context/pháp nhân. Tệp tối đa 64 KiB; từ chối khóa lặp, NaN và JSON sai. Thiếu tệp trả `None`; `bat_buoc=True` trả `CHUA_CAU_HINH`. Cấu hình lỗi trả `CAU_HINH_MAY_KHONG_HOP_LE`, câu cố định.
+`cau_hinh_may.py`, schema và các test cấu hình cũ được giữ làm lịch sử, chờ chuyển `LUU-TRU/` ở lát sau; không được dùng làm nguồn cấu hình theo quyết định 15/11/2026. `chay.py` không import/nạp tệp này. XML/ZIP/bảng kê không cần cấu hình, dữ liệu bền hoặc ngăn; chưa thêm `Ngan`. Khi có nhu cầu lưu về sau, dùng cửa `Ngan` của Core, tạm RAM theo đề nghị SDK 2.1.
+
+## Lõi ZIP HD-5 (chưa công bố qua SDK)
+
+`e_hoa_don.zip.doc_zip(bytes, tep_zip=..., kiem_huy=...)` trả bộ trường và bytes JSON kỹ thuật trong RAM; chưa upload, chưa đăng ký `hoa_don.doc_zip@1`. Handler XML và manifest giữ nguyên. Schema mới `contract/bao_cao_zip.schema.json`, phiên bản 1; bước nối SDK thuộc HD-6.
+
+Tái dùng `doc_goi_hoa_don_zip`, parser strict/DTO và phép chiếu XML hiện có. Duyệt central directory theo ordinal 1-based, mở bằng `ZipInfo`; tên gốc `orig_filename` giữ cả dấu `\` trên Windows. Thư mục báo riêng; từng entry lỗi, PDF và mọi bản trùng đều được giữ. Tên trùng nhận diện sau NFC/casefold, không dùng tên làm khóa hoặc ghi đè nội dung. Tên `../`, tuyệt đối, symlink và ZIP lồng chỉ kiểm kê/băm, không parse hay giải nén đệ quy. Chỉ method STORED/DEFLATE được đọc có trần; method khác báo chưa hỗ trợ, không cấp băm.
+
+Băm SHA-256 lấy từ bytes giải nén đã đọc hết và kiểm CRC. CRC lỗi, mã hóa/không mở được, sai độ dài hoặc luồng chưa kết thúc: `bam=null`, `kich_thuoc=null` và lý do cố định; không băm phần đầu. Tệp XML hỏng nhưng đọc đủ/CRC đúng vẫn có băm. Binding nguồn gồm tham chiếu ZIP, băm gói, ordinal, tên và băm entry; không tạo `tep_id` của entry.
+
+Trần: ZIP 64 MiB, 1.000 entry kể cả thư mục, 16 MiB/tệp, tổng giải nén 128 MiB, 1.000 HHDVu/XML và JSON UTF-8 32 MiB. Kiểm metadata rồi đếm bytes thực, kể cả chunk lỗi CRC/non-XML/trùng; dùng gate HHDVu sẵn có trước DTO. Trần bổ sung chống bom nén **1.000:1** (lựa chọn kỹ thuật HD-5, chưa đo corpus). Vượt bất kỳ trần nào: toàn việc lỗi `HD_ZIP_VUOT_GIOI_HAN`, câu “Gói ZIP vượt giới hạn xử lý. Anh hãy gửi gói nhỏ hơn.” ZIP không kiểm kê được: `HD_ZIP_KHONG_DOC_DUOC`, câu “Không kiểm kê được gói ZIP. Anh hãy kiểm tra lại tệp.” Không trả tập con hoặc cắt JSON.
+
+Lớp đọc chặn việc `ZipExtFile` tự cắt theo `file_size` giả bằng các hook bộ nhớ `_left`/`_update_crc`, xác nhận EOF/độ dài sau đọc. Dùng `_EndRecData` của stdlib để đối chiếu số entry EOCD/central directory và từ chối ZIP nhiều đĩa; kiểm lại các hook bằng test hồi quy khi nâng Python. Không dùng API này để mở đường máy. Hủy/mất lease từ callback đi xuyên ra ngoài, chỉ lỗi đọc ZIP được báo cục bộ. Không tệp tạm hoặc lưu bền.
+
+`da_doc_het` được tính từ kiểm kê và băm, không kế thừa `artifact_coverage=COMPLETE`; gói rỗng/chỉ thư mục/lỗi/chưa hỗ trợ trả false. Dấu trùng tách khỏi trạng thái đọc. Context luôn `None`; `do_du_ky_tai=UNKNOWN`, thuế `UNKNOWN`, ghi nhận `NOT_PERFORMED`. Báo cáo kỹ thuật không chứng minh đủ kỳ hoặc được nhận vào nghiệp vụ.
 
 ## Cài và kiểm offline
 
@@ -53,7 +67,7 @@ Fixture nhỏ `demo/hoa-don-DEMO.xml` hoàn toàn giả: hóa đơn `0000123`, n
 
 ## Phạm vi bàn giao
 
-Chỉ đăng ký `hoa_don.doc_xml@2`. Lead/Core quản lý phiên bản và chuyển quy trình `@1` sang `@2`; giữ bản cũ tại `ma-nguon/`. Mã ZIP đi cùng lõi là phần nội bộ chưa kích hoạt, không có handler hay DEMO ZIP. ZIP/bảng kê/tải/Node/Cloud/cổng thuế còn chờ quyết định riêng. Không sửa hoặc lưu trữ lại mã tham chiếu. HD-0…HD-4 đã kiểm bằng Core giả (CoreGia); cài sạch đã kiểm trên Windows, chưa kiểm Linux hoặc nghiệm thu Core thật.
+Chỉ đăng ký `hoa_don.doc_xml@2`. Lead/Core quản lý phiên bản và chuyển quy trình `@1` sang `@2`; giữ bản cũ tại `ma-nguon/`. Anh đã mở ZIP/bảng kê ngày 15/11: HD-5 chỉ làm lõi ZIP, chưa có handler hoặc DEMO ZIP trong manifest; HD-6 mới nối SDK, HD-7/HD-8 làm XLSX và kiểm cài sạch. PDF/portal/Cloud/tải cổng thuế vẫn ngoài phạm vi. Không sửa hoặc lưu trữ lại mã tham chiếu. Đã kiểm bằng Core giả (CoreGia); bằng chứng kiểm Windows trong VIEC/CHANGELOG, chưa suy thành Linux hoặc nghiệm thu Core thật.
 
 Bộ DEMO HD-3 có ba ca trong `chay_thu_demo`: `hoa-don-DEMO.xml` (1000000 VND + 100000 VND = 1100000 VND), `hoa-don-le-DEMO.xml` (1000000.123456 VND + 100000.012345 VND = 1100000.135801 VND), `hoa-don-thieu-DEMO.xml` (thiếu ký hiệu/tổng, MST mua rỗng → null/cảnh báo). Công ty DEMO Ánh Dương là nhãn mô tả, không thêm trường Ten ngoài allowlist. Cả ba đọc kỹ thuật thành công nhưng cần kiểm tra vì context=None; TToan ngoài semantic envelope V1 vẫn giữ issue. Oracle literal và pin bytes mới nằm ngoài gói ở `tests/demo/`; pytest kiểm đầy đủ trường/JSON qua CoreGia.doc_tep. Ca âm và 1.000/1.001 dòng ở pytest; tệp lớn chỉ sinh trong DEMO tạm. Không xác nhận golden cũ khi thiếu bytes fixture gốc.
 

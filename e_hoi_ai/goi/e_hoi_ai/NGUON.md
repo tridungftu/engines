@@ -54,10 +54,21 @@ Các đường dẫn dưới đây tính từ thư mục `e_hoi_ai/` trong repo 
 - `e_hoi_ai/cong_ai.py`: chỉ chuyển lớp Local sang import từ mô-đun provider; không sửa đường gọi Local/chọn model/hậu kiểm.
 - Chỉ thư viện chuẩn Python + SDK 2.0.0; không thêm dependency. Không sửa `ma-nguon/`, manifest hoặc bộ DEMO. Danh mục SHA-256 hiện hành ở cuối tệp.
 
+## AI-8 — 15/11/2026
+
+- `e_hoi_ai/ngan.py`, `e_hoi_ai/cau_hinh.py`: lead đã chép nguyên từ `_chung/mau-ma/` NGAN-0 (PR #34). Lát nối giữ nguyên hai tệp; test so SHA-256 sau CRLF → LF, không skip. Chỉ thư viện chuẩn, không sửa `_chung/**`.
+- `e_hoi_ai/ngan_engine.py`: viết mới để đọc `ngan_du_lieu` từ `KHAI-SDK-2.1.json` trong gói và cấp RAM đúng khai báo cho engine/công cụ độc lập. `chay.py`, `hoi.py`, `chon_model.py`: nối API chung, phân trang bằng thuộc tính và chuyển ngoại lệ sang lỗi SDK an toàn. Không thêm dependency.
+- `cau_hinh.schema.json`: từ schema cấu hình máy AI-0; giữ loại dữ liệu, thêm mặc định quy tắc rỗng và trần timeout 600 giây theo trần bước hiện hành. `KHAI-SDK-2.1.json`, `ui/cau_hinh.js`: viết mới theo phiếu AI-8; DOM an toàn, không thêm thư viện trình duyệt.
+- `hoi.py`, `hoi_yeu_cau.py`, `cong_ai.py`, `chon_model.py`: sửa phần nối cấu hình/model qua cổng ngăn, không chuyển thêm mã cũ. `cau_hinh_may.py` và schema cũ giữ nguyên, không thuộc đường chạy; chờ lead chuyển LUU-TRU.
+- Giữ manifest SDK 2.0, không sửa wheel/hợp đồng Core, không thêm dependency chạy. Node chỉ dùng để kiểm UI với KttCore/DOM giả.
+
 ## SHA-256 hiện hành
 
 ```text
-f048204e229a227589abc6250cafb914c5d2898834623621f327f007981fc52c  CHANGELOG.md
+8a58292845b14ec9ea9be47aba098803516635853e127c8e54e0748f2975c236  CHANGELOG.md
+f06d1630ba133d73f3994c557c5521be9061e9e739602246b04979ce33c5cec8  KHAI-SDK-2.1.json
+45506213aacc808850fbf75da28da477c0e3d45ea452dbd5b5f1bb65e585c680  README.md
+c2809e0ff68b11d6c4627c2fa58a5e2abf8b421be8002af4dc5a5479c6a381a5  cau_hinh.schema.json
 e42b1dee5af2da90583ee94eeac4df0404935de27da7b14a88f79f3f3a27e69c  contract/cau_hinh_may.schema.json
 5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f  contract/tra_loi_ai.schema.json
 81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977  contract/van_ban_tai_lieu.schema.json
@@ -65,17 +76,20 @@ e42b1dee5af2da90583ee94eeac4df0404935de27da7b14a88f79f3f3a27e69c  contract/cau_h
 3464bd7a36b7019edc741ffaa4aea0da193b0ffa0229ac6d03237ee0d6f0024e  demo/mau.txt
 514cf09ba8f776418f50b892a22f72c27d02d87c78acc4a196aa2350ecd3649c  e_hoi_ai/__init__.py
 8a9a88a6ed158af3a5704a740afe9855c5161c5785e3f3d9bae7c292d90d2f0e  e_hoi_ai/ai_cuc_bo.py
+7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252  e_hoi_ai/cau_hinh.py
 111ebeafcf253df6e012078d12fefd27250292d3fe03953933f01bbfd98bfd73  e_hoi_ai/cau_hinh_may.py
-8a42559e00454fe0aafa2dd07bf4e9d9477454f19e1a1f599ac16aabeb5c35cf  e_hoi_ai/chay.py
-e09755393f91d0a33ff0c28b7e9b17f5c24321a09100d7d4e55f19b77e90e808  e_hoi_ai/chon_model.py
+9a417093e39a3d1ff577003c70374699ff80ab3784d540a3375bedd334ceb639  e_hoi_ai/chay.py
+cd9775d479966873f9529e419c0c296c2bec02ae57a1b90773572d3131ea3481  e_hoi_ai/chon_model.py
 9f55354b7641ce4a6d6c48fb7b8ed2fb6b7409ac0e0797af79b70f33a3ee8074  e_hoi_ai/cloud.py
-bc870676e4e59915a786a227874ed04bf3814f2675e3d516a3542a781bbe142b  e_hoi_ai/cong_ai.py
+99bef752985200e2a40760a55ecd33422e844b40fb7361fd63bba070bce16ae8  e_hoi_ai/cong_ai.py
 912c22d54099fd4a2ddca9e0d6971ad514bfa104c067ebb249285a6237ec1985  e_hoi_ai/dto.py
-0d112a1d7908c4310272002f24ae6a1cb4700e2ef86f6077847996a6ff17f872  e_hoi_ai/hoi.py
-69a7c0a9498ea8073574dbb3f482576042132e3faf040cb52342b294c9d0f84d  e_hoi_ai/hoi_yeu_cau.py
+f99fffe3c7a6c86543fedb89d21f6cae5e371e2aba8e308b304d1bb5adb12a67  e_hoi_ai/hoi.py
+4130ccafd39b070db959a0b6b3832f740d0cc694ff1e7747ff72089c2c705962  e_hoi_ai/hoi_yeu_cau.py
 ab4dc18a48df5f6f7c8e8f08ae10ea87e5a0a43ced3ca0870909e44eece069df  e_hoi_ai/khuon_json.py
+2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0  e_hoi_ai/ngan.py
+4bfdaadff868d708eb5f9dabaeee492a1202a242f0d9fcb15772820921877181  e_hoi_ai/ngan_engine.py
 00fd471634ba19b8d9a3183273a5c411685a037abf9985ef346b197f6d086164  e_hoi_ai/nha_cung_cap.py
 0b7a1e80f8ec22480eced0009eb1f44a50dfbb7b4a6e91058dc34d6db4e4caf9  engine.json
-824009fc10df7cd0fb2159badd55c9d48ee7fb7cdbb0ef44bfea6ee6f96c6891  README.md
 f25f6409128d583a2cc5cf1c8022651fff2db00f72c94783c49738234a01584a  requirements.lock
+2cd65eb7647c5fa9a1d904cd6972e2e135bf6f3e81682819de110113cc011e00  ui/cau_hinh.js
 ```

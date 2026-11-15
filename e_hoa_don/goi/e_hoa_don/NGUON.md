@@ -91,3 +91,17 @@ Chỉ bổ sung CHANGELOG trong gói để ghi phiếu ZIP/XLSX HD-5…HD-8 tạ
 | `CHANGELOG.md` | `d8adc3e10866662a32d9b890add47bf95d37c2ca2c5b597107fad6d5d46ff420` | `d8adc3e10866662a32d9b890add47bf95d37c2ca2c5b597107fad6d5d46ff420` |
 
 Quyết định lead 15/11: XLSX dự kiến dùng Python stdlib; `bang_ke.cjs` chỉ tham chiếu tĩnh cách chiếu cột/định dạng. Chưa thêm mã hay dependency XLSX.
+
+## HD-5 — lõi kiểm kê ZIP, 15/11/2026
+
+`e_hoa_don/zip.py` viết mới theo phiếu §2.4, tái dùng trực tiếp `doc_goi_hoa_don_zip`, `ra_json`, phép chiếu XML và gate HHDVu HD-1; không chép parser thứ hai. `e_hoa_don/hoa_don_xml.py` chỉ đổi cổng ZIP và thêm stat/unicodedata cùng hai hằng số bảo vệ ZIP; parser XML/DTO/thuật toán tiền còn lại nguyên AST so với nguồn đã ghi ở bảng trên (sau hai đổi import SDK lịch sử). Nguồn ma-nguon/Core/SDK không sửa. Không nguồn bên ngoài hoặc dependency mới; runtime chỉ SDK 2.0.0 + stdlib. Không tự đặt giấy phép mới. Manifest và phiên bản 1.0.0 giữ nguyên vì chưa công bố năng lực ZIP.
+
+Các bảng lịch sử giữ nguyên. SHA bytes thực/LF của các tệp thay đổi hoặc thêm trong gói HD-5 ở dưới; không tự băm NGUON.md. Các tệp khác trong gói không đổi.
+
+| Tệp HD-5 trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `e_hoa_don/zip.py` | `e10b854b14c990c756c318ed3f9b8ed21f59f97ff154570957d1a6587ce1add9` | `e10b854b14c990c756c318ed3f9b8ed21f59f97ff154570957d1a6587ce1add9` |
+| `e_hoa_don/hoa_don_xml.py` | `fb201bbb723c4c739596dbbbe0270584a8ab2dbc368886428cde7ef0e3fbcab1` | `8b7cb17848a5861b7384aefa31b22d6cc39f28b2e3486a0c4bc938929d397f32` |
+| `contract/bao_cao_zip.schema.json` | `3585b86eb1f8d9210d54d42042fc73b4cfa36c39ccbf4e8bfaf21a391d78f27b` | `fb320d2310fb3651e8fe8c487c4e83a4f464df53d7736cc3de943bb3f8aa8443` |
+| `README.md` | `d1c4959a102df6de300193f1905f857de1aa099107dd26bb6c0cc1d027593b35` | `70302865c2f4357df4fdb8af51d596faf4cf27346329da1d6b36bea327114c98` |
+| `CHANGELOG.md` | `12d96bfd0d55201516790a24c2320af2997ed8b1d207f2e4685e5a7b2950d08a` | `12d96bfd0d55201516790a24c2320af2997ed8b1d207f2e4685e5a7b2950d08a` |

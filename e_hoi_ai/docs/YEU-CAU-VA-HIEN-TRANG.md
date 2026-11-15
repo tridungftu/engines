@@ -19,6 +19,10 @@
 
 **Chưa có gì chạy thật với model thật.**
 
+## Cập nhật AI-8 — 15/11/2026
+
+Cấu hình Local/quy tắc model và danh sách phát hiện đi qua ngăn; đã nối ngăn chung NGAN-0 (PR #34), bản RAM chờ SDK 2.1 cấp ngăn thật. Màn hai phần Local/Cloud đã có trong gói, kiểm DOM và KttCore giả; Cloud luôn “Chưa áp dụng ở bản 1”. Cổng DEMO không đọc tệp cấu hình. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core thật, trình duyệt thật hoặc model thật. Các mô tả cấu hình máy/tệp và màn chưa có ở phần lịch sử dưới đây đã được thay ở AI-8. Chi tiết và kết quả: VIEC.md.
+
 ## 0. Kết luận
 - **Bản 1 = chỉ Local AI.** Module gửi prompt của function cùng tài liệu → engine ghép khung "trả lời có trích dẫn / không thấy căn cứ" → gọi Local → Python kiểm trích dẫn → trả kết quả và ghi nhật ký.
 - **Mã lõi bản 1 đã gộp (08/11)** và kiểm bằng mock. Gồm: contract v2, ghim function và prompt, chọn model theo module/function có dự phòng, nhật ký nguồn gốc.

@@ -1,3 +1,12 @@
+## Chưa phát hành — 15/11/2026, MASK-R3 kết thúc khảo sát ứng viên
+
+- Thêm lõi khảo sát RAM `tra_cuu_dinh_danh.py` và đầu dò trong `che_van_ban.py`: ứng viên từ detector/quy tắc/trường/danh sách của đầu vào hiện tại; gọi `tim_ung_vien` R2 bằng đúng giá trị, nhận metadata/null+cờ. Không liệt kê ngăn/dựng matcher danh mục, không fuzzy/prefix hoặc thử mọi chuỗi con trong nhánh mới. Không giải mã, ghi ngăn, cấp alias tạm hoặc phát hành từ đầu dò.
+- Ghép alias với nguyên văn tại span gốc, giữ NFD/Cf/hoa-thường/khoảng trắng. Cùng alias nhưng nguyên văn khác nhau thì chặn toàn lượt. Dò lặp cùng giá trị chuẩn hóa chỉ tính một ứng viên; chia sẻ lượt dò/budget giữa quy tắc và điểm nối Local trong `hau_kiem_ai.py`.
+- Trần khảo sát 2.000 giá trị phân biệt, 20.000 vị trí, 8 triệu ký tự qua các lượt định vị; kiểm hạn tuyệt đối/hủy trước và sau RPC. Vượt trần/hạn không trả phần đã làm; dọn tham chiếu khi lỗi/kết thúc lượt. Đây là budget đề xuất, deadline hợp tác không thay cơ chế cưỡng chế Core. Giữ kiểm tiền/ngày và nguồn/span/đủ đoạn Local.
+- **Chưa chứng minh chất lượng/chi phí, kết thúc khảo sát bằng giới hạn.** 16 ca gốc: 1 che đủ không chặn, 7 lọt trong bản khảo sát, 8 chặn; 18 câu thường: 14 giữ nguyên, 4 chặn, 0 che thừa, báo nhầm theo §6 = 4/18 (22,22%). Biến thể và số đo riêng ở VIEC. Không lấy 0 phát hành làm 0 lọt; chưa đo Local thật/held-out có người soạn độc lập.
+- Cửa SDK nhận diện R2 trong che/hậu kiểm bị chặn cố định `MASK_R3_CHUA_CHUNG_MINH`, không rơi về matcher/snapshot RAM lịch sử. Nhánh RAM lịch sử trong `che_van_ban.py` giữ nguyên để hồi quy tới R5/R6; chưa tuyên bố xóa matcher khỏi toàn gói hoặc nối P4 vận hành. Hậu kiểm lịch sử bỏ đọc danh mục, chỉ dùng vùng gốc đã có trong RAM. R4/R5/R6 và C-P4-03/04/05 còn mở; Cloud tắt.
+- Đúng ba runtime R3; không sửa handler/vòng đời của R4, Core/SDK hoặc dependency. Kiểm kê bytes/SHA tự sinh lại theo gói SDK. Đã kiểm bằng Core giả (CoreGia), chỉ DEMO; PR: chờ lead mở. Số kiểm thật trong VIEC và báo cáo R3.
+
 ## Chưa phát hành — 15/11/2026, MASK-R2 adapter nhận diện bí mật
 
 - Thêm `KhoNganBiMat` dùng đúng `viec.ngan.doc/tim/lo` SDK 2.2.0. Ứng viên chỉ tìm bằng giá trị chính xác ở cột bí mật, cùng vùng và phiên bản chuẩn hóa; trả ID/alias/metadata/null+cờ, không băm tên công khai hoặc nạp danh mục bản rõ. Số gặp đọc theo chuỗi thập phân của SDK.

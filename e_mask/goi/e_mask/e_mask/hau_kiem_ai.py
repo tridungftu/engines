@@ -23,6 +23,7 @@ from .kho_dinh_danh import KhoDinhDanh
 from .ngan import NganXungDot
 from .nguon.privacy.types import bo_ky_tu_vo_hinh, la_bien_to_hop
 from .quyen_yeu_cau import xac_minh
+from .tra_cuu_dinh_danh import UngVien, chan_phat_hanh
 
 NANG_LUC = 'mask.hau_kiem_ai_cuc_bo@1'
 NANG_LUC_AI = 'ai.hoi_mask_cuc_bo@1'
@@ -273,7 +274,19 @@ class HauKiemAI:
             moi.append((a, b, u, v, NHOM[loai]))
         return moi
 
+    def _tra_ung_vien_ram(self, luot, moi):
+        """Sau _span/nguồn Local tin cậy: cùng budget và map với lớp 1.
+
+        Chỉ nhận tọa độ; TraCuu lấy tên tại đầu vào RAM, không dùng tên
+        model trả hoặc đọc lại danh mục. R5 nối đời sống luot xuyên bước.
+        """
+        for a, b, _u, _v, nhom in moi:
+            luot.them(UngVien(a, b, nhom, 'local'))
+        return luot.ket_qua()
+
     def _che_them(self, kho, h, snapshot, moi):
+        if callable(getattr(kho, 'tim_ung_vien', None)):
+            chan_phat_hanh()
         ma, m = self.ctx.ma_yeu_cau, h.anh_xa
         with kho.giao_dich():
             kho.doc_yeu_cau(ma)
@@ -304,8 +317,8 @@ class HauKiemAI:
             if map_cuoi.da_che != da_che:
                 raise loi('MASK_AI_HO_SO')
             # Giữ mọi alias lớp 1 nguyên vị trí tương ứng, không cho AI sửa/gỡ.
-            tat_ca = [(t['gia_tri'], t['nhom'], t['nhom'] != 'KHAC')
-                      for t in kho.liet_ke_dinh_danh()]
+            # Chỉ các vùng hiện tại trong RAM; không đọc danh mục để hậu kiểm.
+            tat_ca = [(m.goc[a:b], da_dung[alias]['nhom'], True) for a, b, alias in phep]
             con_sot, day_du = che._kiem_con_sot(da_che, tat_ca)
             tien_ngay = che._kiem_tien_ngay(m.goc, da_che)
             so_sanh = []

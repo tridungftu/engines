@@ -157,3 +157,24 @@ Trình lead cổng DEMO có ngăn thay thế trong lúc chờ C-TX-04; không th
 cờ cấu hình tệp/env hoặc tự cấu hình trong runtime để làm xanh CLI.
 Máy kiểm phiên này là Windows; Linux chưa chạy thực tế (WSL chưa cài,
 không có Docker). Test dùng API Python/Node đa nền tảng. Core thật chưa kiểm.
+
+
+## Lõi TX-3 chờ review chi tiết — 15/11/2026
+
+Đã có lõi hậu kiểm và xuất JSON/Excel trong gói nhưng **chưa đăng ký**
+`trich.hau_kiem@1`, `trich.xuat_ket_qua@1` hoặc schema
+`bang_trich_xuat`. Manifest/runtime hiện vẫn chỉ công bố hai năng lực
+TX-1/2. Hướng bảng + Excel đã chốt; xem
+[chi tiết review](../../docs/TX-3-REVIEW.md) trước khi đăng ký.
+
+Cổng `tests/chay_demo_voi_ngan_gia.py` ngoài gói chạy ba DEMO runtime có
+ngăn và hai DEMO TX-3 trong phiếu RAM chỉ cho test: **5/5 ĐẠT**,
+**đã kiểm bằng Core giả (CoreGia)**. CLI SDK chuẩn vẫn **2/3 ĐẠT, exit 1**,
+TX-2 thiếu cấu hình ngăn; chờ lead xác nhận cổng thay thế/C-TX-04.
+Không tự tạo cấu hình trong engine.
+
+Hậu kiểm hiện giữ `van_ban` vì bộ E1 của TX-2 chưa khai cách chuyển kiểu;
+không tự đoán tiền/ngày hoặc tính TT-21. Exporter kiểm và giữ kiểu đã khai
+trong bảng: tiền có mã tiền tệ, ngày ISO, số dài bằng text JSON; text không
+thành công thức Excel. Tệp JSON là dữ liệu chuẩn để module ghép cột.
+Không ghi kết quả/bộ/lịch sử lên máy engine; module quyết định lưu.

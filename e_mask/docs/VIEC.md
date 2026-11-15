@@ -8,7 +8,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 1 | Chuyển kho bí danh sang **ngăn của engine** theo cổng chung (thay `mask.py`/`kho_mask.py`/SQL 113, 117–120 trong Core) | MK-10, 19 | Chờ Core | Bàn cùng lead Core qua Anh |
 | 2 | J8b: đối soát mất xác nhận | — | Chờ làm |  |
 | 3 | Lát 4: màn duyệt danh sách chờ (Admin) — giao diện của engine | MK-15, 16 | Chờ làm |  |
-| 4 | Lát 5: màn thử che/mở che DEMO | — | Chờ Anh | Duyệt `PHIEU-MASK-CHAY-THU-DEMO.md` |
+| 4 | Lát 5: màn thử che/mở che DEMO | — | Bỏ — 15/11/2026 | Anh chốt bỏ `PHIEU-MASK-CHAY-THU-DEMO.md` (QUYET-DINH-ANH-20261115 câu 10); thử DEMO dùng màn Chạy thử chung của Core |
 | 5 | Lát 8: che/mở che Word/Excel (mẫu 5–8) | §1.3 | Chờ làm |  |
 | 6 | Lát 6: 8 contract (Anh duyệt tên) → lát 7: bài 11 bước | — | Chờ làm |  |
 | MASK-P | Lập phiếu giao Codex theo SDK 2.0; chỉ tài liệu, không tạo gói/không sửa nguồn | MK-1…6, 10…22 | Xong — 14/11/2026 | [Phiếu giao](GIAO-CODEX-e_mask.md): 14 lát, 52–62 giờ ước tính có điều kiện. Regex 14/14 khối đạt; 5 mục/bảng lát/tổng giờ khớp; UTF-8/NFC và kiểm khoảng trắng đạt, `git diff --check` mã 0. Ba lệnh kiểm gói AGENTS.md §5 không áp dụng theo ngoại lệ lát chỉ tài liệu; không chạy hoặc nhận là đã kiểm bằng CoreGia. Đề xuất `van_ban_da_che` ở cuối sổ chung mang nhãn **ĐỀ XUẤT MASK-P, chờ Anh**. Không commit/push; PR: **chờ lead mở** |

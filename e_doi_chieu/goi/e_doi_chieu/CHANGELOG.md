@@ -1,5 +1,20 @@
 # Thay đổi
 
+## DC-13 — 15/11/2026 · công cụ ngoài runtime, 0.9.0 chưa phát hành
+
+- Công cụ đo DEMO và wrapper CMD ASCII ngoài gói, chạy khô mặc định;
+  không đọc cấu hình máy/khóa, không mạng, không gọi engine/Hot Folder.
+- Adapter handle đề nghị chờ Core review; chỉ gửi qua cửa chung Core khi
+  Anh chọn --that và host xác minh môi trường/DEMO. Mất ACK/chưa xong
+  trả ChuaRo, không retry. Kết quả về Core/RAM; chỉ --bao-cao mới ghi
+  một JSON DEMO mới ngoài gói trong workspace, không chứa nguồn nhạy cảm.
+- Chấm đáp án độc lập, tử/mẫu/null và lý do; vùng sửa tay tính vào cổng
+  100% Nghiêm trọng, 0 sửa thật bị ẩn; không suy bảo đảm ngoài bộ mẫu.
+  Thiếu đo tách thất bại; chưa đặt ngưỡng detector/lệch giả/OCR kém.
+- Đã kiểm bằng Core giả (CoreGia); phép đo môi trường thật, trình duyệt,
+  CAS/quyền và hiệu lực module: CHỜ ANH TỰ CHẠY. Không đổi runtime/API,
+  không thêm dependency. Hướng dẫn: docs/DC-13-THU-THAT.md ngoài gói.
+
 ## DC-12 — 15/11/2026 · kiểm gói 0.9.0 chưa phát hành
 
 - Harness ngoài runtime nạp tệp DEMO/ngăn CoreGia và mẫu NGAN-0 riêng;

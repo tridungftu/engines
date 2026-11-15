@@ -338,3 +338,9 @@ Thời gian thực tế: **08:37:00–08:59:29, 15/11/2026 UTC+07; 0.375 giờ**
 Lệch khỏi phiếu / quyết định tạm đã dùng: **không**; giữ gói 1.0.0 theo nền hiện có tới bước ghim của lead/HD-8. Tái dựng phần DTO từ JSON để dùng lại phép chiếu đã có, không viết parser mới. Runtime đúng trần ba tệp; manifest/test/tài liệu ngoài số này. Không thêm dependency.
 
 Cần Core / Chờ Anh mới phát sinh: không có cửa mới. **Giữ nợ fixture tệp lồng trong truong/chuỗi Chạy thử chung**: SDK 2.0.0 chưa cấp fixture JSON trong truong.chi_tiet_nguon. Vì vậy 4/4 DEMO chỉ phủ XML/ZIP; XLSX kiểm riêng qua pytest với CoreGia.them_tep và kết quả đọc thật, cả bộ nhớ và MayChuGia HTTP loopback, không ID giả/không sửa SDK. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core thật/quyền kho tệp/Excel app/Linux; kiểm cài sạch ZIP/XLSX thuộc HD-8.
+
+### B?n giao HD-8 ? 15/11/2026, PR: ch? lead m?
+
+B? sung ki?m chu?i ZIP ? XLSX trong ti?n tr?nh c? l?p c?a b?n g?i sao ch?p; gi? audit ch?n m?ng, ti?n tr?nh ngo?i v? import ngo?i SDK/stdlib. Oracle HD-5?7 ki?m entry, CRC/m? h?a, gi?i h?n, XML, OOXML, cell/style v? c?ng CoreGia; th?m ca pin SHA XML VND/USD, l?i v? ch?n ghi ??a. Runtime kh?ng ??i. C?i s?ch Windows d?ng wheel SDK ?? ??i chi?u SHA, kh?ng PYTHONPATH Core/ma-nguon. Ch?a ch?y Linux (WSL ch?a c?i), Core th?t, Excel app ho?c quy?n kho t?p; kh?ng coi b?i nghi?p v? 120 ph?t l? ??t. SDK ch?a c? fixture t?p l?ng trong `truong` cho Ch?y th? XLSX: c?n Core/SDK b? sung; hi?n ki?m b?ng CoreGia. Bytes/t?p b?n giao do Core qu?n. Kh?ng d?ng fixture l?m b?ng ch?ng quy?n t?p th?t.
+
+K?t qu? Windows/Python 3.13.14: `kho_tri_thuc_sdk.thu` **4/4 ??T**, m? 0; pytest **653 passed in 115.12s, 0 skipped**, m? 0; `kiem_doc_lap.py` **??T**, m? 0; `KIEM-MAY-SACH.cmd` **??T**, m? 0. Test m?i sau ch?nh h?nh th?c c?ng ch?y ri?ng 1 passed. ?? ki?m b?ng Core gi? (CoreGia). Th?i gian th?c t? 09:06?09:12:19 ng?y 15/11/2026, kho?ng **0,105 gi?**, so ??c t?nh **2 gi?**; kh?ng ??i API hay runtime.

@@ -8,7 +8,8 @@ from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
 from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
 from .doc_docx import doc_docx as _doc_docx
 from .ho_so import nhan_cap as _nhan_cap
-from .so_chu import so_van_ban as _so_van_ban
+# DC-5 — khối nối riêng; không đổi đăng ký/cổng của lát ảnh DC-8.
+from .quy_tac import so_van_ban as _so_van_ban
 
 _GOI = Path(__file__).resolve().parent.parent
 app = Engine.tu_khai_bao(str(_GOI / "engine.json"))

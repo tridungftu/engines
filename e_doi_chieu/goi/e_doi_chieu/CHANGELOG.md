@@ -1,5 +1,57 @@
 # Thay đổi
 
+## DC-5 — sửa theo kiểm độc lập lead, 15/11/2026 · chưa phát hành
+
+- Bỏ ReDoS ở nhận diện tiền chữ; quét token tuyến tính và kiểm hủy trong
+  dòng dài. Hai mẫu tìm số kèm đơn vị cũng đổi thành quét số một lần rồi
+  kiểm đơn vị phía sau, tránh quét lại dãy số dài thiếu đơn vị.
+- Cụm tiền chữ tối đa 64 từ; vượt giữ Cần xem, `khop=null`, nguyên văn
+  đầy đủ. Bổ sung nghìn tỷ, hai nghìn linh năm, năm/lăm ở hàng chục và
+  cách đọc gọn một trăm năm. Ngoài ngữ pháp vẫn chưa đủ kiểm.
+- Ngoặc ngay sau một số tiền duy nhất, cùng dòng/ô, không cần nhãn:
+  `1.000.000 đồng (hai triệu đồng)` → Nghiêm trọng; chữ không đọc được
+  → Cần xem. Cụm mơ hồ/nhiều số/ngoặc lồng không tự ghép.
+- Thuật toán `DC-5-2` không tái dùng kết quả cũ. Chỉ sửa hai tệp runtime
+  và `tests/test_dc5.py`; giữ `_chung/**`, `ngan.py`, `cau_hinh.py` và API.
+- Đã kiểm bằng Core giả (CoreGia): **629 passed, 0 skipped** (222 ca DC-5,
+  thêm 49 ca), SDK DEMO **1/1 ĐẠT**, kiểm độc lập **ĐẠT**, cả ba lệnh mã 0.
+  Bộ quét: `năm * 100000` **0,0640 giây**, `một trăm * 50000`
+  **0,0690 giây**, 500.000 ký tự nhiều cụm tiền **0,4418 giây**;
+  cùng một dòng **0,0482 giây**. Dãy số thiếu/có đơn vị khoảng 500.000
+  ký tự (lấy thời gian lớn hơn giữa quét tiền và đặc trưng) **0,4450 /
+  0,4591 giây**; tất cả <2 giây. Có test hủy giữa vòng quét/lập chỉ mục.
+  Đây là số đo bộ quét bằng adapter DEMO, không phải toàn tuyến/OCR.
+- SHA-256 LF hiện hành ở NGUON; PR: **chờ lead mở**. Chưa kiểm Core thật/
+  Linux/OCR/model thật; không phát sinh Cần Core/Chờ Anh, không commit/push.
+
+## DC-5 — 15/11/2026 · chưa phát hành
+
+- Hoàn thiện `doi_chieu.so_van_ban@1` trong đúng ba tệp runtime:
+  `quy_tac.py`, `tien_chu.py`, `chay.py`; dùng lại kiểm nguồn/căn/so DC-4,
+  giữ nguyên API/schema/manifest, hai mẫu NGAN-0 và phần ảnh DC-8.
+- Sàn Python và quy tắc trúng cho mọi điểm; quét toàn văn cùng vùng bảo
+  vệ từ nhãn/metadata đã kiểm băm/offset. Chữ số, ngày/thời hạn, tiền/
+  tiền tệ/tỷ lệ, định danh, phủ định/bắt buộc, cấu trúc và nghi nhầm OCR
+  giữ Nghiêm trọng. Kiểm lại cả lát tương đương chuẩn hóa để không mất
+  thay đổi mã/số/tên; NFC tương đương ngoài khác biệt nghiệp vụ vẫn giữ.
+- Chỉ chuẩn phân cách số theo bộ ghim, giữ chuỗi 0 đầu; Decimal/int,
+  không float hoặc đoán tiền tệ. Tiền snapshot `{so, tien_te}`; tiền lẻ
+  dùng chuỗi thập phân chính xác, ngày đã phân tích dùng ISO.
+- Kiểm số ↔ chữ ngay trong bản ký dù hai bản giống nhau. Đủ cụm/đơn vị
+  và trái nhau → Nghiêm trọng; thiếu/mơ hồ/chưa hiểu ngữ pháp → Cần xem,
+  `khop=null`, hạng mục chưa đủ kiểm. Không ghép qua dòng/ô.
+- Nhật ký/sàn ghim băm, kiểm với snapshot gốc Core; chặn hạ mức, tự băm
+  lại, thay căn cứ/xóa điểm. Áp lại không reset mức AI đã nâng. DC-6 còn
+  phải kiểm nguồn/trích dẫn/Local; DC-5 không gọi AI hoặc Cloud.
+- Snapshot/chống trùng/CAS/chủ/hạn chiếm qua Core/Ngan; trần điểm và
+  bytes tính cả bằng chứng/nhật ký, không cắt danh sách. Vùng dài tham
+  chiếu bằng offset/băm tới nguyên văn, tránh nhân cả dòng vào mỗi điểm.
+- Đã kiểm bằng Core giả (CoreGia): DEMO **1/1 ĐẠT**, pytest **580 passed,
+  0 skipped** (173 ca DC-5), kiểm độc lập **ĐẠT**, cả ba lệnh mã 0.
+  Ma trận 29 cặp dương + 29 cặp không lệch; 4 ca tiền nội bộ trái số và
+  8 ca tiền nội bộ khớp. Bắt đủ các điểm cài trong bộ này, không suy tỷ
+  lệ thực tế. Chưa kiểm Core thật/Linux/OCR/model thật; PR: **chờ lead mở**.
+  Không sửa `ma-nguon/`, không commit/push. Chi tiết tại VIEC/README.
 ## DC-8 — 15/11/2026 · 0.4.8 chưa phát hành
 
 - Thêm `doi_chieu.phat_hien_sua_tay@1` ở khối đăng ký riêng: nhận hồ sơ

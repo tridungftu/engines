@@ -1,6 +1,6 @@
-# NGUỒN — gói e_mask, MASK-1…6 và sửa an toàn
+# NGUỒN — gói e_mask, MASK-1…7, MASK-2b và sửa an toàn
 
-Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Handler che/mở che hiện đã có nghiệp vụ qua ngăn; các mô tả stub/kho tệp dưới đây là lịch sử từng lát. Trạng thái mới nhất tại mục sửa an toàn ngày 15/11/2026. Đã kiểm bằng Core giả (CoreGia).
+Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Handler che/mở che hiện đã có nghiệp vụ qua ngăn; các mô tả stub/kho tệp dưới đây là lịch sử từng lát. Trạng thái và băm mới nhất của tệp sửa ở MASK-2b nằm tại mục MASK-2b cuối tài liệu. Đã kiểm bằng Core giả (CoreGia).
 
 ## Năm tệp chép vào gói
 
@@ -165,3 +165,30 @@ SHA-256 hiện tại bên dưới tính sau chuẩn hóa CRLF thành LF, không 
 | `e_mask/tests/test_sua_an_toan.py` | `c85beeb506055e65303ce302546300054792f588e9325f3174b02940d6cb4413` |
 | `e_mask/docs/BAO-CAO-SUA-AN-TOAN-MASK-3b-6.md` | `b670eaf9a1199dfaff23dc20045e15219f88cf7f455189872f58347671b3cc7d` |
 | `e_mask/docs/KET-QUA-KIEM-SUA-AN-TOAN-MASK-3b-6.txt` | `4b232e449470aeb2b5d91e27d7772a93b105d28e8ae6344d3700c37961c6c24d` |
+
+## Bổ sung MASK-2b — 15/11/2026
+
+Mã viết trong repo, chỉ dùng thư viện chuẩn và SDK 2.0.0; không chép nguồn ngoài hoặc thêm dependency. Đúng hai tệp runtime: thêm `e_mask/ten_nguoi.py`, sửa `e_mask/che_van_ban.py`. Bộ dò dùng lại bốn tài nguyên sạch đã cấp, không thay tệp/băm từ điển. Không sửa mẫu chung, ngăn/cấu hình, Core hoặc nguồn cũ.
+
+Quy tắc mới: bỏ dấu/hoa thường nhưng giữ âm tiết và vị trí, họ + 1–3 âm tiết; danh xưng/tên chính thức tăng tin cậy để che, nghi vấn còn lại chặn phát hành. “và”/ngoặc chức danh không tự cho phép gửi. Cụm thông dụng trùng họ khai rõ tại `_CUM_THONG_DUNG`; không tải từ điển hay dùng dữ liệu thật. Tên dài, che prefix, trùng sau bỏ dấu và bí danh tạm chưa duyệt có ca hồi quy. Giữ bộ dò chữ hoa cũ, thêm lưới tên thường độc lập.
+
+Đã kiểm bằng Core giả (CoreGia): pytest 545 passed, 190 subtests passed, 0 skipped; adapter DEMO 2/2, kiểm độc lập ĐẠT. CLI SDK chuẩn 0/2 do thiếu nguồn quyền. 14 mẫu có sẵn báo nhầm 1/14; 30 câu bổ sung 2/30, bằng bản nền; chi tiết/giới hạn và nguồn mẫu ở báo cáo MASK-2b. Không chứng nhận mọi tên hoặc đủ điều kiện bật Cloud.
+
+Bảng này thay các băm lịch sử cùng tên ở trên cho bản MASK-2b. Quy ước SHA-256: `read_bytes().replace(b'\r\n', b'\n')`, không đổi ký tự khác; không tự băm NGUON.md.
+
+<!-- SHA-MASK-2b -->
+
+| Tệp (từ gốc repo) | SHA-256 LF |
+|---|---|
+| `e_mask/goi/e_mask/e_mask/ten_nguoi.py` | `6b5b0a21fbbc7ce438f82725589391c234febc58fc1d4c239a9c5df075693886` |
+| `e_mask/goi/e_mask/e_mask/che_van_ban.py` | `766552691ca30d4fca2cde61d1c1b11423216823d5fa136218a757b732bc45d4` |
+| `e_mask/tests/test_mask_2b.py` | `150ded0fb5848a62e3d09869343df6d35c8570fe76d7f981bc47c093b003fe56` |
+| `e_mask/tests/do_mask_2b.py` | `9ce3d80e2845345ea34548c091d51568fa737f8996a968a7f81e38257870835e` |
+| `e_mask/tests/test_mask_2.py` | `f5b012bcefac7196e62318de0afd4d402fc0c3420ba8375e997a0b23c27514bb` |
+| `e_mask/tests/test_che_van_ban.py` | `e2023cc28afe67b91744bfff12a9d44e93ad579bee8c742b6b1b6a7ec2420264` |
+| `e_mask/docs/VIEC.md` | `c10cc41ba3f2fc3eecf7d99025777e5c3b1d705ea8b49cd394dee6debcf91ed1` |
+| `e_mask/goi/e_mask/README.md` | `1d412cbbb27311da170d67e4b0d2dc46fa849d91073044dbbb7373f49e3b8474` |
+| `e_mask/goi/e_mask/CHANGELOG.md` | `1f042768b20d89eb831eddadddc45665cab96a130e43de90cf96b04c6784cb29` |
+| `e_mask/docs/BAO-CAO-MASK-2b.md` | `523778d62fe4294fda317e576f4fc2e77b55b6085296c7c87bb391a2dc400b6d` |
+| `e_mask/docs/KET-QUA-KIEM-MASK-2b.txt` | `221b8669bd261ec15e49085832405beda14fcb91f1b69b4e143b02855c9c6aff` |
+| `e_mask/docs/SO-DO-MASK-2b.json` | `94645b2b9baed0f86190eeedb20db0e3a866332ede8629fc115baf8e1c3162fe` |

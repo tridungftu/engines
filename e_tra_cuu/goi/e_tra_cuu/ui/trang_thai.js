@@ -34,7 +34,7 @@ export async function mount(goc, {KttCore = globalThis.KttCore, phapNhanId} = {}
   goc.replaceChildren();
   tao("h2", "Trạng thái bài đo DEMO");
   tao("p", "Chỉ hiển thị bài đo thuộc pháp nhân Core cho phép. Bài đo DEMO chưa chứng nhận chất lượng thật.");
-  tao("p", "Ngăn RAM mất bài đo khi khởi động lại; chưa kiểm lưu bền Core thật.");
+  tao("p", "Bài đo do Core lưu theo pháp nhân; chưa kiểm lưu bền trên Core thật.");
   const thongBao = tao("p", ""); thongBao.setAttribute("role", "status");
   const ds = tao("section");
   const sau = tao("button", "Trang sau"); sau.type = "button"; sau.disabled = true;
@@ -44,7 +44,14 @@ export async function mount(goc, {KttCore = globalThis.KttCore, phapNhanId} = {}
   const noiDungDoc = tao("section", undefined, chiTiet);
   function kiemPhamVi(b) {
     if (!b || b.gia_tri?.phap_nhan_id !== p) throw new Error("Sai phạm vi pháp nhân.");
-    return b.gia_tri;
+    const v = {...b.gia_tri};
+    for (const ten of ["chi_so", "bao_cao"]) {
+      if (v[ten] == null) continue;
+      if (typeof v[ten] !== "string" || new TextEncoder().encode(v[ten]).length > 65536) throw new Error("Sai cấu trúc bài đo.");
+      v[ten] = JSON.parse(v[ten]);
+      if (!v[ten] || typeof v[ten] !== "object" || Array.isArray(v[ten])) throw new Error("Sai cấu trúc bài đo.");
+    }
+    return v;
   }
   function ve(b, cha) {
     const trangThai = {chua_do: "Chưa đo", dang_do: "Đang đo", da_do: "Đã đo DEMO", loi: "Bài đo có lỗi"};
@@ -60,7 +67,7 @@ export async function mount(goc, {KttCore = globalThis.KttCore, phapNhanId} = {}
     ds.replaceChildren(); sau.disabled = true; tiep = null;
     try {
       if (!hopLe || typeof p !== "string" || !p.trim()) throw new Error("Thiếu phạm vi Core.");
-      const trang = await cong.ngan.tim("dot_kiem", {loc: {phap_nhan_id: p}, gioi_han: 500, tiep: cursor});
+      const trang = await cong.ngan.tim("dot_kiem", {loc: {}, gioi_han: 500, tiep: cursor});
       if (daDong || lan !== luot) return false;
       if (!Array.isArray(trang?.danh_sach) || trang.danh_sach.length > 500
           || (trang.tiep != null && (typeof trang.tiep !== "string" || trang.tiep === cursor))) throw new Error("Trang không hợp lệ.");
@@ -89,7 +96,7 @@ export async function mount(goc, {KttCore = globalThis.KttCore, phapNhanId} = {}
     noiDungDoc.replaceChildren();
     try {
       if (typeof p !== "string" || !p.trim() || typeof maDot !== "string" || !/^DEMO-[A-Za-z0-9_.-]{1,195}$/.test(maDot)) throw new Error("Mã bài đo không hợp lệ.");
-      const b = await cong.ngan.doc("dot_kiem", {phap_nhan_id: p, ma_dot: maDot});
+      const b = await cong.ngan.doc("dot_kiem", {ma_dot: maDot});
       if (daDong || lan !== luotDoc) return false;
       if (b) {
         const v = kiemPhamVi(b);

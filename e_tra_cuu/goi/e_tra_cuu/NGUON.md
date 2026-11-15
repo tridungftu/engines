@@ -1,3 +1,90 @@
+# Nguồn và phụ thuộc hiện hành — TC-S22, 15/11/2026
+
+Phần này thay thông tin cổng tạm/SDK 2.0 trong lịch sử bên dưới. Gói 0.2.0
+chỉ dùng thư viện chuẩn Python ≥3.11 và `kho_tri_thuc_sdk==2.2.0`.
+
+- **SDK nội bộ:** docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl,
+  SHA-256 nguyên bytes `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`,
+  đã khớp SHA256SUMS.txt. Cài vào venv sạch bằng --no-index --no-deps,
+  in đúng 2.2.0; không sửa wheel/SDK/tài liệu nguồn.
+- **Căn cứ:** AGENTS.md cập nhật 2.2; CHUYEN-SDK-2.2 §2/§4;
+  THAY-DOI-2.2.0; mẫu e_demo_ngan (phiếu/cấu hình/migration/kiểm kê);
+  LOAI-DU-LIEU-RIENG §8 và TC-9. Hướng dẫn/phiếu cũ nằm trong bộ 2.2 còn
+  nhiều chữ 2.0; dùng ghi chú 2.2 và mã wheel/mẫu làm đối chiếu kỹ thuật.
+- **Mã mới/chuyển:** năm tệp thay ngữ nghĩa là chay.py, trang_thai.py,
+  ngu_canh_ai.py, ui/trang_thai.js, sql/001_tao_dot_kiem.sql. Chỉ SDK/thư viện
+  chuẩn; không nguồn ngoài, model hoặc dữ liệu thật. Kiểm cấu hình snapshot
+  riêng theo schema cố định; Core vẫn kiểm schema lúc lưu. Không sửa thuật
+  toán kiểm thực thể/giá trị/đơn vị hoặc sàn nhãn TC-7.
+- **Ngăn:** viec.ngan thật, pháp nhân Core gắn; JSON đã kiểm trong text cho
+  chi_so/bao_cao vì SDK chưa có json/tep. Không xóa hoặc đặt hạn giữ khi
+  TC-Q06 chưa chốt. Cấu hình chỉ viec.cau_hinh; row_version nội bộ chưa có
+  phiên bản SDK công khai để null, không bịa số. Chi tiết Cần Core ở VIEC.
+- **Lưu trữ:** KHAI-SDK-2.1.json, ngan.py, cau_hinh.py và README trước chuyển
+  nằm ngoài gói ở LUU-TRU/TC-S22. Đã đối chiếu 4/4 nội dung LF với f2d73fc,
+  không xóa. Bốn schema chung giữ SHA LF; những tệp mã khác trong gói chỉ
+  chuẩn hóa LF để kiểm kê bytes ổn định, không thay thuật toán.
+- **Test:** CoreGia 2.2.0, dat_cau_hinh/gay_xung_dot_ngan/xem_ngan thật; adapter
+  quyền/tệp con và Local giả chỉ trong tests. Consumer Hỏi AI 0.12.0 chỉ
+  nạp trong tests, lấy phiên bản từ manifest. Không sửa engine Hỏi AI hoặc
+  ép phản hồi để vượt kiểm chứng. Giữ 1249 ca nền (bỏ đúng 2 ca so băm cổng
+  tạm theo yêu cầu), thêm 19 ca TC-S22: **1268 passed, 0 skipped**; UI 29/29;
+  hồi quy DEMO 43/43. **Đã kiểm bằng Core giả (CoreGia)**, không Core thật/
+  RLS/Linux/model thật. CLI chuẩn **0/5 CHUA_CAU_HINH, mã 1**, chưa nghiệm thu.
+- **Công cụ test riêng:** tests/requirements.lock ghim pytest 9.1.1, packaging
+  26.3, pluggy 1.6.0, pygments 2.21.0, iniconfig 2.3.0, colorama 0.4.6,
+  jsonschema 4.26.0, attrs 26.1.0, jsonschema-specifications 2025.9.1,
+  referencing 0.37.0, rpds-py 2026.6.3, typing_extensions 4.15.0. Cài offline
+  từ distribution đã cài trên máy sau khi đối chiếu version; không dùng
+  system-site-packages, không tải mạng và không chép chúng vào gói chạy.
+  JSON Schema đầy đủ giúp CoreGia không rơi về bộ kiểm tối giản của SDK.
+
+Bảng hiện hành dưới đây băm SHA-256 **chỉ thay CRLF→LF**, không strip, không
+đổi Unicode/khoảng trắng. Không băm NGUON.md (tự tham chiếu) hoặc kiểm kê
+(kiểm kê đã chứa băm NGUON). `sql/kiem_ke.json` kiểm **bytes nguyên trạng**
+toàn gói, trừ chính kiểm kê; đây là kiểm kê riêng theo mẫu SDK, không dùng
+chuẩn hóa lúc xác minh. Toàn gói và quy tắc checkout giữ LF.
+
+| Tệp (từ gốc repo) | SHA-256 LF hiện hành TC-S22 |
+|---|---|
+| `e_tra_cuu/.gitattributes` | `26ff5c027f6bb82b6ee1637f05478ceeeb407914752632c54ace16691e059c32` |
+| `e_tra_cuu/LUU-TRU/TC-S22/KHAI-SDK-2.1.json` | `81a39d0224b4c3e1514016cb126dffc8925571c2f27a549e48bdad3c242c3537` |
+| `e_tra_cuu/LUU-TRU/TC-S22/README-truoc-TC-S22.md` | `7b1c6a5fd1bcb4b0839ceaa775f3f3ad6a11d9242c884ca9ffc5a9d30e9b99b5` |
+| `e_tra_cuu/LUU-TRU/TC-S22/cau_hinh.py` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
+| `e_tra_cuu/LUU-TRU/TC-S22/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
+| `e_tra_cuu/docs/VIEC.md` | `de7b84159cacca6087b8dd2eae8acf3c121a2f2dc1d924b21e2095473adefccb` |
+| `e_tra_cuu/goi/e_tra_cuu/CHANGELOG.md` | `461e05265c906f493d06c6ac227dc9a3cbb15ed8d55eaf14d9657c9a8879bf6f` |
+| `e_tra_cuu/goi/e_tra_cuu/README.md` | `6bfbebb45a739471ba5b4a5a2ad1473c49903b439402bd91c66d373cf4823b15` |
+| `e_tra_cuu/goi/e_tra_cuu/cau_hinh.schema.json` | `d5f29134e9abc7a5641eab5ea61d4b16f8a3ab85fc639d362fbc6b7367f2f6b3` |
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/chay.py` | `f4309327930d2c172e943535484d498e7d924332b0f500943179164d2822d7d8` |
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/ngu_canh_ai.py` | `b5bbd9ee4dadd9933c6189056ac277d308d2d5384ff6dbafb7f841ea7fc84600` |
+| `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/trang_thai.py` | `91b3d8017927ba322b904b0c5bee54cd1332c169574a2dc9f78ca5eecc096434` |
+| `e_tra_cuu/goi/e_tra_cuu/engine.json` | `9508e0772836fdd411d00412d66fec2712de7d9472653fd198c86d767b11c801` |
+| `e_tra_cuu/goi/e_tra_cuu/requirements.lock` | `8fa45c1a5222efe4d18008b137604cb5be7c68bc1d4a54c7c130dcc839fba03f` |
+| `e_tra_cuu/goi/e_tra_cuu/sql/001_tao_dot_kiem.sql` | `5865916533d70048eccd18c2d09b5ebb8ec96bf68aa1e6c42c843ec9373ed82b` |
+| `e_tra_cuu/goi/e_tra_cuu/ui/trang_thai.js` | `07e42802468bd9f47ef985f88245500057a0c14d6bfdeca462da774cff1b0678` |
+| `e_tra_cuu/tests/chay_demo_voi_core_gia.py` | `bb8984a1ca0b5adfd52e36dfc3ffa3a6af95e25ef7a3cec20c06e2fc5462023f` |
+| `e_tra_cuu/tests/ho_tro_sdk_22.py` | `6709b84f3bf5b307a19139a7afddaca49076c2f7b4259b3af410b6117672bfa2` |
+| `e_tra_cuu/tests/ho_tro_tc_2.py` | `6ad57bd5b4b2670dac39ed4afc8cfeff1b15a2f092354508c47b08f279d77116` |
+| `e_tra_cuu/tests/ho_tro_tc_3.py` | `4e9fc3b406bc015e5b2ec89cde94beae8f58c11d5d23ad5d4aafc27d7555112b` |
+| `e_tra_cuu/tests/ho_tro_tc_4.py` | `cb1ecc64a9d3bc619094e37337a6fc72a328a3e859325bf4e0e3ac8b0bd8e319` |
+| `e_tra_cuu/tests/ho_tro_tc_5.py` | `7e2b1ee55e3ea30e583093ec564c9d099e6ff51755085bb52cb4e587af72e081` |
+| `e_tra_cuu/tests/ho_tro_tc_6.py` | `b4f1113d93c4ee666cda0ba0cc93bc2818960a71e3f739b402c65d204e7dfd66` |
+| `e_tra_cuu/tests/requirements.lock` | `161e9367b1524b60c0e12f9a9d39d9cdc7741bf9be29623cfde89f3e495098d8` |
+| `e_tra_cuu/tests/test_sdk_22.py` | `3b856d3f1a03ca0bd28368461fd4f9f0e958db80569b6eb0214869cf7ff36dd5` |
+| `e_tra_cuu/tests/test_tc_0.py` | `50121f34c0bde57b2ea162761f64a97e80fc836b841c4cb11e4ee55588c4c6ec` |
+| `e_tra_cuu/tests/test_tc_1.py` | `06682d23d51f467d27763824ab623861fe5f39c0263673c3e61170ecdf59602b` |
+| `e_tra_cuu/tests/test_tc_2.py` | `f0b10991bad368bd53cb3ecbd9bec1e76c19099335f63263248acb783c6a04a6` |
+| `e_tra_cuu/tests/test_tc_3.py` | `f724b5a5616ec5506e9d12e5706556e2443b910833232baf30b634e4e9ef4e23` |
+| `e_tra_cuu/tests/test_tc_4.py` | `8de18f58d5308c4c7b294689266ffccf803683f0c7788a979abf9ca78bff47cf` |
+| `e_tra_cuu/tests/test_tc_5.py` | `bccb510cad61d02a0ef866644b123656b5a5ba7f47ff5ac4addbcfe0e1640669` |
+| `e_tra_cuu/tests/test_tc_7.py` | `b10b84784a6336a0334bfdb9c3d16db01b30e0c2605be842dc983089a73c77de` |
+| `e_tra_cuu/tests/test_tc_9.py` | `e479044501e694b7f146b11c6f79ae919f5b12a01351b97ee80f9120e2d8fa94` |
+| `e_tra_cuu/tests/ui/ho_tro.js` | `9a9f0442edccd35b0491c6167a872ff9dd4387ba10931face982aafaf0e01fc8` |
+| `e_tra_cuu/tests/ui/trang_thai.test.js` | `edec35e4a91199d437b21f7488dca70be75622d6b6d2ea2880a31aec067a3c3d` |
+
+## Lịch sử nguồn trước TC-S22
+
 # Nguồn và phụ thuộc — TC-0, 15/11/2026
 
 ## TC-7 — Sửa sau kiểm độc lập KHÔNG ĐẠT, 15/11/2026

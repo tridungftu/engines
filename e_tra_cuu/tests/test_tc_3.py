@@ -393,7 +393,8 @@ def test_chi_dung_cau_hinh_ghim_tu_ngan_khong_doc_lai_giua_chuoi():
     bo.dat_cau_hinh({"cat_doan": {"ky_tu_don_vi_toi_da": 200, "do_dai_muc_tieu": 200, "so_doan_toi_da": 1}})
     s, ds = kiem_phu_nguon(bo, bo.cat())
     assert len(ds) > 1 and s["cau_hinh"] == bo.s_nhan["cau_hinh"]
-    assert s["cau_hinh"]["row_version"] != bo.app.ngan.doc("cau_hinh", {}).row_version
+    assert s["cau_hinh"]["gia_tri"] != bo.app.cau_hinh
+    assert s["cau_hinh"]["gia_tri"]["cat_doan"]["so_doan_toi_da"] == 5000
 
 
 @pytest.mark.parametrize("p", [None, "", "DEMO-Q"])

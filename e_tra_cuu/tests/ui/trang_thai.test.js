@@ -16,7 +16,7 @@ test("Chưa đo/null/mẫu số 0 không thành 0%; giữ tử số/mẫu số r
   assert.equal(tienViet({so: 1000000, tien_te: "VND"}), "1.000.000 VND");
   assert.equal(tienViet({so: 1000000}), "Chưa có số tiền");
 });
-test("Đọc/tìm phân trang có pháp nhân trong MỌI khoa/loc, chỉ gọi engine mình", async () => {
+test("Đọc/tìm dùng phạm vi host Core, không tự khai pháp nhân trong khoa/loc", async () => {
   const root = goc(), fake = coreGia({cacBan: [ban(), ban("DEMO-P", "DEMO-2"), ban("DEMO-Q")], kichThuocTrang: 1});
   const ctl = await mount(root, {...fake, phapNhanId: "DEMO-P"});
   assert.match(root.textContent, /Chưa đo/); assert.doesNotMatch(root.textContent, /0%/);
@@ -26,7 +26,7 @@ test("Đọc/tìm phân trang có pháp nhân trong MỌI khoa/loc, chỉ gọi 
   assert.ok(fake.goi.length >= 3);
   for (const [tt, bang, opts] of fake.goi) {
     assert.equal(bang, "dot_kiem");
-    assert.equal((tt === "tim" ? opts.loc : opts).phap_nhan_id, "DEMO-P");
+    assert.ok(!Object.hasOwn(tt === "tim" ? opts.loc : opts, "phap_nhan_id"));
     if (tt === "tim") assert.ok(opts.gioi_han <= 500);
   }
   assert.deepEqual(fake.engines, ["e_tra_cuu"]);
@@ -48,7 +48,7 @@ test("Cursor không chuyển phạm vi: UI từ chối cursor lạ; KttCore gi�
   const cursor = [...fake.cursors.keys()][0];
   await assert.rejects(() => fake.cong.ngan.tim("dot_kiem", {loc: {phap_nhan_id: "DEMO-Q"}, gioi_han: 500, tiep: cursor}));
   await assert.rejects(() => fake.cong.ngan.tim("dot_kiem", {loc: {phap_nhan_id: "DEMO-P", trang_thai: "da_do"}, gioi_han: 500, tiep: cursor}));
-  await assert.rejects(() => fake.cong.ngan.doc("dot_kiem", {ma_dot: "DEMO-1"}));
+  assert.equal((await fake.cong.ngan.doc("dot_kiem", {ma_dot: "DEMO-1"})).gia_tri.phap_nhan_id, "DEMO-P");
   const truoc = fake.goi.length;
   assert.equal(await ctl.taiTrang("DEMO-cursor-gia"), false);
   assert.equal(fake.goi.length, truoc);
@@ -93,7 +93,7 @@ test("Lỗi quyền đọc chi tiết cũng xóa dữ liệu cũ, chỉ phần l
 });
 test("XSS trong metadata/lỗi SDK không dựng HTML hoặc phản chiếu vào màn", async () => {
   const b = ban(); b.gia_tri.trang_thai = '<img src=x onerror="DEMO">';
-  b.gia_tri.chi_so.tra_loi_dung = {tu_so: "<script>DEMO</script>", mau_so: 1};
+  b.gia_tri.chi_so = JSON.stringify({tra_loi_dung: {tu_so: "<script>DEMO</script>", mau_so: 1}});
   const root = goc(), fake = coreGia({cacBan: [b]});
   await mount(root, {...fake, phapNhanId: "DEMO-P"});
   assert.equal(root.all().filter(n => ["img", "script"].includes(n.tagName)).length, 0);
@@ -117,9 +117,10 @@ test("Quét tĩnh UI: không mạng/mã thực thi động/HTML, quyền manifes
     assert.doesNotMatch(text, /\b(?:fetch|eval|XMLHttpRequest|WebSocket)\s*\(|\binnerHTML\s*=|\bnew\s+Function\b/);
     assert.match(text, /KttCore\.engine\("e_tra_cuu"\)/);
   }
-  const khai = JSON.parse(await readFile(new URL("../../goi/e_tra_cuu/KHAI-SDK-2.1.json", import.meta.url)));
+  const khai = JSON.parse(await readFile(new URL("../../LUU-TRU/TC-S22/KHAI-SDK-2.1.json", import.meta.url)));
   assert.equal(khai.giao_dien_quan_tri.find(m => m.ma === "cau_hinh").quyen, "admin_core");
   assert.equal(khai.giao_dien_quan_tri.find(m => m.ma === "trang_thai").quyen, "xem_dot_kiem_theo_phap_nhan");
   const phieu = JSON.parse(await readFile(new URL("../../goi/e_tra_cuu/engine.json", import.meta.url)));
-  assert.ok(!("giao_dien_quan_tri" in phieu) && !("ngan_du_lieu" in phieu));
+  assert.ok(!("giao_dien_quan_tri" in phieu) && "ngan_du_lieu" in phieu);
+  assert.equal(phieu.tuong_thich.sdk, ">=2.2.0 <3.0.0");
 });

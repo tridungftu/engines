@@ -20,9 +20,8 @@ class BoCatDoan(BoDemo):
         self.nguon_duoc_cap[self.nguon["ma_nguon"]] = deepcopy(self.nguon)
 
     def dat_cau_hinh(self, ban_va):
-        ban = self.app.ngan.doc("cau_hinh", {})
-        with self.app.ngan.lo() as lo:
-            lo.sua("cau_hinh", {}, ban_va, row_version=ban.row_version)
+        self.cau_hinh.update(deepcopy(ban_va))
+        self.core.dat_cau_hinh(self.app.ma, self.cau_hinh)
 
     def nhan(self, yc=None):
         kq = self.chay(self.yeu_cau("cat_doan") if yc is None else yc)

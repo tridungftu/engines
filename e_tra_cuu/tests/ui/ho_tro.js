@@ -19,7 +19,7 @@ export class Nut {
 export function goc() {const d = {createElement: tag => new Nut(tag, d)}; return new Nut("main", d);}
 export function cauHinh() {return {phien_ban: 1, quy_tac_nhom: {tep_id: "tep-DEMO", bam: "sha256:" + "a".repeat(64)}};}
 export function ban(p = "DEMO-P", ma = "DEMO-1") {
-  return {gia_tri: {phap_nhan_id: p, ma_dot: ma, trang_thai: "chua_do", chi_so: {tra_loi_dung: null}, bao_cao: null}, row_version: 1};
+  return {gia_tri: {phap_nhan_id: p, ma_dot: ma, trang_thai: "chua_do", chi_so: JSON.stringify({tra_loi_dung: null}), bao_cao: null}, row_version: 1};
 }
 export function coreGia({cau_hinh = cauHinh(), phap_nhan = ["DEMO-P"], cacBan = [ban()], kichThuocTrang = 500} = {}) {
   let c = structuredClone(cau_hinh), phien = c == null ? null : 1;
@@ -29,7 +29,7 @@ export function coreGia({cau_hinh = cauHinh(), phap_nhan = ["DEMO-P"], cacBan = 
   function cam() {throw Object.assign(new Error("DEMO path/noi-dung-khong-duoc-hien"), {ma: "KHONG_DU_QUYEN", status: 403});}
   function kiem(bang, scope) {
     assert.equal(bang, "dot_kiem");
-    if (!scope || !Object.hasOwn(scope, "phap_nhan_id") || !quyen.has(scope.phap_nhan_id)) cam();
+    if (!scope || Object.hasOwn(scope, "phap_nhan_id") || !quyen.has(phap_nhan[0])) cam();
   }
   const cong = {
     cau_hinh: {
@@ -47,14 +47,14 @@ export function coreGia({cau_hinh = cauHinh(), phap_nhan = ["DEMO-P"], cacBan = 
         goi.push(["tim", bang, structuredClone(opts)]); kiem(bang, opts.loc);
         assert.ok(Number.isInteger(opts.gioi_han) && opts.gioi_han > 0 && opts.gioi_han <= 500);
         if (loiTim) throw loiTim;
-        const nhan = JSON.stringify([bang, opts.loc]);
+        const nhan = JSON.stringify([bang, phap_nhan[0], opts.loc]);
         let offset = 0;
         if (opts.tiep != null) {
           const saved = cursors.get(opts.tiep);
           if (!saved || saved.nhan !== nhan) cam();
           offset = saved.offset;
         }
-        const ds = cacBan.filter(b => b.gia_tri.phap_nhan_id === opts.loc.phap_nhan_id);
+        const ds = cacBan.filter(b => b.gia_tri.phap_nhan_id === phap_nhan[0]);
         const dem = Math.min(kichThuocTrang, opts.gioi_han);
         let tiep = null;
         if (offset + dem < ds.length) {
@@ -66,7 +66,7 @@ export function coreGia({cau_hinh = cauHinh(), phap_nhan = ["DEMO-P"], cacBan = 
       async doc(bang, khoa) {
         goi.push(["doc", bang, structuredClone(khoa)]); kiem(bang, khoa);
         if (loiChiTiet) throw loiChiTiet;
-        return structuredClone(cacBan.find(b => b.gia_tri.phap_nhan_id === khoa.phap_nhan_id && b.gia_tri.ma_dot === khoa.ma_dot) ?? null);
+        return structuredClone(cacBan.find(b => b.gia_tri.phap_nhan_id === phap_nhan[0] && b.gia_tri.ma_dot === khoa.ma_dot) ?? null);
       },
       async ghi_lo() {throw new Error("Màn trạng thái không được ghi.");},
     },

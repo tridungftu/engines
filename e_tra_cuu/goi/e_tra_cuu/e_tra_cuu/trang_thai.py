@@ -8,9 +8,7 @@ from copy import deepcopy
 import json
 import re
 
-from kho_tri_thuc_sdk.engine import LoiNghiepVu
-
-from .ngan import NganKhongHopLe, NganXungDot
+from kho_tri_thuc_sdk.engine import LoiNghiepVu, NganXungDot
 
 
 CHI_SO = ("tra_loi_dung", "trich_dan_dung", "tu_choi_dung", "phan_loai_dung")
@@ -22,12 +20,11 @@ def _loi():
     raise LoiNghiepVu("TC_BAI_DO_KHONG_HOP_LE", "Bài đo DEMO không hợp lệ. Anh kiểm tra lại báo cáo.")
 
 
-def _khoa(phap_nhan_id, ma_dot):
-    if (not isinstance(phap_nhan_id, str) or not _MA.fullmatch(phap_nhan_id)
-            or not isinstance(ma_dot, str) or not _MA.fullmatch(ma_dot)
+def _khoa(ma_dot):
+    if (not isinstance(ma_dot, str) or not _MA.fullmatch(ma_dot)
             or not ma_dot.startswith("DEMO-")):
         _loi()
-    return {"phap_nhan_id": phap_nhan_id, "ma_dot": ma_dot}
+    return {"ma_dot": ma_dot}
 
 
 def _kiem(gia_tri, khoa):
@@ -75,22 +72,25 @@ def _kiem(gia_tri, khoa):
           or type(tep["kich_thuoc"]) is not int or not 0 < tep["kich_thuoc"] <= 20971520
           or not isinstance(bam, str) or not _BAM.fullmatch(bam)):
         _loi()
-    return {**deepcopy(gia_tri), **khoa}
+    kq = {**deepcopy(gia_tri), **khoa}
+    # SDK 2.2.0 chỉ có kiểu vô hướng trong ngăn. Hai cấu trúc nhỏ đã kiểm
+    # được mã hóa JSON vào text; không chứa câu hỏi/nguyên văn, không là kho thứ hai.
+    for ten in ("chi_so", "bao_cao"):
+        kq[ten] = json.dumps(kq[ten], ensure_ascii=False, allow_nan=False,
+                             sort_keys=True, separators=(",", ":")) if kq[ten] is not None else None
+    return kq
 
 
-def lay_hoac_tao_dot(ngan, phap_nhan_id, ma_dot, gia_tri):
+def lay_hoac_tao_dot(ngan, ma_dot, gia_tri):
     """Gửi lại cùng khóa trả bản cũ, không cộng số đếm hoặc đổi phiên bản."""
-    khoa = _khoa(phap_nhan_id, ma_dot)
+    khoa = _khoa(ma_dot)
     gia_tri = _kiem(gia_tri, khoa)
-    try:
-        with ngan.lo() as lo:
-            kq = lo.lay_hoac_tao("dot_kiem", khoa, gia_tri)
-        return kq
-    except (NganKhongHopLe, NganXungDot) as exc:
-        raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None
+    with ngan.lo() as lo:
+        lo.lay_hoac_tao("dot_kiem", khoa, gia_tri)
+    return lo.ket_qua[0]
 
 
-def cap_nhat_cac_dot(ngan, phap_nhan_id, cac_dot):
+def cap_nhat_cac_dot(ngan, cac_dot):
     """Thay ảnh số đo tuyệt đối bằng CAS trong MỘT lô; lệch bất kỳ → rollback.
 
     Mỗi mục: {ma_dot, gia_tri, row_version}. Không tự đọc lại/ghi đè hoặc retry.
@@ -102,18 +102,16 @@ def cap_nhat_cac_dot(ngan, phap_nhan_id, cac_dot):
     for muc in cac_dot:
         if not isinstance(muc, dict) or set(muc) != {"ma_dot", "gia_tri", "row_version"}:
             _loi()
-        khoa = _khoa(phap_nhan_id, muc["ma_dot"])
+        khoa = _khoa(muc["ma_dot"])
         if muc["ma_dot"] in da_gap or type(muc["row_version"]) is not int or muc["row_version"] < 1:
             _loi()
         da_gap.add(muc["ma_dot"])
         lenh.append((khoa, _kiem(muc["gia_tri"], khoa), muc["row_version"]))
     try:
         with ngan.lo() as lo:
-            ket_qua = [lo.sua("dot_kiem", khoa, gia_tri, row_version=phien)
-                       for khoa, gia_tri, phien in lenh]
-        return ket_qua
+            for khoa, gia_tri, phien in lenh:
+                lo.sua("dot_kiem", khoa, gia_tri, row_version=phien)
+        return lo.ket_qua
     except NganXungDot:
         raise LoiNghiepVu("NGAN_XUNG_DOT", "Bài đo đã thay đổi. Anh đọc lại và thử lại.",
                          thu_lai_duoc=True) from None
-    except NganKhongHopLe as exc:
-        raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None

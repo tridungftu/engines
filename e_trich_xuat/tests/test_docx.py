@@ -46,13 +46,16 @@ def doc(raw):
 def test_demo_sdk_phan_bo_dung_schema_va_khong_tu_cau_hinh():
     app, core = tao_app(), CoreGia()
     app.ngan = NganBoNho()
-    assert app.cac_nang_luc == ("trich.doc_docx@1",)
+    assert app.cac_nang_luc == ("trich.doc_docx@1", "trich.chuan_bi@1")
     assert app.ngan.doc("cau_hinh", {}) is None
     ds = core.chay_thu_demo(app)
-    assert len(ds) == 2
-    for kq in ds:
+    assert len(ds) == 3
+    for kq in ds[:2]:
         assert kq["trang_thai"] == "XONG"
         BO_KIEM_SCHEMA.validate(kq["ket_qua"])
+    assert ds[2]["trang_thai"] == "LOI"
+    assert ds[2]["loi"]["ma"] == "CHUA_CAU_HINH"
+    assert app.ngan.doc("cau_hinh", {}) is None
     assert app.ngan.doc("cau_hinh", {}) is None
     assert (GOI / "demo/DEMO-hop-dong.docx").read_bytes() == mau_thuong()
     assert (GOI / "demo/DEMO-track-changes.docx").read_bytes() == mau_track()
@@ -294,7 +297,7 @@ def test_canh_bao_vung_khong_doc_va_khong_gia_ocr():
 def test_log_sdk_khong_lo_traceback_noi_dung_ho_so(capsys):
     app = tao_app()
     capsys.readouterr()
-    app._ghi("DEMO chi tiết lỗi và nội dung tài liệu không được công bố")
+    app._ghi("Lỗi khi xử lý việc DEMO:\nTraceback (most recent call last):\nDEMO nội dung tài liệu")
     err = capsys.readouterr().err
     assert "nội dung tài liệu" not in err
-    assert "Có lỗi khi xử lý hoặc trao đổi với Core" in err
+    assert "ENGINE_LOI_XU_LY" in err

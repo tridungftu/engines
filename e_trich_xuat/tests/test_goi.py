@@ -21,8 +21,7 @@ GOI = GOC / "e_trich_xuat/goi/e_trich_xuat"
 def test_phieu_20_va_khai_21_tach_rieng():
     phieu = json.loads((GOI / "engine.json").read_text(encoding="utf-8"))
     assert kiem_phieu(phieu, GOI) == []
-    assert len(phieu["nang_luc"]) == 1
-    assert phieu["nang_luc"][0]["ma"] == "trich.doc_docx@1"
+    assert [n["ma"] for n in phieu["nang_luc"]] == ["trich.doc_docx@1", "trich.chuan_bi@1"]
     for k in ["ngan_du_lieu", "cau_hinh", "giao_dien_quan_tri"]:
         assert k not in phieu
     khai = json.loads((GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))
@@ -31,8 +30,8 @@ def test_phieu_20_va_khai_21_tach_rieng():
     assert "giu_toi_da_ngay" not in khai["ngan_du_lieu"][0]
 
 
-def test_schema_chung_khop_tung_byte_va_sha():
-    ten = "van_ban_tai_lieu.schema.json"
+@pytest.mark.parametrize("ten", ["van_ban_tai_lieu.schema.json", "yeu_cau_ai.schema.json"])
+def test_schema_chung_khop_tung_byte_va_sha(ten):
     a = (GOC / "_chung/contract" / ten).read_bytes()
     b = (GOI / "contract" / ten).read_bytes()
     assert a == b and hashlib.sha256(a).digest() == hashlib.sha256(b).digest()

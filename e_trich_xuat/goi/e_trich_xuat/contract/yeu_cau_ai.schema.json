@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ktt:contract:yeu_cau_ai:1",
+  "title": "Yêu cầu hỏi AI",
+  "$comment": "Theo _chung/docs/LOAI-DU-LIEU-RIENG.md ngày 14/11/2026. Cho phép thêm trường tùy chọn để tương thích phiên bản 1.",
+  "type": "object",
+  "required": [
+    "loai",
+    "yeu_cau_ai"
+  ],
+  "properties": {
+    "loai": {
+      "const": "yeu_cau_ai"
+    },
+    "yeu_cau_ai": {
+      "type": "object",
+      "required": [
+        "phien_ban",
+        "ma_prompt",
+        "phien_ban_prompt",
+        "prompt",
+        "tai_lieu",
+        "khuon_tra_loi",
+        "bat_buoc_trich_dan",
+        "model_uu_tien",
+        "chuyen_tiep"
+      ],
+      "properties": {
+        "phien_ban": {
+          "type": "integer",
+          "const": 1
+        },
+        "ma_prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phien_ban_prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "tai_lieu": {
+          "type": "string"
+        },
+        "khuon_tra_loi": {
+          "type": [
+            "object",
+            "boolean",
+            "null"
+          ],
+          "$comment": "JSON Schema Draft 2020-12 (có cả schema boolean), tối đa 32 KiB JSON UTF-8. AI-2 kiểm tính hợp lệ của schema và dung lượng; null nghĩa là trả lời tự do."
+        },
+        "bat_buoc_trich_dan": {
+          "type": "boolean"
+        },
+        "model_uu_tien": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "chuyen_tiep": {
+          "type": "object",
+          "additionalProperties": true,
+          "$comment": "Giới hạn 64 KiB JSON UTF-8; giữ nguyên vẹn khi chuyển tiếp. Kiểm dung lượng lúc xử lý (AI-2), không thể dùng maxLength cho số byte của đối tượng."
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

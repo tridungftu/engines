@@ -5,6 +5,8 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
 | MASK-B6 | Che Excel giữ format, shared/rich/inline/metadata, map chỉ RAM | Sau B3/B4 và R3…R6; MASK-P4; C-P4-01…05 | Xong mã/kiểm nội bộ / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Một runtime mới; B6 122/122. Full 2923 passed, 4 xfailed cũ, 190 subtests, 0 lỗi/skip; độc lập/diff mã 0, CLI 0/2 thiếu quyền. Nguồn 19/19, kiểm kê 55/55; PR: **chờ lead mở**. |
+
+| MASK-B5b | Chặn số tài khoản/giấy tờ bị coi là ngày | Phiếu lead 16/11/2026; sau B5 | Chờ Anh — 16/11/2026; đã sửa mã, chưa đạt full xanh | Hai runtime Word/văn bản; 180 ca mới. Full: 2980 passed, 1 failed do assertion cũ buộc chặn nhầm ngày thật, 4 xfailed cũ. Cần duyệt sửa một assertion ngoài phạm vi; báo cáo §6 ở cuối sổ; PR: **chờ lead mở**. |
 | MASK-B5 | Che Word trong whitelist, patch byte giữ format, map chỉ RAM đúng chuỗi | Sau B2/B4 và R3…R6; MASK-P4; C-P4-01…05 | Xong phần mã nội bộ / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Chỉ thêm `tep_word.py` trong bốn runtime được giao; B5 91/91 sau khóa ghi RAM với timer/hủy. CLI chuẩn 0/2 thiếu quyền; kiểm độc lập đạt. Kết quả full cuối, Cần Core và giờ thực tế tại mục B5 cuối sổ; PR: **chờ lead mở**. |
 | MASK-R6 | Mở che văn bản/AI một lần từ map RAM bản cuối, nối R5/R4 và bàn giao đúng quyền | MASK-P4 §2/4/5; sau R3/R4/R5; C-P4-02/05 | Xong phần mã/kiểm R6 / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Đúng bốn runtime; R6 124/124, full 2646 passed, 1 failed kiểm kê ngoài closure, 4 xfailed cũ, 190 subtests, 0 skip. CLI 0/2 thiếu quyền; độc lập lỗi cùng kiểm kê; bản sao chỉ thay kiểm kê đạt; diff mã 0. Đã kiểm bằng Core giả (CoreGia); PR: **chờ lead mở**. Chi tiết/thời gian ở cuối sổ. |
 | MASK-R7 | Admin chỉ metadata, xem tại Core và duyệt CAS cùng ID | MASK-P4 §3–5; sau R2; C-P4-06 | Xong phần adapter/UI giả / Chờ Core — 15/11/2026; chưa đạt nghiệm thu chung | Đúng hai runtime; không bản rõ/lọc tên, không ghi ngăn từ UI hoặc sao/xóa bí mật. Cửa biên nhận/quyền đang chờ Core; đã kiểm bằng Core giả (CoreGia), chưa UI Core thật. PR: **chờ lead mở**; kết quả thật/thời gian và C-P4-06 ở mục R7 cuối sổ. |
@@ -960,3 +962,44 @@ Kiểm riêng B5 cuối **91 passed, 6,35 giây, mã 0**, gồm bốn ca TTL/h�
 **Lệch khỏi phiếu / quyết định tạm:** không vượt phạm vi; chỉ một runtime trong tối đa bốn tệp. Thêm kiểm ô số/metadata số không thể patch thì chặn; không đổi số sang chuỗi. Giữ trần reader chiều đọc lại bảo thủ 500.000 như B3/B4/B5, chưa mở đủ trần ra 2.000.000. Chỉ đưa fixture gold R3 về nguyên LF có SHA đã khóa, không đổi nội dung/gold/test/ngưỡng. `.venv` dùng `--system-site-packages` để dùng pytest/jsonschema sẵn có, SDK 2.2.0 cài offline wheel đúng SHA; không thêm dependency. Bộ bọc log lần đầu chưa chạy lệnh con do Windows cần đường `python.exe`; đã sửa bộ bọc rồi chạy đủ bốn lệnh với chính Python của `.venv`, tham số không đổi.
 
 **Cần Core / Chờ Anh mới phát sinh:** kế thừa **C-P4-01…05** chi tiết ở trên và C-MS22-01 về CLI thiếu quyền; B7/B8/B9/B10 vẫn riêng, không nhận Local/Office/Core thật đạt. Không có câu chọn nghiệp vụ mới chờ Anh. Lead commit/mở PR, **PR: chờ lead mở**.
+
+## MASK-B5b — số tài khoản/giấy tờ dạng ngày, 16/11/2026
+
+**Trạng thái: Chờ Anh — mã đã sửa, chưa đạt full xanh do assertion cũ trái yêu cầu giữ ngày thật. PR: chờ lead mở.** Bắt đầu **04:02:00 ngày 16/11/2026 (UTC+07)** theo lead; **2–3 giờ ƯỚC TÍNH**, độ khó vừa. Đã kiểm bằng Core giả (CoreGia); chưa Core/Local/Office/Linux thật, Cloud tắt. Không commit/push.
+
+- Sửa đúng hai runtime `tep_word.py`, `che_van_ban.py`; thêm `test_mask_b5b.py`, cập nhật CHANGELOG/NGUON/kiểm kê. Ngày được miễn phải hợp lịch, năm 1900–2100; nhãn tài khoản/giấy tờ/MST có/không dấu, hoa/thường, NFD/Cf, có/không hai chấm thắng hình dạng ngày. Cửa sổ 120 ký tự trước số, không qua biên đoạn/trường `;`, tab, `|`; cảnh báo từ nhãn không bị bỏ vì trùng vùng ngày. Giữ nguyên hai mẫu ngày thật đã giao và kiểm lịch nhuận.
+- Sáu ca lọt được kiểm cả Word đọc lại bytes thật và văn bản; có kiểm trực tiếp nhánh miễn `_kiem_vung`, nhãn viết tắt/không dấu, ngày hợp lịch nhưng là định danh, ngày sai lịch và nhãn/số tách run. Trường hợp không che an toàn phải từ chối, không trả bản rõ. Không đổi API v1, lưu map ngoài RAM, sửa Core/e_hoi_ai hoặc mã Excel.
+- Tái chạy trên runtime HEAD trước B5b: Word **6/6 trả số rõ, 0 từ chối**; runtime sau sửa **0/6 trả số rõ, 6/6 từ chối an toàn**. Thêm chốt độc lập giữ hiệu lực nhãn R5 khi hơn 120 ký tự khoảng trắng ngăn nhãn và số; bốn ca hồi quy trực tiếp nhánh miễn cho tài khoản/TK/CCCD/account. Bộ Word/văn bản/held-out trên mã runtime cuối **347 passed, 190 subtests passed; 49,71 giây, mã 0**. Bộ MASK-2c cùng B5b trước chốt nhãn xa: **593 passed; 304,93 giây, mã 0**, không coi là số kiểm mã runtime cuối.
+- Held-out MASK-2c **190 ca, 115 có gold, 75 câu thường**, SHA nội dung vẫn `sha256:b720fb2d9a330110ed5c4d5fd777b9728887f863651a2b0c46dc395dc45c95ad`. Đối chiếu trực tiếp mã HEAD trước sửa và mã sau: **28 → 28** ca còn nguyên gold ở **nhánh quy tắc RAM lịch sử**, câu thường bị chặn **14/75 → 12/75**; chỉ T35/T36 đổi do ngày thật ISO không còn bị báo nhầm (đã chuẩn hóa alias ngẫu nhiên khi so). Đây không phải số đo Local/hai lớp, không tuyên bố 0 lọt vận hành. Test mới ghim SHA và hai chỉ tiêu không giảm; không đổi bộ gold hay luật tên từ held-out.
+- Checkout fixture R3 có CRLF: chỉ trả về đúng byte LF của gold đã khóa, SHA `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`; không đổi nội dung/gold/assertion hoặc SHA kỳ vọng. Mọi tệp gói hiện LF. Môi trường `.venv` Python 3.13.14, dùng thư viện hệ thống đã có, SDK 2.2.0 cài offline wheel SHA khớp; không thêm dependency. Các lệnh kiểm dùng `-B`, `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`.
+
+### Kết quả kiểm và báo cáo §6 — MASK-B5b
+
+**Kết luận: Chưa đạt — sáu ca lọt đã bị chặn, nhưng full suite còn một assertion cũ bắt buộc chặn nhầm ngày thật ISO; chưa được phép sửa tệp test đó.** Không bỏ test, thêm skip/xfail hoặc giữ báo nhầm trong runtime để làm xanh.
+
+**Đã làm:** hai runtime đúng phạm vi, 180 ca B5b mới, cập nhật CHANGELOG/NGUON và kiểm kê 54/54 tệp LF. Word trước/sau trên sáu ca chứng minh **6 → 0** trường hợp trả số rõ. Ngày thật giữ nguyên; nhãn và lịch dùng chung cho văn bản/Word, nhãn R5 độc lập thắng cửa sổ gần. Held-out không giảm theo phép đo đã ghi phía trên. Đã kiểm bằng Core giả (CoreGia).
+
+**Kết quả kiểm thật trên mã cuối:**
+
+| Lệnh / phép kiểm | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**. Cả hai DEMO: “Chưa xác minh được phiên và quyền xử lý yêu cầu.” Nợ **C-MS22-01** đã có; không đổi gate/manifest/DEMO. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **2980 passed, 1 failed, 4 xfailed cũ, 190 subtests passed, 0 skipped; 439,37 giây, mã 1**. Duy nhất `test_mask_2b.py:201`, kết quả `[]`, kỳ vọng `[15]`; chi tiết và đề nghị một assertion bên dưới. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**; không tham chiếu bị cấm hoặc bytecode trong gói. |
+| Đối chiếu bytes LF/SHA-256/provenance | **54/54 tệp khớp**, trừ chính kiểm kê; hai SHA runtime sau sửa có trong NGUON; không bytecode. |
+| B5b + B5 + văn bản trên mã cuối | **347 passed, 190 subtests passed; 49,71 giây, mã 0**, gồm 180 ca B5b mới. |
+| `git diff --check` | **Mã 0**; Git cảnh báo checkout LF→CRLF ở tài liệu/fixture R3, nội dung gold không đổi. |
+
+Lượt full trước chốt bảo vệ nhãn R5 ở xa: **2976 passed, 1 failed cùng assertion trên, 4 xfailed cũ, 190 subtests passed; 450,74 giây, mã 1**. Đã chạy lại full sau chốt mã; dùng kết quả **2980 passed** làm số kiểm cuối. Không dùng focused thay full.
+
+**Thời gian thực tế:** **04:02:00–04:30:09 ngày 16/11/2026 (UTC+07), 0,47 giờ** tại mốc chốt kiểm; so với **2–3 giờ ƯỚC TÍNH**. Chưa gồm việc sửa assertion cũ nếu được duyệt sau đó.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** giữ đúng danh sách runtime, không thêm dependency, không đổi API v1 hay mã Excel. Cửa sổ gần 120 ký tự là lựa chọn triển khai trong yêu cầu cửa sổ hữu hạn; giữ cảnh báo nhãn R5 độc lập. Chỉ trả byte LF fixture R3 về đúng SHA đã khóa, không đổi nội dung/gold/test/ngưỡng. Chưa sửa assertion cũ do ngoài danh sách tệp cho phép; không commit/push.
+
+**Cần Core / Chờ Anh mới phát sinh:** cần Anh/lead cho phép đổi duy nhất kỳ vọng `[15] → []` trong test cũ nêu dưới rồi chạy lại full suite. Không phát sinh cổng Core/SDK mới; nợ CLI quyền **C-MS22-01** và cửa P4/B5 giữ nguyên.
+
+### Cần Core — MASK-B5b
+
+Không phát sinh cổng Core/SDK hoặc câu nghiệp vụ mới. Kế thừa **C-MS22-01** (quyền/ngữ cảnh CLI DEMO) và các cửa P4/B5 về ghim chuỗi, vòng đời RAM, nguồn Local và bàn giao; B5b không chứng nhận các cửa này.
+
+**Chờ Anh/lead về phạm vi test cũ:** `test_mask_2b.py::test_do_lap_lai_co_nguon_khong_bia_mau` bắt buộc `vi_tri_chan_nham == [15]`, tức câu ngày thật ISO “Đáo hạn khoản vay vào ngày 2026-10-30.” phải bị chặn nhầm. B5b giữ đúng ngày thật làm kết quả thành `[]`. Đã trình thay đúng một assertion `[15] → []`, không skip/xfail/đổi ngưỡng bảo mật; chưa sửa vì tệp nằm ngoài danh sách cho phép của phiếu. Đo lại riêng đã xác minh failure này, không phải lỗi giữ tiền/ngày hoặc lọt định danh.

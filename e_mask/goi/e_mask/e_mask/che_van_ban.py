@@ -10,6 +10,7 @@ from bisect import bisect_right
 from collections import Counter, deque
 from contextlib import AbstractContextManager
 from dataclasses import dataclass
+from datetime import date
 import re
 from typing import Protocol
 import unicodedata
@@ -85,6 +86,16 @@ _NGAY_CHU = re.compile(
     r'(?<!\w)(?:ngày[^\S\r\n]{1,8})?(?:0?[1-9]|[12]\d|3[01])'
     r'[^\S\r\n]{1,8}tháng[^\S\r\n]{1,8}(?:0?[1-9]|1[0-2])'
     r'(?:[^\S\r\n]{1,8}năm[^\S\r\n]{1,8}\d{2,4})?(?!\w)', re.I
+)
+# MASK-B5b: chỉ dò cửa sổ 120 ký tự trước số, không qua biên đoạn.
+# Bản dò bỏ dấu, không đổi văn bản hay tọa độ của giá trị cần che.
+_CUA_SO_NHAN_SO = 120
+_NHAN_SO = re.compile(
+    r'(?<!\w)(?:(?P<TAI_KHOAN>(?:so\s+)?tai\s+khoan(?:\s+so)?|STK|TK|A/C'
+    r'|account(?:\s+no\.?)?|acc|so\s+the|the\s+so)'
+    r'|(?P<GIAY_TO>CCCD|CMND|CMT|can\s+cuoc(?:\s+cong\s+dan)?'
+    r'|ho\s+chieu|passport|giay\s+phep(?:\s+lai\s+xe)?|GPLX)'
+    r'|(?P<MA_SO_THUE>ma\s+so\s+(?:thue|doanh\s+nghiep)|MST|MSDN))(?!\w)', re.I
 )
 _NHAN_TRUONG = re.compile(
     r'(?<!\w)(?:(?P<CA_NHAN>họ\s+(?:và\s+)?tên|ông(?:\s*/\s*bà)?|bà)'
@@ -348,6 +359,58 @@ def _tien_theo_ngu_canh(van_ban, a, b):
     return detectors.money_context(van_ban[dau:b + 24], a - dau, b - dau)
 
 
+def _nhan_dinh_danh_truoc(van_ban, a):
+    """Nhãn gần số thắng hình dạng ngày, kể cả NFD/Cf/không dấu."""
+    dau = max(0, a - _CUA_SO_NHAN_SO)
+    # Không cắt giữa một từ rồi nhận nhầm hậu tố là nhãn viết tắt.
+    if dau and van_ban[dau - 1].isalnum():
+        while dau < a and (van_ban[dau].isalnum()
+                           or unicodedata.category(van_ban[dau]).startswith('M')):
+            dau += 1
+    chu = re.split(r'[\r\n\u2028\u2029;\t|]', van_ban[dau:a])[-1]
+    chu = ''.join(c for c in unicodedata.normalize('NFD', bo_ky_tu_vo_hinh(chu))
+                  if not unicodedata.combining(c)).replace('đ', 'd').replace('Đ', 'D')
+    nhan = None
+    for m in _NHAN_SO.finditer(chu):
+        nhan = m.lastgroup
+    return nhan
+
+
+def _ngay_hop_le(gia_tri):
+    """Không suy năm hai chữ số; kiểm cả lịch nhuận trong 1900–2100."""
+    so = re.findall(r'\d+', gia_tri)
+    if len(so) == 3:
+        nam, thang, ngay = so if len(so[0]) == 4 else so[::-1]
+        if len(nam) != 4 or not 1900 <= int(nam) <= 2100:
+            return False
+    elif len(so) == 2 and 'tháng' in gia_tri.lower():
+        ngay, thang = so
+        nam = '2000'  # Không ghi năm: chỉ kiểm ngày/tháng, cho phép 29/2.
+    else:
+        return False
+    try:
+        date(int(nam), int(thang), int(ngay))
+    except ValueError:
+        return False
+    return True
+
+
+def _so_dang_ngay_co_nhan(van_ban):
+    """Giữ cảnh báo định danh độc lập khi detector cũ tưởng đây là ngày."""
+    for m in _NGAY_SO.finditer(van_ban):
+        nhom = _nhan_dinh_danh_truoc(van_ban, m.start())
+        if nhom:
+            yield m.start(), m.end(), nhom
+
+
+def _duoc_mien_ngay(van_ban, a, b, nhom, ngay):
+    """Chỉ miễn báo trùng số trong một ngày đã kiểm lịch và nhãn."""
+    if nhom not in {'GIAY_TO', 'TAI_KHOAN'} or _nhan_dinh_danh_truoc(van_ban, a):
+        return False
+    i = bisect_right(ngay, (a, len(van_ban) + 1)) - 1
+    return i >= 0 and ngay[i][0] <= a < b <= ngay[i][1]
+
+
 def _cac_tien_ngay(van_ban):
     """Lập tập từ bản thật, độc lập với các vùng đã được chọn để che."""
     # Không có chữ/đơn vị tiền hoặc dấu nối hai chữ số thì mọi mẫu tiền/ngày
@@ -359,11 +422,19 @@ def _cac_tien_ngay(van_ban):
         return [(toa_do[a][0], toa_do[b - 1][1], loai,
                  van_ban[toa_do[a][0]:toa_do[b - 1][1]])
                 for a, b, loai, _ in _cac_tien_ngay(nfc)]
+    # Vùng từ nhãn R5 là bằng chứng độc lập, kể cả khi nhãn cách số quá
+    # cửa sổ dò gần (ví dụ nhiều khoảng trắng). Không hạ tin cậy nhãn này.
+    dinh_danh = detectors.Spans(
+        [(a, b) for a, b, nhom in _vung_nhan(van_ban)
+         if nhom not in {'CA_NHAN', 'DIA_CHI'}]
+        + [m.span('value') for m in detectors.ACCOUNT.finditer(van_ban)]
+        + [(a, b) for a, b, _ in _so_dang_ngay_co_nhan(van_ban)])
     ket_qua = [(m.start(), m.end(), 'ngay', m.group())
-               for mau in (_NGAY_SO, _NGAY_CHU) for m in mau.finditer(van_ban)]
+               for mau in (_NGAY_SO, _NGAY_CHU) for m in mau.finditer(van_ban)
+               if _ngay_hop_le(m.group())
+               and not dinh_danh.hit(m.start(), m.end())
+               and not _nhan_dinh_danh_truoc(van_ban, m.start())]
     ngay = detectors.Spans((a, b) for a, b, _, _ in ket_qua)
-    dinh_danh = detectors.Spans((a, b) for a, b, nhom in _vung_nhan(van_ban)
-                               if nhom not in {'CA_NHAN', 'DIA_CHI'})
     tien_ro = []
     co_don_vi = re.search(_DON_VI_TIEN, van_ban, re.I) is not None
     for m in _TIEN_KY_HIEU.finditer(van_ban) if co_don_vi else ():
@@ -427,11 +498,14 @@ def _kiem_con_sot(van_ban, da_biet, *, da_do=None):
     if da_biet:
         cum += [(m['cum'], m['nhom_goi_y']) for m in core.leaked_known(nfc, da_biet)]
     vung = set(_vung_nhan(nfc, ten_da_che=ten_da_che))
+    vung.update(_so_dang_ngay_co_nhan(nfc))
     vung.update((m.start(), m.end(), 'CONG_TY') for m in _CONG_TY.finditer(nfc))
     vung.update((m.start(), m.end(), 'MA_SO_THUE') for m in _MST.finditer(nfc)
                 if not _tien_theo_ngu_canh(nfc, m.start(), m.end())
                 and not detectors.DATE.search(m.group()))
-    bao_ve = _vung_tien_ngay(nfc)
+    tien_ngay = _cac_tien_ngay(nfc)
+    bao_ve = detectors.Spans((a, b) for a, b, _, _ in tien_ngay)
+    ngay = sorted((a, b) for a, b, loai, _ in tien_ngay if loai == 'ngay')
     for mau, nhom in ((_GIAY_TO, 'GIAY_TO'), (_DIEN_THOAI_VN, 'DIEN_THOAI'), (_EMAIL, 'EMAIL')):
         vung.update((m.start(), m.end(), nhom) for m in mau.finditer(nfc)
                     if not bao_ve.hit(m.start(), m.end()))
@@ -453,7 +527,8 @@ def _kiem_con_sot(van_ban, da_biet, *, da_do=None):
         vung.update((a, b, nhom if nhom in core.CATEGORIES else 'KHAC') for a, b in vi_tri)
     xuong_dong = [i for i, c in enumerate(van_ban) if c == '\n']
     con_sot = [{'nhom': nhom, 'vi_tri': _vi_tri(toa_do[a][0], toa_do[b - 1][1], xuong_dong)}
-               for a, b, nhom in sorted(vung) if a < b]
+               for a, b, nhom in sorted(vung) if a < b
+               and not _duoc_mien_ngay(nfc, a, b, nhom, ngay)]
     # Lớp độc lập trên bản đã che: không phụ thuộc việc detector cũ có tìm
     # ra tên hay không. Chỉ trả nhóm/vị trí/lý do, không nguyên văn tên.
     for ten in ten_nguoi.tim(nfc):

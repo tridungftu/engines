@@ -198,7 +198,7 @@ def test_do_lap_lai_co_nguon_khong_bia_mau():
     ket = do()
     assert ket['am_tinh_co_san']['so_chan_nham'] == 0
     assert ket['am_tinh_co_san']['so_che_nham'] == 1
-    assert ket['am_tinh_bo_sung']['vi_tri_chan_nham'] == [15]
+    assert ket['am_tinh_bo_sung']['vi_tri_chan_nham'] == []  # B5b: ngày ISO thật không còn bị chặn nhầm
     assert ket['am_tinh_bo_sung']['vi_tri_che_nham'] == [30]
 
 

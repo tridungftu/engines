@@ -9,9 +9,10 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | TX-1 | Khung SDK 2.0, ngăn/cấu hình/UI và đọc DOCX/Track Changes | TX-0 §8; TX-15, 12 | Xong | **15/11/2026 — đã nối ngăn chung NGAN-0** (PR #34); **đã kiểm bằng Core giả (CoreGia)**: SDK DEMO **2/2 ĐẠT**, pytest **73 passed, 0 skipped**, Node UI **6/6**, độc lập **exit 0**. Hai test SHA chạy bắt buộc sau CRLF→LF. Tổng TX-1 **8 giờ ước tính**; PR: **chờ lead mở**. Linux/Core thật chưa chạy; SDK 2.1 và màn Core còn cần review |
 | TX-2 | Snapshot/hash, prompt/khuôn đủ mã, hồ sơ hậu kiểm tại Core và ngân sách | TX-2, 3, 4, 16, 17 | Chờ Core | **15/11/2026** — xong code/test phần engine; **đã kiểm bằng Core giả (CoreGia)**: pytest **164 passed, 0 skipped**, độc lập **exit 0**, DEMO có ngăn **3/3 ĐẠT**. CLI SDK chuẩn **2/3 ĐẠT, exit 1**, TX-2 `CHUA_CAU_HINH`; trình lead cổng DEMO có ngăn thay thế, C-TX-04. Chưa kiểm Linux/Core thật. **7 giờ ước tính**; PR: **chờ lead mở** |
 | TX-3 | Hậu kiểm từng ô, bảng đề xuất và xuất JSON/Excel | TX-3, 5, 6 | Chờ Anh | **15/11/2026** — xong lõi/test DEMO, **chưa đăng ký runtime/schema**, chờ lead/Anh review chi tiết. Sửa kiểm độc lập trong 5 tệp mã, đóng hai nợ TX-2; **đã kiểm bằng Core giả (CoreGia)**. Pytest/CLI/DEMO và đề xuất payload ở biên bản sửa review dưới; **8 giờ ước tính**. PR: **chờ lead mở** |
+| TX-4 | Công cụ/test E6, xác minh XLSX/E1 và đối chiếu byte hai đường | TX-7, TX-2/3 | Đang làm | **15/11/2026** — xong công cụ/test; **E6 nghiệm thu chưa kiểm**, thiếu fixture/bản vàng được lead chấp nhận. Chẩn đoán kỹ thuật hai DEMO: bộ/thứ tự/370 ô/văn bản trùng; câu hỏi/bảng/phản hồi **khác byte**, chưa đạt chẩn đoán. **đã kiểm bằng Core giả (CoreGia)**; pytest **375 passed, 0 skipped**, CLI **2/3 ĐẠT, exit 1** (C-TX-04), có ngăn **5/5 ĐẠT**, độc lập **exit 0**. [TX-4-E6.md](TX-4-E6.md); **4 giờ ước tính**, chưa gồm làm lại T3. PR: **chờ lead mở** |
 | 1 | Tách năng lực thành **chuẩn bị** và **hậu kiểm**; bỏ gọi AI trực tiếp (`ai_chung.py`) | TX-3 | Đang làm | TX-2 đã có `trich.chuan_bi@1`, không gọi AI; hậu kiểm/xuất còn ở TX-3, theo CD-111 |
 | 2 | E2/E5: nhận bộ từ việc của module, đủ metadata module/loại/phiên bản/hash | TX-2, 4, 5 | Xong | **15/11/2026 — TX-2**, snapshot/prompt/cấu hình riêng từng việc đã kiểm bằng Core giả (CoreGia); quyền module/pháp nhân và ghim Core thật còn C-TX-01 |
-| 3 | E6: so từng byte bộ 37 xây dựng (cần tệp ghim `DANH_MUC_THAM_SO.xlsx`) | TX-7 | Chờ làm | `e_trich_xuat/tham-chieu/DANH_MUC_THAM_SO.xlsx`: **lead đã đặt 15/11 (PR #30)** + NGUON/SHA-256, xác nhận không dữ liệu thật theo đợt 2 §4; chưa kiểm E6 |
+| 3 | E6: so từng byte bộ 37 xây dựng (cần tệp ghim `DANH_MUC_THAM_SO.xlsx`) | TX-7 | Đang làm | **15/11/2026 — TX-4**: băm XLSX thực khớp ghim/cũ, E1 đúng 37 mã/thứ tự/10 cột nguyên văn. **Chưa kiểm E6 nghiệm thu** do thiếu nguồn/bản vàng được lead chấp nhận; DEMO kỹ thuật đã thấy khác câu hỏi/bảng/phản hồi. Không chuyển bộ/lưu trữ, không fallback; chi tiết [TX-4-E6.md](TX-4-E6.md). PR: **chờ lead mở** |
 | 4 | Cung cấp E1 (kiểm Excel) + U1a/U1b cho module dùng lại; module tự đặt màn quản lý bộ tham số | TX-8, 14 | Chờ làm | C1/C2/C4 là việc của module |
 | 5 | LHD-02b: bộ nháp thuê đất KCN + 3 hợp đồng DEMO (CRM giữ bộ) | TX-10 | Chờ Anh | Người nghiệp vụ duyệt |
 | 6 | G3-GOI-37, N1 (một lần), TRICH-READY, N2 (buổi 17:00 ≤ 30 phút) | TX-12, 13 | Chờ làm |  |
@@ -32,6 +33,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - **Bổ sung C-TX-02/04 từ TX-3 (15/11/2026):** lõi hậu kiểm/xuất chỉ kiểm bằng CoreGia, quyền/module/pháp nhân/TTL/ACK lưu-đóng vẫn là mô phỏng. Khi JSON đã tải nhưng Excel lỗi/hủy, không nộp kết quả; Core cần dọn tệp tải dở theo vòng đời chung. CLI chuẩn vẫn **2/3 ĐẠT, exit 1, CHUA_CAU_HINH**; cổng có ngăn **5/5 ĐẠT** gồm hai DEMO TX-3 chưa đăng ký, trình lead xác nhận như TX-2. Payload/schema và bước xuất tĩnh chờ lead/Anh review tại **TX-3-REVIEW.md**; chưa tạo schema nguồn hoặc đăng ký runtime, không tự đổi contract.
 
 ## Cần phối hợp sau TX-0 — cập nhật 15/11/2026
+- **TX-4 / lead (15/11/2026):** đã xác minh XLSX PR #30, không cần cấp lại tệp này. Cần fixture hợp đồng thường/Track Changes, snapshot/prompt hai module, băng AI giả cố định và bản vàng đủ sáu artifact được lead chấp nhận, kèm SHA/biên bản. `tests/kiem_e6.py` mặc định **exit 2**, “Thiếu nguồn đối chiếu E6.”; `--chan-doan` cũng luôn **exit 2**. Hai DEMO kỹ thuật chưa được duyệt đã lộ khác byte thật; giữ E6, không nhận 375 test passed là E6 đạt. Phương án làm lại riêng tại [TX-4-E6.md](TX-4-E6.md): batch có contract mới **12–18 giờ ước tính** hoặc lặp v1 Core điều phối **18–24 giờ ước tính**, chưa gồm Core/AI/module; chưa triển khai và không tính vào 4 giờ TX-4. Cần xử lý cả tương thích bảng/phản hồi, không chỉ số lượt. Giữ C-TX-01/02/04/A-TX-01, chưa phát sinh API mới hoặc đo N1/Core thật.
 - **Cần phối hợp AI-2: bước Hỏi AI phải bao/thoát nội dung** (sửa review TX-3, 15/11/2026). Test Trích xuất xác nhận tài liệu chứa chỉ dẫn/dấu phân cách/JSON giả chỉ đi vào trường `tai_lieu`, không sửa prompt hệ thống hoặc khuôn; chưa chứng nhận lớp bọc request tới model của Hỏi AI.
 
 - **Hỏi AI A-TX-01:** xác minh context hiệu dụng, ngân sách đầu ra/reasoning, cách đếm token và hỗ trợ `$defs` của model đã chọn; không gửi `chuyen_tiep` vào model; thống nhất trích dẫn từng ô với danh sách chung của `tra_loi_ai`. Phiếu AI-1/AI-2/AI-3 chưa đủ bằng chứng rằng phần kiểm context này đã có. Gemma chưa có ID cụ thể, ngữ cảnh máy thật **chưa rõ**.
@@ -444,3 +446,39 @@ không commit/push. PR: **chờ lead mở**.
 Cần Core / Chờ Anh: giữ C-TX-01/02/04 và A-TX-01; chờ duyệt chi tiết
 `bang_trich_xuat`, phối hợp AI-2 bao/thoát nội dung và lead xác nhận cổng
 DEMO có ngăn thay CLI SDK 2.0. Không phát sinh API/năng lực đã đăng ký mới.
+
+## Bàn giao TX-4 — 15/11/2026, PR: chờ lead mở
+
+Kết luận: **Chưa đạt điều kiện E6 — nghiệm thu chưa kiểm do thiếu nguồn
+được lead chấp nhận; chẩn đoán kỹ thuật đã thấy khác byte câu hỏi/bảng/phản hồi.**
+
+Đã làm: xác minh băm XLSX thật khớp NGUON/nguồn cũ; E1 đủ 37 mã đúng thứ
+tự/10 tiêu đề/370 ô nguyên văn, ghi riêng băm XLSX/E1/snapshot. Thêm ba tệp
+ngoài runtime `tests/kiem_e6.py`, `doi_chieu_cu_e6.py`, `test_e6.py`; wrapper
+chỉ đọc nguồn, giữ nhóm/dò/rà lại, AI giả cố định và Track Changes. Báo cáo
+[TX-4-E6.md](TX-4-E6.md) và artifact chẩn đoán đi kèm ghi đủ offset/độ dài/
+băm. Công cụ mặc định và chế độ chẩn đoán đều **exit 2**, không nhận E6 đạt.
+
+Kết quả kiểm: `kho_tri_thuc_sdk.thu` **2/3 ĐẠT, exit 1** (`CHUA_CAU_HINH`,
+CLI SDK 2.0/C-TX-04); pytest **375 passed in 11.68s, 0 skipped, exit 0**;
+kiểm độc lập **[ĐẠT], exit 0**; DEMO có ngăn **5/5 ĐẠT, exit 0** (hai DEMO
+TX-3 chỉ đăng ký trong RAM). **đã kiểm bằng Core giả (CoreGia)**. AST/UTF-8/
+NFC/artifact tái lập và `git diff --check` đạt. Python 3.13.14, SDK 2.0.0
+wheel offline khớp SHA; không thêm dependency, không mạng/AI thật, **0 Cloud**.
+Linux/Core thật/ACL/TTL/lưu-đóng và N1/T3 thật **chưa kiểm**.
+
+Thời gian thực tế: **15/11/2026 09:54:00–10:12:54 (UTC+07), 0,32 giờ**;
+phiếu **4 giờ công ước tính**, chưa gồm làm lại T3 khi E6 thất bại.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: chưa có fixture/bản vàng E6 được
+lead chấp nhận nên chỉ kiểm cơ chế bằng DEMO kỹ thuật, không chứng nhận
+tương đương hoặc tạo đáp án để đạt. Nguồn cũ có 9/8 câu hỏi ở hai mẫu so
+với 1 câu hỏi mới; bộ/tham số/văn bản trùng nhưng ba phần còn lại khác.
+Không nới cổng; không sửa runtime/manifest/schema/Core/SDK/mã cũ/hai mẫu
+NGAN-0 hoặc ghim nguồn, không chuyển bộ/lưu trữ, không xóa/commit/push.
+
+Cần Core / Chờ Anh mới phát sinh: **không thêm API đã triển khai**; giữ
+C-TX-01/02/04/A-TX-01 và chờ duyệt TX-3. Lead cấp nguồn/bản vàng đúng checklist
+trong biên bản; trình lựa chọn làm lại riêng batch **12–18 giờ ước tính**
+hoặc lặp v1 **18–24 giờ ước tính**, chưa gồm Core/module/AI. Không tự mở code
+batch/nhiều vòng hoặc chuyển bộ trước E6 đạt.

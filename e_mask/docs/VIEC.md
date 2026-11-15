@@ -855,3 +855,45 @@ Mục này giữ số kiểm của lần giao trước. Lead đã gộp main tr�
 - `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py`: **mã 1**, duy nhất kiểm kê chưa khớp. Đề nghị **53/53** tệp đúng bytes/SHA sau sửa cuối; bản sao chỉ thay kiểm kê qua chính bộ kiểm **ĐẠT, mã 0**. Gói gốc vẫn báo chưa đạt. `git diff --check`: **mã 0**.
 - R6 riêng sau sửa cuối **124 passed, 2,19 giây, mã 0**, gồm bốn ca weakref/GC tắt sau thành công/lỗi/hủy/ChuaRo. Kiểm CoreGia bổ sung alias tạm/Junsky case-space mềm **2/2 ĐẠT**. AST mười test/công cụ lịch sử **10/10** không đổi thân hàm/assertion; không thêm skip/xfail hoặc đổi bốn xfailed cũ “giới hạn quy tắc, nợ CAO”.
 - Thực tế **00:52:00–01:41:32 ngày 16/11/2026 (UTC+07), 0,83 giờ**, tại mốc chốt kiểm/báo cáo, so với **4–6 giờ ƯỚC TÍNH**. [Lệnh/kết quả thật](KET-QUA-KIEM-MASK-R6.txt), [báo cáo §6](BAO-CAO-MASK-R6.md). Đã kiểm bằng Core giả (CoreGia), chưa Core/Local/Office/Linux thật; Cloud tắt. Không commit/push; PR: **chờ lead mở**.
+
+## MASK-R6b — sửa điểm VỪA/NHẸ rà bảo mật R6, 16/11/2026
+
+**Trạng thái: đã sửa và kiểm đủ phạm vi được giao; chưa đạt do một kỳ vọng test R6 cũ trái yêu cầu mới, cần cho phép cập nhật test ngoài phạm vi.** PR: **chờ lead mở**. Bắt đầu **01:59 ngày 16/11/2026 (UTC+07)** theo lead; **2–3 giờ ƯỚC TÍNH**, độ khó vừa. Chỉ bốn runtime được giao, test R6b mới, VIEC/CHANGELOG/NGUON và kiểm kê; không commit/push, không sửa Core/e_hoi_ai/API v1/dependency.
+
+- Dò alias/mảnh alias bằng automaton trie/failure-link chung, dựng một lần/lượt mở; giữ nhận diện case/space mềm, một ký tự lạ thay/chen và chặn nối qua vùng đã xét. Cây tiền tố chỉ được thử cạnh dãy ngoặc trong cửa sổ hữu hạn. Kiểm hạn/hủy mỗi **2.048 ký tự**, từng alias và các vòng duyệt; không cache bảng dò qua chuỗi. Đối chiếu **505 ca** với hàm trước sửa: **0 khác kết quả**.
+- Trần kỹ thuật thử nghiệm **1.000 alias/map**, **10.000 chuỗi trong nội dung mở, kể cả khóa dict/câu trích**, thêm **200.000 nút bảng dò** để chặn phình RAM khi alias dài/phân tán. Trần nút là giới hạn triển khai bổ sung, không quyết định nghiệp vụ. Vượt trần trả **MASK_QUA_GIOI_HAN**, không cắt ngầm, map được dọn qua R4. Giữ trần tổng **500.000 ký tự**, tính cả khóa ở đầu vào; đếm chuỗi theo lượt xuất hiện, kể cả chuỗi rỗng.
+- Hồ sơ có sẵn **anh_xa_cuoi.da_che**, đúng bản cuối R5 tạo phong bì và bàn giao trước khi đánh dấu **DA_HAU_KIEM**. Lấy tập alias xuất hiện trong chính bản này và giới hạn map mở vào tập đó; không đọc ngăn/snapshot hoặc thêm nơi lưu trữ. Bất biến phép thay đã chặn alias dư từ R6; kiểm tập xuất hiện là lớp chặn độc lập, có ca mô phỏng map cấp alias dư nhưng chưa giao. Không tuyên bố đây là bằng chứng ACK/binding Core thật.
+- Khóa dict giữ nguyên theo contract; có alias hoặc mảnh alias thì **mo_day_du=False**, không báo đã mở đầy đủ. Giá trị/trích dẫn vẫn mở theo quy tắc R6. Chụp alias map dưới khóa timer, dùng bản sao riêng và kiểm lại vòng đời trước kết luận lỗi; timer dọn giữa kiểm map trả **MASK_ANH_XA_KHONG_CON**. Không dời/bỏ timer hoặc kéo dài TTL.
+- Bỏ tham chiếu biến **ket/raw/chu/ai**, các mảnh bản rõ và kết quả cục bộ trong **finally** trước ngoại lệ đi ra; giữ lỗi Việt/hủy/ChuaRo và hành vi thành công. Test giữ ngoại lệ để kiểm frame handler và raw JSON, cùng kiểm weakref/GC cũ; không tuyên bố ghi đè vật lý mọi bản sao Python/port Core.
+- Bộ mới **63 passed**, gồm 1.000 alias × 500.000 ký tự, tiền tố chung/phân biệt, trần alias/chuỗi/nút, alias bịa, khóa lồng, timer chạy luồng khác, hết hạn giữa chuỗi lớn và frame lỗi. Số đo trên mã cuối: dò chung **0,388130 giây** (cùng tiền tố), **0,689834 giây** (1.000 tiền tố phân biệt); handler CoreGia **0,630239 giây**, đều dưới **2 giây**; lệnh ba benchmark **3 passed in 2,51s**, mã **0**. Tính cả dựng bộ dò; phép đo handler không tính dựng fixture/giao việc. Số đo phụ thuộc máy và tải lúc chạy.
+- Kiểm kê đã bao đủ **53 tệp** theo **bytes LF thực tế/SHA-256**, trừ chính kiểm kê; gỡ nợ kiểm kê R6. Fixture gold R3 được đưa về LF khớp nguyên SHA đã khóa **b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181**; không đổi nội dung/gold/assertion. `.venv` Python 3.13.14 dùng thư viện hệ thống có sẵn, SDK **2.2.0** cài offline wheel repo, SHA khớp; không thêm dependency. Các lệnh dùng **-B**, **PYTHONUTF8=1**, **PYTHONDONTWRITEBYTECODE=1**.
+- **Đã kiểm bằng Core giả (CoreGia)**; chưa Core/Local/Office/Linux thật, Cloud tắt. Full pytest và giờ kết thúc ở kết quả chốt bên dưới; không dùng focused thay full.
+
+### Cần Core / Cần lead — MASK-R6b
+
+- **Cần Core — kết quả trả hai đường:** hiện kết quả mở che đi qua cả **CongMoCheRAM.ban_giao_cuoi** và **return handler/SDK**. Core cần chốt quyền, cách ly và ngữ nghĩa phát hành/ACK giữa hai đường, tránh bàn giao lặp hoặc lộ bản rõ ở kết quả/traceback/log SDK. R6b chỉ ghi nhận, không sửa Core hoặc thêm đường bàn giao.
+- Kế thừa **C-P4-02/05** về binding quyền/lease/deadline, bàn giao sau tiêu thụ và cấm dump bản rõ; **C-MS22-01** vẫn mở: CLI DEMO chuẩn thiếu quyền Core, không đổi ví dụ/bỏ gate để báo đạt. Các điểm Core khác của R6 giữ nguyên.
+- **Xung đột phạm vi test:** test R6 cũ **test_du_truong_ai_giu_khoa_kieu_noi_dung_moi_va_tinh_lai_trich** buộc giữ khóa alias và **mo_day_du=True** (dòng 46), trái mục 3 của phiếu R6b. Phạm vi chỉ cho thêm **test_mask_r6b.py**, nên chưa sửa test cũ/không thêm xfail hoặc bỏ test; đã đề nghị Anh cho cập nhật tối thiểu kỳ vọng thành **False**. Focused R6+R6b hiện **186 passed, 1 failed** đúng kỳ vọng cũ này. Không phát sinh câu chọn nghiệp vụ.
+
+### MASK-R6b — báo cáo chốt theo AGENTS §6
+
+**Kết luận: Chưa đạt — năm điểm R6b đã sửa, full suite còn đúng một test cũ có kỳ vọng trái yêu cầu về khóa dict; chưa được phép sửa tệp test đó.** Không bỏ test, thêm skip/xfail hoặc nới kiểm tra để làm xanh. Nợ quyền CLI Core còn nguyên.
+
+**Đã làm:** bốn runtime đúng danh sách; automaton dò chung và trần tài nguyên, chỉ mở alias đã xuất hiện trong bản cuối đã giao, dò khóa dict/hạ cờ đầy đủ, chụp map dưới khóa timer và ưu tiên mã mất RAM, dọn biến bản rõ trong finally. Thêm **63 ca R6b**, cập nhật CHANGELOG/NGUON và kiểm kê **53/53** bytes LF/SHA-256. Đã kiểm bằng Core giả (CoreGia).
+
+**Kết quả kiểm thật trên gói trong worktree:**
+
+| Lệnh / phép kiểm | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**. Hai DEMO thiếu quyền/ngữ cảnh tin cậy Core; nợ **C-MS22-01** đã có. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q` | **2709 passed, 1 failed, 4 xfailed cũ, 190 subtests passed; 416,82 giây (6 phút 56 giây), mã 1**. Không skipped. Failure duy nhất **test_mask_r6.py:46** nêu trên. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**: không tham chiếu cấm/tệp biên dịch. Lượt đầu vướng chữ tên thư mục migration trong đoạn NGUON mới; đã sửa cách diễn đạt, không sửa bộ kiểm. |
+| Đối chiếu toàn bộ kiểm kê | **53/53** đường dẫn/bytes/SHA-256 khớp, mọi tệp gói LF; không tính chính kiểm kê. Ca kiểm kê trong full pytest cũng qua. |
+| Bộ R6b / benchmark cuối | **63 passed**, không skip/xfail; ba benchmark cuối **3 passed in 2,51s**, mỗi phép **0,388130 / 0,689834 / 0,630239 giây**, đều dưới 2 giây. |
+| `git diff --check` | **Mã 0**; fixture gold chỉ đổi biểu diễn checkout về LF, không có nội dung diff. |
+
+**Thời gian thực tế:** bắt đầu **01:59:00**, kết thúc chốt kiểm **02:20:23 ngày 16/11/2026 (UTC+07)**, **0,36 giờ**, so với **2–3 giờ ƯỚC TÍNH**. Chưa bao gồm lần sửa kỳ vọng test cũ nếu được cho phép sau đó.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** thêm trần kỹ thuật **200.000 nút bảng dò** để ràng buộc RAM của biến thể alias; không đổi API hoặc nghiệp vụ. Để nguyên kỳ vọng test R6 cũ do ngoài danh sách tệp cho sửa, nên chưa đạt tiêu chí full xanh. Chỉ chuẩn hóa LF của fixture gold để đúng SHA đã khóa, không thay gold/nội dung/assertion. Không commit/push.
+
+**Cần Core / Chờ Anh mới phát sinh:** Core chốt hai đường **port ban_giao_cuoi + return handler** và các nợ **C-P4-02/05, C-MS22-01** nêu trên. Cần Anh/lead cho phép sửa duy nhất kỳ vọng **mo_day_du=True → False** trong test R6 cũ rồi chạy lại full suite; lý do là danh sách tệp R6b hiện chỉ cho thêm test mới. Không có câu chọn nghiệp vụ mới.

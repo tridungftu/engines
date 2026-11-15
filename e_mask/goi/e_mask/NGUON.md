@@ -514,3 +514,16 @@ Các bản snapshot fixture và công cụ trước đổi được giữ nguyê
 | `e_mask/goi/e_mask/e_mask/hau_kiem_ai.py` | `051f4eb324345cfe8a60b6146e0a26886ffe77348b877f28f2b75a19f10a4c46` | `051f4eb324345cfe8a60b6146e0a26886ffe77348b877f28f2b75a19f10a4c46` |
 | `e_mask/goi/e_mask/e_mask/phong_bi.py` | `f64f540e124da384bcbb166c5c68817fe15b67d1b693b8f75722f71cc826576e` | `f64f540e124da384bcbb166c5c68817fe15b67d1b693b8f75722f71cc826576e` |
 | `e_mask/cong-cu/thu_mask_local_ai_that.py` | `4071dfeee80ac208c3c059b88885aa65e366ecc8810504d9bc8e11b3d4866c23` | `20453f2d4bbe77b592ac8f1df0ba698a648266c328b0e3d4dcbb8536208ec192` |
+
+## MASK-R6b — sửa rà bảo mật R6, 16/11/2026
+
+Viết tiếp bốn runtime nội bộ đã có; automaton trie/failure-link tự viết bằng thư viện chuẩn Python (collections.deque), không chép mã ngoài/thêm dependency. SDK 2.2.0 cài offline từ wheel repo; SHA-256 khớp 0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984. Không sửa nguồn cũ/Core/e_hoi_ai/API v1 hoặc lưu map ngoài RAM.
+
+Chốt giới hạn thử nghiệm 1.000 alias, 10.000 chuỗi kể cả khóa và 200.000 nút bảng dò để chặn phình RAM lúc dựng biến thể. Tập alias được phép lấy từ bản che cuối bất biến sẵn có trong AnhXaAI; không mở cổng lưu trữ mới. Mọi tệp gói được kiểm kê theo bytes LF thực tế, trừ chính tệp kiểm kê. Kết quả kiểm bằng CoreGia và số đo tại VIEC.md; không là bằng chứng Core/Local/Linux thật.
+
+| Tệp | SHA-256 LF |
+|---|---|
+| `e_mask/mo_che_ram.py` | `3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799` |
+| `e_mask/che_van_ban.py` | `fb20d043b46cddea2080b50904f88533c0990b7cf21cc434be8089beb72ead81` |
+| `e_mask/kho_anh_xa_ram.py` | `9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6` |
+| `e_mask/phong_bi.py` | `83ccbdaba8d10a68b247068a9ce7fa72d6962e415ce46595538697b302541625` |

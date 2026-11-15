@@ -1,5 +1,19 @@
 # Thay đổi
 
+## 0.1.0 — 15/11/2026 — TC-1 (contract, chưa phát hành)
+
+- TC-Q13 đã duyệt chiều 15/11: thêm schema `ho_so_tra_cuu` nguồn chung và bản
+  chép gói; chép nguyên ba schema văn bản/yêu cầu AI/trả lời AI, kiểm băm LF.
+- TC-1-CONTRACT chốt required/enum/trần, snapshot năm tác vụ, state/summary,
+  băm/nguồn/offset, ngữ cảnh tin cậy và tám năng lực để TC-2 triển khai.
+- Giữ manifest/chay.py khung TC-0 và 0 demo theo lệnh giao mới nhất; TC-2 thay
+  đồng thời manifest/stub trước phát hành. Không thêm handler thành công giả.
+- Test contract có adapter tệp con/quyền chỉ trong tests; khung và lỗi hiện có
+  đã kiểm bằng Core giả (CoreGia), không chứng nhận handler nghiệp vụ/RLS thật.
+  Không thêm dependency, không Cloud/AI/Core thật, không lưu bền trên máy.
+- Cần Core C-TC-02/03/05; CLI 0 demo trả mã 1 vẫn ghi C-TC-01. Kết quả thật tại
+  docs/VIEC.md, không diễn giải 0 demo là nghiệp vụ đạt.
+
 ## 0.1.0 — 15/11/2026 — TC-0
 
 - Tạo khung SDK 2.0 với năng lực nội bộ `tra_cuu.kiem_khung@1`, luôn lỗi CHUA_LAM;

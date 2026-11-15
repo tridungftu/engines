@@ -23,3 +23,23 @@ SDK và hai mẫu lấy từ bộ nguồn nội bộ được giao. Metadata whe
 License; không tự suy diễn giấy phép nguồn ngoài. Lát này không tải/nhúng mã,
 mô hình hoặc dữ liệu bên ngoài. Không chép schema của loại chưa duyệt TC-Q13.
 Chỉ dữ liệu DEMO trong test, không tài liệu thật; không mạng/Cloud khi kiểm.
+
+## TC-1 — 15/11/2026
+
+TC-Q13 đã duyệt tại `_chung/docs/QUYET-DINH-ANH-20261115-CHIEU.md` câu 5.
+Schema mới theo phần TC-P cuối `_chung/docs/LOAI-DU-LIEU-RIENG.md` và phiếu
+Tra cứu §2; chi tiết thực thi ở `e_tra_cuu/docs/TC-1-CONTRACT.md`.
+Không sửa tài liệu loại chung. Câu “chưa duyệt” phía trên mô tả lịch sử TC-0.
+
+| Bản chép trong `contract/` | Nguồn `_chung/contract/` | SHA-256 sau chỉ đổi CRLF→LF |
+|---|---|---|
+| `ho_so_tra_cuu.schema.json` | Cùng tên, mới viết TC-1 | `2364deaf44c8fe4923640f77523e5b82c91daca27d90d7c7a6c018921df28ea9` |
+| `van_ban_tai_lieu.schema.json` | Cùng tên, giữ nguyên | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
+| `yeu_cau_ai.schema.json` | Cùng tên, giữ nguyên | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
+| `tra_loi_ai.schema.json` | Cùng tên, giữ nguyên | `5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f` |
+
+Chép nguyên bytes; pytest kiểm cả bytes và SHA-256 LF. Hai mẫu NGAN-0 giữ nguyên.
+Chỉ 5 tệp schema nguồn/bản chép trong TC-1, không thay manifest/chay.py hoặc
+schema đã khóa. Không thêm dependency, không dùng bộ đọc cấu hình làm validator
+chung; bộ đánh giá schema mới và adapter CoreGia chỉ ở tests. Mọi fixture chỉ
+DEMO với bytes được nạp vào CoreGia, metadata/băm tính thật, không tải mạng/AI.

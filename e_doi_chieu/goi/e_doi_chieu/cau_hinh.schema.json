@@ -31,6 +31,11 @@
       "type": "string",
       "minLength": 1
     },
+    "thoi_han_chiem_luot_giay": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Thời hạn chiếm lượt trong ngăn; bỏ trống thì dùng thời hạn bước nhận cặp cộng 60 giây."
+    },
     "nguong_ocr_kem": {
       "enum": [
         null

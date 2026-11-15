@@ -107,6 +107,8 @@ Khoảng trắng được gộp; chỉ nối ngắt dòng bên trong đoạn, gi
 và `\f` giữa trang. Chỉ bỏ **soft hyphen + ngắt dòng giữa chữ** trong một
 đoạn; không xóa gạch nối cứng hoặc nối số/mã hợp đồng. Không tự chuẩn kiểu
 đánh số, từ vựng hay bỏ dấu trên bản so chính.
+Khoảng trắng sau soft hyphen phải liền kề trong nguồn; không nối chữ hoặc
+gộp ánh xạ qua một vùng đầu/chân trang đã bỏ.
 
 Đầu/chân trang chỉ bỏ chuỗi đúng whitelist đã ghim và có story DOCX thật;
 OCR còn cần vị trí lề và lặp ở ít nhất hai trang. Số trang chỉ bỏ nguyên
@@ -132,12 +134,27 @@ chưa đo là `null`, các bước sau `chua_kiem`, `ket_luan=null`,
 
 Ngăn `luot_doi_chieu` dùng `lay_hoac_tao` theo pháp nhân, băm cặp, băm bộ
 và phiên bản engine. Băm cặp gồm băm/phiên bản hai bản và băm các đầu ra
-dẫn xuất/ảnh/bằng chứng, không phụ thuộc ID/tên tệp hay `ma_cap` người gọi.
-Chỉ chủ lượt tải snapshot và cập nhật bằng CAS; lượt đồng thời đợi tối đa
-khoảng một giây rồi báo thử lại nếu còn bận. CAS chốt thử lại tối đa ba
-lần, không tải lại tệp để thử CAS. Tái dùng phải mở lại snapshot và **mọi
-tham chiếu cũ** bằng quyền việc hiện tại. Hủy/lỗi để `can_thu_lai` bằng CAS,
-không xóa sổ hoặc đè chủ khác. Ngăn chỉ giữ phong bì nhỏ, không toàn văn.
+dẫn xuất/ảnh/bằng chứng, `ma_cap`, cảnh báo đầu vào và SHA-256 JSON cấu
+hình đã điền mặc định (gồm các trần). Không phụ thuộc ID/tên tệp; đổi mã
+cặp, cảnh báo hoặc cấu hình thì tạo lượt mới, không trả metadata cũ.
+
+Chủ lượt có mã riêng mỗi lần thực thi, `luc_chiem`/`han_chiem` theo giây
+Unix UTC. Cấu hình ngăn `thoi_han_chiem_luot_giay` là số nguyên dương,
+không bắt buộc; khi bỏ trống, dùng `gioi_han.thoi_han_giay` của bước nhận
+cặp cộng biên 60 giây (**180 giây** với manifest hiện tại). Lượt quá hạn
+hoặc hàng cũ thiếu hạn được chiếm lại bằng CAS; chưa quá hạn đợi tối đa
+khoảng một giây rồi trả `DC_DANG_XU_LY`, cho thử lại. Chủ cũ quay lại không
+được chốt/cleanup đè chủ mới. Không dùng hạn này để xóa nhật ký hay ngăn.
+
+CAS chốt thử lại tối đa ba lần, không tải lại tệp để thử CAS. Tái dùng
+phải mở lại snapshot và **mọi tham chiếu cũ** bằng quyền việc hiện tại.
+Nếu tệp cũ thiếu/hết hạn/không còn quyền, CAS chuyển `can_thu_lai`, rồi
+chiếm lượt và dựng lại từ các nguồn **hiện tại đã kiểm quyền/băm/trần**.
+Sai băm vẫn từ chối `DC_SAI_NGUON`, lỗi truyền vẫn giữ ngữ nghĩa SDK.
+Hủy/lỗi nhường `can_thu_lai` bằng CAS, không xóa sổ hoặc đè chủ khác.
+Ngăn chỉ giữ phong bì nhỏ, không toàn văn. Ngăn RAM mất khi khởi động lại;
+quyền/vòng đời snapshot, đồng hồ giữa worker, lease Core và CAS bền vẫn
+cần Core xác nhận.
 
 Các trần §2.3 được kiểm cả metadata và bytes thật: yêu cầu 1 MiB; từng tệp
 gốc/ảnh/JSON nguồn ≤20 MiB, toàn việc ≤128 MiB bytes đọc (kể cả yêu cầu và

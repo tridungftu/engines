@@ -2,6 +2,26 @@
 
 ## DC-3 — 15/11/2026 · 0.3.0 chưa phát hành
 
+Sửa theo kiểm độc lập lead, cùng phạm vi DC-3:
+
+- Thêm hạn chiếm lượt trong ngăn, cấu hình thời hạn riêng hoặc mặc định
+  thời hạn bước + 60 giây; CAS chiếm lại lượt quá hạn, mã chủ riêng ngăn
+  worker cũ chốt/cleanup đè chủ mới. Chưa quá hạn trả `DC_DANG_XU_LY`.
+- Hồ sơ Core cũ không đọc được chuyển `can_thu_lai` bằng CAS rồi dựng lại
+  từ nguồn hiện tại đã kiểm quyền/băm/trần; sai băm vẫn từ chối.
+- Khóa chống trùng ghim mã cặp, cảnh báo và băm cấu hình (gồm trần).
+- Dựng chỉ mục văn bản → tập trang một lần, kiểm hủy trong vòng dài;
+  12.000 nút OCR lề lặp đo riêng **0,1190 giây**, test `< 2 giây` đạt.
+- Soft hyphen chỉ gom khoảng trắng liền kề, map không qua vùng đã bỏ.
+  Bảng test 14 cặp vẫn phân biệt, 7 cặp bằng nhau theo bộ ghim và kiểm
+  tắt từng quy tắc; thêm ca phục hồi, tranh lượt, chủ cũ quay lại và hủy.
+- Đã kiểm bằng Core giả (CoreGia): pytest **297 passed, 0 skipped**
+  (144 ca DC-3); DEMO Word **1/1 ĐẠT**; kiểm độc lập mã 0. Chưa kiểm
+  Core thật/Linux; ngăn RAM/quyền tệp/đồng hồ/lease thật còn theo VIEC.
+  SHA-256 LF hiện hành tại NGUON; PR: **chờ lead mở**, không commit/push.
+
+Bản bàn giao trước kiểm độc lập:
+
 - Thêm `doi_chieu.nhan_cap@1`: băm bytes yêu cầu trước parse JSON nghiêm,
   kiểm nguồn/tham chiếu/phiên bản/quyền qua SDK, đọc lại Word bằng DC-2,
   từ chối OCR rỗng/lỗi, thiếu tệp/quyền, sai băm và vượt trần.

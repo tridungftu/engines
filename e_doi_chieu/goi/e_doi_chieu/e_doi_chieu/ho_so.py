@@ -378,7 +378,7 @@ def _lay_cu(doc, ban):
     return pb
 
 
-def nhan_cap(viec, ngan, cau_hinh, *, phien_ban_engine):
+def nhan_cap(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
     """Chỉ dùng ngu_canh do Core cấp, không lấy danh tính từ JSON yêu cầu."""
     viec.kiem_huy()
     _khoa(viec.dau_vao, ("loai", "tep"))
@@ -408,7 +408,9 @@ def nhan_cap(viec, ngan, cau_hinh, *, phien_ban_engine):
         if ref is None:
             return None
         return {"bam": _bam(ref["bam"]), **{k: ref[k] for k in ("phien_ban", "so") if k in ref}}
-    dau_cap = {"nguon": {k: dau_ref(v) for k, v in cap["nguon"].items()},
+    dau_cap = {"ma_cap": cap["ma_cap"], "canh_bao": cap["kiem_dau_vao"]["canh_bao"],
+               "bam_cau_hinh": bam(json_bytes(cau_hinh)),
+               "nguon": {k: dau_ref(v) for k, v in cap["nguon"].items()},
                "van_ban": {k: dau_ref(v) for k, v in cap["van_ban"].items()},
                "anh_trang": [dau_ref(v) for v in cap["anh_trang"]],
                "ban_chuan_phan_trang": dau_ref(cap["ban_chuan_phan_trang"]),
@@ -417,25 +419,44 @@ def nhan_cap(viec, ngan, cau_hinh, *, phien_ban_engine):
         dau_cap["anh_trang_word"] = [dau_ref(v) for v in cap["anh_trang_word"]]
     khoa = {"phap_nhan_id": phap_nhan, "bam_cap": bam(json_bytes(dau_cap)),
             "bam_bo": _bam(cap["bo_quy_tac"]["bam"]), "phien_ban_engine": phien_ban_engine}
-    chu_so_huu = str(viec.ngu_canh.get("viec_id", viec.id)) + ":" + str(viec.lan_thu)
+    chu_so_huu = str(viec.ngu_canh.get("viec_id", viec.id)) + ":" + str(viec.lan_thu) + ":" + uuid.uuid4().hex
+    thoi_han_chiem = cau_hinh.get("thoi_han_chiem_luot_giay", thoi_han_viec_giay + 60)
     ma_luot, ban, giu = uuid.uuid4().hex, None, False
     try:
         for lan in range(50):
             viec.kiem_huy()
             try:
+                luc_chiem = time.time()
+                chiem = {"trang_thai": "dang_nhan", "chu_so_huu": chu_so_huu,
+                         "luc_chiem": luc_chiem, "han_chiem": luc_chiem + thoi_han_chiem}
                 with ngan.lo() as lo:
                     kq = lo.lay_hoac_tao("luot_doi_chieu", khoa,
-                        {**khoa, "ma_luot": ma_luot, "trang_thai": "dang_nhan", "chu_so_huu": chu_so_huu})
+                        {**khoa, "ma_luot": ma_luot, **chiem})
                 ban = kq.ban_ghi  # KetQuaLenh chỉ được đọc sau commit.
                 if kq.da_tao:
                     giu = True
                     break
                 if ban.gia_tri["trang_thai"] == "da_nhan":
-                    return _lay_cu(doc, ban)
-                if ban.gia_tri["trang_thai"] == "can_thu_lai":
+                    try:
+                        return _lay_cu(doc, ban)
+                    except LoiNghiepVu as exc:
+                        if exc.ma != "DC_THIEU_NGUON":
+                            raise
+                    # Tệp Core cũ hết hạn/không còn quyền: dựng lại từ nguồn
+                    # hiện tại đã kiểm ở trên; không trả phong bì cũ thiếu tệp.
                     with ngan.lo() as lo:
                         kq = lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
-                                    {"trang_thai": "dang_nhan", "chu_so_huu": chu_so_huu}, row_version=ban.row_version)
+                                    {"trang_thai": "can_thu_lai"}, row_version=ban.row_version)
+                    ban = kq.ban_ghi
+                if (ban.gia_tri["trang_thai"] == "can_thu_lai" or
+                        ban.gia_tri["trang_thai"] == "dang_nhan" and ban.gia_tri.get("han_chiem", 0) <= time.time()):
+                    # Hàng cũ chưa có hạn cũng được thu hồi bằng CAS. Chủ cũ
+                    # trở lại không thể chốt/cleanup đè row_version của chủ mới.
+                    luc_chiem = time.time()
+                    chiem.update(luc_chiem=luc_chiem, han_chiem=luc_chiem + thoi_han_chiem)
+                    with ngan.lo() as lo:
+                        kq = lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
+                                    chiem, row_version=ban.row_version)
                     ban, giu = kq.ban_ghi, True
                     break
             except NganXungDot:

@@ -57,8 +57,10 @@ def nhan_cap(viec):
     if ngan_viec is None:
         ngan_viec = ngan
     cau_hinh = can_cau_hinh(ngan_viec)
+    thoi_han = next(n["gioi_han"]["thoi_han_giay"] for n in app.phieu["nang_luc"]
+                   if n["ma"] == "doi_chieu.nhan_cap@1")
     return _nhan_cap(viec, ngan_viec, cau_hinh,
-                     phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"])
+                     phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
 
 
 if __name__ == "__main__":

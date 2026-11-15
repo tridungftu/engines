@@ -13,7 +13,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 6 | 8 câu trả lời sau (đặc tả §13) | — | Chờ Anh |  |
 | DC-P | Lập phiếu giao Codex theo SDK 2.0 và quyết định 15/11 | DC-a…n | Xong — 15/11/2026 | PR: **chờ lead mở**. Phiếu `GIAO-CODEX-e_doi_chieu.md`: 14 lát DC-0…DC-13, 57 giờ **ƯỚC TÍNH**, bảng độ khó và 14 khối lệnh; 17 câu chọn gom duy nhất tại §5.2. Chỉ tài liệu, chưa tạo gói/chưa code; chờ duyệt thiết kế và giao từng lát. |
 | DC-2 (phiếu mới) | Đọc DOCX đã chốt, giữ nguyên văn/bảng/offset, chặn đầu vào không an toàn | DC-a | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 153 passed, 0 skipped; kiểm độc lập mã 0. Chi tiết DC-2 bên dưới. |
-| DC-3 (phiếu mới) | Nhận cặp, ghim snapshot, chuẩn hóa và ánh xạ về nguyên văn/cấu trúc | DC-b, d; DC-Q16 | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO Word 1/1 ĐẠT; pytest 237 passed, 0 skipped (84 ca DC-3); kiểm độc lập mã 0. Tích hợp thật vẫn chờ C-DC-01/02/05/06. |
+| DC-3 (phiếu mới) | Nhận cặp, ghim snapshot, chuẩn hóa và ánh xạ về nguyên văn/cấu trúc | DC-b, d; DC-Q16 | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã sửa theo kiểm độc lập lead; đã kiểm bằng Core giả (CoreGia): DEMO Word 1/1 ĐẠT; pytest 297 passed, 0 skipped (144 ca DC-3); kiểm độc lập mã 0. 12.000 nút OCR lề lặp: 0,1190 giây. Tích hợp thật vẫn chờ C-DC-01/02/05/06. |
 
 **Cập nhật sau DC-P:** hàng 0…6 phía trên giữ làm lịch sử cách chia lát cũ, không dùng để giao code. Mã DC-0…DC-13 và phụ thuộc hiện hành theo phiếu mới §3; 8 nhóm câu cũ đã tách/gom thành DC-Q01…DC-Q17 (§5.2). Quyết định chiều 15/11 đã duyệt cả 17 câu theo đề xuất; trạng thái hiện hành theo các dòng phiếu mới và báo cáo từng lát bên dưới.
 
@@ -28,6 +28,70 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 (CoreGia), NganBoNho và adapter tệp con DEMO chỉ trong tests. Chưa kiểm
 Core thật/Linux, chất lượng OCR hoặc đối chiếu toàn tuyến; không kết luận
 Khớp từ bước nhận cặp. Theo DC-Q16/DC-Q17 và quyết định chiều 15/11 đã duyệt.
+
+### Sửa theo kiểm độc lập lead — kết quả hiện hành
+
+- Sửa `ho_so.py`, `chuan_hoa.py`, `chay.py`; bổ sung schema cấu hình và
+  bản khai ngăn dự kiến SDK 2.1 (tổng 5 tệp mã/metadata). `vi_tri.py`,
+  `_chung/**`, `ngan.py`, `cau_hinh.py`, API/SDK và manifest giữ nguyên.
+- Lượt `dang_nhan` ghi `luc_chiem`/`han_chiem` theo giây Unix UTC.
+  Cấu hình tùy chọn `thoi_han_chiem_luot_giay` phải là số nguyên dương;
+  mặc định lấy thời hạn bước nhận cặp + 60 giây (hiện 180 giây).
+  Hết hạn/thiếu hạn được chiếm lại bằng CAS; chưa hết hạn trả
+  `DC_DANG_XU_LY`, cho thử lại. Mã chủ riêng mỗi lần thực thi + CAS
+  ngăn worker cũ quay lại chốt hoặc cleanup đè chủ mới.
+- `da_nhan` nhưng tệp Core cũ thiếu/hết hạn/không còn quyền đọc: chuyển
+  `can_thu_lai` bằng CAS rồi chiếm và dựng lại từ nguồn hiện tại đã kiểm
+  quyền/băm/trần. Sai băm không bị bỏ qua; lỗi truyền/hủy giữ ngữ nghĩa SDK.
+- Khóa chống trùng ghim thêm `ma_cap`, cảnh báo đầu vào và băm JSON toàn
+  cấu hình đã điền mặc định (gồm trần pixel/trang/bytes/ký tự/giải nén).
+  Cùng mã/nội dung với ID mới vẫn tái dùng khi đủ quyền nguồn cũ; đổi
+  metadata/cấu hình tạo lượt mới. Không tái dùng metadata cũ cho mã mới.
+- `_vung_bo` dựng chỉ mục văn bản → tập số trang một lần; story DOCX và
+  whitelist dùng tập hợp. Kiểm hủy trong lúc lập chỉ mục, duyệt và gom
+  vùng bỏ; giữ điều kiện ít nhất hai trang thật, nhiều nút một trang
+  không đủ căn cứ. 12.000 nút khối/dòng OCR lề lặp qua 60 trang: **0,1190
+  giây** khi đo riêng trên Windows, test bắt buộc `< 2 giây` đã qua.
+- Soft hyphen kiểm liền kề trước/sau ký tự và từng khoảng trắng; map
+  không nuốt qua vùng đã bỏ. Bảng test giữ phân biệt đủ 14 cặp Anh nêu;
+  7 cặp NBSP/tab/nhiều dấu cách/en–em dash/nháy cong chỉ bằng nhau theo
+  bộ ghim, tắt từng quy tắc thì lại khác nhau. Thêm test hủy giữa các
+  vòng dài, phục hồi/đua CAS/chủ cũ quay lại và 5 kiểu cấu hình hạn sai.
+- Không thêm thư viện, không ghi dữ liệu bền trên engine; chỉ DEMO.
+  NGUON ghi SHA-256 sau CRLF→LF của mã, schema/bản khai và test hiện tại.
+  README/CHANGELOG đã đồng bộ. Không commit/push; PR: **chờ lead mở**.
+
+Kết quả thật bằng `.venv/Scripts/python`, Python 3.13.14, SDK 2.0.0,
+`PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`; **đã kiểm bằng Core giả
+(CoreGia)**, ngăn RAM và adapter DEMO; chưa kiểm Core thật/Linux:
+
+```text
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q --basetemp=.pytest-tmp
+297 passed in 4.19s
+Mã thoát 0; 0 skipped; 144 ca DC-3 (thêm 60 so với bản bàn giao trước).
+
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.3.0: mọi ví dụ chạy thử DEMO đều đạt.
+Mã thoát 0; 1/1 DEMO ĐẠT (Word).
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0.
+```
+
+Lệch/quyết định tạm: biên giữ lượt 60 giây theo yêu cầu sửa của lead;
+vẫn ở phiên bản 0.3.0 chưa phát hành. Cần Core mới: không thêm cửa;
+đồng hồ worker, quyền/vòng đời tệp và CAS bền vẫn theo C-DC-01/02/06 bên
+dưới. Không có câu Chờ Anh mới.
+
+Thời gian thực tế vòng sửa: **14:00–14:17 ngày 15/11/2026 (UTC+7), khoảng
+0,28 giờ**. Phiếu DC-3 gốc ước tính **4 giờ**; lead chưa có ước tính riêng
+cho vòng sửa. `git diff --check` mã 0; SHA-256 LF hiện hành 7/7 khớp
+NGUON, AST bốn tệp DC-3 hợp lệ, không pycache/pyc trong gói. Không có
+thay đổi `_chung/**`, `ngan.py`, `cau_hinh.py` hoặc `vi_tri.py`.
+
+### Bản bàn giao trước kiểm độc lập (lịch sử)
 
 - Đúng bốn tệp runtime: thêm `ho_so.py`, `chuan_hoa.py`, `vi_tri.py`, sửa
   `chay.py`. Manifest phiên bản 0.3.0 thêm `doi_chieu.nhan_cap@1`, nhận `tep`
@@ -123,10 +187,11 @@ Không nới Word hoặc bịa adapter chạy thật để tạo ví dụ thành
   CoreGia mặc định thiếu cửa đã test trả `DC_THIEU_NGUON`, adapter ở tests.
 - **C-DC-01/02/06:** lưu bền/CAS ngăn thật, cấu hình theo snapshot việc,
   vòng đời tệp kết quả và thu hồi tệp tải lên nhưng việc hủy/lỗi trước chốt.
-  Lượt đang nhận bị crash không được tự chiếm theo đồng hồ hay tự xóa:
-  cần Core gắn/thu hồi chủ lượt theo lease rồi cho thử lại an toàn. Trong
-  lượt bình thường có cleanup CAS sang `can_thu_lai`; không có TTL engine.
-  RAM mất dấu chống trùng khi dừng, chưa kiểm ngăn bền/RLS thật.
+  Sau kiểm lead, lượt nhận đã có hạn cấu hình và thu hồi CAS theo đồng
+  hồ Unix UTC; cần Core xác nhận đồng bộ đồng hồ giữa worker và phối hợp
+  lease việc thật. CAS + mã chủ ngăn worker cũ ghi đè; không tự xóa sổ.
+  Cleanup bình thường vẫn CAS sang `can_thu_lai`. RAM mất dấu chống trùng
+  khi dừng, chưa kiểm ngăn bền/RLS thật.
 - **C-DC-05:** chưa kiểm nguồn phân trang/DPI/phép xoay/đổi hệ tọa độ thật.
   PNG interlace chưa hỗ trợ; JPEG chưa giải mã DCT. DC-8 phải dùng thư viện
   đã ghim theo phiếu để giải mã/kiểm ảnh trước detector; dữ liệu CRC/khung

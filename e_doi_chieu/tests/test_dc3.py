@@ -12,6 +12,8 @@ from pathlib import Path
 import struct
 import sys
 import threading
+import time
+from types import SimpleNamespace
 import zlib
 
 import pytest
@@ -353,7 +355,160 @@ def test_lap_lai_kiem_quyen_snapshot_va_khong_tai_lai(mau):
     b = mau.chay()
     assert b["ket_qua"] == a["ket_qua"] and mau.core.so_tai == 1
     mau.core.cam.add(a["ket_qua"]["ho_so_doi_chieu"]["ho_so"]["tep_id"])
-    kiem_loi(mau.chay(), "DC_THIEU_NGUON")
+    c = mau.chay()
+    assert c["trang_thai"] == "XONG" and c["ket_qua"] != a["ket_qua"], c
+    assert len(mau.cac_luot()) == 1 and mau.core.so_tai == 2
+
+
+@pytest.mark.parametrize("thoi_han", [None, 45])
+def test_han_chiem_luot_mac_dinh_theo_thoi_han_buoc_va_cau_hinh(mau, monkeypatch, thoi_han):
+    if thoi_han is not None:
+        mau.cau_hinh["thoi_han_chiem_luot_giay"] = thoi_han
+        mau.dat_cau_hinh()
+    luc = 1000000.0  # Đồng hồ DEMO riêng, không đổi lease/đồng hồ của SDK.
+    monkeypatch.setattr(hs, "time", SimpleNamespace(time=lambda: luc, sleep=lambda _: None))
+    assert mau.chay()["trang_thai"] == "XONG"
+    ban = mau.cac_luot()[0].gia_tri
+    buoc = next(n for n in chay.app.phieu["nang_luc"] if n["ma"] == "doi_chieu.nhan_cap@1")
+    assert ban["luc_chiem"] == luc
+    assert ban["han_chiem"] == luc + (thoi_han if thoi_han is not None else buoc["gioi_han"]["thoi_han_giay"] + 60)
+
+
+@pytest.mark.parametrize("thoi_han", [0, -1, True, "45", 1.5])
+def test_thoi_han_chiem_luot_khong_hop_le_bi_tu_choi(mau, thoi_han):
+    mau.cau_hinh["thoi_han_chiem_luot_giay"] = thoi_han
+    mau.dat_cau_hinh()
+    kiem_loi(mau.chay(), "CAU_HINH_KHONG_HOP_LE")
+    assert not mau.cac_luot()
+
+
+@pytest.mark.parametrize("chenh_han", [-1, 0, 1])
+def test_luot_chu_da_chet_chi_chiem_lai_khi_het_han(mau, monkeypatch, chenh_han):
+    assert mau.chay()["trang_thai"] == "XONG"
+    ban = mau.cac_luot()[0]
+    khoa = {"phap_nhan_id": PN, "ma_luot": ban.gia_tri["ma_luot"]}
+    luc = ban.gia_tri["han_chiem"] + 1
+    monkeypatch.setattr(hs, "time", SimpleNamespace(time=lambda: luc, sleep=lambda _: None))
+    with mau.ngan.lo() as lo:
+        lo.sua("luot_doi_chieu", khoa, {"trang_thai": "dang_nhan", "chu_so_huu": "DEMO-chu-da-chet",
+                                       "han_chiem": luc + chenh_han}, row_version=ban.row_version)
+    result = mau.chay()
+    moi = mau.cac_luot()[0]
+    assert len(mau.cac_luot()) == 1 and moi.gia_tri["ma_luot"] == khoa["ma_luot"]
+    if chenh_han > 0:
+        kiem_loi(result, "DC_DANG_XU_LY")
+        assert result["loi"]["thu_lai_duoc"] and mau.core.so_tai == 1
+        assert moi.gia_tri["chu_so_huu"] == "DEMO-chu-da-chet" and moi.row_version == ban.row_version + 1
+    else:
+        assert result["trang_thai"] == "XONG", result
+        assert moi.gia_tri["trang_thai"] == "da_nhan" and moi.gia_tri["chu_so_huu"] != "DEMO-chu-da-chet"
+        assert moi.gia_tri["luc_chiem"] == luc < moi.gia_tri["han_chiem"]
+        assert moi.row_version == ban.row_version + 3 and mau.core.so_tai == 2
+
+
+def test_cas_chiem_lai_qua_han_khong_de_chu_vua_giu_luot(mau, monkeypatch):
+    assert mau.chay()["trang_thai"] == "XONG"
+    ban = mau.cac_luot()[0]
+    luc = ban.gia_tri["han_chiem"] + 1
+    monkeypatch.setattr(hs, "time", SimpleNamespace(time=lambda: luc, sleep=lambda _: None))
+    khoa = {"phap_nhan_id": PN, "ma_luot": ban.gia_tri["ma_luot"]}
+    with mau.ngan.lo() as lo:
+        lo.sua("luot_doi_chieu", khoa, {"trang_thai": "dang_nhan"}, row_version=ban.row_version)
+    original, dem = mau.ngan.lo, [0]
+
+    class LoChen:
+        def __enter__(self):
+            self.lo = original()
+            self.lo.__enter__()
+            return self
+
+        def __exit__(self, *exc):
+            return self.lo.__exit__(*exc)
+
+        def __getattr__(self, ten):
+            return getattr(self.lo, ten)
+
+        def sua(self, bang, khoa, gia_tri, *, row_version):
+            if gia_tri.get("trang_thai") == "dang_nhan" and dem[0] == 0:
+                dem[0] += 1
+                with original() as khac:
+                    khac.sua(bang, khoa, {"chu_so_huu": "DEMO-chu-moi", "han_chiem": luc + 180}, row_version=row_version)
+            return self.lo.sua(bang, khoa, gia_tri, row_version=row_version)
+
+    monkeypatch.setattr(mau.ngan, "lo", LoChen)
+    kiem_loi(mau.chay(), "DC_DANG_XU_LY")
+    assert dem[0] == 1 and mau.core.so_tai == 1
+    assert mau.cac_luot()[0].gia_tri["chu_so_huu"] == "DEMO-chu-moi"
+
+
+def test_chu_cu_quay_lai_sau_thu_hoi_khong_chot_hoac_cleanup_de_chu_moi(mau, monkeypatch):
+    dung, tiep = threading.Event(), threading.Event()
+    original, so_lan, luc = hs.chuan_hoa, [0], [1000000.0]
+    monkeypatch.setattr(hs, "time", SimpleNamespace(time=lambda: luc[0], sleep=lambda _: None))
+
+    def cho_chu_cu(*a, **kw):
+        so_lan[0] += 1
+        if so_lan[0] == 1:
+            dung.set()
+            assert tiep.wait(timeout=5), "Chưa cho worker DEMO cũ tiếp tục."
+        return original(*a, **kw)
+
+    monkeypatch.setattr(hs, "chuan_hoa", cho_chu_cu)
+    vid = mau.giao()
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        cu = pool.submit(mau.core.chay, chay.app)
+        try:
+            assert dung.wait(timeout=5), "Worker DEMO chưa chiếm lượt."
+            luc[0] = mau.cac_luot()[0].gia_tri["han_chiem"] + 1
+            moi = mau.chay()
+            assert moi["trang_thai"] == "XONG", moi
+            ban_moi = mau.cac_luot()[0]
+        finally:
+            tiep.set()
+        cu.result(timeout=5)
+    kiem_loi(mau.core.xem(vid), "NGAN_XUNG_DOT")
+    assert mau.cac_luot() == [ban_moi] and ban_moi.gia_tri["phong_bi"] == moi["ket_qua"]
+
+
+@pytest.mark.parametrize("loi_doc", [403, 404, 410, FileNotFoundError, PermissionError])
+def test_ho_so_cu_khong_doc_duoc_dung_lai_tu_nguon_hien_tai(mau, monkeypatch, loi_doc):
+    a = mau.chay()
+    tid_cu = a["ket_qua"]["ho_so_doi_chieu"]["ho_so"]["tep_id"]
+    original, trang_thai = mau.core._mo_tep, []
+    ghi = mau.ngan._thuc_hien
+
+    def mat_ho_so(ma, vid, tid, toi_da):
+        if tid == tid_cu:
+            if type(loi_doc) is int:
+                raise LoiDuongTruyen("DEMO_KHONG_DOC_DUOC", "Không đọc được tệp DEMO.", http_status=loi_doc)
+            raise loi_doc("Không đọc được tệp DEMO.")
+        return original(ma, vid, tid, toi_da)
+
+    def ghi_trang_thai(du_lieu, chi_muc, phien_ban, lenh):
+        if lenh[0] == "sua":
+            trang_thai.append(lenh[3].get("trang_thai"))
+        return ghi(du_lieu, chi_muc, phien_ban, lenh)
+
+    monkeypatch.setattr(mau.core, "_mo_tep", mat_ho_so)
+    monkeypatch.setattr(mau.ngan, "_thuc_hien", ghi_trang_thai)
+    b = mau.chay()
+    assert b["trang_thai"] == "XONG" and b["ket_qua"] != a["ket_qua"], b
+    assert trang_thai == ["can_thu_lai", "dang_nhan", "da_nhan"]
+    assert mau.snapshot(b)["nguon"] == mau.cap["nguon"]
+    assert len(mau.cac_luot()) == 1 and mau.core.so_tai == 2
+
+
+def test_ho_so_cu_sai_bam_khong_tu_bo_qua(mau, monkeypatch):
+    a = mau.chay()
+    tid_cu = a["ket_qua"]["ho_so_doi_chieu"]["ho_so"]["tep_id"]
+    original = mau.core._mo_tep
+
+    def hong(ma, vid, tid, toi_da):
+        return b"DEMO-ho-so-hong" if tid == tid_cu else original(ma, vid, tid, toi_da)
+
+    monkeypatch.setattr(mau.core, "_mo_tep", hong)
+    kiem_loi(mau.chay(), "DC_SAI_NGUON")
+    assert mau.core.so_tai == 1 and mau.cac_luot()[0].gia_tri["trang_thai"] == "da_nhan"
 
 
 @pytest.mark.parametrize("so_lan", [1, 5])
@@ -490,6 +645,106 @@ def test_ngat_tu_mem_khong_xoa_gach_noi_so_hop_dong():
     assert out["da_bo"][0]["ly_do"] == "ngat_tu_mem_trong_doan"
 
 
+@pytest.mark.parametrize("goc", [
+    "hợ\u00adDEMO bỏ\n  p", "hợ\u00ad\nDEMO bỏ  p",
+    "hợ\u00ad\n  DEMO bỏp", "hợDEMO bỏ\u00ad\n  p",
+])
+def test_soft_hyphen_khong_gom_qua_vung_da_bo(monkeypatch, goc):
+    a, b = goc.index("DEMO bỏ"), goc.index("DEMO bỏ") + len("DEMO bỏ")
+
+    def vung_gia(*args):
+        return [{"bat_dau": a, "ket_thuc": b, "ly_do": "dau_chan_trang_da_duyet"}]
+
+    monkeypatch.setattr(ch, "_vung_bo", vung_gia)
+    out = ch.chuan_hoa(word_chuan(goc), quy_tac_demo()["chuan_hoa"])
+    assert "\u00ad" in out["van_ban"]  # Không nối chữ qua khoảng trống nguồn.
+    assert not any(x["ly_do"] == "ngat_tu_mem_trong_doan" for x in out["da_bo"])
+    for i in range(len(out["van_ban"])):
+        lat = vt.ve_nguon(out, i, i + 1)["lat_nguon"]
+        assert all(x["ket_thuc"] <= a or x["bat_dau"] >= b for x in lat), lat
+
+
+@pytest.mark.parametrize("trai,phai", [
+    ("1.000.000", "1.000.001"), ("1.000.000", "1,000,000"), ("10%", "1O%"),
+    ("01/02", "02/01"), ("bảo hành", "bao hanh"), ("sẽ", "se"),
+    ("không, đồng ý", "không đồng ý"), ("1 000", "1000"), ("A", "\u0410"),
+    ("-5", "−5"), ("IV", "Ⅳ"), ("Nguyễn", "nguyễn"), ("001", "1"), ("1l", "11"),
+])
+def test_bang_chuan_hoa_van_phan_biet(trai, phai):
+    q = quy_tac_demo()["chuan_hoa"]
+    ket_qua = []
+    for text in (trai, phai):
+        out = ch.chuan_hoa(word_chuan(text), q)
+        assert out["van_ban"] == text
+        assert vt.ve_nguon(out, 0, len(text))["lat_nguon"] == [{"bat_dau": 0, "ket_thuc": len(text), "van_ban": text}]
+        ket_qua.append(out["van_ban"])
+    assert ket_qua[0] != ket_qua[1]
+
+
+@pytest.mark.parametrize("trai,phai,quy_tac", [
+    ("1\u00a0000", "1 000", "khoang_trang"), ("DEMO\tA", "DEMO A", "khoang_trang"),
+    ("DEMO   A", "DEMO A", "khoang_trang"), ("DEMO–A", "DEMO-A", "gach_noi"),
+    ("DEMO—A", "DEMO-A", "gach_noi"), ("‘DEMO’", "'DEMO'", "dau_nhay"),
+    ("“DEMO”", '"DEMO"', "dau_nhay"),
+])
+def test_bang_duoc_phep_bang_nhau_chi_theo_bo_ghim(trai, phai, quy_tac):
+    q = quy_tac_demo()["chuan_hoa"]
+    a, b = [ch.chuan_hoa(word_chuan(text), q)["van_ban"] for text in (trai, phai)]
+    assert a == b == phai
+    q[quy_tac] = "giu_nguyen"
+    a, b = [ch.chuan_hoa(word_chuan(text), q)["van_ban"] for text in (trai, phai)]
+    assert a == trai and b == phai and a != b
+
+
+def ocr_le_demo(so_trang=60):
+    """12.000 nút khối/dòng; chữ lề duy nhất mỗi trang, lặp qua 60 trang."""
+    texts = ["DEMO lề " + chr(97 + i // 26) + chr(97 + i % 26) for i in range(100)]
+    khoi = [{"loai": "doan", "van_ban": text, "hop": [0, 1, 90, 5],
+             "dong": [{"van_ban": text, "hop": [0, 1, 90, 5]}]} for text in texts]
+    v = {"nguon_doc": "tesseract", "van_ban": "\f".join(["\n".join(texts) + "\nDEMO thân"] * so_trang),
+         "so_trang": so_trang, "trang": [{"so": i + 1, "rong": 100, "cao": 100, "don_vi": "pt",
+                                           "khoi": deepcopy(khoi)} for i in range(so_trang)]}
+    q = quy_tac_demo()["chuan_hoa"]
+    q["dau_chan_trang"] = texts
+    return v, q
+
+
+def test_hieu_nang_12000_nut_ocr_le_lap_duoi_hai_giay():
+    v, q = ocr_le_demo()
+    dau = time.perf_counter()
+    out = ch.chuan_hoa(v, q)
+    thoi_gian = time.perf_counter() - dau
+    print(f"DEMO 12.000 nút OCR lề lặp: {thoi_gian:.4f} giây")
+    assert thoi_gian < 2, f"Chuẩn hóa 12.000 nút mất {thoi_gian:.3f} giây."
+    assert len([p for p in out["vi_tri"] if "hop" in p]) == 12000
+    assert len(out["da_bo"]) == 6000 and out["van_ban"].count("DEMO thân") == 60
+    assert not out["chua_neo_cau_truc"] and "DEMO lề" not in out["van_ban"]
+
+
+@pytest.mark.parametrize("lan_huy", [300, 12300, 24300])
+def test_huy_giua_chi_muc_duyet_va_gom_vung_bo(lan_huy, monkeypatch):
+    v, q = ocr_le_demo()
+    vi_tri, bien, chua_neo = vt.lap_vi_tri(v)
+    # Chỉ cô lập khâu trước _vung_bo; kiểm callback truyền từ chuan_hoa.
+    monkeypatch.setattr(ch, "lap_vi_tri", lambda *a: (vi_tri, bien, chua_neo))
+    dem = [0]
+
+    def huy():
+        dem[0] += 1
+        if dem[0] == lan_huy:
+            raise ViecDaHuy()
+
+    with pytest.raises(ViecDaHuy):
+        ch.chuan_hoa(v, q, huy)
+    assert dem[0] == lan_huy
+
+
+def test_nhieu_nut_le_cung_trang_khong_du_can_cu_bo():
+    v, q = ocr_le_demo(so_trang=1)
+    out = ch.chuan_hoa(v, q)
+    assert not out["da_bo"] and "DEMO lề aa" in out["van_ban"]
+
+
 def test_bien_doan_va_bang_o_rong_gop_duoc_giu():
     v = docx.doc_bytes(tao_goi(p("Đầu DEMO") + table_demo() + p("Cuối DEMO")), lambda: None, lambda *a: None,
                        phien_ban_engine=PB_ENGINE)["van_ban_tai_lieu"]
@@ -549,12 +804,36 @@ def test_tai_lai_cung_bytes_khong_nhan_doi_luot(mau):
     for key in ("word", "ban_ky"):
         old = mau.cap["nguon"][key]
         mau.cap["nguon"][key] = mau.luu("tai-lai-" + key, mau.core.doc_tep(old["tep"]["tep_id"]), old["tep"]["mime"], True)
-    mau.cap["ma_cap"] = "DEMO-ma-moi"
     b = mau.chay()
     assert b["ket_qua"] == a["ket_qua"] and len(mau.cac_luot()) == mau.core.so_tai == 1
-    # Quyền nguồn cũ của snapshot vẫn phải còn, không dùng quyền tới ID mới để lách.
+    # Tái dùng cần quyền nguồn cũ; nếu thiếu thì dựng lại hoàn toàn từ ID mới được cấp.
     mau.core.cam.add(a["ket_qua"]["ho_so_doi_chieu"]["nguon"]["word"]["tep_id"])
-    kiem_loi(mau.chay(), "DC_THIEU_NGUON")
+    c = mau.chay()
+    assert c["trang_thai"] == "XONG" and c["ket_qua"] != a["ket_qua"], c
+    assert mau.snapshot(c)["nguon"] == mau.cap["nguon"]
+    assert len(mau.cac_luot()) == 1 and mau.core.so_tai == 2
+
+
+@pytest.mark.parametrize("thay", ["ma_cap", "canh_bao", "pixel_anh", "so_trang_toi_da", "tep_mib",
+                                   "ho_so_mib", "tong_byte_tep_con", "ky_tu_moi_tai_lieu", "ky_tu_hai_tai_lieu",
+                                   "diem_lech_toi_da", "docx_giai_nen_mib", "docx_so_muc"])
+def test_khoa_chong_trung_ghim_ma_cap_canh_bao_va_cau_hinh_tran(mau, thay):
+    a = mau.chay()
+    assert a["trang_thai"] == "XONG", a
+    if thay == "ma_cap":
+        mau.cap["ma_cap"] = "DEMO-cap-moi"
+    elif thay == "canh_bao":
+        mau.cap["kiem_dau_vao"]["canh_bao"].append("DEMO cảnh báo mới.")
+    else:
+        mau.cau_hinh[thay] = chay.can_cau_hinh()[thay] - 1
+        mau.dat_cau_hinh()
+    b = mau.chay()
+    assert b["trang_thai"] == "XONG" and b["ket_qua"] != a["ket_qua"], b
+    assert b["ket_qua"]["ho_so_doi_chieu"]["ma_cap"] == mau.cap["ma_cap"]
+    snap = mau.snapshot(b)
+    assert snap["kiem_dau_vao"]["canh_bao"] == mau.cap["kiem_dau_vao"]["canh_bao"]
+    assert snap["cau_hinh"] == chay.can_cau_hinh()
+    assert len(mau.cac_luot()) == mau.core.so_tai == 2
 
 
 @pytest.mark.parametrize("thay", ["phien_ban_word", "phien_ban_bo", "ket_qua_ocr"])

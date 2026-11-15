@@ -53,6 +53,14 @@
           "kieu": "van_ban"
         },
         {
+          "ma": "luc_chiem",
+          "kieu": "so"
+        },
+        {
+          "ma": "han_chiem",
+          "kieu": "so"
+        },
+        {
           "ma": "phong_bi",
           "kieu": "json"
         }

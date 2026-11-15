@@ -1,0 +1,119 @@
+KẾT QUẢ KIỂM MASK-B2 — 15/11/2026
++
+LƯỢT CUỐI — sau kiểm trần logic độc lập và bổ sung map mọi scalar custom
+
+.venv/Scripts/python -B -m pytest e_mask/tests -q
+.............................. [  3%]
+........................................ [  6%]
+........................................................................ [ 11%]
+........................................................................ [ 15%]
+..........................................................xxxx.......... [ 20%]
+........................................................................ [ 25%]
+........................................................................ [ 29%]
+........................................................................ [ 34%]
+........................................................................ [ 38%]
+........................................................................ [ 43%]
+........................................................................ [ 48%]
+........................................................................ [ 52%]
+........................................................................ [ 57%]
+........................................................................ [ 62%]
+........................................................................ [ 66%]
+........................................................................ [ 71%]
+........................................................................ [ 76%]
+........................................................................ [ 80%]
+........................................................................ [ 85%]
+........................................................................ [ 90%]
+........................................................................ [ 94%]
+........................................................................ [ 99%]
+......                                                                   [100%]
+1540 passed, 4 xfailed, 190 subtests passed in 142.45s (0:02:22)
+
+Mã thoát 0; 1540 passed, 4 xfailed strict giữ nguyên, 190 subtests, 0 skipped.
+
+.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b1.py e_mask/tests/test_mask_b2.py -q
+431 passed in 12.39s; mã thoát 0; gồm 155 test B2 mới.
+
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.2.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát 1.
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+Mã thoát 0.
+
+CLI chuẩn vẫn 0/2 vì thiếu quyền, adapter DEMO có quyền 2/2. Có một lượt chạy toàn bộ bị dừng chủ động (mã 1) để bổ sung map scalar custom; không dùng lượt dở này làm kết luận. Lượt cuối trên hoàn tất sau sửa. Scalar custom số/bool/ngày đều có map và tổng quét; typed scalar cần thay alias phải bị writer sau từ chối khi không giữ được kiểu. Trần logic reader được kiểm độc lập B1 bằng 495.000 ký tự +5.000 tab và +1. Không sửa runtime/test sau lượt cuối.
+
+Kết thúc bàn giao tại mốc chốt kiểm: 15/11/2026 15:44:23 (UTC+07); bắt đầu 14:47:00; 0,96 giờ, so với 6–8 giờ ƯỚC TÍNH.
+
+CÁC LƯỢT TRƯỚC VÀ THIẾT LẬP MÔI TRƯỜNG
+
+
+Môi trường: Windows x64; Python 3.13.14, SDK 2.0.0, pytest 9.1.1.
+.venv trong worktree, --system-site-packages để dùng pytest có sẵn.
+SDK cài offline --no-index --no-deps từ wheel trong repo.
+SHA-256 wheel: a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
+Khớp SHA256SUMS.txt. Không thêm dependency của gói; lệnh Python đều dùng -B.
+
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.2.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát 1. 0/2 ĐẠT; thiếu nguồn quyền như B1.
+
+.venv/Scripts/python -B -m pytest e_mask/tests -q
+Trích phần cuối stdout của lượt chạy toàn bộ; không bỏ lỗi hoặc skip:
+................................................... [ 53%]
+........................................................................ [ 57%]
+........................................................................ [ 62%]
+........................................................................ [ 67%]
+........................................................................ [ 71%]
+........................................................................ [ 76%]
+........................................................................ [ 81%]
+........................................................................ [ 85%]
+........................................................................ [ 90%]
+........................................................................ [ 95%]
+........................................................................ [ 99%]
+....                                                                     [100%]
+1538 passed, 4 xfailed, 190 subtests passed in 135.46s (0:02:15)
+Mã thoát 0. 0 skipped; bốn xfail strict held-out lớp quy tắc giữ nguyên, chưa đo Local thật.
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+Mã thoát 0.
+
+.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b1.py e_mask/tests/test_mask_b2.py -q
+429 passed in 17.32s; mã thoát 0.
+
+Sau khi hoàn thiện fixture style matrix theme đủ ba phần tử mỗi danh sách:
+.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b2.py -q
+153 passed in 6.38s; mã thoát 0. Đây là lượt trước rà soát scalar custom; lượt cuối sau bổ sung nằm ở cuối tệp.
+
+.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b2.py::test_khong_import_engine_khac_khong_doi_manifest_va_nguon_co_sha -q
+.                                                                        [100%]
+1 passed in 0.18s
+Mã thoát 0. Test dùng SHA LF để qua checkout Linux/Windows, SHA bytes kiểm riêng đúng checkout.
+
+QA bổ sung: AST/UTF-8/whitespace/SHA bytes+LF 3/3 runtime đạt; 2 nguồn mẫu và 2 tệp ZIP/XML B1 giữ nguyên bytes/LF; không __pycache__ hoặc .pyc trong gói. git diff --check mã thoát 0; Git chỉ báo LF có thể đổi thành CRLF ở NGUON.md.
+
+Các lượt phát triển ban đầu: B1 có 275 passed, 1 failed do SHA doc_tep chưa cập nhật trong NGUON; fixture emoji có lỗi escape entity lặp, và một lượt ghi NGUON qua PowerShell stdin bị sai encoding. Đã sửa fixture/đường ghi UTF-8 và ghi lại provenance; không nới kiểm an toàn/trần, không sửa bốn xfail cũ. Các lượt cuối ở trên đạt.
+
+Đã kiểm bằng Core giả (CoreGia) gói văn bản hiện có. Reader B2 kiểm trực tiếp RAM với fixture DEMO, chưa Word/Excel/Local/Core thật hoặc Linux thực tế. Fixture mô phỏng Word lưu ra, không coi XML parse được là Office thật đã mở không repair. Cloud tắt. Chưa phát hành/đăng ký năng lực tệp, chưa chạy hai lớp trên tệp.
+

@@ -1,5 +1,13 @@
 # Thay đổi
 
+## Chưa phát hành — 15/11/2026, MASK-B2 reader Word nội bộ
+
+- Đúng ba tệp runtime: `doc_word.py`, `xml_word.py`, khối B2 riêng trong `doc_tep.py`. Chép chọn lọc walker DC/TX, ghi quyền/symbol/SHA bytes và LF trước–sau; không import chéo engine, không sửa nguồn mẫu/Core/SDK, không thêm dependency/COM/PDF hoặc handler/năng lực tệp.
+- Đọc thân/bảng/run/đầu-chân/notes/chữ ẩn, core/app/custom thuộc profile và text/attribute trong styles/numbering/theme. Mọi scalar custom có map/tổng quét, gồm cả số/bool/ngày có thể mang mã định danh. Mỗi vùng giữ biên riêng, text Unicode gốc/SHA riêng, map node/run/style/ẩn/attribute và byte từng code point. Giữ NFD/Cf; entity/CR/CDATA/UTF-8/UTF-16/ngoài BMP có map, không ghép qua đoạn/ô/story. Giữ text cả ô gộp nối và note chưa có tham chiếu; kiểm note lặp/tham chiếu sai.
+- Kiểm cấu trúc/giá trị trước coi thuộc tính bất biến: ID style/font chỉ tập hằng có kiểm; tên style/theme/property được quét có map. Comments/revision/author markup, field/textbox/content control/extension/media/nhúng/phần lạ từ chối cả gói với câu cố định. Dữ liệu việc chỉ RAM, dọn bảng/buffer trong finally; chưa chạy hai lớp MASK-2b + Local trên tệp.
+- Cổng chung thêm cờ ZIP bit 1–2 của DEFLATE và descriptor bit 3 có/không chữ ký, kiểm CRC/size/local-central trước cho B1 kiểm lại payload. Giữ bytes/offset gốc; `le_cuoi` bao descriptor, payload dài `so_byte_nen`. Thêm theme Word có kiểm và app properties chuẩn; tên part/target dài hơn 256 bị chặn trong wrapper B2 để giữ giới hạn ba tệp. Reader/theme/calcChain Excel thuộc B3, không sửa `doc_excel.py`/`xml_excel.py`.
+- 155 test B2 mới; riêng B1+B2 **431 passed**. Toàn bộ **1540 passed, 4 xfailed giữ nguyên, 190 subtests passed, 0 skipped**; kiểm độc lập đạt, adapter DEMO 2/2. CLI SDK chuẩn 0/2 thiếu nguồn quyền như trước. Đã kiểm bằng Core giả (CoreGia) gói văn bản hiện có; reader B2 kiểm trực tiếp RAM, chưa Office/Core/Local thật hoặc Linux thực tế. Cloud tắt; PR chờ lead mở, không commit/push.
+
 ## Chưa phát hành — 15/11/2026, MASK-B1 cổng ZIP/XML nội bộ
 
 - Thêm đúng `doc_tep.py`, `zip_an_toan.py`, `xml_an_toan.py`; chưa gắn handler/năng lực tệp, giữ manifest 1.1.0. Chỉ stdlib/SDK, RAM, Cloud tắt.

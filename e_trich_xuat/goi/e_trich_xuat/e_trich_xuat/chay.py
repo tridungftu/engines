@@ -1,10 +1,12 @@
 """Đăng ký năng lực thật bằng SDK 2.0; cấu hình chỉ qua ngăn."""
 
 from copy import deepcopy
+from inspect import signature
 import json
 from pathlib import Path
 from types import SimpleNamespace
 
+import kho_tri_thuc_sdk
 from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
 
 from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
@@ -69,11 +71,27 @@ class EngineTrichXuat(Engine):
                                 loi=loi, ma_tuong_quan=ma_tuong_quan)
 
     def _ghi(self, cau):
-        # SDK 2.0 có thể đưa traceback vào cau. Không đưa nội dung đó ra log.
-        super()._ghi("Có lỗi khi xử lý hoặc trao đổi với Core; hãy thử lại hoặc liên hệ hỗ trợ.")
+        # Chỉ chặn dòng SDK chứa lỗi nội dung việc/traceback; giữ mã lỗi vận hành.
+        if cau.startswith("Lỗi khi xử lý việc ") or "Traceback (most recent call last):" in cau:
+            cau = "Engine gặp lỗi khi xử lý việc này (ENGINE_LOI_XU_LY)."
+        super()._ghi(cau)
+
+
+def _kiem_sdk():
+    """Hai hook nội bộ chỉ được kiểm với đúng SDK này; đổi SDK thì dừng kín."""
+    try:
+        dung = (kho_tri_thuc_sdk.__version__ == "2.0.0"
+                and str(signature(Engine._ghi)) == "(self, cau)"
+                and str(signature(Engine._ket_thuc)) == (
+                    "(self, dt, viec, cfg, trang_thai, *, loi=None, ma_tuong_quan=None)"))
+    except (AttributeError, TypeError, ValueError):
+        dung = False
+    if not dung:
+        raise RuntimeError("SDK đã thay đổi; cần kiểm lại cổng lỗi và nhật ký trước khi chạy.")
 
 
 def tao_app():
+    _kiem_sdk()
     app = EngineTrichXuat.tu_khai_bao(GOC_GOI / "engine.json")
     if getattr(app, "ngan", None) is None:
         app.ngan = NganBoNho(KHAI_BAO_NGAN)
@@ -83,6 +101,13 @@ def tao_app():
     def doc_word(viec):
         from .docx import doc_docx
         return doc_docx(viec, phien_ban_engine=f"{app.ma} {app.phien_ban}")
+
+    @app.nang_luc("trich.chuan_bi@1")
+    def chuan_bi_ai(viec):
+        from .tich_hop import chuan_bi
+        viec.kiem_huy()
+        cau_hinh = ghim_cau_hinh(viec, app)
+        return chuan_bi(viec, cau_hinh, phien_ban_engine=f"{app.ma} {app.phien_ban}")
 
     return app
 

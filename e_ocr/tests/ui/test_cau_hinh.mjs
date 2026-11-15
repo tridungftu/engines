@@ -4,7 +4,7 @@ import test from "node:test";
 
 const nguon = await readFile(new URL("../../goi/e_ocr/ui/cau_hinh.js", import.meta.url), "utf8");
 const {mount} = await import("data:text/javascript;base64," + Buffer.from(nguon).toString("base64"));
-const khai = JSON.parse(await readFile(new URL("../../goi/e_ocr/KHAI-SDK-2.1.json", import.meta.url), "utf8"));
+const khai = JSON.parse(await readFile(new URL("../../goi/e_ocr/engine.json", import.meta.url), "utf8"));
 const schema = JSON.parse(await readFile(new URL("../../goi/e_ocr/cau_hinh.schema.json", import.meta.url), "utf8"));
 
 function kiemPhamVi(ten, loc) {
@@ -51,14 +51,19 @@ async function dung({cauHinh = {}, phien = 4, loiLuu = null, loiDoc = false, loi
         },
       },
       ngan: {
-        async doc(bang, khoa) {
-          kiemPhamVi(bang, khoa);
-          lenh.push({ten: bang, khoa});
-          assert.equal(bang, "trang_thai_engine");
-          assert.ok(["abbyy", "chua_ro"].includes(khoa.ma));
+        async doc(tenBang, khoa) {
+          kiemPhamVi(tenBang, khoa);
+          lenh.push({ten: tenBang, khoa});
+          assert.equal(tenBang, "trang_thai_engine");
+          assert.ok(["abbyy", "chua_ro", "han_muc"].includes(khoa.ma));
           if (loiNgan || loiPhan === khoa.ma) throw Error("DEMO lỗi nguồn riêng");
+          if (khoa.ma === "han_muc") {
+            const dangGiu = Object.assign({}, ...(bang.han_muc_ngay ?? []).map(b => b.dang_giu ?? {}));
+            return {gia_tri: {dang_giu: JSON.stringify(dangGiu)}, row_version: 1};
+          }
           const b = khoa.ma === "abbyy" ? tt : chuaRo;
-          return b == null ? null : {gia_tri: b, row_version: 1};
+          return b == null ? null : {gia_tri: khoa.ma === "chua_ro"
+            ? {...b, so_luot: String(b.so_luot), theo_ngay: JSON.stringify(b.theo_ngay)} : b, row_version: 1};
         },
         async tim(ten, {loc, gioi_han, tiep}) {
           kiemPhamVi(ten, loc);
@@ -68,7 +73,7 @@ async function dung({cauHinh = {}, phien = 4, loiLuu = null, loiDoc = false, loi
           const ds = (bang[ten] ?? []).filter(b => Object.entries(loc).every(([k, v]) => b[k] === v));
           const dau = Number(tiep ?? 0);
           // Chỉ trả một hàng để bắt buộc màn đọc hết phân trang.
-          return {danh_sach: ds.slice(dau, dau + 1).map(b => ({gia_tri: b})), tiep: dau + 1 < ds.length ? String(dau + 1) : null};
+          return {danh_sach: ds.slice(dau, dau + 1).map(b => ({gia_tri: {...b, da_nhan: JSON.stringify(b.da_nhan)}})), tiep: dau + 1 < ds.length ? String(dau + 1) : null};
         },
       },
     };
@@ -179,7 +184,7 @@ test("nội dung lạ chỉ vào ô chữ, mã màn không dùng mạng hoặc t
   assert.ok(duyet(a.goc).every(n => n.tagName !== "img")); a.man.destroy();
 });
 
-test("KttCore giả từ chối bảng pháp nhân thiếu ngữ cảnh như NganBoNho", async () => {
+test("KttCore giả từ chối bảng pháp nhân thiếu ngữ cảnh", async () => {
   const a = await dung();
   for (const phap_nhan_id of [undefined, null, "", "   ", 1]) {
     const loc = {phap_nhan_id};

@@ -7,7 +7,7 @@ Mọi tài liệu, thông báo lỗi, báo cáo bằng **tiếng Việt**; tên 
 
 1. `docs/goi-gui-engine/API-ENGINE-v1.md` — hợp đồng API v1 + `engine.json` 2.0. **Đã khóa, không được đổi.**
 2. `docs/goi-gui-engine/sdk-2.0.0/HUONG-DAN-VIET-ENGINE.md` và `MAU-PHIEU-ENGINE.md`.
-3. `_chung/docs/QUYET-DINH-ANH-20261115.md` và `_chung/docs/GIAO-CODEX-DOT-2.md` — **quyết định của Anh 15/11 (thắng các quyết định tạm cũ)**; `_chung/docs/GIAO-CODEX-THU-TU.md` — thứ tự engine, phần còn thiếu phía Core; `_chung/docs/DE-NGHI-SDK-2.1.md` — API ngăn/cấu hình/màn engine mà mã phải bám.
+3. `_chung/docs/QUYET-DINH-ANH-20261115.md`, `_chung/docs/QUYET-DINH-ANH-20261115-CHIEU.md` và `_chung/docs/GIAO-CODEX-DOT-2.md` — **quyết định của Anh 15/11 (thắng các quyết định tạm cũ)**; `_chung/docs/GIAO-CODEX-THU-TU.md` — thứ tự engine, phần còn thiếu phía Core; `_chung/docs/DE-NGHI-SDK-2.1.md` — API ngăn/cấu hình/màn engine mà mã phải bám.
 4. `_chung/docs/LOAI-DU-LIEU-RIENG.md` — loại dữ liệu riêng dùng chung giữa các engine.
 5. `<engine>/docs/GIAO-CODEX-<engine>.md` — lát đang được giao.
 6. `<engine>/CLAUDE.md`, `<engine>/docs/YEU-CAU-VA-HIEN-TRANG.md`, quyết định cuối của engine.

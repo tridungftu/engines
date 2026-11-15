@@ -88,7 +88,7 @@
 ```
 - `e_hoi_ai` từ chối nếu `con_sot` khác rỗng hoặc `kiem_tien_ngay` khác `true`; **không gửi `ma_yeu_cau` ra Cloud**; chép `ma_yeu_cau` vào `chuyen_tiep` của `tra_loi_ai` để bước mở che dùng.
 
-## 3. ĐỀ XUẤT MASK-P, chờ Anh — chi tiết `van_ban_da_che`
+## 3. ĐÃ DUYỆT 15/11/2026 (Anh, câu 11) — chi tiết `van_ban_da_che`
 
 *Lập 14/11/2026 khi soạn `e_mask/docs/GIAO-CODEX-e_mask.md`. Đây là đề xuất bổ sung cho khung §2.4, chưa thay định nghĩa đang có, chưa tạo schema hoặc sửa engine. Không thêm mã loại mới; giữ tên “Văn bản đã che định danh” và `phien_ban: 1`. Chỉ thêm trường tùy chọn tương thích; nếu cần đổi trường bắt buộc/nghĩa cũ phải trình mã loại mới theo §1.*
 
@@ -128,7 +128,7 @@ Schema dự kiến `_chung/contract/van_ban_da_che.schema.json` được tạo t
 
 Chờ Anh chốt bổ sung này cùng Q3/Q4 của `GIAO-CODEX-THU-TU.md`; không coi nhãn đề xuất là bằng chứng contract đã đăng ký/kích hoạt hoặc engine đủ điều kiện gửi Cloud.
 
-## 4. ĐỀ XUẤT TX-0, chờ Anh — chi tiết `bang_trich_xuat`
+## 4. ĐÃ DUYỆT 15/11/2026 (Anh) — chi tiết `bang_trich_xuat` (gồm bổ sung TX-3-REVIEW)
 
 *Bổ sung 14/11/2026 (Codex), theo `e_trich_xuat/docs/TX-0-THIET-KE.md` T2(b). Phần này là đề xuất riêng; không sửa định nghĩa/schema của bốn loại ở trên. Chưa tạo `_chung/contract/bang_trich_xuat.schema.json`, chưa đăng ký năng lực hoặc cập nhật gói engine.*
 
@@ -215,7 +215,7 @@ T3(a) dùng nguyên `yeu_cau_ai` phiên bản 1. Đề xuất dùng khóa riêng
 
 Nếu T3(b) được chọn sau này, phải trình riêng request/result batch, giới hạn số lượt, cách hợp nhất, hủy/lỗi/chưa rõ và tương thích; không thêm mảng câu hỏi vào schema v1 rồi coi consumer cũ hỗ trợ.
 
-## 5. ĐỀ XUẤT DC-P, chờ Anh — `ho_so_doi_chieu`
+## 5. ĐÃ DUYỆT 15/11/2026 (Anh, DC-Q17) — `ho_so_doi_chieu`
 
 *Lập 15/11/2026 · Codex · Theo `e_doi_chieu/docs/GIAO-CODEX-e_doi_chieu.md` §2 và DC-Q17. Đây là đề xuất mới, **chưa duyệt/kích hoạt**, không thuộc bốn loại đã duyệt ở §1–3. Không tạo schema/gói ở DC-P, không đổi loại/schema hiện có.*
 
@@ -324,7 +324,7 @@ Mục tiêu metadata ≤4 KiB, trần toàn `chuyen_tiep` vẫn 64 KiB JSON UTF-
 
 **Không thêm cờ an toàn caller tự khai vào `van_ban_da_che`:** dùng contract hiện có khi hậu kiểm cả hai lớp thực sự đạt. Chứng cứ lớp 2 gắn băm bản cuối/nguồn bước 3 lưu do Core quản, cửa Cloud kiểm chứng cứ này và từ chối đầu ra lớp 1 cũ thiếu chứng cứ. Không gửi ma_yeu_cau/chuyen_tiep/snapshot/băm/trích dẫn gốc ra Cloud; chỉ nội dung cuối đã che, prompt chứa dữ liệu cũng phải che. BAT_CLOUD vẫn False. Mục này chờ duyệt chi tiết profile và cửa Core; không đổi hợp đồng kỹ thuật API v1/SDK 2.0 đã khóa.
 
-## 7. ĐỀ XUẤT TC-P, chờ Anh — `ho_so_tra_cuu`
+## 7. ĐÃ DUYỆT 15/11/2026 (Anh, TC-Q13) — `ho_so_tra_cuu`
 
 *Lập 15/11/2026 · Codex · Theo `e_tra_cuu/docs/GIAO-CODEX-e_tra_cuu.md` §2 và TC-Q13. Phần này là **đề xuất mới, chưa duyệt/kích hoạt**; nhãn “ĐÃ DUYỆT” đầu tệp chỉ áp dụng bốn loại §1–3, không áp dụng đề xuất này hoặc DC-P. TC-P chỉ bổ sung tài liệu, không tạo schema/gói hoặc sửa loại/schema đã có.*
 

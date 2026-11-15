@@ -1,0 +1,226 @@
+{
+  "nhan": "DEMO tong hop; khong phai scan/viet tay that",
+  "cloud": 0,
+  "local_vision": {
+    "trang_thai": "chua_do",
+    "model": null,
+    "giay": null,
+    "ram": null,
+    "ket_qua": null
+  },
+  "anh": {
+    "phuong_phap": "net_de_vung_chu",
+    "phien_ban": "DC-8.1-thu-nghiem",
+    "so_trang": 12,
+    "ghep_vung": "IoU >= 0.3, mot-mot",
+    "giay_tong_co_tracemalloc": 0.15243,
+    "ram_python_dinh_bytes": 297204,
+    "ram_tien_trinh_bytes": null,
+    "ket_qua": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 3,
+      "precision": 1.0,
+      "recall": 0.5,
+      "lech_gia_moi_trang": 0.0
+    },
+    "trang": [
+      {
+        "ma": "khong_vet",
+        "bam_anh": "sha256:7df9d5c1242c08b49914b46c0dc6404cfdce3f5a1fa689b11e760d7c19b56ec7",
+        "dap_an": [],
+        "phat_hien": [],
+        "so_vung_loai": 0,
+        "giay": 0.012428,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      {
+        "ma": "gach",
+        "bam_anh": "sha256:1d2c9574aa1188894bfef6ad8875fb8873764be1d0124a8bd2a383c4d57f2329",
+        "dap_an": [
+          [
+            30,
+            93,
+            311,
+            96
+          ]
+        ],
+        "phat_hien": [
+          [
+            30.0,
+            93.0,
+            311.0,
+            96.0
+          ]
+        ],
+        "so_vung_loai": 0,
+        "giay": 0.011206,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0
+      },
+      {
+        "ma": "chen",
+        "bam_anh": "sha256:2e063fa52b4baee99ab65063fad7602f584cfdcfa2756941c4d6b595aeb64e6e",
+        "dap_an": [
+          [
+            64,
+            58,
+            104,
+            77
+          ]
+        ],
+        "phat_hien": [
+          [
+            64.0,
+            59.0,
+            104.0,
+            76.0
+          ]
+        ],
+        "so_vung_loai": 0,
+        "giay": 0.0129,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0
+      },
+      {
+        "ma": "sat_chu",
+        "bam_anh": "sha256:745d904f7a4d64ba37be130cdc2ae9fe60337eb381983e396c90ea65c620dea6",
+        "dap_an": [
+          [
+            104,
+            79,
+            144,
+            98
+          ]
+        ],
+        "phat_hien": [
+          [
+            104.0,
+            80.0,
+            144.0,
+            97.0
+          ]
+        ],
+        "so_vung_loai": 0,
+        "giay": 0.013154,
+        "tp": 1,
+        "fp": 0,
+        "fn": 0
+      },
+      {
+        "ma": "chu_ky",
+        "bam_anh": "sha256:e53f6bb3c40eec9ab9727e8b023560812ddf86ea1d88812e72ada9e032642956",
+        "dap_an": [],
+        "phat_hien": [],
+        "so_vung_loai": 1,
+        "giay": 0.01406,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      {
+        "ma": "dau",
+        "bam_anh": "sha256:ac77ba47a807146e6f8bdeaa9f8b7a3a69e725fbe5e4f9e34f9ae99e3600a6f9",
+        "dap_an": [],
+        "phat_hien": [],
+        "so_vung_loai": 1,
+        "giay": 0.013672,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      {
+        "ma": "ky_nhay",
+        "bam_anh": "sha256:e53f6bb3c40eec9ab9727e8b023560812ddf86ea1d88812e72ada9e032642956",
+        "dap_an": [],
+        "phat_hien": [],
+        "so_vung_loai": 1,
+        "giay": 0.013491,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      {
+        "ma": "ky_chong_chu",
+        "bam_anh": "sha256:964af4cc16f8d547aa88d086d04e67f983ead35fb62b5f055348ad336703e5cb",
+        "dap_an": [
+          [
+            64,
+            78,
+            104,
+            97
+          ]
+        ],
+        "phat_hien": [],
+        "so_vung_loai": 0,
+        "giay": 0.012694,
+        "tp": 0,
+        "fp": 0,
+        "fn": 1
+      },
+      {
+        "ma": "muc_mau_in",
+        "bam_anh": "sha256:abcfc06fd21622ac4a4d808c2bff95de26749d58a691260f47dcb4690353c5b2",
+        "dap_an": [],
+        "phat_hien": [],
+        "so_vung_loai": 0,
+        "giay": 0.011904,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      {
+        "ma": "net_xa_chu",
+        "bam_anh": "sha256:815f79baba461bb75051db69650bdd946fef0219ecdffab8b863cbaefcc59e6c",
+        "dap_an": [],
+        "phat_hien": [],
+        "so_vung_loai": 0,
+        "giay": 0.013017,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      {
+        "ma": "net_mo",
+        "bam_anh": "sha256:a38226bd1265b7e9132b6902f578fcac0e611216d76b14dccd4f99a7daf94263",
+        "dap_an": [
+          [
+            64,
+            58,
+            104,
+            77
+          ]
+        ],
+        "phat_hien": [],
+        "so_vung_loai": 0,
+        "giay": 0.011629,
+        "tp": 0,
+        "fp": 0,
+        "fn": 1
+      },
+      {
+        "ma": "net_trong_chu",
+        "bam_anh": "sha256:40b42844f4a74b685d835289334d224692852ac927312b2e51ac0bef58fac601",
+        "dap_an": [
+          [
+            44,
+            90,
+            50,
+            100
+          ]
+        ],
+        "phat_hien": [],
+        "so_vung_loai": 0,
+        "giay": 0.011918,
+        "tp": 0,
+        "fp": 0,
+        "fn": 1
+      }
+    ],
+    "du_dieu_kien_van_hanh": false
+  }
+}

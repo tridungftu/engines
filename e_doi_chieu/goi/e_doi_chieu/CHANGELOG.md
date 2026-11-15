@@ -1,5 +1,27 @@
 # Thay đổi
 
+## DC-8 — 15/11/2026 · 0.4.8 chưa phát hành
+
+- Thêm `doi_chieu.phat_hien_sua_tay@1` ở khối đăng ký riêng: nhận hồ sơ
+  `da_nhan/da_so`, đọc ảnh/băm/byte/pixel và phép đổi tọa độ tin cậy Core;
+  quét toàn ảnh, giữ trang/phương pháp/phiên bản, PNG vùng có ngữ cảnh và
+  snapshot mới trong kho Core. Không đọc chữ tay, không ghi đĩa/mạng/Cloud.
+- Detector pixel thử nghiệm gạch đè/nét chèn gần chữ; không dùng màu mực
+  hoặc mặc định nét ngoài OCR là sửa. Bổ sung duy nhất Pillow 12.3.0 và đúng
+  hai hash wheel từ lock OCR; NGUON ghi môi trường có sẵn, chưa kiểm máy sạch.
+- Chữ ký/dấu/ký nháy chỉ loại khi đủ căn cứ và không chồng nội dung; vùng
+  chưa rõ vẫn cắt để xem, tách nguồn metadata khỏi phát hiện pixel. Giữ
+  sàn Nghiêm trọng/xác nhận, điểm lệch cũ và đề nghị chặn; chưa kiểm đủ.
+- Đo **thuật toán thật** trên 12 ca DEMO/11 raster: **3 TP, 0 FP, 3 FN,
+  recall 50%**. Chưa đạt vận hành độc lập, `sua_tay=chua_kiem`, không kết
+  luận không sửa tay. Local vision chưa đo, mọi số đo/model để null.
+  Công cụ Q13 + `.cmd` ASCII đã chạy khô, không gọi model; khảo sát, đáp án,
+  số đo thô và dự toán bổ sung ở docs DC-8. Không đổi tiêu chí DC-13.
+- Đã kiểm bằng Core giả (CoreGia): SDK DEMO **1/1 ĐẠT**; pytest
+  **486 passed, 0 skipped** (79 ca DC-8); kiểm độc lập mã 0. Adapter Core
+  và detector giả chỉ kiểm giao thức, không dùng tính accuracy. Chưa kiểm
+  Core thật/Linux/model/OCR/scan thật. PR: **chờ lead mở**; không commit/push.
+
 ## DC-4 — 15/11/2026 · 0.4.0 chưa phát hành
 
 - Thêm `doi_chieu.so_van_ban@1`, đúng ba tệp runtime `can_chinh.py`,

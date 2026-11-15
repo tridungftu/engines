@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| DC-8 (phiếu mới) | Khảo sát và bản đầu vùng nghi sửa tay, ảnh cắt Core, so sánh phương pháp và đo DEMO | DC-j; Q04/07/08/13 | Xong phạm vi khảo sát/bản đầu — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **486 passed, 0 skipped** (79 ca DC-8); kiểm độc lập mã 0. Thuật toán thật 12 ca: TP=3/FP=0/FN=3, recall 50%; **chưa đạt vận hành**, giữ chặn/chưa kiểm đủ. Local vision chưa đo. |
 | DC-4 (phiếu mới) | Căn cấu trúc, so hai lượt, edit script đầy đủ và kiểm thứ tự trang có bằng chứng | DC-c, e | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 407 passed, 0 skipped (110 ca DC-4); kiểm độc lập mã 0. Lõi 450.000 ký tự lặp: 1,1848 giây; 500 bảng: 0,1856 giây. Tích hợp phân trang tin cậy vẫn chờ C-DC-05. |
 | 0 | Đọc `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` và `docs\YEU-CAU-VA-HIEN-TRANG.md`; lập kế hoạch lát có giờ ước tính; trình Anh | — | Chờ làm | Kế hoạch phải đối chiếu 3 yêu cầu bắt buộc |
 | 1 | DC-0: khảo sát ABBYY (tọa độ từ, cờ nghi ngờ), từ điển tiếng Việt, cách phát hiện sửa tay; dựng bộ mẫu | — | Chờ làm |  |
@@ -22,6 +23,119 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Đề xuất loại `ho_so_doi_chieu` đã ghi **ĐỀ XUẤT DC-P, chờ Anh** ở cuối `_chung/docs/LOAI-DU-LIEU-RIENG.md` §5; chưa tạo schema/kích hoạt. Tái dùng nguyên ba loại `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`; không đổi `bang_trich_xuat`.
 - Quy tắc mới: không lưu gì bền trên máy engine; cấu hình/chỉ mục/danh mục/xác nhận qua `Ngan`, snapshot/ảnh/báo cáo qua kho tệp Core; màn trong `goi/e_doi_chieu/ui/`. Không dùng `cau_hinh_may`/`kho_tam` cũ.
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
+
+## DC-8 — 15/11/2026
+
+**Kết luận: Đạt phạm vi khảo sát/bản đầu; detector chưa đạt để vận hành độc
+lập. PR: chờ lead mở.** Đã kiểm bằng Core giả (CoreGia), với adapter quyền
+tệp/metadata ảnh và ngăn RAM; không phải kiểm Core thật hoặc đo chất lượng
+OCR/model/scan thật. Nghiên cứu và dự toán ở [DC-8-KHAO-SAT.md](DC-8-KHAO-SAT.md),
+số đo thật từ thuật toán trên DEMO ở [DC-8-SO-DO-DEMO.json](DC-8-SO-DO-DEMO.json).
+
+- Đúng ba tệp runtime dự kiến: `sua_tay.py`, `anh.py`, `chay.py`. Thêm
+  công cụ đo ngoài gói và `.cmd` ASCII theo Q13; tổng bốn tệp mã ngoài test.
+  Manifest SDK 2.0 thêm năng lực, phiên bản 0.4.8 chưa phát hành; lead thống
+  nhất phiên bản khi gộp DC-5 song song. Không sửa `quy_tac.py`, `tien_chu.py`,
+  API/SDK/Core, schema chung, mẫu NGAN-0 hoặc `ma-nguon/`; không commit/push.
+- Nhận hồ sơ sau DC-3 hoặc sau so văn bản, giữ mọi điểm/sàn/bằng chứng đã
+  có; kiểm snapshot/phong bì, đọc lại nguồn/bộ/text và quyền tệp con. Ảnh
+  phải đủ từng trang, băm/bytes/giải mã/pixel và phép xoay/tỷ lệ đúng nguồn.
+  Không tin vùng tự khai từ caller để chứng minh đã quét toàn trang.
+- Detector pixel và ngưỡng DEMO có phiên bản/băm; quét mọi dòng pixel,
+  không dùng sắc mực làm nhãn. Vùng ký/dấu/nháy chỉ loại khi có căn cứ Core
+  đúng ảnh và không chồng nội dung. Chưa rõ/chồng chữ vẫn có ảnh để xem;
+  nguồn `metadata_can_xem` tách khỏi `detector_pixel`, không cộng vào TP.
+- Ảnh cắt có lề ngữ cảnh, hộp nguồn/hộp nét pixel/hộp cắt thực, băm và
+  tham chiếu kho Core; `chu_tay=null`, sàn Nghiêm trọng và cần xác nhận.
+  Quét xong mọi trang trước tải crop. Không tệp tạm hoặc đệm đĩa; ảnh RAM
+  đóng bằng context manager khi lỗi/hủy. Phần tệp Core mồ côi cần vòng đời
+  C-DC-02, không tự xóa nhật ký hoặc dùng sổ máy.
+- Snapshot `da_quet_anh` ghi trang/phạm vi/số pixel/phương pháp/phiên bản,
+  cấu hình/ngưỡng/metadata đã băm. Do chưa đủ recall, **luôn** giữ
+  `kiem_tra.sua_tay=chua_kiem`, `da_kiem_du=false`, `ket_luan=null`,
+  `de_nghi_chan=true`; `[]` sau quét không có nghĩa không sửa tay.
+- Thiếu ảnh/phép đổi/quyền ảnh/hỏng ảnh → `DC_THIEU_ANH`; thiếu phương
+  pháp/phiên bản/hộp từ/kiểm toàn trang → `DC_CHUA_CO_BO_PHAT_HIEN`;
+  vượt trần → `DC_QUA_GIOI_HAN`. Không log ngoại lệ/nội dung/đường máy.
+  Trần 60 trang, 20 triệu pixel, 20 MiB/ảnh, 128 MiB đầu vào/việc,
+  10.000 vùng, 900 giây và các trần thuật toán tại khảo sát; không cắt ngầm.
+
+### Kết quả kiểm DC-8
+
+Venv `.venv` trong đúng worktree/nhánh `codex/e_doi_chieu-dc-8`, Python
+3.13.14, SDK 2.0.0 cài offline từ wheel repo; SHA-256
+`a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`
+khớp SHA256SUMS.txt. Pytest 9.1.1 và Pillow 12.3.0 có sẵn qua venv
+system-site-packages; không mạng. Có `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`.
+Lock engine chỉ chép Pillow và hai hash Windows/Linux từ lock OCR; chưa
+có wheel Pillow trong repo để kiểm cài máy sạch, không tuyên bố đã kiểm.
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.4.8: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q
+486 passed in 24.24s
+0 skipped; mã thoát 0. Nền DC-0…4: 407; DC-8 mới: 79.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0; không import Core/kênh cũ, pycache/pyc/symlink trong gói.
+```
+
+SDK DEMO hiện là Word; kiểm giao thức DC-8 trong pytest với CoreGia và
+detector giả **tách riêng** thuật toán pixel thật trên ảnh DEMO có đáp án.
+Bao gồm gạch/chèn/nét sát chữ, chữ ký/dấu/nháy, chồng chữ và thiếu căn cứ,
+chữ in màu/nét xa chữ/trang không vết, 12 tổ hợp tỷ lệ/xoay, biên làm tròn
+pixel, hai trang/thiếu trang, sai băm/size/quyền/metadata, thiếu detector/
+hộp từ, detector lỗi/không quét đủ, PNG/JPEG hỏng/EXIF, ảnh quá lớn,
+timeout/hủy trong pixel/cắt/tải, giữ điểm lệch cũ, không ghi đĩa/mạng và
+không lộ nội dung lỗi. Hai mẫu NGAN-0 và bốn schema so băm LF vẫn đạt.
+
+`cong-cu/DO-SUA-TAY-DEMO.cmd` đã chạy **khô**, mã 0; không gọi AI. Số đo
+thật tách mock, từ `--do-demo`: **12 ca/11 raster, 6 vùng có đáp án,
+TP=3/FP=0/FN=3**, IoU ghép một-một ≥0,3; recall 50%, precision 100% chỉ
+trên 3 dự đoán, 0 lệch giả/12 ca. Bỏ sót nét mờ, nét trong chữ và ký chồng
+chữ; runtime giữ ký chồng để xem qua metadata không biến FN thành TP.
+Thời gian có tracemalloc **0,152430 giây**; đỉnh Python **297.204 bytes**;
+RAM tiến trình/native/VRAM **null/chưa đo**. Local vision/model/tất cả
+chỉ số **null/chưa đo**. Không suy ra accuracy hoặc hiệu năng hồ sơ thật.
+
+**Thời gian thực tế:** bắt đầu 15/11/2026 **15:09:00**, chốt ba lệnh kiểm
+và báo cáo **15:42:04** (UTC+7), khoảng **0,55 giờ**; phiếu **7 giờ ƯỚC TÍNH**.
+Không thay 7 giờ bằng cam kết tỷ lệ phát hiện; số đo toy DEMO không thay DC-13.
+
+**Lệch/phương án tạm:** detector chỉ tạo ứng viên thử nghiệm, chưa đủ để
+ghi sửa tay đã kiểm đạt. Local vision chưa được cấp, chỉ có công cụ chấm
+file export và chạy khô, không bịa phép đo. Metadata ảnh Core là quy ước
+adapter tạm cần review, không đổi API/SDK. Không cần bảng ngăn mới: cấu
+hình qua Ngan, mọi snapshot/ảnh qua kho Core. Phiên bản/lock/README và
+test manifest cũ được cập nhật để đăng ký năng lực; chưa tích hợp DC-5.
+
+### Cần Core — cập nhật DC-8
+
+- **C-DC-02/05:** Core cấp quyền ảnh/text/nguồn/snapshot xuyên bước và
+  metadata `doi_chieu_anh` tin cậy gắn đúng snapshot/PDF/trang/băm ảnh,
+  toàn trang/gốc tọa độ/tỷ lệ/xoay. Nguồn loại trừ ký/dấu cần căn cứ được
+  xác nhận; danh sách caller không đủ. Quy ước cụ thể tại khảo sát §3.
+- **C-DC-02:** vòng đời/thu hồi ảnh đã tải nếu hủy/lỗi trước nộp snapshot,
+  cấp lại quyền tệp con ở việc sau; CoreGia không chứng minh ACL/RLS thật.
+- **C-DC-04:** tổng hợp/module giữ chặn khi `sua_tay=chua_kiem` dù số vùng
+  bằng 0, và giữ riêng các vùng phải xác nhận theo Q04. Chưa kiểm hiệu lực thật.
+- **C-DC-05/L-DC-01:** nguồn DEMO scan có đáp án, render/căn chỉnh và/hoặc
+  model Local được phép dùng, phiên bản/hash/giấy phép/RAM/VRAM; Core điều
+  phối vision, engine không gọi trực tiếp. Model chưa cấp thì chọn vision
+  trả `DC_CHUA_CO_BO_PHAT_HIEN`.
+- C-DC-01/06 giữ nợ ngăn bền/log SDK/trần sâu/lease chung, không vá SDK/Core.
+
+**Việc tiếp / dự toán bổ sung, chưa được giao:** bộ DEMO scan/đáp án
+**4–6 giờ ước tính**; sau đó nhánh ảnh render+căn chỉnh **8–12 giờ ước tính**
+hoặc nhánh so Local vision qua Core **6–10 giờ ước tính**, phụ thuộc nguồn/
+máy/giấy phép. Không tự thêm dependency/model hoặc giảm tiêu chí DC-13.
+Không phát sinh câu xin lại Q04/Q07/Q08; cần lead/Anh xác nhận nguồn model
+theo Q13 khi thực hiện nhánh đó. Chi tiết so sánh/rủi ro ở khảo sát §1, §6.
 
 ## DC-4 — 15/11/2026
 

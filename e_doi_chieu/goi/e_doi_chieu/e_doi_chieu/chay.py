@@ -77,5 +77,25 @@ def so_van_ban(viec):
                        phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
 
 
+# DC-8 — khối đăng ký riêng; DC-5 bổ sung độc lập ở phía trên.
+from .sua_tay import phat_hien_sua_tay as _phat_hien_sua_tay
+
+
+@app.nang_luc("doi_chieu.phat_hien_sua_tay@1")
+@_an_toan
+def phat_hien_sua_tay(viec):
+    ngan_viec = getattr(viec, "ngan", None)
+    ngan_doc = ngan if ngan_viec is None else ngan_viec
+    ban = ngan_doc.doc("cau_hinh", {})
+    if ban is not None and any(type(ban.gia_tri.get(k)) is not str or not ban.gia_tri[k].strip()
+            for k in ("phuong_phap_detector", "phien_ban_detector")):
+        raise LoiNghiepVu("DC_CHUA_CO_BO_PHAT_HIEN", "Chưa có bộ phát hiện sửa tay và dữ liệu hỗ trợ đã đo phù hợp. Hồ sơ vẫn cần kiểm tra.")
+    cau_hinh = can_cau_hinh(ngan_doc)
+    thoi_han = next(n["gioi_han"]["thoi_han_giay"] for n in app.phieu["nang_luc"]
+                   if n["ma"] == "doi_chieu.phat_hien_sua_tay@1")
+    return _phat_hien_sua_tay(viec, cau_hinh,
+        phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
+
+
 if __name__ == "__main__":
     app.chay()

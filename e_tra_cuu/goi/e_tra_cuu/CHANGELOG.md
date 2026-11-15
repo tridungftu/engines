@@ -1,5 +1,23 @@
 # Thay đổi
 
+## 0.1.0 — 15/11/2026 — TC-4 (chưa phát hành)
+
+- Thực thi `tra_cuu.chuan_bi_ai@1` cho bốn tác vụ Local; kiểm lại snapshot,
+  nguồn/quyền/cấu hình/tóm tắt. Prompt module bắt buộc, không dùng mặc định;
+  model ưu tiên chỉ chuyển cho Hỏi AI. TC không gọi engine/model.
+- Ngữ cảnh nguyên Unicode với mã đoạn/nguồn/ứng viên/hàm và map offset về
+  nguồn/snapshot. Bốn khuôn đóng kết quả; xếp hạng đủ mã đúng một lần, hàm
+  và tham số theo allowlist, giữ ref nội bộ. Không model cấp quyền/duyệt/Xanh.
+- Ghim snapshot `cho_ai` tại Core với prompt/phiên bản/khuôn/ngữ cảnh/map/băm.
+  `chuyen_tiep.tra_cuu` chỉ ref/băm/metadata, không toàn văn/danh mục/câu hỏi.
+- Kiểm trần ký tự/bytes UTF-8/số lượng; vượt từ chối, không cắt/batch/Cloud.
+  Token/context thực ghi chưa đo. Tầng 1 Python/thiếu bằng chứng đi nhánh
+  Core bỏ AI, không tạo yêu cầu/phản hồi giả.
+- Đã kiểm bằng Core giả (CoreGia), NganBoNho và consumer AI-2 có Local giả
+  do tests điều phối, kể cả CHUA_RO; 0 Cloud/mạng. Harness thêm bốn tác vụ.
+  CLI chuẩn vẫn 0/5 CHUA_CAU_HINH/mã 1; SDK còn lỗi tham số chung trước handler.
+  Chi tiết kiểm thực và Cần Core trong docs/VIEC.md.
+
 ## 0.1.0 — 15/11/2026 — TC-3 (chưa phát hành)
 
 - Thực thi `tra_cuu.cat_doan@1`: snapshot ghim qua Core, `cat_doan/da_nhan`

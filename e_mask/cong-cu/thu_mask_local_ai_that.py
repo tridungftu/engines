@@ -393,6 +393,10 @@ def dong_chua_do(ca, che_do, *, ma='CHUA_DO', **dem):
                 du_doan=False, chan_truoc_ai=False, tinh_trang_do='chưa đo đủ', **dem)
 
 
+# Lead đóng băng bộ held-out 15/11/2026 sau kiểm độc lập (190 ca, 124 span vàng).
+DONG_BANG_SHA = "sha256:b720fb2d9a330110ed5c4d5fd777b9728887f863651a2b0c46dc395dc45c95ad"
+
+
 def chot_bao_cao(ket, rows):
     ket.update(trang_thai_local='ĐÃ THỬ Local qua CoreGia; chưa nghiệm thu độc lập',
                ket_qua=tong_hop(rows), tung_ca=rows)
@@ -409,7 +413,9 @@ def do(bo, *, that=False, url=None, model=None, timeout=None, timeout_toi_da=TRA
     ca = bo['noi_dung'][tap]
     ket = dict(nhan='DEMO', trang_thai_local='CHƯA ĐO Local thật', core='CoreGia',
                canh_bao='CoreGia không chứng nhận cửa Core thật; nợ CAO còn mở, Cloud giữ tắt.',
-               held_out_doc_lap=False, tinh_trang_gold=bo['tinh_trang_gold'],
+               held_out_doc_lap=(tap == 'ung_vien' and bo['sha256_noi_dung'] == DONG_BANG_SHA),
+               tinh_trang_gold=('ĐÃ ĐÓNG BĂNG — lead 15/11/2026' if tap == 'ung_vien'
+                   and bo['sha256_noi_dung'] == DONG_BANG_SHA else bo['tinh_trang_gold']),
                bam_bo=bo['sha256_noi_dung'], tap=tap, so_ca=len(ca),
                so_ten_co_so=sum(c['nhom'] == 'nguoi' for c in ca),
                so_span_gold=sum(len(c['gold']) for c in ca),

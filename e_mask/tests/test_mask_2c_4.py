@@ -109,7 +109,8 @@ def test_mac_dinh_kho_khong_mang_khong_so_gia(monkeypatch, capsys):
     v = json.loads(capsys.readouterr().out)
     assert v['trang_thai_local'] == 'CHƯA ĐO Local thật'
     assert v['ket_qua'] is None and v['so_luot_local'] == v['so_luot_cloud'] == 0
-    assert 'muc_tieu_0_lot' not in v and v['held_out_doc_lap'] is False
+    assert 'muc_tieu_0_lot' not in v and v['held_out_doc_lap'] is True
+    assert v['tinh_trang_gold'].startswith('ĐÃ ĐÓNG BĂNG')
 
 
 @pytest.mark.parametrize('args', [['--that'], ['--that', '--url', 'http://127.0.0.1:1'], ['--that', '--model', 'model-demo']])

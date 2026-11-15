@@ -1,0 +1,51 @@
+from h2 import *
+env=ghep()
+S=['Thanh toán tại hà nội theo hợp đồng số 01/2026 ngày 30/10/2026.',
+'Công ty đã giao hàng tại hà nội và lê thị hoa đơn gốc.',
+'Lý do điều chỉnh là chênh lệch tỷ giá cuối kỳ.',
+'Số dư trương mục ngân hàng được đối chiếu hàng tháng.',
+'Phan bổ chi phí trả trước theo từng kỳ kế toán.',
+'Kế toán phân bổ chi phí đào tạo nhân viên trong quý.',
+'Mai sau khi nhận hóa đơn sẽ hạch toán vào tài khoản 331.',
+'Hồ sơ thanh toán gồm hóa đơn và biên bản nghiệm thu.',
+'Chi phí cao hơn dự toán 10.000.000 VND do lâm thời tăng giá.',
+'Doanh thu kim ngạch xuất khẩu sang châu á tăng 5%.',
+'Thái độ phục vụ của nhà thầu được đánh giá tốt.',
+'Đinh kèm theo hợp đồng là phụ lục số 1.',
+'Khoản vay ngắn hạn được trả vào cuối tháng 12.',
+'Chi phí lương tháng 10 là 500.000.000 VND.',
+'Bên A có trách nhiệm thanh toán trong vòng 30 ngày.',
+'Báo cáo tài chính hợp nhất năm 2026 được lập theo chuẩn mực.',
+'Lập dự phòng phải thu khó đòi theo thông tư hiện hành.',
+'Tài sản cố định hữu hình khấu hao theo đường thẳng.',
+'Hàng tồn kho được đánh giá theo giá gốc.',
+'Giá trị hợp lý của khoản đầu tư cao hơn giá gốc.',
+'Hợp đồng có hiệu lực kể từ ngày ký và kéo dài 12 tháng.',
+'Phương thức thanh toán là chuyển khoản trong 15 ngày.',
+'Trần nợ vay được phê duyệt bởi hội đồng quản trị.',
+'Hoàng hôn trên biển là hình ảnh trong báo cáo thường niên.',
+'Thuế giá trị gia tăng đầu vào được khấu trừ đầy đủ.',
+'Bùi nhùi và các vật tư khác được ghi nhận vào chi phí.',
+'Võ đoán trong ước tính kế toán cần tránh.',
+'Dương tính giả trong kiểm toán được xem xét lại.',
+'Vương quốc Anh là thị trường xuất khẩu lớn.',
+'Tạ ơn khách hàng đã tin tưởng sử dụng dịch vụ.',
+'Ngô nghê là cách nói; thực tế chi phí được ghi nhận đúng kỳ.',
+'Lương thực và thực phẩm là nhóm hàng chính.',
+'Hà nội và thành phố hồ chí minh là hai thị trường chính.',
+'Thanh lý tài sản cố định theo quyết định của hội đồng quản trị.',
+'Đoàn kiểm toán làm việc tại văn phòng trong 5 ngày.',
+'Cao su thiên nhiên là nguyên liệu chính của công ty.',
+'Tiền mặt tại quỹ cuối kỳ là 20.000.000 VND.',
+'Lý thuyết kế toán và thực hành được áp dụng.',
+'Phạm vi kiểm toán gồm các khoản mục trọng yếu.',
+'Trịnh trọng cam kết thực hiện đúng hợp đồng.',
+'Mạc định các điều khoản theo mẫu hợp đồng chuẩn.']
+bl=ms=0
+for t in S:
+    r,_=che(env,t)
+    if r['trang_thai']!='XONG': bl+=1; print('BLOCK',t)
+    else:
+        vb=r['ket_qua']['van_ban_da_che']['van_ban']
+        if vb!=t: ms+=1; print('MASK ',t,'->',vb)
+print(len(S),'block',bl,'che_nham',ms)

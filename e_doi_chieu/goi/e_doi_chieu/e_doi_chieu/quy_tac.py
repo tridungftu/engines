@@ -2,6 +2,7 @@
 from bisect import bisect_right
 from collections import Counter
 from copy import deepcopy
+from functools import lru_cache
 import re
 import time
 import uuid
@@ -12,7 +13,7 @@ from . import ho_so as hs
 from . import so_chu as sc
 from .can_chinh import BanDo
 from .chuan_hoa import chuan_hoa
-from .ngan import NganXungDot
+from kho_tri_thuc_sdk.engine import NganXungDot
 from .tien_chu import (TOI_DA_TU_TIEN_CHU, chuan_chu, doc_ngay, doc_so,
                        doc_tien_chu, doc_tien_so, so_json, vuot_cum_tien_chu)
 from .vi_tri import loi
@@ -306,6 +307,19 @@ def _co_tien_chu(text, kiem):
 def _kiem_tien_noi_bo(ban, q, kiem):
     """Ghép duy nhất trong cùng dòng/ô; không nối một số với chữ ở khoản khác."""
     ds = []
+
+    # Đệm hữu hạn chỉ trong một lượt quét. Mỗi vị trí vẫn có bản kết quả
+    # riêng; không phân tích lại hàng nghìn cụm giống nhau ở các dòng lặp.
+    @lru_cache(maxsize=128)
+    def doc_so_tien(cum):
+        tien = doc_tien_so(cum, q["don_vi_tien"], q["dinh_dang_so"])
+        return None if tien is None else tuple(tien.items())
+
+    @lru_cache(maxsize=128)
+    def doc_chu_tien(cum):
+        tien = doc_tien_chu(cum, q["don_vi_tien"])
+        return None if tien is None else tuple(tien.items())
+
     units = sorted(set(q["don_vi_tien"]) | {"VND", "VNĐ", "USD", "EUR", "GBP", "JPY", "đồng", "đô la", "đô la Mỹ", "$", "€", "¥", "£", "₫"}, key=len, reverse=True)
     pat_don_vi = r"(?:" + "|".join(re.escape(x) for x in units) + r"|[A-Z]{3})(?!\w)"
     don_vi = re.compile(r"\s*" + pat_don_vi, re.I)
@@ -336,7 +350,8 @@ def _kiem_tien_noi_bo(ban, q, kiem):
             if len(before) == 1 and len(amounts) == 1:
                 a, b = before[0]
                 so = _lat(ban, off + a, off + b)
-                tien_so = doc_tien_so(text[a:b], q["don_vi_tien"], q["dinh_dang_so"])
+                da_doc = doc_so_tien(text[a:b])
+                tien_so = None if da_doc is None else dict(da_doc)
         elif len(amounts) == 1:
             a, b = amounts[0]
             so = _lat(ban, off + a, off + b)
@@ -348,11 +363,13 @@ def _kiem_tien_noi_bo(ban, q, kiem):
                 if (end >= 0 and "(" not in text[ngoac.end():end]
                         and not text[end + 1:].strip(" .;")):
                     a_chu, b_chu = ngoac.end(), end
-                    tien_so = doc_tien_so(text[a:b], q["don_vi_tien"], q["dinh_dang_so"])
+                    da_doc = doc_so_tien(text[a:b])
+                    tien_so = None if da_doc is None else dict(da_doc)
         if a_chu is not None:
             chu = _lat(ban, off + a_chu, off + b_chu)
             if not vuot_cum_tien_chu(text[a_chu:b_chu]):
-                tien_chu = doc_tien_chu(text[a_chu:b_chu], q["don_vi_tien"])
+                da_doc = doc_chu_tien(text[a_chu:b_chu])
+                tien_chu = None if da_doc is None else dict(da_doc)
         if vuot_cum_tien_chu(text[a_chu:b_chu] if a_chu is not None else text):
             ly_do = f"Cụm tiền bằng chữ vượt {TOI_DA_TU_TIEN_CHU} từ; cần xem lại nguyên văn."
         du = tien_so is not None and tien_chu is not None
@@ -615,7 +632,7 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
     phan_trang_core = viec.ngu_canh.get("doi_chieu_phan_trang")
     if phan_trang_core is not None and len(hs.json_bytes(phan_trang_core)) > 16384:
         loi("DC_QUA_GIOI_HAN")
-    khoa = {"phap_nhan_id": phap_nhan, "bam_cap": hs.bam(hs.json_bytes({
+    khoa = {"bam_cap": hs.bam(hs.json_bytes({
         "buoc": "so_van_ban@1", "quy_tac": PHIEN_BAN, "bam_ho_so_nhan": pin["bam_ho_so"],
         "gioi_han": cau_hinh, "phan_trang_core": phan_trang_core})),
         "bam_bo": pin["bam_bo_quy_tac"].lower(), "phien_ban_engine": phien_ban_engine}
@@ -628,8 +645,9 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
                 chiem = {"trang_thai": "dang_so", "chu_so_huu": chu, "luc_chiem": luc,
                          "han_chiem": luc + thoi_han_viec_giay + 60}
                 with ngan.lo() as lo:
-                    kq = lo.lay_hoac_tao("luot_doi_chieu", khoa, {**khoa, "ma_luot": uuid.uuid4().hex, **chiem})
-                ban = kq.ban_ghi
+                    lo.lay_hoac_tao("luot_doi_chieu", khoa, {**khoa, "ma_luot": uuid.uuid4().hex, **chiem})
+                kq = lo.ket_qua[0]
+                ban = hs.doc_sau_lo(ngan, khoa, lo)
                 if kq.da_tao:
                     giu = True
                     break
@@ -639,12 +657,12 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
                     except LoiNghiepVu as exc:
                         if exc.ma != "DC_THIEU_NGUON":
                             raise
-                elif not (ban.gia_tri["trang_thai"] == "can_thu_lai" or ban.gia_tri.get("han_chiem", 0) <= luc):
+                elif not (ban.gia_tri["trang_thai"] == "can_thu_lai" or float(ban.gia_tri.get("han_chiem") or 0) <= luc):
                     raise LoiNghiepVu("DC_DANG_XU_LY", "Cặp tài liệu đang được xử lý. Anh thử lại sau.", thu_lai_duoc=True)
                 with ngan.lo() as lo:
-                    kq = lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                                 chiem, row_version=ban.row_version)
-                ban, giu = kq.ban_ghi, True
+                ban, giu = hs.doc_sau_lo(ngan, khoa, lo), True
                 break
             except NganXungDot:
                 if lan == 3:
@@ -667,8 +685,8 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
             viec.kiem_huy()
             try:
                 with ngan.lo() as lo:
-                    lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
-                           {"trang_thai": "da_so", "phong_bi": pb}, row_version=ban.row_version)
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
+                           {"trang_thai": "da_so", "phong_bi": hs.dong_phong_bi(pb)}, row_version=ban.row_version)
                 giu = False
                 break
             except NganXungDot:
@@ -683,7 +701,7 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
         if giu and ban is not None and ban.gia_tri.get("chu_so_huu") == chu:
             try:
                 with ngan.lo() as lo:
-                    lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                            {"trang_thai": "can_thu_lai"}, row_version=ban.row_version)
             except Exception:
                 pass

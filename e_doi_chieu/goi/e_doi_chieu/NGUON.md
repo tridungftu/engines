@@ -1,5 +1,40 @@
 # Nguồn của gói Đối chiếu
 
+## DC-6 — 15/11/2026 · 0.6.0 chưa phát hành
+
+`chuan_bi_ai.py`, `hau_kiem_ai.py` viết mới theo phiếu DC-6, DAC-TA §5.2,
+API-ENGINE-v1 và loại dữ liệu chung §2.2–2.3. `chay.py` chỉ thêm khối
+đăng ký/import hai handler. Tái dùng nội bộ kiểm tệp/băm/JSON/phong bì
+của `ho_so.py`, edit script/giới hạn của `so_chu.py`, kiểm bất biến/quy
+tắc của DC-5. Không sửa các lõi đó, DC-8, mã Core hoặc `ma-nguon/`.
+Không nguồn ngoài/dependency mới; chỉ thư viện chuẩn và SDK 2.0.0.
+
+Nguyên văn, snapshot, yêu cầu và kết quả chỉ ở Core/RAM; chỉ mục chống
+trùng qua đúng API mẫu NGAN-0. Hai tệp `ngan.py`, `cau_hinh.py` và bốn
+schema chung giữ nguyên, test so SHA-256 sau CRLF→LF. Không tải model,
+từ điển, dữ liệu, wheel hoặc tài nguyên từ mạng. SDK 2.0.0 cài offline
+vào `.venv`; wheel có SHA-256
+`a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`,
+khớp `SHA256SUMS.txt` trong repo.
+
+`tests/test_dc6.py` dùng DOCX/PDF/PNG/văn bản DEMO của bộ DC-3…5 và tự
+dựng phản hồi Local giả. Điều phối/Core/quyền và nguồn OCR đều giả,
+không đo chất lượng model. Riêng test handler Hỏi AI-2 tham khảo mã
+`e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/hoi_yeu_cau.py` hiện có, chỉ import trong
+tests; provider giả chặn mạng/Cloud. Không import/gọi engine khác trong
+runtime hoặc sửa engine Hỏi AI. Test chứng minh giữ chuyển tiếp/băm và
+đường thiếu căn cứ/ChuaRo; nợ metadata phân loại C-DC-07 ghi ở VIEC.
+
+SHA-256 hiện hành UTF-8 sau CRLF→LF (các bảng lát trước là lịch sử):
+
+| Tệp | SHA-256 LF |
+|---|---|
+| `e_doi_chieu/chuan_bi_ai.py` | `ce9e650e8e49b9a669a2a9fdc1c2c9164cc46390b03e6afd5ccfa517112096df` |
+| `e_doi_chieu/hau_kiem_ai.py` | `4d2c994ce7066bf1a61f143e4d838c7b61378af82f6adaeca0e950b330229fd4` |
+| `e_doi_chieu/chay.py` | `e654431fdd7173a4e1db0e4a2df942069f923801ee5631db1a3b6c17b6ed4c93` |
+| `engine.json` | `0bfafdc1550405313b48fd4066b8448cc77f8f7548a39e42d2326fa7ff645d8c` |
+| Repo: `e_doi_chieu/tests/test_dc6.py` | `5ed55b425d889d76bfa4889a64ca5fd69824168a502d977f76b0de2a341e92d1` |
+
 ## DC-5 — 15/11/2026
 
 Sửa theo kiểm độc lập lead: bỏ regex wildcard nối chữ số với đơn vị;

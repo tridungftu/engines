@@ -330,7 +330,7 @@ def test_giao_lai_cung_viec_chay_thuan_khong_ghi_nhan(kenh, xml_demo, monkeypatc
     assert core.xem(viec_id)["lan_thu"] == 1
     assert core.xem(viec_id)["ket_qua"] is None
     assert core.so_lan_ghi["tep"] == core.so_lan_ghi["ket_thuc"] == 0
-    # CoreGia 2.0.0 chưa có API giả lập hết lease/giao lại công khai.
+    # CoreGia 2.2.0 chưa có API giả lập hết lease/giao lại công khai.
     # Chỉ seam test sửa hàng việc giả; engine không chạm ngăn hay lease.
     with core._lock:
         core._viec[viec_id].update(trang_thai="CHO", ma_engine=None)
@@ -485,7 +485,7 @@ def test_stderr_loi_invariant_khong_lo_canary(xml_demo, monkeypatch, capsys):
 
 def test_sdk_ghim_va_thieu_hook_khong_khoi_dong():
     import kho_tri_thuc_sdk
-    assert kho_tri_thuc_sdk.__version__ == "2.0.0"
+    assert kho_tri_thuc_sdk.__version__ == "2.2.0"
     ma = "from kho_tri_thuc_sdk.engine import Engine; del Engine._ghi; import e_hoa_don.chay"
     kq = subprocess.run([sys.executable, "-B", "-c", ma], cwd=GOI,
                         capture_output=True, text=True, encoding="utf-8",

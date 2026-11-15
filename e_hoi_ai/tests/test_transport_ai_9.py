@@ -1,3 +1,4 @@
+from local_gia import core_demo
 """Hồi quy cả ba handler: hoàn tất, mạng Local và trạng thái gửi POST."""
 import socket
 import threading
@@ -272,7 +273,7 @@ def test_socket_tho_phan_hoi_loi_sau_post_la_chua_ro(phan_hoi):
 def test_mat_lease_khong_nop_hoac_ket_thuc(local, monkeypatch, phan_tram):
     from kho_tri_thuc_sdk.engine import LoiDuongTruyen
     from kho_tri_thuc_sdk.thu import CoreGia
-    core = CoreGia()
+    core = core_demo()
     goc = core._tien_do
     def mat_lease(ma, viec_id, pt, cau):
         if pt == phan_tram:

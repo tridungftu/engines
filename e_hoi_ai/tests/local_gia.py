@@ -132,21 +132,27 @@ class LocalGia:
         self.luong.join(timeout=5)
 
 
-def nap_cau_hinh(url, *, thoi_han=2, quy_tac=None):
-    """Nạp DEMO qua API ngăn, không tạo tệp cấu hình."""
+_CORE_DEMO = None
+
+
+def core_demo():
+    """CoreGia chính thức dùng chung trong một ca; fixture tạo mới giữa các ca."""
+    global _CORE_DEMO
+    if _CORE_DEMO is None:
+        from kho_tri_thuc_sdk.thu import CoreGia
+        from e_hoi_ai.chay import app
+        _CORE_DEMO = CoreGia(app)
+    return _CORE_DEMO
+
+
+def nap_cau_hinh(url, *, thoi_han=2, quy_tac=None, core=None):
+    """Nạp DEMO qua cấu hình chính thức của SDK, không tạo tệp hay bảng cấu hình."""
     from e_hoi_ai.chay import app
-    from e_hoi_ai.ngan import chon_ngan
-    ngan = chon_ngan(app)
     gia_tri = {
         "local_ai": {"url": url, "timeout_giay": thoi_han},
         "quy_tac_model": quy_tac if quy_tac is not None else [
             {"mau_ma_prompt": "demo.*", "uu_tien": "model-demo", "du_phong": []}
         ],
     }
-    cu = ngan.doc("cau_hinh", {})
-    with ngan.lo() as lo:
-        if cu is None:
-            lo.them("cau_hinh", {}, gia_tri)
-        else:
-            lo.sua("cau_hinh", {}, gia_tri, row_version=cu.row_version)
+    (core or core_demo()).dat_cau_hinh(app.ma, gia_tri)
     return gia_tri

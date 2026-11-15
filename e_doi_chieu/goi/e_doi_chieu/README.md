@@ -1,5 +1,76 @@
-# Đối chiếu bản ký — SDK 2.0, đến DC-5
-# Đối chiếu bản ký — DC-8, phiên bản 0.4.8 chưa phát hành
+# Đối chiếu bản ký — SDK 2.0, DC-6/DC-8, phiên bản 0.6.0 chưa phát hành
+
+## Chuẩn bị và hậu kiểm Local AI — DC-6
+
+Core điều phối `ho_so_doi_chieu → doi_chieu.chuan_bi_ai@1 → yeu_cau_ai →
+ai.hoi_theo_yeu_cau@1 → tra_loi_ai → doi_chieu.phan_loai_diem_lech@1 →
+ho_so_doi_chieu`. Engine Đối chiếu không gọi Hỏi AI, Local, Cloud hoặc OCR.
+Hai năng lực mới dùng đúng API v1 và ba schema chung hiện có.
+
+Chuẩn bị chỉ nhận snapshot `da_so` đã áp DC-5-2 hoặc `da_quet_anh` có
+tiền nhiệm DC-5. Bản DC-5 phải khớp chỉ mục Ngan trong đúng pháp nhân;
+mọi tệp mở lại qua Core, kiểm bytes/băm/nguyên văn/edit script. Core phải
+cấp `ngu_canh.module`, `phap_nhan_id` tin cậy và quyền đọc tệp con xuyên
+bước. Băm hoặc module do caller khai không cấp quyền.
+
+Tham số bắt buộc nghiệp vụ: `module`, `ma_prompt`, `phien_ban_prompt`,
+`prompt`; `model_uu_tien` tùy chọn, chỉ là ưu tiên Local. Không có prompt
+mặc định. Thiếu/rỗng → `THIEU_PROMPT`; thiếu cấu hình ngăn → `CHUA_CAU_HINH`.
+Do SDK 2.0 kiểm `bat_buoc` trước handler và chưa cho đặt mã lỗi riêng,
+manifest để engine kiểm bắt buộc và ghi rõ trên nhãn/mô tả. Mã module/
+prompt ≤200, phiên bản ≤100, prompt module ≤16.000 ký tự. Nội dung module
+giữ nguyên, nối thêm chỉ dẫn cố định về dữ liệu nguồn/khuôn/offset.
+
+Chỉ các điểm `cho_phan_loai=true` được giao AI. `tai_lieu` chứa ngữ cảnh
+nguyên văn trọn đoạn/dòng/ô chứa điểm, có mã điểm và nhãn TRÁI (`word`)/
+PHẢI (`ban_ky`). Không rút ngắn ngữ cảnh để vừa trần. `khuon_tra_loi`
+đòi `{diem:[{ma_diem,nhan,ly_do,trai,phai}]}`; hai phía có câu/offset
+Unicode code point nửa mở trong **toàn chuỗi tai_lieu**. Phía không có
+nguồn dùng null và không thể tạo kết luận có căn cứ hai phía. Model
+không được thêm nguồn, quyền, nguyên văn thay thế hoặc `muc_san`.
+
+Snapshot `cho_ai` giữ yêu cầu chính xác, bộ, phạm vi Core, danh sách điểm,
+bản đồ AI→nguồn và tham chiếu snapshot gốc trong kho tệp Core. Phần
+`chuyen_tiep.doi_chieu` chỉ có mã cặp, phiên bản, tham chiếu tệp và băm
+hồ sơ/bộ/nguồn/ngữ cảnh/prompt/khuôn; DEMO kể cả 100 điểm vẫn ≤4 KiB.
+Hỏi AI phải chép nguyên `chuyen_tiep`, không gửi phần này cho model.
+`bam_dau_vao` là SHA-256 JSON chuẩn hóa **toàn phong bì yêu cầu**, theo
+AI-2; không thay bằng băm văn bản. JSON: UTF-8, `ensure_ascii=False`,
+`sort_keys=True`, `separators=(",",":")`, `allow_nan=False`.
+
+Hậu kiểm đọc lại bản ghim Ngan/tệp Core và snapshot DC-5 độc lập, dựng
+lại đúng yêu cầu và kiểm `kiem_bat_bien(out,goc)`. Sai cặp/nguồn/băm/
+chuyển tiếp/prompt/phiên bản → `DC_SAI_NGUON`; Cloud → `DC_CHI_LOCAL`;
+sai khuôn hoặc thiếu/thừa/trùng mã → `DC_AI_SAI_KHUON`. Trích dẫn phải
+thuộc đúng block AI, đúng phía/điểm, khớp nguyên văn nguồn và phủ vị trí
+lệch. Trích bịa, offset sai, không chắc hoặc `khong_thay_can_cu` giữ
+Cần xem. Nghiêm trọng chỉ được nâng khi có căn cứ; điểm Python đã chốt
+giữ nguyên. Đề nghị hình thức/nhiễu lưu ở `ai.ket_qua` với `cho_dc7`,
+chưa hạ sàn `can_xem`; DC-7 còn phải kiểm đủ bằng chứng từ điển/OCR lại.
+
+Trần một lượt: 100 điểm, ngữ cảnh 500.000 ký tự, khuôn 32 KiB, chuyển
+tiếp 64 KiB; vượt → `DC_QUA_NGAN_SACH_AI`, không cắt hoặc tự chia lượt.
+Không có ứng viên: Core bỏ qua AI/chọn chuỗi không AI; gọi nhầm chuẩn bị
+→ `DC_KHONG_CAN_AI`, không dựng phản hồi thành công giả. Nguồn đã nhận
+nhưng chưa trả: tầng Hỏi AI sở hữu lượt báo `ChuaRo(ma_tuong_quan)`.
+
+Giữ/chốt lượt bằng Ngan `lay_hoac_tao`/CAS; cùng yêu cầu hoặc phản hồi
+giao lại dùng cùng tham chiếu đã ghim. ACK tệp/kết quả/kết thúc do SDK
+gửi lại cùng khóa chống trùng. Toàn văn chỉ ở tệp Core/RAM, không có
+kho/cấu hình/đệm bền trên engine. NganBoNho mất chỉ mục khi khởi động
+lại thì từ chối hồ sơ chưa chứng thực lại, không suy quyền từ băm.
+
+**Giới hạn tích hợp Hỏi AI-2:** test chạy handler thật với provider DEMO
+không mạng cho thấy phép kiểm mọi lá `du_lieu` còn coi nhãn/lý do/ID/
+offset là giá trị trích xuất. Có thể trả `khong_thay_can_cu` dù câu trích
+đúng; DC-6 giữ bảo thủ. Lead Hỏi AI cần quy ước hậu kiểm metadata phân
+loại trong khuôn đã có, không nhét metadata vào câu trích để qua kiểm.
+Chưa kiểm model/Core thật, Linux hoặc bằng chứng OCR của DC-7.
+
+Đã kiểm bằng Core giả (CoreGia); kết quả ba lệnh và phụ thuộc tích hợp
+ghi tại `../../docs/VIEC.md`. Phần DC-8 bên dưới giữ phạm vi thử nghiệm.
+
+## Phát hiện vùng nghi sửa tay — DC-8
 
 DC-8 thêm `doi_chieu.phat_hien_sua_tay@1`: `ho_so_doi_chieu` → cùng loại,
 quét ảnh qua SDK, phát hiện ứng viên gạch/chèn, tải PNG vùng có ngữ cảnh và

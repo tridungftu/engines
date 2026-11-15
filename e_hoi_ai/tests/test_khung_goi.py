@@ -57,7 +57,7 @@ def test_doc_phieu_va_khai_bao_dung_hop_dong():
 def test_schema_trong_goi_trung_bam_nguon_chung(ma):
     nguon = (GOC / "_chung" / "contract" / f"{ma}.schema.json").read_bytes()
     ban_sao = (GOI / "contract" / f"{ma}.schema.json").read_bytes()
-    assert sha256(nguon).digest() == sha256(ban_sao).digest()
+    assert sha256(nguon.replace(b"\r\n", b"\n")).digest() == sha256(ban_sao.replace(b"\r\n", b"\n")).digest()
     schema = json.loads(ban_sao)
     assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
     assert schema["properties"]["loai"]["const"] == ma
@@ -95,10 +95,11 @@ def test_goi_chay_doc_lap_ngoai_repo_khi_thieu_cau_hinh(tmp_path):
     ma_kiem = (
         "import sys; sys.path.insert(0, " + repr(str(thu_muc_sdk)) + "); "
         "sys.path.insert(0, " + repr(str(ban_sao)) + "); "
-        "from e_hoi_ai.chay import app; from e_hoi_ai.cau_hinh import doc_cau_hinh; "
-        "from e_hoi_ai.ngan import chon_ngan; "
-        "assert app.ma == 'e_hoi_ai'; assert doc_cau_hinh(chon_ngan(app), {}) is None; "
-        "assert app.ngan.tim('model_phat_hien').danh_sach == []; "
+        "from e_hoi_ai.chay import app; from kho_tri_thuc_sdk.thu import CoreGia; "
+        "from kho_tri_thuc_sdk.engine import NganEngine; "
+        "assert app.ma == 'e_hoi_ai'; core = CoreGia(app); "
+        "assert core._doc_cau_hinh(app.ma)['cau_hinh'] == {'quy_tac_model': []}; "
+        "assert core.xem_ngan(app.ma, 'model_phat_hien') == []; "
         "assert 'e_hoi_ai.cau_hinh_may' not in sys.modules"
     )
     ket_qua = subprocess.run([sys.executable, "-X", "utf8", "-I", "-S", "-B", "-c", ma_kiem], cwd=tmp_path,

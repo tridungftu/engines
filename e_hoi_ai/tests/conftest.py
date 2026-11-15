@@ -5,13 +5,16 @@ import sys
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "goi" / "e_hoi_ai"))
 
-import json
 import pytest
+from kho_tri_thuc_sdk.engine import NganEngine
+from kho_tri_thuc_sdk.thu import CoreGia
 from e_hoi_ai.chay import app
-from e_hoi_ai.ngan import NganBoNho
+import local_gia
 
 
 @pytest.fixture(autouse=True)
 def ngan_demo_rieng(monkeypatch):
-    khai = json.loads((app.thu_muc_goi / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))
-    monkeypatch.setattr(app, "ngan", NganBoNho(khai["ngan_du_lieu"]), raising=False)
+    core = CoreGia(app)
+    monkeypatch.setattr(local_gia, "_CORE_DEMO", core)
+    monkeypatch.setattr(app, "ngan", NganEngine(core.duong_truyen(app.ma), app._cfg))
+    monkeypatch.setattr(app, "cau_hinh", {})

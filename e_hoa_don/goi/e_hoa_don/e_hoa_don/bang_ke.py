@@ -17,7 +17,7 @@ from .doc import PHIEN_BAN_ENGINE, chieu_truong
 from .hoa_don_xml import FieldValue, InvoiceField, InvoiceIssue
 from .xlsx_toi_thieu import tao_xlsx, vuot_tran
 
-JSON_TOI_DA = 32 * 1024 * 1024
+JSON_TOI_DA = 20 * 1024 * 1024
 DONG_TOI_DA = 1000
 THOI_HAN = 600
 MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

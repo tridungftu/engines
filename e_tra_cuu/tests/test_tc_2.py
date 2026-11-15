@@ -68,7 +68,9 @@ def test_manifest_tam_nang_luc_va_stub_khong_xong_gia():
     assert len(bo.app.phieu["loai_du_lieu_rieng"]) == 4
     for n in bo.app.phieu["nang_luc"]:
         assert n["gioi_han"]["tep_toi_da_mib"] == 20 and n["huy_duoc"] is True
-        if n["ma"] in {MA, "tra_cuu.cat_doan@1", "tra_cuu.chuan_bi_ai@1", "tra_cuu.phan_loai_tai_lieu@1"}:
+        if n["ma"] in {MA, "tra_cuu.cat_doan@1", "tra_cuu.chuan_bi_ai@1",
+                       "tra_cuu.phan_loai_tai_lieu@1",
+                       "tra_cuu.phan_tich_cau_hoi@1", "tra_cuu.xep_hang_lai@1"}:
             continue
         loai = n["nhan"][0]
         ts = {} if "chuan_bi_ai" not in n["ma"] else {

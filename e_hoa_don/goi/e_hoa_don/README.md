@@ -1,6 +1,6 @@
-# Đọc XML hóa đơn và kiểm kê ZIP — HD-6
+# Đọc XML, kiểm kê ZIP và bảng kê XLSX — HD-7
 
-Gói SDK 2.0.0, phiên bản 1.0.0; `hoa_don.doc_xml@2` nhận một XML, `hoa_don.doc_zip@1` nhận ZIP; cả hai trả `truong` và tham chiếu JSON chi tiết. Bộ đọc strict chỉ hỗ trợ profile `DEMO_M2_XML_QD1271_FIELDS_V1`. Đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật/quyền kho tệp.
+Gói SDK 2.0.0, phiên bản 1.0.0; `hoa_don.doc_xml@2` nhận một XML, `hoa_don.doc_zip@1` nhận ZIP; cả hai trả `truong` và tham chiếu JSON chi tiết. `hoa_don.bang_ke_xlsx@1` nhận kết quả bước đọc để tạo XLSX. Bộ đọc strict chỉ hỗ trợ profile `DEMO_M2_XML_QD1271_FIELDS_V1`. Đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật/quyền kho tệp hoặc Excel app.
 
 ## Dữ liệu vào và ra
 
@@ -69,7 +69,7 @@ Fixture nhỏ `demo/hoa-don-DEMO.xml` hoàn toàn giả: hóa đơn `0000123`, n
 
 ## Phạm vi bàn giao
 
-Đăng ký `hoa_don.doc_xml@2` và `hoa_don.doc_zip@1`. Lead/Core quản lý phiên bản và chuyển quy trình XML `@1` sang `@2`; giữ bản cũ tại `ma-nguon/`. HD-7/HD-8 làm XLSX và kiểm cài sạch ZIP/XLSX. PDF/portal/Cloud/tải cổng thuế vẫn ngoài phạm vi. Không sửa hoặc lưu trữ lại mã tham chiếu. Đã kiểm bằng Core giả (CoreGia); bằng chứng kiểm Windows trong VIEC/CHANGELOG, chưa suy thành Linux hoặc nghiệm thu Core thật.
+Đăng ký `hoa_don.doc_xml@2`, `hoa_don.doc_zip@1`, `hoa_don.bang_ke_xlsx@1`. Lead/Core quản lý phiên bản và chuyển quy trình XML `@1` sang `@2`; giữ bản cũ tại `ma-nguon/`. HD-7 bổ sung XLSX; HD-8 còn kiểm cài sạch ZIP/XLSX. PDF/portal/Cloud/tải cổng thuế vẫn ngoài phạm vi. Không sửa hoặc lưu trữ lại mã tham chiếu. Đã kiểm bằng Core giả (CoreGia); bằng chứng kiểm Windows trong VIEC/CHANGELOG, chưa suy thành Linux hoặc nghiệm thu Core thật.
 
 DEMO ZIP `demo/goi-hon-hop-DEMO.zip` gồm 6 entry theo thứ tự central directory: XML tốt, thư mục, XML hỏng, PDF, hai XML trùng tên (một bản trùng bytes XML đầu, một bản khác số hóa đơn). Báo cáo giữ 5 tệp/1 thư mục, 3 đọc được/1 lỗi/1 chưa hỗ trợ/1 trùng nội dung; `da_doc_het=false`, `can_kiem_tra=true`. `tests/test_hd_6.py` đối chiếu toàn JSON với oracle literal tự dựng từ XML DEMO, không lấy kết quả parser làm đáp án; kiểm hai đường SDK bộ nhớ/HTTP, ACK, hủy, lease, upload, canary và API riêng zipfile.
 
@@ -78,3 +78,14 @@ Bộ DEMO HD-3 có ba ca trong `chay_thu_demo`: `hoa-don-DEMO.xml` (1000000 VND 
 ## Kiểm cài sạch HD-4
 
 Tại gốc repo chạy `e_hoa_don\tests\KIEM-MAY-SACH.cmd` trên Windows, hoặc `sh e_hoa_don/tests/kiem_may_sach.sh` trên Linux. Kịch bản đối chiếu SHA wheel SDK, cài offline vào venv mới và sao chép gói cùng bộ kiểm ra vị trí DEMO riêng. Windows giữ thư mục DEMO tạm trong `.venv/` của workspace; Linux dùng thư mục tạm hệ thống. Kiểm cấu hình thiếu, XML và nhập độc lập bằng CoreGia. Không tự chuyển quy trình `@1` sang `@2`; lead/Core giữ bản cũ và quản lý việc chuyển. Trạng thái HOLD và `canh_bao` là lý do cần kiểm tra, không phải xác nhận nghiệp vụ.
+
+
+## Bảng kê XLSX — HD-7
+
+`hoa_don.bang_ke_xlsx@1` nhận `truong` từ bước `doc_xml@2` hoặc `doc_zip@1`, đọc tệp JSON trong `chi_tiet_nguon` bằng cổng SDK. Kiểm schema phiên bản 1, nguồn/phiên bản/băm/binding tệp/ordinal và số đếm; không parse XML lại. Trả 11 trường §2.5, bao gồm `bang_ke` (tham chiếu XLSX upload thành công), `chi_tiet_nguon` giữ nguyên, số đếm/cảnh báo/băm JSON thực. Chưa upload được hoặc mất lease/hủy thì không XONG.
+
+XLSX có hai sheet `Hoa don`, `Kiem ke tep`, inline string/format text `@`, style/width/freeze header. Giữ mọi entry, lỗi, thư mục và trùng. Số hóa đơn/MST giữ chuỗi; ngày hiển thị dd/mm/yyyy. Tiền exact giữ số 0 thập phân, kể cả ngoài 18/6 lấy từ DTO với cảnh báo, luôn kèm currency; thiếu/sai/mơ hồ để trống. Không công thức/tổng/hyperlink; text bắt đầu = + - @ giữ literal. Không xác nhận đủ hóa đơn trong kỳ, thuế hoặc ghi nhận nghiệp vụ.
+
+Trần: JSON 32 MiB (metadata và bytes thực), 1.000 dòng hóa đơn/1.000 entry gồm thư mục, 16.000 ký tự/cell, XLSX 32 MiB, 600 giây; vượt trả `HD_BANG_KE_VUOT_GIOI_HAN`, không upload phần cắt. Xử lý và upload bytes hoàn toàn RAM, không JSON/XLSX/cấu hình/sổ/cache trên máy, không cần ngăn/màn riêng.
+
+SDK 2.0.0 chưa cấp fixture tệp lồng trong `truong`: bốn Chạy thử DEMO đang khai chỉ phủ XML/ZIP. XLSX kiểm qua pytest với CoreGia.them_tep và kết quả đọc thật; không ID giả. Đã kiểm bằng Core giả (CoreGia); chưa kiểm Core thật, quyền kho tệp hoặc Excel app; chưa chạy Linux. Nguồn/quyền CD-096 A1, SHA thực và khác biệt cột tại NGUON.md HD-7.

@@ -3,31 +3,172 @@
   "loai": "engine",
   "ma": "e_trich_xuat",
   "ten": "Trích thông tin hợp đồng",
-  "phien_ban": "0.2.0",
-  "tuong_thich": {"core": ">=2.0.0 <3.0.0", "api": "v1", "sdk": ">=2.0.0 <3.0.0"},
+  "phien_ban": "0.3.0",
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "api": "v1",
+    "sdk": ">=2.0.0 <3.0.0"
+  },
   "che_do_chay": "cuc_bo",
-  "diem_vao": {"lenh": ["{python}", "-B", "-m", "e_trich_xuat.chay"], "thu_muc": "."},
+  "diem_vao": {
+    "lenh": [
+      "{python}",
+      "-B",
+      "-m",
+      "e_trich_xuat.chay"
+    ],
+    "thu_muc": "."
+  },
   "nang_luc": [
     {
       "ma": "trich.doc_docx@1",
       "ten": "Đọc hợp đồng Word",
-      "nhan": ["tep"],
+      "nhan": [
+        "tep"
+      ],
       "tra": "van_ban_tai_lieu",
       "gioi_han": {
         "tep_toi_da_mib": 20,
-        "mime": ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+        "mime": [
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ],
         "thoi_han_giay": 120
       },
       "huy_duoc": true,
       "tham_so": []
+    },
+    {
+      "ma": "trich.chuan_bi@1",
+      "ten": "Chuẩn bị trích thông tin",
+      "nhan": [
+        "van_ban_tai_lieu"
+      ],
+      "tra": "yeu_cau_ai",
+      "gioi_han": {
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 120
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "bo_tham_so_json",
+          "ten": "Bộ tham số đã ghim của việc (JSON)",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        },
+        {
+          "ma": "bam_bo_tham_so",
+          "ten": "Mã kiểm tra snapshot bộ tham số",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        },
+        {
+          "ma": "ma_prompt",
+          "ten": "Mã hướng dẫn của module",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        },
+        {
+          "ma": "phien_ban_prompt",
+          "ten": "Phiên bản hướng dẫn đã ghim",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        },
+        {
+          "ma": "prompt",
+          "ten": "Hướng dẫn trích thông tin của module",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        },
+        {
+          "ma": "model_uu_tien",
+          "ten": "Model ưu tiên",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        },
+        {
+          "ma": "ma_truong_can_trich_json",
+          "ten": "Danh sách mã cần trích (JSON)",
+          "kieu": "van_ban",
+          "mac_dinh": "[]"
+        },
+        {
+          "ma": "yeu_cau_them_json",
+          "ten": "Câu hỏi bổ sung (chưa bật)",
+          "kieu": "van_ban",
+          "mac_dinh": "[]"
+        },
+        {
+          "ma": "ngan_sach_token_vao",
+          "ten": "Ngân sách đầu vào (token ước lượng)",
+          "kieu": "so",
+          "mac_dinh": 16000
+        }
+      ]
     }
   ],
-  "loai_du_lieu_rieng": [{"ma": "van_ban_tai_lieu", "ten": "Văn bản tài liệu có vị trí"}],
-  "tai_nguyen": {"so_viec_dong_thoi": 1},
-  "readiness": {"thoi_han_giay": 30},
+  "loai_du_lieu_rieng": [
+    {
+      "ma": "van_ban_tai_lieu",
+      "ten": "Văn bản tài liệu có vị trí"
+    },
+    {
+      "ma": "yeu_cau_ai",
+      "ten": "Yêu cầu hỏi AI"
+    }
+  ],
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
   "chay_thu_demo": [
-    {"nang_luc": "trich.doc_docx@1", "ten": "Đọc hợp đồng DOCX DEMO", "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-hop-dong.docx"}, "tham_so": {}},
-    {"nang_luc": "trich.doc_docx@1", "ten": "Chấp nhận Track Changes DOCX DEMO", "dau_vao": {"loai": "tep", "tep_demo": "demo/DEMO-track-changes.docx"}, "tham_so": {}}
+    {
+      "nang_luc": "trich.doc_docx@1",
+      "ten": "Đọc hợp đồng DOCX DEMO",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/DEMO-hop-dong.docx"
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "trich.doc_docx@1",
+      "ten": "Chấp nhận Track Changes DOCX DEMO",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/DEMO-track-changes.docx"
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "trich.chuan_bi@1",
+      "ten": "Chuẩn bị đủ trường từ snapshot DEMO",
+      "dau_vao": {
+        "loai": "van_ban_tai_lieu",
+        "van_ban_tai_lieu": {
+          "phien_ban": 1,
+          "van_ban": "DEMO — DỮ LIỆU GIẢ.\nĐiều 1. Giá trị hợp đồng DEMO\nSố hợp đồng: DEMO-001. Giá trị: 1.000.000 VND.\n",
+          "trang": [],
+          "so_trang": 0,
+          "nguon_doc": "docx",
+          "ly_do_chuyen_nguon": null,
+          "phien_ban_engine": "DEMO-nguon-gia 1",
+          "bam_dau_vao": "sha256:75633b8dea48d93c147d7e172f84a1ef0ad1d5c481e45996701fdc51791784db",
+          "canh_bao": [
+            "DEMO; chưa xác định số trang Word."
+          ]
+        }
+      },
+      "tham_so": {
+        "bo_tham_so_json": "{\"cac_dong\":[{\"bat_buoc\":\"\",\"bk\":\"\",\"dung\":true,\"loai_tru\":\"\",\"luon_cloud\":false,\"ma\":\"TT-01\",\"mo_ta\":\"Số hợp đồng DEMO\",\"muc\":2,\"nhom\":\"Thông tin DEMO\",\"tk\":\"\"},{\"bat_buoc\":\"\",\"bk\":\"\",\"dung\":true,\"loai_tru\":\"\",\"luon_cloud\":false,\"ma\":\"TT-02\",\"mo_ta\":\"Giá trị hợp đồng, giữ nguyên đơn vị\",\"muc\":2,\"nhom\":\"Thông tin DEMO\",\"tk\":\"\"},{\"bat_buoc\":\"\",\"bk\":\"\",\"dung\":false,\"loai_tru\":\"\",\"luon_cloud\":false,\"ma\":\"TT-03\",\"mo_ta\":\"Dòng DEMO ngừng dùng, vẫn giữ trong snapshot\",\"muc\":2,\"nhom\":\"Thông tin DEMO\",\"tk\":\"\"}],\"loai_hop_dong\":\"HD_DEMO\",\"module\":\"crm_demo\",\"phien_ban\":1,\"phien_ban_bo\":\"DEMO-1\",\"quy_tac\":[{\"dieu_kien\":\"\",\"doi_chieu\":\"TT-02\",\"kieu\":\"Có thì phải có\",\"ma_tham_so\":[\"TT-01\"]}]}",
+        "bam_bo_tham_so": "sha256:599ef178fa65953a0311d387643aca5bf2334ba544c520416e570cd3db2d50b4",
+        "ma_prompt": "crm_demo.trich_hd",
+        "phien_ban_prompt": "DEMO-1",
+        "prompt": "Trích số và giá trị hợp đồng DEMO theo bộ của module CRM DEMO."
+      }
+    }
   ],
   "bi_mat": [],
   "webhook": null

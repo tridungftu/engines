@@ -5,6 +5,7 @@ from kho_tri_thuc_sdk.engine import Engine, LoiDuongTruyen, LoiNghiepVu
 from .doc import JSON_TOI_DA_BYTE, doc_xml
 from .hoa_don_xml import MAX_XML_BYTES
 from .zip import CAU_VUOT_TRAN, ZIP_TOI_DA_BYTE, doc_zip
+from .bang_ke import lap_bang_ke
 
 
 if not callable(getattr(Engine, "_ghi", None)):
@@ -103,6 +104,11 @@ def doc_hoa_don_zip(viec):
     viec.tien_do(100, "Đã trả báo cáo gói ZIP; cần kiểm tra kết quả nguồn.")
     viec.kiem_huy()
     return {"loai": "truong", "truong": truong}
+
+
+@app.nang_luc("hoa_don.bang_ke_xlsx@1")
+def bang_ke_hoa_don(viec):
+    return lap_bang_ke(viec)
 
 
 if __name__ == "__main__":

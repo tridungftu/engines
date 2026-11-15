@@ -1,5 +1,14 @@
 # CHANGELOG — e_hoa_don
 
+## HD-7 — Bảng kê XLSX exact trong RAM, 15/11/2026
+
+- Đăng ký hoa_don.bang_ke_xlsx@1 nhận truong từ đọc XML/ZIP, trả 11 trường §2.5. Đúng 3/3 runtime chay.py/bang_ke.py/xlsx_toi_thieu.py; manifest/DEMO/AST handler XML/ZIP giữ nguyên. Không thêm dependency, không sửa Core/SDK/ma-nguon.
+- Kiểm schema/phiên bản/băm/raw_ref/binding/đếm/ordinal/trùng từ JSON qua SDK, tái dựng DTO để dùng lại phép chiếu; không parse XML lại. OOXML zipfile RAM, hai sheet, inline string text @, style/width/freeze. Giữ exact money/currency/số 0 đầu, ngoài 18/6 kèm cảnh báo; sai/mơ hồ/thiếu currency để trống; không formula/SUM/hyperlink. Giữ mọi entry/thư mục/lỗi/trùng, không suy đủ kỳ hoặc ghi nhận nghiệp vụ.
+- Chặn JSON 32 MiB, 1.000 dòng/entry, cell 16.000 ký tự, XLSX 32 MiB, 600 giây; kiểm hủy trong xử lý/trước upload/trả, không XONG khi mất lease/hủy/upload lỗi. Không ghi dữ liệu/cấu hình/sổ/cache/tệp tạm lên máy, chưa cần ngăn/màn riêng. Nguồn tĩnh CD-096 A1, SHA thực/LF và giải thích khác cột trong NGUON.md.
+- Windows/Python 3.13.14/SDK 2.0.0: `.venv\Scripts\python -B -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_hoa_don` → **4/4 DEMO ĐẠT** (3 XML + 1 ZIP); `.venv\Scripts\python -B -m pytest e_hoa_don/tests -q --basetemp=.pytest-tmp` → **652 passed in 113.65s, 0 skipped**; `.venv\Scripts\python -B e_hoa_don/tests/kiem_doc_lap.py` → **ĐẠT**; mọi mã thoát 0. Có 180 ca HD-7, oracle OOXML độc lập và CoreGia bộ nhớ/HTTP; biên 1.000, 32 MiB JSON, cell 16.000 và buffer XLSX kiểm thật; trần writer nhỏ/clock giả kiểm lỗi giới hạn. Lượt đầu 1 failed/648 passed do assertion HD-5 chỉ cho hai năng lực; sửa assertion theo phạm vi rồi chạy lại toàn bộ đạt.
+- **Đã kiểm bằng Core giả (CoreGia)**. SDK chay_thu_demo chưa fixture tệp lồng trong truong: XLSX chỉ phủ qua pytest với CoreGia.them_tep/kết quả đọc thật; giữ Cần Core fixture/chuỗi chung, không ID giả hoặc sửa SDK. Chưa kiểm Core thật/quyền kho tệp/Excel app/Linux, cài sạch ZIP/XLSX tiếp HD-8.
+- Thời gian thực tế: **08:37:00–08:59:29, 15/11/2026 UTC+07; 0.375 giờ**, so phiếu **5 giờ ước tính**. PR: **chờ lead mở**; không xóa/commit/push. Chi tiết lệnh và kết quả trong VIEC.md Bàn giao HD-7.
+
 ## HD-5 — Lõi ZIP và kiểm kê từng entry, 15/11/2026
 
 - Thêm zip.py và schema JSON kỹ thuật; tái dùng lõi ZIP/parser strict/DTO/phép chiếu XML. Chỉ sửa 2/4 runtime; manifest/hoa_don.doc_xml@2 không đổi, ZIP chưa đăng ký (HD-6). Giữ ordinal/tên gốc/entry lỗi và mọi bản trùng; trạng thái đọc tách khỏi dấu trùng; thư mục báo riêng.

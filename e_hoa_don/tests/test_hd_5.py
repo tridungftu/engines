@@ -284,7 +284,8 @@ def test_chay_py_xml_zip_khong_nap_cau_hinh():
     import e_hoa_don.chay as chay
     tree = ast.parse((GOI / "e_hoa_don/chay.py").read_text(encoding="utf-8"))
     assert not any(isinstance(n, ast.ImportFrom) and n.module == "cau_hinh_may" for n in ast.walk(tree))
-    assert [n["ma"] for n in chay.app.phieu["nang_luc"]] == ["hoa_don.doc_xml@2", "hoa_don.doc_zip@1"]
+    assert [n["ma"] for n in chay.app.phieu["nang_luc"]] == [
+        "hoa_don.doc_xml@2", "hoa_don.doc_zip@1", "hoa_don.bang_ke_xlsx@1"]
 
 
 def test_huy_khong_boc_thanh_loi_entry(xml_demo):

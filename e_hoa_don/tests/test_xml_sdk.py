@@ -201,7 +201,8 @@ def test_upload_that_bai_khong_xong(xml_demo, monkeypatch):
 
 
 def test_manifest_xml_khong_doi_va_demo_that():
-    assert [n["ma"] for n in app.phieu["nang_luc"]] == ["hoa_don.doc_xml@2", "hoa_don.doc_zip@1"]
+    assert [n["ma"] for n in app.phieu["nang_luc"]] == [
+        "hoa_don.doc_xml@2", "hoa_don.doc_zip@1", "hoa_don.bang_ke_xlsx@1"]
     nl = app.phieu["nang_luc"][0]
     assert nl["ma"] == "hoa_don.doc_xml@2" and nl["nhan"] == ["tep"] and nl["tra"] == "truong"
     assert nl["tham_so"] == app.phieu["loai_du_lieu_rieng"] == []

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| DC-10 (phiếu mới) | Màn cấu hình/kết quả, xác nhận chỉ-thêm + CAS, đề nghị module qua cổng cấp | DC-k/l; Q01–04; C-DC-01/03/04 | Xong phạm vi CoreGia; chờ cổng thật — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO **1/1 ĐẠT**; pytest **989 passed, 0 skipped** (47 ca DC-10); Node **22/22**; kiểm độc lập ĐẠT; kiểm kê 43 tệp. C-DC-01/03/04 chưa tích hợp thật; ngăn RAM không chứng minh nhật ký đã bền. |
 | DC-S22 | Chuyển Đối chiếu sang SDK 2.2.0, ngăn/cấu hình/SQL, vai trò trường DC-6 và tích hợp Hỏi AI | CHUYEN-SDK-2.2 §2, §4 | Xong mã/kiểm CoreGia; chờ lead merge Git — 15/11/2026 | PR: **chờ lead mở**. DEMO 1/1 ĐẠT; pytest **898 passed, 0 skipped**, kể cả Hỏi AI; kiểm độc lập mã 0; kiểm kê 31 tệp khớp. Nội dung main `12ed8db` đã đồng bộ; merge Git metadata cần lead hoàn tất vì sandbox chỉ cho ghi worktree. |
 | DC-7 (phiếu mới) | Lệch dấu năm bước, từ điển ghim, bằng chứng OCR lại và tỷ lệ trang | DC-f; Q12/14/15 | Xong phạm vi CoreGia — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **881 passed, 0 skipped** (85 ca DC-7); kiểm độc lập ĐẠT, ba mã thoát 0. Chỉ DEMO, 0 Cloud. Nguồn từ điển thật DC-Q14, ngưỡng DC-Q15 và contract OCR vùng C-DC-05 vẫn thiếu. |
 | DC-6 (phiếu mới) | Chuẩn bị yêu cầu Local AI, ghim hồ sơ Core và hậu kiểm độc lập nguồn/trích dẫn/sàn Python | DC-h | Xong phạm vi CoreGia — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 796 passed, 0 skipped (88 ca DC-6); kiểm độc lập ĐẠT, ba mã thoát 0. Provider Cloud = 0. Tích hợp Hỏi AI còn C-DC-07, giữ Cần xem bảo thủ. |
@@ -27,6 +28,122 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Đề xuất loại `ho_so_doi_chieu` đã ghi **ĐỀ XUẤT DC-P, chờ Anh** ở cuối `_chung/docs/LOAI-DU-LIEU-RIENG.md` §5; chưa tạo schema/kích hoạt. Tái dùng nguyên ba loại `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`; không đổi `bang_trich_xuat`.
 - Quy tắc mới: không lưu gì bền trên máy engine; cấu hình/chỉ mục/danh mục/xác nhận qua `Ngan`, snapshot/ảnh/báo cáo qua kho tệp Core; màn trong `goi/e_doi_chieu/ui/`. Không dùng `cau_hinh_may`/`kho_tam` cũ.
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
+
+## DC-10 — 15/11/2026
+
+**Kết luận: Đạt phạm vi DC-10 trên CoreGia; chưa tích hợp Core thật.
+PR: chờ lead mở.** Bắt đầu **19:53**, kết thúc **20:25:24 ngày 15/11/2026
+(UTC+7)**, thực tế khoảng **0,54 giờ**, so với **4 giờ ƯỚC TÍNH** trong
+phiếu. Đã kiểm bằng Core giả (CoreGia), NganBoNho và KttCore/DOM giả trên
+Node; chỉ DEMO, 0 Cloud, không dữ liệu bền trên máy engine.
+
+Đã làm:
+
+- Gói **0.8.0 chưa phát hành**, SDK 2.2.0. Hai màn ở `ui/`, dùng
+  `KttCore.engine("e_doi_chieu")`; mỗi phần màn đọc riêng. Không route,
+  HTTP server, mạng ngoài, eval, HTML chưa lọc, localStorage/sessionStorage.
+  KHAI-SDK-2.1 mới chỉ màn/quyền đề nghị; không thêm khóa UI vào manifest 2.0.
+- Màn cấu hình đọc/lưu qua schema + CAS; trần số khớp schema. Giữ bộ kiểm
+  đã ghim, không lộ mã/băm/phiên bản ở form. Thiếu bộ đã duyệt không tự
+  tạo bộ/ngưỡng. Xung đột hoặc mất ACK khóa lưu tới khi Anh chủ động tải
+  lại; không đọc token mới rồi tự ghi đè nội dung đang sửa.
+- Màn kết quả: hai cột Word/OCR, tô đoạn lệch bằng textContent/mark,
+  vị trí trang/Điều/Khoản khi có, ảnh đúng tham chiếu/hộp qua Core ngay
+  cột bản ký, bộ lọc mức, nhiễu OCR ẩn mặc định nhưng xem được, null là
+  chưa đo và phần thiếu kiểm hiện rõ. Nhật ký hiển thị ngày dd/mm/yyyy
+  UTC+7; tiền có đơn vị; nguyên văn chứng cứ giữ chính xác.
+- Adapter `xac_nhan.py` + ba hàm nối trong `chay.py`, không decorator,
+  capability hoặc API giả. Đọc báo cáo từ lượt da_xuat tin cậy, kiểm
+  băm/quyền JSON/PDF, mở lại nguồn/snapshot đã ghim và tính lại tổng hợp.
+  UI không gửi kết quả máy để engine tin theo. Thiếu cổng thì
+  `DC_CHUA_CO_CONG_XAC_NHAN`; thiếu quyền/cổng không có nút lưu thật.
+- Bốn lựa chọn đúng phiếu; nội dung đúng/lý do bắt buộc theo lựa chọn.
+  Người/giờ/pháp nhân/module/quyền/tập điểm lấy từ đối tượng Core cấp
+  tin cậy, kiểm kiểu và đối chiếu ngữ cảnh việc; không lấy từ JSON UI.
+  Chỉ thêm nhật ký + CAS lượt **cùng một lô**, không đổi kết quả máy.
+  NganXungDot đổi đúng `DC_XUNG_DOT`, câu Việt đã giao và thu_lai_duoc.
+  Gửi lại cùng mã/nội dung/người trả cùng receipt; khác nội dung/người
+  không dùng lại mã được. Hai người tranh cùng phiên bản: một lô thắng,
+  bên kia rollback toàn bộ, tải lại rồi xác nhận thì giữ đủ hai bản ghi.
+- Q03 cần cùng nội dung/quyết định, đủ hai người khác nhau và người duyệt
+  cấp hai; một người gửi mã khác không thành người thứ hai. Q04 giữ vùng
+  sửa tay như Nghiêm trọng. Các lựa chọn mâu thuẫn hoặc còn Bản ký sai
+  giữ điều kiện chặn; bản ký sai cần cặp mới, không lấy dòng cuối ghi đè.
+- Chỉ lập bằng chứng đề nghị cho module; chuyển qua đối tượng cổng
+  C-DC-04 được Core cấp, ghim pháp nhân/module/lượt/row_version/băm kết
+  quả và mã chống trùng. Q01 gửi cho cả người nộp và phụ trách theo quyền
+  Core. Thiếu cổng từ chối; đã gọi mà thiếu ACK báo ChuaRo. Engine không
+  mở hiệu lực, phát event hoặc gọi engine khác.
+
+Lệch/tách kỹ thuật so với bốn tệp dự kiến:
+
+- Thêm **migration 002** (tệp logic thứ năm), chỉ ALTER thêm ba cột nhật
+  ký trong schema riêng, không đổi SQL 001 đã có. Manifest khai cột theo
+  SDK 2.2.0, phiên bản dữ liệu **2**; chỉ soạn, chưa chạy CSDL thật.
+- Phần **DC-10-NGAN0** tách riêng hai bản chép nguyên `ngan.py`,
+  `cau_hinh.py` theo yêu cầu lead trong `tham_chieu_ngan_0/`. So băm
+  SHA-256 sau CRLF→LF; không sửa mẫu và không import vào runtime. Adapter
+  test chuẩn hóa API/ngoại lệ của NganBoNho sang SDK. Runtime luôn
+  `viec.ngan`/`viec.cau_hinh`; không hồi sinh ngăn/cấu hình tạm DC-S22.
+- Không thêm dependency/schema loại dữ liệu hoặc nới quyết định nghiệp
+  vụ. KHAI-SDK-2.1 mới không thay bản lịch sử lưu trữ. NGUON, README,
+  CHANGELOG và kiểm kê **43 tệp**/bytes/SHA-256 đã cập nhật.
+
+Kết quả kiểm cuối: Python **3.13.14**, .venv dùng system-site-packages cho
+dependency offline đúng bản, SDK **2.2.0** cài từ wheel repo
+`--no-index --no-deps`, SHA-256 khớp SHA256SUMS. Node **24.18.0**.
+Đặt PYTHONDONTWRITEBYTECODE=1, PYTHONUTF8=1, PYTHONIOENCODING=utf-8:
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.8.0: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 DEMO ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q
+989 passed in 107.83s (0:01:47)
+0 skipped; mã thoát 0.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0; không __pycache__/.pyc/symlink trong gói.
+
+node --test e_doi_chieu/tests/ui/dc10.test.mjs
+tests 22; pass 22; fail 0; skipped 0; mã thoát 0.
+
+git diff --check
+Không có lỗi; mã thoát 0.
+```
+
+47 ca Python mới kiểm bằng SDK/CoreGia thật với nguồn/tệp DEMO, thêm
+NganBoNho chuẩn hóa để tranh hai luồng thực. Có ca CAS từ chối tại commit
+rollback cả nhật ký, mất ACK SDK không nhân đôi, gửi lại còn phải có
+quyền tệp cũ, bốn lựa chọn, giả người/giờ/quyền từ JSON bị từ chối,
+khác pháp nhân/module, hai người duyệt, thiếu kiểm/vùng sửa tay/Bản ký
+sai/mâu thuẫn giữ điều kiện chặn. 22 ca Node dùng DOM/KttCore RAM, chặn
+mạng/HTML/src/href/ghi ngăn, kiểm schema/CAS, script độc hại là chữ,
+bộ lọc, ngữ cảnh đọc riêng, quyền xem ảnh, thiếu cổng/quyền không nút
+lưu, gửi lại cùng mã và yêu cầu module.
+
+### Cần Core — DC-10
+
+- **C-DC-01:** duyệt loader màn, CSP, quyền sửa cấu hình/schema/CAS/ACK;
+  cấp bộ đã duyệt trước khi sửa giới hạn. Không khai khóa UI chưa được
+  hỗ trợ vào manifest. Node giả chưa chứng minh trình duyệt/Core thật.
+- **C-DC-03:** binding cổng chung cho adapter và nguồn danh tính/giờ/
+  giao quyền module tin cậy; Core kiểm lại quyền trong giao dịch khi
+  commit, chỉ-thêm/ACL, lease, chống trùng và kiểm toán bền. Cấm UI ghi
+  trực tiếp bảng xác nhận hoặc sửa lượt để lách cổng. SQL 002 không phải
+  cơ chế ACL; **ngăn RAM không chứng minh nhật ký đã bền**. Chưa có
+  binding được Core review thì không bật xác nhận thật.
+- **C-DC-04:** cửa chung nhận yêu cầu có băm/phiên bản/chống trùng, tính
+  lại điều kiện từ hồ sơ/nhật ký khi áp dụng; giữ chặn/tầng 1, giao việc
+  bản ký sai và gửi đúng cả hai người theo Q01. Chưa kiểm hiệu lực/thông
+  báo thật; boolean đề nghị từ engine không là quyền mở chặn.
+- Chi tiết giao diện adapter/chưa kiểm: `DC-10-CONG-CORE.md`. Chưa kiểm
+  Linux, Core/trình duyệt thật, RLS/CSP/đồng hồ/nhật ký bền thật hoặc
+  OCR/detector/Local model thật. Không phát sinh câu chờ Anh quyết định.
+  Không sửa `ma-nguon/`, `_chung/**`, API/SDK/Core; không commit/push.
 
 ## DC-9 — 15/11/2026
 

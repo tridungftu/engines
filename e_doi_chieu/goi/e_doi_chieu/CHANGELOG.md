@@ -1,5 +1,28 @@
 # Thay đổi
 
+## DC-10 — 15/11/2026 · 0.8.0 chưa phát hành
+
+- Thêm hai màn cấu hình/kết quả, CAS cấu hình, bộ lọc/nhiễu ẩn mặc định,
+  nguyên văn hai phía/ảnh theo quyền Core và phần chưa kiểm rõ ràng.
+  HTML là chữ; ngày/tiền có định dạng, không hiển thị mã kỹ thuật, không
+  mạng ngoài/eval/HTML chưa lọc/ghi ngăn từ UI.
+- Bốn lựa chọn xác nhận, nội dung/lý do bắt buộc; adapter nội bộ chỉ nhận
+  danh tính/giờ/quyền Core tin cậy, không từ JSON UI. Nhật ký chỉ thêm +
+  CAS lượt trong một lô, mã yêu cầu chống trùng/gửi lại, hai người khác
+  nhau và thẩm quyền cấp hai theo Q03. Không đổi kết quả máy; Bản ký sai,
+  mâu thuẫn hoặc thiếu kiểm giữ điều kiện chặn.
+- Yêu cầu module chỉ qua adapter C-DC-04; thiếu cổng từ chối, thiếu ACK
+  báo ChuaRo. Engine không mở hiệu lực hoặc phát sự kiện/gọi engine khác.
+  Khai màn/quyền riêng trong KHAI-SDK-2.1, không thêm khóa UI vào manifest.
+- SQL 002 chỉ thêm cột nhật ký, dữ liệu phiên bản 2; không chạy DB thật.
+  Hai mẫu NGAN-0 chép nguyên làm tham chiếu/test RAM, runtime dùng SDK
+  2.2.0. Không thêm dependency, không đĩa bền hoặc Cloud. Hợp đồng/chưa
+  kiểm thật tại docs/DC-10-CONG-CORE; PR: **chờ lead mở**.
+- Đã kiểm bằng Core giả (CoreGia): SDK DEMO **1/1 ĐẠT**, pytest
+  **989 passed, 0 skipped** (47 ca DC-10); Node **22/22**, kiểm độc lập
+  **ĐẠT**, kiểm kê **43 tệp** khớp bytes/SHA-256. Chưa kiểm Core thật,
+  Linux hoặc nhật ký bền/hiệu lực thật. Báo cáo thực tế ở VIEC.md.
+
 ## DC-9 — 15/11/2026 · 0.7.1 chưa phát hành
 
 - Thêm `doi_chieu.xuat_ket_qua@1`, trả đủ 11 trường tĩnh, JSON đầy đủ và

@@ -13,6 +13,7 @@ from .lech_dau import xu_ly_ho_so as _kiem_lech_dau
 from . import chuan_bi_ai as cb
 from . import ho_so as hs
 from .tong_hop import xuat_ket_qua as _xuat_ket_qua
+from . import xac_nhan as xn
 
 _GOI = Path(__file__).resolve().parent.parent
 app = Engine.tu_khai_bao(str(_GOI / "engine.json"))
@@ -121,6 +122,28 @@ def phan_loai_diem_lech(viec):
 def xuat_ket_qua(viec):
     return _xuat_ket_qua(viec, viec.ngan, can_cau_hinh(viec),
                          phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"])
+
+
+@_an_toan
+def doc_ket_qua(viec, ma_luot, *, cong=None):
+    """Adapter C-DC-03; host chưa cấp cổng thì từ chối, không là năng lực mới."""
+    if cong is None:
+        xn.loi("DC_CHUA_CO_CONG_XAC_NHAN")
+    return xn.doc_ket_qua(viec, viec.ngan, can_cau_hinh(viec), ma_luot, cong=cong)
+
+
+@_an_toan
+def xac_nhan(viec, yeu_cau, *, cong=None):
+    if cong is None:
+        xn.loi("DC_CHUA_CO_CONG_XAC_NHAN")
+    return xn.xac_nhan(viec, viec.ngan, can_cau_hinh(viec), yeu_cau, cong=cong)
+
+
+@_an_toan
+def gui_yeu_cau_module(viec, ma_luot, *, cong=None):
+    if cong is None:
+        xn.loi("DC_CHUA_CO_CONG_MODULE")
+    return xn.gui_yeu_cau_module(viec, viec.ngan, can_cau_hinh(viec), ma_luot, cong=cong)
 
 
 if __name__ == "__main__":

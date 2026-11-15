@@ -30,6 +30,7 @@ def test_sdk_va_wheel_dung_ban():
 def test_sql_khai_bao_va_cot_he_thong_khop():
     sql = (GOI / "sql/001_tao_ngan.sql").read_text(encoding="utf-8")
     statements = [s.strip() for s in re.sub(r"--[^\n]*", "", sql).split(";") if s.strip()]
+    them_cot = (GOI / "sql/002_xac_nhan.sql").read_text(encoding="utf-8")
     assert len(statements) == len(chay.app.phieu["ngan_du_lieu"]) == 4
     for statement, bang in zip(statements, chay.app.phieu["ngan_du_lieu"]):
         assert statement.startswith("CREATE TABLE eng_e_doi_chieu." + bang["bang"] + " (")
@@ -39,7 +40,8 @@ def test_sql_khai_bao_va_cot_he_thong_khop():
         assert ("phap_nhan_id uuid NOT NULL" in statement) == (bang["pham_vi"] == "phap_nhan")
         for truong in bang["truong"]:
             kieu = {"van_ban": "text", "so": "numeric"}[truong["kieu"]]
-            assert re.search(r"\b" + truong["ma"] + " " + kieu + r"\b", statement)
+            assert (re.search(r"\b" + truong["ma"] + " " + kieu + r"\b", statement) or
+                    ("ALTER TABLE eng_e_doi_chieu." + bang["bang"] + " ADD COLUMN " + truong["ma"] + " " + kieu + ";") in them_cot)
         for unique in bang.get("duy_nhat", []):
             assert "UNIQUE (" + ", ".join(unique) + ")" in statement
         assert "phap_nhan_id" not in bang["khoa"]

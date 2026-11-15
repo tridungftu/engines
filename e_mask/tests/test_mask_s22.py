@@ -13,26 +13,32 @@ from e_mask.ngan import NganBoNho, NganKhongHopLe
 from ho_tro_ngan import QuyenNganDemo, VAN_BAN
 
 
-def test_phieu_cau_hinh_sdk_va_khong_khai_kho_bi_danh_core():
+def test_phieu_cau_hinh_sdk_va_kho_ram_van_tach_kho_core_r1():
     app = tao_app()
     assert kho_tri_thuc_sdk.__version__ == '2.2.0'
     assert app.phieu['tuong_thich']['sdk'] == '>=2.2.0 <3.0.0'
     assert app.phieu['cau_hinh'] == {'schema': 'cau_hinh.schema.json'}
-    assert not app.phieu.get('ngan_du_lieu')
-    assert not app.phieu.get('du_lieu', {}).get('goi_migration')
+    assert {b['bang'] for b in app.phieu['ngan_du_lieu']} == {'dinh_danh', 'bi_danh'}
+    assert app.phieu['du_lieu']['goi_migration']['thu_muc'] == 'sql'
     goi = Path(app.thu_muc_goi)
-    assert not (goi / 'sql').exists()
+    assert (goi / 'sql/kiem_ke.json').is_file()
     assert not (goi / 'KHAI-SDK-2.1.json').exists()
     assert not (goi / 'e_mask/cau_hinh.py').exists()
-    assert json.loads((goi / 'cau_hinh.schema.json').read_text('utf-8'))['properties'] == {}
+    schema = json.loads((goi / 'cau_hinh.schema.json').read_text('utf-8'))
+    assert all('default' in truong for truong in schema['properties'].values())
+    assert schema['properties']['thoi_han_anh_xa_giay']['default'] == 600
 
 
-def test_core_gia_cau_hinh_snapshot_khong_dung_ngan_bi_danh(monkeypatch):
+@pytest.mark.parametrize('cau_hinh, ttl', [({}, 600),
+                                        ({'thoi_han_anh_xa_giay': 60}, 60),
+                                        ({'thoi_han_anh_xa_giay': 600}, 600),
+                                        ({'thoi_han_anh_xa_giay': 900}, 900)])
+def test_core_gia_cau_hinh_snapshot_khong_dung_ngan_bi_danh(monkeypatch, cau_hinh, ttl):
     quyen = QuyenNganDemo()
     ram = NganBoNho(KHAI_NGAN)
     app = tao_app(ngan=ram, quyen=quyen)
     core = CoreGia(app)
-    core.dat_cau_hinh(app.ma, {})
+    core.dat_cau_hinh(app.ma, cau_hinh)
     da_doc = []
     from e_mask.kho_dinh_danh import KhoDinhDanh
     xu_ly = KhoDinhDanh.xu_ly
@@ -50,7 +56,7 @@ def test_core_gia_cau_hinh_snapshot_khong_dung_ngan_bi_danh(monkeypatch):
     quyen.cap(ma)
     core.chay(app)
     assert core.xem(ma)['trang_thai'] == 'XONG'
-    assert da_doc == [{}]
+    assert da_doc == [{'thoi_han_anh_xa_giay': ttl}]
     assert ram.tim('cho_duyet').danh_sach
     assert core.xem_ngan(app.ma, 'cho_duyet') == []
     with pytest.raises(NganKhongHopLe):

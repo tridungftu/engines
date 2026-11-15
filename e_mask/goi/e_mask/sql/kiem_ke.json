@@ -8,8 +8,8 @@
     },
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 25732,
-      "sha256": "4ef8cb56dba7a0fb037d75e7aaf79ee84b4ea7138c3b768e60903848f14fce0e"
+      "bytes": 26212,
+      "sha256": "2bae6d5e167e4227ec43b0e9e7491edab4aee3406530f440bf104893e5d7637a"
     },
     {
       "duong_dan": "demo/README.md",
@@ -28,8 +28,8 @@
     },
     {
       "duong_dan": "e_mask/chay.py",
-      "bytes": 6547,
-      "sha256": "76d87a38d855b742f65b519731c45a056e53596cac11c43784e14a9fe5fdafd9"
+      "bytes": 6494,
+      "sha256": "251b232f8b3747fa6be4a15f008759a262ccf13125c2d318096616facb6f8336"
     },
     {
       "duong_dan": "e_mask/che_van_ban.py",
@@ -228,8 +228,8 @@
     },
     {
       "duong_dan": "NGUON.md",
-      "bytes": 76563,
-      "sha256": "18e248b1e880129a85554b7d66901c5b15d27294d09ecc0ed841586fda6bee24"
+      "bytes": 77580,
+      "sha256": "a16c17564d4072aea707bccd1677e6dd3bbbf2bce0fcd2f2ddefa24c21d96107"
     },
     {
       "duong_dan": "README.md",

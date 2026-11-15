@@ -4,7 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| MASK-R1 | Khai ngăn bí mật/alias, TTL SDK 2.2 và migration/kiểm kê | MASK-P4 §1–5; CĐ-36; câu 10 tối 15/11 | Chờ Core/lead — 15/11/2026; **chưa đạt nghiệm thu** | Đúng 5 tệp mã/khai báo theo bảng §4; 46 test riêng đạt, full pytest 440 failed sau thêm TTL; chưa nối adapter R2/handler R4, C-P4-03 còn mở. PR: **chờ lead mở**; kết quả thật ở mục MASK-R1 bên dưới. |
+| MASK-R1 | Khai ngăn bí mật/alias, TTL SDK 2.2 và migration/kiểm kê | MASK-P4 §1–5; CĐ-36; câu 10 tối 15/11 | Xong sửa hồi quy / Chờ Core — 15/11/2026; **chưa đạt nghiệm thu chung** | Ngoại lệ lead cho sửa thêm chay.py/test: full pytest 2228 passed, 4 xfailed cũ, 190 subtests passed, 0 failed/skip; R1 46/46; độc lập mã 0, kiểm kê 50/50. CLI 0/2 thiếu quyền Core, C-P4-03 còn mở; kho RAM cũ giữ tới R2/R4. PR: **chờ lead mở**; kết quả thật ở mục MASK-R1 bên dưới. |
 | MASK-P4 | Lập lại phiếu mở che cùng chu kỳ, map chỉ RAM và kho bí danh kín; chỉ tài liệu | Quyết định Anh tối 15/11 câu 10; CĐ-36 | Xong tài liệu — 15/11/2026; kiểm nền gói chưa đạt / Chờ Core | [Phiếu RAM](MASK-P4-MO-CHE-RAM.md): R1…R7 32–46 giờ ƯỚC TÍNH, B5…B10 sửa 36–56 giờ ƯỚC TÍNH, mỗi lát ≤5 tệp; TTL đề xuất 600 giây, cấu hình 60–900. Không code/commit/push; PR: **chờ lead mở**. P3 A không dùng; kết quả kiểm thật và C-P4-01…06 ở mục MASK-P4 bên dưới. |
 | MASK-P3 | Thiết kế lại mở che/kho bí danh cho SDK 2.2.0, chỉ tài liệu | **CĐ-36 — Anh, 15/11/2026 16:28** | Xong tài liệu lịch sử — 15/11/2026; **A không dùng theo quyết định Anh 15/11 tối** | [Thiết kế P3 giữ truy vết](MASK-P3-MO-CHE-SDK-2.2.md): A/lát A/Q1…Q4 không còn giao/chờ chọn; MASK-P4 thay bằng B chỉ RAM, không hồ sơ Core, không giải mã bi_mat. Kết quả kiểm P3 giữ nguyên lịch sử. PR: **chờ lead mở**. |
 | MASK-2c-4 | Công cụ đo Local ngoài gói và gold DEMO ứng viên | Sau MASK-2c-3; quyết định Anh “Thêm AI cục bộ” | Xong phần công cụ/mock — 15/11/2026; **Chờ Anh/lead đo độc lập** | Đúng ba tệp mã/dữ liệu ngoài gói; không sửa runtime. 45 tên/45 ngữ cảnh +75 câu thường +15 tổ chức +15 địa chỉ +12 biến thể; chưa lead đóng băng gold độc lập. [Báo cáo](BAO-CAO-MASK-2c-4.md); PR: **chờ lead mở**; nợ CAO/Cloud tắt giữ nguyên |
@@ -35,6 +35,31 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
 
 ## MASK-R1 — khai ngăn bí mật và cấu hình SDK 2.2, 15/11/2026
+
+### Cập nhật sửa hồi quy theo lệnh lead — 15/11/2026, bắt đầu 19:52
+
+**Kết luận: Đạt yêu cầu sửa hồi quy MASK-R1; chưa đạt nghiệm thu chung vì CLI chuẩn thiếu cửa quyền Core và C-P4-03 còn mở.** PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia).
+
+- Schema hiện có đã đặt default cho mọi trường mới: TTL mặc định 600, số nguyên 60–900, không trường bắt buộc thiếu default, không nhận khóa lạ. Không cần sửa schema. Nguyên nhân 440 failure là guard cũ trong `chay.py::_loi_cong` từ chối mọi snapshot cấu hình có trường sau khi SDK điền default.
+- Theo ngoại lệ lead cho thêm `chay.py` ngoài giới hạn 5 tệp: bỏ guard chỉ được cấu hình rỗng, dùng kiểm schema của SDK 2.2.0. Giữ nguyên thứ tự xác minh ngữ cảnh/port và kiểm nghiệp vụ trong handler, mã lỗi cũ, hậu kiểm và kho RAM vận hành tới R2/R4. Không nối kho bí mật R1 vào handler, không bỏ kiểm schema/quyền hoặc thêm đường giải mã.
+- Cập nhật test S22 về khai báo ngăn/migration R1 và snapshot TTL; kiểm handler qua CoreGia với cấu hình rỗng và TTL 60/600/900. Giữ nguyên 46 test R1 (có các ca TTL sai, khóa lạ, biên/default/snapshot) và bốn xfail cũ; không thêm skip/xfail. Cập nhật NGUON/CHANGELOG và kiểm kê theo bytes thực tế của gói.
+
+Môi trường: `.venv/Scripts/python`, Python 3.13.14, SDK **2.2.0**; SHA-256 wheel offline **0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984** khớp `SHA256SUMS.txt`. Các lệnh dùng `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`, `-B`.
+
+| Lệnh / phép kiểm | Kết quả thật sau sửa hồi quy |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**. Cả hai DEMO trở lại mã cũ `MASK_NGU_CANH_CHUA_XAC_MINH`, câu “Chưa xác minh được phiên và quyền xử lý yêu cầu.”; không còn lỗi cấu hình. Không cấp quyền DEMO trong runtime để làm CLI xanh. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --basetemp=.pytest-tmp --tb=short` | **2228 passed, 4 xfailed cũ, 190 subtests passed, 0 failed, 0 skipped; 187,94 giây; mã 0**. Tăng 3 ca do tham số hóa kiểm handler TTL. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_r1.py -q --basetemp=.pytest-tmp-r1 --tb=short` | **46 passed, 0 failed/skip/xfail; 0,82 giây; mã 0**. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**; giữ nguyên bộ kiểm. |
+| Kiểm kê SQL và phạm vi migration | **50/50 tệp** đủ bytes/SHA-256, trừ chính kiểm kê; `_kiem_ke` và `_kiem_lenh_sql` đạt. Không đổi nội dung migration. |
+| `git diff --check` | **ĐẠT, mã 0**. |
+
+**Thời gian thực tế lượt sửa hồi quy:** **19:52:00–19:59:50 ngày 15/11/2026 (UTC+07), 0,13 giờ** tại mốc chốt kiểm; phiếu toàn lát R1 **4–6 giờ ƯỚC TÍNH**. Lượt R1 trước đó 0,34 giờ giữ riêng ở lịch sử bên dưới; không coi 4–6 giờ là ước tính riêng cho lượt sửa hồi quy này.
+
+Không phát sinh Cần Core / Chờ Anh mới; các mục Cần Core — MASK-R1 bên dưới giữ nguyên. Chưa kiểm Core/PostgreSQL/Local/Office/Linux thật. Không commit/push.
+
+### Lịch sử lượt R1 trước sửa hồi quy (18:57–19:17)
 
 **Kết luận: Chưa đạt — phần khai báo và 46 test riêng R1 đạt, nhưng CLI chuẩn 0/2 và full pytest có 440 failure sau thay đổi TTL; C-P4-03 chưa đủ bảo đảm.** PR: **chờ lead mở**. Không nhận là đã xong nghiệm thu hoặc đã giữ toàn bộ test an toàn cũ xanh.
 

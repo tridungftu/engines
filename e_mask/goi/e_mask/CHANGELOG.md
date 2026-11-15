@@ -1,3 +1,11 @@
+## Chưa phát hành — 15/11/2026, MASK-R5
+
+- Chuyển hồ sơ MASK-2c (gốc, bản quy tắc, edit map/Unicode, kế hoạch, phiên bản, cấu hình đã ghim và phản hồi Local) sang handle `KhoAnhXaRAM` của R4. Đóng cửa lưu/đọc snapshot `KhoHoSoAI`; chuẩn bị và hậu kiểm không đọc/ghi chỉ mục hoặc hồ sơ Core. Kho nhận diện chỉ tìm chính xác qua R2, không phục hồi danh mục bản rõ hoặc dùng kho RAM lịch sử để chốt.
+- Chuyển tiếp nội bộ chỉ có mã RAM opaque, băm, chỉ số/biên đoạn và nhãn profile an toàn. Không `ho_so`/`tap_phan_hoi` tham chiếu tệp, không gốc/map. Core chọn từng đoạn qua port, Mask trả đúng một `yeu_cau_ai`; hậu kiểm nhận tập phản hồi Local tạm qua cửa tin cậy rồi kiểm nguồn và băm từng yêu cầu dựng lại từ RAM. Không gọi Hỏi AI/model từ Mask, không Cloud.
+- Giữ kiểm đủ đoạn, Unicode NFD/Cf/code point, overlap/span/trích dẫn, alias lớp 1, tiền/ngày và hậu kiểm toàn văn. Kiểm đầu vào đã ghim và bytes tệp cùng tham chiếu bị đổi. Cùng alias khác nguyên văn chặn; alias → nguyên văn đúng tại span chỉ ở RAM. Lookup nhường việc/handle SDK khi chờ, giữ budget; tên mới thiếu bảo đảm C-P4-03 bị chặn trước ghi/phát hành.
+- R4 dọn khi mất RAM, lỗi, hủy, TTL hoặc sự kiện kết thúc; replay hậu kiểm bị chặn. Chỉ `ChuaRo` lúc còn chờ Local/Core được giữ RAM trong hạn tuyệt đối. Sau chốt không giữ bản rõ/kết quả để tái chạy; Core quản ACK và cách ly kết quả tới chốt cuối.
+- **Chưa nối runtime thật:** constructor yêu cầu truyền kho R4 rõ ràng; `chay.py` ngoài phạm vi R5 chưa truyền kho vào hai handler (điểm nối R6). AI-9 hiện bắt buộc profile tham chiếu snapshot; cần C-P4-04 thay phụ thuộc đó, không tạo tham chiếu giả hoặc sửa contract/schema chung. Adapter tích hợp chỉ nằm trong tests; các test snapshot cũ giữ nguyên và đang lỗi, không nhận full suite xanh. Kết quả thật và C-P4-01/02/04 tại VIEC/báo cáo R5; PR: chờ lead mở.
+
 ## Chưa phát hành — 15/11/2026, MASK-R3 kết thúc khảo sát ứng viên
 
 - Thêm lõi khảo sát RAM `tra_cuu_dinh_danh.py` và đầu dò trong `che_van_ban.py`: ứng viên từ detector/quy tắc/trường/danh sách của đầu vào hiện tại; gọi `tim_ung_vien` R2 bằng đúng giá trị, nhận metadata/null+cờ. Không liệt kê ngăn/dựng matcher danh mục, không fuzzy/prefix hoặc thử mọi chuỗi con trong nhánh mới. Không giải mã, ghi ngăn, cấp alias tạm hoặc phát hành từ đầu dò.

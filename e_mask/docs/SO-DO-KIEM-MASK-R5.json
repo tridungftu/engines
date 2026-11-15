@@ -1,0 +1,22 @@
+[
+  {
+    "lenh": ".venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask",
+    "ma_thoat": 1,
+    "giay": 1.04
+  },
+  {
+    "lenh": ".venv/Scripts/python -B -m pytest e_mask/tests -q",
+    "ma_thoat": 1,
+    "giay": 162.02
+  },
+  {
+    "lenh": ".venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py",
+    "ma_thoat": 0,
+    "giay": 0.67
+  },
+  {
+    "lenh": "git diff --check",
+    "ma_thoat": 0,
+    "giay": 0.15
+  }
+]

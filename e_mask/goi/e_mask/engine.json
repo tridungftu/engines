@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_mask",
   "ten": "Che định danh",
-  "phien_ban": "1.1.0",
+  "phien_ban": "1.2.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -19,6 +19,20 @@
     "thu_muc": "."
   },
   "nang_luc": [
+    {
+      "ma": "mask.hau_kiem_ai_cuc_bo@1",
+      "ten": "Hậu kiểm AI cục bộ và che bổ sung",
+      "nhan": ["tra_loi_ai"],
+      "tra": "van_ban_da_che",
+      "gioi_han": {
+        "ky_tu_toi_da": 1048576,
+        "tep_toi_da_mib": 64,
+        "mime": ["application/json"],
+        "thoi_han_giay": 60
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    },
     {
       "ma": "mask.chuan_bi_ai_cuc_bo@1",
       "ten": "Chuẩn bị AI cục bộ nhận diện định danh",

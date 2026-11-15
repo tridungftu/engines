@@ -74,3 +74,21 @@ class KhoDinhDanh:
         if ket_qua['van_ban_da_che'] != anh_xa.da_che:
             raise LoiNghiepVu('MASK_AI_HO_SO', 'Không xác minh được hồ sơ nội bộ. Cần thực hiện lại yêu cầu.')
         return ket_qua, anh_xa
+
+    def xu_ly_hau_kiem_ai(self, viec, ham, *, ma_yeu_cau, kiem_chot):
+        """Dùng nguyên kho/CAS/chống lặp; kiểm lại nguồn trước và sau chốt.
+
+        PortNgan tái tạo cùng lựa chọn alias khi mất ACK, so băm kết quả và
+        không tăng đếm gặp lại. Không chia lô khi vượt 100 lệnh.
+        """
+        kiem_chot()
+        kho = self.mo_luot(viec, ma_yeu_cau=ma_yeu_cau)
+        ket_qua = kho.chot() if kho.da_chot else ham(kho)
+        _kiem_ket_qua(ket_qua, 'che')
+        kiem_chot()
+        viec.kiem_huy()
+        if not kho.da_chot:
+            ket_qua = kho.chot(ket_qua)
+        _kiem_ket_qua(ket_qua, 'che')
+        kiem_chot()
+        return ket_qua

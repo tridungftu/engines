@@ -1,8 +1,9 @@
-# Trích thông tin hợp đồng — TX-2, bản 0.3.0
+# Trích thông tin hợp đồng — TX-3b, bản 0.4.0
 
 Gói công bố **`trich.doc_docx@1`** (`tep` DOCX → `van_ban_tai_lieu`) và
 **`trich.chuan_bi@1`** (`van_ban_tai_lieu` → một `yeu_cau_ai` phiên bản 1).
-Hậu kiểm và xuất JSON/Excel thuộc TX-3, chưa đăng ký.
+Đã đăng ký **`trich.hau_kiem@1`** (`tra_loi_ai` → `bang_trich_xuat`) và
+**`trich.xuat_ket_qua@1`** (`bang_trich_xuat` → `truong` tĩnh).
 Phần đã chạy test: **đã kiểm bằng Core giả (CoreGia)**; chưa nối Core thật.
 
 ## Chuẩn bị yêu cầu AI — TX-2
@@ -149,32 +150,39 @@ node --test e_trich_xuat/tests/ui/cau_hinh.test.mjs
 
 Luôn chạy `-B` hoặc `PYTHONDONTWRITEBYTECODE=1` để giữ gói sạch bytecode.
 Test chỉ dùng DEMO, CoreGia, NganBoNho và KttCore giả; không cần mạng.
-Ngày 15/11/2026: pytest **164 passed, 0 skipped**; độc lập **exit 0**.
-CLI SDK chuẩn **2/3 ĐẠT, exit 1**: DEMO TX-2 trả `CHUA_CAU_HINH` vì CLI
-2.0.0 chưa nạp ngăn. Cổng `chay_demo_voi_ngan_gia.py` nạp cấu hình DEMO
-qua `NganBoNho` trước `CoreGia.chay_thu_demo`: **3/3 ĐẠT, exit 0**.
-Trình lead cổng DEMO có ngăn thay thế trong lúc chờ C-TX-04; không thêm
-cờ cấu hình tệp/env hoặc tự cấu hình trong runtime để làm xanh CLI.
+Ngày 15/11/2026, TX-3b: pytest **408 passed, 0 skipped**; độc lập **exit 0**.
+CLI SDK chuẩn **3/5 ĐẠT, exit 1**: chuẩn bị trả `CHUA_CAU_HINH`
+(C-TX-04); hậu kiểm ở `DANG_CHAY` vì chưa nạp tệp hồ sơ tham chiếu
+(C-TX-06, SDK coi 404 là mất quyền giữ việc). SDK 2.0 CLI chỉ tự nạp
+`tep_demo` khi đầu vào có loại `tep`, không nạp tệp bên trong loại riêng.
+Không sửa vòng đời SDK hoặc điền cấu hình trong handler.
+
+Cổng `chay_demo_voi_ngan_gia.py` nạp cấu hình DEMO vào `NganBoNho`,
+gọi `e_trich_xuat.demo.nap_ho_so_demo(core, app)` để tải hồ sơ có sẵn trong
+gói qua `CoreGia.them_tep`, rồi chạy đúng 5 mẫu manifest bằng
+`CoreGia.chay_thu_demo`: **5/5 ĐẠT, exit 0**. Helper chỉ đổi mã tệp do
+Core cấp và băm toàn request AI tương ứng; không thay snapshot/handlers,
+không tạo cấu hình hoặc được gọi từ runtime. Core thật cần cấp tệp tham
+chiếu cho màn DEMO chung; cổng kiểm hiện tại chưa chứng nhận quyền/TTL.
 Máy kiểm phiên này là Windows; Linux chưa chạy thực tế (WSL chưa cài,
 không có Docker). Test dùng API Python/Node đa nền tảng. Core thật chưa kiểm.
 
 
-## Lõi TX-3 chờ review chi tiết — 15/11/2026
+## Hậu kiểm và xuất — TX-3b, 15/11/2026
 
-Đã có lõi hậu kiểm và xuất JSON/Excel trong gói nhưng **chưa đăng ký**
-`trich.hau_kiem@1`, `trich.xuat_ket_qua@1` hoặc schema
-`bang_trich_xuat`. Manifest/runtime hiện vẫn chỉ công bố hai năng lực
-TX-1/2. Hướng bảng + Excel đã chốt; xem
-[chi tiết review](../../docs/TX-3-REVIEW.md) trước khi đăng ký.
+Anh đã duyệt `bang_trich_xuat` tại quyết định chiều 15/11, gồm bổ sung
+TX-3-REVIEW. Schema nguồn ở `_chung/contract/`, bản tự chứa trong
+`contract/bang_trich_xuat.schema.json`; test so SHA-256 sau CRLF→LF.
+Payload có offset `unicode` theo code point Python; `dau_kiem_tam_e6`
+chỉ là dấu kiểm tạm đối chiếu E6. `phan_hoi_ai` **chỉ kiểm toán**, có thể
+chứa dẫn chứng giả/nội dung tài liệu: module không hiển thị mặc định và
+không ghép cột từ đây. Dữ liệu chuẩn là `gia_tri` và `dan_chung` đã kiểm.
 
-Cổng `tests/chay_demo_voi_ngan_gia.py` ngoài gói chạy ba DEMO runtime có
-ngăn và hai DEMO TX-3 trong phiếu RAM chỉ cho test: **5/5 ĐẠT**,
-**đã kiểm bằng Core giả (CoreGia)**. CLI SDK chuẩn vẫn **2/3 ĐẠT, exit 1**,
-TX-2 thiếu cấu hình ngăn; chờ lead xác nhận cổng thay thế/C-TX-04.
-Không tự tạo cấu hình trong engine.
-
-Hậu kiểm hiện giữ `van_ban` vì bộ E1 của TX-2 chưa khai cách chuyển kiểu;
-không tự đoán tiền/ngày hoặc tính TT-21. Exporter kiểm và giữ kiểu đã khai
-trong bảng: tiền có mã tiền tệ, ngày ISO, số dài bằng text JSON; text không
-thành công thức Excel. Tệp JSON là dữ liệu chuẩn để module ghép cột.
-Không ghi kết quả/bộ/lịch sử lên máy engine; module quyết định lưu.
+Hậu kiểm giữ `kieu=van_ban`, `kieu_da_chuyen=false` vì snapshot E1 chưa
+khai quy tắc chuyển kiểu. Không tự đoán tiền/ngày hoặc tính TT-21.
+Exporter hỗ trợ sáu kiểu chung, tiền có mã tiền tệ, ngày ISO, số dài bằng
+text JSON; text không thành công thức Excel. Hai tệp JSON/Excel tạo trong
+RAM và tải lên Core; chỉ trả `XONG` khi đủ hai tệp. Trường tĩnh:
+`tep_json`, `tep_excel`, `so_tham_so`, `so_can_soat`, `co_can_cu`.
+Module dùng JSON chuẩn để ghép cột, quyết định lưu và quản lý lịch sử.
+Không ghi kết quả/bộ/lịch sử lên máy engine. E6/N1/Core thật chưa kiểm.

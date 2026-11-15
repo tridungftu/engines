@@ -1,0 +1,1239 @@
+{
+  "bam_xlsx": "sha256:05846a2acd60f2cde708d13a163a137ee3fb0b4e08fd84f85a7e14e7ef861bcd",
+  "bam_noi_dung_e1": "6b8190a73e73ced8784fb22e3339a42d72785826ae15b1a499955facb4d65812",
+  "bam_snapshot_json_DEMO": "sha256:36ede31d53aab2af694e3856f84dc0851c1d51d4a2e2ece9a212a6475b3ff67a",
+  "bam_ma_nguon_cu_LF": {
+    "quy_trinh.py": "sha256:236000766047fd789709d0150873fe6c9ecff06c6de2dd92e762fc1ea4d0e0d6",
+    "ai_chung.py": "sha256:b82abcb6a92a8d9dfc90b92d053497bc8cbb251c71ab9ee1ddb37ed395a45f45",
+    "docx.py": "sha256:84b5662856ecf2742360077012377f913698a917e1fd4a4a08f87568e1af6a5b",
+    "vendor/review/danh_muc.py": "sha256:f0796984f7b18a4d0d3389b557a6324f3ad59ca488c29ad3284e11ca97ca2ff2",
+    "vendor/review/xlsx_mini.py": "sha256:a29ed16811637daa756fcb2640557ec817734d3d2ee617c30deca51d3799857b",
+    "vendor/review/doc_hop_dong.py": "sha256:1a73354377cd5a13aaa9c45254756d54099796150c7ad798ef26cff5e86c556f",
+    "vendor/review/cau_truc.py": "sha256:2817a46ec2fc967d1e64eae1dd68e35047e687a7b654a9c8ce03f106b9aad5c6",
+    "vendor/review/kiem_tra.py": "sha256:47ee35567cb7b864a6b3d6825bc90f93a7a26c0c6872a326e99ead9160467f12",
+    "vendor/review/logic.py": "sha256:f7cfcf37ff2293d8f8ea994f1ae0a69f57d1d1d9a844f0620f018a3d285a4452"
+  },
+  "so_ma": 37,
+  "so_cot": 10,
+  "nguyen_van_10_cot": true,
+  "thu_tu_37_ma": true,
+  "trang_thai": "chua_kiem",
+  "ai_that": 0,
+  "cloud": 0,
+  "cac_ca": [
+    {
+      "ma": "DEMO-thuong",
+      "loai": "thuong",
+      "byte_bat_buoc": {
+        "bo_10_cot": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 8661,
+          "so_byte_phai": 8661,
+          "bam_trai": "sha256:f942f4c117ae1b92eed4dd1ad7629a4f273dd2ed2fae8886016f3276be1c3bbd",
+          "bam_phai": "sha256:f942f4c117ae1b92eed4dd1ad7629a4f273dd2ed2fae8886016f3276be1c3bbd"
+        },
+        "tham_so": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 13243,
+          "so_byte_phai": 13243,
+          "bam_trai": "sha256:8450c4a622e02779f181b2a0fc4c47a6f88365933ffd844136d58b903d6e4c94",
+          "bam_phai": "sha256:8450c4a622e02779f181b2a0fc4c47a6f88365933ffd844136d58b903d6e4c94"
+        },
+        "van_ban": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 3175,
+          "so_byte_phai": 3175,
+          "bam_trai": "sha256:9f95dcb74d7e899a54132a1b15a1122e64828a87d2b0eff47a51612f28ae62ad",
+          "bam_phai": "sha256:9f95dcb74d7e899a54132a1b15a1122e64828a87d2b0eff47a51612f28ae62ad"
+        }
+      },
+      "tham_khao_khong_cham": {
+        "cau_hoi": {
+          "trung_byte": false,
+          "byte_khac_dau": 3,
+          "so_byte_trai": 35846,
+          "so_byte_phai": 11177,
+          "bam_trai": "sha256:b96adff0fd7b11691c0c25992476ab736fc20699349ea767bb04e4ef1a61315b",
+          "bam_phai": "sha256:e06704be109ea4ce8c07c5623a6239f15fc7f48bea9d616592212e16cac20ef1"
+        },
+        "bang": {
+          "trung_byte": false,
+          "byte_khac_dau": 3,
+          "so_byte_trai": 24120,
+          "so_byte_phai": 28083,
+          "bam_trai": "sha256:23335b35f5554aaea34101de65a266677a3da994a79bdd761642604e76e1ec5d",
+          "bam_phai": "sha256:8221b8d8e04199c332ac635f05b6a82f3baa64f9fc8e085495a82519e3e51ab6"
+        },
+        "phan_hoi": {
+          "trung_byte": false,
+          "byte_khac_dau": 12,
+          "so_byte_trai": 8180,
+          "so_byte_phai": 8434,
+          "bam_trai": "sha256:456e8b7efce44f6c51d9c02210441e987373f2bbb53ea516478fcbf996c3968d",
+          "bam_phai": "sha256:829ef43671723b51c98a233b3a90e228100f296832a4caabc00e311997e381aa"
+        }
+      },
+      "tung_ma": [
+        {
+          "ma": "TC-01",
+          "ket_qua": "khớp",
+          "cu": "DEMO-XD-001",
+          "moi": "DEMO-XD-001",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "DEMO-XD-001",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-02",
+          "ket_qua": "khớp",
+          "cu": "2026-10-30",
+          "moi": "2026-10-30",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "2026-10-30",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-03",
+          "ket_qua": "khớp",
+          "cu": "Thi công nhà kho DEMO",
+          "moi": "Thi công nhà kho DEMO",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Thi công nhà kho DEMO",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-04",
+          "ket_qua": "khớp",
+          "cu": "Khu công nghiệp DEMO Sao Mai",
+          "moi": "Khu công nghiệp DEMO Sao Mai",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Khu công nghiệp DEMO Sao Mai",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-05",
+          "ket_qua": "khớp",
+          "cu": "Lô DEMO A khu DEMO Bình Minh",
+          "moi": "Lô DEMO A khu DEMO Bình Minh",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Lô DEMO A khu DEMO Bình Minh",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-06",
+          "ket_qua": "khớp",
+          "cu": "Công ty DEMO Ánh Dương",
+          "moi": "Công ty DEMO Ánh Dương",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Công ty DEMO Ánh Dương",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-07",
+          "ket_qua": "khớp",
+          "cu": "Công ty DEMO Mây Trắng",
+          "moi": "Công ty DEMO Mây Trắng",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Công ty DEMO Mây Trắng",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-08",
+          "ket_qua": "khớp",
+          "cu": "2026-11-01",
+          "moi": "2026-11-01",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "2026-11-01",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-09",
+          "ket_qua": "khớp",
+          "cu": "Thi công xây dựng",
+          "moi": "Thi công xây dựng",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Thi công xây dựng",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-01",
+          "ket_qua": "khớp",
+          "cu": "trọn gói",
+          "moi": "trọn gói",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "trọn gói",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-02",
+          "ket_qua": "khớp",
+          "cu": "1.100.000 VND",
+          "moi": "1.100.000 VND",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "1.100.000 VND",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-03",
+          "ket_qua": "khớp",
+          "cu": "Có",
+          "moi": "Có",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Có",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-04",
+          "ket_qua": "khớp",
+          "cu": "10%",
+          "moi": "10%",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "10%",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-05",
+          "ket_qua": "khớp",
+          "cu": "KL nghiệm thu thực tế",
+          "moi": "KL nghiệm thu thực tế",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "KL nghiệm thu thực tế",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-10",
+          "ket_qua": "khớp",
+          "cu": "20% giá trị sau VAT",
+          "moi": "20% giá trị sau VAT",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "20% giá trị sau VAT",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-11",
+          "ket_qua": "khớp",
+          "cu": "Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt",
+          "moi": "Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-12",
+          "ket_qua": "khớp",
+          "cu": "220.000 VND, hiệu lực đến khi thu hồi hết tạm ứng",
+          "moi": "220.000 VND, hiệu lực đến khi thu hồi hết tạm ứng",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "220.000 VND, hiệu lực đến khi thu hồi hết tạm ứng",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-20",
+          "ket_qua": "khớp",
+          "cu": "90% giá trị nghiệm thu mỗi đợt",
+          "moi": "90% giá trị nghiệm thu mỗi đợt",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "90% giá trị nghiệm thu mỗi đợt",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-21",
+          "ket_qua": "khớp",
+          "cu": "10%",
+          "moi": "10%",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "10%",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-22",
+          "ket_qua": "khớp",
+          "cu": "15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ",
+          "moi": "15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-30",
+          "ket_qua": "khớp",
+          "cu": "95% giá trị quyết toán",
+          "moi": "95% giá trị quyết toán",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "95% giá trị quyết toán",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-31",
+          "ket_qua": "khớp",
+          "cu": "5% giá trị quyết toán",
+          "moi": "5% giá trị quyết toán",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "5% giá trị quyết toán",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-32",
+          "ket_qua": "khớp",
+          "cu": "12 tháng kể từ ngày nghiệm thu hoàn thành",
+          "moi": "12 tháng kể từ ngày nghiệm thu hoàn thành",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "12 tháng kể từ ngày nghiệm thu hoàn thành",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-33",
+          "ket_qua": "khớp",
+          "cu": "110.000 VND, hiệu lực đến nghiệm thu hoàn thành",
+          "moi": "110.000 VND, hiệu lực đến nghiệm thu hoàn thành",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "110.000 VND, hiệu lực đến nghiệm thu hoàn thành",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-40",
+          "ket_qua": "khớp",
+          "cu": "Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản",
+          "moi": "Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-41",
+          "ket_qua": "khớp",
+          "cu": "Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01",
+          "moi": "Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-42",
+          "ket_qua": "khớp",
+          "cu": "Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký",
+          "moi": "Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-50",
+          "ket_qua": "khớp",
+          "cu": "120 ngày kể từ ngày khởi công 2026-11-02",
+          "moi": "120 ngày kể từ ngày khởi công 2026-11-02",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "120 ngày kể từ ngày khởi công 2026-11-02",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-51",
+          "ket_qua": "khớp",
+          "cu": "8% giá trị phần công việc vi phạm chất lượng",
+          "moi": "8% giá trị phần công việc vi phạm chất lượng",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "8% giá trị phần công việc vi phạm chất lượng",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-52",
+          "ket_qua": "khớp",
+          "cu": "0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên",
+          "moi": "0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-53",
+          "ket_qua": "khớp",
+          "cu": "0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8",
+          "moi": "0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-54",
+          "ket_qua": "khớp",
+          "cu": "0,05% giá trị phần công việc chậm hoàn thành mỗi ngày",
+          "moi": "0,05% giá trị phần công việc chậm hoàn thành mỗi ngày",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "0,05% giá trị phần công việc chậm hoàn thành mỗi ngày",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-55",
+          "ket_qua": "khớp",
+          "cu": "8% giá trị phần nghĩa vụ vi phạm",
+          "moi": "8% giá trị phần nghĩa vụ vi phạm",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "8% giá trị phần nghĩa vụ vi phạm",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-56",
+          "ket_qua": "khớp",
+          "cu": "Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận",
+          "moi": "Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-60",
+          "ket_qua": "khớp",
+          "cu": "Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO",
+          "moi": "Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-61",
+          "ket_qua": "khớp",
+          "cu": "Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO",
+          "moi": "Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-62",
+          "ket_qua": "khớp",
+          "cu": "3 bộ",
+          "moi": "3 bộ",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "3 bộ",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        }
+      ],
+      "dat_do": true,
+      "metadata": {
+        "module": "DEMO-crm",
+        "phien_ban_bo": "DEMO-E6-1",
+        "bam_snapshot_json": "sha256:36ede31d53aab2af694e3856f84dc0851c1d51d4a2e2ece9a212a6475b3ff67a",
+        "so_dong": 37
+      },
+      "nguon": {
+        "docx": {
+          "tep": "DEMO-thuong.docx",
+          "bam": "sha256:9d632660f560d943569d6b76644c00ddc4689c2b8f038dd5ab9d97c5b2897283"
+        },
+        "ai": {
+          "tep": "DEMO-thuong.ai.json",
+          "bam": "sha256:e2c4b17c07013bc88d3553f50c01ac43da59c20f651b93f8fbcaeb1a711959be"
+        },
+        "tham_so": {
+          "tep": "DEMO-thuong.tham-so.json",
+          "bam": "sha256:02eb194ec5b462c5b7eaf6ad440208b065274dfbc33e015d3f3a295cb5077644"
+        },
+        "vang": {
+          "tep": "DEMO-thuong.vang.json",
+          "bam": "sha256:25972ccba8878c293e830dcb37b0aef4a08ab23af50f4538eb7aad0f92deaaca"
+        }
+      },
+      "track_changes_da_nhan": 0,
+      "so_cau_hoi_cu": 9,
+      "so_cau_hoi_moi": 1
+    },
+    {
+      "ma": "DEMO-track-changes",
+      "loai": "track_changes",
+      "byte_bat_buoc": {
+        "bo_10_cot": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 8661,
+          "so_byte_phai": 8661,
+          "bam_trai": "sha256:f942f4c117ae1b92eed4dd1ad7629a4f273dd2ed2fae8886016f3276be1c3bbd",
+          "bam_phai": "sha256:f942f4c117ae1b92eed4dd1ad7629a4f273dd2ed2fae8886016f3276be1c3bbd"
+        },
+        "tham_so": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 13243,
+          "so_byte_phai": 13243,
+          "bam_trai": "sha256:8450c4a622e02779f181b2a0fc4c47a6f88365933ffd844136d58b903d6e4c94",
+          "bam_phai": "sha256:8450c4a622e02779f181b2a0fc4c47a6f88365933ffd844136d58b903d6e4c94"
+        },
+        "van_ban": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 3175,
+          "so_byte_phai": 3175,
+          "bam_trai": "sha256:360199b2583f803eb50429d1e8fcc9da8899f6ff9470080c9d81a8481649bcd6",
+          "bam_phai": "sha256:360199b2583f803eb50429d1e8fcc9da8899f6ff9470080c9d81a8481649bcd6"
+        }
+      },
+      "tham_khao_khong_cham": {
+        "cau_hoi": {
+          "trung_byte": false,
+          "byte_khac_dau": 3,
+          "so_byte_trai": 35846,
+          "so_byte_phai": 11177,
+          "bam_trai": "sha256:c58612f75562cdb84b5882f79bcac02b5e74d65c29da1149f70d769b82ea4377",
+          "bam_phai": "sha256:0ef72d8021f6ad2249e5becbc0d0f742d2247a79233d76a1877c2d97a134643a"
+        },
+        "bang": {
+          "trung_byte": false,
+          "byte_khac_dau": 3,
+          "so_byte_trai": 24120,
+          "so_byte_phai": 28083,
+          "bam_trai": "sha256:71e1a3003cd15ced5679e5111d8a46b71d40a4fae0587b45d3aed661f3702c1f",
+          "bam_phai": "sha256:1222f5f0ad88339a8a1f7aa2253da089fecbe984697c867f933fbf287429e24d"
+        },
+        "phan_hoi": {
+          "trung_byte": false,
+          "byte_khac_dau": 12,
+          "so_byte_trai": 8180,
+          "so_byte_phai": 8434,
+          "bam_trai": "sha256:e3a5a4755a5bc94ab5a88a95bebf291cb95c4cabd33af7c5861c5fe9696a0daf",
+          "bam_phai": "sha256:3a9f8b7f26abe4bc6adeb4ea911ce840706fc072c49d41e3a76d10153e34a784"
+        }
+      },
+      "tung_ma": [
+        {
+          "ma": "TC-01",
+          "ket_qua": "khớp",
+          "cu": "DEMO-XD-002",
+          "moi": "DEMO-XD-002",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "DEMO-XD-002",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-02",
+          "ket_qua": "khớp",
+          "cu": "2026-10-30",
+          "moi": "2026-10-30",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "2026-10-30",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-03",
+          "ket_qua": "khớp",
+          "cu": "Thi công nhà kho DEMO",
+          "moi": "Thi công nhà kho DEMO",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Thi công nhà kho DEMO",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-04",
+          "ket_qua": "khớp",
+          "cu": "Khu công nghiệp DEMO Sao Mai",
+          "moi": "Khu công nghiệp DEMO Sao Mai",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Khu công nghiệp DEMO Sao Mai",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-05",
+          "ket_qua": "khớp",
+          "cu": "Lô DEMO A khu DEMO Bình Minh",
+          "moi": "Lô DEMO A khu DEMO Bình Minh",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Lô DEMO A khu DEMO Bình Minh",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-06",
+          "ket_qua": "khớp",
+          "cu": "Công ty DEMO Ánh Dương",
+          "moi": "Công ty DEMO Ánh Dương",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Công ty DEMO Ánh Dương",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-07",
+          "ket_qua": "khớp",
+          "cu": "Công ty DEMO Mây Trắng",
+          "moi": "Công ty DEMO Mây Trắng",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Công ty DEMO Mây Trắng",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-08",
+          "ket_qua": "khớp",
+          "cu": "2026-11-01",
+          "moi": "2026-11-01",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "2026-11-01",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TC-09",
+          "ket_qua": "khớp",
+          "cu": "Thi công xây dựng",
+          "moi": "Thi công xây dựng",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Thi công xây dựng",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-01",
+          "ket_qua": "khớp",
+          "cu": "trọn gói",
+          "moi": "trọn gói",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "trọn gói",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-02",
+          "ket_qua": "khớp",
+          "cu": "2.200.000 VND",
+          "moi": "2.200.000 VND",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "2.200.000 VND",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-03",
+          "ket_qua": "khớp",
+          "cu": "Có",
+          "moi": "Có",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Có",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-04",
+          "ket_qua": "khớp",
+          "cu": "10%",
+          "moi": "10%",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "10%",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-05",
+          "ket_qua": "khớp",
+          "cu": "KL nghiệm thu thực tế",
+          "moi": "KL nghiệm thu thực tế",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "KL nghiệm thu thực tế",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-10",
+          "ket_qua": "khớp",
+          "cu": "20% giá trị sau VAT",
+          "moi": "20% giá trị sau VAT",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "20% giá trị sau VAT",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-11",
+          "ket_qua": "khớp",
+          "cu": "Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt",
+          "moi": "Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Thu hồi từ đợt đầu, mỗi đợt 25% số tạm ứng, hết sau 4 đợt",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-12",
+          "ket_qua": "khớp",
+          "cu": "440.000 VND, hiệu lực đến khi thu hồi hết tạm ứng",
+          "moi": "440.000 VND, hiệu lực đến khi thu hồi hết tạm ứng",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "440.000 VND, hiệu lực đến khi thu hồi hết tạm ứng",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-20",
+          "ket_qua": "khớp",
+          "cu": "90% giá trị nghiệm thu mỗi đợt",
+          "moi": "90% giá trị nghiệm thu mỗi đợt",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "90% giá trị nghiệm thu mỗi đợt",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-21",
+          "ket_qua": "khớp",
+          "cu": "10%",
+          "moi": "10%",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "10%",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-22",
+          "ket_qua": "khớp",
+          "cu": "15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ",
+          "moi": "15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "15 ngày làm việc kể từ khi nhận đủ hồ sơ hợp lệ",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-30",
+          "ket_qua": "khớp",
+          "cu": "95% giá trị quyết toán",
+          "moi": "95% giá trị quyết toán",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "95% giá trị quyết toán",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-31",
+          "ket_qua": "khớp",
+          "cu": "5% giá trị quyết toán",
+          "moi": "5% giá trị quyết toán",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "5% giá trị quyết toán",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-32",
+          "ket_qua": "khớp",
+          "cu": "12 tháng kể từ ngày nghiệm thu hoàn thành",
+          "moi": "12 tháng kể từ ngày nghiệm thu hoàn thành",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "12 tháng kể từ ngày nghiệm thu hoàn thành",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-33",
+          "ket_qua": "khớp",
+          "cu": "220.000 VND, hiệu lực đến nghiệm thu hoàn thành",
+          "moi": "220.000 VND, hiệu lực đến nghiệm thu hoàn thành",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "220.000 VND, hiệu lực đến nghiệm thu hoàn thành",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-40",
+          "ket_qua": "khớp",
+          "cu": "Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản",
+          "moi": "Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Chỉ điều chỉnh khi hai bên ký phụ lục bằng văn bản",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-41",
+          "ket_qua": "khớp",
+          "cu": "Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01",
+          "moi": "Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Biến động vượt 5% so với giá gốc DEMO ngày 2026-10-01",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-42",
+          "ket_qua": "khớp",
+          "cu": "Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký",
+          "moi": "Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Khối lượng phát sinh chỉ thi công sau phụ lục được hai bên ký",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-50",
+          "ket_qua": "khớp",
+          "cu": "120 ngày kể từ ngày khởi công 2026-11-02",
+          "moi": "120 ngày kể từ ngày khởi công 2026-11-02",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "120 ngày kể từ ngày khởi công 2026-11-02",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-51",
+          "ket_qua": "khớp",
+          "cu": "8% giá trị phần công việc vi phạm chất lượng",
+          "moi": "8% giá trị phần công việc vi phạm chất lượng",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "8% giá trị phần công việc vi phạm chất lượng",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-52",
+          "ket_qua": "khớp",
+          "cu": "0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên",
+          "moi": "0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "0,02% giá trị giai đoạn mỗi ngày trong 7 ngày chậm đầu tiên",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-53",
+          "ket_qua": "khớp",
+          "cu": "0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8",
+          "moi": "0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "0,04% giá trị giai đoạn mỗi ngày từ ngày chậm thứ 8",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-54",
+          "ket_qua": "khớp",
+          "cu": "0,05% giá trị phần công việc chậm hoàn thành mỗi ngày",
+          "moi": "0,05% giá trị phần công việc chậm hoàn thành mỗi ngày",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "0,05% giá trị phần công việc chậm hoàn thành mỗi ngày",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-55",
+          "ket_qua": "khớp",
+          "cu": "8% giá trị phần nghĩa vụ vi phạm",
+          "moi": "8% giá trị phần nghĩa vụ vi phạm",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "8% giá trị phần nghĩa vụ vi phạm",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-56",
+          "ket_qua": "khớp",
+          "cu": "Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận",
+          "moi": "Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Khấu trừ tiền phạt vào đợt thanh toán kế tiếp sau biên bản xác nhận",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-60",
+          "ket_qua": "khớp",
+          "cu": "Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO",
+          "moi": "Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Biên bản nghiệm thu; Bảng xác nhận khối lượng; Hóa đơn DEMO",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-61",
+          "ket_qua": "khớp",
+          "cu": "Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO",
+          "moi": "Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "Biên bản hoàn thành; Bảng quyết toán; Hóa đơn DEMO",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        },
+        {
+          "ma": "TT-62",
+          "ket_qua": "khớp",
+          "cu": "3 bộ",
+          "moi": "3 bộ",
+          "dan_chung_hop_le": true,
+          "ly_do": [
+            "Giá trị bằng nhau sau strip đầu/cuối."
+          ],
+          "dat": true,
+          "vang": "3 bộ",
+          "cu_khop_vang": true,
+          "moi_khop_vang": true
+        }
+      ],
+      "dat_do": true,
+      "metadata": {
+        "module": "DEMO-m3",
+        "phien_ban_bo": "DEMO-E6-1",
+        "bam_snapshot_json": "sha256:d1800ec3a87e222eddf2246553fc3b0a887b48096af1b26680ff7cbe0e7c8239",
+        "so_dong": 37
+      },
+      "nguon": {
+        "docx": {
+          "tep": "DEMO-track-changes.docx",
+          "bam": "sha256:881057802339b4185ac92a824e498191a39f8ea8b69d7e6fccbe699454eb8d71"
+        },
+        "ai": {
+          "tep": "DEMO-track-changes.ai.json",
+          "bam": "sha256:ca3a26b9fcaccb738ed866b647bad5e96c80d5a399b6f6345fd151eefeafc6a5"
+        },
+        "tham_so": {
+          "tep": "DEMO-track-changes.tham-so.json",
+          "bam": "sha256:6cb40338981b62f9699f382af468384d8379a82d0e706e331cffd60abbfa0f54"
+        },
+        "vang": {
+          "tep": "DEMO-track-changes.vang.json",
+          "bam": "sha256:a638c23bd8f3d61b57f6aa979fe0e3a8ea1c461d2bdff2339fd51598d6994b2b"
+        }
+      },
+      "track_changes_da_nhan": 2,
+      "so_cau_hoi_cu": 9,
+      "so_cau_hoi_moi": 1
+    }
+  ],
+  "chuan_hoa": "Chỉ str.strip() khoảng trắng đầu/cuối; không NFC, không đổi khoảng trắng bên trong, số/tiền/ngày.",
+  "da_kiem": "đã kiểm bằng Core giả (CoreGia)",
+  "bam_manifest": "sha256:1728003ae4428b6a19fb42a63b6b17c541c8df85d71eb1b1c3176fbc73423418",
+  "chap_nhan_lead": "chờ lead",
+  "ket_qua_do": "dat",
+  "ly_do_nghiem_thu": "Đã đo; bộ DEMO và bản vàng chờ lead duyệt."
+}

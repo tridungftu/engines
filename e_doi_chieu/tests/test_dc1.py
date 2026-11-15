@@ -189,6 +189,7 @@ def mo_ref_demo(viec, ref):
 def app_kiem_demo():
     """Năng lực chỉ ở test; KHÔNG đăng ký nhan_cap hoặc thay app thật."""
     phieu = deepcopy(chay.app.phieu)
+    phieu["chay_thu_demo"] = []  # App test chỉ có năng lực kiểm contract.
     phieu["nang_luc"] = [{"ma": "demo.kiem_contract@1", "ten": "Kiểm phong bì DEMO",
                           "nhan": ["ho_so_doi_chieu"], "tra": "ho_so_doi_chieu",
                           "gioi_han": {"tep_toi_da_mib": 20, "thoi_han_giay": 120}}]
@@ -252,7 +253,8 @@ def test_manifest_core_gia_giu_khung():
         {"ma": "ho_so_doi_chieu", "ten": "Hồ sơ đối chiếu bản ký"}]
     core = CoreGia()
     core.chay(chay.app)
-    assert core.chay_thu_demo(chay.app, GOI) == []
+    demo = core.chay_thu_demo(chay.app, GOI)
+    assert demo and all(kq["trang_thai"] == "XONG" for kq in demo)
     assert [n["ma"] for n in chay.app.phieu["nang_luc"]] == ["doi_chieu.doc_docx@1"]
 
 

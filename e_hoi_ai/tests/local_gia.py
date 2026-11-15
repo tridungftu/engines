@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 import threading
+import socket
 
 TAI_LIEU = (
     "DEMO — Hợp đồng DEMO-001 của Công ty DEMO Ánh Dương. "
@@ -20,8 +21,9 @@ class LocalGia:
     def __init__(self, tra_loi=None):
         self.tra_loi = TRA_LOI if tra_loi is None else tra_loi
         self.tra_loi_tung_luot = []
-        self.models = [{"id": "model-demo", "owned_by": "local-demo"}]
+        self.models = [{"id": "model-demo", "owned_by": "local-demo", "context_length": 65536}]
         self.tags = None
+        self.dang_chay = [{"name": "model-demo", "context_length": 65536}]
         self.native_v1 = None
         self.native_v0 = None
         self.phan_hoi_get = {}
@@ -30,6 +32,9 @@ class LocalGia:
         self.khi_nhan = lambda phuong_thuc, duong: None
         self.ma_http = 200
         self.phan_hoi_tho = None
+        self.sua_phong_bi = {}
+        self.cat_sau_post = False
+        self.cat_than_sau_post = False
         self.chuyen_huong = None
         self.may_chu = None
 
@@ -57,6 +62,8 @@ class LocalGia:
                 self.send_header("Content-Type", "application/json")
                 self.send_header("Content-Length", str(len(raw)))
                 self.end_headers()
+                if chu.cat_than_sau_post and self.command == "POST":
+                    raw = raw[:len(raw) // 2]
                 try:
                     self.wfile.write(raw)
                 except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
@@ -87,6 +94,8 @@ class LocalGia:
                     self.tra(200, {"data": chu.models})
                 elif self.path == "/api/tags" and chu.tags is not None:
                     self.tra(200, {"models": chu.tags})
+                elif self.path == "/api/ps":
+                    self.tra(200, {"models": chu.dang_chay})
                 else:
                     self.tra(404, {"error": "Đường dẫn DEMO không có."})
 
@@ -95,6 +104,10 @@ class LocalGia:
                 than = self.rfile.read(int(self.headers["Content-Length"]))
                 chu.yeu_cau.append(json.loads(than))
                 chu.khi_nhan("POST", self.path)
+                if chu.cat_sau_post:
+                    self.connection.shutdown(socket.SHUT_RDWR)
+                    self.connection.close()
+                    return
                 if self.chuyen():
                     return
                 if chu.phan_hoi_tho is not None:
@@ -102,8 +115,10 @@ class LocalGia:
                     return
                 tra_loi = chu.tra_loi_tung_luot.pop(0) if chu.tra_loi_tung_luot else chu.tra_loi
                 noi_dung = tra_loi if isinstance(tra_loi, str) else json.dumps(tra_loi, ensure_ascii=False)
-                self.tra(chu.ma_http, {"message": {"content": noi_dung}} if self.path == "/api/chat"
-                         else {"choices": [{"message": {"content": noi_dung}}]})
+                phong_bi = ({"message": {"content": noi_dung}, "done": True, "done_reason": "stop"}
+                           if self.path == "/api/chat" else
+                           {"choices": [{"message": {"content": noi_dung}, "finish_reason": "stop"}]})
+                self.tra(chu.ma_http, {**phong_bi, **chu.sua_phong_bi})
 
         self.may_chu = ThreadingHTTPServer(("127.0.0.1", 0), XuLy)
         self.luong = threading.Thread(target=self.may_chu.serve_forever,

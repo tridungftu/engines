@@ -33,6 +33,16 @@ class ThieuBangAI(ValueError):
     """Băng AI không đủ hoặc còn lượt chưa dùng; không sinh câu trả lời."""
 
 
+def gia_tri_cu(dong):
+    """Đổi dấu thiếu của giao thức cũ sang null, không đổi giá trị nghiệp vụ.
+
+    Chỉ chuỗi rỗng và thông báo thiếu vị trí do pipeline tự sinh là vắng mặt.
+    'Không quy định' và 'Không áp dụng' vẫn là câu trả lời nghiệp vụ.
+    """
+    v = dong["gia_tri"]
+    return None if v is None or v == "" or v == "Không tìm thấy trong HĐ" else v
+
+
 def _cam(*args, **kwargs):
     raise ValueError("Thao tác ngoài phạm vi đối chiếu E6.")
 

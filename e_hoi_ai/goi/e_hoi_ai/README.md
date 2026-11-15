@@ -1,10 +1,25 @@
-# e_hoi_ai — Hỏi AI (AI-1, AI-2, AI-3, AI-4)
+# e_hoi_ai — Hỏi AI (AI-1…AI-9)
 
-Gói SDK 2.0.0, phiên bản 0.4.0, dùng lại khung AI-0 và lõi AI-1. Chỉ dùng thư viện chuẩn Python (Python ≥ 3.11) và `kho_tri_thuc_sdk` 2.0.0. Gọi Local theo API OpenAI-compatible hoặc Ollama native khi có khuôn; mọi đường bản 1 chỉ dùng provider Local.
+Gói SDK 2.0.0, phiên bản 0.5.0, dùng lại khung AI-0 và lõi AI-1. Chỉ dùng thư viện chuẩn Python (Python ≥ 3.11) và `kho_tri_thuc_sdk` 2.0.0. Gọi Local theo API OpenAI-compatible hoặc Ollama native khi có khuôn; mọi đường bản 1 chỉ dùng provider Local.
 
 - `ai.hoi_tai_lieu@1`: nhận `van_ban` hoặc `van_ban_tai_lieu`, trả bộ trường `tra_loi`, `co_can_cu`, `trich_dan`, `model`, `ly_do_chon_model`.
 - `ai.hoi_theo_yeu_cau@1`: nhận `yeu_cau_ai`, trả `tra_loi_ai`.
-- Cả hai năng lực đã thực hiện; không có nội dung prompt mặc định chung.
+- `ai.hoi_mask_cuc_bo@1`: nhận `yeu_cau_ai`, trả `tra_loi_ai` có thực thể và span trên gốc, chỉ Local.
+- Prompt nghiệp vụ thuộc module/quy trình, không lưu trong cấu hình engine.
+
+## Nhận diện Local AI-9 — 15/11/2026
+
+Profile `chuyen_tiep.mask_2c` đã được lead duyệt ngày 15/11 theo sổ loại chung §6. Kiểm đủ trường, local bắt buộc, phiên bản, tham chiếu kỹ thuật an toàn, dạng SHA-256, hệ offset, chỉ số/số đoạn và khoảng đoạn. Tái tính băm prompt UTF-8, khuôn JSON chuẩn và đoạn gốc; một đoạn duy nhất còn đối chiếu băm gốc. Trần đoạn 8.000 code point, tối đa 128 đoạn, gốc tối đa 500.000, span tối đa 300; vượt từ chối. Engine không mở snapshot hoặc đọc ngăn riêng của Mask. Băm snapshot/profile/bản che và độ phủ toàn gốc nhiều đoạn phải được Core/Mask kiểm lại với bytes có quyền; payload không tự cấp quyền hoặc chứng thực nguồn.
+
+Model nhận prompt do module cấp và đúng đoạn gốc, giữ nguyên NFD/Cf/selector. Khuôn được truyền trực tiếp; model trả duy nhất `{da_quet_het:true,thuc_the:[{loai,nguyen_van,bat_dau,ket_thuc,muc}]}`, sau đó engine đặt đối tượng ấy vào `tra_loi_ai.du_lieu`. Mọi object đóng, đủ required, loại `nguoi|to_chuc|dia_chi`, mức `chac|nghi_ngo`. Không nhận JSON rào Markdown/thiếu/khóa trùng/NaN/Infinity/ngoài khuôn. AI-9 không tự hỏi lại; sai JSON/khuôn/span là lỗi và không có kết quả. Quy tắc hỏi lại AI-2 giữ nguyên.
+
+Kiểm span bằng số nguyên Python (không nhận bool/float), `0 <= a < b <= len(goc)` và `goc[a:b] == nguyen_van`. Giữ riêng trích dẫn mỗi lần xuất hiện; nhãn/mức/offset không cần xuất hiện trong câu trích. Rỗng hợp lệ trả `khong_thay_can_cu`, `kiem_trich_dan.dat=true`, `du_lieu` đúng khuôn và trích dẫn rỗng; không chứng minh đã nhận diện hết hoặc đủ điều kiện Cloud. `nha_cung_cap=local` do engine đặt; `bam_dau_vao` vẫn là SHA JSON chuẩn của toàn phong bì yêu cầu. `chuyen_tiep` được giữ nguyên byte JSON chuẩn hóa, không gửi ra model; không đưa snapshot/mã yêu cầu vào wire/log.
+
+Budget AI-9: toàn body JSON đầu vào ≤64 KiB; dự trù bảo thủ `byte UTF-8 body + 256 + 8192 token đầu ra` phải nằm trong context server khai. Đây không phải số đếm tokenizer chính xác hoặc số đo model thật. Ollama lấy context đang chạy qua `/api/ps`; API tương thích đọc `loaded_context_length` hoặc `context_length` của đúng model tại endpoint discovery. Không lấy `max_context_length` làm context đang dùng; thiếu/sai metadata thì từ chối trước POST. Server không công bố trường này chưa chạy AI-9 được; cần lead xác minh/đo server thật. Đầu ra giới hạn 8192 token và 2.000.000 byte; chạm dấu cắt hoặc vượt trần không được lấy phần đầu làm kết quả.
+
+Transport chung kiểm Ollama `done=true,done_reason=stop` hoặc OpenAI-compatible `finish_reason=stop`. Lỗi kết nối chắc chắn trước gửi là `LOCAL_AI_KHONG_SAN_SANG`, có thể thử lại. Từ lúc bắt đầu gửi POST, timeout/mất phản hồi/body thiếu theo Content-Length hoặc HTTP 202 → `ChuaRo` với mã tương quan riêng; không retry/fallback. Phản hồi hoàn chỉnh sai nguồn/JSON/hoàn tất bị từ chối. Giữ IP trực tiếp, bind nguồn Tailscale, cấm DNS/proxy/redirect và metadata remote/cloud. Hủy/mất lease dừng trước nộp. Các quy tắc trích dẫn hỏi–đáp cũ giữ nguyên.
+
+Ba DEMO hỏi–đáp trong manifest giữ tương thích công cụ AI-7. `tests/chay_demo_voi_local_gia.py` chạy thêm một ca AI-9 bằng snapshot bytes thật trong kho RAM CoreGia; `--sdk-thu` kiểm riêng ba mẫu manifest. Đã kiểm bằng Core giả (CoreGia), không chứng nhận ACL/provenance hoặc model thật. Trước dùng thật lead phải xác nhận model chạy tại chỗ và chặn egress Cloud; IP private/nhãn local chưa chứng minh điều này. `BAT_CLOUD=False`, không khai năng lực Cloud.
 
 ## Hỏi tài liệu
 
@@ -28,7 +43,7 @@ Mỗi lượt ghi một dòng JSON kỹ thuật ra stderr: mã/phiên bản prom
 
 Kiểm `du_lieu` bằng tập con JSON Schema 2020-12 tự viết, offline: schema boolean; `type` (cả danh sách kiểu), `const`, `enum`; `properties`, `required`, `additionalProperties`, `minProperties`/`maxProperties`; `items`, `prefixItems`, `minItems`/`maxItems`, `uniqueItems`; `minLength`/`maxLength`; `minimum`, `maximum`, `exclusiveMinimum`, `exclusiveMaximum`, `multipleOf`; `allOf`, `anyOf`, `oneOf`, `not`; `$defs` và `$ref` nội bộ tới vị trí schema. Số nguyên phân biệt boolean; `multipleOf` kiểm bằng phân số để tránh sai số float. Chấp nhận các annotation `$schema`, `$id` ở gốc, `$comment`, `title`, `description`, `default`, `examples`; không tự áp default.
 
-Đây là bộ kiểm **tối thiểu**, không phải toàn bộ Draft 2020-12: `pattern`, `format`, `unevaluatedProperties`, reference ngoài, vòng `$ref`, resource `$id` lồng và từ khóa lạ bị từ chối trước mạng bằng `KHUON_KHONG_HOP_LE`. Trần độ sâu schema 64 và ngân sách kiểm 100.000 bước; vượt ngân sách không được xem là khớp. Contract chung chỉ cho `du_lieu` là object khi có khuôn; schema chỉ nhận kiểu khác hoặc schema `false` không thể tạo kết quả phù hợp. Sai khuôn/JSON hỏng được hỏi lại đúng một lần, vẫn sai → `AI_TRA_SAI_KHUON`; lỗi HTTP/mạng vẫn là `LOCAL_AI_KHONG_SAN_SANG`, không tự hỏi lại.
+Đây là bộ kiểm **tối thiểu**, không phải toàn bộ Draft 2020-12: `pattern`, `format`, `unevaluatedProperties`, reference ngoài, vòng `$ref`, resource `$id` lồng và từ khóa lạ bị từ chối trước mạng bằng `KHUON_KHONG_HOP_LE`. Trần độ sâu schema 64 và ngân sách kiểm 100.000 bước; vượt ngân sách không được xem là khớp. Contract chung chỉ cho `du_lieu` là object khi có khuôn; schema chỉ nhận kiểu khác hoặc schema `false` không thể tạo kết quả phù hợp. Ở năng lực hỏi theo yêu cầu cũ, sai khuôn/JSON hỏng được hỏi lại đúng một lần, vẫn sai → `AI_TRA_SAI_KHUON`. Lỗi trước gửi là `LOCAL_AI_KHONG_SAN_SANG`; sau khi POST có thể đã gửi mà mất phản hồi/timeout hoặc 202 thì `ChuaRo`, không tự hỏi lại.
 
 Hậu kiểm nguyên văn và token số giống AI-1. Kiểm thêm mọi giá trị lá trong `du_lieu` có căn cứ ở trích dẫn đã xác minh; chỉ cho phép chuyển số nhóm nghìn dạng Việt sang số JSON và ngày DD/MM/YYYY sang YYYY-MM-DD. Giá trị null không đòi dẫn chứng; boolean cần nguyên văn `true`/`false`. Cách kiểm bảo thủ có thể hạ một kết quả diễn giải đúng về nghĩa. Theo quyết định bản 1, `bat_buoc_trich_dan=false` vẫn không bỏ hậu kiểm trích dẫn chung. Sai dẫn chứng hạ `trang_thai=khong_thay_can_cu`, `kiem_trich_dan.dat=false`, trả cảnh báo và giữ `du_lieu` đúng schema để bước hậu kiểm xét trạng thái; không tự hỏi lại vì lỗi dẫn chứng.
 

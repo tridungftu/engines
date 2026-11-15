@@ -12,18 +12,20 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | OCR-4 | Lượt chưa rõ theo phương án B, chống trùng bền và đối chiếu hạn mức sau khởi động lại | OCR-13, 14, 15 | Xong 15/11/2026 | Phiếu 14/11/2026; PR: **chờ lead mở**. SDK DEMO 3/3, pytest 218 passed, 0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia) |
 | OCR-5 | Bộ DEMO, sáu ví dụ chạy thử và OCR-MAY ca 2/3/4/5/7/9; sửa namespace Word | OCR-11, 15, 16 | Xong — phiếu 14/11/2026 | Thực hiện 15/11/2026; PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); SDK 6/6, pytest 239 passed, 0 skipped; bằng chứng bên dưới |
 | OCR-6 | Ghim thư viện, nguồn và kiểm máy sạch | OCR-6 | Chưa đạt — phiếu 14/11/2026 | PR: **chờ lead mở**; chờ kiểm cài sạch và SDK DEMO theo bằng chứng bên dưới |
+| OCR-8 | Cấu hình, hạn mức và lượt ABBYY qua ngăn; màn quản trị; đóng nợ OCR-4 số 1 | OCR-8, 13, 14 | Xong 15/11/2026 trong phạm vi CoreGia/RAM | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), NganBoNho và KttCore/DOM giả; chờ NGAN-0/SDK 2.1, chi tiết bên dưới |
 | 1 | Đóng gói độc lập theo cổng chung; thay hàm SDK riêng `ocr_*_luot` bằng lượt bền chung khi Core có | OCR-6, 13 | Đang làm 14/11/2026 | Có khung OCR-0; chuyển lõi ở OCR-1…OCR-4, không sửa `ma-nguon/` |
 | 2 | Bổ sung nguồn dự phòng mask_ocr/Tesseract | OCR-8 | Xong 14/11/2026 | OCR-2 dùng CLI và pypdfium2 đã ghim, không thêm dependency. Máy đích xem **Cần cài** |
-| 3 | Màn hạn mức ABBYY / trạng thái máy (giao diện của engine) | OCR-8 | Chờ làm |  |
+| 3 | Màn hạn mức ABBYY / trạng thái máy (giao diện của engine) | OCR-8 | Xong 15/11/2026 với KttCore/DOM giả | Màn `ui/cau_hinh.js`; chờ SDK 2.1 nạp trong Core thật |
 | 4 | Bài máy test còn lại ca 1, 6, 8 | OCR-11 | Chờ Core / thiết kế | Ca 3 đã kiểm bằng Core giả ở OCR-5; ca 1 chờ thẻ trạng thái, ca 6 chờ Đối chiếu, ca 8 chờ bí mật/cầu nối có khóa |
 | 5 | Lát 9: ABBYY thật trên máy hiện tại bằng PDF DEMO (Anh đã cho phép mở kết nối tạm) | OCR-12 | Chờ làm | Không chép `in\ out\ jobs\ state\` |
 | 6 | Ghép Core (K1–K6) → nghiệm thu tổng thể | — | Chờ Core |  |
 
 ## Cần Core (chuyển lead Core qua Anh)
-- Theo SDK 2.0.0 và `GIAO-CODEX-THU-TU.md` §3: đưa cấu hình từ `san-sang` tới engine, kèm schema để Core dựng form. Tạm đọc JSON ngoài gói bằng `KTT_ENGINE_CAU_HINH`.
-- Ngăn dữ liệu engine: ghi theo lô nguyên tử, CAS/`row_version`, ràng buộc duy nhất/lấy hoặc tạo. Tạm dùng `KTT_ENGINE_DU_LIEU`; OCR-2 thêm `cap_nhat` đọc–sửa–ghi một khóa nguyên tử. `doc` rồi `ghi` vẫn không phải giao dịch/CAS nhiều lời gọi.
-- Lượt bền chung #10 `luot-ben` giữ/chốt/đọc (đợt 2): **khi Core có thao tác #10 thì thay `kho_tam` phần lượt của OCR-4**; cần giữ điều kiện duy nhất/nguyên tử theo pháp nhân + băm. Không dùng hàm `ocr_*_luot` cũ.
-- Bí mật theo tên, nhật ký kỹ thuật và thẻ trạng thái chung để thay phần trạng thái/hạn mức ABBYY; đợt 1 không làm giao diện riêng hay cầu nối có khóa.
+- OCR-8 đã chuyển cấu hình vào ngăn theo quyết định 15/11; cần SDK 2.1 cấp `app.ngan`/`viec.ngan` và màn quản trị `KttCore.engine`. Không còn dùng biến `KTT_ENGINE_CAU_HINH`/`KTT_ENGINE_DU_LIEU` trong đường chạy engine.
+- Ngăn thật cần nguyên tử toàn lô, CAS/`row_version`, duy nhất/lấy hoặc tạo theo pháp nhân + băm, đọc hết phân trang. Khai báo dự kiến ở `goi/e_ocr/KHAI-SDK-2.1.json`; manifest vẫn 2.0. Tạm RAM, chấp nhận mất hạn mức/dấu chống trùng khi khởi động lại theo quyết định Anh.
+- Lead gộp NGAN-0, thay nguyên `ngan.py`/`cau_hinh.py` trong gói và bỏ dấu skip của hai test so băm; đối chiếu chữ ký/kết quả API ở bằng chứng OCR-8. Không tạo/sửa `_chung/mau-ma/**` trong lát OCR-8.
+- Cần Core cấp quyền `admin_core`, nạp `mount(goc, {KttCore})` và gọi `destroy` khi đóng màn. Ngăn trạng thái có hai bản `abbyy` và mốc CAS `han_muc`; không tự xóa mốc hoặc lượt chưa rõ theo tuổi. Trạng thái ABBYY hiện phản ánh công tắc và khả năng truy cập thư mục, chưa là kiểm tiến trình FineReader.
+- Bí mật theo tên, nhật ký kỹ thuật chung và cầu nối có khóa vẫn thuộc các lát sau. Lượt bền #10 có thể dùng ngăn theo đề nghị SDK 2.1; không cần hàm `ocr_*_luot` cũ.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
 - OCR-3 không phát sinh thiếu hụt Core/SDK: tải DOCX ra bằng API chung `viec.tai_tep_ra`, không cần kênh ACK hoặc sổ bàn giao riêng.
 - OCR-5: cần mốc vào hàng chờ/nhận việc và số việc đang chờ qua cổng chung
@@ -33,12 +35,14 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
   và đường dẫn. OCR-5 đã đổi lỗi bất ngờ tại cổng engine thành lỗi cố định;
   cần cơ chế nhật ký an toàn chung của SDK/Core cho cả lỗi ngoài action.
 
-## Nợ — giữ nguyên ngoài phạm vi OCR-5
+## Nợ OCR-4 — cập nhật OCR-8 ngày 15/11/2026
 
-Ba nợ OCR-4 do lead chuyển, **chưa vá trong lát này**:
+OCR-8 đóng nợ số 1; số 2 và số 3 tiếp tục ngoài phạm vi lát:
 
-1. Khe đua giữa đọc trạng thái/`giu()` và lấy khóa lượt ở `chon_nguon.py`
-   (dòng 170–176 của nền OCR-4; OCR-5 chỉ thêm đo thời gian/nguồn tại đây).
+1. **Đã đóng trong OCR-8:** giữ trang + `lay_hoac_tao` trong một lô CAS,
+   không tạo thế hệ gửi mới từ lần đọc đã cũ; quyền đọc/dọn có CAS riêng.
+   Có test cùng tệp đồng thời, việc chậm qua lúc việc kia vừa xong và
+   xung đột khi giữ trang. Đã kiểm bằng Core giả (CoreGia).
 2. Lượt treo nếu tiến trình chết giữa `giu()` và thả tệp; chưa có bằng
    chứng phân biệt trước/sau công bố thì không tự nhả hạn mức.
 3. PDF mồ côi sau biên nhận `.loi.json`; cần xử lý ở lát riêng.
@@ -54,8 +58,8 @@ Ba nợ OCR-4 do lead chuyển, **chưa vá trong lát này**:
   mã 0 = đủ bộ đọc và `vie+eng`, mã 1 = cần cài, mã 2 = thiếu ngôn ngữ.
 - Nếu thiếu, Anh tự cài bộ Tesseract Windows x64 offline đã được duyệt,
   chọn cả tiếng Việt/Anh (hoặc bổ sung `vie.traineddata`, `eng.traineddata`
-  từ bộ cài). Chạy lại `.cmd`, đặt `tesseract.duong_dan` trong JSON ngoài
-  gói nếu không dùng PATH/vị trí mặc định; `ngon_ngu` là `vie+eng`.
+  từ bộ cài). Chạy lại `.cmd`, đặt `tesseract.duong_dan` ở màn Cấu hình OCR
+  nếu không dùng PATH/vị trí mặc định; `ngon_ngu` là `vie+eng`.
 - Thiếu khi cần dùng → `LoiNghiepVu("NGUON_DU_PHONG_CHUA_CAI", ...)`.
   Không chặn khởi động engine, PDF có lớp chữ hoặc việc ABBYY đọc được.
 
@@ -631,3 +635,153 @@ gói hoặc git. Toàn bộ 218 test nền còn nguyên, thêm 21 test OCR-5.
 - SDK CLI trực tiếp: 0/6, lỗi không truy cập dữ liệu tạm OCR trong môi trường hiện tại; không suy diễn thành lỗi nghiệp vụ. Pytest: 239 passed, 0 skipped; kiểm độc lập: đạt.
 - `vendor/mask_ocr/extraction.py` và `layout.py` được import gián tiếp qua `__init__.py`, có test vendor, nhưng parser DOCX/layout không được action hiện tại gọi; OCR-3 chuyển thể quy tắc sang `xuat_word.py`, không gọi parser. Giữ nguyên để tránh phá import/test; rà tách phần không dùng và chuyển `LUU-TRU/` sau, không xóa.
 - Cần Core: không phát sinh; giữ các mục hiện có.
+
+## Bằng chứng OCR-8 — 15/11/2026
+
+- Nhánh `codex/e_ocr-ocr-8`; PR: **chờ lead mở**. Chỉ sửa trong worktree
+  được giao; không commit/push, không sửa mẫu chung, SDK, Core hoặc mã cũ.
+- **Đã kiểm bằng Core giả (CoreGia)**, ngăn RAM `NganBoNho`, ABBYY giả và
+  KttCore/DOM giả của Node. CLI DEMO dùng Tesseract thật với `vie+eng`.
+  Chưa kiểm Linux, Core/ABBYY thật hoặc UI trong trình duyệt thật.
+- SDK 2.0.0 cài offline từ wheel, SHA-256 khớp
+  `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`.
+  `.venv --system-site-packages` dùng thư viện sẵn có, tất cả phiên bản
+  khớp `requirements.lock`; không dùng mạng, không thêm dependency.
+- Bốn bảng: `cau_hinh`, `han_muc_ngay`, `luot_abbyy`, `trang_thai_engine`.
+  Bảng lượt có khóa `ma_tuong_quan`, phạm vi `phap_nhan` và duy nhất
+  `[phap_nhan_id, bam_noi_dung]`; sổ ngày và cấu hình dùng phạm vi engine.
+  Không đặt hạn tự xóa cho lượt chưa rõ hoặc bản mốc CAS của hạn mức.
+- Giữ trang + lấy hoặc tạo lượt cùng một lô nguyên tử. Mọi thay đổi sổ
+  tăng bản `trang_thai_engine/han_muc` bằng CAS để bảo vệ tổng 30 ngày,
+  kể cả hai việc ở hai bên nửa đêm. CAS lệch thử lại tối đa 12 lần,
+  không cộng lại trang từ giao dịch thất bại. Đọc trạng thái đã cũ không
+  được tạo thế hệ gửi mới: đóng nợ OCR-4 số 1.
+- Quyền xử lý lượt có CAS, 30 giây, gia hạn khi còn 10 giây. Worker mất
+  quyền không được chốt/hoàn/dọn thay worker mới; quyền hết hạn chỉ cho
+  đọc lại cùng mã. Dấu lượt và trang đang giữ không tự hết hạn theo quyền.
+- Giữ phương án B: đã nhận/chưa rõ thì không chuyển nguồn, không gửi
+  lại, không tự hoàn. Kết quả muộn chốt đúng mã; từ chối rõ chỉ hoàn một
+  lần, sau khi rút/dọn được tệp vào. Nợ OCR-4 số 2 và 3 vẫn còn.
+- Màn cấu hình dùng `KttCore.engine("e_ocr")`: đầy đủ trường ABBYY và
+  Tesseract, lưu cấu hình bằng CAS, hạn mức 30 ngày trừ cả trang đang giữ,
+  trạng thái cập nhật định kỳ và danh sách chờ đối chiếu đọc hết phân trang.
+  Bản trạng thái quá 90 giây hiện chưa có cập nhật; không lấy công tắc
+  cấu hình thay cho trạng thái engine. Không lộ mã, dùng `textContent`.
+- Giữ nguyên `kho_tam.py`, `cau_hinh_may.py` và schema cấu hình máy cũ
+  trong gói, chờ lead chuyển `LUU-TRU/`; không còn nạp chúng từ cổng chạy.
+  Các test riêng của mã cũ vẫn giữ để kiểm hồi quy, chỉ dùng thư mục DEMO.
+- `engine.json` vẫn đúng SDK 2.0, phiên bản engine 1.0.8. Phần ngăn/schema/
+  màn quản trị khai riêng trong `KHAI-SDK-2.1.json`.
+
+### Các phần review trong lát OCR-8
+
+Phiếu này vượt mốc khoảng 5 tệp mã, chia thành ba phần review cùng worktree
+theo lệnh lead (lead tự commit/mở PR): OCR-8a gồm hai mẫu `ngan.py` và
+`cau_hinh.py`; OCR-8b gồm năm mô-đun nối runtime `abbyy`, `chay`,
+`chon_nguon`, `luot_abbyy`, `van_ban`; OCR-8c gồm màn JS và đồng bộ phiên
+bản `__init__`. Lý do: cổng ngăn, giao dịch và màn cấu hình cần cùng có để
+kiểm trọn hành vi OCR-8; không thêm tính năng ngoài phiếu.
+
+### API Ngan đã dùng — để lead đối chiếu NGAN-0
+
+Mã engine chỉ dùng các hàm public dưới đây, không gọi thành phần nội bộ
+của `NganBoNho`:
+
+```python
+chon_ngan(app)                         # ưu tiên app.ngan; trong việc ưu tiên viec.ngan
+ngan.doc(bang, khoa)                   # None hoặc BanGhi.gia_tri, .row_version
+ngan.tim(bang, loc=..., gioi_han=..., tiep=...)
+# -> {"danh_sach": [BanGhi, ...], "tiep": str | None}
+with ngan.lo() as lo:
+    lo.them(bang, khoa, gia_tri)
+    lo.sua(bang, khoa, gia_tri, row_version=...)
+    lo.xoa(bang, khoa, row_version=...)
+    lo.lay_hoac_tao(bang, khoa_duy_nhat, gia_tri)
+# Gửi khi ra with; mọi lệnh cùng thành công hoặc rollback; NganXungDot -> thử lại.
+doc_cau_hinh(ngan, schema)              # None nếu thiếu; dict đã kiểm/điền mặc định
+```
+
+- `khoa_duy_nhat` của lượt là `{phap_nhan_id, bam_noi_dung}`; khóa sửa/xóa
+  lượt là `{phap_nhan_id, ma_tuong_quan}`. Mọi truy vấn lượt đều kèm pháp
+  nhân. Khóa cấu hình là `{"ma": "cau_hinh"}`; giá trị có `abbyy`, `tesseract`.
+- Bản tạm chỉ dùng thư viện chuẩn. API phụ để **test bản RAM**, không
+  được mã nghiệp vụ gọi: `NganBoNho(khai_bao, phap_nhan_id=None)`;
+  `doc/tim/lo(..., phap_nhan_id=...)`; `lo.ket_qua` gồm bản ghi có
+  `.da_tao`. Test lỗi có chèn xung đột tại bản RAM, không đòi API phụ này
+  từ SDK thật. Test qua cổng giả chỉ có `doc/tim/lo` vẫn xử lý OCR được.
+- Trình duyệt tạm dùng `.cau_hinh.doc()` trả
+  `{gia_tri, phien_ban_cau_hinh}`, `.cau_hinh.luu(gia_tri, phien)` trả
+  `{phien_ban_cau_hinh}`; `.ngan.doc(bang, khoa)`,
+  `.ngan.tim(bang, {loc, gioi_han, tiep})`. Bản ghi có `.gia_tri`.
+  Đây là hình dạng kết quả mà KttCore giả kiểm; cần Core đối chiếu khi nối.
+
+### Lệch khỏi phiếu / quyết định tạm
+
+- NGAN-0 đang làm song song, chưa có trong worktree: viết hai bản tạm
+  trong gói theo đúng các tên API được giao, không tạo/sửa `_chung/mau-ma`.
+  Hai test so băm viết sẵn, skip đúng lý do **"chờ NGAN-0 gộp"**; lead
+  thay mẫu rồi bật lại test. Không coi đây là đã kiểm băm mẫu chung.
+- Các ca OCR-4/OCR-5 chạy lại với ngăn RAM. Ca cạnh tranh đa tiến trình
+  của sổ/lượt được chuyển thành hai luồng cùng `NganBoNho`; ca chết thật
+  được đổi sang trạng thái gián đoạn trước/sau công bố rồi dùng lại cùng
+  ngăn. RAM không chia sẻ giữa tiến trình, không lưu qua khởi động lại;
+  không báo những ca này là kiểm độ bền đa tiến trình của Core thật.
+- Giữ cách chọn nguồn cũ: thiếu cấu hình ABBYY thì `chi_abbyy` báo
+  `CHUA_CAU_HINH`; chế độ tự động/chỉ Tesseract vẫn dùng mặc định executable
+  và `vie+eng`. Lượt ABBYY dở vẫn phải đối chiếu, kể cả khi cấu hình bị mất.
+
+### Kết quả ba lệnh bắt buộc — lượt kiểm cuối OCR-8
+
+Đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`. Đã kiểm bằng Core giả
+(CoreGia); dưới đây trích trạng thái/kết luận từ đầu ra thực tế:
+
+```text
+> .venv\Scripts\python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+[ĐẠT] Đọc tài liệu có vị trí — PDF quét 3 trang DEMO, chỉ Tesseract
+[ĐẠT] Đọc tài liệu có vị trí — ảnh PNG 1 trang DEMO, chỉ Tesseract
+[ĐẠT] Đọc văn bản thuần — PDF quét 3 trang DEMO, chỉ Tesseract
+[ĐẠT] Đọc văn bản thuần — ảnh PNG 1 trang DEMO, chỉ Tesseract
+[ĐẠT] Xuất Word giữ bảng — PDF quét 3 trang DEMO, chỉ Tesseract
+[ĐẠT] Xuất Word giữ bảng — ảnh PNG 1 trang DEMO, chỉ Tesseract
+Engine e_ocr 1.0.8: mọi ví dụ chạy thử DEMO đều đạt.
+Mã thoát: 0; 6/6 ĐẠT.
+
+> .venv\Scripts\python -m pytest e_ocr/tests -q -rs
+SKIPPED [2] e_ocr\tests\test_ngan_ocr8.py:25: chờ NGAN-0 gộp
+266 passed, 2 skipped in 55.95s
+Mã thoát: 0.
+
+> .venv\Scripts\python e_ocr/tests/kiem_doc_lap.py
+[ĐẠT] Gói e_ocr độc lập; không import Core/kênh cũ, không có tệp biên dịch sẵn.
+Mã thoát: 0.
+```
+
+- Node UI: **7/7 passed, 0 skipped**, chạy bằng `node --test`; pytest có
+  một ca gọi lại trọn bộ Node này. Kiểm lưu/CAS, phân trang, biên 30 ngày,
+  trang đang giữ, trạng thái hết hạn, lỗi an toàn, dừng chu kỳ khi đóng.
+- Kiểm bổ sung: **43/43** SHA-256 nguồn gói khớp `NGUON.md`;
+  `git diff --check` sạch. Cổng engine trong tiến trình Python mới không
+  nạp `kho_tam`/`cau_hinh_may`. Tài liệu SDK, mẫu chung, mã cũ và hai
+  mô-đun lưu đĩa cũ không đổi; không có tệp Git bị xóa.
+
+### Báo cáo bàn giao OCR-8
+
+Kết luận: **Đạt trong phạm vi được giao** — đã kiểm bằng Core giả (CoreGia)
+và NganBoNho; ngăn thật/màn thật chờ Core/SDK 2.1.
+
+Đã làm: chuyển cấu hình/sổ/lượt sang ngăn, lô nguyên tử/CAS và chống trùng,
+đóng nợ OCR-4 số 1, giữ phương án B, thêm màn cấu hình/trạng thái và khai SDK 2.1.
+
+Kết quả kiểm: SDK DEMO **6/6 ĐẠT**; pytest **266 passed, 2 skipped**
+(chờ NGAN-0 gộp); kiểm độc lập mã **0**; Node UI **7/7**.
+
+Thời gian thực tế: **0,56 giờ**, ngày **15/11/2026, 07:38:00–08:11:25**
+(giờ Việt Nam); so với **5 giờ ước tính** trong phiếu.
+
+Lệch khỏi phiếu / quyết định tạm: hai mẫu trong gói đang là bản tạm chờ
+NGAN-0; test băm skip theo lệnh lead. Ca đa tiến trình/crash cũ được kiểm
+lại bằng hai luồng/trạng thái gián đoạn trên cùng ngăn RAM như mô tả trên.
+
+Cần Core / Chờ Anh mới phát sinh: gộp NGAN-0, đối chiếu hình dạng kết quả
+API và cấp ngăn/màn quản trị SDK 2.1 theo mục Cần Core; **không có câu chờ
+Anh mới**. PR: **chờ lead mở**; không commit/push.

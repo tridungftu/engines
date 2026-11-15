@@ -1,6 +1,6 @@
-# Engine nhận dạng văn bản — OCR-5
+# Engine nhận dạng văn bản — OCR-8
 
-Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.5. Ba năng lực
+Gói độc lập theo SDK 2.0.0, phiên bản engine 1.0.8. Ba năng lực
 `ocr.doc_tai_lieu@1`, `ocr.doc_van_ban@1` và `ocr.xuat_word@1` dùng chung
 lõi đọc lớp chữ PDF hoặc ABBYY Hot Folder cục bộ, dự phòng Tesseract.
 Xuất Word dựng DOCX và gửi qua `viec.tai_tep_ra`. **Đã kiểm bằng Core giả
@@ -22,15 +22,13 @@ lock cũ. Bộ render là pypdfium2 đã ghim; vendor mask_ocr chỉ giữ phầ
 dùng, không thêm PyMuPDF, defusedxml, numpy hoặc model. Môi
 trường kiểm dùng `.venv --system-site-packages` và thư viện có sẵn, SDK cài
 offline từ wheel repo với `--no-index --no-deps`. Đây chưa là kiểm máy sạch
-của OCR-6; lock hiện chưa có hash wheel đa nền tảng. Nguồn/băm xem `NGUON.md`.
+của OCR-6; lock đã có hash wheel đa nền tảng. Nguồn/băm xem `NGUON.md`.
 
 Trong thư mục gốc repo, sau khi cài SDK vào `.venv`:
 
 ```powershell
 $env:PYTHONDONTWRITEBYTECODE = '1'
 $env:PYTHONUTF8 = '1'
-$env:KTT_ENGINE_DU_LIEU = Join-Path (Get-Location) '.venv/du-lieu-DEMO'
-$env:KTT_ENGINE_CAU_HINH = Join-Path (Get-Location) '.venv/khong-co-cau-hinh-DEMO.json'
 .venv\Scripts\python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
 .venv\Scripts\python -m pytest e_ocr/tests -q
 .venv\Scripts\python e_ocr/tests/kiem_doc_lap.py
@@ -45,7 +43,7 @@ thật với `vie+eng`. Máy thiếu bộ đọc chạy công cụ test từ rep
 `.venv\Scripts\python e_ocr/tests/chay_demo.py`; công cụ tự dùng Tesseract
 giả và ghi rõ khi thiếu executable/ngôn ngữ. `--gia` ép dùng giả cho CI.
 Nguồn giả chỉ ở ngoài gói, không tự thay nguồn trong engine. Công cụ cách
-ly cấu hình/kho DEMO bằng thư mục tạm; không đọc cấu hình máy thật.
+ly cấu hình và dữ liệu DEMO bằng ngăn RAM riêng.
 
 Bộ sinh `tests/demo/tao_bo_demo.py` chuyển từ mã cũ, dùng Pillow đã ghim,
 font Arial/DejaVu Sans sẵn trên máy, PDF thuần Python và bộ ghi Word của
@@ -58,8 +56,8 @@ có lớp chữ và đường kẻ bảng. Hai PDF lớp chữ cũ vẫn giữ l
 
 OCR-MAY ca 2/3/4/5/7/9 đã kiểm bằng Core giả (CoreGia), ABBYY giả ở thư
 mục DEMO tạm. Ca 3 quan sát hàng chờ 3→2→1→0 bằng trạng thái CoreGia,
-chống gửi lại lượt dở, không là kiểm màn hình thật. Ca 1 chờ thẻ trạng
-thái Core, ca 6 chờ thiết kế trích vùng với Đối chiếu, ca 8 chờ bí mật và
+chống gửi lại lượt dở, không là kiểm màn hình thật. OCR-8 có màn cấu hình/hạn mức
+đã kiểm bằng KttCore và DOM giả của Node, chờ Core nạp màn thật; ca 6 chờ thiết kế trích vùng với Đối chiếu, ca 8 chờ bí mật và
 cầu nối có khóa. Chưa chạy Linux hoặc ABBYY/Core thật.
 
 Nhật ký JSON stderr ghi năng lực, trạng thái, nguồn đọc và
@@ -160,67 +158,69 @@ cắt ngầm hay tự thêm ô. Hủy/chưa rõ của nguồn đọc được gi
 tạo kết quả thành công giả. Word có thể dàn lại dòng/chiều cao theo font
 trên máy; tọa độ bảng được ghi trong XML, chưa kiểm hiển thị trên Word thật.
 
-## Cấu hình máy ngoài gói
+## Cấu hình và ngăn dữ liệu (OCR-8)
 
-`e_ocr.cau_hinh_may.doc_cau_hinh()` đọc tệp JSON do `KTT_ENGINE_CAU_HINH`
-chỉ định; mặc định là
-`%PROGRAMDATA%\KhoTriThuc\engines\e_ocr\cau_hinh.json`. Trên Linux, khi không
-có `PROGRAMDATA`, gốc thay thế là `/var/lib`. Cấu hình nằm trong gói bị từ chối.
+Admin dùng màn `ui/cau_hinh.js` trong Quản lý engine › OCR › Cấu hình.
+Schema: `cau_hinh.schema.json`. Cấu hình là bản ghi bảng `cau_hinh`, khóa
+`{"ma": "cau_hinh"}`; giá trị có `abbyy` và `tesseract`. Engine đọc bằng
+`doc_cau_hinh(ngan, schema)`, kiểm kiểu/giới hạn và điền mặc định.
+Không đọc cấu hình máy hoặc thư mục dữ liệu từ biến môi trường.
 
-Schema: `contract/cau_hinh_may.schema.json`. Mẫu **DEMO**:
-`demo/cau_hinh.demo.json`; chép ra ngoài gói rồi cấu hình bằng biến môi trường.
-Thiếu tệp trả `None`, engine vẫn khởi động; `chi_abbyy` nhận `CHUA_CAU_HINH`.
-Chế độ tự động khi chưa cấu hình ABBYY thử Tesseract theo PATH/vị trí mặc
-định; `chi_tesseract` cũng có thể chạy không cần tệp cấu hình.
+Thiếu cấu hình: `chi_abbyy` trả `CHUA_CAU_HINH` và hướng dẫn Admin.
+Giữ hành vi chọn nguồn trước đây: chế độ tự động và `chi_tesseract` có
+thể dùng Tesseract mặc định (tự tìm executable, `vie+eng`) khi không có
+cấu hình; lượt ABBYY dở vẫn phải đối chiếu trước. PDF có lớp chữ không
+cần cấu hình. Cấu hình sai trả câu lỗi cố định, không lộ giá trị.
 
-Trường bỏ trống trong JSON được điền mặc định theo schema: ABBYY tắt,
-thời hạn 900 giây, hạn mức 5.000 trang/30 ngày, ngôn ngữ `vie+eng`.
-Loader kiểm đúng các kiểu và ràng buộc của schema này bằng thư viện chuẩn;
-không phải bộ kiểm JSON Schema tổng quát. Tệp tối đa 64 KiB; từ chối khóa
-lặp, kiểu sai, trường ngoài schema và số không hữu hạn. Không có trường bí mật.
-Loader không mở Hot Folder và không kiểm tra/chạy tệp thực thi.
+Mọi trạng thái đi qua `viec.ngan` khi SDK cấp; nếu không có thì dùng
+`chon_ngan(app)`. Có `app.ngan` thì dùng ngăn Core; SDK 2.0 tạm dùng
+`NganBoNho`. RAM chỉ sống trong tiến trình, **khởi động lại sẽ mất hạn mức
+và dấu chống trùng**, theo quyết định Anh 15/11. Cảnh báo này in đúng một
+lần trên stderr khi chọn RAM. Không tự nhập dữ liệu từ sổ đĩa cũ.
 
-## Kho tạm
+| Bảng | Khóa/phạm vi | Nội dung |
+|---|---|---|
+| `cau_hinh` | `ma`, engine | Cấu hình ABBYY/Tesseract |
+| `han_muc_ngay` | `ngay`, engine | Trang nhận theo giây UTC trong ngày; trang đang giữ theo mã lượt |
+| `luot_abbyy` | `ma_tuong_quan`, phap_nhan | Duy nhất `[phap_nhan_id, bam_noi_dung]`; chỉ metadata |
+| `trang_thai_engine` | `ma`, engine | Bản `abbyy` cập nhật 30 giây/lần; bản `han_muc` là mốc CAS của sổ |
 
-`e_ocr.kho_tam.KhoTam` có `doc(khoa, mac_dinh=None)`, `ghi(khoa, gia_tri)`
-và `cap_nhat(khoa, sua)` / `cap_nhat_nhieu(cac_khoa, sua)` để đọc–sửa–ghi một hoặc nhiều khóa trong cùng khóa tệp và một lần thay tệp.
-Nguồn thư mục: `KTT_ENGINE_DU_LIEU`; mặc định
-`%PROGRAMDATA%\KhoTriThuc\engines\e_ocr\du-lieu`. Trên Linux dùng cùng gốc
-thay thế như cấu hình máy. Khởi tạo đối tượng chưa tạo thư mục.
+Giữ trang và `lay_hoac_tao` lượt nằm trong **một lô nguyên tử** trước khi
+gửi. Tất cả thay đổi sổ cùng tăng mốc CAS `han_muc`, kể cả qua nửa đêm;
+xung đột thì đọc lại và thử tối đa 12 lần, không cộng trang từ lần thất bại.
+Đọc ban đầu đã cũ thì nhập lượt vừa có, không tạo thế hệ gửi tiếp.
+Trang đã dùng tính đúng cửa sổ trượt 30 × 86.400 giây; trang đang giữ vẫn
+chặn hạn mức cho tới khi có căn cứ chốt/nhả, kể cả quá 30 ngày.
 
-Kho chỉ lưu mã, băm, số đếm, cờ và cấu trúc JSON gồm những giá trị đó. Chuỗi
-mã tối đa 200 ký tự ASCII thuộc `[A-Za-z0-9_.:@+-]`, không có khoảng trắng
-hay đường dẫn. Không truyền bytes, nội dung tài liệu hoặc nội dung mã hóa.
-Các tên trường nội dung như `van_ban`, `noi_dung`, `tai_lieu`, `prompt` bị từ chối.
-Mỗi giá trị tối đa 64 KiB, độ sâu tối đa 16; toàn kho tối đa 8 MiB, vượt trần
-thì báo lỗi, không cắt. Không cần lưu tên hoặc đường dẫn tài liệu.
+Quyền xử lý một lượt dùng CAS trên `chu_xu_ly`/`han_xu_ly`, không dùng
+khóa tệp. Quyền kéo dài 30 giây, kiểm trong vòng chờ, gia hạn khi còn
+10 giây; worker mất quyền phải dừng. Quyền hết hạn chỉ cho worker sau
+**đọc lại cùng mã**, không cho gửi lại hoặc tự hoàn trang. Quyền được nhả
+trong `finally`; ngăn Core thật mới có thể giữ dấu qua lần khởi động lại.
 
-Đọc và ghi dùng một tệp khóa cố định `kho.khoa`: `msvcrt.locking` trên Windows,
-`fcntl.flock` trên Linux. Ghi khóa cả đọc–sửa–ghi, ghi tệp tạm trong cùng thư
-mục, `flush` + `fsync`, đóng tệp rồi `os.replace` sang `kho.json`; Linux còn
-`fsync` thư mục. Lỗi thay tệp giữ nguyên bản cũ và dọn tệp tạm của lượt ghi.
-Kho hỏng bị từ chối, không tự đặt lại thành kho rỗng. Hết hạn chờ khóa trả
-`KHO_TAM_DANG_BAN`, cho phép thử lại.
+Màn chỉ gọi `KttCore.engine("e_ocr")`, lưu cấu hình bằng CAS; có xung đột
+thì yêu cầu tải lại trước khi lưu. Hạn mức còn lại đã trừ cả trang đang giữ.
+Trạng thái ABBYY lấy từ ngăn (bật cấu hình và truy cập được hai thư mục),
+không khẳng định tiến trình FineReader đang chạy. Bản trạng thái quá 90
+giây thì hiển thị chưa có cập nhật; không suy trạng thái từ công tắc.
+Danh sách chờ đọc cả `chua_ro` và `dang_gui`, đọc hết phân trang, ẩn băm/mã.
+Ngày dd/mm/yyyy, số có dấu chấm hàng nghìn; mọi nội dung qua `textContent`.
+`mount(goc, {KttCore})` trả `{refresh, destroy}`; Core cần gọi `destroy`
+khi đóng màn để dừng chu kỳ đọc 30 giây.
 
-Chuỗi `doc` rồi `ghi` không phải giao dịch/CAS. Sổ và nhật ký dùng
-`cap_nhat_nhieu`: kiểm lượt dở, giữ trang và ghi dấu `dang_gui` **trong cùng
-lần thay tệp trước khi công bố**. Khóa `han_muc_abbyy` giữ sổ theo ngày UTC
-và giây trong ngày, cửa sổ **30 × 86.400 giây** trượt. Mỗi pháp nhân + băm
-có khóa `luot_abbyy.<sha256>` riêng, nên không dồn nhật ký vào một giá trị
-64 KiB. Kho chỉ lưu mã pháp nhân, băm, số trang, lần gửi, thời điểm và trạng thái.
-
-`ma_tuong_quan` là UUID5 từ pháp nhân + băm nội dung + `lan_gui` bền; Core
-đổi `viec_id`, `lan_thu` hoặc năng lực đọc/xuất Word vẫn tra cùng lượt dở.
-Khóa tệp riêng theo mã lượt ngăn hai tiến trình cùng đọc/dọn kết quả; tiến
-trình không lấy được khóa trả `ChuaRo` ngay. Hệ điều hành tự nhả khóa khi
-chết; **dấu chống trùng vẫn nằm trong kho**. Không dùng lease/timeout để xóa dấu.
+`engine.json` giữ schema 2.0, chỉ tăng phiên bản engine lên 1.0.8.
+Khai báo dự kiến SDK 2.1 nằm riêng trong `KHAI-SDK-2.1.json`.
+`ngan.py`/`cau_hinh.py` là bản tạm chờ NGAN-0; test so băm được viết sẵn
+và skip với lý do “chờ NGAN-0 gộp”. Lead thay nguyên hai tệp và bật lại test.
+`kho_tam.py`, `cau_hinh_may.py` và schema máy cũ giữ nguyên để chuyển
+`LUU-TRU/` sau; chúng không thuộc đường chạy engine hiện tại.
 
 Lượt `dang_gui`/`chua_ro` luôn tìm PDF đúng mã trong thư mục ra trước; không
 có kết quả hợp lệ thì tiếp tục `ChuaRo`, không gửi lần hai, không chạy
 Tesseract và không tự hoàn trang. Áp dụng cả khi chọn nguồn mới là
 `chi_tesseract`, ABBYY vừa tắt hoặc thiếu cấu hình. Có PDF thì đối chiếu,
 chuyển chỗ giữ sang trang đã dùng đúng một lần, kiểm đủ lớp chữ/số trang,
-chốt `xong` bền rồi mới dọn PDF. Nếu chốt bền lỗi, giữ PDF bằng `ChuaRo`.
+chốt `xong` trong ngăn rồi mới dọn PDF. Nếu chốt ngăn lỗi, giữ PDF bằng `ChuaRo`.
 `xong` không là cache nội dung: việc mới sau lượt đã chốt tạo lần gửi tiếp.
 
 Trước nhận, rút được tệp hoặc gửi chưa thành công là căn cứ bỏ chỗ giữ.
@@ -246,9 +246,8 @@ nhận khác mã, thiếu trường, báo đã tiêu trang hoặc xung đột v�
 này **chưa kiểm ABBYY thật**, cần xác nhận khi nối nguồn ở OCR-7; không có
 biên nhận xác nhận thì tiếp tục giữ hạn mức.
 
-Khi Core có thao tác #10 `luot-ben` giữ/chốt/đọc, thay phần nhật ký lượt
-trong `kho_tam` bằng cửa đó. Ngăn engine có CAS sẽ thay sổ tạm. Không dùng
-hàm `ocr_*_luot` hoặc cổng riêng cũ.
+Khi SDK 2.1 cấp ngăn thật, dữ liệu sẽ được Core lưu bền qua cùng API.
+Không dùng hàm `ocr_*_luot` hoặc cổng riêng cũ.
 
 `demo/van_ban_tai_lieu.demo.json` chỉ minh họa hợp đồng bằng dữ liệu giả có
 nhãn DEMO, gồm vị trí, ô trống và ô gộp; băm toàn số 0 là băm minh họa.

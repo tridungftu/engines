@@ -23,7 +23,7 @@ from kho_tri_thuc_sdk.thu import CoreGia, nap_engine_tu_goi
 from chay_demo import GOI, TesseractGia, chay_demo
 from demo.tao_bo_demo import CONG_TY, TIEN, NGAY, tao_bo_demo
 from e_ocr import tesseract
-from e_ocr.chon_nguon import KHOA_HAN_MUC, SoHanMuc
+from ngan_demo import SoHanMuc, ngan_demo
 from e_ocr.lop_chu import dem_trang
 from e_ocr.xuat_word import MIME_DOCX, W
 from test_ocr_1 import ABBYYGia, DOC, VAN_BAN, hot_folder, kiem_loi
@@ -214,7 +214,8 @@ def test_ca_7_tep_loi_khong_tru_han_muc(bo_demo, hot_folder, ten, ma):
     kiem_loi(core, kq, ma)
     assert not list(vao.iterdir()) and not tam
     assert SoHanMuc().da_dung() == 0
-    assert SoHanMuc().kho.doc(KHOA_HAN_MUC) is None
+    assert ngan_demo().tim("han_muc_ngay", loc={})["danh_sach"] == []
+    assert ngan_demo().doc("trang_thai_engine", {"ma": "han_muc"}) is None
     assert str(bo_demo.thu_muc) not in kq["loi"]["thong_diep"]
 
 
@@ -235,7 +236,7 @@ def test_ca_7_huy_dang_cho_khong_tru_han_muc(bo_demo, hot_folder, capsys):
     kq = core.xem(ma)
     assert kq["trang_thai"] == "HUY" and kq["ket_qua"] is None
     assert core.so_lan_ghi["ket_qua"] == 0 and SoHanMuc().da_dung() == 0
-    assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {}
+    assert SoHanMuc()._doc()[1]["dang_giu"] == {}
     log = json.loads(capsys.readouterr().err)
     assert log["trang_thai"] == "HUY" and log["nguon_doc"] == "abbyy"
     assert log["cho_nguon_giay"] > 0

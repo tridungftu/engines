@@ -1,5 +1,21 @@
 # Thay đổi
 
+## 1.0.8 — 15/11/2026 — OCR-8
+
+- Chuyển cấu hình, sổ hạn mức và lượt ABBYY sang cổng `Ngan`; SDK 2.0
+  tạm dùng `NganBoNho`, không ghi cấu hình/sổ trên máy. Giữ nguyên tệp cũ
+  để lead chuyển lưu trữ. Hai mẫu dùng chung đang chờ NGAN-0 gộp.
+- `lay_hoac_tao` theo pháp nhân + băm, giữ trang và ghi lượt trong một lô;
+  CAS có thử lại, mốc dùng chung qua nửa đêm. Đóng khe đua OCR-4 số 1
+  bằng kiểm lại quyết định đọc cũ và quyền xử lý có CAS.
+- Giữ phương án B: lượt chưa rõ không gửi lại, không tự hết hạn/hoàn
+  trang; chốt/hoàn đúng một lần khi có kết quả hoặc bằng chứng từ chối.
+- Thêm màn cấu hình ABBYY/Tesseract, hạn mức 30 ngày, trạng thái ngăn
+  cập nhật định kỳ và lượt chờ đối chiếu; lưu cấu hình bằng CAS.
+- Khai SDK 2.1 riêng trong `KHAI-SDK-2.1.json`, giữ hợp đồng manifest 2.0.
+- Đã kiểm bằng Core giả (CoreGia), ABBYY giả và KttCore/DOM giả của Node;
+  chưa kiểm Core/ABBYY hoặc màn trình duyệt thật. RAM mất sau khởi động lại.
+
 ## OCR-6 — 14/11/2026
 
 - Ghim hash wheel Windows/Linux, bổ sung kiểm máy sạch và cập nhật nguồn gói.

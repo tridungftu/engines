@@ -1,5 +1,13 @@
 # Thay đổi
 
+## Chưa phát hành — 15/11/2026, TX-3 chờ review
+
+- Lõi hậu kiểm từng ô và xuất JSON/Excel theo đề xuất; chưa đăng ký runtime/schema.
+- Kiểm snapshot/offset/logic theo loại, giữ dấu legacy và nguyên văn AI riêng; không tự chuyển kiểu hoặc tính TT-21.
+- Hai tệp trong RAM, text không thành công thức, kiểm trần trước escape, không cắt; hủy/lỗi/mất ACK không nộp thiếu/trùng.
+- Hai DEMO đề xuất chỉ đăng ký trong phiếu RAM của test; cổng có ngăn **5/5 ĐẠT**, CLI chuẩn vẫn **2/3 ĐẠT, exit 1, CHUA_CAU_HINH** (C-TX-04).
+- **đã kiểm bằng Core giả (CoreGia)**; chờ lead/Anh review tại **../../docs/TX-3-REVIEW.md**. Linux/Core thật/E6/N1 chưa kiểm; không đổi nguồn cũ/Core/SDK/dependency.
+
 ## 0.3.0 — 15/11/2026, TX-2
 
 - Thêm `trich.chuan_bi@1`: nhận snapshot theo việc, SHA-256 đúng bytes UTF-8

@@ -15,7 +15,7 @@ import zipfile
 SDK = "2.2.0"
 WHEEL = f"kho_tri_thuc_sdk-{SDK}-py3-none-any.whl"
 THU_MUC_SDK = f"docs/goi-gui-engine/sdk-{SDK}"
-CAC_ENGINE = ("e_hoa_don", "e_hoi_ai", "e_ocr", "e_trich_xuat")
+CAC_ENGINE = ("e_hoa_don", "e_hoi_ai", "e_ocr", "e_trich_xuat", "e_doi_chieu", "e_tra_cuu")
 TEP_GOC = {"engine.json", "README.md", "CHANGELOG.md", "NGUON.md",
            "requirements.lock", "cau_hinh.schema.json", ".gitattributes"}
 TEN_CAM = {".venv", "__pycache__", ".pytest-tmp", ".pytest_cache", "luu-tru"}
@@ -76,6 +76,8 @@ def kiem_ten(ten, ma):
             raise LoiDongGoi("Gói có tên tệp hoặc thư mục bị cấm.")
     if ten in TEP_GOC:
         return
+    if len(p.parts) == 1 and (p.name in (".gitattributes", "KHAI-SDK-2.1.json") or p.name.endswith(".schema.json")):
+        return
     duoi = p.suffix.lower()
     if len(p.parts) > 1 and (
         (p.parts[0] == ma and (duoi == ".py" or p.name == "LICENSE"))
@@ -83,11 +85,13 @@ def kiem_ten(ten, ma):
         or (p.parts[0] == "demo" and duoi in
             {".txt", ".json", ".xml", ".pdf", ".png", ".jpg", ".jpeg", ".docx", ".xlsx", ".zip", ".md"})
         or (p.parts[0] == "ui" and duoi in {".js", ".css", ".html"})
+        or (p.parts[0] == "tai_nguyen" and duoi in {".txt", ".json", ".ttf", ".otf", ".md"})
+        or (len(p.parts) == 2 and p.parts[0].startswith("tham_chieu_") and duoi == ".py")
         or (len(p.parts) == 2 and p.parts[0] == "sql" and
             (p.name == "kiem_ke.json" or re.fullmatch(r"[0-9]{3}_[a-z0-9_]+\.sql", p.name)))
     ):
         return
-    raise LoiDongGoi("Gói có tệp ngoài danh sách cho phép.")
+    raise LoiDongGoi("Gói có tệp ngoài danh sách cho phép: " + ten)
 
 
 def doc_goi_git(repo, commit, ma):

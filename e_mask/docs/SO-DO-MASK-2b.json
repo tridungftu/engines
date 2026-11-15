@@ -1,0 +1,1648 @@
+{
+  "truoc": {
+    "am_tinh_co_san": {
+      "so_mau": 14,
+      "so_chan_nham": 0,
+      "so_che_nham": 1,
+      "ti_le_bao_nham": 0.07142857142857142,
+      "vi_tri_chan_nham": [],
+      "vi_tri_che_nham": [
+        10
+      ]
+    },
+    "am_tinh_bo_sung": {
+      "so_mau": 30,
+      "so_chan_nham": 1,
+      "so_che_nham": 1,
+      "ti_le_bao_nham": 0.06666666666666667,
+      "vi_tri_chan_nham": [
+        15
+      ],
+      "vi_tri_che_nham": [
+        30
+      ]
+    },
+    "ten_nguoi": [
+      {
+        "ca": 1,
+        "gui_duoc": true,
+        "so_cho_thay": 0,
+        "so_con_sot": 0
+      },
+      {
+        "ca": 2,
+        "gui_duoc": true,
+        "so_cho_thay": 0,
+        "so_con_sot": 0
+      },
+      {
+        "ca": 3,
+        "gui_duoc": true,
+        "so_cho_thay": 0,
+        "so_con_sot": 0
+      },
+      {
+        "ca": 4,
+        "gui_duoc": true,
+        "so_cho_thay": 0,
+        "so_con_sot": 0
+      }
+    ]
+  },
+  "sau": {
+    "am_tinh_co_san": {
+      "so_mau": 14,
+      "so_chan_nham": 0,
+      "so_che_nham": 1,
+      "ti_le_bao_nham": 0.07142857142857142,
+      "vi_tri_chan_nham": [],
+      "vi_tri_che_nham": [
+        10
+      ]
+    },
+    "am_tinh_bo_sung": {
+      "so_mau": 30,
+      "so_chan_nham": 1,
+      "so_che_nham": 1,
+      "ti_le_bao_nham": 0.06666666666666667,
+      "vi_tri_chan_nham": [
+        15
+      ],
+      "vi_tri_che_nham": [
+        30
+      ]
+    },
+    "ten_nguoi": [
+      {
+        "ca": 1,
+        "gui_duoc": false,
+        "so_cho_thay": 0,
+        "so_con_sot": 1
+      },
+      {
+        "ca": 2,
+        "gui_duoc": true,
+        "so_cho_thay": 1,
+        "so_con_sot": 0
+      },
+      {
+        "ca": 3,
+        "gui_duoc": true,
+        "so_cho_thay": 1,
+        "so_con_sot": 0
+      },
+      {
+        "ca": 4,
+        "gui_duoc": false,
+        "so_cho_thay": 0,
+        "so_con_sot": 1
+      }
+    ]
+  },
+  "rv_truoc": {
+    "t9": [
+      {
+        "ca": 1,
+        "van_ban_demo": "giữa nguyễn văn an và bên B",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 2,
+        "van_ban_demo": "Hợp đồng gửi nguyen van an trước ngày mai",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 3,
+        "van_ban_demo": "anh tran bao long đã ký",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 4,
+        "van_ban_demo": "chị lê thị hoa (kế toán) đã nhận",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 5,
+        "van_ban_demo": "NGUYỄN VĂN AN ĐÃ KÝ",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 6,
+        "van_ban_demo": "NGUYEN VAN AN DA KY",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 7,
+        "van_ban_demo": "Ký bởi trần thị bích ngọc hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 8,
+        "van_ban_demo": "Ký bởi huỳnh đức thịnh hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 9,
+        "van_ban_demo": "Ký bởi lâm quốc đạt hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 10,
+        "van_ban_demo": "Ký bởi tạ văn bình hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 11,
+        "van_ban_demo": "Ký bởi ung nho khoa hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "lot",
+        "ma_loi": null
+      },
+      {
+        "ca": 12,
+        "van_ban_demo": "Ký bởi hoàng long hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 13,
+        "van_ban_demo": "Ký bởi phạm văn đồng thanh tùng hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 14,
+        "van_ban_demo": "nguyễn văn an là giám đốc",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 15,
+        "van_ban_demo": "Người ký là nguyễn văn an",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 16,
+        "van_ban_demo": "Người ký là nguyễn văn an.",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 17,
+        "van_ban_demo": "Gửi cho bên B, nguyễn văn an, và bên C",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 18,
+        "van_ban_demo": "Họ tên\tnguyễn văn an\tChức vụ\tgiám đốc",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 19,
+        "van_ban_demo": "Ký bởi nguyễn\nvăn\nan hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 20,
+        "van_ban_demo": "Ký bởi ngu​yễn văn a​n hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 21,
+        "van_ban_demo": "Ký bởi nguyễn văn an1 hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 22,
+        "van_ban_demo": "a. long đã ký",
+        "loai": "tieng_viet",
+        "ket_qua": "lot",
+        "ma_loi": null
+      },
+      {
+        "ca": 23,
+        "van_ban_demo": "c. hoa đã nhận hàng",
+        "loai": "tieng_viet",
+        "ket_qua": "lot",
+        "ma_loi": null
+      },
+      {
+        "ca": 24,
+        "van_ban_demo": "john smith đã ký hợp đồng",
+        "loai": "nuoc_ngoai",
+        "ket_qua": "lot",
+        "ma_loi": null
+      },
+      {
+        "ca": 25,
+        "van_ban_demo": "Ký bởi tên người nước ngoài michael johnson hôm nay",
+        "loai": "nuoc_ngoai",
+        "ket_qua": "lot",
+        "ma_loi": null
+      },
+      {
+        "ca": 26,
+        "van_ban_demo": "ông nguyễn văn an và bà lê thị hoa",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 27,
+        "van_ban_demo": "hợp đồng với phan thanh hải ngày 1/1/2026",
+        "loai": "tieng_viet",
+        "ket_qua": "lot",
+        "ma_loi": null
+      },
+      {
+        "ca": 28,
+        "van_ban_demo": "đối tác đặng minh tuấn thanh toán 1.000.000 VND",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 29,
+        "van_ban_demo": "Vũ Thị Mai Anh",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 30,
+        "van_ban_demo": "vũ thị mai anh",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 31,
+        "van_ban_demo": "bùi xuân trường gửi thư",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 32,
+        "van_ban_demo": "trần văn a ký",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      }
+    ],
+    "t10": [
+      {
+        "ca": 1,
+        "van_ban_demo": "Thanh toán tại hà nội theo hợp đồng số 01/2026 ngày 30/10/2026.",
+        "ket_qua": "che_thua",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 2,
+        "van_ban_demo": "Công ty đã giao hàng tại hà nội và lê thị hoa đơn gốc.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CONG_TY",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 54,
+              "dong": 1,
+              "cot": 1
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 35,
+              "ket_thuc": 53,
+              "dong": 1,
+              "cot": 36
+            }
+          }
+        ]
+      },
+      {
+        "ca": 3,
+        "van_ban_demo": "Lý do điều chỉnh là chênh lệch tỷ giá cuối kỳ.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 17,
+              "ket_thuc": 37,
+              "dong": 1,
+              "cot": 18
+            }
+          }
+        ]
+      },
+      {
+        "ca": 4,
+        "van_ban_demo": "Số dư trương mục ngân hàng được đối chiếu hàng tháng.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 6,
+              "ket_thuc": 26,
+              "dong": 1,
+              "cot": 7
+            }
+          }
+        ]
+      },
+      {
+        "ca": 5,
+        "van_ban_demo": "Phan bổ chi phí trả trước theo từng kỳ kế toán.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 6,
+        "van_ban_demo": "Kế toán phân bổ chi phí đào tạo nhân viên trong quý.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 7,
+        "van_ban_demo": "Mai sau khi nhận hóa đơn sẽ hạch toán vào tài khoản 331.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "TAI_KHOAN",
+            "vi_tri": {
+              "bat_dau": 52,
+              "ket_thuc": 55,
+              "dong": 1,
+              "cot": 53
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 7,
+              "dong": 1,
+              "cot": 1
+            }
+          }
+        ]
+      },
+      {
+        "ca": 8,
+        "van_ban_demo": "Hồ sơ thanh toán gồm hóa đơn và biên bản nghiệm thu.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 9,
+        "van_ban_demo": "Chi phí cao hơn dự toán 10.000.000 VND do lâm thời tăng giá.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 39,
+              "ket_thuc": 59,
+              "dong": 1,
+              "cot": 40
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 42,
+              "ket_thuc": 59,
+              "dong": 1,
+              "cot": 43
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 51,
+              "ket_thuc": 59,
+              "dong": 1,
+              "cot": 52
+            }
+          }
+        ]
+      },
+      {
+        "ca": 10,
+        "van_ban_demo": "Doanh thu kim ngạch xuất khẩu sang châu á tăng 5%.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 10,
+              "ket_thuc": 34,
+              "dong": 1,
+              "cot": 11
+            }
+          }
+        ]
+      },
+      {
+        "ca": 11,
+        "van_ban_demo": "Thái độ phục vụ của nhà thầu được đánh giá tốt.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 12,
+        "van_ban_demo": "Đinh kèm theo hợp đồng là phụ lục số 1.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 8,
+              "dong": 1,
+              "cot": 1
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 23,
+              "ket_thuc": 36,
+              "dong": 1,
+              "cot": 24
+            }
+          }
+        ]
+      },
+      {
+        "ca": 13,
+        "van_ban_demo": "Khoản vay ngắn hạn được trả vào cuối tháng 12.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 14,
+        "van_ban_demo": "Chi phí lương tháng 10 là 500.000.000 VND.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 15,
+        "van_ban_demo": "Bên A có trách nhiệm thanh toán trong vòng 30 ngày.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 16,
+        "van_ban_demo": "Báo cáo tài chính hợp nhất năm 2026 được lập theo chuẩn mực.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 4,
+              "ket_thuc": 26,
+              "dong": 1,
+              "cot": 5
+            }
+          }
+        ]
+      },
+      {
+        "ca": 17,
+        "van_ban_demo": "Lập dự phòng phải thu khó đòi theo thông tư hiện hành.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 18,
+        "van_ban_demo": "Tài sản cố định hữu hình khấu hao theo đường thẳng.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 11,
+              "ket_thuc": 33,
+              "dong": 1,
+              "cot": 12
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 39,
+              "ket_thuc": 50,
+              "dong": 1,
+              "cot": 40
+            }
+          }
+        ]
+      },
+      {
+        "ca": 19,
+        "van_ban_demo": "Hàng tồn kho được đánh giá theo giá gốc.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 20,
+        "van_ban_demo": "Giá trị hợp lý của khoản đầu tư cao hơn giá gốc.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 21,
+        "van_ban_demo": "Hợp đồng có hiệu lực kể từ ngày ký và kéo dài 12 tháng.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 22,
+        "van_ban_demo": "Phương thức thanh toán là chuyển khoản trong 15 ngày.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 23,
+              "ket_thuc": 44,
+              "dong": 1,
+              "cot": 24
+            }
+          }
+        ]
+      },
+      {
+        "ca": 23,
+        "van_ban_demo": "Trần nợ vay được phê duyệt bởi hội đồng quản trị.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 11,
+              "dong": 1,
+              "cot": 1
+            }
+          }
+        ]
+      },
+      {
+        "ca": 24,
+        "van_ban_demo": "Hoàng hôn trên biển là hình ảnh trong báo cáo thường niên.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 9,
+              "dong": 1,
+              "cot": 1
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 20,
+              "ket_thuc": 41,
+              "dong": 1,
+              "cot": 21
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 42,
+              "ket_thuc": 57,
+              "dong": 1,
+              "cot": 43
+            }
+          }
+        ]
+      },
+      {
+        "ca": 25,
+        "van_ban_demo": "Thuế giá trị gia tăng đầu vào được khấu trừ đầy đủ.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 17,
+              "ket_thuc": 29,
+              "dong": 1,
+              "cot": 18
+            }
+          }
+        ]
+      },
+      {
+        "ca": 26,
+        "van_ban_demo": "Bùi nhùi và các vật tư khác được ghi nhận vào chi phí.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 8,
+              "dong": 1,
+              "cot": 1
+            }
+          }
+        ]
+      },
+      {
+        "ca": 27,
+        "van_ban_demo": "Võ đoán trong ước tính kế toán cần tránh.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 22,
+              "dong": 1,
+              "cot": 1
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 3,
+              "ket_thuc": 25,
+              "dong": 1,
+              "cot": 4
+            }
+          }
+        ]
+      },
+      {
+        "ca": 28,
+        "van_ban_demo": "Dương tính giả trong kiểm toán được xem xét lại.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 25,
+              "dong": 1,
+              "cot": 1
+            }
+          }
+        ]
+      },
+      {
+        "ca": 29,
+        "van_ban_demo": "Vương quốc Anh là thị trường xuất khẩu lớn.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 14,
+              "dong": 1,
+              "cot": 1
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 15,
+              "ket_thuc": 38,
+              "dong": 1,
+              "cot": 16
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 22,
+              "ket_thuc": 42,
+              "dong": 1,
+              "cot": 23
+            }
+          }
+        ]
+      },
+      {
+        "ca": 30,
+        "van_ban_demo": "Tạ ơn khách hàng đã tin tưởng sử dụng dịch vụ.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 16,
+              "dong": 1,
+              "cot": 1
+            }
+          }
+        ]
+      },
+      {
+        "ca": 31,
+        "van_ban_demo": "Ngô nghê là cách nói; thực tế chi phí được ghi nhận đúng kỳ.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 8,
+              "dong": 1,
+              "cot": 1
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 9,
+              "ket_thuc": 20,
+              "dong": 1,
+              "cot": 10
+            }
+          }
+        ]
+      },
+      {
+        "ca": 32,
+        "van_ban_demo": "Lương thực và thực phẩm là nhóm hàng chính.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 10,
+              "dong": 1,
+              "cot": 1
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 24,
+              "ket_thuc": 42,
+              "dong": 1,
+              "cot": 25
+            }
+          }
+        ]
+      },
+      {
+        "ca": 33,
+        "van_ban_demo": "Hà nội và thành phố hồ chí minh là hai thị trường chính.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 32,
+              "ket_thuc": 55,
+              "dong": 1,
+              "cot": 33
+            }
+          }
+        ]
+      },
+      {
+        "ca": 34,
+        "van_ban_demo": "Thanh lý tài sản cố định theo quyết định của hội đồng quản trị.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 6,
+              "ket_thuc": 24,
+              "dong": 1,
+              "cot": 7
+            }
+          }
+        ]
+      },
+      {
+        "ca": 35,
+        "van_ban_demo": "Đoàn kiểm toán làm việc tại văn phòng trong 5 ngày.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 23,
+              "dong": 1,
+              "cot": 1
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 15,
+              "ket_thuc": 37,
+              "dong": 1,
+              "cot": 16
+            }
+          }
+        ]
+      },
+      {
+        "ca": 36,
+        "van_ban_demo": "Cao su thiên nhiên là nguyên liệu chính của công ty.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 19,
+              "ket_thuc": 39,
+              "dong": 1,
+              "cot": 20
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 22,
+              "ket_thuc": 39,
+              "dong": 1,
+              "cot": 23
+            }
+          }
+        ]
+      },
+      {
+        "ca": 37,
+        "van_ban_demo": "Tiền mặt tại quỹ cuối kỳ là 20.000.000 VND.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 38,
+        "van_ban_demo": "Lý thuyết kế toán và thực hành được áp dụng.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 17,
+              "dong": 1,
+              "cot": 1
+            }
+          }
+        ]
+      },
+      {
+        "ca": 39,
+        "van_ban_demo": "Phạm vi kiểm toán gồm các khoản mục trọng yếu.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 21,
+              "dong": 1,
+              "cot": 1
+            }
+          }
+        ]
+      },
+      {
+        "ca": 40,
+        "van_ban_demo": "Trịnh trọng cam kết thực hiện đúng hợp đồng.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 24,
+              "dong": 1,
+              "cot": 1
+            }
+          }
+        ]
+      },
+      {
+        "ca": 41,
+        "van_ban_demo": "Mạc định các điều khoản theo mẫu hợp đồng chuẩn.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 23,
+              "dong": 1,
+              "cot": 1
+            }
+          }
+        ]
+      }
+    ],
+    "tom_tat": {
+      "t9_so_ca": 32,
+      "t9_lot": 6,
+      "t9_chan": 21,
+      "t9_che": 5,
+      "t10_so_ca": 41,
+      "t10_chan": 28,
+      "t10_che_thua": 1,
+      "t10_bao_nham": 29
+    }
+  },
+  "rv_sau": {
+    "t9": [
+      {
+        "ca": 1,
+        "van_ban_demo": "giữa nguyễn văn an và bên B",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 2,
+        "van_ban_demo": "Hợp đồng gửi nguyen van an trước ngày mai",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 3,
+        "van_ban_demo": "anh tran bao long đã ký",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 4,
+        "van_ban_demo": "chị lê thị hoa (kế toán) đã nhận",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 5,
+        "van_ban_demo": "NGUYỄN VĂN AN ĐÃ KÝ",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 6,
+        "van_ban_demo": "NGUYEN VAN AN DA KY",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 7,
+        "van_ban_demo": "Ký bởi trần thị bích ngọc hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 8,
+        "van_ban_demo": "Ký bởi huỳnh đức thịnh hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 9,
+        "van_ban_demo": "Ký bởi lâm quốc đạt hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 10,
+        "van_ban_demo": "Ký bởi tạ văn bình hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 11,
+        "van_ban_demo": "Ký bởi ung nho khoa hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 12,
+        "van_ban_demo": "Ký bởi hoàng long hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 13,
+        "van_ban_demo": "Ký bởi phạm văn đồng thanh tùng hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 14,
+        "van_ban_demo": "nguyễn văn an là giám đốc",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 15,
+        "van_ban_demo": "Người ký là nguyễn văn an",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 16,
+        "van_ban_demo": "Người ký là nguyễn văn an.",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 17,
+        "van_ban_demo": "Gửi cho bên B, nguyễn văn an, và bên C",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 18,
+        "van_ban_demo": "Họ tên\tnguyễn văn an\tChức vụ\tgiám đốc",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 19,
+        "van_ban_demo": "Ký bởi nguyễn\nvăn\nan hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 20,
+        "van_ban_demo": "Ký bởi ngu​yễn văn a​n hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 21,
+        "van_ban_demo": "Ký bởi nguyễn văn an1 hôm nay",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 22,
+        "van_ban_demo": "a. long đã ký",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 23,
+        "van_ban_demo": "c. hoa đã nhận hàng",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 24,
+        "van_ban_demo": "john smith đã ký hợp đồng",
+        "loai": "nuoc_ngoai",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 25,
+        "van_ban_demo": "Ký bởi tên người nước ngoài michael johnson hôm nay",
+        "loai": "nuoc_ngoai",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 26,
+        "van_ban_demo": "ông nguyễn văn an và bà lê thị hoa",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 27,
+        "van_ban_demo": "hợp đồng với phan thanh hải ngày 1/1/2026",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 28,
+        "van_ban_demo": "đối tác đặng minh tuấn thanh toán 1.000.000 VND",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 29,
+        "van_ban_demo": "Vũ Thị Mai Anh",
+        "loai": "tieng_viet",
+        "ket_qua": "che",
+        "ma_loi": null
+      },
+      {
+        "ca": 30,
+        "van_ban_demo": "vũ thị mai anh",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 31,
+        "van_ban_demo": "bùi xuân trường gửi thư",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      },
+      {
+        "ca": 32,
+        "van_ban_demo": "trần văn a ký",
+        "loai": "tieng_viet",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT"
+      }
+    ],
+    "t10": [
+      {
+        "ca": 1,
+        "van_ban_demo": "Thanh toán tại hà nội theo hợp đồng số 01/2026 ngày 30/10/2026.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 2,
+        "van_ban_demo": "Công ty đã giao hàng tại hà nội và lê thị hoa đơn gốc.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "CONG_TY",
+            "vi_tri": {
+              "bat_dau": 0,
+              "ket_thuc": 54,
+              "dong": 1,
+              "cot": 1
+            }
+          },
+          {
+            "nhom": "CA_NHAN",
+            "ly_do": "nghi tên người viết thường",
+            "diem": 4,
+            "can_cu": [
+              "HO_TU_DIEN:+3",
+              "AM_TEN:+1",
+              "AM_CHUA_BIET:+0"
+            ],
+            "vi_tri": {
+              "bat_dau": 35,
+              "ket_thuc": 41,
+              "dong": 1,
+              "cot": 36
+            }
+          }
+        ]
+      },
+      {
+        "ca": 3,
+        "van_ban_demo": "Lý do điều chỉnh là chênh lệch tỷ giá cuối kỳ.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 4,
+        "van_ban_demo": "Số dư trương mục ngân hàng được đối chiếu hàng tháng.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 5,
+        "van_ban_demo": "Phan bổ chi phí trả trước theo từng kỳ kế toán.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 6,
+        "van_ban_demo": "Kế toán phân bổ chi phí đào tạo nhân viên trong quý.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 7,
+        "van_ban_demo": "Mai sau khi nhận hóa đơn sẽ hạch toán vào tài khoản 331.",
+        "ket_qua": "chan",
+        "ma_loi": "MASK_DINH_DANH_CHUA_DAT",
+        "ly_do": [
+          {
+            "nhom": "TAI_KHOAN",
+            "vi_tri": {
+              "bat_dau": 52,
+              "ket_thuc": 55,
+              "dong": 1,
+              "cot": 53
+            }
+          }
+        ]
+      },
+      {
+        "ca": 8,
+        "van_ban_demo": "Hồ sơ thanh toán gồm hóa đơn và biên bản nghiệm thu.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 9,
+        "van_ban_demo": "Chi phí cao hơn dự toán 10.000.000 VND do lâm thời tăng giá.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 10,
+        "van_ban_demo": "Doanh thu kim ngạch xuất khẩu sang châu á tăng 5%.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 11,
+        "van_ban_demo": "Thái độ phục vụ của nhà thầu được đánh giá tốt.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 12,
+        "van_ban_demo": "Đinh kèm theo hợp đồng là phụ lục số 1.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 13,
+        "van_ban_demo": "Khoản vay ngắn hạn được trả vào cuối tháng 12.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 14,
+        "van_ban_demo": "Chi phí lương tháng 10 là 500.000.000 VND.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 15,
+        "van_ban_demo": "Bên A có trách nhiệm thanh toán trong vòng 30 ngày.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 16,
+        "van_ban_demo": "Báo cáo tài chính hợp nhất năm 2026 được lập theo chuẩn mực.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 17,
+        "van_ban_demo": "Lập dự phòng phải thu khó đòi theo thông tư hiện hành.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 18,
+        "van_ban_demo": "Tài sản cố định hữu hình khấu hao theo đường thẳng.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 19,
+        "van_ban_demo": "Hàng tồn kho được đánh giá theo giá gốc.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 20,
+        "van_ban_demo": "Giá trị hợp lý của khoản đầu tư cao hơn giá gốc.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 21,
+        "van_ban_demo": "Hợp đồng có hiệu lực kể từ ngày ký và kéo dài 12 tháng.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 22,
+        "van_ban_demo": "Phương thức thanh toán là chuyển khoản trong 15 ngày.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 23,
+        "van_ban_demo": "Trần nợ vay được phê duyệt bởi hội đồng quản trị.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 24,
+        "van_ban_demo": "Hoàng hôn trên biển là hình ảnh trong báo cáo thường niên.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 25,
+        "van_ban_demo": "Thuế giá trị gia tăng đầu vào được khấu trừ đầy đủ.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 26,
+        "van_ban_demo": "Bùi nhùi và các vật tư khác được ghi nhận vào chi phí.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 27,
+        "van_ban_demo": "Võ đoán trong ước tính kế toán cần tránh.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 28,
+        "van_ban_demo": "Dương tính giả trong kiểm toán được xem xét lại.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 29,
+        "van_ban_demo": "Vương quốc Anh là thị trường xuất khẩu lớn.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 30,
+        "van_ban_demo": "Tạ ơn khách hàng đã tin tưởng sử dụng dịch vụ.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 31,
+        "van_ban_demo": "Ngô nghê là cách nói; thực tế chi phí được ghi nhận đúng kỳ.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 32,
+        "van_ban_demo": "Lương thực và thực phẩm là nhóm hàng chính.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 33,
+        "van_ban_demo": "Hà nội và thành phố hồ chí minh là hai thị trường chính.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 34,
+        "van_ban_demo": "Thanh lý tài sản cố định theo quyết định của hội đồng quản trị.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 35,
+        "van_ban_demo": "Đoàn kiểm toán làm việc tại văn phòng trong 5 ngày.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 36,
+        "van_ban_demo": "Cao su thiên nhiên là nguyên liệu chính của công ty.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 37,
+        "van_ban_demo": "Tiền mặt tại quỹ cuối kỳ là 20.000.000 VND.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 38,
+        "van_ban_demo": "Lý thuyết kế toán và thực hành được áp dụng.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 39,
+        "van_ban_demo": "Phạm vi kiểm toán gồm các khoản mục trọng yếu.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 40,
+        "van_ban_demo": "Trịnh trọng cam kết thực hiện đúng hợp đồng.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      },
+      {
+        "ca": 41,
+        "van_ban_demo": "Mạc định các điều khoản theo mẫu hợp đồng chuẩn.",
+        "ket_qua": "giu_nguyen",
+        "ma_loi": null,
+        "ly_do": []
+      }
+    ],
+    "tom_tat": {
+      "t9_so_ca": 32,
+      "t9_lot": 0,
+      "t9_chan": 24,
+      "t9_che": 8,
+      "t10_so_ca": 41,
+      "t10_chan": 2,
+      "t10_che_thua": 0,
+      "t10_bao_nham": 2
+    }
+  }
+}

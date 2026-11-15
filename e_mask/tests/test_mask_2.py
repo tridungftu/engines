@@ -159,10 +159,13 @@ def test_so_tien_thay_doi_khi_mo_khong_tra_van_ban_khong_dong(demo_tu_vung, monk
 
 
 def test_gioi_han_heuristic_ten_thuong_khong_nhan(demo_tu_vung):
-    # Ca này chứng minh giới hạn, không phải chứng nhận văn bản an toàn Cloud.
+    # Detector cũ vẫn không nhận ra; MASK-2b phải chặn bằng bộ dò độc lập.
     chu = "nguyễn văn demo đang làm việc"
     assert not detectors.people(chu)
     assert not list(xu_ly._vung_nhan(chu))
+    kq = xu_ly.che(chu, [], KhoBoNho())
+    assert not kq['gui_duoc'] and kq['van_ban_da_che'] is None
+    assert any(m.get('ly_do') == 'nghi tên người viết thường' for m in kq['con_sot'])
 
 
 def test_numeric_review_giu_ranh_gioi_so_canh_bi_danh():

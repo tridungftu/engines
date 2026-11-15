@@ -1,0 +1,42 @@
+MASK-2b — sửa theo kiểm độc lập, 15/11/2026. Chỉ DEMO; đã kiểm bằng Core giả (CoreGia).
+Môi trường: Windows x64; Python 3.13.14; SDK 2.0.0; pytest 9.1.1.
+Biến môi trường cho từng lệnh: PYTHONDONTWRITEBYTECODE=1, PYTHONUTF8=1.
+
+.venv/Scripts/python -m pytest e_mask/tests -q --basetemp=.pytest-tmp
+[Đầu ra đoạn cuối; lược thanh tiến độ đầu.]
+............................... [  8%]
+........................................ [ 13%]
+........................................................................ [ 23%]
+........................................................................ [ 33%]
+........................................................................ [ 43%]
+........................................................................ [ 53%]
+........................................................................ [ 63%]
+........................................................................ [ 73%]
+........................................................................ [ 83%]
+........................................................................ [ 94%]
+...........................................                              [100%]
+717 passed, 190 subtests passed in 43.68s
+Mã thoát: 0
+
+.venv/Scripts/python e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[ĐẠT] Che văn bản DEMO XONG 
+[ĐẠT] Mở che DEMO XONG 
+Đã kiểm bằng Core giả (CoreGia).
+Mã thoát: 0
+
+.venv/Scripts/python e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát: 0
+
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát: 1
+
+.venv/Scripts/python e_mask/tests/test_mask_2b_rv.py --moc rv_sau
+{"t9_so_ca":32,"t9_lot":0,"t9_chan":24,"t9_che":8,"t10_so_ca":41,"t10_chan":2,"t10_che_thua":0,"t10_bao_nham":2}
+Mã thoát: 0
+

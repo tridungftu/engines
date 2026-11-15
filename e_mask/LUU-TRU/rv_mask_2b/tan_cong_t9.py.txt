@@ -1,0 +1,53 @@
+import sys
+from h2 import *
+import unicodedata
+env=ghep()
+def nocf(s): return ''.join(ch for ch in unicodedata.normalize('NFC',s) if unicodedata.category(ch)!='Cf')
+def strip(s):
+    s=unicodedata.normalize('NFD',nocf(s)); s=''.join(c for c in s if not unicodedata.combining(c)).replace('đ','d').replace('Đ','D')
+    return ''.join(s.split()).lower()
+def run(t,names):
+    r,_=che(env,t)
+    if r['trang_thai']!='XONG': return 'BLOCK'
+    vb=r['ket_qua']['van_ban_da_che']['van_ban']
+    leak=[x for x in names if x in strip(vb)]
+    return ('LEAK' if leak else 'MASKED'), vb
+ATT=[
+('giữa nguyễn văn an và bên B',['nguyenvanan']),
+('Hợp đồng gửi nguyen van an trước ngày mai',['nguyenvanan']),
+('anh tran bao long đã ký',['tranbaolong']),
+('chị lê thị hoa (kế toán) đã nhận',['lethihoa']),
+('NGUYỄN VĂN AN ĐÃ KÝ',['nguyenvanan']),
+('NGUYEN VAN AN DA KY',['nguyenvanan']),
+('Ký bởi trần thị bích ngọc hôm nay',['tranthibichngoc']),
+('Ký bởi huỳnh đức thịnh hôm nay',['huynhducthinh']),
+('Ký bởi lâm quốc đạt hôm nay',['lamquocdat']),
+('Ký bởi tạ văn bình hôm nay',['tavanbinh']),
+('Ký bởi ung nho khoa hôm nay',['ungnhokhoa']),
+('Ký bởi hoàng long hôm nay',['hoanglong']),
+('Ký bởi phạm văn đồng thanh tùng hôm nay',['phamvandongthanhtung']),
+('nguyễn văn an là giám đốc',['nguyenvanan']),
+('Người ký là nguyễn văn an',['nguyenvanan']),
+('Người ký là nguyễn văn an.',['nguyenvanan']),
+('Gửi cho bên B, nguyễn văn an, và bên C',['nguyenvanan']),
+('Họ tên\tnguyễn văn an\tChức vụ\tgiám đốc',['nguyenvanan']),
+('Ký bởi nguyễn\nvăn\nan hôm nay',['nguyenvanan']),
+('Ký bởi ngu​yễn văn a​n hôm nay',['nguyenvanan']),
+('Ký bởi nguyễn văn an1 hôm nay',['nguyenvanan']),
+('a. long đã ký',['along']),('c. hoa đã nhận hàng',['choa']),
+('john smith đã ký hợp đồng',['johnsmith']),
+('Ký bởi tên người nước ngoài michael johnson hôm nay',['michaeljohnson']),
+('ông nguyễn văn an và bà lê thị hoa',['nguyenvanan','lethihoa']),
+('hợp đồng với phan thanh hải ngày 1/1/2026',['phanthanhhai']),
+('đối tác đặng minh tuấn thanh toán 1.000.000 VND',['dangminhtuan']),
+('Vũ Thị Mai Anh',['vuthimaianh']),('vũ thị mai anh',['vuthimaianh']),
+('bùi xuân trường gửi thư',['buixuantruong']),
+('trần văn a ký',['tranvana']),
+]
+leak=blk=msk=0
+for t,nm in ATT:
+    res=run(t,nm)
+    if res=='BLOCK': blk+=1; print('BLOCK',t)
+    elif res[0]=='LEAK': leak+=1; print('LEAK ',t,'->',res[1])
+    else: msk+=1; print('MASK ',t,'->',res[1])
+print('tong',len(ATT),'leak',leak,'block',blk,'masked',msk)

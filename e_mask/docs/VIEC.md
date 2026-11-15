@@ -18,8 +18,18 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-5 | Hai handler văn bản SDK và mở che dữ liệu/trích dẫn AI | MK-12…14, 18, 20, 21 | Xong phạm vi CoreGia — 15/11/2026; chờ quyền thật | DEMO qua port ngoài gói; CLI chuẩn vẫn bị chặn do thiếu quyền. PR: **chờ lead mở** |
 | MASK-6 | Duyệt/từ chối, đóng/dọn, chuyển DEMO và màn Admin | MK-11, 15…19, 22 | Xong phạm vi CoreGia/KttCore giả — 15/11/2026 | Màn trong gói; chưa nạp trong Core thật. PR: **chờ lead mở** |
 | MASK-7 | Khảo sát từng vùng tệp, đo DEMO và trình phương án/trần | MK-1, 4, 21; quyết định 15/11 câu 11 | Xong khảo sát — 15/11/2026; Chờ Anh/lead chốt phần tệp | [Bảng bằng chứng và phương án](MASK-7-KHAO-SAT-TEP.md), [số đo thật](SO-DO-MASK-7.json). Không thêm thuật toán/năng lực tệp; MASK-8…11 chưa code. PR: **chờ lead mở** |
+| MASK-2b | Sửa theo kiểm độc lập: chấm điểm tên, giảm báo nhầm | MK-2, 18, 20; lệnh lead 15/11 lúc 09:47 | Xong phạm vi CoreGia — 15/11/2026 | t9: 0/32 lọt; t10: 2/41 báo nhầm (4,88%); 717 passed, 190 subtests. [Báo cáo](BAO-CAO-MASK-2b.md), [số đo](SO-DO-MASK-2b.json); PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## MASK-2b — sửa theo kiểm độc lập, 15/11/2026
+
+- **Đạt phạm vi sửa**, đã kiểm bằng Core giả (CoreGia). Kết luận bàn giao 09:42 trước đây bị lead bác; lần sửa bắt đầu 09:47. Chỉ hai tệp runtime, không đổi ngăn/cấu hình/từ điển chung. PR: **chờ lead mở**; không commit/push. [Báo cáo](BAO-CAO-MASK-2b.md), [lệnh kiểm thật](KET-QUA-KIEM-MASK-2b.txt).
+- Chấm điểm có căn cứ: ≥8 che, 4–7 con_sot chặn, <4 bỏ qua. Bổ sung họ hiếm theo lệnh lead, âm tiết tên/đệm và cụm ghép tự soạn; danh xưng đầy đủ/viết tắt; tên Latin có ngữ cảnh chặn. Giữ `số 01/2026`. Hai script DEMO chuyển nguyên nội dung vào `LUU-TRU/rv_mask_2b`, 73 literal thành pytest tham số hóa, không thực thi script tham khảo.
+- t9 **6/32 lọt → 0/32** (30 tiếng Việt: 22 chặn/8 che; 2 nước ngoài: đều chặn). t10 **28 chặn + 1 che thừa → 2 chặn, 0 che thừa**, báo nhầm **29/41 → 2/41 (4,88%)**, đếm cả ca mập mờ. Còn ca 2 `lê thị hoa đơn gốc` và ca 7 số sổ cái 331 bị lớp nhãn tài khoản cũ chặn; chi tiết lý do trong báo cáo/số đo.
+- **717 passed, 190 subtests passed, 0 skipped, 43,68 giây, mã 0** (172 test mới + 545 cũ); Cf/bí danh/bốn ví dụ/recall cũ đều đạt. Adapter DEMO **2/2, mã 0**; kiểm độc lập **ĐẠT, mã 0**. CLI SDK chuẩn **0/2, mã 1** vì thiếu nguồn quyền. Chưa kiểm Core thật/Linux/Cloud.
+- Tập đo cũ vẫn 1/14 và 2/30 báo nhầm, không tăng. Thời gian 09:47:00–10:15:57 ngày 15/11/2026 (UTC+07), **0.48 giờ thực tế**; không có ước tính riêng lượt sửa MASK-2b, MASK-2 gốc 3 giờ ước tính. Cần Core/Chờ Anh mới: **không**, các phụ thuộc tích hợp giữ nguyên.
+- **Nợ còn lại:** tên nước ngoài không ngữ cảnh, tên nối gạch/nháy, N.V. An, họ/tên ngoài danh sách hoặc trùng địa danh/cụm thường; phân biệt số sổ cái 331 với tài khoản ngân hàng ở bộ nhãn chung. Không coi số đo này là recall vận hành hoặc đủ điều kiện bật Cloud.
 
 ## MASK-7 — bàn giao khảo sát, 15/11/2026
 
@@ -178,11 +188,16 @@ Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã
 
 ## Nợ từ kiểm MASK-2 — ghi nhận 14/11/2026, không vá trong MASK-3
 
-- **CAO cho Cloud:** tên người viết thường không nhãn có thể lọt hậu kiểm; test heuristic đạt không chứng minh văn bản đã hết định danh. Cần bổ sung ở lát riêng trước xét bật Cloud.
+- **Nợ CAO tên người viết thường không nhãn: đã đóng trong phạm vi MASK-2b — 15/11/2026**, đã kiểm bằng Core giả (CoreGia); PR: **chờ lead mở**. Họ trong từ điển, tổng 2–4 âm tiết được dò sau bỏ dấu/hoa thường; ca nghi ngờ chặn phát hành bằng `con_sot`, không trả `van_ban_da_che`. Không dùng kết quả DEMO để xác nhận đủ điều kiện bật Cloud. Giới hạn/ngoại lệ và số đo thật tại [báo cáo MASK-2b](BAO-CAO-MASK-2b.md).
 - Tên viết tắt dạng **N.V. An**: còn nợ kiểm nhận diện/hậu kiểm; không coi MASK-3 là đã xử lý.
 - Khác biệt **numeric_review với NUL**: cần đối chiếu riêng với nguồn, giữ ranh giới số và chứng minh tiền/ngày; không sửa trong lát kho/quyền.
+- **Báo nhầm nền đo ở MASK-2b:** 1/14 mẫu cũ che thừa chữ DEMO; tập bổ sung có 1 câu ngày ISO bị lớp số/ngày cũ chặn và 1 câu che thừa chữ DEMO. Đã có trước MASK-2b, không tăng trên hai tập đo; giữ nguyên và ghi chi tiết trong báo cáo, chưa sửa ở lát tên người.
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+### MASK-2b sửa kiểm độc lập — 15/11/2026
+
+Không phát sinh yêu cầu Core mới. CLI chuẩn còn thiếu nguồn quyền tin cậy như đã ghi dưới đây; cổng DEMO CoreGia không chứng nhận quyền/ngăn Core thật.
 
 ### Bổ sung MASK-7 — 15/11/2026
 
@@ -246,3 +261,10 @@ Vỏ `ma-nguon/chay.py`, `vong_doi.py`, shim, contract bốn mẫu cũ, helper m
 - Pytest với `--basetemp=.pytest-tmp`: **269 passed, 2 skipped, 190 subtests passed, 24.30 giây; mã 0**. Hai skip đúng lý do **“chờ NGAN-0 gộp”**, so băm `ngan.py` và `cau_hinh.py`; các test SHA schema/từ điển không skip.
 - Kiểm độc lập **ĐẠT, mã 0**; Node/KttCore giả **4/4 ĐẠT, mã 0**; công cụ chuyển DEMO mặc định chạy khô, mã 0; `git diff --check` mã 0. [Nhật ký đầy đủ](KET-QUA-KIEM-MASK-3b-6.txt). Chưa kiểm Linux thực tế, trình duyệt/Core thật hoặc Cloud.
 - Lệch/điểm còn lại: hai bản bọc trong gói chờ mẫu NGAN-0; giữ tệp kho/cấu hình cũ làm hiện vật, không trên đường chạy. Thêm màn duyệt và dùng nguồn sạch theo lệnh mới. Cần Core/SDK: nguồn quyền/mã ổn định, ngăn thật, khóa HMAC, giao dịch trên 100 lệnh, nạp/review màn và đọc lại kết quả qua nâng phiên bản; đã ghi tại mục Cần Core. Không có câu hỏi mới cần Anh duyệt.
+
+
+## MASK-2b — kiểm held-out và ranh giới Cf (15/11/2026)
+
+PR: **chờ lead mở**. Đã bổ sung bản dò ranh giới Cf và test hồi quy; đã kiểm bằng Core giả (CoreGia). Nợ **CAO vẫn mở**: held-out do lead đo lọt 4/45 tên, báo nhầm 15/75 câu thường (20%); quy tắc và danh sách không bảo đảm 0 lọt, Cloud giữ tắt cứng. Không vá từng ca held-out.
+
+**Cần Core:** nguồn xác minh phiên/quyền cho CLI SDK và tích hợp thật vẫn chưa có; hai ví dụ CLI hiện bị từ chối.

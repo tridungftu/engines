@@ -374,7 +374,9 @@ class CheVanBanDemoTests(unittest.TestCase):
                 ('Số tài khoản', '1912345678901', 'TAI_KHOAN'),
                 ('STK', '1912345678901', 'TAI_KHOAN'),
                 ('Điện thoại', '0900000000', 'DIEN_THOAI')):
-            with self.subTest(nhan=nhan), patch.object(xu_ly, '_phat_hien', return_value=([], True)):
+            # Hai bộ dò đều không tìm thấy: chỉ còn lưới nhãn độc lập.
+            with self.subTest(nhan=nhan), patch.object(xu_ly, '_phat_hien', return_value=([], True)), \
+                    patch.object(xu_ly.ten_nguoi, 'tim', return_value=[]):
                 kq = che(nhan + ': ' + gia_tri, [], self.kho)
                 self.assertFalse(kq['gui_duoc'])
                 self.assertNotIn(gia_tri, repr(kq))

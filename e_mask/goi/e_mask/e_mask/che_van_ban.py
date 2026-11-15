@@ -16,6 +16,7 @@ import unicodedata
 from .nguon.privacy import core, detectors, leftovers
 from .nguon.privacy.types import bo_ky_tu_vo_hinh, chuan_hoa_vi_tri
 from .tai_nguyen import ThieuTaiNguyen
+from . import ten_nguoi
 
 
 class LoiCheVanBan(ValueError):
@@ -99,6 +100,7 @@ _DIEN_THOAI_VN = re.compile(
 _EMAIL = re.compile(r'(?<![\w.+-])[\w.+-]{1,64}@[\w.-]{1,253}\.[\w-]{2,63}(?![\w.-])')
 _KHOI_DAI = re.compile(r'[^\s\x00]{1025,}')
 _DAU_TIEN_NGAY = re.compile(r'[^\W\d_]|[$₫]|(?<=\d)(?:[.,]+|[/-])(?=\d)')
+_SO_VAN_BAN = re.compile(r'(?<!\w)số[^\S\r\n]+(?P<so>\d{1,6}/\d{4})(?![\w/.-])', re.I)
 
 
 class _ViTriGiuNguyen:
@@ -254,6 +256,11 @@ def _an_bi_danh(van_ban):
 def _phat_hien(van_ban):
     """Dùng các lớp privacy hiện có, không dùng suggest vốn cắt ở 500 dòng."""
     cum, day_du = [], True
+    # Số văn bản dạng số/năm được giữ theo lệnh MASK-2b. Chỉ ẩn trên bản
+    # dò, giữ nguyên chiều dài/toạ độ; không miễn số tài khoản/MST hoặc
+    # mã hợp đồng có hậu tố chữ như 01/2026/HD-DEMO.
+    van_ban = _SO_VAN_BAN.sub(lambda m: m.group()[:m.start('so') - m.start()]
+                             + '\x00' * len(m.group('so')), van_ban)
     # Regex email/URL của nguồn thử lại ở từng ký tự trên một từ rất dài.
     # Đánh dấu CHƯA KIỂM, không cắt đầu vào hay công bố bản che là đã đạt.
     # NUL cùng chiều dài giữ nguyên ranh giới và tọa độ của các lớp còn lại.
@@ -294,9 +301,11 @@ def _cum_con_sot(van_ban):
     # regex đếm từ một cụm số dài và literal_pattern có hàng nghìn \s+ rất tốn.
     ban_do = core.TOKEN.sub(lambda m: '\x00' * len(m.group()), van_ban)
     da_co, ket_qua = {}, []
-    for _, _, gia_tri in leftovers._candidates(ban_do):
+    for _, b, gia_tri in leftovers._candidates(ban_do):
         if len(gia_tri) < 2 or leftovers._ordinary(gia_tri):
             continue
+        if ten_nguoi.la_danh_xung(gia_tri) and ban_do[b:].lstrip().startswith('\x00'):
+            continue  # Danh xưng VIẾT HOA ngay trước một bí danh, không phải tên công ty.
         khoa = leftovers.fold(gia_tri)
         if khoa not in da_co:
             da_co[khoa] = (gia_tri, leftovers._guess(gia_tri))
@@ -304,10 +313,12 @@ def _cum_con_sot(van_ban):
     return ket_qua
 
 
-def _vung_nhan(van_ban):
+def _vung_nhan(van_ban, *, ten_da_che=frozenset()):
     """Tọa độ giá trị còn chữ/số; NUL tách phần đã che khỏi phần còn lại."""
     nhan = list(_NHAN_TRUONG.finditer(van_ban))
     for i, m in enumerate(nhan):
+        if m.start() in ten_da_che:
+            continue
         cuoi = nhan[i + 1].start() if i + 1 < len(nhan) else len(van_ban)
         ngat = _NGAT_TRUONG.search(van_ban, m.end(), cuoi)
         if ngat:
@@ -395,15 +406,21 @@ def _vi_tri(dau, cuoi, xuong_dong):
 
 def _kiem_con_sot(van_ban, da_biet, *, da_do=None):
     bo_do = None
+    ten_da_che = set()
     if da_do is None:
-        ban_do = _an_bi_danh(van_ban)
-        nfc, toa_do = _nfc_vi_tri(ban_do)
+        nfc, toa_do = _nfc_vi_tri(van_ban)
+        # Giá trị của Ông/Bà đã là bí danh hoàn chỉnh; lời văn sau tên
+        # vẫn được dò độc lập, không coi toàn bộ phần "đã ký" là tên.
+        # Chỉ tin bí danh đúng khuôn, không cho NUL do caller chèn bỏ kiểm.
+        ten_da_che = {m.start() for m in _NHAN_TRUONG.finditer(nfc)
+                      if m.lastgroup == 'CA_NHAN' and _BI_DANH.match(nfc, m.end())}
+        nfc = _an_bi_danh(nfc)
         cum, day_du = _phat_hien(nfc)
     else:
         nfc, toa_do, cum, day_du, bo_do = da_do
     if da_biet:
         cum += [(m['cum'], m['nhom_goi_y']) for m in core.leaked_known(nfc, da_biet)]
-    vung = set(_vung_nhan(nfc))
+    vung = set(_vung_nhan(nfc, ten_da_che=ten_da_che))
     vung.update((m.start(), m.end(), 'CONG_TY') for m in _CONG_TY.finditer(nfc))
     vung.update((m.start(), m.end(), 'MA_SO_THUE') for m in _MST.finditer(nfc)
                 if not _tien_theo_ngu_canh(nfc, m.start(), m.end())
@@ -421,8 +438,17 @@ def _kiem_con_sot(van_ban, da_biet, *, da_do=None):
             day_du = False
         vung.update((a, b, nhom if nhom in core.CATEGORIES else 'KHAC') for a, b in vi_tri)
     xuong_dong = [i for i, c in enumerate(van_ban) if c == '\n']
-    return [{'nhom': nhom, 'vi_tri': _vi_tri(toa_do[a][0], toa_do[b - 1][1], xuong_dong)}
-            for a, b, nhom in sorted(vung) if a < b], day_du
+    con_sot = [{'nhom': nhom, 'vi_tri': _vi_tri(toa_do[a][0], toa_do[b - 1][1], xuong_dong)}
+               for a, b, nhom in sorted(vung) if a < b]
+    # Lớp độc lập trên bản đã che: không phụ thuộc việc detector cũ có tìm
+    # ra tên hay không. Chỉ trả nhóm/vị trí/lý do, không nguyên văn tên.
+    for ten in ten_nguoi.tim(nfc):
+        con_sot.append({'nhom': 'CA_NHAN', 'ly_do': ('nghi tên người nước ngoài' if ten.nuoc_ngoai
+                                                  else 'nghi tên người viết thường'),
+                        'diem': ten.diem, 'can_cu': list(ten.can_cu),
+                        'vi_tri': _vi_tri(toa_do[ten.bat_dau][0],
+                                          toa_do[ten.ket_thuc - 1][1], xuong_dong)})
+    return con_sot, day_du
 
 
 def che(van_ban: str, dinh_danh_da_biet, kho: Kho) -> dict:
@@ -451,6 +477,11 @@ def _che(van_ban, da_biet, kho):
     nfc, toa_do = _nfc_vi_tri(van_ban)
     bo_do = None
     phat_hien, day_du = _phat_hien(nfc)
+    cac_ten = [(ten, toa_do) for ten in ten_nguoi.tim(nfc, danh_muc)]
+    ban_cf = ten_nguoi.ban_do_cf(van_ban)
+    if ban_cf != van_ban:
+        nfc_cf, toa_do_cf = _nfc_vi_tri(ban_cf)
+        cac_ten.extend((ten, toa_do_cf) for ten in ten_nguoi.tim(nfc_cf, danh_muc))
     nhan = list(_vung_nhan(nfc))
     co_dia_chi = any(nhom == 'DIA_CHI' for _, _, nhom in nhan)
     ung_vien, da_xet = [], set()
@@ -468,6 +499,12 @@ def _che(van_ban, da_biet, kho):
         for a, b in bo_do.spans(gia_tri, loose=mem, masking=True):
             if a < b:
                 ung_vien.append((toa_do[a][0], toa_do[b - 1][1], gia_tri, nhom))
+    # Dùng toạ độ từng lần gặp, không truyền tên có danh xưng cho matcher
+    # toàn văn rồi mặc nhiên nâng tin cậy các lần không có danh xưng.
+    for ten, toa_do_ten in cac_ten:
+        if ten.tin_cay:
+            ung_vien.append((toa_do_ten[ten.bat_dau][0], toa_do_ten[ten.ket_thuc - 1][1],
+                             ten.gia_tri, 'CA_NHAN'))
     bao_ve = _vung_tien_ngay(van_ban)
     # Không mất nhãn công ty do che riêng tiền tố của một tên dài hơn.
     duoi_cong_ty = {toa_do[m.start()][0]: toa_do[m.end() - 1][1]
@@ -517,6 +554,26 @@ def _che(van_ban, da_biet, kho):
     da_do = ((nfc, toa_do, phat_hien, day_du, bo_do)
              if not co_ung_vien_che and not co_ngoac and da_che == van_ban else None)
     con_sot, da_kiem_het = _kiem_con_sot(da_che, tat_ca, da_do=da_do)
+    # Nếu matcher cũ chỉ che phần đầu, họ đã mất khỏi bản hậu kiểm. Giữ
+    # nghi vấn từ bản gốc để không phát hành phần đuôi chưa che của tên.
+    xuong_dong_goc = [i for i, c in enumerate(van_ban) if c == '\n']
+    vung_da_che = detectors.Spans((a, b) for a, b, _, _ in chon)
+    cong_ty_da_che = detectors.Spans((a, b) for a, b, _, nhom in chon if nhom == 'CONG_TY')
+    for ten, toa_do_ten in cac_ten:
+        a, b = toa_do_ten[ten.bat_dau][0], toa_do_ten[ten.ket_thuc - 1][1]
+        i = bisect_right(vung_da_che.starts, a) - 1
+        che_du = i >= 0 and b <= vung_da_che.ends[i]
+        if ten.nuoc_ngoai:
+            c = bisect_right(cong_ty_da_che.starts, a) - 1
+            if c >= 0 and b <= cong_ty_da_che.ends[c]:
+                continue  # Cả cụm Latin đã được che như công ty, không còn tên để lọt.
+        if not ten.bat_buoc_duyet and che_du:
+            continue
+        if vung_da_che.hit(a, b) or toa_do_ten is not toa_do:
+            con_sot.append({'nhom': 'CA_NHAN', 'ly_do': ('nghi tên người nước ngoài' if ten.nuoc_ngoai
+                                                      else 'nghi tên người viết thường'),
+                            'diem': ten.diem, 'can_cu': list(ten.can_cu),
+                            'vi_tri': _vi_tri(a, b, xuong_dong_goc)})
     canh_bao = []
     if not day_du or not da_kiem_het:
         con_sot.append({'ly_do': 'Chưa kiểm tra đầy đủ định danh.'})

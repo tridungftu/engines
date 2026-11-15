@@ -1,276 +1,444 @@
-"""Cổng ngăn tạm theo đề nghị SDK 2.1 §3; chỉ RAM, chờ thay bằng NGAN-0.
+"""Cổng ngăn theo đề nghị SDK 2.1; bản thay thế chỉ giữ dữ liệu trong RAM."""
 
-Không sao chép toàn kho khi ghi lô: chỉ giữ thay đổi của các khóa/chỉ mục
-bị tác động. Khóa luồng bao trọn kiểm điều kiện và chốt lô.
-"""
+from __future__ import annotations
 
 from abc import ABC, abstractmethod
+import base64
 from copy import deepcopy
 from dataclasses import dataclass
+import hmac
 import json
+import secrets
 import sys
-import threading
+from threading import RLock
 
 
 class NganXungDot(Exception):
     ma = "NGAN_XUNG_DOT"
+    thong_diep = "Dữ liệu ngăn đã thay đổi hoặc bị trùng. Hãy đọc lại và thử lại."
     thu_lai_duoc = True
 
     def __init__(self):
-        super().__init__("Dữ liệu đã thay đổi; hãy đọc lại rồi lưu.")
+        super().__init__(self.thong_diep)
 
 
-@dataclass(frozen=True)
+class NganKhongHopLe(ValueError):
+    ma = "NGAN_KHONG_HOP_LE"
+    thong_diep = "Yêu cầu ngăn không hợp lệ hoặc vượt giới hạn cho phép."
+    thu_lai_duoc = False
+
+    def __init__(self):
+        super().__init__(self.thong_diep)
+
+
+@dataclass(frozen=True, repr=False)
 class BanGhi:
     gia_tri: dict
     row_version: int
 
 
+@dataclass(frozen=True, repr=False)
+class TrangNgan:
+    danh_sach: list[BanGhi]
+    tiep: str | None
+
+
+class KetQuaLenh:
+    """Chỉ đọc sau khi thoát with thành công; không công bố kết quả lô hỏng."""
+
+    def __init__(self):
+        self._ket_qua = None
+
+    @property
+    def ban_ghi(self):
+        if self._ket_qua is None:
+            raise NganKhongHopLe()
+        return self._ket_qua[0]
+
+    @property
+    def row_version(self):
+        return self.ban_ghi.row_version
+
+    @property
+    def gia_tri(self):
+        return self.ban_ghi.gia_tri
+
+    @property
+    def da_tao(self):
+        self.ban_ghi  # Kiểm lô đã được ghi.
+        return self._ket_qua[1]
+
+
+class LoNgan(ABC):
+    @abstractmethod
+    def __enter__(self): ...
+
+    @abstractmethod
+    def __exit__(self, loai_loi, loi, vet): ...
+
+    @abstractmethod
+    def them(self, bang, khoa, gia_tri) -> KetQuaLenh: ...
+
+    @abstractmethod
+    def sua(self, bang, khoa, gia_tri, *, row_version) -> KetQuaLenh: ...
+
+    @abstractmethod
+    def xoa(self, bang, khoa, *, row_version) -> KetQuaLenh: ...
+
+    @abstractmethod
+    def lay_hoac_tao(self, bang, khoa, gia_tri) -> KetQuaLenh: ...
+
+
 class Ngan(ABC):
     @abstractmethod
-    def doc(self, bang, khoa):
-        """Trả None hoặc bản ghi có gia_tri và row_version."""
+    def doc(self, bang, khoa) -> BanGhi | None: ...
 
     @abstractmethod
-    def tim(self, bang, loc=None, gioi_han=100, tiep=None):
-        """Trả {danh_sach: [BanGhi], tiep}; tối đa 500 bản ghi/lần."""
+    def tim(self, bang, loc=None, gioi_han=100, tiep=None) -> TrangNgan: ...
 
     @abstractmethod
-    def lo(self):
-        """Context manager: ghi nguyên tử khi thoát thành công."""
+    def lo(self) -> LoNgan: ...
+
+    @abstractmethod
+    def cho_phap_nhan(self, phap_nhan_id) -> Ngan: ...
 
 
-def _json(v):
+def _json(gia_tri):
+    """Chuẩn hóa khóa và từ chối đối tượng ngoài miền JSON, kể cả NaN."""
+    def kiem(v):
+        if type(v) is dict:
+            if any(type(k) is not str for k in v):
+                raise NganKhongHopLe()
+            for x in v.values():
+                kiem(x)
+        elif type(v) is list:
+            for x in v:
+                kiem(x)
+        elif v is not None and type(v) not in (str, int, float, bool):
+            raise NganKhongHopLe()
     try:
-        return json.dumps(v, ensure_ascii=False, sort_keys=True,
-                          separators=(",", ":"), allow_nan=False)
-    except (TypeError, ValueError, UnicodeError, RecursionError):
-        raise ValueError("Giá trị ngăn phải là JSON hợp lệ.") from None
+        kiem(gia_tri)
+        chuoi = json.dumps(gia_tri, ensure_ascii=False, sort_keys=True,
+                           separators=(",", ":"), allow_nan=False)
+        chuoi.encode("utf-8")
+        return chuoi
+    except (ValueError, TypeError, RecursionError, UnicodeError):
+        raise NganKhongHopLe() from None
+
+
+def _ma_json(v):
+    """So sánh giá trị JSON: 1 == 1.0, nhưng true khác 1, cả khi lồng nhau."""
+    def chuan(x):
+        if type(x) is float and x.is_integer():
+            return int(x)
+        if type(x) is dict:
+            return {k: chuan(y) for k, y in x.items()}
+        if type(x) is list:
+            return [chuan(y) for y in x]
+        return x
+    return _json(chuan(v))
+
+
+class _LopGhi:
+    """Overlay của một lô; None là dấu xóa. Không sửa kho trước khi đạt."""
+
+    def __init__(self, goc):
+        self._goc = goc
+        self._moi = {}
+
+    def get(self, khoa):
+        if khoa in self._moi:
+            return self._moi[khoa]
+        return self._goc.get(khoa)
+
+    def __setitem__(self, khoa, gia_tri):
+        self._moi[khoa] = gia_tri
+
+    def __delitem__(self, khoa):
+        self._moi[khoa] = None
+
+    def ap_dung(self):
+        for khoa, gia_tri in self._moi.items():
+            if gia_tri is None:
+                self._goc.pop(khoa, None)
+            else:
+                self._goc[khoa] = gia_tri
 
 
 class NganBoNho(Ngan):
-    def __init__(self, khai_bao=None, *, phap_nhan_id=None):
-        self._khoa = threading.RLock()
-        self._bang = {}
+    """khai_bao là danh sách ngan_du_lieu; cau_hinh luôn có khóa {}.
+
+    Mỗi đối tượng gốc thuộc một engine. Các view pháp nhân chia sẻ cùng dữ liệu
+    và cùng khóa luồng; tạo gốc mới sẽ có ngăn độc lập hoàn toàn.
+    """
+
+    def __init__(self, khai_bao=(), *, phap_nhan_id=None):
+        self._khoa_luong = RLock()
+        self._du_lieu = {}
         self._chi_muc = {}
         self._phien_ban = 0
-        self._phap_nhan_id = phap_nhan_id
-        self._khai = {}
-        for k in khai_bao or [{"bang": "cau_hinh", "pham_vi": "engine",
-                               "khoa": ["ma"], "duy_nhat": []}]:
-            if k.get("pham_vi", "engine") not in ("engine", "phap_nhan"):
-                raise ValueError("Phạm vi ngăn không hợp lệ.")
-            if not k.get("khoa") or k["bang"] in self._khai:
-                raise ValueError("Khai báo bảng ngăn không hợp lệ.")
-            self._khai[k["bang"]] = deepcopy(k)
-
-    def _dinh_nghia(self, bang):
-        if bang not in self._khai:
-            raise ValueError("Bảng ngăn chưa được khai báo.")
-        return self._khai[bang]
-
-    def _pham_vi(self, bang, v):
-        self._dinh_nghia(bang)
-        if not isinstance(v, dict):
-            raise ValueError("Khóa và bộ lọc ngăn phải là đối tượng.")
-        v = deepcopy(v)
-        if self._khai[bang].get("pham_vi") == "phap_nhan":
-            p = self._phap_nhan_id
-            if p is not None:
-                if "phap_nhan_id" in v and v["phap_nhan_id"] != p:
-                    raise ValueError("Không được truy cập pháp nhân khác.")
-                v["phap_nhan_id"] = p
-            if not isinstance(v.get("phap_nhan_id"), str) or not v["phap_nhan_id"]:
-                raise ValueError("Cần phạm vi pháp nhân khi truy cập ngăn.")
-        return v
-
-    def _cac_khoa(self, bang):
-        k = self._dinh_nghia(bang)
-        ds = list(k["khoa"])
-        if k.get("pham_vi") == "phap_nhan" and "phap_nhan_id" not in ds:
-            ds.insert(0, "phap_nhan_id")
-        return tuple(ds)
-
-    def _duy_nhat(self, bang):
-        ds = [self._cac_khoa(bang)]
-        for r in self._khai[bang].get("duy_nhat", []):
-            r = tuple(r)
-            if self._khai[bang].get("pham_vi") == "phap_nhan" and "phap_nhan_id" not in r:
-                r = ("phap_nhan_id",) + r
-            if r not in ds:
-                ds.append(r)
-        return ds
+        self._khoa_tiep = secrets.token_bytes(32)
+        self._khai_bao = {"cau_hinh": {"bang": "cau_hinh", "khoa": [],
+                                         "pham_vi": "engine", "duy_nhat": []}}
+        try:
+            for muc in deepcopy(khai_bao):
+                _json(muc)
+                ten = muc["bang"]
+                if not isinstance(ten, str) or not ten or (ten in self._khai_bao and ten != "cau_hinh"):
+                    raise NganKhongHopLe()
+                if ten == "cau_hinh":
+                    if (muc.get("khoa") != [] or muc.get("pham_vi", "engine") != "engine"
+                            or muc.get("duy_nhat", [])):
+                        raise NganKhongHopLe()
+                    continue
+                if muc.get("pham_vi", "engine") not in ("engine", "phap_nhan"):
+                    raise NganKhongHopLe()
+                cac_khoa = [muc["khoa"], *muc.get("duy_nhat", [])]
+                if any(not isinstance(k, list) or not k or len(k) != len(set(k))
+                       or any(not isinstance(t, str) or not t for t in k)
+                       for k in cac_khoa):
+                    raise NganKhongHopLe()
+                self._khai_bao[ten] = muc
+        except (KeyError, TypeError):
+            raise NganKhongHopLe() from None
+        self._goc = self
+        self._phap_nhan_id = self._kiem_phap_nhan(phap_nhan_id)
 
     @staticmethod
-    def _gia_tri_khoa(v, truong):
-        if any(t not in v or v[t] is None for t in truong):
-            raise ValueError("Bản ghi ngăn thiếu khóa hoặc trường duy nhất.")
-        return tuple(_json(v[t]) for t in truong)
+    def _kiem_phap_nhan(p):
+        if p is not None and (type(p) is not str or not p.strip()):
+            raise NganKhongHopLe()
+        _json(p)
+        return p
 
-    def _khoa_chinh(self, bang, khoa):
-        if set(khoa) != set(self._cac_khoa(bang)):
-            raise ValueError("Khóa đọc ngăn không đúng khai báo.")
-        return self._gia_tri_khoa(khoa, self._cac_khoa(bang))
+    def cho_phap_nhan(self, phap_nhan_id):
+        p = self._kiem_phap_nhan(phap_nhan_id)
+        if p is None or (self._phap_nhan_id is not None and p != self._phap_nhan_id):
+            raise NganKhongHopLe()
+        moi = object.__new__(NganBoNho)
+        moi._goc = self._goc
+        moi._phap_nhan_id = p
+        return moi
+
+    def _bang(self, bang, khoa):
+        if not isinstance(bang, str) or bang not in self._goc._khai_bao:
+            raise NganKhongHopLe()
+        muc = self._goc._khai_bao[bang]
+        p = None
+        if muc.get("pham_vi", "engine") == "phap_nhan":
+            if type(khoa) is not dict:
+                raise NganKhongHopLe()
+            p = self._kiem_phap_nhan(khoa.get("phap_nhan_id", self._phap_nhan_id))
+            if p is None:
+                raise NganKhongHopLe()
+            if self._phap_nhan_id is not None and p != self._phap_nhan_id:
+                raise NganKhongHopLe()
+        return muc, p
+
+    def _gia_tri(self, gia_tri, p):
+        if type(gia_tri) is not dict:
+            raise NganKhongHopLe()
+        _json(gia_tri)
+        v = deepcopy(gia_tri)
+        if p is not None:
+            if "phap_nhan_id" in v and v["phap_nhan_id"] != p:
+                raise NganKhongHopLe()
+            v["phap_nhan_id"] = p
+        return v
+
+    def _bo_khoa(self, muc, p):
+        return [set(k) | ({"phap_nhan_id"} if p is not None else set())
+                for k in [muc["khoa"], *muc.get("duy_nhat", [])]]
+
+    def _ma_chi_muc(self, bang, p, bo, v):
+        return bang, p, tuple(sorted(bo)), _ma_json({k: v[k] for k in bo})
+
+    def _chon(self, du_lieu, chi_muc, bang, khoa):
+        muc, p = self._bang(bang, khoa)
+        khoa = self._gia_tri(khoa, p)
+        if set(khoa) not in self._bo_khoa(muc, p):
+            raise NganKhongHopLe()
+        ma = chi_muc.get(self._ma_chi_muc(bang, p, khoa.keys(), khoa))
+        return ma, du_lieu.get(ma)
 
     def doc(self, bang, khoa):
-        khoa = self._pham_vi(bang, khoa)
-        k = self._khoa_chinh(bang, khoa)
-        with self._khoa:
-            return deepcopy(self._bang.get(bang, {}).get(k))
+        with self._goc._khoa_luong:
+            return deepcopy(self._chon(self._goc._du_lieu, self._goc._chi_muc, bang, khoa)[1])
+
+    def _ma_tiep(self, noi_dung):
+        than = _json(noi_dung).encode("utf-8")
+        chu_ky = hmac.digest(self._goc._khoa_tiep, than, "sha256")
+        return base64.urlsafe_b64encode(chu_ky + than).decode("ascii")
+
+    def _doc_tiep(self, tiep):
+        try:
+            raw = base64.b64decode(tiep, altchars=b"-_", validate=True)
+            if not hmac.compare_digest(raw[:32], hmac.digest(self._goc._khoa_tiep, raw[32:], "sha256")):
+                raise ValueError
+            return json.loads(raw[32:])
+        except (ValueError, TypeError, UnicodeError):
+            raise NganKhongHopLe() from None
 
     def tim(self, bang, loc=None, gioi_han=100, tiep=None):
-        loc = self._pham_vi(bang, {} if loc is None else loc)
+        loc = {} if loc is None else loc
+        _, p = self._bang(bang, loc)
+        loc = self._gia_tri(loc, p)
         if type(gioi_han) is not int or not 1 <= gioi_han <= 500:
-            raise ValueError("Mỗi lần chỉ tìm từ 1 đến 500 bản ghi.")
-        try:
-            bat_dau = 0 if tiep is None else int(tiep)
-            if bat_dau < 0 or (tiep is not None and str(bat_dau) != tiep):
-                raise ValueError
-        except (TypeError, ValueError):
-            raise ValueError("Mốc tìm tiếp không hợp lệ.") from None
-        with self._khoa:
-            ds = [v for _, v in sorted(self._bang.get(bang, {}).items())
-                  if all(v.gia_tri.get(t) == x for t, x in loc.items())]
-            cuoi = bat_dau + gioi_han
-            return {"danh_sach": deepcopy(ds[bat_dau:cuoi]),
-                    "tiep": str(cuoi) if cuoi < len(ds) else None}
+            raise NganKhongHopLe()
+        truy_van = [bang, p, loc]
+        sau = ""
+        if tiep is not None:
+            con_tro = self._doc_tiep(tiep)
+            if _ma_json(con_tro["truy_van"]) != _ma_json(truy_van):
+                raise NganKhongHopLe()
+            sau = con_tro["sau"]
+        with self._goc._khoa_luong:
+            ds = sorted((ma[2], ban) for ma, ban in self._goc._du_lieu.items()
+                        if ma[:2] == (bang, p) and ma[2] > sau
+                        and all(k in ban.gia_tri and _ma_json(ban.gia_tri[k]) == _ma_json(v)
+                                for k, v in loc.items()))
+            trang = ds[:gioi_han]
+            moi = (self._ma_tiep({"truy_van": truy_van, "sau": trang[-1][0]})
+                   if len(ds) > gioi_han else None)
+            return TrangNgan(deepcopy([ban for _, ban in trang]), moi)
 
     def lo(self):
-        return _Lo(self)
+        return _LoBoNho(self)
 
-    def _ghi_lo(self, cac_lenh):
-        if len(cac_lenh) > 100:
-            raise ValueError("Một lô chỉ có tối đa 100 lệnh.")
-        with self._khoa:
-            doi, chi_muc, ket_qua = {}, {}, []
-            phien_ban = self._phien_ban
-
-            def doc(bang, k):
-                return doi[(bang, k)] if (bang, k) in doi else self._bang.get(bang, {}).get(k)
-
-            def tim_khoa(bang, truong, gia_tri):
-                k = (bang, truong, self._gia_tri_khoa(gia_tri, truong))
-                return chi_muc[k] if k in chi_muc else self._chi_muc.get(k)
-
-            def doi_chi_muc(bang, ban_ghi, k, moi):
-                for truong in self._duy_nhat(bang):
-                    cm = (bang, truong, self._gia_tri_khoa(ban_ghi.gia_tri, truong))
-                    chi_muc[cm] = k if moi else None
-
-            for thao_tac, bang, khoa, gia_tri, row_version in cac_lenh:
-                khoa = self._pham_vi(bang, khoa)
-                if thao_tac == "lay_hoac_tao":
-                    truong = next((t for t in self._duy_nhat(bang) if set(t) == set(khoa)), None)
-                    if truong is None:
-                        raise ValueError("Lấy hoặc tạo phải dùng khóa duy nhất đã khai báo.")
-                    k = tim_khoa(bang, truong, khoa)
-                    cu = doc(bang, k) if k is not None else None
-                    if cu is not None:
-                        ket_qua.append({"ban_ghi": deepcopy(cu), "row_version": cu.row_version,
-                                        "da_tao": False})
-                        continue
-                else:
-                    k = self._khoa_chinh(bang, khoa)
-                    cu = doc(bang, k)
-                if thao_tac in ("sua", "xoa"):
-                    if cu is None or type(row_version) is not int or cu.row_version != row_version:
-                        raise NganXungDot()
-                elif thao_tac == "them" and cu is not None:
-                    raise NganXungDot()
-                if thao_tac == "xoa":
-                    doi_chi_muc(bang, cu, k, False)
-                    doi[(bang, k)] = None
-                    phien_ban += 1
-                    ket_qua.append({"row_version": phien_ban, "da_tao": False, "ban_ghi": None})
-                    continue
-                if not isinstance(gia_tri, dict):
-                    raise ValueError("Bản ghi ngăn phải là đối tượng.")
-                if any(t in gia_tri and gia_tri[t] != x for t, x in khoa.items()):
-                    raise ValueError("Giá trị không được đổi khóa của bản ghi.")
-                v = self._pham_vi(bang, {**gia_tri, **khoa})
-                _json(v).encode("utf-8")
-                for x in v.values():
-                    if isinstance(x, (dict, list)) and len(_json(x).encode("utf-8")) > 65536:
-                        raise ValueError("Giá trị JSON trong ngăn vượt 64 KiB.")
-                k = self._gia_tri_khoa(v, self._cac_khoa(bang))
-                for truong in self._duy_nhat(bang):
-                    trung = tim_khoa(bang, truong, v)
-                    if trung is not None and (trung != k or cu is None):
-                        raise NganXungDot()
-                phien_ban += 1
-                moi = BanGhi(deepcopy(v), phien_ban)
-                if cu is not None:
-                    doi_chi_muc(bang, cu, k, False)
-                doi_chi_muc(bang, moi, k, True)
-                doi[(bang, k)] = moi
-                ket_qua.append({"ban_ghi": deepcopy(moi), "row_version": phien_ban,
-                                "da_tao": cu is None})
-            for (bang, k), v in doi.items():
-                ds = self._bang.setdefault(bang, {})
-                if v is None:
-                    ds.pop(k, None)
-                else:
-                    ds[k] = v
-            for k, v in chi_muc.items():
-                if v is None:
-                    self._chi_muc.pop(k, None)
-                else:
-                    self._chi_muc[k] = v
-            self._phien_ban = phien_ban
-            return ket_qua
+    def _thuc_hien(self, du_lieu, chi_muc, phien_ban, lenh):
+        thao_tac, bang, khoa, gia_tri, row_version = lenh
+        muc, p = self._bang(bang, khoa)
+        ma, cu = self._chon(du_lieu, chi_muc, bang, khoa)
+        if thao_tac == "lay_hoac_tao" and cu is not None:
+            return phien_ban, (deepcopy(cu), False)
+        if thao_tac in ("sua", "xoa"):
+            if type(row_version) is not int or row_version < 1:
+                raise NganKhongHopLe()
+            if cu is None or cu.row_version != row_version:
+                raise NganXungDot()
+        elif cu is not None:
+            raise NganXungDot()
+        if thao_tac == "xoa":
+            del du_lieu[ma]
+            for bo in self._bo_khoa(muc, p):
+                del chi_muc[self._ma_chi_muc(bang, p, bo, cu.gia_tri)]
+            return phien_ban + 1, (BanGhi(deepcopy(cu.gia_tri), phien_ban + 1), False)
+        gia_tri = self._gia_tri(gia_tri, p)
+        if any(k in gia_tri and _ma_json(gia_tri[k]) != _ma_json(v) for k, v in khoa.items()):
+            raise NganKhongHopLe()
+        v = {**(cu.gia_tri if cu else {}), **khoa, **gia_tri}
+        if any(not k <= v.keys() for k in self._bo_khoa(muc, p)):
+            raise NganKhongHopLe()
+        khoa_chinh = {k: v[k] for k in muc["khoa"]}
+        moi_ma = (bang, p, _ma_json(khoa_chinh))
+        if thao_tac == "them" and set(khoa) != self._bo_khoa(muc, p)[0]:
+            raise NganKhongHopLe()
+        if cu is not None and moi_ma != ma:
+            raise NganKhongHopLe()
+        for bo in self._bo_khoa(muc, p):
+            ma_khac = chi_muc.get(self._ma_chi_muc(bang, p, bo, v))
+            if ma_khac is not None and ma_khac != ma:
+                raise NganXungDot()
+        if cu is not None:
+            for bo in self._bo_khoa(muc, p):
+                del chi_muc[self._ma_chi_muc(bang, p, bo, cu.gia_tri)]
+        for bo in self._bo_khoa(muc, p):
+            chi_muc[self._ma_chi_muc(bang, p, bo, v)] = moi_ma
+        phien_ban += 1
+        moi = BanGhi(deepcopy(v), phien_ban)
+        du_lieu[moi_ma] = moi
+        return phien_ban, (deepcopy(moi), cu is None)
 
 
-class _Lo:
+class _LoBoNho(LoNgan):
     def __init__(self, ngan):
-        self._ngan, self._lenh = ngan, []
-        self._dong = False
-        self.ket_qua = []
+        self._ngan = ngan
+        self._lenh = []
+        self._mo = False
+        self._da_dung = False
+        self._loi = False
 
     def __enter__(self):
-        if self._dong:
-            raise ValueError("Lô ngăn đã kết thúc.")
+        if self._da_dung:
+            raise NganKhongHopLe()
+        self._da_dung = self._mo = True
         return self
 
-    def __exit__(self, loai_loi, loi, vet):
-        self._dong = True
-        if loai_loi is None:
-            self.ket_qua = self._ngan._ghi_lo(self._lenh)
-        return False
-
     def _them_lenh(self, thao_tac, bang, khoa, gia_tri=None, row_version=None):
-        if self._dong or len(self._lenh) >= 100:
-            raise ValueError("Lô đã đóng hoặc vượt 100 lệnh.")
-        self._lenh.append((thao_tac, bang, deepcopy(khoa), deepcopy(gia_tri), row_version))
+        if not self._mo or self._loi or len(self._lenh) >= 100:
+            self._loi = True
+            raise NganKhongHopLe()
+        try:
+            _, p = self._ngan._bang(bang, khoa)
+            khoa = self._ngan._gia_tri(khoa, p)
+            if gia_tri is not None:
+                gia_tri = self._ngan._gia_tri(gia_tri, p)
+        except NganKhongHopLe:
+            self._loi = True
+            raise
+        kq = KetQuaLenh()
+        self._lenh.append(((thao_tac, bang, khoa, gia_tri, row_version), kq))
+        return kq
 
     def them(self, bang, khoa, gia_tri):
-        self._them_lenh("them", bang, khoa, gia_tri)
+        return self._them_lenh("them", bang, khoa, gia_tri)
 
     def sua(self, bang, khoa, gia_tri, *, row_version):
-        self._them_lenh("sua", bang, khoa, gia_tri, row_version)
+        return self._them_lenh("sua", bang, khoa, gia_tri, row_version)
 
     def xoa(self, bang, khoa, *, row_version):
-        self._them_lenh("xoa", bang, khoa, row_version=row_version)
+        return self._them_lenh("xoa", bang, khoa, row_version=row_version)
 
     def lay_hoac_tao(self, bang, khoa, gia_tri):
-        self._them_lenh("lay_hoac_tao", bang, khoa, gia_tri)
+        return self._them_lenh("lay_hoac_tao", bang, khoa, gia_tri)
+
+    def __exit__(self, loai_loi, loi, vet):
+        if not self._mo:
+            raise NganKhongHopLe()
+        self._mo = False
+        if loai_loi is not None:
+            return False
+        if self._loi:
+            raise NganKhongHopLe()
+        goc = self._ngan._goc
+        with goc._khoa_luong:
+            du_lieu = _LopGhi(goc._du_lieu)
+            chi_muc = _LopGhi(goc._chi_muc)
+            phien_ban = goc._phien_ban
+            ket_qua = []
+            for lenh, _ in self._lenh:
+                phien_ban, kq = self._ngan._thuc_hien(du_lieu, chi_muc, phien_ban, lenh)
+                ket_qua.append(kq)
+            du_lieu.ap_dung()
+            chi_muc.ap_dung()
+            goc._phien_ban = phien_ban
+            for (_, cho), kq in zip(self._lenh, ket_qua):
+                cho._ket_qua = kq
+        return False
 
 
-_khoa_chon = threading.Lock()
-_da_canh_bao = False
+_KHOA_CHON = RLock()
+_DA_CANH_BAO = False
 
 
 def chon_ngan(app):
-    global _da_canh_bao
-    with _khoa_chon:
+    """Ưu tiên app.ngan; tái sử dụng RAM khi app cho gắn thuộc tính ngan.
+
+    SDK 2.0: engine tự truyền khai báo vào NganBoNho rồi gắn app.ngan trước
+    khi gọi hàm này, vì phiếu 2.0 chưa cho phép trường ngan_du_lieu.
+    App không cho gắn (ví dụ __slots__) thì caller giữ ngăn được trả về.
+    """
+    global _DA_CANH_BAO
+    with _KHOA_CHON:
         ngan = getattr(app, "ngan", None)
-        if ngan is not None:
-            return ngan
-        ngan = getattr(app, "_ngan_tam", None)
         if ngan is None:
-            ngan = NganBoNho()
-            app._ngan_tam = ngan
-        if not _da_canh_bao:
+            ngan = NganBoNho(getattr(app, "phieu", {}).get("ngan_du_lieu", []))
+            try:
+                app.ngan = ngan
+            except AttributeError:
+                pass  # App dùng __slots__ không có chỗ gắn; caller giữ ngăn trả về.
+        if isinstance(ngan, NganBoNho) and not _DA_CANH_BAO:
             print("Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng",
-                  file=sys.stderr, flush=True)
-            _da_canh_bao = True
+                  file=sys.stderr)
+            _DA_CANH_BAO = True
         return ngan

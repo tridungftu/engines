@@ -13,8 +13,8 @@
     },
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 23688,
-      "sha256": "941b919a5ee4fb18dd9079453c2ec4ca00da1998e35c3c4577e8034698b7ff54"
+      "bytes": 24963,
+      "sha256": "7ce1aeb3b742ffdc83f5a4ffaa38b084eeedc14d06ec91bcba140f3440950d0d"
     },
     {
       "duong_dan": "demo/DEMO-ban-chot.docx",
@@ -23,8 +23,8 @@
     },
     {
       "duong_dan": "demo/README.md",
-      "bytes": 383,
-      "sha256": "e65567d43ae6afeb303f977ddb3ea58ca18fe9dcb166b76fc731ad81d763d580"
+      "bytes": 845,
+      "sha256": "c55d1d9bb7381dd821b4a4c1fea1b129af974ae3c7f83acf35de6ef45fac64bf"
     },
     {
       "duong_dan": "e_doi_chieu/__init__.py",
@@ -148,8 +148,8 @@
     },
     {
       "duong_dan": "NGUON.md",
-      "bytes": 31150,
-      "sha256": "c6ba386ef678c78d2370bd64fbad7b28ff2511128caf38355a491ea0c7a20dbc"
+      "bytes": 35653,
+      "sha256": "7a9c4f0b5d23481515ef15124824167a8e5bad1c7017f1292002a12fb46a3cd6"
     },
     {
       "duong_dan": "README.md",

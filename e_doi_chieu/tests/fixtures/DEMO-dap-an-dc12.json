@@ -1,0 +1,13 @@
+{
+  "nhan": "DEMO: văn bản và OCR giả, không phải phép đo máy thật",
+  "ca": [
+    {"ma": "tien", "word": "DEMO 1.000.000 VND", "ban_ky": "DEMO 1.100.000 VND", "nghiem_trong": true, "quy_tac": "DC_TIEN_TY_LE"},
+    {"ma": "ngay", "word": "DEMO ngày 2026-10-30", "ban_ky": "DEMO ngày 2026-10-31", "nghiem_trong": true, "quy_tac": "DC_NGAY_THOI_HAN"},
+    {"ma": "phu_dinh", "word": "DEMO đồng ý.", "ban_ky": "DEMO không đồng ý.", "nghiem_trong": true, "quy_tac": "DC_PHU_DINH_BAT_BUOC"},
+    {"ma": "mat_khoan", "word": "Điều 1. DEMO\nA\nĐiều 2. DEMO\nB", "ban_ky": "Điều 1. DEMO\nA", "nghiem_trong": true, "quy_tac": "DC_CAU_TRUC"},
+    {"ma": "ben_ky", "word": "Bên A: Công ty DEMO thuê", "ban_ky": "Bên A: Công ty DEMO thuế", "nghiem_trong": true, "quy_tac": "DC_DINH_DANH"},
+    {"ma": "doi_nghia_dau", "word": "DEMO thuê.", "ban_ky": "DEMO thuế.", "nghiem_trong": false},
+    {"ma": "doi_mau", "word": "DEMO màu xanh.", "ban_ky": "DEMO màu đỏ.", "nghiem_trong": false},
+    {"ma": "doi_tu_co_nghia", "word": "DEMO hợp.", "ban_ky": "DEMO hộp.", "nghiem_trong": false}
+  ]
+}

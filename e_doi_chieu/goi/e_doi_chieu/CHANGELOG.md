@@ -1,5 +1,22 @@
 # Thay đổi
 
+## DC-12 — 15/11/2026 · kiểm gói 0.9.0 chưa phát hành
+
+- Harness ngoài runtime nạp tệp DEMO/ngăn CoreGia và mẫu NGAN-0 riêng;
+  10 ca chuỗi, có đọc DOCX qua SDK, Local/OCR giả và xuất JSON/PDF.
+  Đáp án độc lập: bắt 5/5 thay đổi Nghiêm trọng, 0/8 sửa thật bị ẩn thành
+  nhiễu; giữ 12 điểm máy (7 Nghiêm trọng). Không suy accuracy ngoài bộ.
+- Thêm kiểm toàn tuyến về dẫn chứng, lỗi nguồn, thiếu detector/ảnh/tọa độ,
+  hủy/mất lease, ACK/CAS/chống trùng/quyền giả, không lưu đĩa/mạng; một
+  tiến trình `app.chay()` nhận dòng khởi động qua MayChuGia HTTP loopback.
+- Công cụ `.sh`/`.cmd` ASCII kiểm wheel/version/hash/tag và cài offline
+  vào venv sạch; mặc định chạy khô. Thiếu wheel Pillow và wheel/hash
+  test nên chưa cài máy sạch, chưa chạy Linux. NGUON bổ sung giấy phép/
+  metadata dependency có sẵn, không dùng hash metadata thay hash wheel.
+- Không sửa runtime/manifest/SDK/Core/schema nguồn/mẫu; CLI chuẩn giữ
+  1 DOCX DEMO sạch. Đã kiểm bằng Core giả (CoreGia); chưa trình duyệt Core
+  thật, ngăn bền/RLS, OCR/AI thật hoặc nghiệm thu detector. PR: chờ lead mở.
+
 ## DC-11 — 15/11/2026 · 0.9.0 chưa phát hành
 
 - Lõi đề xuất/duyệt chưa đăng ký SDK, đọc xác nhận/cặp từ nguồn ghim;

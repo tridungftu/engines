@@ -1,0 +1,41 @@
+MASK-7 — kết quả thật ngày 15/11/2026; đã kiểm bằng Core giả (CoreGia).
+Môi trường: .venv/Scripts/python; SDK 2.0.0 offline, pytest 9.1.1; PYTHONDONTWRITEBYTECODE=1, PYTHONUTF8=1.
+Các helper tệp chỉ khảo sát nguồn độc lập, không phải năng lực tệp qua CoreGia.
+
+python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+Mã thoát: 1
+
+python -m pytest e_mask/tests -q --basetemp=.pytest-tmp-mask7-day-du
+.......................................................... [ 13%]
+........................................ [ 22%]
+........................................................................ [ 38%]
+........................................................................ [ 55%]
+........................................................................ [ 71%]
+........................................................................ [ 88%]
+....................................................                     [100%]
+438 passed, 190 subtests passed in 32.52s
+Mã thoát: 0
+
+python e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát: 0
+
+python e_mask/tests/chay_demo.py
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+Mã thoát: 0
+
+python -m pytest e_mask/tests/test_mask_7.py -q --basetemp=.pytest-tmp-mask7
+................                                                         [100%]
+16 passed in 0.28s
+Mã thoát: 0
+
+Kiểm tài liệu/công cụ: UTF-8 không BOM/ký tự thay thế 9/9; AST 3/3; khối lệnh phiếu 14/14; SHA nguồn LF 5/5 khớp; JSON 12 ca (11 hoàn tất, 1 timeout); git diff --check mã 0.
+Lệnh đo: python -X utf8 -B e_mask/tests/do_mask_7.py --bao-cao e_mask/docs/SO-DO-MASK-7.json → mã 0; ghi đủ 12 ca, không khẳng định 12 ca hoàn tất xử lý.
+Lượt khảo sát đầu: 8 lỗi do harness dùng trường data thay vì output của ExcelMaskResult; đã sửa riêng test, nguồn cũ giữ nguyên. Lượt đo đầu: timeout ca văn bản đa dạng 500.000 làm công cụ dừng; đã bổ sung ghi từng ca/timeout và chạy lại.

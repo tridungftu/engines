@@ -17,8 +17,20 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-4 | Phong bì và schema ba loại riêng | MK-20 | Xong phạm vi CoreGia — 15/11/2026 | Schema chung/bản gói so SHA; kiểm UTF-8/JSON/trần lồng. PR: **chờ lead mở** |
 | MASK-5 | Hai handler văn bản SDK và mở che dữ liệu/trích dẫn AI | MK-12…14, 18, 20, 21 | Xong phạm vi CoreGia — 15/11/2026; chờ quyền thật | DEMO qua port ngoài gói; CLI chuẩn vẫn bị chặn do thiếu quyền. PR: **chờ lead mở** |
 | MASK-6 | Duyệt/từ chối, đóng/dọn, chuyển DEMO và màn Admin | MK-11, 15…19, 22 | Xong phạm vi CoreGia/KttCore giả — 15/11/2026 | Màn trong gói; chưa nạp trong Core thật. PR: **chờ lead mở** |
+| MASK-7 | Khảo sát từng vùng tệp, đo DEMO và trình phương án/trần | MK-1, 4, 21; quyết định 15/11 câu 11 | Xong khảo sát — 15/11/2026; Chờ Anh/lead chốt phần tệp | [Bảng bằng chứng và phương án](MASK-7-KHAO-SAT-TEP.md), [số đo thật](SO-DO-MASK-7.json). Không thêm thuật toán/năng lực tệp; MASK-8…11 chưa code. PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## MASK-7 — bàn giao khảo sát, 15/11/2026
+
+- **Kết luận: Đạt phạm vi khảo sát/test DEMO; chưa đạt nghiệm thu chung CLI SDK chuẩn.** PR: **chờ lead mở**. Không commit/push; không thêm mã chạy, UI, dependency hoặc năng lực tệp. Báo cáo: [bằng chứng/phương án/trần](MASK-7-KHAO-SAT-TEP.md); [số đo](SO-DO-MASK-7.json); [kết quả lệnh thật](KET-QUA-KIEM-MASK-7.txt).
+- **Đã làm:** bảng Word 6 vùng và Excel 8 vùng; 16 test chứng minh hỗ trợ/giới hạn từ nguồn repo. Word accept có thể giữ nguyên byte; Excel formula/link có disclosure vẫn có thể xuất tên gốc; values-only cắt ô/đổi sheet. Sửa hai mô tả NGUON về hiện vật đã ra LUU-TRU. Nhánh chết trong chốt kho đã được lát trước bỏ, không cần sửa mã.
+- **Đã kiểm bằng Core giả (CoreGia):** adapter văn bản **2/2 ĐẠT, mã 0**. CLI `python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` **0/2 ĐẠT, mã 1** vì thiếu nguồn quyền tin cậy, không thành công giả. Pytest toàn `e_mask/tests`: **438 passed, 190 subtests passed, 0 skipped, 32.52 giây; mã 0**. Khảo sát riêng **16 passed, 0 skipped, 0.28 giây; mã 0**. `kiem_doc_lap.py` **ĐẠT, mã 0**. Khối lệnh phiếu **14/14**, UTF-8 **9/9**, AST **3/3**, SHA nguồn LF **5/5**, `git diff --check` mã 0.
+- **Đo:** 12 ca, 11 hoàn tất và 1 timeout tiến trình đo 60 giây (văn bản 500.000 ký tự đa dạng có tracemalloc); không bịa RAM/thời gian hoàn tất cho ca đó. Ca lặp 500.000 → 927.097 ký tự, 41.689126 giây có đo cấp phát, peak OS 167.227.392 byte. Helper tệp chỉ kiểm độc lập, không phải năng lực tệp qua CoreGia. Cần đo tải/máy đích/biên trước chốt trần production.
+- **Thời gian thực tế:** 08:59:00–09:16:54 ngày 15/11/2026 (UTC+07), 0.30 giờ thực tế; phiếu MASK-7 2 giờ ước tính. Lượt khảo sát đầu sửa tên trường sai trong test; lượt đo đầu timeout, đã ghi riêng và chạy lại để lưu đủ ca. Không sửa nguồn cũ.
+- **Lệch phiếu/quyết định tạm:** không triển khai phần thiếu; đề xuất B ZIP/XML whitelist, tách MASK-8…11 thành 8 lát con **54–80 giờ ước tính mới**, tổng triển khai **85–111 giờ ước tính** nếu Anh chọn đủ B. Phương án A chờ lead cung cấp closure sạch, C giữ văn bản. Trần đề nghị chỉ là tập thử cần phê duyệt/đo biên, không là ngưỡng đã chứng minh; chưa áp dụng manifest/handler. 20/80 MiB và JSON 4 MiB chỉ là mốc kỹ thuật cũ.
+- **Chờ Anh/lead:** chốt trần vào/ra/ZIP và nguồn/phương án + giờ MASK-8…11. Chưa chốt thì không code; thiết kế lỗi `MASK_TEP_CHUA_HO_TRO`/`MASK_TEP_CHUA_CHOT_GIOI_HAN` bằng LoiNghiepVu, không thành công rỗng. PDF chọn tệp từ chối rõ; scan để Core OCR, Mask không gọi OCR.
+- **Chưa kiểm:** Core/ngăn/quyền/browser thật, Linux thực tế, Word/Excel mở thật/giữ bố cục/mở che sau AI sửa, PDF/chuỗi OCR, ZIP và các trần đề xuất tại biên, Cloud/Junsky/danh mục thật. 0 lượt Cloud/engine khác. Cần Core mới ở mục tương ứng: quyền tệp cùng việc, trần upload/download/output/budget job và luồng có hủy.
 
 ## MASK-3b — sửa an toàn theo kiểm độc lập, 15/11/2026
 
@@ -171,6 +183,12 @@ Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã
 - Khác biệt **numeric_review với NUL**: cần đối chiếu riêng với nguồn, giữ ranh giới số và chứng minh tiền/ngày; không sửa trong lát kho/quyền.
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+### Bổ sung MASK-7 — 15/11/2026
+
+- Core xác minh tham chiếu tệp con trong JSON thuộc cùng việc và quyền tải vào/ra/kết quả theo module/người/tài liệu. Ngăn/quyền thật và đối soát bàn giao tiếp tục chờ như MASK-6.
+- SDK 2.0 đọc trọn `mo_tep` vào RAM: cần giới hạn input/output/upload chung, đếm byte thực/luồng có hủy, budget RAM/thời gian/job/concurrency và lỗi 413 đúng. Trần engine sau đọc không bảo vệ RAM phần tải trước đó. Không sửa Core/SDK trong MASK-7.
+- Trần trình Anh và các phương án A/B/C tại [báo cáo MASK-7 §5–6](MASK-7-KHAO-SAT-TEP.md). Các số đề xuất chưa được phê duyệt hoặc kiểm biên; không khai năng lực tệp. PDF yêu cầu tệp thiết kế từ chối rõ; scan để Core OCR, Mask không gọi OCR.
 
 ### Sửa an toàn MASK-3b — 15/11/2026
 

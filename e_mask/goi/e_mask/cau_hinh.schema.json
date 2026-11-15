@@ -1,8 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Cấu hình Che định danh",
-  "description": "Chưa có trường cấu hình engine. Prompt và model Local thuộc cấu hình module/quy trình do Core cấp.",
+  "description": "Thời hạn ánh xạ chỉ trong RAM cùng chu kỳ. Prompt và model Local thuộc cấu hình module/quy trình do Core cấp.",
   "type": "object",
-  "properties": {},
+  "properties": {
+    "thoi_han_anh_xa_giay": {
+      "type": "integer",
+      "title": "Thời hạn ánh xạ trong RAM (giây)",
+      "description": "Chụp lúc bắt đầu chuỗi; hết hạn phải chạy lại toàn chuỗi. Không gia hạn theo truy cập.",
+      "minimum": 60,
+      "maximum": 900,
+      "default": 600
+    }
+  },
   "additionalProperties": false
 }

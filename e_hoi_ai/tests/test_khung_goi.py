@@ -20,8 +20,9 @@ GOI = GOC / "e_hoi_ai" / "goi" / "e_hoi_ai"
 def test_doc_phieu_va_khai_bao_dung_hop_dong():
     engine = Engine.tu_khai_bao(GOI / "engine.json")
     assert engine.ma == "e_hoi_ai"
-    assert engine.cac_nang_luc == ("ai.hoi_tai_lieu@1", "ai.hoi_theo_yeu_cau@1")
-    tai_lieu, yeu_cau = engine.phieu["nang_luc"]
+    assert engine.cac_nang_luc == ("ai.hoi_tai_lieu@1", "ai.hoi_theo_yeu_cau@1", "ai.hoi_mask_cuc_bo@1")
+    tai_lieu, yeu_cau, mask = engine.phieu["nang_luc"]
+    assert mask["nhan"] == ["yeu_cau_ai"] and mask["tra"] == "tra_loi_ai"
     assert tai_lieu["nhan"] == ["van_ban", "van_ban_tai_lieu"]
     assert tai_lieu["tra"] == "truong"
     assert {v["ma"]: v["kieu"] for v in tai_lieu["truong_ra"]} == {
@@ -47,7 +48,9 @@ def test_doc_phieu_va_khai_bao_dung_hop_dong():
     assert engine.phieu["bi_mat"] == []
     assert len(engine.phieu["chay_thu_demo"]) == 3
     assert engine.phieu["chay_thu_demo"][0]["nang_luc"] == "ai.hoi_tai_lieu@1"
-    assert {vd["nang_luc"] for vd in engine.phieu["chay_thu_demo"]} == set(engine.cac_nang_luc)
+    # AI-9 có fixture snapshot/CoreGia riêng trong cổng DEMO; giữ tương thích công cụ AI-7.
+    assert {vd["nang_luc"] for vd in engine.phieu["chay_thu_demo"]} == {
+        "ai.hoi_tai_lieu@1", "ai.hoi_theo_yeu_cau@1"}
 
 
 @pytest.mark.parametrize("ma", ["van_ban_tai_lieu", "yeu_cau_ai", "tra_loi_ai"])

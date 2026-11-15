@@ -43,3 +43,54 @@ Chỉ 5 tệp schema nguồn/bản chép trong TC-1, không thay manifest/chay.p
 schema đã khóa. Không thêm dependency, không dùng bộ đọc cấu hình làm validator
 chung; bộ đánh giá schema mới và adapter CoreGia chỉ ở tests. Mọi fixture chỉ
 DEMO với bytes được nạp vào CoreGia, metadata/băm tính thật, không tải mạng/AI.
+
+## TC-2 — 15/11/2026
+
+Runtime mới/sửa đúng `ho_so.py`, `kiem_dau_vao.py`, `chay.py`; không thêm
+dependency. Giữ nguyên bytes hai mẫu NGAN-0 và cả bốn schema đã chép ở TC-1;
+test SHA-256 sau CRLF→LF tiếp tục áp dụng. Không sửa nguồn/schema chung/Core/SDK.
+
+Tám tệp trong `demo/` là dữ liệu giả mới tạo cho TC-2: nguồn văn bản Công ty
+DEMO Ánh Dương, phong bì OCR DEMO, danh mục DEMO và năm JSON yêu cầu. Không phải
+đáp án hoặc số đo chất lượng đã được nghiệp vụ nghiệm thu. Tên/metadata/băm
+của tệp con nằm trong JSON yêu cầu, băm bytes chính xác từng yêu cầu ở
+`engine.json.chay_thu_demo`. Không đổi Unicode hoặc canonical hóa để chữa băm.
+
+Harness test nạp ba tệp con theo thứ tự gốc → OCR → danh mục bằng API
+`CoreGia.them_tep`; vì vậy ba ID `tep-1/tep-2/tep-3` trong DEMO thực sự trỏ
+bytes đã tải vào kho RAM đó. Có kiểm lại bytes/metadata/băm trước chạy; runtime
+không hardcode các ID hoặc nạp dữ liệu này. SDK CLI gốc thiếu ngăn/cấu hình/
+quyền tệp con; không diễn giải các ID như nguồn có sẵn ở Core thật.
+
+Adapter `CoreGiaTepCon`/`CuaNguonGia` và dữ liệu cấu hình chỉ trong tests ngoài
+gói; không đưa vào runtime. Đã kiểm bằng Core giả (CoreGia), mạng ngoài/Cloud=0;
+chưa chứng nhận RLS thật hoặc Linux. Quyền/ghép nguồn/vòng đời/ACK chờ C-TC-02/03,
+ngăn/cấu hình CLI chờ C-TC-01, log/lỗi trần/lease SDK chờ C-TC-05.
+
+## TC-3 — 15/11/2026
+
+`cat_doan.py`, `vi_tri.py` viết mới bằng thư viện chuẩn Python, theo phiếu
+TC-3, `TC-1-CONTRACT.md` §3–5 và DAC-TA §3.4/8/9; không lấy thuật toán/mã hoặc
+dependency bên ngoài. Sửa `chay.py` đăng ký handler cắt và `kiem_dau_vao.py`
+đóng ba nợ TC-2 do lead giao. Tổng **4 tệp mã**, dưới trần khoảng 5 tệp/lát.
+Không có nguồn cũ tại chỗ, không sửa Core/SDK/engine khác hoặc contract chung.
+
+Các map bảng/ô và `hang_tieu_de` là quy ước snapshot trong phần mở sẵn có của
+`van_ban_tai_lieu` v1; không sửa schema. Phép chiếu TAB + LF/CRLF được kiểm đúng
+chuỗi nguồn trước khi tạo offset, không đoán hộp/ô/tiêu đề. Kiểu nguồn khác
+chưa có map cần adapter Core cấp, ghi C-TC-02/03 và L-TC-01 trong VIEC.
+
+Giữ nguyên hai mẫu NGAN-0 và bốn schema, tiếp tục so băm CRLF→LF với các giá trị
+ở bảng trên. SDK 2.0.0 từ wheel offline, băm vẫn khớp SHA256SUMS.txt. Không
+thêm dependency; `requirements.lock` giữ nguyên. Phiên bản 0.1.0 còn nội bộ.
+
+Test/harness mới dùng dữ liệu tự tạo DEMO: Điều/Khoản xuyên trang/trang rỗng,
+bảng ô gộp/ô rỗng và tiêu đề lặp, NFC/NFD/emoji, 1.000.000 VND, 2026-10-30.
+Không dùng tài liệu thật hoặc model. Bản adapter quyền Core chỉ trong tests;
+seam ghim phong bì/metadata và quyền xuyên bước chưa là API Core thật.
+
+Kiểm hồi quy đầu trên checkout Windows phát hiện Git auto-CRLF làm lệch bytes
+DEMO nguồn so với SHA đã ghim. `e_tra_cuu/.gitattributes` cố định LF cho demo/*;
+bytes LF hiện tại khớp nguyên bytes HEAD và băm đã đăng ký, không sửa băm hay
+canonical hóa trong runtime để bỏ qua sai nguồn. Đã kiểm bằng Core giả (CoreGia),
+AI/Cloud=0; chưa kiểm Linux/RLS/Core thật/UI/chất lượng model.

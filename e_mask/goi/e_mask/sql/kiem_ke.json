@@ -3,8 +3,8 @@
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 32434,
-      "sha256": "2a39637139801962a20ca24f1fbc4122568d153473a8cbae5d38faa91cb1aeca"
+      "bytes": 34228,
+      "sha256": "8184a2c684d269877d254004c4298e369fb78d5a332c0a15545078dab6f34e8d"
     },
     {
       "duong_dan": "NGUON.md",
@@ -68,8 +68,8 @@
     },
     {
       "duong_dan": "e_mask/duyet_dinh_danh.py",
-      "bytes": 5660,
-      "sha256": "e12c5165b264e18e6efacc8ccbe8077bc1143f45d3111ac8820914c8575ad32d"
+      "bytes": 6453,
+      "sha256": "160af62572fae889c8a2aa6ac8c622992d9143f688b8fa6d73e5e8f8a921024e"
     },
     {
       "duong_dan": "e_mask/ghi_zip.py",
@@ -258,8 +258,8 @@
     },
     {
       "duong_dan": "ui/duyet_dinh_danh.js",
-      "bytes": 7114,
-      "sha256": "7ab38327e8ed6446fa42d989c3fa2cd07b9592a89f46d17215595f83a53979b8"
+      "bytes": 7272,
+      "sha256": "c066412eb8fb39aaa021b6160a6c27a9e4ef3945899f0882c457eb65ffd84f08"
     }
   ]
 }

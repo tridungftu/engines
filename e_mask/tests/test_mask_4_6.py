@@ -13,7 +13,7 @@ from kho_tri_thuc_sdk.thu import CoreGia
 from e_mask import phong_bi, che_van_ban
 from e_mask.chay import tao_app
 from e_mask.ngan import CauHinhKhongHopLe
-from e_mask.duyet_dinh_danh import DuyetDinhDanh
+from ho_tro_duyet_lich_su import DuyetDinhDanh
 from e_mask.kho_dinh_danh import KhoDinhDanh
 from e_mask.kho_ngan import AnhNgan, khoa_muc
 from e_mask.kho_ngan import KHAI_NGAN

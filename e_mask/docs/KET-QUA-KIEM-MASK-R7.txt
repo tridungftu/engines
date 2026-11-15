@@ -1,0 +1,55 @@
+MASK-R7 — lệnh và kết quả thật, 15/11/2026
+Đã kiểm bằng Core giả (CoreGia) và KttCore giả; chưa UI Core thật.
+CWD: worktree e_mask-mask-r7; nhánh codex/e_mask-mask-r7.
+Không commit/push/Core/SDK/dependency. Mọi lệnh Python dùng .venv/Scripts/python -B,
+PYTHONUTF8=1 và PYTHONDONTWRITEBYTECODE=1.
+SDK 2.2.0, jsonschema 4.26.0, pytest 9.1.1; wheel offline SHA256 khớp
+0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984.
+
+1. .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.4.0: có ví dụ chạy thử DEMO chưa đạt.
+0/2 ĐẠT, mã thoát 1. Giữ từ chối; kế thừa C-MS22-01.
+
+2. .venv/Scripts/python -B -m pytest e_mask/tests -q — lượt đầu
+1 failed, 2403 passed, 4 xfailed, 190 subtests passed in 231.47s (0:03:51)
+Mã thoát 1; 0 skipped. Test lỗi: test_mask_r3.py::test_gold_demo_da_dong_bang.
+Fixture demo_mask_r3.json có 42 CRLF từ checkout, SHA bytes
+fe48dee8340aeb721fe62943c22b9bed0359cc51acfadd06ce24c8c847c3819a.
+SHA sau CRLF->LF khớp nguyên blob Git HEAD và gold đã đóng băng:
+b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181.
+Chỉ khôi phục LF đúng blob Git; không đổi dữ liệu/gold/hash kỳ vọng/assertion.
+Lượt này thu thập trước khi thêm 8 ca R7 cuối, đã chạy lại full sau đó.
+
+3. .venv/Scripts/python -B -m pytest e_mask/tests/test_mask_r7.py e_mask/tests/test_ui.py -q
+Lượt đầu 42 passed in 1.37s, mã 0.
+Lượt cuối sau bổ sung ca đua/thu hồi/lỗi cửa 50 passed in 2.26s, mã 0.
+Bao gồm 49 test Python R7 và 1 test chạy Node subprocess, không skip/xfail.
+
+4. node --test e_mask/tests/ui/duyet_dinh_danh.test.mjs
+26 tests, 26 pass, 0 fail/cancelled/skipped/todo, duration_ms 170.3635, mã 0.
+KttCore giả không mạng; không là kiểm UI Core thật.
+
+5. .venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát 0 (kiểm sau cập nhật kiểm kê cuối).
+
+6. git diff --check
+Lượt đầu báo lỗi: CHANGELOG thêm dòng trắng cuối tệp. Đã sửa, cập nhật lại kiểm kê.
+Lượt sau mã 0. Git cảnh báo LF->CRLF cho test/tài liệu ngoài gói, không lỗi whitespace.
+Kiểm kê 52/52 tệp gói bằng bytes LF, trừ chính sql/kiem_ke.json.
+6/6 test/công cụ cũ chỉ đổi import fixture lịch sử, AST mọi assertion giữ nguyên.
+Gói không __pycache__/.pyc, không thay phụ thuộc hoặc thêm mạng.
+
+7. .venv/Scripts/python -B -m pytest e_mask/tests -q — lượt chốt
+2412 passed, 4 xfailed, 190 subtests passed in 241.42s (0:04:01)
+Mã thoát 0, 0 failed, 0 skipped. Bốn xfail strict MASK-2b cũ:
+"giới hạn quy tắc, nợ CAO"; không đổi marker/ngưỡng hoặc bỏ test.
+Lượt này gồm đầy đủ 49 ca Python R7, test_ui chạy 26 ca Node và mọi hồi quy.
+UI chỉ sửa thông báo lỗi sang chưa xác minh để không tự nhận còn chờ khi mất ACK;
+UI kiểm riêng lại 1 passed in 0.36s và có trong lượt full chốt.
+CLI chốt vẫn 0/2, mã 1; kiểm độc lập chốt mã 0; git diff --check chốt mã 0.
+
+Thời gian thực tế: 22:17:00–22:37:37 ngày 15/11/2026 (UTC+07), 0.34 giờ.
+Phiếu 3–5 giờ ƯỚC TÍNH, vua. PR: chờ lead mở.

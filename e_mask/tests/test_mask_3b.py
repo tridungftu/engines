@@ -13,7 +13,7 @@ from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu
 from e_mask import che_van_ban, tai_nguyen
 from ho_tro_luu_tru import cau_hinh
 doc_cau_hinh = cau_hinh.doc_cau_hinh
-from e_mask.duyet_dinh_danh import DuyetDinhDanh
+from ho_tro_duyet_lich_su import DuyetDinhDanh
 from e_mask.kho_dinh_danh import KhoDinhDanh
 from e_mask.kho_ngan import AnhNgan, BANG, CAC_TIEN_TO, TIEN_TO, bi_danh_moi, khoa_muc
 from e_mask.kho_ngan import KHAI_NGAN

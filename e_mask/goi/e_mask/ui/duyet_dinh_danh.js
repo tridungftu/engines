@@ -1,136 +1,135 @@
-// Core kiểm quyền admin_core trước khi nạp và trước mỗi thao tác ngăn.
-// Chỉ dùng API Core và textContent; không hiển thị lỗi kỹ thuật từ nguồn.
+// MASK-R7: chỉ metadata. C-P4-06 chưa được SDK đăng ký.
+// thao_tac là cửa Core chung đề nghị: xem_du_lieu mở màn Core, chỉ trả vé
+// ID/phiên bản; quyet_dinh_duyet kiểm vé/quyền/CAS qua backend, không tên.
+// Thiếu cửa hoặc lệnh chưa hỗ trợ: để chờ. Không ghi ngăn từ trình duyệt.
 export function taoMan({ KttCore, goc, document = globalThis.document }) {
-  const ngan = KttCore.engine("e_mask").ngan;
-  const chuan = (b) => b.replace(/\s/g, "").toLowerCase();
-  const khoa = (vung, k) => ({ vung, khoa: k });
+  const engine = KttCore.engine("e_mask");
   const noi = document.createElement("div");
   const thongBao = document.createElement("p");
-  const boLoc = document.createElement("div");
   const bang = document.createElement("table");
-  const loc = {};
   const tao = (ten, chu) => { const e = document.createElement(ten); e.textContent = chu; return e; };
-  noi.append(tao("h2", "Duyệt danh sách chờ"), thongBao, boLoc, bang);
+  noi.append(tao("h2", "Duyệt danh sách chờ"), thongBao, bang);
   goc.append(noi);
-  const cacLoc = [["gia_tri", "Tên cần duyệt"], ["nhom", "Nhóm"], ["so_lan_gap", "Số lần gặp"]];
-  for (const [ma, ten] of cacLoc) {
-    const nhan = tao("label", ten);
-    const o = document.createElement("input"); o.setAttribute("aria-label", ten);
-    loc[ma] = o; o.addEventListener("input", ve); nhan.append(o); boLoc.append(nhan);
+  const nhom = { CONG_TY: "Công ty", CA_NHAN: "Cá nhân", DIA_CHI: "Địa chỉ",
+    MA_SO_THUE: "Mã số thuế", TAI_KHOAN: "Tài khoản", KHAC: "Khác" };
+  const idDung = (v) => typeof v === "string" && /^(?:[0-9a-f]{32}|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(v);
+  const phienDung = (v) => Number.isSafeInteger(v) && v > 0;
+  const cho = "Chưa xác minh được tại Core. Anh hãy tải lại danh sách và xem lại tại Core.";
+  let ds = [], tiep = null, dangChay = false, luot = 0;
+  const veXem = new Map();
+  function metadata(r) {
+    const m = r?.gia_tri;
+    if (!m || !idDung(m.id_dinh_danh) || !phienDung(r.row_version) ||
+        !["DEMO", "THAT"].includes(m.vung_du_lieu) || !Object.hasOwn(nhom, m.nhom) ||
+        m.trang_thai !== "CHO_DUYET" ||
+        m.gia_tri_goc !== null || m.gia_tri_chuan !== null ||
+        m.gia_tri_goc_da_ma_hoa !== true || m.gia_tri_chuan_da_ma_hoa !== true ||
+        !/^(?:0|[1-9][0-9]*)$/.test(String(m.so_gap)) ||
+        !Number.isSafeInteger(Number(m.so_gap))) throw new Error("du_lieu");
+    // Hàng chờ chưa có alias chính thức; không lấy cột bổ sung từ nguồn.
+    return Object.freeze({ id_dinh_danh: m.id_dinh_danh, row_version: r.row_version,
+      vung_du_lieu: m.vung_du_lieu, nhom: m.nhom, trang_thai: m.trang_thai,
+      so_gap: Number(m.so_gap), bi_danh: null });
   }
-  let danhSach = [];
-  async function het(b, dieuKien = {}) {
-    const ds = []; let tiep = null;
-    do {
-      const trang = await ngan.tim(b, { loc: dieuKien, gioi_han: 500, tiep });
-      ds.push(...trang.danh_sach); tiep = trang.tiep;
-    } while (tiep != null);
-    return ds;
+  function thamChieu(m) {
+    return { bang: "dinh_danh", id_dinh_danh: m.id_dinh_danh,
+      row_version: m.row_version, vung_du_lieu: m.vung_du_lieu };
   }
-  const giaTri = (m) => m.gia_tri;
-  async function luu(vung, phien, lenh) {
-    if (lenh.length + 1 > 100) throw new Error("gioi_han");
-    await ngan.ghi_lo({ lenh: [{ thao_tac: "sua", bang: "dau_gap", khoa: khoa(vung, "phien"),
-      gia_tri: { so: phien.gia_tri.so + 1 }, row_version: phien.row_version }, ...lenh] });
+  function timMuc(m) {
+    const r = ds.find((v) => v.id_dinh_danh === m?.id_dinh_danh && v.row_version === m?.row_version);
+    if (!r) throw new Error("phien");
+    return r;
+  }
+  async function cua(ma, dl) {
+    if (typeof engine.thao_tac !== "function") throw new Error("chua_co_cua");
+    return engine.thao_tac(ma, dl);
   }
   async function bao(ham) {
-    try { await ham(); thongBao.textContent = "Đã cập nhật danh sách."; await nap(); }
+    if (dangChay) return false;
+    dangChay = true;
+    try { await ham(); return true; }
     catch (loi) {
+      veXem.clear();
       thongBao.textContent = ["NGAN_XUNG_DOT", "MASK_XUNG_DOT"].includes(loi?.ma)
-        ? "Danh sách vừa thay đổi. Hãy tải lại và thử lại."
-        : "Không thể cập nhật. Hãy kiểm tra quyền quản trị và tải lại danh sách.";
+        ? "Danh sách vừa thay đổi. Anh hãy tải lại và xem lại tại Core." : cho;
       return false;
-    }
-    return true;
+    } finally { dangChay = false; ve(); }
   }
-  async function duyet(muc, maJunsky = "") {
+  async function xem(muc) {
     return bao(async () => {
-      const m = giaTri(muc), vung = m.vung;
-      const phien = await ngan.doc("dau_gap", khoa(vung, "phien"));
-      let biDanh;
-      const tienTo = ["MASKCT", "MASKCN", "MASKDC", "MASKMST", "MASKTK", "MASKKHAC", "MASKTAM"];
-      if (maJunsky) {
-        if (!/^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$/.test(maJunsky) ||
-            tienTo.some((t) => maJunsky.toUpperCase().startsWith(t))) throw new Error("ma");
-        biDanh = `[[${maJunsky}]]`;
-      } else {
-        const t = { CONG_TY: "MASKCT", CA_NHAN: "MASKCN", DIA_CHI: "MASKDC", MA_SO_THUE: "MASKMST", TAI_KHOAN: "MASKTK" };
-        biDanh = `[[${t[m.nhom] || "MASKKHAC"}-${globalThis.crypto.randomUUID().replace(/-/g, "")}]]`;
-      }
-      for (const b of ["dinh_danh", "bi_danh_tam", "cho_duyet"]) {
-        const ds = await het(b, { vung });
-        if (ds.some((r) => {
-          const v = giaTri(r);
-          return v.gia_tri !== m.gia_tri && [v.bi_danh, v.bi_danh_tam].some((a) => a && chuan(a) === chuan(biDanh));
-        })) throw { ma: "MASK_XUNG_DOT" };
-      }
-      const moi = { ...m, bi_danh: biDanh, bi_danh_tam: m.bi_danh, nguon: "chinh_thuc" };
-      delete moi.so_lan_gap;
-      await luu(vung, phien, [
-        { thao_tac: "them", bang: "dinh_danh", khoa: khoa(vung, m.khoa), gia_tri: moi },
-        { thao_tac: "xoa", bang: "cho_duyet", khoa: khoa(vung, m.khoa), row_version: muc.row_version },
-      ]);
+      const m = timMuc(muc), hienTai = luot;
+      veXem.delete(m.id_dinh_danh);
+      const v = await cua("xem_du_lieu", thamChieu(m));
+      // Cửa Core không được callback tên/object khác vào màn engine.
+      if (!v || Object.keys(v).sort().join(",") !== "bien_nhan,id_dinh_danh,row_version" ||
+          v.id_dinh_danh !== m.id_dinh_danh || v.row_version !== m.row_version ||
+          !phienDung(v.row_version) || typeof v.bien_nhan !== "string" ||
+          !/^[0-9a-f]{32}$/.test(v.bien_nhan) || hienTai !== luot) throw new Error("bien_nhan");
+      veXem.set(m.id_dinh_danh, Object.freeze({ ...v }));
+      thongBao.textContent = "Đã nhận biên nhận xem tại Core.";
     });
   }
-  async function tuChoi(muc) {
+  async function quyetDinh(muc, quyet_dinh, maJunsky) {
     return bao(async () => {
-      const m = giaTri(muc);
-      const phien = await ngan.doc("dau_gap", khoa(m.vung, "phien"));
-      await luu(m.vung, phien, [{ thao_tac: "xoa", bang: "cho_duyet", khoa: khoa(m.vung, m.khoa), row_version: muc.row_version }]);
+      const m = timMuc(muc), v = veXem.get(m.id_dinh_danh);
+      if (!v || v.row_version !== m.row_version) throw new Error("chua_xem");
+      if (typeof maJunsky !== "string" || (maJunsky &&
+          (!/^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$/.test(maJunsky) ||
+           /^MASK(?:CT|CN|DC|MST|TK|KHAC|TAM)/i.test(maJunsky)))) throw new Error("ma");
+      veXem.delete(m.id_dinh_danh); // Không dùng lại sau lỗi hoặc mất ACK.
+      const kq = await cua("quyet_dinh_duyet", { ...thamChieu(m), bien_nhan: v.bien_nhan,
+        quyet_dinh, ma_junsky: maJunsky || null });
+      if (!kq || Object.keys(kq).sort().join(",") !== "bi_danh,id_dinh_danh,trang_thai" ||
+          kq.id_dinh_danh !== m.id_dinh_danh ||
+          kq.trang_thai !== (quyet_dinh === "DUYET" ? "CHINH_THUC" : "TU_CHOI") ||
+          (quyet_dinh === "DUYET" ? typeof kq.bi_danh !== "string" ||
+            !/^\[\[[A-Za-z0-9][A-Za-z0-9_.-]{0,99}\]\]$/.test(kq.bi_danh) : kq.bi_danh !== null))
+        throw new Error("xac_nhan");
+      await tai(null);
+      thongBao.textContent = "Đã cập nhật danh sách.";
     });
   }
-  async function don(vung) {
-    return bao(async () => {
-      const phien = await ngan.doc("dau_gap", khoa(vung, "phien"));
-      const yc = await het("ma_yeu_cau", { vung });
-      const mo = new Set(yc.filter((m) => giaTri(m).trang_thai === "DANG_XU_LY").map((m) => giaTri(m).khoa));
-      const dau = await het("dau_gap", { vung });
-      const giu = new Set(dau.filter((m) => giaTri(m).loai_dau === "tham_chieu" && mo.has(giaTri(m).ma_yeu_cau)).map((m) => giaTri(m).bi_danh));
-      for (const m of await het("cho_duyet", { vung })) giu.add(chuan(giaTri(m).bi_danh));
-      const xoa = (await het("bi_danh_tam", { vung })).filter((m) => !giu.has(giaTri(m).khoa));
-      const maXoa = new Set(xoa.map((m) => giaTri(m).khoa));
-      const lenh = xoa.map((m) => ({ thao_tac: "xoa", bang: "bi_danh_tam", khoa: khoa(vung, giaTri(m).khoa), row_version: m.row_version }));
-      for (const r of await het("dinh_danh", { vung })) {
-        const m = giaTri(r);
-        if (m.bi_danh_tam && maXoa.has(chuan(m.bi_danh_tam))) {
-          const moi = { ...m }; delete moi.bi_danh_tam;
-          lenh.push({ thao_tac: "sua", bang: "dinh_danh", khoa: khoa(vung, m.khoa), gia_tri: moi, row_version: r.row_version });
-        }
-      }
-      await luu(vung, phien, lenh);
-    });
-  }
-  function nut(ten, ham) {
-    const n = tao("button", ten);
-    n.addEventListener("click", async () => { n.disabled = true; try { await ham(); } finally { n.disabled = false; } });
-    return n;
+  const duyet = (m, ma = "") => quyetDinh(m, "DUYET", ma);
+  const tuChoi = (m) => quyetDinh(m, "TU_CHOI", "");
+  function nut(ten, ham, cam = false) {
+    const n = tao("button", ten); n.disabled = cam || dangChay;
+    n.addEventListener("click", () => ham()); return n;
   }
   function ve() {
     bang.replaceChildren();
     const dau = document.createElement("tr");
-    for (const ten of ["Tên cần duyệt", "Nhóm", "Số lần gặp", "Mã đối tác (nếu có)", "Thao tác"]) dau.append(tao("th", ten));
+    for (const t of ["ID tham chiếu", "Bí danh", "Nhóm", "Trạng thái", "Số gặp", "Mã đối tác (nếu có)", "Thao tác"]) dau.append(tao("th", t));
     bang.append(dau);
-    const nhom = { CONG_TY: "Công ty", CA_NHAN: "Cá nhân", DIA_CHI: "Địa chỉ", MA_SO_THUE: "Mã số thuế", TAI_KHOAN: "Tài khoản", KHAC: "Khác" };
-    for (const r of danhSach) {
-      const m = giaTri(r);
-      if (cacLoc.some(([k]) => !String(k === "nhom" ? nhom[m[k]] || "Khác" : m[k]).toLocaleLowerCase("vi").includes(loc[k].value.toLocaleLowerCase("vi")))) continue;
+    for (const m of ds) {
       const hang = document.createElement("tr");
-      hang.append(tao("td", m.gia_tri), tao("td", nhom[m.nhom] || "Khác"), tao("td", String(m.so_lan_gap)));
-      const o = document.createElement("input"); o.setAttribute("aria-label", "Mã đối tác");
-      const cot = document.createElement("td"); cot.append(o); hang.append(cot);
-      const tac = document.createElement("td"); tac.append(nut("Duyệt", () => duyet(r, o.value.trim())), nut("Từ chối", () => tuChoi(r)));
+      hang.append(tao("td", m.id_dinh_danh), tao("td", m.bi_danh || "Chưa cấp"),
+        tao("td", nhom[m.nhom]), tao("td", "Chờ duyệt"), tao("td", String(m.so_gap)));
+      const cot = document.createElement("td"), o = document.createElement("input");
+      o.setAttribute("aria-label", "Mã đối tác"); cot.append(o); hang.append(cot);
+      const tac = document.createElement("td"), chuaXem = !veXem.has(m.id_dinh_danh);
+      tac.append(nut("Xem tại Core", () => xem(m), typeof engine.thao_tac !== "function"),
+        nut("Duyệt", () => duyet(m, o.value.trim()), chuaXem),
+        nut("Từ chối", () => tuChoi(m), chuaXem));
       hang.append(tac); bang.append(hang);
     }
+    trangSau.disabled = dangChay || tiep === null;
   }
-  async function nap() { danhSach = await het("cho_duyet"); ve(); }
-  noi.append(nut("Tải lại", () => bao(nap)), nut("Dọn bí danh tạm", async () => {
-    let cacVung;
-    if (!await bao(async () => {
-      cacVung = new Set((await het("bi_danh_tam")).map((m) => giaTri(m).vung));
-    })) return;
-    for (const v of cacVung) if (!await don(v)) return;
-  }));
-  return { nap, duyet, tuChoi, don, thongBao, loc };
+  async function tai(conTro) {
+    const hienTai = ++luot;
+    veXem.clear(); ds = []; tiep = null; ve();
+    const trang = await engine.ngan.tim("dinh_danh", {
+      loc: { trang_thai: "CHO_DUYET" }, gioi_han: 100, tiep: conTro });
+    if (hienTai !== luot) return;
+    if (!Array.isArray(trang.danh_sach) || trang.danh_sach.length > 100 ||
+        !(trang.tiep === null || typeof trang.tiep === "string")) throw new Error("trang");
+    const moi = trang.danh_sach.map(metadata);
+    if (new Set(moi.map((m) => m.id_dinh_danh)).size !== moi.length) throw new Error("trung");
+    ds = moi; tiep = trang.tiep; ve();
+  }
+  const nap = () => bao(() => tai(null));
+  const trangSau = nut("Trang sau", () => bao(() => tai(tiep)), true);
+  noi.append(nut("Tải lại", nap), trangSau);
+  thongBao.textContent = cho;
+  return { nap, xem, duyet, tuChoi, thongBao };
 }
-
 export default taoMan;

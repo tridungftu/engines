@@ -12,7 +12,8 @@
 - Chưa đưa từ điển, detector, model, font hoặc dependency ngoài SDK/thư viện
   chuẩn vào runtime. Nguồn/phiên bản/giấy phép/băm cần lead cấp ở lát sau.
 - Công cụ kiểm: pytest 9.1.1 có sẵn qua venv system-site-packages; bộ kiểm
-  tập con schema chỉ ở tests, dùng thư viện chuẩn. Không tải gói/mạng.
+  tập con schema dùng thư viện chuẩn (từ DC-3 có ở runtime cho hai schema
+  đã ghim, không phải triển khai đầy đủ JSON Schema). Không tải gói/mạng.
 
 ## DC-2 — 15/11/2026
 
@@ -52,3 +53,21 @@ Băm mã nguồn sau CRLF→LF; không gồm NGUON.md.
 | `e_doi_chieu/doc_docx.py` | `7e63532c8ae2358ccc1b90a1bb65cb85e83c5c743fb3d8d9287fb2ed3cce3945` |
 | `e_doi_chieu/cau_truc.py` | `ddde14383f97bf5c1fa1a2161aed7db8f3ea1e36004c16350a2db52018c2d333` |
 | `e_doi_chieu/chay.py` | `0544a6a7dae1cca5a0331383349d7d5c781500f6b1fd4bf8c63820b1aeaf4246` |
+
+## DC-3 — 15/11/2026
+
+- `ho_so.py`, `chuan_hoa.py`, `vi_tri.py`: viết trong lát này bằng thư viện
+  chuẩn Python và SDK 2.0.0; tái dùng trực tiếp bộ đọc/kiểm ZIP của DC-2
+  trong cùng gói. Không import/gọi engine khác, không thêm dependency.
+- Test cặp dùng DOCX từ generator DEMO DC-2, PDF một trang có xref do test
+  tạo và PNG grayscale thực do test dựng; OCR/phân quyền là adapter giả
+  ghi rõ trong `tests/test_dc3.py`, không phân phối trong gói runtime.
+- Test parser ảnh còn đọc hai tệp DEMO đã có của OCR:
+  `e_ocr/goi/e_ocr/demo/DEMO-1-trang.jpg` và `DEMO-1-trang.png`.
+  Chỉ dùng bytes fixture để kiểm PNG/JPEG; không chạy hoặc import OCR.
+- Không cấp bộ quy tắc/từ điển/detector thật trong lát này. Bộ JSON DEMO
+  chỉ kiểm hợp đồng ghim băm/cấu hình và phép chuẩn hóa, không thay phê duyệt
+  nguồn nghiệp vụ. Chi tiết quy ước tại README; Cần Core tại VIEC.md.
+- Băm `chay.py` ở bảng DC-2 là ảnh lịch sử của DC-2; tệp đã được mở rộng
+  handler nhận cặp/lớp bọc lỗi an toàn trong DC-3. Hai bản chép NGAN-0 và
+  bốn schema dữ liệu tiếp tục giữ nguyên, test so băm LF.

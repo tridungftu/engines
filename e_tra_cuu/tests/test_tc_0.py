@@ -89,8 +89,8 @@ def test_stub_core_gia_khong_thanh_cong_gia():
     core = CoreGia()
     kq = core.chay_thu(chay.app, MA, {"loai": "ho_so_tra_cuu", "ho_so_tra_cuu": {}})
     assert kq["trang_thai"] == "LOI"
-    assert kq["loi"]["ma"] == "CHUA_LAM"
-    assert kq["loi"]["thong_diep"] == "Chức năng tra cứu đang được hoàn thiện."
+    assert kq["loi"]["ma"] == "TC_DAU_VAO_KHONG_HOP_LE"
+    assert kq["loi"]["thong_diep"] == "Yêu cầu tra cứu không hợp lệ. Anh kiểm tra lại hồ sơ."
     assert kq["ket_qua"] is None
     assert core.so_lan_ghi["ket_qua"] == 0
 

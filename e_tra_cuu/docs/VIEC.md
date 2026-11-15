@@ -1098,3 +1098,17 @@ các giới hạn tích hợp đã ghi. Lead kiểm độc lập lại và mở 
 **Thời gian thực tế vòng sửa:** bắt đầu **15/11/2026 15:52**, kết thúc chốt
 biên bản **15/11/2026 16:15:02 (UTC+07:00)**, khoảng **0.38 giờ**;
 ước tính lát TC-7 trong phiếu **5 giờ**, không có ước tính riêng vòng sửa.
+
+
+## TC-8 — 15/11/2026 — PR: chờ lead mở
+
+- Đã triển khai xuất JSON qua Core, đối chiếu quyền, snapshot, băm, tác vụ, giai đoạn,
+  tóm tắt và số đếm; giữ nguyên chi tiết, phụ thuộc cache và cờ đề nghị K5.
+- Đã kiểm bằng Core giả (CoreGia): pytest 1229 passed; kiểm độc lập ĐẠT;
+  harness có ngăn và nguồn DEMO 43/43 ĐẠT, không gọi mạng/provider/Cloud.
+- CLI SDK chuẩn 0/5, mã thoát 1: năm ví dụ báo CHUA_CAU_HINH do SDK 2.0
+  chưa cấp ngăn/cấu hình/tệp con; vì vậy **chưa đạt cổng chuẩn** theo §2.5.
+- Cần Core: C-TC-01/02/03/05 vẫn cần cửa ngăn, cấu hình, tệp con xuyên bước,
+  ngữ cảnh và kiểm quyền nguồn/ACK thực; Core thực thi cache, hết hạn và K5.
+  Cổng harness bổ sung cần lead review; chưa kiểm Core thật, Linux hay RLS thật.
+- Không commit/push; không phát sinh câu hỏi chờ Anh.

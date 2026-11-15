@@ -1,25 +1,25 @@
 # TX-0 — Thiết kế chuyển `e_trich_xuat` sang SDK 2.0
 
-*Ngày 14/11/2026 · Codex · Nhánh `codex/e_trich_xuat-tx-0` · PR: chờ lead mở. Bản trình Anh, chưa phải quyết định triển khai.*
+*Bản nháp 14/11/2026, cập nhật 15/11/2026 · Codex · Nhánh `codex/e_trich_xuat-tx-0` · PR: chờ lead mở (bản trước: PR #4). Lát tài liệu; chưa triển khai engine.*
 
-## 1. Kết luận trình Anh
+## 1. Kết luận theo quyết định ngày 15/11
 
-**Đề xuất T1(a), T2(b) có bước xuất tĩnh, T3(a) có điều kiện; chưa chuyển bộ xây dựng hoặc công bố độ chính xác.**
+**Anh đã chốt T1(a), hướng T2(b) + đề nghị Core T2(c), và yêu cầu T3 đo thật bằng số.** Thiết kế dưới đây cụ thể hóa hướng đã chốt; phép đếm DEMO đã tái lập, sức chứa model thật chưa đo. Engine không lưu gì trên máy; cấu hình thuộc engine, qua ngăn do Core giữ. Chưa chuyển bộ xây dựng hoặc công bố độ chính xác.
 
-| Câu | Đề xuất của Codex | Điều kiện / giới hạn |
+| Câu | Hướng đã chốt / thiết kế cụ thể | Điều kiện / giới hạn |
 |---|---|---|
 | T1 — đưa bộ vào việc | Module đóng băng `bo_tham_so_json` + `bam_bo_tham_so` trong tham số bước **của từng việc**. Engine kiểm trước xử lý | Cần Core xác nhận cách module gửi snapshot riêng từng việc; không sửa cấu hình quy trình dùng chung mỗi lần gửi |
-| T2 — bảng có số trường thay đổi | `trich.hau_kiem@1` trả loại riêng `bang_trich_xuat`; thêm `trich.xuat_ket_qua@1` trả `truong` tĩnh gồm JSON/Excel và số đếm | Loại mới chờ Anh duyệt. Loại riêng không thể là đầu cuối ghép cột theo API v1 b.2; bước xuất giải quyết điều này ngay trong engine |
-| T3 — 37 trường trong một lượt | Thử một yêu cầu đủ trường, tài liệu đầy đủ, khuôn JSON dùng `$defs`; vượt ngân sách thì từ chối | Mẫu ngắn: 1.967 token **ước lượng**, không phải số đo AI. Không đổi loại `yeu_cau_ai` phiên bản 1 thành batch trong TX-0; giữ phương án T3(b)/(c) để trình riêng nếu không đạt |
+| T2 — bảng có số trường thay đổi | `trich.hau_kiem@1` trả loại riêng `bang_trich_xuat`; thêm `trich.xuat_ket_qua@1` trả `truong` tĩnh gồm JSON/Excel và số đếm; module tự ghép cột | Hướng bảng + Excel đã chốt; payload/schema chi tiết và bước xuất tĩnh còn cần review. Loại riêng không thể là đầu cuối ghép cột theo API v1 b.2 |
+| T3 — 37 trường trong một lượt | Phương án thử T3(a): tài liệu đầy đủ, khuôn JSON dùng `$defs`; vượt ngân sách thì từ chối | Anh chốt phải đo, chưa chốt một lượt luôn đủ. Mẫu ngắn: 1.967 token **ước lượng**, không phải số đo AI. Số lượt AI thật trong TX-0: **0**; giữ T3(b)/(c) để trình riêng nếu không đạt |
 | Cổng bảo toàn xây dựng | Giữ E6 so từng byte và N1 một lần theo quyết định cuối | Một lượt 37 trường khác cách hỏi theo nhóm/rà lại của nguồn: **chưa chứng minh tương đương câu hỏi hoặc chất lượng**. Không thu hẹp E6 để biến sai khác thành đạt |
 
-TX-0 chỉ tạo thiết kế, phép đếm và đề xuất contract. Không tạo `goi/`, không sửa/chạy `ma-nguon/`, không sửa schema đã gộp, không chạy AI/OCR thật; không commit/push. Phiếu JSON ở mục 6 là nháp trong Markdown, chưa phải gói chạy.
+TX-0 chỉ tạo thiết kế, phép đếm và đề xuất contract. Không tạo `goi/`, không sửa `ma-nguon/` hoặc chạy pipeline nghiệp vụ cũ, không sửa schema đã gộp, không chạy AI/OCR thật; không commit/push. Có chạy lại test tham chiếu sẵn và ghi kết quả tại §9. Phiếu JSON ở mục 6 là nháp trong Markdown, chưa phải gói chạy.
 
 ### Căn cứ và ưu tiên áp dụng
 
-Đã đối chiếu `AGENTS.md`; `API-ENGINE-v1.md` b.2–b.5, c.2; SDK 2.0.0 `HUONG-DAN-VIET-ENGINE.md`, `MAU-PHIEU-ENGINE.md`; `_chung/docs/GIAO-CODEX-THU-TU.md`; `LOAI-DU-LIEU-RIENG.md`; phiếu giao TX-0; `CLAUDE.md`, quyết định cuối 07/11, phiếu có CD-111 và `YEU-CAU-VA-HIEN-TRANG.md` của engine. Kế hoạch loại hợp đồng cũ chỉ dùng phần phân tích mã; hướng kho bộ ở Core và loại DV đã hết hiệu lực theo quyết định cuối.
+Đã đối chiếu `AGENTS.md`; `API-ENGINE-v1.md` b.2–b.5, c.2; SDK 2.0.0 `HUONG-DAN-VIET-ENGINE.md`, `MAU-PHIEU-ENGINE.md`; `_chung/docs/QUYET-DINH-ANH-20261115.md` (đặc biệt câu 1, 2, 5, 7, 13), `GIAO-CODEX-DOT-2.md`, `GIAO-CODEX-THU-TU.md`, `DE-NGHI-SDK-2.1.md`; `LOAI-DU-LIEU-RIENG.md`; phiếu giao TX-0; `CLAUDE.md`, quyết định cuối 07/11, phiếu có CD-111 và `YEU-CAU-VA-HIEN-TRANG.md` của engine. Quyết định 15/11 thay các quyết định tạm cũ: không tệp cấu hình ngoài gói, không kho JSON/đệm bền, có màn cấu hình của engine. Bốn loại chung đã được Anh duyệt; riêng payload `bang_trich_xuat` chưa được duyệt chi tiết. Kế hoạch loại hợp đồng cũ chỉ dùng phần phân tích mã; hướng kho bộ ở Core và loại DV đã hết hiệu lực theo quyết định cuối.
 
-AI-0/OCR-0 đã gộp theo thông tin lead; trong worktree đã có ba schema ở `_chung/contract/`. Đã đọc phiếu AI-1, AI-2, OCR-1: AI-2 sẽ nhận `yeu_cau_ai`, trả `tra_loi_ai`, kiểm khuôn 32 KiB và giữ nguyên `chuyen_tiep` 64 KiB; OCR-1 sẽ tạo `van_ban_tai_lieu` có vị trí. Đây là **năng lực dự kiến của lát đang làm**, chưa xác nhận chúng đã chạy đạt. Không mở TX-1 trước điều kiện AI-2/OCR-1 của phiếu giao và việc Anh duyệt thiết kế.
+Trong worktree ngày 15/11 đã có ba schema ở `_chung/contract/` và gói Hỏi AI/OCR. Đối chiếu manifest hiện có: `ai.hoi_theo_yeu_cau@1` nhận `yeu_cau_ai`, trả `tra_loi_ai`; `ocr.doc_tai_lieu@1` nhận `tep`, trả `van_ban_tai_lieu`, khớp hai chuỗi đề xuất. `VIEC.md` của hai engine ghi AI-2/OCR-1 đã kiểm bằng Core giả (CoreGia); đây là bằng chứng tài liệu của lát trước, phiên TX-0 này **không chạy lại** các gói đó hoặc xác nhận Core thật. Trước TX-1 cần lead review thiết kế chi tiết và giao lát, thêm phụ thuộc NGAN-0 cho ngăn/cấu hình.
 
 ## 2. Mô-đun cũ → phần giữ, chép có sửa, bỏ khỏi gói mới
 
@@ -47,7 +47,7 @@ AI-0/OCR-0 đã gộp theo thông tin lead; trong worktree đã có ba schema �
 
 ### Các phát hiện ảnh hưởng nghiệm thu
 
-- `DANH_MUC_THAM_SO.xlsx` hash ghim `05846a2acd60f2cde708d13a163a137ee3fb0b4e08fd84f85a7e14e7ef861bcd` chưa có trong danh sách tệp repo; các fixture `tests.fixtures.trich_bien_the_xd` mà test cũ import cũng chưa có tại đường tương ứng trong worktree. Không đi tìm hồ sơ ngoài workspace. Lead phải cấp tài nguyên DEMO/chuẩn được phép cho TX-4.
+- `e_trich_xuat/tham-chieu/DANH_MUC_THAM_SO.xlsx` **lead đã đặt 15/11 (PR #30)** theo `GIAO-CODEX-DOT-2.md` §4 và quyết định câu 7. Băm `05846a2acd60f2cde708d13a163a137ee3fb0b4e08fd84f85a7e14e7ef861bcd` chỉ là băm ghim trong nguồn cũ, chưa phải băm đo từ tệp được cấp. Các fixture `tests.fixtures.trich_bien_the_xd` mà test cũ import cũng thiếu. Không tìm hồ sơ ngoài workspace hoặc sinh Excel thay tệp gốc; quy trình E6 ở §6.4.
 - Mô tả TT-21 của `MAC_DINH` cho phép tính tỷ lệ giữ lại; `CHI_DAN_TRICH` lại cấm suy ra. Giữ nguyên tư liệu để E6 phát hiện, không tự sửa bộ 37. Đề xuất trình riêng quy tắc trường suy ra: Python chỉ tính khi bộ module khai rõ công thức và dẫn chứng; trước khi duyệt không đưa giá trị suy ra thành giá trị xác nhận.
 - Đọc Word cũ làm phẳng bảng và bỏ ô trống. TX-1 phải giữ thứ tự nội dung/ô rỗng/ô gộp khi chuyển về biểu diễn tài liệu hoặc báo giới hạn cụ thể; việc này không đồng nghĩa mở năng lực trích bảng TRICH-2a.
 - Số token 0 của mã cũ là số tương thích bộ xuất, có `token_da_do=False`; không được dùng làm phép đo trước/sau.
@@ -56,10 +56,10 @@ AI-0/OCR-0 đã gộp theo thông tin lead; trong worktree đã có ba schema �
 
 | Phương án | Ưu / nhược | Việc ở engine | Việc ở module | Việc ở Core / SDK | Rủi ro và điều kiện |
 |---|---|---|---|---|---|
-| **(a) JSON trong tham số bước + hash — đề xuất đợt 1** | Dùng kiểu `van_ban` hiện có, không thêm kiểu dữ liệu/đầu vào thứ hai; đổi lại có trần chuỗi và JSON phải kiểm sâu | Kiểm JSON nghiêm ngặt, trùng khóa/mã, dung lượng, hash, ngữ cảnh; chuyển thành danh mục thuần, không tra bộ khác | Nạp Excel qua E1; đóng băng cả dòng ngừng dùng, thứ tự, quy tắc và metadata; cung cấp snapshot khi tạo **mỗi việc**, giữ bản gốc | Cần xác nhận API gửi việc của module có thể cấp `tham_so` theo việc, kiểm quyền và ghim bất biến; engine API v1/SDK 2.0 không phải đổi | Nếu module sửa `tham_so` quy trình chung theo mỗi hồ sơ sẽ gây đua và gán sai bộ. Chưa có đường snapshot thì ghi “Cần Core”, không giả định đã hỗ trợ |
+| **(a) JSON trong Cài đặt bước + hash — Anh chốt 15/11** | Dùng kiểu `van_ban` hiện có, không thêm kiểu dữ liệu/đầu vào thứ hai; đổi lại có trần chuỗi và JSON phải kiểm sâu | Kiểm JSON nghiêm ngặt, trùng khóa/mã, dung lượng, hash, ngữ cảnh; chuyển thành danh mục thuần, không tra bộ khác | Nạp Excel qua E1; đóng băng cả dòng ngừng dùng, thứ tự, quy tắc và metadata; cung cấp snapshot khi tạo **mỗi việc**, giữ bản gốc | Cần xác nhận API gửi việc của module có thể cấp `tham_so` theo việc, kiểm quyền và ghim bất biến; engine API v1/SDK 2.0 không phải đổi | Nếu module sửa `tham_so` quy trình chung theo mỗi hồ sơ sẽ gây đua và gán sai bộ. Chưa có đường snapshot thì ghi “Cần Core”, không giả định đã hỗ trợ |
 | (b) Bộ là tệp thứ hai | Giữ nguyên XLSX và hash tệp, phù hợp bộ lớn; đổi lại tệp hợp đồng đã chiếm đầu vào đầu chuỗi | Đọc hai tham chiếu hợp lệ qua SDK và E1, kiểm hash cả hai | Gửi hợp đồng + tệp bộ + phiên bản, đóng băng file | Phiếu hiện chỉ nhận một phong bì đầu vào; cần cơ chế đa đầu vào hoặc bộ ghép tổng quát do Core duyệt, không tự thêm `nhan_2` | Có thể mở rộng Core ngoài phạm vi TX. Không biến chuỗi đường dẫn máy thành cách truyền file |
 
-**Quy ước T1(a) đề xuất:**
+**T1(a) đã chốt về đường truyền; quy ước chi tiết đề xuất:**
 
 1. `bo_tham_so_json` chứa `phien_ban: 1`, `module`, `loai_hop_dong`, `phien_ban_bo`, `cac_dong` đủ 10 cột E1, `quy_tac`, tùy chọn `bam_tep_goc` và khai báo kiểu/quy tắc đã duyệt. Bộ và prompt là snapshot của module, không có prompt mặc định dùng chung.
 2. Module dùng JSON UTF-8 không BOM, `ensure_ascii=False`, `sort_keys=True`, `separators=(",", ":")`, `allow_nan=False`. `bam_bo_tham_so = "sha256:" + SHA256(bytes UTF-8 đúng chuỗi gửi)`; engine kiểm hash **trước** parse, không tự strip/chuẩn hóa chuỗi rồi băm. JSON lặp khóa, NaN/Infinity và mã lạ/trùng bị từ chối. Thứ tự `cac_dong` có ý nghĩa.
@@ -79,7 +79,7 @@ AI-0/OCR-0 đã gộp theo thông tin lead; trong worktree đã có ba schema �
 
 Một cách giản lược (b) là cho hậu kiểm trả luôn `truong` chứa chuỗi JSON/tệp; bớt một bước nhưng mất kiểu bảng có thể dùng cho bước sau. Codex ưu tiên loại riêng + bước xuất vì tái dùng được cho đối chiếu/tra cứu, đồng thời đáp ứng quy tắc đầu cuối hiện hành.
 
-`bang_trich_xuat` mới được đề xuất ở cuối `LOAI-DU-LIEU-RIENG.md`, chưa tạo schema hoặc đăng ký runtime trong TX-0. Không nhầm nó với năng lực trích dữ liệu **dạng bảng trong hợp đồng** đang chờ duyệt.
+Hướng T2(b) đã được Anh chốt ngày 15/11. Payload `bang_trich_xuat` ở cuối `LOAI-DU-LIEU-RIENG.md` vẫn là đề xuất chi tiết, chưa tạo schema hoặc đăng ký runtime trong TX-0. T2(c) được ghi Cần Core bằng đúng nội dung **“trường do tham số quyết định”**; không thêm trường mới vào phiếu 2.0. Không nhầm bảng kết quả này với năng lực trích dữ liệu **dạng bảng trong hợp đồng** đang chờ duyệt.
 
 ## 5. T3 — Một lượt 37 trường hay chia lượt?
 
@@ -119,7 +119,7 @@ Băm SHA-256 để lead đối chiếu phép đo: prompt `290bb3c5a0264e289bdf8b
 
 ### 5.3. So với ngữ cảnh công bố của model
 
-Đối chiếu nguồn công khai ngày 14/11/2026; không gọi máy Local/Tailscale. Giữ đúng model Anh nêu, không thay bằng model mới hơn.
+Bảng nguồn công khai được giữ từ bản nháp 14/11/2026, chưa kiểm lại qua mạng trong phiên 15/11; không gọi máy Local/Tailscale. Đây là số liệu tham khảo có nguồn của bản trước, không phải cấu hình hoặc sức chứa đã đo của máy Anh. Giữ đúng model Anh nêu, không thay bằng model mới hơn.
 
 | Model / biến thể | Ngữ cảnh công bố | So với tổng có dự phòng ở trên | Điều chưa biết / nguồn chính thức |
 |---|---|---|---|
@@ -139,6 +139,20 @@ Băm SHA-256 để lead đối chiếu phép đo: prompt `290bb3c5a0264e289bdf8b
 - Không nhét toàn văn/cấu trúc/bộ vào `chuyen_tiep`: `chuan_bi` ghi **một hồ sơ hậu kiểm JSON tạm trong kho tệp Core** qua `viec.tai_tep_ra`. Tệp chứa snapshot bộ, đúng văn bản gửi AI, vị trí, băm và yêu cầu đã ghim. `chuyen_tiep.trich_xuat` chỉ mang phiên bản, module/loại/phiên bản/hash, tham chiếu hồ sơ và SHA-256; mục tiêu ≤ 4 KiB, vẫn kiểm trần chung 64 KiB.
 - `hau_kiem` đọc hồ sơ qua `viec.mo_tep`, kiểm hash trước dùng. Không đọc lại “bộ đang dùng”, không cần gọi ngược `chuan_bi`, không lưu nội dung vào `kho_tam` hoặc đĩa lâu dài của engine. Core phải cho phép đọc tệp tiền nhiệm trong **cùng chuỗi/cùng phạm vi quyền**, và giữ tới khi module lưu/đóng. API v1 có thao tác tệp nhưng **chưa có bằng chứng về cấp quyền/vòng đời xuyên bước**; ghi “Cần Core”, không coi CoreGia là bằng chứng Core thật.
 
+### 5.5. Số đo thật và điều kiện kết luận T3
+
+Ngày 15/11 đã chạy lại Phụ lục A: số **ký tự, byte, băm và 37 mã** là phép đo thực trên mẫu DEMO; cột token vẫn chỉ là ước lượng ký tự/4. Chưa có cấu hình/biên bản chạy model thật được cấp trong lát tài liệu này, không dùng phép đếm để tuyên bố T3 đạt sức chứa.
+
+| Phép đo cần có | Kết quả hiện có ngày 15/11 | Bằng chứng cần bổ sung |
+|---|---|---|
+| Dung lượng DEMO-1/20/60 | 2.227 / 78.246 / 238.286 ký tự tài liệu; 1.967 / 20.971 / 60.981 token vào **ước lượng** | Phụ lục A; không phải bài chất lượng N1 |
+| Số lượt model thật trong TX-0 | **0** | Không có request/response/tokenizer hoặc thống kê runtime để báo token/giây thật |
+| Qwen3 8B | Token vào/ra thực, context hiệu dụng, thời gian: **chưa đo** | Lead/Anh chạy trên máy được phép, ghi ID đầy đủ, phiên bản runtime/quantization, context nạp, ngân sách reasoning/đầu ra và hỗ trợ khuôn |
+| gpt-oss 20B | Token vào/ra thực, context hiệu dụng, thời gian: **chưa đo** | Cùng mẫu và điều kiện ghi nhận như Qwen; không suy từ thông số 131.072 |
+| Gemma | ID chính xác và toàn bộ số runtime: **chưa rõ/chưa đo** | Phát hiện đúng model trước, không gán giới hạn từ tên họ Gemma |
+
+Biên bản máy thật cần có cho từng mẫu/model: băm bộ/prompt/tài liệu/khuôn, token đầu vào thực sau phần bọc, token đầu ra/reasoning, context hiệu dụng, thời gian xử lý (giây), trạng thái từ chối/tràn, số trường trả/37, số ô có dẫn chứng hợp lệ/37 và số ô cần soát. Đánh dấu “chưa đo” khi runtime không cấp số; không ghi 0 thay dữ liệu thiếu. Chỉ kết luận một lượt phù hợp cho **cấu hình và tải đã đo** khi không cắt văn bản, trả đủ 37 ô, qua hậu kiểm và cổng E6/N1. Phép thử sức chứa này tách khỏi N1 đúng một lần, không lặp N1 để chọn kết quả đẹp. Nếu chưa có biên bản, quyết định T3(a) vẫn là phương án thử, T3(b)/(c) chưa mở.
+
 ## 6. Kiến trúc và phiếu `engine.json` 2.0 nháp
 
 ### 6.1. Chuỗi và trách nhiệm
@@ -153,14 +167,14 @@ Module: ghim bộ + prompt + tham số cho từng việc
          trich.xuat_ket_qua@1 --truong--> Core -> Module
 ```
 
-Đây là **hai quy trình được module chọn theo MIME**, không đòi Core tự rẽ nhánh theo tên engine. Core chỉ điều phối/kiểm quyền/ghép kiểu/giữ tạm; engine không gọi engine, không SQL, không giao diện riêng. Local AI duy nhất ở đợt 1; không khai năng lực Cloud.
+Đây là **hai quy trình được module chọn theo MIME**, không đòi Core tự rẽ nhánh theo tên engine. Core chỉ điều phối/kiểm quyền/ghép kiểu/giữ tạm; engine không gọi engine, không SQL. Engine có màn cấu hình riêng theo §6.3; màn quản lý bộ và ghép cột thuộc module. Local AI duy nhất ở đợt 1; không khai năng lực Cloud.
 
 | Năng lực | Xử lý chính và điều kiện lỗi |
 |---|---|
 | `trich.doc_docx@1` | Đọc bytes qua SDK, MIME/ZIP/XML có trần giải nén, không chuyển `.doc`/COM. Accept All trong bộ nhớ, giữ tệp gốc/băm, thứ tự và số tự động. `nguon_doc="docx"`; chưa có phân trang thật thì `so_trang=0`, `trang=[]` **đúng schema đã gộp**, kèm cảnh báo vị trí theo đoạn/Điều/Khoản; không tạo trang/hộp giả. Vị trí DOCX chi tiết lưu hồ sơ hậu kiểm; PDF giữ vị trí trang từ OCR |
 | `trich.chuan_bi@1` | Kiểm bộ/hash/giới hạn; dùng cấu trúc để định vị nhưng không bỏ nội dung khỏi tài liệu AI; lập prompt + khuôn + hồ sơ hậu kiểm. Thiếu/sai bộ: lỗi tiếng Việt, không fallback mặc định XD. Bộ XD chuyển tiếp chỉ dùng ở đường đối chiếu rõ ràng của TX-4, chưa tự chuyển sang module |
 | `trich.hau_kiem@1` | Kiểm schema AI và metadata liên kết hồ sơ, `nha_cung_cap="local"`; đối chiếu **từng trường**, không chỉ cờ chung. Với trích dẫn: `0 <= bat_dau < ket_thuc <= len(tai_lieu)`, `tai_lieu[bat_dau:ket_thuc] == cau`; kiểm số/đơn vị, ánh xạ vị trí và logic đúng loại. Chỉ số theo ký tự Unicode Python, không theo byte UTF-8/UTF-16 của UI. Thiếu giá trị/căn cứ → `gia_tri=null`, `can_soat=true`, giữ nguyên văn AI riêng; không báo trường đó đã xác nhận. Mã lạ/trùng/sai khuôn là lỗi, không bỏ qua ngầm |
-| `trich.xuat_ket_qua@1` | Kiểm `bang_trich_xuat`, lập JSON chuẩn và Excel theo thứ tự bộ, tải tệp qua SDK; trả `truong` cố định để ghép ngăn. Không cập nhật danh mục hợp đồng lâu dài, sửa tay hoặc tự xác nhận ô. Nếu không xuất Excel thì `tep_excel=null` đúng kiểu cho phép; nếu chọn xuất mà ô vượt trần thì lỗi, không cắt |
+| `trich.xuat_ket_qua@1` | Kiểm `bang_trich_xuat`, lập JSON chuẩn và Excel theo thứ tự bộ, tải cả hai tệp qua SDK; trả `truong` cố định để ghép ngăn. Không cập nhật danh mục hợp đồng lâu dài, sửa tay hoặc tự xác nhận ô. Đợt 1 luôn kèm Excel theo hướng Anh chốt; lỗi xuất hoặc ô vượt trần thì báo lỗi, không cắt hay báo đủ kết quả khi thiếu tệp |
 
 Hậu kiểm giữ cả kết quả kiểm nghiêm và kiểm legacy để E6 nhận diện sai khác. Cờ `kiem_trich_dan.dat` của AI chỉ là một tín hiệu: không cho phép cờ true che lỗi từng ô; cờ false không tự biến mọi giá trị thành “không có trong hợp đồng”. Phân biệt “không thấy căn cứ”, “AI bỏ sót” và lỗi vận hành. `trang_thai="khong_thay_can_cu"` vẫn có thể là kết quả xử lý hoàn tất với ô cần soát, không phải báo toàn bộ dữ liệu chính xác.
 
@@ -230,7 +244,7 @@ Không thêm khóa ngoài hợp đồng đã khóa. `truong_ra` chỉ xuất hi�
       ],
       "gioi_han": {"tep_toi_da_mib": 20, "ky_tu_toi_da": 500000, "thoi_han_giay": 120},
       "huy_duoc": true,
-      "tham_so": [{"ma": "xuat_excel", "ten": "Kèm bản Excel", "kieu": "co_khong", "mac_dinh": true}]
+      "tham_so": []
     }
   ],
   "loai_du_lieu_rieng": [
@@ -249,21 +263,45 @@ Không thêm khóa ngoài hợp đồng đã khóa. `truong_ra` chỉ xuất hi�
 
 Phiếu không công bố `trich.tham_so_hop_dong@1` cũ chạy trên socket, không lẫn nó với `@1` của các năng lực mới. Khi đổi nhận/trả của một năng lực đã phát hành phải tăng `@2`, không sửa tại chỗ. Tên model không được ghim trong mã; `ma_prompt` giữ phạm vi module để Hỏi AI chọn theo quy tắc.
 
-## 7. Câu trình Anh chốt
+### 6.3. Bảng ngăn và màn cấu hình của engine — theo đề nghị SDK 2.1
 
-Mỗi dòng là một quyết định độc lập; các quyết định đã có (bộ thuộc module, KCN là loại thứ hai, không engine gọi engine) không hỏi lại.
+**Không lưu gì bền trên máy engine.** Bảng dưới là thiết kế cần Core theo `DE-NGHI-SDK-2.1.md` §2–5, chưa phải API/ngăn đã có trong SDK 2.0. Bộ tham số, phiên bản bộ và kết quả nghiệp vụ vẫn thuộc module; không đưa vào kho chung của engine.
 
-| Mã | Câu trình Anh | Đề xuất của Codex | Nếu chưa chốt |
+| Bảng / dữ liệu | Phạm vi, khóa và trường dự kiến | Duy nhất / CAS / thời hạn | Nơi đọc, ghi và dung lượng |
 |---|---|---|---|
-| TX0-01 / T1 | Chọn snapshot JSON + hash trong tham số từng việc cho đợt 1? | **Chọn T1(a)**, Core xác minh module và ghim từng việc; không sửa quy trình chung theo mỗi hồ sơ | Chỉ giữ nháp, chưa triển khai đường nhận bộ |
-| TX0-02 / T2 | Duyệt loại `bang_trich_xuat` và bước xuất tĩnh theo mục 6? | **Chọn T2(b) có bước xuất**, trình Core làm T2(c) dài hạn | Không tạo schema/đăng ký loại mới; nháp này chưa phải contract được duyệt |
-| TX0-03 / T3 | Cho thử một yêu cầu 37 trường trong giới hạn, chưa đổi loại AI thành batch? | **Chọn T3(a) có điều kiện**: từ chối vượt trần, kiểm context thực bên Hỏi AI; chỉ xem xét T3(b)/(c) sau kết quả | Không tự bật nhiều lượt/hỏi lại hoặc hứa chất lượng chưa đo |
-| TX0-04 / E6 | Giữ E6 nguyên điều kiện khi T3(a) thay cách hỏi của nguồn? | **Giữ nguyên E6**. Nếu byte câu hỏi/bảng khác thì báo chưa đạt và trình phương án giữ phát vấn theo nguồn; không chuyển bộ XD mặc định | Không nghiệm thu chuyển XD dù phép đếm context đạt; việc đổi tiêu chí E6 cần quyết định riêng, không thuộc đề xuất ngầm này |
-| TX0-05 | Duyệt cách giữ hồ sơ hậu kiểm bằng tệp tạm Core, chỉ mang tham chiếu trong `chuyen_tiep`? | **Đồng ý** sau khi Core xác nhận quyền tệp xuyên bước và giữ tới lưu/đóng; không lưu tài liệu trong kho engine | TX-2/3 chỉ kiểm bằng CoreGia; chưa nối Core thật đường này |
-| TX0-06 | Duyệt giới hạn hỏi thêm tối đa 5 câu/việc và cách xử lý trường suy ra TT-21? | **Tối đa 5 câu** tách bộ; TT-21 giữ mô tả gốc, trình quy tắc tính Python có công thức/căn cứ trước kích hoạt; chưa duyệt thì hỏi thêm tắt, giá trị suy ra cần soát | Không thay byte bộ 37 hoặc bật hành vi suy ra mới; ghi rõ phần chưa hỗ trợ |
-| TX0-07 | Duyệt ước lượng cập nhật 35 giờ cho TX-1…TX-6? | **Duyệt có điều kiện** tài nguyên ghim và contract đã chốt; tách phần Core/module/AI ngoài dự toán | Lead chưa mở lát code tiếp theo; TX-0 tài liệu vẫn hoàn tất |
+| `cau_hinh` — một bản ghi cấu hình hệ thống engine | `engine`; định danh bản mặc định `ma="mac_dinh"` trong lớp bọc tạm; `gia_tri` kiểu `json` chứa `ngan_sach_token_vao_toi_da` (mặc định đề xuất 16.000, khoảng 1.024–100.000) | Một bản ghi; lưu có CAS `phien_ban_cau_hinh` theo §4 SDK 2.1, lớp bọc dùng `row_version`; không tự hết hạn. Core cần thống nhất định danh bản ghi hệ thống, không tạo hai nguồn cấu hình | Admin qua màn cấu hình; `chuan_bi` chỉ đọc snapshot. Giá trị JSON ≤ 64 KiB, không bí mật, không nội dung hợp đồng |
+| Bộ tham số / lịch sử / ghép cột | **Không cần bảng ngăn engine** | Module giữ phiên bản và quyền riêng, không chia sẻ giữa module | Nhận snapshot JSON + băm qua Cài đặt bước; không ghi bản sao bền |
+| Hồ sơ hậu kiểm / JSON kết quả / Excel | **Không cần bảng ngăn engine** | Kho tệp Core giữ tạm theo chuỗi tới xác nhận lưu/đóng, có kiểm quyền và ACK lặp (C-TX-02) | Tạo trong RAM, gửi `tai_tep_ra`, đọc `mo_tep`; không dùng ngăn làm kho chứa toàn văn |
+| Đệm, sổ lượt, kết quả đo model | **Chưa cần bảng riêng** trong thiết kế này | Engine không gọi AI, không cần sổ chống trùng nguồn ngoài; số đo máy thật là tài liệu nghiệm thu DEMO do lead giữ | Không ghi log/tệp dữ liệu trên máy engine; nếu có nhu cầu giữ về sau phải bổ sung khai ngăn và phạm vi |
 
-Lead cần cấp đúng XLSX ghim và fixture/đáp án DEMO cho TX-4; lấy ID Gemma/cấu hình context thực từ kết quả AI-7 trên máy được phép. Đây là đầu vào còn thiếu, không yêu cầu Anh mở lại nơi sở hữu bộ hay cấp phép gọi máy thật trong TX-0.
+- Khi code: chép `_chung/mau-ma/ngan.py`, `cau_hinh.py` theo NGAN-0 (hiện **chưa có trong worktree**); dùng `chon_ngan(app)` ưu tiên `app.ngan`, nếu thiếu thì `NganBoNho`. API bám `doc`, `tim`, `lo()` với `them/sua/xoa/lay_hoac_tao`; cả lô nguyên tử, CAS lệch → `NganXungDot`. Không thay bằng tệp JSON/SQLite/đệm bền. Chạy RAM thì cảnh báo stderr một lần theo đợt 2; khởi động lại mất cấu hình, phải nạp lại.
+- `cau_hinh.schema.json` là tài nguyên chỉ đọc trong gói, **không phải tệp lưu giá trị cấu hình**. Chưa có bản ghi thì engine vẫn khởi động, bước cần cấu hình trả `LoiNghiepVu("CHUA_CAU_HINH", "Engine chưa được cấu hình. Admin vào Quản lý engine › Trích thông tin hợp đồng › Cấu hình.")`. Mặc định schema chỉ điền cho bản ghi đã có, không tạo thành công giả khi mất RAM.
+- Tách ba nơi: bộ JSON + băm/prompt và ngân sách yêu cầu thuộc **Cài đặt bước**; trần ngân sách vận hành thuộc **cấu hình engine Trích xuất**; IP/model/context hiệu dụng thuộc **engine Hỏi AI**. Ngân sách bước không được vượt trần cấu hình Trích xuất. Trần ký tự/4 không bảo đảm context; Hỏi AI vẫn phải kiểm token thật. Mỗi việc ghim cấu hình/phiên bản khi nhận, thay đổi giữa chuỗi không sửa snapshot hồ sơ đã tạo.
+- Màn dự kiến `goi/e_trich_xuat/ui/cau_hinh.js`, nạp như màn module trong Quản lý engine; dùng `KttCore.engine("e_trich_xuat").cau_hinh.doc()/luu(gia_tri, phien_ban_cau_hinh)`. Chỉ một ô trần ngân sách và nút Lưu, lỗi CAS bằng tiếng Việt; không đưa quản lý bộ vào màn này. Không mạng ngoài, không `eval`/`innerHTML` chưa lọc; lead Core review trước cài. Chưa có SDK trình duyệt thì kiểm bằng `KttCore` giả trong `tests/ui/`.
+- Khi code, đặt khai dự kiến `ngan_du_lieu`, `cau_hinh`, `giao_dien_quan_tri` vào `goi/e_trich_xuat/KHAI-SDK-2.1.json`; **không thêm vào `engine.json` 2.0**. Đổi cấu hình theo cơ chế `engine.cau_hinh_doi` của SDK 2.1; hiện chỉ mô phỏng. TX-0 không tạo gói/màn/schema hoặc lớp bọc.
+
+### 6.4. E6 — nhận tệp gốc do lead đặt
+
+1. Đầu vào duy nhất cần cấp: `e_trich_xuat/tham-chieu/DANH_MUC_THAM_SO.xlsx` — **lead đã đặt 15/11 (PR #30)**. Theo quyết định câu 7 và đợt 2 §4, lead chép chỉ đọc từ bản review gốc, ghi SHA-256 vào `e_trich_xuat/tham-chieu/NGUON.md`, xác nhận chỉ là danh mục tham số, không dữ liệu thật. Codex không tự đọc thư mục nguồn ngoài worktree.
+2. Khi nhận: tính SHA-256 từ **bytes tệp thực**, đối chiếu NGUON và băm nguồn cũ `05846a2acd60f2cde708d13a163a137ee3fb0b4e08fd84f85a7e14e7ef861bcd`. Nếu khác, báo sai khác và để lead xác minh nguồn; không thay băm ghim cho khớp. Không coi `MAC_DINH`/băm JSON là bằng chứng tệp XLSX đúng.
+3. E1 đọc tệp đã xác minh, giữ đủ 37 mã, thứ tự, 10 cột, nội dung nguyên văn. E6 so từng byte hai đường bộ mặc định/bộ module, câu hỏi và bảng theo tiêu chí nguồn; băm XLSX, băm nội dung E1 và băm snapshot JSON ghi riêng. Fixture/đáp án phải là DEMO, giữ bài Word Track Changes.
+4. Chưa có tệp/fixture hoặc có sai khác thì ghi **E6 chưa kiểm/chưa đạt** tương ứng, giữ bộ mặc định chỉ cho đường đối chiếu chuyển tiếp; không fallback khi việc thiếu bộ, không chuyển bộ sang module, không sinh tệp thay thế. Đạt E6 rồi mới đề nghị đưa bản mặc định vào lưu trữ, không xóa. Tệp tham chiếu phát triển không phải dữ liệu engine được phép lưu lúc chạy.
+
+## 7. Quyết định đã chốt và phần còn mở
+
+Không trình lại các lựa chọn Anh đã chốt. Quyết định hướng nghiệp vụ không đồng nghĩa duyệt mọi trường payload hay mọi ước lượng của bản nháp.
+
+| Mã | Trạng thái ngày 15/11 | Nội dung và phần còn mở |
+|---|---|---|
+| TX0-01 / T1 | **Đã chốt**, câu 5 | Cài đặt bước `van_ban` JSON + băm. Cần Core xác nhận đường ghim tham số từng việc/quyền/trần byte; chi tiết canonical JSON ở §3 là đề xuất kỹ thuật |
+| TX0-02 / T2 | **Đã chốt hướng**, câu 5 | Bảng loại riêng + Excel, module tự ghép cột, đề nghị Core “trường do tham số quyết định”. Payload/schema `bang_trich_xuat` và bước xuất tĩnh còn cần lead/Anh review; không mặc nhiên coi toàn bộ §4 loại chung đã duyệt |
+| TX0-03 / T3 | **Đã chốt phải đo**, câu 5 | Phép đếm thực có số ở §5.2; token/sức chứa model thật chưa đo (§5.5). T3(a) là phương án thử có điều kiện; batch/nhiều bước chưa mở |
+| TX0-04 / E6 | **Giữ quyết định 07/11; nguồn tệp đã chốt**, câu 7 | Lead sẽ đặt tệp theo §6.4. E6 chưa kiểm, tiêu chí byte không đổi; nếu phương án một lượt đổi câu hỏi/bảng thì báo chưa đạt, trình lại cách hỏi |
+| TX0-05 / lưu giữ, cấu hình | **Nguyên tắc đã chốt**, câu 1, 2, 13 | Không lưu trên máy, ngăn + RAM tạm, có màn cấu hình engine. Hồ sơ tạm Core và bảng cấu hình cụ thể §6.3 cần Core xác nhận quyền/vòng đời/API, không xin lại quyền lưu đĩa |
+| TX0-06 | **Còn mở** | Giới hạn hỏi thêm 5 câu, hỏi lại nhiều vòng CD-111, quy tắc suy ra TT-21; chưa bật chức năng chưa duyệt, chưa đổi byte bộ 37. Số mẫu KCN và nhánh trích bảng vẫn theo phiếu, không mở trong TX-0 |
+| TX0-07 | **Còn mở** | Dự toán mới **37 giờ** TX-1…TX-6 ở §8, tăng 2 giờ so nháp 35 để thêm ngăn/cấu hình/màn. Chờ lead tách/giao lát code sau review thiết kế, không coi lệnh sửa tài liệu là lệnh triển khai |
+
+Lead cấp XLSX/fixture/đáp án DEMO và số liệu máy thật; phần thiếu được ghi Cần Core/cần phối hợp, không chuyển thành câu xin Anh quyết lại định hướng.
 
 ## 8. Ước tính cập nhật TX-1…TX-6
 
@@ -271,15 +309,15 @@ Tất cả là **giờ công ước tính, chưa đo**, gồm tự kiểm/review
 
 | Lát | Phạm vi cập nhật | Phụ thuộc / cổng đạt | Cũ | Mới | Vì sao đổi |
 |---|---|---|---:|---:|---|
-| TX-1 | Khung SDK 2.0 + `doc_docx`, kiểu tài liệu/vị trí không giả, Track Changes và trần ZIP/XML | TX-0 được duyệt; AI-2/OCR-1 đạt theo phiếu giao; test DOCX/Track Changes Linux | 4 | **6** | +2 cho chuyển hình thức dữ liệu, giữ bảng/vị trí và gỡ seam globals cũ |
+| TX-1 | Khung SDK 2.0 + `doc_docx`, Track Changes, trần ZIP/XML; thêm cổng ngăn, schema/màn cấu hình và khai SDK 2.1 riêng | TX-0 được review; AI-2/OCR-1 và NGAN-0; test Linux, RAM/CAS/thiếu cấu hình, UI bằng KttCore giả | 4 | **8** | +2 như nháp cho DOCX; +2 mới cho ngăn/cấu hình/màn. Lead tách TX-1a/1b nếu vượt ~5 tệp mã/lát, không dồn thành lát lớn |
 | TX-2 | Nhận snapshot/hash, kiểm dòng bằng E1 SDK, prompt/khuôn đủ mã, hồ sơ hậu kiểm và ngân sách | TX-1, AI-2; Core xác nhận hoặc mô phỏng rõ snapshot việc/quyền tệp | 5 | **7** | +2 cho phân biệt băm, tệp hậu kiểm tránh 64 KiB, kiểm context/byte |
 | TX-3 | Hậu kiểm từng ô/dẫn chứng/logic đúng loại + `bang_trich_xuat` + bước xuất tĩnh | TX-2; Anh duyệt loại mới; test nối AI giả, bước cuối trả `truong` | 5 | **8** | +3 cho kiểm nghiêm và bước xuất/JSON/Excel, bỏ cắt ô ngầm; nếu vượt ~5 tệp mã thì lead tách TX-3a/3b, tổng giờ giữ riêng để review |
 | TX-4 | E6 giữ bộ, thứ tự, câu hỏi và bảng byte theo nguồn; đường mặc định chuyển tiếp riêng, Track Changes | TX-2 **và TX-3**, có XLSX đúng SHA + fixture/câu trả lời giả/bản vàng DEMO; chưa có thì báo chưa đạt | 3 | **4** | +1 cho phục hồi đối chiếu phiên bản cũ/mới; **không gồm làm lại T3 nếu E6 thất bại** |
 | TX-5 | Bàn giao thư viện bọc/cách dùng E1 SDK và U1a/U1b cho module; không làm UI/SQL trong engine | TX-0 được duyệt; dùng E1 đã có trong wheel, không tạo bản thứ ba | 3 | **3** | Không tăng; nguồn E1 đã xác minh có sẵn SDK 2.0.0 |
 | TX-6 | DEMO toàn chuỗi trên CoreGia, ghim nguồn/máy sạch Linux/Windows; công cụ và báo cáo N1 đúng một lần | TX-3/4/5; AI/OCR được kiểm; lead/Anh tự chạy máy thật, có nền được chấp nhận | 6 | **7** | +1 cho chuỗi thêm bước và phân biệt bằng chứng giả/thật; Codex không tự chạy máy AI |
-| **Tổng sau TX-0** | | | **26** | **35** | **+9** |
+| **Tổng sau TX-0** | | | **26** | **37** | **+11**, trong đó +2 so nháp 14/11 |
 
-TX-0 vẫn theo phiếu **3 giờ ước tính**; tổng đề xuất TX-0…TX-6 là **38 giờ ước tính**. Không cộng lại 53 giờ của phiếu cũ vì có cả phần module/Core ngoài phạm vi.
+TX-0 vẫn theo phiếu **3 giờ ước tính**; tổng đề xuất TX-0…TX-6 là **40 giờ ước tính**. Không cộng lại 53 giờ của phiếu cũ vì có cả phần module/Core ngoài phạm vi.
 
 ## 9. Cần Core / cần phối hợp và cách kiểm các lát sau
 
@@ -287,20 +325,22 @@ TX-0 vẫn theo phiếu **3 giờ ước tính**; tổng đề xuất TX-0…TX-
 |---|---|---|
 | Core C-TX-01 | Cửa gửi việc của module chấp nhận tham số snapshot theo việc, giới hạn chuỗi/bytes thực, ghim bộ/prompt/hash bất biến và kiểm module/pháp nhân | Chỉ mô phỏng input SDK; không cập nhật cấu hình quy trình toàn cục hoặc mở API riêng |
 | Core C-TX-02 | Tệp hồ sơ hậu kiểm và tệp kết quả truy cập được qua `mo_tep` giữa các bước trong cùng chuỗi, ngăn truy cập khác quyền; giữ tới module lưu/đóng và xử lý ACK lặp | TX-2/3 dùng tham chiếu DEMO trong CoreGia; chưa tuyên bố Core thật hỗ trợ |
-| Core C-TX-03 | Dài hạn: output schema theo snapshot để ghép trường động; giữ hợp đồng 2.0 hiện tại | Bước `xuat_ket_qua` trả `truong` tĩnh, module tự đọc/ghép bảng |
+| Core C-TX-03 | **“Trường do tham số quyết định”**: output schema theo snapshot để ghép trường động; giữ hợp đồng 2.0 hiện tại | Bước `xuat_ket_qua` trả `truong` tĩnh với JSON + Excel, module tự đọc/ghép bảng |
+| Core C-TX-04 | Ngăn `cau_hinh`, CAS, snapshot cấu hình, sự kiện đổi cấu hình, `KttCore.engine` và màn engine theo `DE-NGHI-SDK-2.1.md` §2–5; xác nhận định danh bản ghi cấu hình hệ thống | Chờ NGAN-0 để chép lớp bọc, RAM tạm; UI dùng KttCore giả. Khai dự kiến riêng trong `KHAI-SDK-2.1.json`, không sửa phiếu 2.0 |
 | Hỏi AI A-TX-01 | Context hiệu dụng/đầu ra/reasoning theo **model được chọn**, bộ đếm đáng tin, provider hỗ trợ `$defs`, không gửi `chuyen_tiep` vào model; chặn model dự phòng không đủ context. Thống nhất cách gom trích dẫn từng ô trong `du_lieu` sang `tra_loi_ai.trich_dan` chung để kiểm theo AI-2, không đổi phong bì | Chỉ khảo sát ký tự/4; thiếu số runtime ghi chưa rõ, không coi thông số model card là cấu hình Local |
 | Lead/module | XLSX ghim + fixture/bản vàng DEMO cho E6; prompt/bộ được ghim; KCN cần duyệt nghiệp vụ | Giữ đường xây dựng chuyển tiếp và trạng thái chưa chuyển; không sinh Excel thay tệp ghim bị thiếu |
 
-Các nhu cầu cấu hình/bí mật/ngăn/lượt bền/thẻ trạng thái chung vẫn theo `_chung/docs/GIAO-CODEX-THU-TU.md`; TX không dựng chức năng Core thay thế. SDK đã có E1, thao tác tệp và kiểm phiếu; không đề nghị sửa wheel 2.0.0.
+Các quyết định tạm về tệp cấu hình/kho đĩa/không có màn ở `_chung/docs/GIAO-CODEX-THU-TU.md` §2 **đã hết hiệu lực**; áp dụng `QUYET-DINH-ANH-20261115.md`, `GIAO-CODEX-DOT-2.md`, `DE-NGHI-SDK-2.1.md` và bảng ngăn §6.3. SDK đã có E1, thao tác tệp và kiểm phiếu; không sửa wheel 2.0.0. Tệp tạm của một việc ưu tiên RAM; nếu thư viện cần tệp thì chỉ trong vùng tạm của việc và dọn trong `finally` cả khi lỗi/hủy, không tồn tại qua việc.
 
 Các lát code phải chạy ba lệnh `AGENTS.md` §5 khi có gói/test, kiểm hash schema chung, ca bộ sai/thiếu/hash, hai module đồng thời, bản kích hoạt đổi giữa chuỗi, trích dẫn/offset giả, giá trị tiền kèm tiền tệ, ngày ISO, vượt context/32 KiB/64 KiB/ô Excel, hủy và gửi lại. E6 so byte **không** thay N1; N1 dùng cùng nền/model/cấu hình, đúng một lần và không thấp hơn nền được chấp nhận. Trước Core thật, báo cáo dùng đúng câu **“đã kiểm bằng Core giả (CoreGia)”** khi thực sự có chạy CoreGia; kiểm tài liệu TX-0 không tự nhận nhãn này.
 
-### Kiểm TX-0 thực tế
+### Kiểm TX-0 thực tế — cập nhật 15/11/2026
 
-- Đã tạo `.venv` trong worktree, cài wheel bằng `--no-index --no-deps`; Python 3.13.14, SDK in **2.0.0**. SHA-256 wheel **a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892**, khớp `SHA256SUMS.txt`.
-- Phép đếm Phụ lục A đã chạy, 37 mã duy nhất; khuôn **2.000 byte ≤ 32 KiB**, snapshot **11.216 byte ≤ 64 KiB**. Số liệu là phép đếm DEMO, không phải số đo AI/N1.
-- Ba lệnh `kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat`, `pytest e_trich_xuat/tests -q`, `python e_trich_xuat/tests/kiem_doc_lap.py`: **không áp dụng, không chạy** theo ghi chú lead cho TX-0 chỉ tài liệu, chưa có `goi/`/test mới. Không tính là test skip hoặc báo 0 lỗi giả.
-- Đã kiểm phiếu nháp bằng `kho_tri_thuc_sdk.engine.kiem_phieu`: **0 lỗi**; hai chuỗi DOCX/OCR khớp loại khi đối chiếu phiếu AI-0/OCR-0 đã có và kết thúc bằng `truong`. Ba tệp Markdown đọc UTF-8 nghiêm ngặt, không BOM, NFC và không khoảng trắng cuối dòng; `git diff --check` mã thoát **0**. Ba khối JSON đề xuất bổ sung đúng cú pháp; dẫn chứng DEMO `[405:471]` khớp nguyên văn. Nội dung loại chung trước phần bổ sung được giữ nguyên, diff chỉ có ba tệp tài liệu. Đây là kiểm cấu trúc/tài liệu, **không chạy** `chay_thu_demo`, CoreGia hay Core thật.
+- Dùng lại `.venv` trong worktree, gọi cài wheel `--no-index --no-deps` (pip xác nhận đã cài đúng bản); Python **3.13.14**, SDK **2.0.0**. SHA-256 wheel **a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892** khớp `SHA256SUMS.txt`. Không dùng mạng hoặc thêm dependency runtime.
+- Chạy lại nguyên Phụ lục A: **37 mã**, prompt 3.638 ký tự, tài liệu 2.227, khuôn 2.000; token mẫu 1/20/60 = **1.967/20.971/60.981 ước lượng**; khuôn **2.000 byte**, snapshot **11.216 byte**, các băm trùng bản nháp. `kiem_phieu` cho manifest đã sửa (luôn kèm Excel): **0 lỗi, 4 năng lực**. Đây là kiểm cấu trúc/tài liệu, không chạy CoreGia hoặc model thật.
+- Đã gọi đủ ba lệnh chuẩn, kết quả thật: `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat` → **exit 1**, “Không đọc được tệp phiếu engine.json” (chưa có gói); `.venv/Scripts/python -B -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp` → ban đầu thiếu pytest, sau dùng pytest có sẵn trên máy qua `PYTHONPATH` tạm → **exit 4**, “file or directory not found: e_trich_xuat/tests”, không có test được chạy; `.venv/Scripts/python -B e_trich_xuat/tests/kiem_doc_lap.py` → **exit 2**, chưa có tệp. Không tạo gói/test giả để làm xanh kiểm tra, không báo DEMO đạt hoặc skip giả.
+- Test sẵn đã chạy lại bằng Python của `.venv`, dùng pytest cài sẵn trên máy qua `PYTHONPATH` chỉ trong tiến trình kiểm, tắt plugin tự nạp và bytecode, không sửa môi trường venv. `pytest e_trich_xuat/ma-nguon/tests -q --basetemp=.pytest-tmp` → **3 passed, 1 failed**, do test cũ so mã engine `e_trich_xuat` với tên thư mục nay là `ma-nguon`. `pytest e_trich_xuat/tests-tu-core e_trich_xuat/tu-core-cu/tests -q --basetemp=.pytest-tmp --tb=no` → **15 lỗi collection**; kiểm thêm `--collect-only --tb=short` xác định **35 tests collected, 15 errors, exit 2**: thiếu module/fixture Core cũ và đường SQL cũ. Không sửa test/mã tham chiếu trong lát tài liệu; các kết quả này không chứng nhận engine mới.
+- Kết quả rà UTF-8/JSON/phạm vi và `git diff --check` cuối phiên ghi tại `VIEC.md`, cùng giờ bắt đầu/kết thúc. Chỉ sửa bốn tài liệu; chưa có `goi/`, schema runtime hoặc kiểm nối Core thật. Cụm **“đã kiểm bằng Core giả (CoreGia)”** chỉ được dùng cho ca thực sự chạy ở lát sau, không gán cho kiểm TX-0 này.
 
 ## Phụ lục A — Phép đếm tái lập, chỉ dùng DEMO
 

@@ -128,9 +128,11 @@ Schema dự kiến `_chung/contract/van_ban_da_che.schema.json` được tạo t
 
 Chờ Anh chốt bổ sung này cùng Q3/Q4 của `GIAO-CODEX-THU-TU.md`; không coi nhãn đề xuất là bằng chứng contract đã đăng ký/kích hoạt hoặc engine đủ điều kiện gửi Cloud.
 
-## 4. ĐỀ XUẤT TX-0, chờ Anh — `bang_trich_xuat`
+## 4. ĐỀ XUẤT TX-0, chờ Anh — chi tiết `bang_trich_xuat`
 
 *Bổ sung 14/11/2026 (Codex), theo `e_trich_xuat/docs/TX-0-THIET-KE.md` T2(b). Phần này là đề xuất riêng; không sửa định nghĩa/schema của bốn loại ở trên. Chưa tạo `_chung/contract/bang_trich_xuat.schema.json`, chưa đăng ký năng lực hoặc cập nhật gói engine.*
+
+**Cập nhật 15/11/2026:** Anh đã chốt **hướng** bảng loại riêng + tệp Excel, module tự ghép cột (`QUYET-DINH-ANH-20261115.md` câu 5). Nhãn “chờ Anh” của mục này chỉ còn áp dụng cho **payload/schema chi tiết và bước xuất tĩnh**, không hỏi lại lựa chọn T2(b). Đề nghị Core thêm cửa chung **“trường do tham số quyết định”** được ghi C-TX-03 trong `e_trich_xuat/docs/VIEC.md`; không đổi API/phiếu 2.0. Nguyên tắc ngăn/cấu hình/màn theo SDK 2.1 ở thiết kế §6.3; không lưu tệp cấu hình, bộ, hồ sơ hay kết quả trên máy engine.
 
 **Đề xuất khai báo thống nhất:**
 
@@ -145,6 +147,7 @@ Chờ Anh chốt bổ sung này cùng Q3/Q4 của `GIAO-CODEX-THU-TU.md`; không
 | Mục đích | Danh sách trường thay đổi theo bộ riêng từng module, có kiểu giá trị, nguyên văn, dẫn chứng/vị trí và ô cần soát; không phải năng lực trích bảng TRICH-2a |
 | Phiên bản | Payload `phien_ban: 1`; thêm trường tùy chọn giữ số, đổi không tương thích tạo mã `bang_trich_xuat_2` theo quy tắc chung |
 | Đầu cuối quy trình | API v1 chỉ ghép `truong`/`van_ban`/`tep` vào cột ngăn. Loại này là bước trung gian, **bắt buộc có bước xuất** trả `truong` tĩnh (`tep_json`, `tep_excel`, `so_tham_so`, `so_can_soat`, `co_can_cu`) khi cần ghép ngăn |
+| Bản Excel đi kèm | Đợt 1 bước xuất luôn tải cả JSON bảng và Excel lên Core; module tự ghép cột từ dữ liệu chuẩn, không suy kiểu từ Excel. Xuất tệp lỗi thì báo lỗi, không trả thành công thiếu Excel; tệp tạo trong RAM, tệp tạm nếu cần phải dọn trong `finally` |
 | Giới hạn đề xuất | Tối đa 200 dòng đang trích, phong bì JSON UTF-8 ≤ 20 MiB; mọi trích dẫn thuộc đúng văn bản đã gửi AI. Không nhét toàn văn/cấu trúc vào bảng; hồ sơ hậu kiểm ở tệp tạm Core, có tham chiếu và băm |
 
 ### 3.1. Hình dạng phong bì đề xuất

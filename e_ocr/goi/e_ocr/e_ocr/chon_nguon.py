@@ -49,9 +49,9 @@ class SoHanMuc:
         hang, tiep = {}, None
         while True:
             trang = self.ngan.tim("han_muc_ngay", loc={}, gioi_han=500, tiep=tiep)
-            for b in trang["danh_sach"]:
+            for b in trang.danh_sach:
                 hang[b.gia_tri["ngay"]] = b
-            tiep = trang["tiep"]
+            tiep = trang.tiep
             if tiep is None:
                 break
         so = {"da_nhan": {}, "dang_giu": {}}

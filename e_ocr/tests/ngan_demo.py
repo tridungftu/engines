@@ -24,19 +24,19 @@ def ngan_demo():
 
 def dat_cau_hinh(gia_tri):
     ngan = ngan_demo()
-    cu = ngan.doc("cau_hinh", {"ma": "cau_hinh"})
+    cu = ngan.doc("cau_hinh", {})
     with ngan.lo() as lo:
         if cu is None:
-            lo.them("cau_hinh", {"ma": "cau_hinh"}, gia_tri)
+            lo.them("cau_hinh", {}, gia_tri)
         else:
-            lo.sua("cau_hinh", {"ma": "cau_hinh"}, gia_tri, row_version=cu.row_version)
+            lo.sua("cau_hinh", {}, gia_tri, row_version=cu.row_version)
 
 
 def bo_cau_hinh():
     ngan = ngan_demo()
-    cu = ngan.doc("cau_hinh", {"ma": "cau_hinh"})
+    cu = ngan.doc("cau_hinh", {})
     with ngan.lo() as lo:
-        lo.xoa("cau_hinh", {"ma": "cau_hinh"}, row_version=cu.row_version)
+        lo.xoa("cau_hinh", {}, row_version=cu.row_version)
 
 
 def cau_hinh_hien_tai():

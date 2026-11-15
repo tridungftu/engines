@@ -121,7 +121,9 @@ def test_app_moi_giao_lai_va_tra_muon_cung_ma_khong_gui_lai(hot_folder, tess_gia
     else:
         text = muon["ket_qua"].get("van_ban", muon["ket_qua"].get("van_ban_tai_lieu", {}).get("van_ban"))
         assert all(d in text for d in DONG_DEMO)
-    noi_dung_kho = json.dumps([b.gia_tri for b in ngan_demo().tim("luot_abbyy", loc={})["danh_sach"]])
+    cac_luot = ngan_demo().tim("luot_abbyy", loc={"phap_nhan_id": "pn-demo"}).danh_sach
+    assert len(cac_luot) == 1
+    noi_dung_kho = json.dumps([b.gia_tri for b in cac_luot])
     assert "DEMO.pdf" not in noi_dung_kho and "VND" not in noi_dung_kho and "Công ty" not in noi_dung_kho
 
 
@@ -238,15 +240,21 @@ def test_loi_chot_ben_giu_pdf_chua_ro_roi_khoi_dong_lai_chot_mot_lan(hot_folder,
 
 
 def test_ghi_giu_loi_khong_co_luot_hoac_trang_mot_nua(hot_folder, monkeypatch):
+    from contextlib import contextmanager
     from e_ocr.ngan import NganXungDot
     vao, _, _ = hot_folder
     ngan = ngan_demo()
 
-    def hong(*args, **kwargs):
-        raise NganXungDot()
+    lo_goc = ngan.lo
+
+    @contextmanager
+    def hong():
+        with lo_goc() as lo:
+            yield lo
+            raise NganXungDot()
 
     with monkeypatch.context() as tam:
-        tam.setattr(ngan, "_ghi_lo", hong)
+        tam.setattr(ngan, "lo", hong)
         _, kq = chay_moi()
     assert kq["loi"]["ma"] == "NGAN_XUNG_DOT", kq
     assert nhat_ky().doc() is None and SoHanMuc()._doc()[1] == {"da_nhan": {}, "dang_giu": {}}

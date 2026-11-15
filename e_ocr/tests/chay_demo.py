@@ -66,7 +66,7 @@ def chay_demo(*, gia=False):
         khai = json.loads((GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))
         ngan = NganBoNho(khai["ngan_du_lieu"])
         with ngan.lo() as lo:
-            lo.them("cau_hinh", {"ma": "cau_hinh"}, {"abbyy": {"bat": False}, "tesseract": {}})
+            lo.them("cau_hinh", {}, {"abbyy": {"bat": False}, "tesseract": {}})
         stack.enter_context(patch.object(app, "ngan", ngan, create=True))
         if not gia:
             try:

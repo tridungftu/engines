@@ -2,9 +2,18 @@
 
 ## 1.0.8 — 15/11/2026 — OCR-8
 
+- Đã nối ngăn chung NGAN-0 (PR #34), giữ nguyên hai tệp mẫu chung.
+  Khai báo bảng truyền vào RAM từ `KHAI-SDK-2.1.json`, khóa cấu hình `{}`;
+  đọc `TrangNgan` và `KetQuaLenh` theo API chung, kết quả lô chỉ đọc sau commit.
+- Dùng pháp nhân trong khóa/bộ lọc hoặc ngăn theo việc; chuyển ngoại lệ
+  ngăn/cấu hình chung thành `LoiNghiepVu`, giữ mã và khả năng thử lại.
+- Bật hai test băm mẫu sau chuẩn hóa CRLF→LF; sửa fixture và test cạnh
+  tranh qua API public. Giữ phương án B, chống gửi ABBYY hai lần và lô
+  nguyên tử giữ trang/lượt. Đã kiểm bằng Core giả (CoreGia): 273 passed,
+  0 skipped; SDK DEMO 6/6 ĐẠT, kiểm độc lập đạt.
 - Chuyển cấu hình, sổ hạn mức và lượt ABBYY sang cổng `Ngan`; SDK 2.0
   tạm dùng `NganBoNho`, không ghi cấu hình/sổ trên máy. Giữ nguyên tệp cũ
-  để lead chuyển lưu trữ. Hai mẫu dùng chung đang chờ NGAN-0 gộp.
+  để lead chuyển lưu trữ. Hai mẫu dùng chung đã nối NGAN-0.
 - `lay_hoac_tao` theo pháp nhân + băm, giữ trang và ghi lượt trong một lô;
   CAS có thử lại, mốc dùng chung qua nửa đêm. Đóng khe đua OCR-4 số 1
   bằng kiểm lại quyết định đọc cũ và quyền xử lý có CAS.

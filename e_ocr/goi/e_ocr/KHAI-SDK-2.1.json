@@ -1,7 +1,7 @@
 {
   "ngan_du_lieu": [
-    {"bang": "cau_hinh", "ten": "Cấu hình OCR", "pham_vi": "engine", "khoa": ["ma"],
-     "truong": [{"ma": "ma", "kieu": "van_ban"}, {"ma": "abbyy", "kieu": "json"}, {"ma": "tesseract", "kieu": "json"}]},
+    {"bang": "cau_hinh", "ten": "Cấu hình OCR", "pham_vi": "engine", "khoa": [],
+     "truong": [{"ma": "abbyy", "kieu": "json"}, {"ma": "tesseract", "kieu": "json"}]},
     {"bang": "han_muc_ngay", "ten": "Hạn mức ABBYY theo ngày", "pham_vi": "engine", "khoa": ["ngay"],
      "truong": [{"ma": "ngay", "kieu": "ngay"}, {"ma": "da_nhan", "kieu": "json"}, {"ma": "dang_giu", "kieu": "json"}]},
     {"bang": "luot_abbyy", "ten": "Lượt gửi ABBYY", "pham_vi": "phap_nhan", "khoa": ["ma_tuong_quan"],

@@ -8,8 +8,6 @@ import hashlib
 import json
 from pathlib import Path
 
-from kho_tri_thuc_sdk.engine import LoiNghiepVu
-
 from .cau_hinh import doc_cau_hinh
 from .chon_nguon import doc_theo_nguon
 from .lop_chu import MAX_BYTES, LoiLopChu, dem_trang, doc_lop_chu
@@ -37,10 +35,7 @@ def trich_van_ban(viec, *, phien_ban_engine, ngan):
     nguon_doc = "lop_chu_san"
     ly_do = None
     if ket_qua is None:
-        try:
-            cau_hinh = doc_cau_hinh(ngan, SCHEMA) or {}
-        except (ValueError, TypeError, OverflowError, RecursionError):
-            raise LoiNghiepVu("CAU_HINH_KHONG_HOP_LE", "Cấu hình OCR không hợp lệ. Admin kiểm tra tại Quản lý engine › OCR › Cấu hình.") from None
+        cau_hinh = doc_cau_hinh(ngan, SCHEMA) or {}
         chon = doc_theo_nguon(raw, tep["mime"], so_trang, viec=viec, cau_hinh=cau_hinh, ngan=ngan)
         ket_qua, nguon_doc, ly_do = chon.ket_qua, chon.nguon_doc, chon.ly_do_chuyen_nguon
     viec.tien_do(95, "Đang hoàn tất văn bản và vị trí trang.")

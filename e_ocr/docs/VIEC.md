@@ -12,7 +12,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | OCR-4 | Lượt chưa rõ theo phương án B, chống trùng bền và đối chiếu hạn mức sau khởi động lại | OCR-13, 14, 15 | Xong 15/11/2026 | Phiếu 14/11/2026; PR: **chờ lead mở**. SDK DEMO 3/3, pytest 218 passed, 0 skipped, kiểm độc lập mã 0; đã kiểm bằng Core giả (CoreGia) |
 | OCR-5 | Bộ DEMO, sáu ví dụ chạy thử và OCR-MAY ca 2/3/4/5/7/9; sửa namespace Word | OCR-11, 15, 16 | Xong — phiếu 14/11/2026 | Thực hiện 15/11/2026; PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); SDK 6/6, pytest 239 passed, 0 skipped; bằng chứng bên dưới |
 | OCR-6 | Ghim thư viện, nguồn và kiểm máy sạch | OCR-6 | Chưa đạt — phiếu 14/11/2026 | PR: **chờ lead mở**; chờ kiểm cài sạch và SDK DEMO theo bằng chứng bên dưới |
-| OCR-8 | Cấu hình, hạn mức và lượt ABBYY qua ngăn; màn quản trị; đóng nợ OCR-4 số 1 | OCR-8, 13, 14 | Xong 15/11/2026 trong phạm vi CoreGia/RAM | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), NganBoNho và KttCore/DOM giả; chờ NGAN-0/SDK 2.1, chi tiết bên dưới |
+| OCR-8 | Cấu hình, hạn mức và lượt ABBYY qua ngăn; màn quản trị; đóng nợ OCR-4 số 1 | OCR-8, 13, 14 | Xong 15/11/2026 trong phạm vi CoreGia/RAM | PR: **chờ lead mở**. Đã nối ngăn chung NGAN-0; đã kiểm bằng Core giả (CoreGia), 273 passed, 0 skipped, SDK DEMO 6/6; ngăn thật/màn thật chờ SDK 2.1 |
 | 1 | Đóng gói độc lập theo cổng chung; thay hàm SDK riêng `ocr_*_luot` bằng lượt bền chung khi Core có | OCR-6, 13 | Đang làm 14/11/2026 | Có khung OCR-0; chuyển lõi ở OCR-1…OCR-4, không sửa `ma-nguon/` |
 | 2 | Bổ sung nguồn dự phòng mask_ocr/Tesseract | OCR-8 | Xong 14/11/2026 | OCR-2 dùng CLI và pypdfium2 đã ghim, không thêm dependency. Máy đích xem **Cần cài** |
 | 3 | Màn hạn mức ABBYY / trạng thái máy (giao diện của engine) | OCR-8 | Xong 15/11/2026 với KttCore/DOM giả | Màn `ui/cau_hinh.js`; chờ SDK 2.1 nạp trong Core thật |
@@ -23,7 +23,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 ## Cần Core (chuyển lead Core qua Anh)
 - OCR-8 đã chuyển cấu hình vào ngăn theo quyết định 15/11; cần SDK 2.1 cấp `app.ngan`/`viec.ngan` và màn quản trị `KttCore.engine`. Không còn dùng biến `KTT_ENGINE_CAU_HINH`/`KTT_ENGINE_DU_LIEU` trong đường chạy engine.
 - Ngăn thật cần nguyên tử toàn lô, CAS/`row_version`, duy nhất/lấy hoặc tạo theo pháp nhân + băm, đọc hết phân trang. Khai báo dự kiến ở `goi/e_ocr/KHAI-SDK-2.1.json`; manifest vẫn 2.0. Tạm RAM, chấp nhận mất hạn mức/dấu chống trùng khi khởi động lại theo quyết định Anh.
-- Lead gộp NGAN-0, thay nguyên `ngan.py`/`cau_hinh.py` trong gói và bỏ dấu skip của hai test so băm; đối chiếu chữ ký/kết quả API ở bằng chứng OCR-8. Không tạo/sửa `_chung/mau-ma/**` trong lát OCR-8.
+- NGAN-0 (PR #34) đã nối ngày 15/11/2026; hai test so băm đã bật, chuẩn hóa CRLF→LF. Không còn chờ gộp mẫu chung; còn chờ ngăn bền và màn quản trị thật của Core/SDK 2.1.
 - Cần Core cấp quyền `admin_core`, nạp `mount(goc, {KttCore})` và gọi `destroy` khi đóng màn. Ngăn trạng thái có hai bản `abbyy` và mốc CAS `han_muc`; không tự xóa mốc hoặc lượt chưa rõ theo tuổi. Trạng thái ABBYY hiện phản ánh công tắc và khả năng truy cập thư mục, chưa là kiểm tiến trình FineReader.
 - Bí mật theo tên, nhật ký kỹ thuật chung và cầu nối có khóa vẫn thuộc các lát sau. Lượt bền #10 có thể dùng ngăn theo đề nghị SDK 2.1; không cần hàm `ocr_*_luot` cũ.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
@@ -638,6 +638,9 @@ gói hoặc git. Toàn bộ 218 test nền còn nguyên, thêm 21 test OCR-5.
 
 ## Bằng chứng OCR-8 — 15/11/2026
 
+Phần dưới ghi lịch sử lượt OCR-8 trước NGAN-0; kết quả nối mẫu chung và
+báo cáo mới nhất ở cuối tài liệu thay các ghi chú chờ/skip NGAN-0 cũ.
+
 - Nhánh `codex/e_ocr-ocr-8`; PR: **chờ lead mở**. Chỉ sửa trong worktree
   được giao; không commit/push, không sửa mẫu chung, SDK, Core hoặc mã cũ.
 - **Đã kiểm bằng Core giả (CoreGia)**, ngăn RAM `NganBoNho`, ABBYY giả và
@@ -785,3 +788,72 @@ lại bằng hai luồng/trạng thái gián đoạn trên cùng ngăn RAM như 
 Cần Core / Chờ Anh mới phát sinh: gộp NGAN-0, đối chiếu hình dạng kết quả
 API và cấp ngăn/màn quản trị SDK 2.1 theo mục Cần Core; **không có câu chờ
 Anh mới**. PR: **chờ lead mở**; không commit/push.
+
+
+## N?i ng?n chung NGAN-0 ? OCR-8, 15/11/2026
+
+K?t lu?n: **??t** trong ph?m vi ???c giao ? **?? n?i ng?n chung NGAN-0**
+(PR #34), ?? ki?m b?ng Core gi? (CoreGia). PR: **ch? lead m?**.
+M?c n?y thay k?t lu?n ch? NGAN-0 v? skip trong b?o c?o OCR-8 tr??c ??.
+
+?? l?m:
+- Gi? nguy?n `ngan.py`, `cau_hinh.py` trong g?i v? to?n b? `_chung/**`;
+  hai test so SHA-256 ch?y sau chu?n h?a CRLF?LF, kh?ng skip.
+- Kh?i t?o RAM b?ng `KHAI-SDK-2.1.json/ngan_du_lieu`; b?ng `cau_hinh`
+  c? `khoa: []`, ??c/ghi b?ng kh?a `{}`, gi? tr? ch?nh l? dict c?u h?nh.
+  `doc_cau_hinh` tr? dict/None; default ch? ?i?n tr?n b?n sao.
+- ??c `TrangNgan.danh_sach/tiep`; nh?n `KetQuaLenh` t? l?nh l?, ch? ??c
+  `gia_tri/da_tao` sau commit. Ph?p nh?n n?m trong kh?a/b? l?c, h? tr?
+  `viec.ngan` ?? g?n ph?p nh?n, ?u ti?n ng?n SDK khi ???c c?p.
+- Chuy?n `NganXungDot`, `NganKhongHopLe`, `CauHinhKhongHopLe` sang
+  `LoiNghiepVu` t?i bi?n SDK, gi? `ma/thong_diep/thu_lai_duoc`.
+- Gi? ph??ng ?n B c?a OCR-4: kh?ng g?i ABBYY l?n hai khi l??t c?n d?,
+  kh?ng t? ho?n trang/h?t h?n l??t; trang v? l??t v?n c?ng l? nguy?n t?
+  c? m?c CAS. Test l?i gi? l? v? xung ??t d?ng API public, kh?ng m?c
+  `_ghi_lo` c?a b?n t?m. Gi? to?n b? test h?nh vi OCR-4/OCR-MAY.
+- B? sung n?m ca ki?m kh?i t?o b?ng/gi? ng?n SDK, ba ngo?i l? chung v?
+  ng?n theo vi?c ?? g?n ph?p nh?n. C?p nh?t README, CHANGELOG, NGUON.md;
+  43/43 SHA-256 kh?p theo quy ??c LF, t?p nh? ph?n b?m nguy?n byte.
+
+K?t qu? ba l?nh b?t bu?c (??u ra th?c t?; `PYTHONUTF8=1`,
+`PYTHONDONTWRITEBYTECODE=1`, Python 3.13.14, SDK 2.0.0 trong `.venv`):
+
+```text
+> .venv/Scripts/python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+[??T] ??c t?i li?u c? v? tr? ? PDF qu?t 3 trang DEMO, ch? Tesseract
+[??T] ??c t?i li?u c? v? tr? ? ?nh PNG 1 trang DEMO, ch? Tesseract
+[??T] ??c v?n b?n thu?n ? PDF qu?t 3 trang DEMO, ch? Tesseract
+[??T] ??c v?n b?n thu?n ? ?nh PNG 1 trang DEMO, ch? Tesseract
+[??T] Xu?t Word gi? b?ng ? PDF qu?t 3 trang DEMO, ch? Tesseract
+[??T] Xu?t Word gi? b?ng ? ?nh PNG 1 trang DEMO, ch? Tesseract
+Engine e_ocr 1.0.8: m?i v? d? ch?y th? DEMO ??u ??t.
+M? tho?t: 0. Payload DEMO ???c l??c trong b?n ghi n?y.
+
+> .venv/Scripts/python -m pytest e_ocr/tests -q --basetemp=.pytest-tmp
+273 passed in 56.93s
+M? tho?t: 0; 0 skipped.
+
+> .venv/Scripts/python e_ocr/tests/kiem_doc_lap.py
+[??T] G?i e_ocr ??c l?p; kh?ng import Core/k?nh c?, kh?ng c? t?p bi?n d?ch s?n.
+M? tho?t: 0.
+```
+
+SDK DEMO d?ng **CoreGia v? Tesseract th?t (vie+eng)** v?i d? li?u DEMO,
+kh?ng c?n c?ng thay th? ho?c c?u h?nh ABBYY. Test ABBYY d?ng ngu?n gi?;
+UI v?n ki?m qua KttCore/DOM gi? trong b? pytest. Kh?ng ch?y ABBYY/Core
+th?t, m?y s?ch ho?c Linux trong l??t n?y. B?m wheel SDK kh?p
+`SHA256SUMS.txt`; kh?ng th?m dependency hay d?ng m?ng.
+
+Th?i gian th?c t? n?i NGAN-0: **0.16 gi?**, ng?y **15/11/2026,
+08:12:00?08:21:53** (gi? Vi?t Nam); phi?u OCR-8 **5 gi? ??c t?nh**,
+kh?ng c? ??c t?nh ri?ng cho l??t n?i n?y. Th?i gian OCR-8 tr??c ?? ???c
+b?o ri?ng ? ph?n l?ch s?.
+
+L?ch kh?i phi?u / quy?t ??nh t?m ?? d?ng: kh?ng ph?t sinh; ch? s?a b?n
+m?-?un runtime v? khai b?o b?ng, kh?ng ??i manifest/API SDK ?? kh?a.
+RAM t?m theo quy?t ??nh Anh 15/11; m?t d? li?u khi kh?i ??ng l?i.
+
+C?n Core / Ch? Anh m?i ph?t sinh: **kh?ng**. C?n c?c vi?c ?? ghi ? m?c
+C?n Core: ng?n b?n SDK 2.1, quy?n/ph?m vi th?t v? m?n qu?n tr? trong Core;
+kh?ng c?n ch? NGAN-0. N? OCR-4 s? 2, 3 gi? nguy?n ngo?i ph?m vi.
+Kh?ng commit/push; lead th?c hi?n commit v? m? PR.

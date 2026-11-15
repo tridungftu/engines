@@ -30,9 +30,9 @@ def khoa_nhat_ky(phap_nhan_id, bam):
 def tim_luot(ngan, phap_nhan_id, bam):
     khoa_nhat_ky(phap_nhan_id, bam)
     ds = ngan.tim("luot_abbyy", loc={"phap_nhan_id": str(phap_nhan_id), "bam_noi_dung": bam}, gioi_han=2)
-    if len(ds["danh_sach"]) > 1:
+    if len(ds.danh_sach) > 1:
         raise LoiNghiepVu("NHAT_KY_LUOT_CAN_KIEM_TRA", "Nhật ký lượt ABBYY cần được đối chiếu.")
-    return ds["danh_sach"][0] if ds["danh_sach"] else None
+    return ds.danh_sach[0] if ds.danh_sach else None
 
 
 class NhatKyLuot:
@@ -118,11 +118,12 @@ class NhatKyLuot:
                 with self.ngan.lo() as lo:
                     if b is not None:
                         lo.xoa("luot_abbyy", self._khoa(cu["ma_tuong_quan"]), row_version=b.row_version)
-                    lo.lay_hoac_tao("luot_abbyy",
+                    ket_qua = lo.lay_hoac_tao("luot_abbyy",
                                    {"phap_nhan_id": self.phap_nhan_id, "bam_noi_dung": self.bam}, luot)
                     self.so._ghi(lo, anh, so)
-                self.ma = ma
-                return luot, True
+                luot = self._kiem(ket_qua.gia_tri)
+                self.ma = luot["ma_tuong_quan"]
+                return luot, ket_qua.da_tao
             except NganXungDot:
                 continue
         self._xung_dot()

@@ -10,7 +10,7 @@ dùng của `vendor/mask_ocr` đã có trong repo; không đọc nguồn ngoài 
 |---|---|
 | `CHANGELOG.md` | Giữ lịch sử OCR-0…OCR-6; bổ sung OCR-8, phiên bản 1.0.8. |
 | `NGUON.md` | Bảng nguồn nội bộ, một hàng mỗi tệp; không tự băm để tránh tự tham chiếu. |
-| `README.md` | Hướng dẫn SDK 2.0; OCR-5 bổ sung DEMO, nguồn giả ngoài gói, cách ly cấu hình/kho và giới hạn số đo nhật ký. |
+| `README.md` | Hướng dẫn SDK 2.0; OCR-5 bổ sung DEMO; OCR-8 cập nhật nối NGAN-0, cấu hình trong ngăn và so băm LF. |
 | `contract/cau_hinh_may.schema.json` | Viết mới theo `GIAO-CODEX-THU-TU.md` §2 và `GIAO-CODEX-e_ocr.md` §2; thư viện chuẩn Python |
 | `contract/van_ban_tai_lieu.schema.json` | Chép nguyên byte từ `_chung/contract/van_ban_tai_lieu.schema.json`, định nghĩa theo `LOAI-DU-LIEU-RIENG.md` §2.1; test so SHA-256 |
 | `demo/DEMO-bang-3-trang.pdf` | JSON DEMO từ OCR-0 minh họa schema/cấu hình. Hai PDF lớp chữ 3 trang (không bảng/có bảng ô trống và gộp ngang) sinh bằng mã thuần `tests/demo/tao_pdf.py`, chuyển thể bộ sinh `ma-nguon/tests/test_lop_chu.py`; nhãn ảnh DEMO và chữ ẩn ToUnicode, không font hệ thống/model. Test OCR-3 còn có cấu trúc DEMO gộp cả ngang/dọc, không là hồ sơ thật |
@@ -22,13 +22,13 @@ dùng của `vendor/mask_ocr` đã có trong repo; không đọc nguồn ngoài 
 | `e_ocr/ban_giao.py` | Thay vai trò bàn giao của `ma-nguon/ban_giao.py` bằng `viec.tai_tep_ra` SDK 2.0. Không chép `CongOCR`, cơ chế ACK/lease/nhật ký nội dung hoặc import SDK cũ; không giữ nội dung trên đĩa |
 | `e_ocr/bang.py` | Chuyển quy tắc ô trống/ô gộp, không suy bảng từ text và trần 100 hàng/40 cột từ `ma-nguon/bang.py`; đổi parser DOCX cũ sang đường kẻ/ký tự PDF sẵn có; xuất Word qua mô-đun riêng |
 | `e_ocr/cau_hinh_may.py` | Giữ nguyên mã OCR-0, chỉ tham chiếu/kiểm hồi quy; OCR-8 bỏ khỏi đường chạy, chờ lead chuyển LUU-TRU. |
-| `e_ocr/chay.py` | Ba action SDK 2.0; OCR-8 nhận ngăn, thêm luồng cập nhật trạng thái ABBYY vào ngăn, không đổi phong bì. |
-| `e_ocr/chon_nguon.py` | Chuyển sổ ngày sang Ngan trong OCR-8, mốc CAS chung, giữ nguyên chính sách chọn nguồn/phương án B. |
+| `e_ocr/chay.py` | Ba action SDK 2.0; OCR-8 nhận ngăn, cập nhật trạng thái; nối NGAN-0 bằng khai báo bảng RAM và chuyển ngoại lệ chung tại biên SDK. |
+| `e_ocr/chon_nguon.py` | Chuyển sổ ngày sang Ngan trong OCR-8; đọc TrangNgan chung, giữ mốc CAS và chính sách chọn nguồn/phương án B. |
 | `e_ocr/kho_tam.py` | Giữ nguyên mã OCR-0/OCR-4, chỉ tham chiếu/kiểm hồi quy; OCR-8 bỏ khỏi đường chạy, chờ lead chuyển LUU-TRU. |
 | `e_ocr/lop_chu.py` | Chép và chuyển thể `ma-nguon/lop_chu.py`: giữ thuật toán đọc chữ ẩn, kiểm ma trận/xoay trang, tọa độ và trần; đổi kết quả sang schema chung, callback hủy SDK và bổ sung tự đếm trang/kiểm PNG/JPEG |
-| `e_ocr/luot_abbyy.py` | Phương án B của OCR-4; OCR-8 dùng lay_hoac_tao, lô ngăn/CAS và quyền xử lý theo mã lượt; đóng nợ khe đua OCR-4 số 1. |
+| `e_ocr/luot_abbyy.py` | Phương án B của OCR-4; OCR-8 dùng lay_hoac_tao, lô ngăn/CAS; nối NGAN-0 đọc TrangNgan/KetQuaLenh sau commit; đóng nợ khe đua OCR-4 số 1. |
 | `e_ocr/tesseract.py` | Chuyển nhánh `doc_mask_ocr`/`image_text` của mã cũ thành adapter CLI: render từng trang bằng pypdfium2 đã ghim, giữ trang native, đọc TSV có vị trí, điền chữ vào bảng vector. Không dùng MuPDF worker/model |
-| `e_ocr/van_ban.py` | Chuyển lõi OCR-1…4; OCR-8 đọc cấu hình từ ngăn theo schema, giữ lớp chữ sẵn và phong bì SDK. |
+| `e_ocr/van_ban.py` | Chuyển lõi OCR-1…4; OCR-8 đọc dict/None từ cấu hình chung, chuyển lỗi tại chay.py; giữ lớp chữ sẵn và phong bì SDK. |
 | `e_ocr/vendor/mask_ocr/LICENSE` | Vỏ import và giấy phép theo mã cũ/quyết định cuối; **phần mềm nội bộ, dùng nội bộ tập đoàn**. Không chép runtime dual, worker/model VietOCR hoặc model Tesseract |
 | `e_ocr/vendor/mask_ocr/__init__.py` | Vỏ import và giấy phép theo mã cũ/quyết định cuối; **phần mềm nội bộ, dùng nội bộ tập đoàn**. Không chép runtime dual, worker/model VietOCR hoặc model Tesseract |
 | `e_ocr/vendor/mask_ocr/common.py` | Chép `ma-nguon/vendor/mask_ocr/common.py` (Extracted, normalize), thêm wrapper XML chuẩn chặn DTD/entity và XML khác UTF-8 |
@@ -36,10 +36,10 @@ dùng của `vendor/mask_ocr` đã có trong repo; không đọc nguồn ngoài 
 | `e_ocr/vendor/mask_ocr/layout.py` | Chép riêng `word_layout` từ tệp cùng tên, giữ ô rỗng/gridSpan/vMerge và thứ tự. Bỏ parser PDF MuPDF, phần review và nhánh append của runtime khác |
 | `e_ocr/xuat_word.py` | Chuyển thể quy tắc ô trống/ô gộp từ ma-nguon/bang.py và vendor/mask_ocr/layout.py; ZIP/XML thư viện chuẩn. OCR-5 đăng ký namespace w/xml chuẩn; không đổi thuật toán bảng. |
 | `engine.json` | Phiếu 2.0, phiên bản 1.0.8; sáu DEMO PDF quét/PNG cho ba năng lực, nguon=chi_tesseract; giữ nguyên hợp đồng kỹ thuật. |
-| `e_ocr/ngan.py` | Bản tạm viết mới theo DE-NGHI-SDK-2.1 §3 và GIAO-CODEX-DOT-2 §2 bằng thư viện chuẩn; NGAN-0 chưa có trong worktree. Lead thay nguyên tệp khi gộp mẫu chung. |
-| `e_ocr/cau_hinh.py` | Bản tạm viết mới theo API doc_cau_hinh(ngan, schema), chỉ thư viện chuẩn; kiểm schema tối thiểu, chờ NGAN-0 như ngan.py. |
+| `e_ocr/ngan.py` | Bản chung `_chung/mau-ma/ngan.py`, NGAN-0 (PR #34), lead đã chép; giữ nguyên, test so SHA-256 sau chuẩn hóa CRLF→LF. Chỉ thư viện chuẩn. |
+| `e_ocr/cau_hinh.py` | Bản chung `_chung/mau-ma/cau_hinh.py`, NGAN-0 (PR #34), lead đã chép; giữ nguyên, test so SHA-256 sau chuẩn hóa CRLF→LF. Chỉ thư viện chuẩn. |
 | `cau_hinh.schema.json` | Chuyển schema cấu hình máy cũ sang bản khai cấu hình trong ngăn; không thêm bí mật hoặc trường máy thật. |
-| `KHAI-SDK-2.1.json` | Viết mới theo DE-NGHI-SDK-2.1 §2–5; bốn bảng ngăn, schema và màn quản trị; không đưa trường mới vào manifest 2.0. |
+| `KHAI-SDK-2.1.json` | Viết mới theo DE-NGHI-SDK-2.1 §2–5; bốn bảng ngăn, schema và màn; nối NGAN-0 sửa bảng cấu hình về khoa: []; không đổi manifest 2.0. |
 | `ui/cau_hinh.js` | Viết mới OCR-8, JavaScript chuẩn và KttCore; form/DOM dùng textContent, không mạng ngoài hoặc thư viện frontend. |
 | `requirements.lock` | Ghim phiên bản và SHA-256 wheel Windows x64, Linux x86_64; SDK nội bộ và thư viện PyPI. |
 | `e_ocr/nhat_ky.py` | Viết mới OCR-5, thư viện chuẩn + SDK: ContextVar cách ly số đo, JSON stderr chỉ mã cố định; chuyển lỗi bất ngờ thành LoiNghiepVu an toàn, giữ lỗi transport/hủy/chưa rõ. |
@@ -88,50 +88,55 @@ import PyMuPDF/defusedxml chưa được ghim. Giấy phép phần nguồn chuy�
 
 OCR-6 dùng hash SHA-256 từ metadata phát hành PyPI cho wheel Windows x64 CPython 3.13 và Linux x86_64 CPython 3.13; SDK lấy từ wheel trong repo. Pillow được dùng trực tiếp; PyMuPDF và defusedxml không được dùng. Script máy sạch yêu cầu nguồn wheel PyPI hoặc wheelhouse đã chuẩn bị; SDK cài offline.
 
-Băm SHA-256 nguyên byte các tệp trong gói (không tự băm `NGUON.md` để tránh tự tham chiếu):
+Băm SHA-256 các tệp trong gói (không tự băm `NGUON.md` để tránh tự tham chiếu).
+Quy ước LF: với tệp văn bản `.py`, `.md`, `.json`, `.js`, `.lock` và
+`LICENSE`, thay byte CRLF (`0D 0A`) bằng LF (`0A`) trước khi băm; không
+đổi BOM, encoding hoặc byte khác. Tệp nhị phân DEMO băm nguyên byte.
+Quy ước này áp dụng cả hai bản mẫu NGAN-0, không cần sửa tệp mẫu khi
+Git chuyển kiểu xuống dòng trên Windows.
 
 ```text
 aeddb6e290d09b7ca683e77123969e48500dda0e3dfed632461e3db4929a0028  cau_hinh.schema.json
-e678b078fe3d474a269b53289204d9362e11a0b418733d28b503ffbeebbcf98b  CHANGELOG.md
-bc1af1f36a1b4de11f47395c56ffe2030e1a6202f4ca21740f36c86166376893  contract/cau_hinh_may.schema.json
-d73a80f276eef43536ee14810ef46a1df73d476a9b4f02cc4f3bd163f4d73902  contract/van_ban_tai_lieu.schema.json
-8521635ce091f072c116ae64a5064b1d3baba70c78dfb6a4fcdffb212e9dfbd9  demo/cau_hinh.demo.json
+ffc7c760705c06c75728338b9b8d56a6b124958f86c0f59947d6f0e5ef03ab4a  CHANGELOG.md
+1b56ef1a5de686b4359857b68ad86bd909d250714fbc7f43c44e0e78887b0f04  contract/cau_hinh_may.schema.json
+81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977  contract/van_ban_tai_lieu.schema.json
+e6a148a20c0bda845df9beff217e86657f63c6c75bc3fa0a0e292d389f6551cd  demo/cau_hinh.demo.json
 f69f1adf0b91d21d093fab6a8ac5b276daa2fcb44038f544fcdfa6bd92a117c7  demo/DEMO-1-trang.jpg
 c36869332d46eea25ff7f2b265da081d2c8ab6f345dced1b38cce56ffeff316e  demo/DEMO-1-trang.png
 a254b5361b26e2eef7b8cf26c1f15e87e4bee008421eec60c8cfb41d1fcec90d  demo/DEMO-ABBYY-gia-1-trang.pdf
 79445753d110c93ca5b6e714bd63e990d253ff270478da3c713c71efdea87a59  demo/DEMO-ABBYY-gia-3-trang.pdf
 5e2aa5781c934df99f3289deef68c6397968e625d75febb64374f1ea9918720a  demo/DEMO-bang-3-trang.pdf
 f3726f407bdc2daa24ad646b85ff8a9701ba3bc1eb417f16effe4ffd8cc6049d  demo/DEMO-dap-an.docx
-22420732b1666a4d1dd2ecd872069bfd6b9cad6028c639e660ac0406145828fc  demo/DEMO-dap-an.json
+c5a46dc43d03e3306d2e532c9465cea330e429fa16da62909ef2b6659a5d3259  demo/DEMO-dap-an.json
 9c62de68d53c5433d46378e73b8199c34904c2a6e308ec6616db4243229e5879  demo/DEMO-lop-chu-3-trang.pdf
 2f57eb1431a6bf05ce245dc8aea01ebb8449213e69de83e178f1afc2e1cbeab3  demo/DEMO-quet-3-trang.pdf
 3b4fe5051351530778e101cd857e85d2b0b0804a0bd5655f58708a8f3159c642  demo/DEMO-vung-da-cat.png
 c36869332d46eea25ff7f2b265da081d2c8ab6f345dced1b38cce56ffeff316e  demo/DEMO-vung.png
-d406d94e40aa25046ee87084931f69a1595ed6dd2c9386869ddc8e905dab05e3  demo/van_ban_tai_lieu.demo.json
-f3a4c825acb9a9f8498fbdce6268f5a64d2cab80fd45399dc67c2cf303f5bb87  e_ocr/__init__.py
-87e58327635de9e2549714c690168e573abf96e8e0f8d21dfe9aaf727fcd1037  e_ocr/abbyy.py
-e488040c45310ef0776d3c529e3e0d5586651c39bcb042c82bb728657358dd10  e_ocr/ban_giao.py
-98bf4fb94199a65ce197864a9b169cf80be727ee65e76ec0249ddb9e6342ca35  e_ocr/bang.py
-6c3b393338e666ad94b22b9f80561a6c830684ee873ab44d0eb137a7e090e197  e_ocr/cau_hinh.py
-3dd03176ef7ec59364be1d8ba3e8b21a04b9feaca3d08e57e5b23aea37f31625  e_ocr/cau_hinh_may.py
-b8c0e2bc631bc142c3e061acdfb3cd11a4e7333258a6f155b6e679ce48b130a1  e_ocr/chay.py
-0a590aa7a3358ddaabaeb9481d27c6354d17deea733084f916131c5c91bcb053  e_ocr/chon_nguon.py
-69045a82652147f76d8e5273ba6bc1c199b20c86282d2483e4600cda1512931a  e_ocr/kho_tam.py
-3f62ce0659ab866444c96d11df4f8e2ad6f1b61ab79394c0635a60cd609203c4  e_ocr/lop_chu.py
-d2da3aede862ffee8b8821303d8420ec2c01fb402920f775eefa02996164e8ff  e_ocr/luot_abbyy.py
-8ff2817062cbd9ba0d91262892bcb97f3bdff3e6ec9629a41254626c582882ce  e_ocr/ngan.py
-27ef11e06b1e3ed1c54873a2849b9b32951ade738a20c7586ec983ba7b9200e0  e_ocr/nhat_ky.py
-dfbc642c1d0a04115f5ed5894e4622b515a4c6e11a17ce16c9f60e93e40e1254  e_ocr/tesseract.py
-2a30eb8989c7521ab6c2cff54ba5e237716a2f2795879e6ca489d1251a7d56b2  e_ocr/van_ban.py
-b29f50e2662f897fd771a7cff297cabaf7e74ee4ed9a36bf71f18d7c1fe1edb5  e_ocr/vendor/mask_ocr/__init__.py
-c2c2095c2a15deeb091ad96e23324ee5bd3e2c7fdf1972ed291a8c3cf3c67577  e_ocr/vendor/mask_ocr/common.py
-1e1a0282230b16b06ef5fdad87664c72d1ff47ed7fd7aeaa44ec24815248b9e7  e_ocr/vendor/mask_ocr/extraction.py
-fc31ae693905e1c544204d3be3e706bf4e7f9d1fd9e470dc31b1463491131d9c  e_ocr/vendor/mask_ocr/layout.py
-09809e497efb6db53f33b883dafd008d495f22d1549657da5f2578abc2b9b728  e_ocr/vendor/mask_ocr/LICENSE
-17f282a755ee25d934bcc9157dbc2c14e8b671b10d3dfed22c06553a47eb0494  e_ocr/xuat_word.py
-7cdd66690ae82e2efcc2b1401b77e26014c0a988685920868fff93c2c70a4e7c  engine.json
-cebb434669da4c4ce6a926a2e006d6f9c47325c2f0ddf02546972bc79dfbb909  KHAI-SDK-2.1.json
-4a489b9507ee79e7070a234ab03acf9c453e44aa9080b94360de4462d279fbf5  README.md
-ae7a61b60beb17381431df4ac0d8908afe21164381ab305983f76b9d7792792d  requirements.lock
+76c99fe7d0a0c286f5e210c569233f4195cae188cb71ca56d0b04036b06d872e  demo/van_ban_tai_lieu.demo.json
+e8872ef7b80c7774aa878b846e90ba90f71b86e434fa3016c1cb2886339a3a88  e_ocr/__init__.py
+56b2968c588e22b70196ffad44cfec2a5e54f8b8647bec710af76d6e43e9bf35  e_ocr/abbyy.py
+73d301dcaa535454871daaa3685819001c55cccabc881619971f8322244ad606  e_ocr/ban_giao.py
+b11102034a8b77d18bf2a5043c05ac2d1f71a12614a7fb3a7f87f60056c1b5ad  e_ocr/bang.py
+7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252  e_ocr/cau_hinh.py
+298732214730d25b21e98b63e6af92f4159c4c2f1a9599de0a86719ec6023046  e_ocr/cau_hinh_may.py
+d5ce6c204551508b44ff13de047714b4e7f63b95c004defdb3c3ba7124e8fbc7  e_ocr/chay.py
+3c7a7490560c3cb56a919c804a34cdbfe2ecfabd6e4524f0048e084f772fcadf  e_ocr/chon_nguon.py
+16dbcd9625c7cdf4d19df1cfbac7ff7a619bc2f008eecb99b1232f421c2e6a0d  e_ocr/kho_tam.py
+46abf54b034eed40233efac67f0f50e2c8a7e46b446b0e75fca6d59e3c749115  e_ocr/lop_chu.py
+dd6109c5ca08c515119ed5000ecde270cf82b954ab047ca37675454c1d643aa8  e_ocr/luot_abbyy.py
+2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0  e_ocr/ngan.py
+28603912217c0ac6b6d6d5b5c3982ac0a3b436970f26d7a26afc0bc619b6f9b2  e_ocr/nhat_ky.py
+6c7fec7a0497f3d0fa9ac1ae7037fb2b4c15dc12471b61f38a999dcc8da3c029  e_ocr/tesseract.py
+c245888380ba316880a7ca330cdf757604257ddad35c9e1f597ccbe167f15aa6  e_ocr/van_ban.py
+44e314dab34037d5f9060eb80be0a03e440c2a4fe0da68641eb9c4db31da210d  e_ocr/vendor/mask_ocr/__init__.py
+95876167119b631b669366ea2feb494c0be9c9171f705d8d6f1365fe04dd498b  e_ocr/vendor/mask_ocr/common.py
+0bfa7df02ebfdccbf28390a8ded135e580df4345a9d15ff8e0c4fc35d8e380e4  e_ocr/vendor/mask_ocr/extraction.py
+aac81c7cf8d09c7eace619fb4543b69dd7211c1095e88a65940b0b7291ba953e  e_ocr/vendor/mask_ocr/layout.py
+7f0205ee63a89a6634e1443b165e06968884b07bd5c3aa27129d3dad9a728c66  e_ocr/vendor/mask_ocr/LICENSE
+9ade7360ae708ba872814a082cb77ca60e1577d6aec39be9559bbd5bad9335e9  e_ocr/xuat_word.py
+09ceeef8b76bbc84295452f8036362d2d38a4e02d4f67378cbe22c79d7a6f357  engine.json
+bf598525893dbed6f3494d422558dd8681839da97c4c120a19f9946e75dc5a2a  KHAI-SDK-2.1.json
+c7acee26015f821042ea093c6a0151be91cb6563655e03f42f475ea3b6765f73  README.md
+a6e0b765087fa3707acab44063cb697610f231657a410b88ae1ff6e3bae2107c  requirements.lock
 10150cc470f1416a63d960ba3d227228e17b48a5fbb07874f867ad62ab30bd21  ui/cau_hinh.js
 ```

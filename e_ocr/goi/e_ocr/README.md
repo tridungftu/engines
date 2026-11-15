@@ -210,8 +210,10 @@ khi đóng màn để dừng chu kỳ đọc 30 giây.
 
 `engine.json` giữ schema 2.0, chỉ tăng phiên bản engine lên 1.0.8.
 Khai báo dự kiến SDK 2.1 nằm riêng trong `KHAI-SDK-2.1.json`.
-`ngan.py`/`cau_hinh.py` là bản tạm chờ NGAN-0; test so băm được viết sẵn
-và skip với lý do “chờ NGAN-0 gộp”. Lead thay nguyên hai tệp và bật lại test.
+`ngan.py`/`cau_hinh.py` dùng nguyên bản chung NGAN-0 (PR #34).
+Hai test so băm luôn chạy, chuẩn hóa CRLF thành LF trước khi tính SHA-256.
+Ngăn RAM nhận khai báo bảng từ `KHAI-SDK-2.1.json/ngan_du_lieu`;
+bảng cấu hình có khóa `{}`, giá trị chính là dict cấu hình.
 `kho_tam.py`, `cau_hinh_may.py` và schema máy cũ giữ nguyên để chuyển
 `LUU-TRU/` sau; chúng không thuộc đường chạy engine hiện tại.
 

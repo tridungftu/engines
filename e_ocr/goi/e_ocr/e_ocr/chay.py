@@ -1,26 +1,41 @@
 """Cổng SDK 2.0: ba action đọc/xuất Word dùng chung lõi nhận dạng."""
 
 from datetime import datetime, timezone
+import json
+from pathlib import Path
 from threading import Event, Thread
 
 from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
 
 from .abbyy import BackendABBYY, LoiABBYYChuaNhan
 from .ban_giao import ban_giao_word
-from .cau_hinh import doc_cau_hinh
-from .ngan import NganXungDot, chon_ngan
+from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
+from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
 from .nhat_ky import do_luot, ghi_nguon
 from .van_ban import SCHEMA, trich_van_ban
 
 
 app = Engine.tu_khai_bao("engine.json")
+KHAI_NGAN = json.loads((Path(__file__).resolve().parents[1] / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))["ngan_du_lieu"]
+
+
+def _ngan_ung_dung(ung_dung):
+    if getattr(ung_dung, "ngan", None) is None:
+        ung_dung.ngan = NganBoNho(KHAI_NGAN)
+    return chon_ngan(ung_dung)
+
+
+_ngan_ung_dung(app)
 
 
 def _doc(viec):
     ngan = getattr(viec, "ngan", None)
     if ngan is None:
-        ngan = chon_ngan(app)
-    du_lieu = trich_van_ban(viec, phien_ban_engine=f"{app.ma} {app.phieu['phien_ban']}", ngan=ngan)
+        ngan = _ngan_ung_dung(app)
+    try:
+        du_lieu = trich_van_ban(viec, phien_ban_engine=f"{app.ma} {app.phieu['phien_ban']}", ngan=ngan)
+    except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
+        raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None
     ghi_nguon(du_lieu.get("nguon_doc"))
     return du_lieu
 
@@ -84,7 +99,7 @@ def chay_engine(*, ung_dung=None, khoang_giay=30):
     def cap_nhat():
         while not dung.is_set():
             try:
-                ghi_trang_thai(chon_ngan(ung_dung))
+                ghi_trang_thai(_ngan_ung_dung(ung_dung))
             except Exception:
                 # Giữ bản ghi cũ; màn hiển thị hết hạn, không bịa trạng thái mới.
                 pass

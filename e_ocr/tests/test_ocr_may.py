@@ -214,7 +214,7 @@ def test_ca_7_tep_loi_khong_tru_han_muc(bo_demo, hot_folder, ten, ma):
     kiem_loi(core, kq, ma)
     assert not list(vao.iterdir()) and not tam
     assert SoHanMuc().da_dung() == 0
-    assert ngan_demo().tim("han_muc_ngay", loc={})["danh_sach"] == []
+    assert ngan_demo().tim("han_muc_ngay", loc={}).danh_sach == []
     assert ngan_demo().doc("trang_thai_engine", {"ma": "han_muc"}) is None
     assert str(bo_demo.thu_muc) not in kq["loi"]["thong_diep"]
 

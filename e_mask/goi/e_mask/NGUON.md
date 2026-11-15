@@ -66,7 +66,7 @@ Chỉ bốn tệp mã chạy mới. Không thêm dependency ngoài thư viện c
 | Tệp trong gói Python | Nguồn / điều chỉnh | SHA-256 đích (byte và LF giống nhau tại bàn giao) |
 |---|---|---|
 | `e_mask/kho_qua_core.py` | Chuyển nguyên tắc snapshot/nhật ký/chốt từ `e_mask/ma-nguon/kho_qua_core.py`; giữ hai thao tác port nội bộ và toàn bộ 11 vector cũ. Bỏ phụ thuộc cổng thế hệ trước, thêm nguồn quyền tin cậy, mã opaque, dấu chống trùng và đối soát chốt chưa rõ. | `5914a2818f0ff8bad6aa217dcd7e9ef466c116d51670fa35a7cd3cb017f0d86e` |
-| `e_mask/kho_tam.py` | Viết mới theo phiếu §2.4: thư mục dữ liệu ngoài gói, khóa tệp đa tiến trình, ghi tạm/fsync/replace, schema đóng chỉ băm/mã trạng thái; lỗi thì dừng. | `f59171f0094a6093a338a9894a0695f6ce8d2a2d66f4acd1769714c1555714f5` |
+| `e_mask/LUU-TRU/mask_truoc_ngan/kho_tam.py` (ngoài gói chạy) | Hiện vật lịch sử MASK-3: kho tệp theo phiếu §2.4 cũ; đã chuyển nguyên byte ra LUU-TRU ngày 15/11/2026, không còn trên đường chạy. Kho hiện tại dùng cổng Ngan. | `f59171f0094a6093a338a9894a0695f6ce8d2a2d66f4acd1769714c1555714f5` |
 | `e_mask/kho_dinh_danh.py` | Viết lớp ghép port/quyền cho protocol Kho có sẵn; kiểm kết quả trước chốt và sau đọc lại, không có vòng gửi kết quả riêng. | `c23be50fd1d64a32f142a1a9eb5b870f624e667f4640387cb8f05fd76e5766a4` |
 | `e_mask/quyen_yeu_cau.py` | Viết port danh tính/quyền; thiếu nguồn xác minh thì từ chối, không suy từ tham số/đầu vào/pháp nhân. | `4f44b32ec0c89ee40023dbd38502e9615f3522aaf648b9b15bb4b3c00cd17a4c` |
 
@@ -88,7 +88,7 @@ Bốn từ điển chép nguyên byte từ e_mask/tham-chieu/tu-dien/ vào e_mas
 | `vn_places.txt` | `e991d899a1fa2265082e871715a653c9ca4fd7ed233a8d3951fb80b7a2d41847` |
 | `vn_surnames.txt` | `b9fc76e5fa1ebb6abca7f4bc7c58d0dd9ecffc992e642a21958449080b2aaad1` |
 
-Kho mới giữ nguyên nguyên tắc snapshot/chốt của MASK-3, chuyển thành adapter API ngăn chung; dùng dòng CAS bảo vệ năm bảng. Chỉ dấu/băm/số đếm và định danh cần che được giữ; không cache tài liệu hoặc kết quả AI. Cổng quyền vẫn là port được bên tích hợp tin cậy cấp. Tệp kho_tam.py/cau_hinh_may.py giữ nguyên làm hiện vật, không được handler import; lead xét lưu trữ sau.
+Kho mới giữ nguyên nguyên tắc snapshot/chốt của MASK-3, chuyển thành adapter API ngăn chung; dùng dòng CAS bảo vệ năm bảng. Chỉ dấu/băm/số đếm và định danh cần che được giữ; không cache tài liệu hoặc kết quả AI. Cổng quyền vẫn là port được bên tích hợp tin cậy cấp. Tệp kho_tam.py/cau_hinh_may.py đã chuyển nguyên byte sang `e_mask/LUU-TRU/mask_truoc_ngan/`, ngoài gói chạy; handler không import các hiện vật này.
 
 Schema van_ban_da_che tạo theo phần đã duyệt của sổ loại riêng, chép nguyên byte vào gói; hai schema van_ban_tai_lieu/tra_loi_ai chép từ sổ chung, không sửa nguồn. Test so SHA cả ba. Bản khai chờ 2.1 độc lập phiếu 2.0. Màn duyệt viết bằng JavaScript chuẩn, chỉ gọi KttCore, Node dùng riêng cho kiểm với bản giả. Công cụ chuyển DEMO chỉ nhận danh sách giả tích hợp sẵn, không đọc danh mục thật.
 

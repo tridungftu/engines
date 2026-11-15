@@ -1,0 +1,183 @@
+Đã kiểm bằng Core giả (CoreGia); chưa kiểm Core/model thật.
+Đầu ra thật; đường dẫn thư mục tạm DEMO trong traceback đã được ẩn.
+
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.1.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát: 1
+
+.venv/Scripts/python -B -m pytest e_mask/tests -q
+.......................................................... [  5%]
+........................................ [ 10%]
+........................................................................ [ 17%]
+........................................................................ [ 24%]
+..........................................................xxxx.......... [ 32%]
+........................................................................ [ 39%]
+........................................................................ [ 46%]
+........................................................................ [ 54%]
+........................................................................ [ 61%]
+........................................................................ [ 69%]
+........................................................................ [ 76%]
+..............FFF....................................................... [ 83%]
+........................................................................ [ 91%]
+........................................................................ [ 98%]
+..............                                                           [100%]
+================================== FAILURES ===================================
+__________ test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong[1] ___________
+
+tmp_path = <thư mục tạm DEMO do pytest cấp; đã ẩn đường dẫn máy>
+tu_vung_demo = None, so_lan_mat = 1
+
+    @pytest.mark.parametrize('so_lan_mat', [1, 4])
+    def test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong(tmp_path, tu_vung_demo, so_lan_mat):
+        core, ben_kho = CoreGia(), KhoCoreGia()
+        quyen, cac_lan = QuyenCoreGia(ben_kho), []
+        ma_viec = core.giao_viec(CHE, {'loai': 'van_ban', 'van_ban': VAN_BAN})
+        ctx = quyen.cap(ma_viec)
+        app = tao_app_demo(ben_kho, quyen, tmp_path, cac_lan)
+        core.gay_mat_xac_nhan('ket_qua', so_lan=so_lan_mat)
+>       core.chay(app)
+
+e_mask\tests\test_mask_3.py:531: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\kho_tri_thuc_sdk\thu.py:130: in chay
+    app.chay(self.duong_truyen(app.ma), dung_khi_het_viec=True, **tuy_chon)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Engine(ma='e_mask', phien_ban='1.1.0')
+duong_truyen = <kho_tri_thuc_sdk.thu._DuongGia object at 0x0000029BB78B40B0>
+dung_khi_het_viec = True, khoang_gia_han = 0.01, han_giu_giay = 60
+cho_gui_lai_giay = 0
+
+    def chay(self, duong_truyen=None, *, dung_khi_het_viec=False, khoang_gia_han=None,
+             han_giu_giay=HAN_GIU_MAC_DINH_GIAY, cho_gui_lai_giay=0.5):
+        """Vòng nhận và làm việc. Không truyền đường truyền thì dùng HTTP, đọc
+        địa chỉ Core và khóa engine từ dòng khởi động trên stdin (hoặc biến môi
+        trường khi chạy tay) — xem engine_http.doc_khoi_dong."""
+        thieu = [m for m in self._nang_luc if m not in self._ham]
+        if thieu:
+>           raise LoiPhieu([f'Năng lực "{m}" đã khai trong phiếu nhưng chưa có hàm xử lý '
+                            f'(@app.nang_luc("{m}")).' for m in thieu])
+E           kho_tri_thuc_sdk.engine.LoiPhieu: Phiếu engine.json chưa đúng:
+E           - Năng lực "mask.chuan_bi_ai_cuc_bo@1" đã khai trong phiếu nhưng chưa có hàm xử lý (@app.nang_luc("mask.chuan_bi_ai_cuc_bo@1")).
+
+.venv\Lib\site-packages\kho_tri_thuc_sdk\engine.py:1046: LoiPhieu
+__________ test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong[4] ___________
+
+tmp_path = <thư mục tạm DEMO do pytest cấp; đã ẩn đường dẫn máy>
+tu_vung_demo = None, so_lan_mat = 4
+
+    @pytest.mark.parametrize('so_lan_mat', [1, 4])
+    def test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong(tmp_path, tu_vung_demo, so_lan_mat):
+        core, ben_kho = CoreGia(), KhoCoreGia()
+        quyen, cac_lan = QuyenCoreGia(ben_kho), []
+        ma_viec = core.giao_viec(CHE, {'loai': 'van_ban', 'van_ban': VAN_BAN})
+        ctx = quyen.cap(ma_viec)
+        app = tao_app_demo(ben_kho, quyen, tmp_path, cac_lan)
+        core.gay_mat_xac_nhan('ket_qua', so_lan=so_lan_mat)
+>       core.chay(app)
+
+e_mask\tests\test_mask_3.py:531: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\kho_tri_thuc_sdk\thu.py:130: in chay
+    app.chay(self.duong_truyen(app.ma), dung_khi_het_viec=True, **tuy_chon)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Engine(ma='e_mask', phien_ban='1.1.0')
+duong_truyen = <kho_tri_thuc_sdk.thu._DuongGia object at 0x0000029BB75C1010>
+dung_khi_het_viec = True, khoang_gia_han = 0.01, han_giu_giay = 60
+cho_gui_lai_giay = 0
+
+    def chay(self, duong_truyen=None, *, dung_khi_het_viec=False, khoang_gia_han=None,
+             han_giu_giay=HAN_GIU_MAC_DINH_GIAY, cho_gui_lai_giay=0.5):
+        """Vòng nhận và làm việc. Không truyền đường truyền thì dùng HTTP, đọc
+        địa chỉ Core và khóa engine từ dòng khởi động trên stdin (hoặc biến môi
+        trường khi chạy tay) — xem engine_http.doc_khoi_dong."""
+        thieu = [m for m in self._nang_luc if m not in self._ham]
+        if thieu:
+>           raise LoiPhieu([f'Năng lực "{m}" đã khai trong phiếu nhưng chưa có hàm xử lý '
+                            f'(@app.nang_luc("{m}")).' for m in thieu])
+E           kho_tri_thuc_sdk.engine.LoiPhieu: Phiếu engine.json chưa đúng:
+E           - Năng lực "mask.chuan_bi_ai_cuc_bo@1" đã khai trong phiếu nhưng chưa có hàm xử lý (@app.nang_luc("mask.chuan_bi_ai_cuc_bo@1")).
+
+.venv\Lib\site-packages\kho_tri_thuc_sdk\engine.py:1046: LoiPhieu
+__________________ test_core_gia_chua_ro_khong_bao_xong_gia ___________________
+
+tmp_path = <thư mục tạm DEMO do pytest cấp; đã ẩn đường dẫn máy>
+tu_vung_demo = None
+
+    def test_core_gia_chua_ro_khong_bao_xong_gia(tmp_path, tu_vung_demo):
+        core, ben_kho = CoreGia(), KhoCoreGia()
+        quyen, cac_lan = QuyenCoreGia(ben_kho), []
+        ma = core.giao_viec(CHE, {'loai': 'van_ban', 'van_ban': VAN_BAN})
+        quyen.cap(ma)
+        ben_kho.mat_phan_hoi = True
+>       core.chay(tao_app_demo(ben_kho, quyen, tmp_path, cac_lan))
+
+e_mask\tests\test_mask_3.py:568: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\kho_tri_thuc_sdk\thu.py:130: in chay
+    app.chay(self.duong_truyen(app.ma), dung_khi_het_viec=True, **tuy_chon)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Engine(ma='e_mask', phien_ban='1.1.0')
+duong_truyen = <kho_tri_thuc_sdk.thu._DuongGia object at 0x0000029BB7993DD0>
+dung_khi_het_viec = True, khoang_gia_han = 0.01, han_giu_giay = 60
+cho_gui_lai_giay = 0
+
+    def chay(self, duong_truyen=None, *, dung_khi_het_viec=False, khoang_gia_han=None,
+             han_giu_giay=HAN_GIU_MAC_DINH_GIAY, cho_gui_lai_giay=0.5):
+        """Vòng nhận và làm việc. Không truyền đường truyền thì dùng HTTP, đọc
+        địa chỉ Core và khóa engine từ dòng khởi động trên stdin (hoặc biến môi
+        trường khi chạy tay) — xem engine_http.doc_khoi_dong."""
+        thieu = [m for m in self._nang_luc if m not in self._ham]
+        if thieu:
+>           raise LoiPhieu([f'Năng lực "{m}" đã khai trong phiếu nhưng chưa có hàm xử lý '
+                            f'(@app.nang_luc("{m}")).' for m in thieu])
+E           kho_tri_thuc_sdk.engine.LoiPhieu: Phiếu engine.json chưa đúng:
+E           - Năng lực "mask.chuan_bi_ai_cuc_bo@1" đã khai trong phiếu nhưng chưa có hàm xử lý (@app.nang_luc("mask.chuan_bi_ai_cuc_bo@1")).
+
+.venv\Lib\site-packages\kho_tri_thuc_sdk\engine.py:1046: LoiPhieu
+=========================== short test summary info ===========================
+FAILED e_mask/tests/test_mask_3.py::test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong[1]
+FAILED e_mask/tests/test_mask_3.py::test_core_gia_mat_ack_sdk_retry_khoi_dong_lai_va_dong[4]
+FAILED e_mask/tests/test_mask_3.py::test_core_gia_chua_ro_khong_bao_xong_gia
+3 failed, 969 passed, 4 xfailed, 190 subtests passed in 78.66s (0:01:18)
+Mã thoát: 1
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát: 0
+
+.venv/Scripts/python -B e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[ĐẠT] Che văn bản DEMO XONG 
+[ĐẠT] Mở che DEMO XONG 
+Đã kiểm bằng Core giả (CoreGia).
+Mã thoát: 0
+
+Lượt cuối sau sửa adapter lịch sử MASK-3 cho phiếu con hai năng lực cũ.
+.venv/Scripts/python -B -m pytest e_mask/tests -q
+.......................................................... [  5%]
+........................................ [ 10%]
+........................................................................ [ 17%]
+........................................................................ [ 24%]
+..........................................................xxxx.......... [ 32%]
+........................................................................ [ 39%]
+........................................................................ [ 46%]
+........................................................................ [ 54%]
+........................................................................ [ 61%]
+........................................................................ [ 69%]
+........................................................................ [ 76%]
+........................................................................ [ 83%]
+........................................................................ [ 91%]
+........................................................................ [ 98%]
+..............                                                           [100%]
+972 passed, 4 xfailed, 190 subtests passed in 89.92s (0:01:29)
+Mã thoát: 0
+
+Kiểm cuối sau cập nhật tài liệu:
+UTF-8/NFC/AST/JSON; đúng 5 tệp mã/manifest; chỉ e_mask: ĐẠT
+git diff --check: mã 0; không lỗi khoảng trắng.

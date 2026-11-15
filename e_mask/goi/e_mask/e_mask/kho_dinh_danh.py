@@ -55,3 +55,22 @@ class KhoDinhDanh:
         ket_qua = kho.chot(ket_qua)
         _kiem_ket_qua(ket_qua, loai)
         return ket_qua
+
+    def xu_ly_co_anh_xa(self, viec, ham):
+        """Map chỉ ở RAM/snapshot Core; không chép vào kết quả chốt ngăn.
+
+        PortNgan phục hồi cùng lựa chọn alias và tính lại map từ gốc bất
+        biến; không cấp alias/đếm gặp lần nữa. Port cũ chỉ có kết quả đã
+        chốt mà không map thì từ chối, không suy map từ chênh chiều dài.
+        """
+        kho = self.mo_luot(viec)
+        if kho.da_chot:
+            raise LoiNghiepVu('MASK_AI_HO_SO', 'Không xác minh được hồ sơ nội bộ. Cần thực hiện lại yêu cầu.')
+        ket_qua, anh_xa = ham(kho)
+        _kiem_ket_qua(ket_qua, 'che')
+        viec.kiem_huy()
+        ket_qua = kho.chot(ket_qua)
+        _kiem_ket_qua(ket_qua, 'che')
+        if ket_qua['van_ban_da_che'] != anh_xa.da_che:
+            raise LoiNghiepVu('MASK_AI_HO_SO', 'Không xác minh được hồ sơ nội bộ. Cần thực hiện lại yêu cầu.')
+        return ket_qua, anh_xa

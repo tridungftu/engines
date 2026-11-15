@@ -1,0 +1,75 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "module",
+  "ma": "demo_ho_so",
+  "ten": "Hồ sơ DEMO",
+  "phien_ban": "1.0.0",
+  "nha_phat_trien": {"ten": "Nhóm phát triển Core (gói DEMO)", "lien_he": "Lead dự án Core", "mo_ta": "Gói module DEMO dùng để nghiệm thu cổng module."},
+  "tuong_thich": {"core": ">=2.0.0 <3.0.0", "sdk": ">=2.0.0 <3.0.0"},
+  "goi": {"tep_kiem_ke": "KIEM-KE.json", "thuat_toan_ma_bam": "sha256", "phu_thuoc_module": []},
+  "backend": {"diem_vao": "backend.chay"},
+  "tien_trinh": {
+    "cong": {"nguon": "core_cap", "pham_vi": "loopback"},
+    "nhan_listener": "socket.fromshare",
+    "readiness": "kenh_dieu_khien",
+    "thu_hoi": "drain_va_xac_nhan",
+    "bi_mat": "stdin_hoac_handle",
+    "che_do_mac_dinh": "tu_kich_hoat_tu_dong",
+    "ranh_giay_de_xuat": 300
+  },
+  "giao_dien": {
+    "diem_vao": "frontend/chinh.js",
+    "tai_nguyen": ["frontend/chinh.js", "frontend/chinh.css"],
+    "icon": "folder",
+    "trang_dau": "tong_quan",
+    "phan": [
+      {"ma": "tong_quan", "ten": "Tổng quan", "icon": "home", "thu_tu": 1, "quyen_xem": "ho_so.xem"}
+    ]
+  },
+  "quyen": [
+    {"ma": "ho_so.xem", "ten": "Xem hồ sơ"},
+    {"ma": "ho_so.lap", "ten": "Lập hồ sơ"}
+  ],
+  "hanh_dong": [
+    {"ma": "danh_sach_ho_so", "ten": "Danh sách hồ sơ", "phuong_thuc": "GET", "duong_dan": "/ho-so",
+     "quyen": "ho_so.xem", "dau_ra": "schema/danh_sach_ho_so_ra.v1.json",
+     "kieu": "dong_bo", "chong_trung": false},
+    {"ma": "xem_ho_so", "ten": "Xem một hồ sơ", "phuong_thuc": "GET", "duong_dan": "/ho-so/{id}",
+     "quyen": "ho_so.xem", "dau_ra": "schema/ho_so_ra.v1.json",
+     "kieu": "dong_bo", "chong_trung": false, "doi_tuong": {"ngan": "ho_so", "id_tu": "duong_dan.id"}},
+    {"ma": "thu_ghi_cheo_core", "ten": "Thử ghi phiếu của module khác", "phuong_thuc": "POST",
+     "duong_dan": "/thu-ngan-core/ghi-cheo", "quyen": "ho_so.lap",
+     "kieu": "dong_bo", "chong_trung": true, "sdk_dung": ["ngan_core.them"]}
+  ],
+  "ma_loi": [
+    {"ma": "HO_SO_KHONG_TIM_THAY", "http": 404, "thong_diep": "Không tìm thấy hồ sơ."},
+    {"ma": "HO_SO_MA_KHONG_HOP_LE", "http": 400, "thong_diep": "Mã hồ sơ không hợp lệ."},
+    {"ma": "KENH_KHONG_DU_QUYEN", "http": 403, "thong_diep": "Không có quyền thực hiện thao tác trên ngăn dữ liệu."}
+  ],
+  "du_lieu": {
+    "ngan": [
+      {"ma": "ho_so", "ten": "Hồ sơ", "mo_ta": "Mỗi dòng một hồ sơ đọc từ một tệp văn bản DEMO.",
+       "cot": [
+         {"ma": "ten_ho_so", "ten": "Tên hồ sơ", "kieu": "van_ban"},
+         {"ma": "noi_dung", "ten": "Nội dung đã đọc", "kieu": "van_ban"},
+         {"ma": "so_tu", "ten": "Số từ", "kieu": "so"},
+         {"ma": "so_dong", "ten": "Số dòng", "kieu": "so"},
+         {"ma": "tep_goc", "ten": "Tệp gốc", "kieu": "tep"}
+       ]}
+    ],
+    "goi_migration": null
+  },
+  "contract": {
+    "cong_bo": [
+      {"ma": "demo_ho_so_ho_so", "phien_ban": "1.0.0", "module_so_huu": "demo_ho_so",
+       "tep_mo_ta": "contract/ho_so.mo_ta.json", "schema": "contract/ho_so.schema.json",
+       "vi_du": "contract/ho_so.vi_du.json", "quyen_doc": "ho_so.xem", "ngan": "ho_so"}
+    ]
+  },
+  "nut": [
+    {"ma": "doc_tep", "ten": "Đọc tệp", "phan": "tong_quan", "thao_tac_dau": "tai_tep",
+     "nhan_tep": {"mime": ["text/plain"], "toi_da_mib": 1},
+     "ngan_ket_qua": "ho_so", "quyen": "ho_so.lap",
+     "sdk_dung": ["quy_trinh.ket_qua", "ngan.them"]}
+  ]
+}

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-2c-3 | Hậu kiểm Local, xác minh nguồn và che bổ sung theo span | Sau MASK-2c-2, AI-9; profile lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.2.0; 1109 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-3.md); PR: **chờ lead mở** |
 | 0 | Đọc yêu cầu chung/SDK 2.0, yêu cầu Mask và lập kế hoạch lát có giờ ước tính; trình Anh qua lead | MASK-P | Xong — 14/11/2026 (lập phiếu) | [GIAO-CODEX-e_mask.md](GIAO-CODEX-e_mask.md): 14 lát MASK-0…13, 52–62 giờ ước tính chưa đo; phần tệp có điều kiện, chưa triển khai; PR: **chờ lead mở** |
 | 1 | Chuyển kho bí danh sang **ngăn của engine** theo cổng chung (thay `mask.py`/`kho_mask.py`/SQL 113, 117–120 trong Core) | MK-10, 19 | Chờ Core | Bàn cùng lead Core qua Anh |
 | 2 | J8b: đối soát mất xác nhận | — | Chờ làm |  |
@@ -25,6 +26,14 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-2c-2 | Chuẩn bị yêu cầu Local, khuôn/profile/budget và kế hoạch đoạn | MASK-2c-1; profile kỹ thuật lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.1.0; 972 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-2.md); PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## MASK-2c-3 — bàn giao hậu kiểm Local, 15/11/2026
+
+- **Đạt phạm vi CoreGia; đã kiểm bằng Core giả (CoreGia).** PR: **chờ lead mở**; không commit/push. [Báo cáo theo AGENTS.md §6](BAO-CAO-MASK-2c-3.md), [kết quả lệnh thật](KET-QUA-KIEM-MASK-2c-3.txt). Chưa kiểm Core/model thật hoặc Linux thực tế.
+- Đúng năm tệp mã được giao; bản 1.2.0 thêm `mask.hau_kiem_ai_cuc_bo@1`, một đầu vào `tra_loi_ai`, đầu ra `van_ban_da_che`. Đọc snapshot/tập nguồn có quyền từ Core, chứng thực từng phản hồi AI-9/Local/hoàn tất và giữ chuyển tiếp nguyên vẹn; băm AI trên toàn phong bì yêu cầu JSON chuẩn. Rỗng không tự là an toàn.
+- Đối chiếu code point, map, biên NFD/Cf/selector; giữ alias lớp 1 và chặn partial overlap/prefix/nghi vấn/mâu thuẫn/mép đoạn chưa có bản bao đủ. Gom đúng span, giữ lần lặp; che thêm phải → trái qua kho hiện có. Hậu kiểm cũ và kiểm tiền/ngày/numeric review toàn văn phải đạt trước chốt. CAS/rollback/chống lặp giữ nguyên, >100 lệnh từ chối toàn bộ; Core ghi chứng cứ SHA kết quả cuối trước trả.
+- **1109 passed, 4 xfailed giữ nguyên, 190 subtests passed, 0 skipped, 128.47 giây; mã 0**, gồm 137 test mới. DEMO có quyền **2/2 ĐẠT**, độc lập và `git diff --check` mã 0. CLI SDK chuẩn **0/2, mã 1** vì thiếu nguồn quyền, không nới runtime để làm xanh. Có kiểm mất ACK/ChuaRo/timeout/CAS thực/thu hồi quyền/hủy và không rò gốc. Không chạy AI/model thật hoặc đo held-out hai lớp; nợ CAO và MASK-2c-4 vẫn mở. 0 Cloud/engine-to-engine từ Mask.
+- Thời gian thực tế: 13:47:00–14:13:07 ngày 15/11/2026 (UTC+07), **0.44 giờ** (bắt đầu 13:47:00 theo lead); phiếu **8 giờ ƯỚC TÍNH**, độ khó **kho**. C-M2C-01…05 đã cụ thể ở mục Cần Core: port tin cậy, nguồn hoàn tất, kho ACL, chứng cứ hai lớp và cửa Cloud chặn đường cũ. Không có câu chờ Anh mới; Cloud vẫn tắt, không sửa Core/SDK/schema chung/nguồn cũ/dependency.
 
 ## MASK-2b — sửa theo kiểm độc lập, 15/11/2026
 
@@ -198,6 +207,15 @@ Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã
 - **Báo nhầm nền đo ở MASK-2b:** 1/14 mẫu cũ che thừa chữ DEMO; tập bổ sung có 1 câu ngày ISO bị lớp số/ngày cũ chặn và 1 câu che thừa chữ DEMO. Đã có trước MASK-2b, không tăng trên hai tập đo; giữ nguyên và ghi chi tiết trong báo cáo, chưa sửa ở lát tên người.
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+### Cụ thể hóa MASK-2c-3 — 15/11/2026
+
+- **C-M2C-01/03:** nối `tao_app(cong_hau_kiem_ai=...)` với `CongHauKiemAI`. Các phương thức `kiem_quyen`, `kiem_han`, `chung_thuc`, `ban_giao` là port nội bộ đề nghị, **chưa phải API/transport SDK 2.0**. Quyền phải được kiểm nguyên tử ngay trong `mo_tep` và từng thao tác, gắn mã yêu cầu/phiên/module/người/tài liệu/pháp nhân/vùng/lease; cùng việc/bước giữ mã lượt ổn định khi giao lại. Không dùng cờ caller/model làm quyền hoặc chứng cứ.
+- **C-M2C-02/03:** Core giữ tập JSON chuẩn `mask-2c-phan-hoi.json` có `phien_ban`, `ma_yeu_cau`, `ke_hoach`, `phan_hoi`. Mỗi phần gồm nguyên phong bì `yeu_cau_ai`, `tra_loi_ai` và `nguon` (`engine`, `nang_luc`, `nha_cung_cap`, `model`, `trang_thai`, `hoan_tat` với `giao_thuc`, `ket_thuc`). Nguồn phải là AI-9/Local/XONG và hoàn tất `stop`; Core chứng thực bytes/băm từng cặp từ sổ nguồn, kế hoạch và snapshot gốc, không tin nội dung `nguon` tự khai trong tệp. Giữ nguyên phản hồi gốc; bản giao cuối chỉ thêm tham chiếu+băm tập phản hồi. `bam_dau_vao` là SHA JSON chuẩn toàn phong bì yêu cầu.
+- **Bằng chứng hoàn tất:** AI-9 không thêm finish vào schema chung. Core cần nguồn tin cậy cho hoàn tất transport/API (hoặc chứng thực phiên thực thi AI-9 đã kiểm đủ done/finish), không tạo `stop` từ `khong_thay_can_cu`. Nguồn đã nhận nhưng chưa trả phải `ChuaRo` trước giao bước 3, kể cả nếu còn payload rỗng tạm. Chưa có bằng chứng từ đường thực thì từ chối. Model phải khớp model đã ghim budget trong snapshot; fallback Local khác model cần chuẩn bị/đo budget lại, không tự lấy budget model cũ.
+- **C-M2C-04:** `ban_giao` ghi bền, chống lặp chứng cứ nguồn `mask.hau_kiem_ai_cuc_bo@1`, băm đề nghị nguồn/tập phản hồi, số đoạn, SHA phong bì kết quả cuối và SHA văn bản trước ACK. Cửa Cloud kiểm chứng cứ này gắn đúng bytes kết quả và quyền; chặn đường `mask.che_van_ban@1` cũ thiếu lớp 2 dù cùng loại và hai cờ đạt. Không đẩy mã yêu cầu/snapshot/chuyển tiếp/trích dẫn gốc/băm nội bộ lên Cloud; prompt chứa dữ liệu cũng phải qua Mask. **BAT_CLOUD vẫn False**, chưa có cửa thật hoặc phép đo thật.
+- **C-M2C-05:** dùng nguyên kho/Ngan CAS hiện có, không thêm bảng. Alias/hàng chờ/dấu gặp/lượt trong một lô nghiệp vụ; >100 lệnh chặn toàn bộ. Core cần staging/chốt nguyên tử chung nếu muốn vượt trần; không chia lô phía engine. Ghi đã nhận mất ACK phải `ChuaRo`, Core đối soát đúng mã/băm trước giao lại; quyền/lease phải bao trùm giao dịch ngăn. Ngăn RAM và adapter ngoài gói không chứng nhận độ bền/RLS thật.
+- **Trần nội bộ:** kế thừa profile 1 MiB/phản hồi và đầu vào bước cuối; snapshot và tập phản hồi tối đa 64 MiB/tệp. Vượt từ chối, không cắt. SDK 2.0 tải cả tệp vào RAM trước engine kiểm nên Core còn phải chặn byte/budget RAM/deadline trước tải. Chưa đo context/chất lượng/model/Core thật; MASK-2c-4 và nợ CAO vẫn mở. Không có câu chờ Anh mới.
 
 ### Cụ thể hóa MASK-2c-2 — 15/11/2026
 

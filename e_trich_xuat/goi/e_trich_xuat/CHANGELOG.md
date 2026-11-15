@@ -74,3 +74,7 @@
 - Màn cấu hình qua KttCore, khai SDK 2.1 riêng, kiểm bằng Node/KttCore giả.
 - Phạm vi kiểm: **đã kiểm bằng Core giả (CoreGia)** trên Windows;
   chưa chạy Linux hoặc nối Core thật. Không AI/OCR thật, 0 Cloud.
+
+## TX-5 — 15/11/2026
+
+Bàn giao ngoài runtime helper chuyển E1 thành snapshot cùng hướng dẫn U1a/U1b cho module; không thay engine runtime hoặc đăng ký năng lực. Kiểm chi tiết và giới hạn CLI/Core tại `docs/VIEC.md`.

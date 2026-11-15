@@ -1,3 +1,20 @@
+## 1.3.0 — 15/11/2026, MASK-S22 (chưa phát hành)
+
+- Nâng SDK 2.2.0, khai schema cấu hình rỗng đúng hiện trạng; handler đọc `viec.cau_hinh`. Lưu trữ nguyên byte bản khai 2.1 và bộ đọc cấu hình tạm; bỏ bảng cấu hình khỏi kho RAM.
+- Theo ngoại lệ Lead/CĐ-36, giữ cổng kho bí danh RAM; tách khỏi ngăn SDK, không khai bảng/migration, không thêm đường giải mã. MASK-P3 xử lý thiết kế nghiệp vụ sau.
+- Adapter công cụ Local dùng cấu hình và ngăn CoreGia 2.2.0 cho Hỏi AI AI-11/AI-12; hai test deadline dùng checkpoint xác định, không đo tải máy. Giữ các ca hành vi/an toàn cũ; chỉ bỏ so băm mẫu tạm.
+- Đã kiểm bằng Core giả (CoreGia). CLI chuẩn vẫn bị chặn ở cả hai ví dụ do thiếu cửa cấp quyền/mã yêu cầu tin cậy; Cần Core, chưa đạt điều kiện nghiệm thu chung. Pytest lượt chốt: 2179 passed, một subtest hiệu năng cũ failed, 4 xfailed giữ nguyên, 189 subtests passed, 0 skipped; hai ca deadline đã qua. Kiểm độc lập đạt. Kết quả lệnh và thời gian cuối tại `e_mask/docs/BAO-CAO-MASK-S22.md`.
+
+## Chưa phát hành — 15/11/2026, MASK-B4 writer ZIP/XML nội bộ
+
+- Thêm `ghi_zip.py`, `va_xml.py`, mở kiểm record trong `zip_an_toan.py`; đúng ba runtime, chỉ stdlib/SDK và RAM. Không đổi manifest/năng lực/handler hoặc bật Cloud; B7/B9 mới nối hai lớp và phát hành.
+- Edit script ghim SHA ZIP/vùng/part/span; writer đọc lại B1+B2/B3, chặn span Unicode/byte chồng hoặc sai băm/map/CRC/size/offset. Kiểm tổng lệnh trước cấp phát map; không tin cây XML mutable của caller.
+- Chép nguyên local record, payload nén và descriptor part bất biến; central chỉ sửa offset cần thiết. Part sửa giữ method/flags/thứ tự, cập nhật CRC/size/local/descriptor; không nén lại part khác hoặc đổi compression để tránh ratio. Không edit/no-op thì toàn ZIP bằng gốc.
+- Patch byte text/attribute giữ markup/namespace/format ngoài span, không serialize toàn XML. UTF-8/UTF-16, entity/NFD/CR/CDATA, ST_Xstring/control của ô Excel và metadata XML thường có kiểm nghĩa sau đọc lại; shared string patch một lần, kiểm đủ mọi nơi dùng và mục chưa dùng. Giữ bytes ô số/ngày/style/merge.
+- Kiểm trước/từng lần encode/ghi/đóng ZIP: 1 MiB output, 2 MiB/part, 8 MiB tổng, ratio 200 cùng toàn bộ trần B1/readers. Đọc lại output hiện còn trần bảo thủ 500.000 ký tự B1/B2/B3, có thể từ chối trước trần văn bản ra 2 triệu; giữ chặn này và ghi rõ để lead lập lát reader nếu cần mở rộng.
+- DEMO có oracle SHA bytes giải nén/payload nén/local record, container 1 MiB/+1, part 2 MiB/tổng 8 MiB tại bước chuẩn bị patch, map/ZIP giả, XML hỏng dù CRC đúng, hủy/ChuaRo/không I/O hoặc log. Nguồn/quyền/SHA bytes+LF trước/sau tại NGUON; kết quả cuối ở `e_mask/docs/BAO-CAO-MASK-B4.md`.
+- Kết quả cuối: riêng B4 **270 passed**; toàn bộ **2175 passed, 2 failed deadline cũ MASK-2c-4, 4 xfailed giữ nguyên, 190 subtests passed, 0 skipped**. Chưa đạt kiểm chung; CLI 0/2 thiếu quyền, DEMO có quyền 2/2 và kiểm độc lập đạt. Đã kiểm bằng Core giả (CoreGia); chưa Office/Core/Local thật. PR chờ lead mở, không commit/push.
+
 ## Chưa phát hành — 15/11/2026, gộp MASK-B2 + MASK-B3
 
 - Giữ trọn reader Word/Excel và hai quy ước offset ZIP khi có data descriptor; cổng ZIP chung B2 áp cho XLSX, cổng B3 dùng chung kiểm tên 256.

@@ -253,7 +253,7 @@ def test_manifest_core_gia_giu_khung():
     core.chay(chay.app)
     demo = core.chay_thu_demo(chay.app, GOI)
     assert demo and all(kq["trang_thai"] == "XONG" for kq in demo)
-    assert [n["ma"] for n in chay.app.phieu["nang_luc"]] == ["doi_chieu.doc_docx@1", "doi_chieu.nhan_cap@1", "doi_chieu.so_van_ban@1", "doi_chieu.phat_hien_sua_tay@1", "doi_chieu.chuan_bi_ai@1", "doi_chieu.phan_loai_diem_lech@1"]
+    assert [n["ma"] for n in chay.app.phieu["nang_luc"]] == ["doi_chieu.doc_docx@1", "doi_chieu.nhan_cap@1", "doi_chieu.so_van_ban@1", "doi_chieu.phat_hien_sua_tay@1", "doi_chieu.chuan_bi_ai@1", "doi_chieu.phan_loai_diem_lech@1", "doi_chieu.xuat_ket_qua@1"]
 
 
 def test_phong_bi_demo_hop_le_core_gia(ho_so_demo):

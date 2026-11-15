@@ -3,11 +3,11 @@
   "loai": "engine",
   "ma": "e_mask",
   "ten": "Che định danh",
-  "phien_ban": "1.2.0",
+  "phien_ban": "1.3.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
-    "sdk": ">=2.0.0 <3.0.0"
+    "sdk": ">=2.2.0 <3.0.0"
   },
   "che_do_chay": "cuc_bo",
   "diem_vao": {
@@ -22,12 +22,16 @@
     {
       "ma": "mask.hau_kiem_ai_cuc_bo@1",
       "ten": "Hậu kiểm AI cục bộ và che bổ sung",
-      "nhan": ["tra_loi_ai"],
+      "nhan": [
+        "tra_loi_ai"
+      ],
       "tra": "van_ban_da_che",
       "gioi_han": {
         "ky_tu_toi_da": 1048576,
         "tep_toi_da_mib": 64,
-        "mime": ["application/json"],
+        "mime": [
+          "application/json"
+        ],
         "thoi_han_giay": 60
       },
       "huy_duoc": true,
@@ -36,12 +40,18 @@
     {
       "ma": "mask.chuan_bi_ai_cuc_bo@1",
       "ten": "Chuẩn bị AI cục bộ nhận diện định danh",
-      "nhan": ["van_ban", "van_ban_tai_lieu", "tep"],
+      "nhan": [
+        "van_ban",
+        "van_ban_tai_lieu",
+        "tep"
+      ],
       "tra": "yeu_cau_ai",
       "gioi_han": {
         "ky_tu_toi_da": 500000,
         "tep_toi_da_mib": 4,
-        "mime": ["application/json"],
+        "mime": [
+          "application/json"
+        ],
         "thoi_han_giay": 60
       },
       "huy_duoc": true,
@@ -184,5 +194,8 @@
     }
   ],
   "bi_mat": [],
-  "webhook": null
+  "webhook": null,
+  "cau_hinh": {
+    "schema": "cau_hinh.schema.json"
+  }
 }

@@ -402,3 +402,85 @@ Giữ hai khối reader và cổng ZIP, không sửa `doc_word.py`, `xml_word.py
 | `e_mask/tests/test_gop_mask_b2_b3.py` | `58976f10be12beb8d7a4b8001e7856d49017cd3784c2230888c30c9733c95d28` |
 | `e_mask/tests/test_mask_2c_4.py` | `aaeb93c259f68e943d4ae212791e40c15909072f6d57afc1faef3cc214992510` |
 | `e_mask/tests/test_mask_b3.py` | `4f5dc6876b1ffe359c13a8aa3cc5aa938245b153fd2c923ec95d93fad3e9cd68` |
+
+## MASK-B4 — writer ZIP và patch XML nội bộ, 15/11/2026
+
+**Quyền tái dùng:** Anh/lead cho phép CHÉP chọn lọc các mẫu nội repo trong lệnh MASK-B4. Hóa đơn HD-7 ghi `xlsx_toi_thieu.py` là writer Python stdlib nội bộ tự viết; HD-4/HD-6 là nguồn ZIP Python của B1. Đối chiếu DC-2 ghi nguồn DOCX nội bộ chuyển có sửa từ Trích xuất. Không suy quyền CD-096 A1 của Node sang Python hoặc quyền phân phối ngoài tổ chức. Không import engine nguồn, sửa nguồn mẫu, thêm dependency hoặc đổi SDK/API.
+
+| Đường nguồn từ gốc repo | Symbol chép/chuyển có sửa | Đích và khác biệt |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/xlsx_toi_thieu.py` | `_BoDem.write`, `chu_xml`: RAM, kiểm byte trước ghi, escape literal ST_Xstring/control/CR | `ghi_zip.py::_BoDem.ghi`, `va_xml.py::_ma_hoa`: tính cả central directory/EOCD, đếm trước từng mảnh encode; ST chỉ ô Excel, attribute giữ tab/LF/CR, CDATA đổi miền ngay trong span. Không chép `tao_xlsx`, `ten_cot`, writer inline string hoặc dựng workbook mới |
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/doc_docx.py` | `_kiem_danh_muc`, `_kiem_zip`: EOCD, bounds/metadata, CRC/ratio/tên/loại tệp | `zip_an_toan.py::kiem_ban_ghi` tiếp tục kiểm của B1 và đối chiếu bytes record thực trước chép. Không dùng ZipInfo làm nguồn tin cậy hoặc mang policy bỏ qua vùng của reader mẫu |
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/zip.py` → `hoa_don_xml.py` | Closure đã ghi B1: `doc_goi_hoa_don_zip`, `dem_byte`, NFC/casefold, CRC, symlink/ZIP lồng/hủy | Tái dùng các kiểm B1 qua `doc_word`/`doc_excel`, `_kiem_danh_muc`, `_kiem_header`, `_giai_nen`; không kéo wrapper/DTO, báo cáo tên raw hoặc policy tiếp tục khi entry lỗi. Runtime không dùng zipfile nên không có UserWarning mang tên entry |
+| `e_mask/goi/e_mask/e_mask/{doc_tep,doc_word,xml_word,doc_excel,xml_excel}.py` | Reader/map B1/B2/B3 và hai kiểu mốc cuối descriptor | Dùng trực tiếp trong cùng engine, không sửa. Writer dựng lại reader từ bytes trước và sau, đối chiếu map/băm/metadata thay vì tin cây mutable của caller; `kiem_ban_ghi` phân biệt cuối payload với cuối local record |
+
+Nguồn trước = sau, đã đối chiếu snapshot `e_mask/docs/SHA-NGUON-MASK-B4-TRUOC.json`. LF chỉ thay CRLF bằng LF, không chuẩn hóa Unicode. Closure dừng tại các kiểm/mẫu trên; không nạp `ma-nguon`, COM, PDF, engine khác hoặc mã Core.
+
+| Đường nguồn | SHA-256 bytes trước = sau | SHA-256 LF trước = sau |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/xlsx_toi_thieu.py` | `06e185c00dc5762a4393a7223d47e234d6af39a3424dcf43263ae60933fbc304` | `ad6a6c8e89d73e5e994c4f21066c7ee76640b261eaf253dc82a69cf1337fa46d` |
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/zip.py` | `6212ab75f8f1e0cb8cc2103d11ce4a5d4ea08ab213d5191745c3721ecc215149` | `3be2a2156de2ba8f63c5a9679b8c4d344a6d7e5a8d12f838d5d440b2d4b3e733` |
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/hoa_don_xml.py` | `fb201bbb723c4c739596dbbbe0270584a8ab2dbc368886428cde7ef0e3fbcab1` | `8b7cb17848a5861b7384aefa31b22d6cc39f28b2e3486a0c4bc938929d397f32` |
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/doc_docx.py` | `5d261c682d130a7cc5fba80759d9a94512ba773e6d463af5b16a9a58592d476c` | `7e63532c8ae2358ccc1b90a1bb65cb85e83c5c743fb3d8d9287fb2ed3cce3945` |
+
+Đích trước/sau B4, băm toàn tệp chuyển có sửa, không là băm phát hành cả gói. Hai tệp mới chưa có trước; phần ZIP B1 trước B4 có SHA bytes `0b7112dc63c02c2b33893de1efa8f442090ed12ae1672aa72a1ccd3225644d8b`, LF `0628d86ff80985b365c0ac7fc1c25583b102254e8892a4de70b508d1f7d7d25e`. Băm hiện hành dưới đây thay băm ZIP cũ, không sửa provenance lịch sử.
+
+| Đích từ gốc gói | SHA-256 bytes sau | SHA-256 LF sau |
+|---|---|---|
+| `e_mask/ghi_zip.py` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` |
+| `e_mask/va_xml.py` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` |
+| `e_mask/zip_an_toan.py` | `d55a1555fd3fb05aed323b3fd9146d26e773c19bfcd57ac32d836905b53880db` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` |
+
+API nội bộ: `lap_kich_ban(tai_lieu, ((vi_vung, dau_unicode, cuoi_unicode, chu_moi), ...), kiem_huy=...)` → `KichBanXML`; `ghi_goi(tai_lieu, kich_ban, kiem_huy=...)` → bytes. Chỉ nhận `TaiLieuWord`/`ExcelDaDoc` qua B1+B2/B3, không nhận raw/path/dict thay reader. Script phiên bản 1 ghim SHA bytes ZIP, SHA UTF-8 vùng, SHA part và SHA từng khoảng byte XML gốc. Writer đọc lại bytes/map, kiểm chồng Unicode/byte và mọi băm/CRC/size/offset; không dùng script như chứng cứ hai lớp hoặc quyền phát hành.
+
+Một thay thế qua nhiều run/miền lexical ghi chữ mới ở mảnh đầu, xóa text đã chọn ở các mảnh sau; giữ toàn bộ markup/namespace/format ngoài khoảng. Không sửa tab/br/note như text. CDATA đóng/mở ngay trong span để escape đúng CR và chuỗi đóng CDATA. Không normalize NFD/Cf, không sửa byte ngoài span hoặc serialize XML. ST chỉ shared/inline/rich text Excel, metadata giữ nghĩa XML thường; surrogate lẻ, injection, ST ghép mã ngoài ý định ở biên bị chặn qua kiểm lại nghĩa mọi vùng.
+
+Part bất biến chép nguyên local header/payload nén/descriptor; central chỉ đổi offset nếu cần. Part sửa giữ method/flags, DOS time/attribute/thứ tự/names; cập nhật CRC và hai size trong central, local đầy đủ hoặc descriptor đúng kiểu 12/16 byte. Mức DEFLATE theo cờ normal/max/fast/superfast, chỉ một lần nén, không đổi method hoặc thử lại để tránh ratio. Không edit/no-op thì toàn ZIP bằng đúng gốc. Extra/comment/cờ/descriptor chưa kiểm đều từ chối cả gói.
+
+Giới hạn được kiểm trước/từng lần encode, thêm buffer, nén/ghi và đóng ZIP, gồm cả central+EOCD: output 1 MiB; giải nén tổng 8 MiB/phần 2 MiB; ratio 200. Các trần phần/node/depth/ô/sheet và tính hợp lệ XML/graph tiếp tục qua lại B1/readers. Nội dung dự kiến đếm cả shared dùng lặp, kiểm 2 triệu code point/8 MiB UTF-8 và 32767 UTF-16/ô; không thêm báo cáo JSON nên giữ helper 256/64/32 KiB của B1 nguyên trạng. **Giới hạn hiện hành:** B1/B2/B3 đọc lại output vẫn đếm bảo thủ 500.000 ký tự cả text/tail/attribute kỹ thuật, có thể từ chối sớm hơn trần ra 2 triệu; không nới reader bằng cờ hoặc monkey-patch. Điều chỉnh profile đọc chiều ra cần lát reader riêng trước khi cam kết hỗ trợ phần khuếch đại đó.
+
+Không ghi Ngan/bền máy hoặc tạo tệp tạm; chỉ RAM và dọn buffer trong `finally`. Hủy/mất lease/ChuaRo truyền nguyên, không output dở, mạng/log/tên gốc. Chưa công bố năng lực tệp; B7/B9 mới nối hai lớp/quyền/chốt/upload. Đã kiểm bằng Core giả (CoreGia) gói văn bản hiện có; writer tệp kiểm trực tiếp RAM/fixture Office DEMO, **chưa Word/Excel/Core/Local thật hoặc Linux thực tế**. Cloud vẫn tắt.
+
+## MASK-S22 — 15/11/2026, SDK 2.2.0
+
+Mục này là hiện trạng mới nhất; các mục SDK 2.0/2.1 ở trên là lịch sử. Đã kiểm bằng Core giả (CoreGia). Runtime chỉ thư viện chuẩn và `kho_tri_thuc_sdk==2.2.0`, không thêm dependency chạy. Wheel từ `docs/goi-gui-engine/sdk-2.2.0/`, SHA-256 bytes `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`, khớp SHA256SUMS.txt. Venv mới `.venv`, SDK cài bằng `--no-index --no-deps`; môi trường cũ được giữ tại `.venv-truoc-mask-s22`. Bộ kiểm offline sao các tệp phân phối đã cài từ venv cũ theo đúng phiên bản ở `e_mask/tests/requirements.lock`: pytest 9.1.1, packaging 26.3, pluggy 1.6.0, Pygments 2.21.0, iniconfig 2.3.0, colorama 0.4.6. Không cần mạng hoặc phụ thuộc khác của SDK dành cho module.
+
+Không chép nguồn engine khác hoặc sửa SDK/mẫu chung. Bốn runtime được điều chỉnh từ chính HEAD trước lát; adapter công cụ ngoài gói đổi sang cấu hình/ngăn CoreGia của Hỏi AI AI-11/AI-12. Theo chỉ dẫn Lead riêng Mask, giữ cổng bí danh RAM và các ca hành vi hiện tại, không tự nối kho này với ngăn SDK; không có đường giải mã mới. Schema cấu hình rỗng theo hiện trạng; prompt/model Local do module/quy trình cấp qua port tin cậy, không là cấu hình engine. Không có đệm phụ thuộc cấu hình cần làm mới. Bản khai 2.1 và bộ đọc cấu hình tạm chuyển nguyên byte ra LUU-TRU; test bộ đọc cũ chỉ nạp hiện vật ngoài gói. Hai test so băm mẫu và phép so mẫu trong ca B3 đã bỏ, các kiểm hành vi còn giữ.
+
+Băm LF dưới đây chuẩn hóa CRLF → LF, không đổi nội dung khác. Nguồn trước là Git HEAD của worktree bắt đầu lát, đích sau là tệp hiện tại. Tệp mới ghi “mới”.
+
+| Tệp từ thư mục e_mask | SHA-256 trước (LF) | SHA-256 sau (LF) |
+|---|---|---|
+| `goi/e_mask/e_mask/chay.py` | `af5bfbdaf8bb2ea90aad75c84375b16be65a4ab2207b4e4c0ca675f26198fdb0` | `3afb29b2364a5dca5d35f6dc5a1ca12a447badf52f77a281aecb1f6bfbadc5ff` |
+| `goi/e_mask/e_mask/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` | `a2304ef100f2650227d06f5ec0b64ea4026626de967b8d256d87e5a05f180f59` |
+| `goi/e_mask/e_mask/kho_ngan.py` | `dd7f47f871a8b1bced793855a79a9a98b66a6c11d6559a8112d99f3b39d7f67b` | `e8ca52d6a8e81a512e11c4ef093e9c60a9a741f967dd19c92d5f1580825e4cd5` |
+| `goi/e_mask/e_mask/kho_qua_core.py` | `ead192d13252dab309692c1f7e95ebbf3100930a73a1f2ed9ced051a03c292c3` | `eab5abe60566e0874a1f989cacf6813d84ab5c75de364a2b214e484054e9c24f` |
+| `cong-cu/thu_mask_local_ai_that.py` | `27a2f63e05519ddb8ab227c107a829b3b615f8cd5ad423a341d5d70b9939ee05` | `a8e091d14e1c9992cfcf02d885ce977caf1231b166ba054346c1c33d29139eb2` |
+| `goi/e_mask/engine.json` | `9edc5cdb2becd61e3ae880a59157691f1e9a0c2564b013d67c08c90bce5d9c82` | `cdf368cd4fa86a0f64271f33303d2717a131a7985046f66cee54e13f159b54c2` |
+| `goi/e_mask/cau_hinh.schema.json` | `mới` | `3804ad4a504016a6a80a752c51d7ab05a3f5289b8bf7ac329b4512c570150175` |
+| `goi/e_mask/requirements.lock` | `mới` | `2042fa331b34afc8df48dcfa2d46909276abd557f828865360618b07b64de5a9` |
+
+Hiện vật được bảo toàn (SHA bytes trước = sau; SHA LF kiểm được ở mọi checkout):
+
+| Nguồn trước trong gói | Đích từ thư mục e_mask | SHA bytes | SHA LF |
+|---|---|---|---|
+| `KHAI-SDK-2.1.json` | `LUU-TRU/sdk_truoc_2_2/KHAI-SDK-2.1.json` | `c9d215451c1c1d9f3857803a2526681daf6820f2a8a33ed9cdcb7029c1e70958` | `db2ca7378f08d4d5c9fd60d77d79b403c4c1f9b8ea80a5f26e796c5349306cb5` |
+| `e_mask/cau_hinh.py` | `LUU-TRU/sdk_truoc_2_2/cau_hinh.py` | `fc36c496f3f7717b3f05512c21ef5dea84f34d3929cba3d2a8d5acefe453acbf` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
+
+CLI chuẩn chưa có cửa cấp quyền/mã yêu cầu tin cậy cho hai ví dụ Mask; không đổi quyền hoặc thêm chế độ DEMO runtime để báo đạt. Cần Core và kết quả kiểm cuối ghi trong `e_mask/docs/BAO-CAO-MASK-S22.md`; màn duyệt chỉ giữ kiểm với KttCore giả, chưa nối ngăn Core mới.
+
+Nguồn tham chiếu đã thay trên main trước MASK-S22 (không phải thay đổi do lát này):
+
+| Nguồn | Commit đã gộp | SHA bytes hiện hành | SHA LF hiện hành |
+|---|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/zip.py` | `55f0f761fed03460a0039cd791da0684303ede88` | `0d9abdf12d0a5767ab2f46b445f4baeda8e7e6e0ca264f971eec11ca6aa99567` | `5b60d342be6f9e109c75df7b266e779a0aa389c0937288f7e7ed77e992685e52` |
+
+Giữ nguyên băm nguồn B1/B4 lịch sử và hiện vật `SHA-NGUON-MASK-B4-TRUOC.json`; test so với bằng chứng chuyển nguồn `SHA-NGUON-MASK-S22-DA-GOP.json` cho đúng tệp đã đổi trên main, các nguồn khác vẫn kiểm nguyên trạng. Mã B1/B4 đã chép không đổi.
+
+Băm bản checkout MASK-B4 hiện tại, mã LF không đổi; bytes khác do checkout Windows dùng CRLF:
+
+| Tệp trong gói Python | SHA bytes checkout | SHA LF |
+|---|---|---|
+| `ghi_zip.py` | `c98b6d8ad273ca9d6946c0362446f292cf40e8b871b01a3d4aa5054a7f44a470` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` |
+| `va_xml.py` | `6b826f350c567b04587bd4f6e227af136037a28400fabd38a131fb37e7b48f17` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` |
+| `zip_an_toan.py` | `d55a1555fd3fb05aed323b3fd9146d26e773c19bfcd57ac32d836905b53880db` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` |

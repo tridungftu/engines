@@ -708,7 +708,12 @@ def test_nguon_mau_khong_doi_va_bam_lf_khop_p2():
         'e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/cau_truc.py': 'ddde14383f97bf5c1fa1a2161aed7db8f3ea1e36004c16350a2db52018c2d333',
         'e_trich_xuat/goi/e_trich_xuat/e_trich_xuat/docx.py': '4290748070f8d5a8deee8a051c9ccdb384b1cb3ee8780e833d2781e5f84f1653',
     }
+    # Main đã nâng nguồn HD-9 trước MASK-S22; giữ cả băm lịch sử và băm đã gộp.
+    da_gop = json.loads((goc / 'e_mask/docs/SHA-NGUON-MASK-S22-DA-GOP.json').read_text('utf-8'))
     for ten, sha in nguon.items():
+        if ten in da_gop:
+            assert sha == da_gop[ten]['truoc']['lf']
+            sha = da_gop[ten]['hien_hanh']['lf']
         assert hashlib.sha256((goc / ten).read_bytes().replace(b'\r\n', b'\n')).hexdigest() == sha
 
 

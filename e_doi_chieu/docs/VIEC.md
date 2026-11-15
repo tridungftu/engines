@@ -28,6 +28,109 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Quy tắc mới: không lưu gì bền trên máy engine; cấu hình/chỉ mục/danh mục/xác nhận qua `Ngan`, snapshot/ảnh/báo cáo qua kho tệp Core; màn trong `goi/e_doi_chieu/ui/`. Không dùng `cau_hinh_may`/`kho_tam` cũ.
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
 
+## DC-9 — 15/11/2026
+
+**Kết luận: Đạt phạm vi DC-9; PR: chờ lead mở.**
+Thời điểm bắt đầu **18:39 ngày 15/11/2026 (UTC+7)** theo lead giao;
+ước tính trong phiếu **4 giờ**. Đã kiểm bằng Core giả (CoreGia), chỉ DEMO,
+0 Cloud; chưa kiểm Core thật/Linux thật hoặc chất lượng OCR/detector thật.
+
+Đã làm trong đúng ba mô-đun runtime `tong_hop.py`, `bao_cao.py`, `chay.py`:
+
+- Đăng ký `doi_chieu.xuat_ket_qua@1`, đúng 11 trường tĩnh §2.1. Mở lại
+  snapshot và mọi nguồn bằng `mo_tep`, kiểm schema/băm/kích thước/quyền,
+  phong bì/số đếm/giai đoạn, nguyên văn/offset/edit script và sàn Python.
+  Phong bì phải khớp chỉ mục Ngăn tin cậy. Còn chờ phân loại/`cho_ai`
+  từ chối `DC_HO_SO_CHUA_DU`; sai nguồn/schema/quyền/băm trả `DC_SAI_NGUON`.
+- Tổng hợp năm kết luận đúng Q04/Q15, giữ Nghiêm trọng/vùng sửa tay dù
+  chưa kiểm đủ. OCR lỗi/thiếu trang/chưa căn được/thiếu detector/ngưỡng
+  chưa đo không thành Khớp; số chưa đo là null. Chỉ Cần xem khi kiểm đủ
+  không đề nghị chặn. Không xác nhận thay người dùng hoặc đổi hiệu lực.
+- Ngoại lệ DC-7 thấp hơn sàn được tính lại bằng **validator DC-7** từ
+  snapshot tiền nhiệm, từ điển và manifest OCR vùng tin cậy; không tin
+  boolean `ai_dat`/`ocr_lai_dat` trong nội dung. Thiếu manifest cần thiết
+  từ chối nguồn, không xuất một nhãn nhiễu không kiểm chứng được.
+- Ghim đầu ra DC-8 trong `chay.py` bằng Ngăn/CAS/chống trùng, sau khi
+  xác nhận đầu vào cũng đã được engine ghim. Đây là bổ sung cần cho kiểm
+  nguồn DC-9; không đổi detector. Snapshot DC-8 lịch sử chưa có chỉ mục
+  cần chạy lại bước quét, không tự hợp thức hóa snapshot tự băm.
+- JSON chuẩn giữ mọi điểm/nguyên văn/bằng chứng/snapshot, tham chiếu đầu
+  vào và băm PDF. PDF có kết luận/số đếm/phần thiếu kiểm ở đầu; từng điểm
+  có hai phía, mức/sàn/lý do/vị trí thực và ảnh cắt khi đủ hệ tọa độ; vùng
+  sửa tay giữ crop thực DC-8. Không suy đoán trang Word, không ghi người
+  đã xác nhận. Toàn bộ nhiễu có trong JSON và phụ lục PDF.
+- PDF dựng trong RAM bằng Pillow 12.3.0 đã ghim; Roboto 2.137 nguyên bản
+  phân phối offline trong CustomTkinter 5.2.2, Apache 2.0/copyright/SHA
+  đóng trong gói, ghi NGUON. Không dùng font hệ điều hành hoặc dò đường
+  máy thật. Thiếu/sai font → `DC_THIEU_TAI_NGUYEN`; lỗi dựng/tải đầy đủ
+  hai tệp → `DC_KHONG_XUAT_DUOC`; hủy/ChuaRo giữ ngữ nghĩa SDK.
+- Lượt xuất qua `viec.ngan`, CAS/chống trùng; gửi lại kết quả đã chốt
+  phải mở/kiểm cả JSON/PDF, không báo thành công tệp cũ mất quyền. Tệp
+  chỉ ở RAM, không tệp tạm/kho bền trên engine, không SQL/sự kiện riêng.
+
+Kiểm render thủ công bằng `tests/kiem_pdf_dc9_demo.py` + pypdfium2 5.13.0
+offline (chỉ QA, đã ghim trong requirements kiểm thử): **8 trang**, PDF
+**5.732.118 bytes**, render và xem trang **1, 3, 4, 8**, ảnh cắt tại **4, 8**.
+Đã xem lại bản render cuối: chữ Việt đúng dấu, không ô vuông, dòng/điểm
+dài xuống trang đủ, ảnh và chân trang không bị cắt. DEMO tại thư mục
+ignored `.pytest-tmp-dc9/pdf/`, ngoài gói runtime; không là dữ liệu thật.
+PDF dùng raster xấp xỉ 150 dpi, không có lớp text tìm kiếm; JSON là dữ liệu
+chuẩn. Trần PDF theo `tep_mib` ≤20 MiB, bảo vệ ≤2.000 trang và thời hạn
+180 giây; vượt trần từ chối toàn lượt, không cắt danh sách.
+
+44 ca DC-9 kiểm bảng năm kết luận, thiếu từng kiểm/OCR/trang/detector,
+giữ điểm nghiêm trọng, hình thức+nhiễu, đếm khớp tệp, tiếng Việt/tiền/ngày,
+12 điểm nguyên văn dài không mất dòng, đường DC-5…8 thật, validator DC-7,
+font thiếu/hỏng, tải tệp lỗi/hủy/ChuaRo/mất ACK/gọi lại/mất quyền PDF cũ.
+Fixture đủ kiểm là upstream **giả** có nhãn DEMO, không là số đo thật.
+
+Kết quả kiểm cuối bằng `.venv/Scripts/python` Python 3.13.14, SDK 2.2.0
+cài offline `--no-index --no-deps` từ wheel repo, băm khớp SHA256SUMS;
+Pillow 12.3.0/pytest 9.1.1 có sẵn offline qua system-site-packages.
+Đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONIOENCODING=utf-8`:
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.7.1: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 DEMO ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q
+942 passed in 137.68s (0:02:17)
+0 skipped; mã thoát 0.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0; không __pycache__/.pyc trong gói.
+
+git diff --check
+Không có lỗi; mã thoát 0.
+```
+
+Đã cập nhật kiểm kê 36 tệp/bytes/SHA của gói; chỉ cập nhật metadata
+`sql/kiem_ke.json`, không sửa/chạy SQL. Giữ phiên bản 0.7.1 **chưa phát
+hành** của worktree; lead quyết phiên bản phát hành khi gom các lát.
+Thời gian thực tế **18:39–19:11 ngày 15/11/2026 (UTC+7)**, khoảng
+**0,53 giờ**, so với **4 giờ ƯỚC TÍNH** trong phiếu. Không có quyết định
+tạm nới tiêu chí. Bổ sung ghim đầu ra DC-8 nằm trong `chay.py` đã giao;
+ba mô-đun runtime đúng phạm vi, thêm metadata/font/giấy phép/test/tài liệu.
+
+### Cần Core / lead — DC-9
+
+- **C-DC-02 (làm rõ):** giữ quyền/vòng đời nguồn, snapshot tiền nhiệm,
+  từ điển, crop và báo cáo xuyên bước. Bước xuất phải được Core gắn lại
+  manifest `doi_chieu_ocr_vung` tương ứng khi cần kiểm lại ngoại lệ DC-7;
+  không lấy metadata quyền từ JSON caller. Core xử lý vòng đời tệp đã tải
+  nhưng lượt thất bại/hủy trước khi chốt đủ hai tệp; engine không có API
+  xóa tệp và không tự đặt TTL/xóa snapshot.
+- **C-DC-03/04:** xác nhận/danh tính/giờ/quyền và hiệu lực thực tế vẫn do
+  cửa chung Core/module. DC-9 chỉ trả khuyến nghị và báo cáo máy.
+- **Q15/DC-13:** detector DC-8 vẫn thử nghiệm, chưa đủ căn cứ sạch;
+  không đổi thành `da_kiem_du=true` chỉ để kiểm năm nhãn đi qua runtime.
+  Chờ đo/duyệt thật ngưỡng OCR/detector và cấp từ điển ngoài DEMO.
+- Không phát sinh câu cần Anh quyết định mới. Không sửa `ma-nguon/`,
+  `_chung/**`, API/SDK/Core, không commit/push.
+
 ## DC-S22 — 15/11/2026
 
 **Kết luận: Chưa đạt toàn bộ bước bàn giao vì merge Git metadata bị

@@ -1,5 +1,33 @@
 # Nguồn của gói Đối chiếu
 
+## DC-9 — 15/11/2026
+
+- `tong_hop.py`, `bao_cao.py` viết mới trong lát DC-9, `chay.py` mở rộng;
+  chỉ SDK 2.2.0, thư viện chuẩn và Pillow 12.3.0 đã ghim ở DC-8. Không
+  cài/tải thư viện mạng, không thêm dependency runtime. PDF 1.4 gồm trang
+  ảnh JPEG do Pillow dựng/nén; writer xref ghi offset byte thực trong RAM.
+- `tai_nguyen/font/Roboto-Regular.ttf`: chép nguyên tài nguyên phân phối
+  offline của **CustomTkinter 5.2.2**, đường tương đối trong distribution
+  `customtkinter/assets/fonts/Roboto/Roboto-Regular.ttf`. Không dùng font
+  hệ điều hành, không dò thư mục font Windows hoặc đường cấu hình máy.
+  Nguồn upstream: <https://github.com/TomSchimansky/CustomTkinter/tree/v5.2.2/customtkinter/assets/fonts/Roboto>;
+  nguồn họ font: <https://github.com/googlefonts/roboto>.
+  Metadata font: **Roboto Regular, Version 2.137; 2017**, Copyright 2011
+  Google Inc. All Rights Reserved.; `nameID=13` ghi **Apache License 2.0**,
+  `nameID=14` ghi <http://www.apache.org/licenses/LICENSE-2.0>.
+  Font nguyên bản **168.260 bytes**, SHA-256
+  `319cff6e7a31f0f2a41c475dca42890aa5d19fe16017e2290f8c1d4e14f76481`.
+  Giữ copyright/metadata; đóng kèm `NOTICE.txt` và toàn văn Apache 2.0
+  (`LICENSE-APACHE-2.0.txt`, bản chuẩn có sẵn offline từ pip vendored
+  packaging). Không thêm CustomTkinter/pip/reportlab vào runtime engine.
+- Engine kiểm băm font và cmap; NFC khi hiển thị dấu tổ hợp. Ký tự ngoài
+  cmap được biểu diễn rõ `[U+XXXX]`, không hiện ô vuông hoặc bỏ ký tự;
+  JSON giữ nguyên mọi Unicode/bytes nguồn. Test tiếng Việt không có fallback.
+- QA render dùng **pypdfium2 5.13.0** có sẵn offline, chỉ trong công cụ
+  `tests/kiem_pdf_dc9_demo.py`, không trong engine/pytest bắt buộc.
+  Bộ test tạo dữ liệu DEMO bằng CoreGia; fixture upstream giả để kiểm
+  bảng quyết định không phải số đo detector/OCR. Không gọi Cloud.
+
 ## DC-S22 — 15/11/2026 · 0.7.1 chưa phát hành
 
 Chuyển cổng ngăn/cấu hình theo SDK 2.2.0 và mẫu `e_demo_ngan` trong repo;
@@ -37,14 +65,15 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 |---|---|
 | `.gitattributes` | `36f5046d7b9e6c15c3d77263f4918fa7997bebfbf79f3a4f3b954da607cd4eed` |
 | `cau_hinh.schema.json` | `15f77ad989363254ab67fffeb88b48eccbb8243fc58b91e5357f130c2fc70d98` |
-| `CHANGELOG.md` | `cc93a1e9c1a66b6d6644de6ea21546caba02c7c1afc2a3c4e417a8ddc32e17a4` |
+| `CHANGELOG.md` | `e49db82defb440710f4a367631510c924abb4cf04c0dab4b33a5aca42b216ee7` |
 | `demo/DEMO-ban-chot.docx` | `e086e49c1dfad0cdfc702ab141a9de6123cbd123e4c7110df975b673e194bcaa` |
 | `demo/README.md` | `e65567d43ae6afeb303f977ddb3ea58ca18fe9dcb166b76fc731ad81d763d580` |
 | `e_doi_chieu/__init__.py` | `a427fe739dab3a98c108b79f40f7a53328d504300979b71ccc900892064948b3` |
 | `e_doi_chieu/anh.py` | `2358268bca79589385e904909ab32d5bdaa43d3ebf5097776698e91a0c5f7dbe` |
+| `e_doi_chieu/bao_cao.py` | `9cc4c1941d0512b8e97d1f7af845f029edcbe852c1e1b3fb3bbf20f33b38b965` |
 | `e_doi_chieu/can_chinh.py` | `39b084ae09adc8785051fbbb95238281b0f305e4a5370f5856c65263f0ada76e` |
 | `e_doi_chieu/cau_truc.py` | `ddde14383f97bf5c1fa1a2161aed7db8f3ea1e36004c16350a2db52018c2d333` |
-| `e_doi_chieu/chay.py` | `ab7f490dec356ad6f0e5a878dd7dfc2fbc82ad9f52168f5650a8a2cc573e6fd6` |
+| `e_doi_chieu/chay.py` | `cc34ffb60e19102523151b5c629a9b926c78f76cb5318b55945c8b5cd61ebbd3` |
 | `e_doi_chieu/chuan_bi_ai.py` | `82b8f8d2363ee3746aed14e1cbf4c1c4a290c7d6b92cfcd46eac456aab7de8ae` |
 | `e_doi_chieu/chuan_hoa.py` | `a427053b5465450e838c274589d7d4b91fa86f69817414854a16cce2028bfe1b` |
 | `e_doi_chieu/doc_docx.py` | `7e63532c8ae2358ccc1b90a1bb65cb85e83c5c743fb3d8d9287fb2ed3cce3945` |
@@ -55,13 +84,17 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | `e_doi_chieu/so_chu.py` | `f6045c6494422bb842c638d90f378e8e95d66ad3d0996fff9d365814779f5038` |
 | `e_doi_chieu/sua_tay.py` | `29a63bdfa9306c748a6a6bc4808f85206dfc69e9f94d816c52c6a22d369528d0` |
 | `e_doi_chieu/tien_chu.py` | `d0aba9de44269b62fe1a1506780b3a3459c1a462a9fc9988b502ad6a8d48224d` |
+| `e_doi_chieu/tong_hop.py` | `c619b98e82b4db5887ad06d0058877425d2132edcff1428c9533fc855f71cfd0` |
 | `e_doi_chieu/tu_dien.py` | `4ac5ec887ae9a732f2a69675ae69b9b28801a583b4310cb5986830e8ca874481` |
 | `e_doi_chieu/vi_tri.py` | `0efdfb41d3cc56e857ab74e49c8f8cbaa7f0d075267581f60ffb33232d148a97` |
-| `engine.json` | `a13beaea3539315c4aa989a800f235dc9958d02f7fc31d54ac47bac67cf1ca9b` |
+| `engine.json` | `8ec8c919f8cb32b9f1e66b2d903d4d017888527699835ae155e29877cc695dfc` |
 | `ho_so_doi_chieu.schema.json` | `9114bf674c4d16189050eb3130453838b7bc1c2c22f6208a05e866df84adf776` |
-| `README.md` | `ed232754fda2c1f1bf154da6cbe868f0c7f57d7f5330b11a1dd9973296eb3e8a` |
+| `README.md` | `3ae4c0305d5284dad24d8320853f167aef8501a0641b0ef37b5cda747254d731` |
 | `requirements.lock` | `68ddd023dd5f4610cea4f5aa63fbe91a9915c3b0fde10661edecb430e9f4bc4f` |
 | `sql/001_tao_ngan.sql` | `e71934770ec9664fa902782bd849a4a1d375e428602cff959691154ddb5f5f8e` |
+| `tai_nguyen/font/LICENSE-APACHE-2.0.txt` | `0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594` |
+| `tai_nguyen/font/NOTICE.txt` | `99ad6f482ee36dc478166aeb2d2300928feae4393f5bf2f18ed44130a5ed095b` |
+| `tai_nguyen/font/Roboto-Regular.ttf` | `319cff6e7a31f0f2a41c475dca42890aa5d19fe16017e2290f8c1d4e14f76481` |
 | `tra_loi_ai.schema.json` | `5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f` |
 | `van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
 | `yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |

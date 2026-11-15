@@ -10,6 +10,7 @@ import socket
 import subprocess
 import sys
 import time
+from types import SimpleNamespace
 import unicodedata
 
 import pytest
@@ -412,19 +413,60 @@ def test_ngoai_le_giua_chung_giu_ca_xong_va_danh_dau_ca_chua_do(monkeypatch):
     assert 'không được phản chiếu' not in json.dumps(k,ensure_ascii=False)
 
 
+def gia_deadline_child(monkeypatch, *, so_doan_ai_xong):
+    """Chạy chuỗi thật tới checkpoint, tiêm hết hạn tại biên subprocess.
+
+    subprocess.run bảo đảm kill/wait trước TimeoutExpired. Test phía cha
+    kiểm hợp đồng đó bằng tín hiệu xác định, không dùng sleep hay đo tải máy.
+    Các ca LocalGia khác vẫn kiểm timeout HTTP và child CLI thật.
+    """
+    cac_luot = []
+    # Đồng hồ logic chỉ của tool; không sửa time của SDK/HTTP server.
+    # Chuẩn bị snapshot chậm do tải máy không được hết hạn trước checkpoint.
+    monkeypatch.setattr(tool, 'time', SimpleNamespace(
+        monotonic=lambda: 100.0, perf_counter=time.perf_counter))
+
+    class DungTaiCheckpoint(BaseException):
+        pass
+
+    def run(cmd, *, input, stdout, stderr, timeout):
+        assert cmd[-1] == '--_ca-con'
+        assert stdout == stderr == subprocess.PIPE
+        tham_so = json.loads(input)
+        bo_con = tham_so.pop('bo')
+        checkpoint = None
+
+        def nhan(k):
+            nonlocal checkpoint
+            r = k['tung_ca'][1]
+            if (r['so_doan_ai_xong'] == so_doan_ai_xong
+                    and r.get('so_luot_local', 0) > 0):
+                checkpoint = deepcopy(k)
+                raise DungTaiCheckpoint()
+
+        try:
+            tool.do(bo_con, that=True, cap_nhat=nhan, **tham_so)
+        except DungTaiCheckpoint:
+            pass
+        assert checkpoint is not None, 'Chuỗi chưa tới checkpoint cần kiểm.'
+        cac_luot.append(timeout)
+        raw = json.dumps({'bao_cao': checkpoint}, ensure_ascii=False).encode('utf-8') + b'\n'
+        raise subprocess.TimeoutExpired(cmd, timeout, output=raw)
+
+    monkeypatch.setattr(tool.subprocess, 'run', run)
+    return cac_luot
+
+
 def test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan(tmp_path, monkeypatch, capsys):
     ca = ca_demo()
     monkeypatch.setattr(tool,'doc_bo',lambda: bo_demo(ca))
     tep = tmp_path/'timeout-cung.json'
-    # Server trì hoãn POST lâu hơn deadline cứng; transport vẫn là AI-9 gốc.
+    cac_luot = gia_deadline_child(monkeypatch, so_doan_ai_xong=0)
     with LocalGia() as may:
-        may.khi_nhan = lambda method,path: time.sleep(4) if method == 'POST' else None
-        bat_dau = time.monotonic()
         code = tool.main(['--that','--url',may.url,'--model','model-demo',
                           '--timeout','2','--bao-cao',str(tep),'--thu-muc-bao-cao',str(tmp_path)])
-        thoi_gian = time.monotonic()-bat_dau
     k = json.loads(tep.read_text('utf-8'))
-    assert code == 1 and thoi_gian < 3.5
+    assert code == 1 and cac_luot == [2]
     assert k['so_ca_het_han_cung'] == 1
     assert k['tung_ca'][0]['tinh_trang_do'] == 'đã đo'
     assert k['tung_ca'][1]['tinh_trang_do'] == 'chưa đo đủ'
@@ -486,13 +528,14 @@ def test_timeout_cung_giu_dem_doan_ai_da_xong(tmp_path,monkeypatch):
     ca = ca_demo(chu='DEMO; '+ 'nội dung tổng hợp; '*900+' orvella linero')
     monkeypatch.setattr(tool,'doc_bo',lambda: bo_demo(ca))
     tep = tmp_path/'mot-phan-doan.json'
+    cac_luot = gia_deadline_child(monkeypatch, so_doan_ai_xong=1)
     with LocalGia(tra_loi={'da_quet_het':True,'thuc_the':[]}) as may:
-        may.khi_nhan = lambda method,path: time.sleep(7) if method == 'POST' and may.so_luot_hoi > 1 else None
         code = tool.main(['--that','--url',may.url,'--model','model-demo','--timeout','5',
                           '--bao-cao',str(tep),'--thu-muc-bao-cao',str(tmp_path)])
+        assert may.so_luot_hoi == 1
     k = json.loads(tep.read_text('utf-8'))
     r = k['tung_ca'][1]
-    assert code == 1 and r['so_doan_ai_xong'] == 1
+    assert code == 1 and cac_luot == [5] and r['so_doan_ai_xong'] == 1
     assert r['so_doan_ke_hoach'] > 1 and r['du_doan'] is False
     assert r['so_span_lot'] is None and r['tinh_trang_do'] == 'chưa đo đủ'
     assert k['ket_qua']['hai_lop']['phan_tach']['ai_thuc_su_do']['tong_ca'] == 1

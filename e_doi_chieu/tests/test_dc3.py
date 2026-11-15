@@ -20,6 +20,8 @@ import pytest
 from kho_tri_thuc_sdk.engine import Engine, LoiDuongTruyen, LoiNghiepVu, ViecDaHuy, ChuaRo
 from kho_tri_thuc_sdk.thu import CoreGia
 
+from ngan_demo import cac_luot, sua_ngan, trong_ngan
+
 from test_dc1 import kiem_schema as kiem_schema_test, png_demo
 from test_dc2 import tao_goi, p, table_demo
 
@@ -30,7 +32,7 @@ hs = importlib.import_module("e_doi_chieu.ho_so")
 ch = importlib.import_module("e_doi_chieu.chuan_hoa")
 vt = importlib.import_module("e_doi_chieu.vi_tri")
 docx = importlib.import_module("e_doi_chieu.doc_docx")
-ng = importlib.import_module("e_doi_chieu.ngan")
+import kho_tri_thuc_sdk.engine as ng
 PB_ENGINE = "e_doi_chieu " + chay.app.phieu["phien_ban"]
 PN, MODULE = "DEMO-P", "DEMO-module"
 
@@ -46,8 +48,8 @@ class CoreTepConDEMO(CoreGia):
         self.doc_ids = []
         self.so_tai = 0
 
-    def _nhan_viec(self, ma):
-        data = super()._nhan_viec(ma)
+    def _nhan_viec(self, ma, instance=None):
+        data = super()._nhan_viec(ma, instance)
         if data:
             data["ngu_canh"]["module"] = self.module_viec.get(data["id"], MODULE)
         return data
@@ -107,7 +109,8 @@ class Mau:
     def __init__(self, core=None):
         self.core = core or CoreTepConDEMO()
         self.refs = {}
-        self.ngan = ng.NganBoNho(chay._khai["ngan_du_lieu"])
+        self.app = chay.app
+        self.core.nap_engine(self.app)
         word = self.luu("ban-chot.docx", tao_goi(p("Công ty DEMO Ánh Dương") + p("1.000.000 VND ngày 2026-10-30")), docx.MIME_DOCX, True)
         ban_ky = self.luu("ban-ky.pdf", pdf_demo(), "application/pdf", True)
         word_vb = docx.doc_bytes(self.core.doc_tep(word["tep"]["tep_id"]), lambda: None, lambda *a: None,
@@ -142,12 +145,7 @@ class Mau:
         return ref
 
     def dat_cau_hinh(self):
-        ban = self.ngan.doc("cau_hinh", {})
-        with self.ngan.lo() as lo:
-            if ban:
-                lo.sua("cau_hinh", {}, self.cau_hinh, row_version=ban.row_version)
-            else:
-                lo.them("cau_hinh", {}, self.cau_hinh)
+        self.core.dat_cau_hinh(self.app.ma, self.cau_hinh)
 
     def vb(self, ben="ban_ky"):
         return json.loads(self.core.doc_tep(self.cap["van_ban"][ben]["tep"]["tep_id"]))
@@ -179,13 +177,13 @@ class Mau:
         return json.loads(raw)
 
     def cac_luot(self, pn=PN):
-        return self.ngan.tim("luot_doi_chieu", {"phap_nhan_id": pn}).danh_sach
+        return cac_luot(self, pn)
 
 
 @pytest.fixture
 def mau(monkeypatch):
     m = Mau()
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     return m
 
 
@@ -251,7 +249,7 @@ def test_core_tu_choi_khac_phap_nhan_module(mau, phap_nhan, module):
 
 def test_thieu_cua_core_that_khong_adapter(monkeypatch):
     m = Mau(CoreGia())
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     kiem_loi(m.chay(), "DC_THIEU_NGUON")
     assert not m.cac_luot()
 
@@ -322,7 +320,7 @@ def test_anh_sai_bam_thieu_trang_va_hop_ngoai_bien(mau):
 
 
 def test_thieu_cau_hinh(mau, monkeypatch):
-    monkeypatch.setattr(chay, "ngan", ng.NganBoNho(chay._khai["ngan_du_lieu"]))
+    mau.core.dat_cau_hinh(chay.app.ma, {})
     kiem_loi(mau.chay(), "CHUA_CAU_HINH")
 
 
@@ -377,8 +375,9 @@ def test_han_chiem_luot_mac_dinh_theo_thoi_han_buoc_va_cau_hinh(mau, monkeypatch
 @pytest.mark.parametrize("thoi_han", [0, -1, True, "45", 1.5])
 def test_thoi_han_chiem_luot_khong_hop_le_bi_tu_choi(mau, thoi_han):
     mau.cau_hinh["thoi_han_chiem_luot_giay"] = thoi_han
-    mau.dat_cau_hinh()
-    kiem_loi(mau.chay(), "CAU_HINH_KHONG_HOP_LE")
+    with pytest.raises(LoiDuongTruyen) as exc:
+        mau.dat_cau_hinh()
+    assert exc.value.ma == "NGAN_DU_LIEU_SAI"
     assert not mau.cac_luot()
 
 
@@ -386,12 +385,11 @@ def test_thoi_han_chiem_luot_khong_hop_le_bi_tu_choi(mau, thoi_han):
 def test_luot_chu_da_chet_chi_chiem_lai_khi_het_han(mau, monkeypatch, chenh_han):
     assert mau.chay()["trang_thai"] == "XONG"
     ban = mau.cac_luot()[0]
-    khoa = {"phap_nhan_id": PN, "ma_luot": ban.gia_tri["ma_luot"]}
+    khoa = {"ma_luot": ban.gia_tri["ma_luot"]}
     luc = ban.gia_tri["han_chiem"] + 1
     monkeypatch.setattr(hs, "time", SimpleNamespace(time=lambda: luc, sleep=lambda _: None))
-    with mau.ngan.lo() as lo:
-        lo.sua("luot_doi_chieu", khoa, {"trang_thai": "dang_nhan", "chu_so_huu": "DEMO-chu-da-chet",
-                                       "han_chiem": luc + chenh_han}, row_version=ban.row_version)
+    sua_ngan(mau, khoa, {"trang_thai": "dang_nhan", "chu_so_huu": "DEMO-chu-da-chet",
+                          "han_chiem": luc + chenh_han}, ban.row_version)
     result = mau.chay()
     moi = mau.cac_luot()[0]
     assert len(mau.cac_luot()) == 1 and moi.gia_tri["ma_luot"] == khoa["ma_luot"]
@@ -411,31 +409,17 @@ def test_cas_chiem_lai_qua_han_khong_de_chu_vua_giu_luot(mau, monkeypatch):
     ban = mau.cac_luot()[0]
     luc = ban.gia_tri["han_chiem"] + 1
     monkeypatch.setattr(hs, "time", SimpleNamespace(time=lambda: luc, sleep=lambda _: None))
-    khoa = {"phap_nhan_id": PN, "ma_luot": ban.gia_tri["ma_luot"]}
-    with mau.ngan.lo() as lo:
-        lo.sua("luot_doi_chieu", khoa, {"trang_thai": "dang_nhan"}, row_version=ban.row_version)
-    original, dem = mau.ngan.lo, [0]
-
-    class LoChen:
-        def __enter__(self):
-            self.lo = original()
-            self.lo.__enter__()
-            return self
-
-        def __exit__(self, *exc):
-            return self.lo.__exit__(*exc)
-
-        def __getattr__(self, ten):
-            return getattr(self.lo, ten)
-
-        def sua(self, bang, khoa, gia_tri, *, row_version):
-            if gia_tri.get("trang_thai") == "dang_nhan" and dem[0] == 0:
-                dem[0] += 1
-                with original() as khac:
-                    khac.sua(bang, khoa, {"chu_so_huu": "DEMO-chu-moi", "han_chiem": luc + 180}, row_version=row_version)
-            return self.lo.sua(bang, khoa, gia_tri, row_version=row_version)
-
-    monkeypatch.setattr(mau.ngan, "lo", LoChen)
+    key = {"ma_luot": ban.gia_tri["ma_luot"]}
+    sua_ngan(mau, key, {"trang_thai": "dang_nhan"}, ban.row_version)
+    original, dem = mau.core._ngan_ghi_lo, [0]
+    def chen(ma, instance, lenh, khoa, *, viec_id=None):
+        l = lenh[0]
+        if l["thao_tac"] == "sua" and l["gia_tri"].get("trang_thai") == "dang_nhan" and dem[0] == 0:
+            dem[0] += 1
+            original(ma, instance, [{**l, "gia_tri": {"chu_so_huu": "DEMO-chu-moi", "han_chiem": luc + 180}}],
+                     "DEMO-chen-chu-moi", viec_id=viec_id)
+        return original(ma, instance, lenh, khoa, viec_id=viec_id)
+    monkeypatch.setattr(mau.core, "_ngan_ghi_lo", chen)
     kiem_loi(mau.chay(), "DC_DANG_XU_LY")
     assert dem[0] == 1 and mau.core.so_tai == 1
     assert mau.cac_luot()[0].gia_tri["chu_so_huu"] == "DEMO-chu-moi"
@@ -475,22 +459,19 @@ def test_ho_so_cu_khong_doc_duoc_dung_lai_tu_nguon_hien_tai(mau, monkeypatch, lo
     a = mau.chay()
     tid_cu = a["ket_qua"]["ho_so_doi_chieu"]["ho_so"]["tep_id"]
     original, trang_thai = mau.core._mo_tep, []
-    ghi = mau.ngan._thuc_hien
-
+    ghi = mau.core._ngan_ghi_lo
     def mat_ho_so(ma, vid, tid, toi_da):
         if tid == tid_cu:
             if type(loi_doc) is int:
                 raise LoiDuongTruyen("DEMO_KHONG_DOC_DUOC", "Không đọc được tệp DEMO.", http_status=loi_doc)
             raise loi_doc("Không đọc được tệp DEMO.")
         return original(ma, vid, tid, toi_da)
-
-    def ghi_trang_thai(du_lieu, chi_muc, phien_ban, lenh):
-        if lenh[0] == "sua":
-            trang_thai.append(lenh[3].get("trang_thai"))
-        return ghi(du_lieu, chi_muc, phien_ban, lenh)
-
+    def ghi_trang_thai(ma, instance, lenh, khoa, *, viec_id=None):
+        if lenh[0]["thao_tac"] == "sua":
+            trang_thai.append(lenh[0]["gia_tri"].get("trang_thai"))
+        return ghi(ma, instance, lenh, khoa, viec_id=viec_id)
     monkeypatch.setattr(mau.core, "_mo_tep", mat_ho_so)
-    monkeypatch.setattr(mau.ngan, "_thuc_hien", ghi_trang_thai)
+    monkeypatch.setattr(mau.core, "_ngan_ghi_lo", ghi_trang_thai)
     b = mau.chay()
     assert b["trang_thai"] == "XONG" and b["ket_qua"] != a["ket_qua"], b
     assert trang_thai == ["can_thu_lai", "dang_nhan", "da_nhan"]
@@ -513,14 +494,14 @@ def test_ho_so_cu_sai_bam_khong_tu_bo_qua(mau, monkeypatch):
 
 @pytest.mark.parametrize("so_lan", [1, 5])
 def test_cas_xung_dot_khong_de_ket_qua_cu_khong_nhan_doi_tai(mau, monkeypatch, so_lan):
-    original = mau.ngan._thuc_hien
-    dem = [0]
-    def xung_dot(du_lieu, chi_muc, phien_ban, lenh):
-        if lenh[0] == "sua" and lenh[3].get("trang_thai") == "da_nhan" and dem[0] < so_lan:
+    original, dem = mau.core._ngan_ghi_lo, [0]
+    def xung_dot(ma, instance, lenh, khoa, *, viec_id=None):
+        l = lenh[0]
+        if l["thao_tac"] == "sua" and l["gia_tri"].get("trang_thai") == "da_nhan" and dem[0] < so_lan:
             dem[0] += 1
-            raise ng.NganXungDot()
-        return original(du_lieu, chi_muc, phien_ban, lenh)
-    monkeypatch.setattr(mau.ngan, "_thuc_hien", xung_dot)
+            mau.core.gay_xung_dot_ngan("luot_doi_chieu")
+        return original(ma, instance, lenh, khoa, viec_id=viec_id)
+    monkeypatch.setattr(mau.core, "_ngan_ghi_lo", xung_dot)
     result = mau.chay()
     if so_lan == 1:
         assert result["trang_thai"] == "XONG", result
@@ -533,24 +514,15 @@ def test_cas_xung_dot_khong_de_ket_qua_cu_khong_nhan_doi_tai(mau, monkeypatch, s
 
 
 def test_cas_mat_quyen_so_huu_khong_ghi_de(mau, monkeypatch):
-    original = mau.ngan.lo
-    dem = [0]
-    class LoChen:
-        def __enter__(self):
-            self.lo = original()
-            self.lo.__enter__()
-            return self
-        def __exit__(self, *exc):
-            return self.lo.__exit__(*exc)
-        def __getattr__(self, ten):
-            return getattr(self.lo, ten)
-        def sua(self, bang, khoa, gia_tri, *, row_version):
-            if gia_tri.get("trang_thai") == "da_nhan" and dem[0] == 0:
-                dem[0] += 1
-                with original() as khac:
-                    khac.sua(bang, khoa, {"chu_so_huu": "DEMO-chu-khac"}, row_version=row_version)
-            return self.lo.sua(bang, khoa, gia_tri, row_version=row_version)
-    monkeypatch.setattr(mau.ngan, "lo", LoChen)
+    original, dem = mau.core._ngan_ghi_lo, [0]
+    def chen(ma, instance, lenh, khoa, *, viec_id=None):
+        l = lenh[0]
+        if l["thao_tac"] == "sua" and l["gia_tri"].get("trang_thai") == "da_nhan" and dem[0] == 0:
+            dem[0] += 1
+            original(ma, instance, [{**l, "gia_tri": {"chu_so_huu": "DEMO-chu-khac"}}],
+                     "DEMO-chen-doi-chu", viec_id=viec_id)
+        return original(ma, instance, lenh, khoa, viec_id=viec_id)
+    monkeypatch.setattr(mau.core, "_ngan_ghi_lo", chen)
     kiem_loi(mau.chay(), "NGAN_XUNG_DOT")
     ban = mau.cac_luot()[0].gia_tri
     assert ban["chu_so_huu"] == "DEMO-chu-khac" and ban["trang_thai"] == "dang_nhan"
@@ -825,14 +797,14 @@ def test_khoa_chong_trung_ghim_ma_cap_canh_bao_va_cau_hinh_tran(mau, thay):
     elif thay == "canh_bao":
         mau.cap["kiem_dau_vao"]["canh_bao"].append("DEMO cảnh báo mới.")
     else:
-        mau.cau_hinh[thay] = chay.can_cau_hinh()[thay] - 1
+        mau.cau_hinh[thay] = mau.core._doc_cau_hinh(chay.app.ma)["cau_hinh"][thay] - 1
         mau.dat_cau_hinh()
     b = mau.chay()
     assert b["trang_thai"] == "XONG" and b["ket_qua"] != a["ket_qua"], b
     assert b["ket_qua"]["ho_so_doi_chieu"]["ma_cap"] == mau.cap["ma_cap"]
     snap = mau.snapshot(b)
     assert snap["kiem_dau_vao"]["canh_bao"] == mau.cap["kiem_dau_vao"]["canh_bao"]
-    assert snap["cau_hinh"] == chay.can_cau_hinh()
+    assert snap["cau_hinh"] == mau.core._doc_cau_hinh(chay.app.ma)["cau_hinh"]
     assert len(mau.cac_luot()) == mau.core.so_tai == 2
 
 
@@ -1001,8 +973,8 @@ def test_anh_jpeg_png_demo_repo_khong_nhan_giai_ma_jpeg():
 
 def test_cac_truong_ngan_da_khai_du_de_sdk_21_tao_bang(mau):
     assert mau.chay()["trang_thai"] == "XONG"
-    bang = next(x for x in chay._khai["ngan_du_lieu"] if x["bang"] == "luot_doi_chieu")
-    assert mau.cac_luot()[0].gia_tri.keys() <= {x["ma"] for x in bang["truong"]}
+    bang = next(x for x in chay.app.phieu["ngan_du_lieu"] if x["bang"] == "luot_doi_chieu")
+    assert mau.cac_luot()[0].gia_tri.keys() <= {x["ma"] for x in bang["truong"]} | {"id", "phap_nhan_id", "row_version", "tao_luc", "sua_luc", "het_han_luc", "viec_id"}
 
 
 def test_bam_hex_hoa_hop_dong_chung(mau):

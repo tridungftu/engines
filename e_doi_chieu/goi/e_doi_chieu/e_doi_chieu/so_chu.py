@@ -14,7 +14,7 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 from . import ho_so as hs
 from .can_chinh import can_chinh, dung_cay, khong_can, khop_thu_tu, kiem_trang
 from .chuan_hoa import chuan_hoa, kiem_bo
-from .ngan import NganXungDot
+from kho_tri_thuc_sdk.engine import NganXungDot
 from .vi_tri import loi
 
 _SCHEMA_CH = json.loads((Path(__file__).resolve().parent.parent / "cau_hinh.schema.json").read_text(encoding="utf-8"))
@@ -372,7 +372,7 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
     phan_trang_core = viec.ngu_canh.get("doi_chieu_phan_trang")
     if phan_trang_core is not None and len(hs.json_bytes(phan_trang_core)) > 16384:
         loi("DC_QUA_GIOI_HAN")
-    khoa = {"phap_nhan_id": phap_nhan, "bam_cap": hs.bam(hs.json_bytes({
+    khoa = {"bam_cap": hs.bam(hs.json_bytes({
         "buoc": "so_van_ban@1", "bam_ho_so_nhan": pin["bam_ho_so"], "gioi_han": cau_hinh,
         "phan_trang_core": phan_trang_core})),
         "bam_bo": pin["bam_bo_quy_tac"].lower(), "phien_ban_engine": phien_ban_engine}
@@ -386,8 +386,9 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
                 chiem = {"trang_thai": "dang_so", "chu_so_huu": chu, "luc_chiem": luc,
                          "han_chiem": luc + thoi_han_viec_giay + 60}
                 with ngan.lo() as lo:
-                    kq = lo.lay_hoac_tao("luot_doi_chieu", khoa, {**khoa, "ma_luot": uuid.uuid4().hex, **chiem})
-                ban = kq.ban_ghi
+                    lo.lay_hoac_tao("luot_doi_chieu", khoa, {**khoa, "ma_luot": uuid.uuid4().hex, **chiem})
+                kq = lo.ket_qua[0]
+                ban = hs.doc_sau_lo(ngan, khoa, lo)
                 if kq.da_tao:
                     giu = True
                     break
@@ -398,12 +399,12 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
                         if exc.ma != "DC_THIEU_NGUON":
                             raise
                     chiem["trang_thai"] = "dang_so"
-                elif not (ban.gia_tri["trang_thai"] == "can_thu_lai" or ban.gia_tri.get("han_chiem", 0) <= luc):
+                elif not (ban.gia_tri["trang_thai"] == "can_thu_lai" or float(ban.gia_tri.get("han_chiem") or 0) <= luc):
                     raise LoiNghiepVu("DC_DANG_XU_LY", "Cặp tài liệu đang được xử lý. Anh thử lại sau.", thu_lai_duoc=True)
                 with ngan.lo() as lo:
-                    kq = lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                                 chiem, row_version=ban.row_version)
-                ban, giu = kq.ban_ghi, True
+                ban, giu = hs.doc_sau_lo(ngan, khoa, lo), True
                 break
             except NganXungDot:
                 if lan == 3:
@@ -429,8 +430,8 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
             viec.kiem_huy()
             try:
                 with ngan.lo() as lo:
-                    lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
-                           {"trang_thai": "da_so", "phong_bi": pb}, row_version=ban.row_version)
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
+                           {"trang_thai": "da_so", "phong_bi": hs.dong_phong_bi(pb)}, row_version=ban.row_version)
                 giu = False
                 break
             except NganXungDot:
@@ -445,7 +446,7 @@ def so_van_ban(viec, ngan, cau_hinh, *, phien_ban_engine, thoi_han_viec_giay):
         if giu and ban is not None and ban.gia_tri.get("chu_so_huu") == chu:
             try:
                 with ngan.lo() as lo:
-                    lo.sua("luot_doi_chieu", {"phap_nhan_id": phap_nhan, "ma_luot": ban.gia_tri["ma_luot"]},
+                    lo.sua("luot_doi_chieu", {"ma_luot": ban.gia_tri["ma_luot"]},
                            {"trang_thai": "can_thu_lai"}, row_version=ban.row_version)
             except Exception:
                 pass

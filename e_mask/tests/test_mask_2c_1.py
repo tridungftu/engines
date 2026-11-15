@@ -11,7 +11,7 @@ from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_mask import che_van_ban as x, tai_nguyen
 from e_mask.anh_xa_ai import LoiAnhXa, PhepSua, bam_chu, kiem_anh_xa, tao_anh_xa
-from e_mask.chay import tao_app
+from ho_tro_van_ban_lich_su import tao_app
 from e_mask.ho_so_ai import (DoanAI, HoSoAI, KHAI_NGAN_HO_SO_AI,
                              KhoHoSoAI, bam_bytes, doc_bytes, json_chuan)
 from e_mask.kho_ngan import KHAI_NGAN

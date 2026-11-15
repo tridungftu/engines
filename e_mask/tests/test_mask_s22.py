@@ -7,7 +7,7 @@ import kho_tri_thuc_sdk
 from kho_tri_thuc_sdk.engine import LoiDuongTruyen
 from kho_tri_thuc_sdk.thu import CoreGia
 
-from e_mask.chay import tao_app
+from ho_tro_van_ban_lich_su import tao_app
 from e_mask.kho_ngan import KHAI_NGAN
 from e_mask.ngan import NganBoNho, NganKhongHopLe
 from ho_tro_ngan import QuyenNganDemo, VAN_BAN

@@ -214,14 +214,14 @@ def doc_mo(viec):
             raise loi()
         ma, chu = muc.get('ma_yeu_cau'), muc.get('van_ban')
         dong = muc.get('dong_viec', dong)
-        kiem_van_ban(chu, cho_rong=True)
+        kiem_van_ban(chu, cho_rong=True, cho_dinh_dang=True)
     elif dau.get('loai') == 'tra_loi_ai':
         ai = kiem_loai(dau, 'tra_loi_ai')
         kiem_chuyen_tiep(ai['chuyen_tiep'])
         ma, chu = ai['chuyen_tiep'].get('ma_yeu_cau'), ai['tra_loi']
         chuoi = [chu] + [c for _, c in cac_chu(ai['du_lieu'])] + [m['cau'] for m in ai['trich_dan']]
         for c in chuoi:
-            kiem_van_ban(c, cho_rong=True)
+            kiem_van_ban(c, cho_rong=True, cho_dinh_dang=True)
         if sum(map(len, chuoi)) > 500000:
             raise loi('MASK_QUA_GIOI_HAN')
     else:

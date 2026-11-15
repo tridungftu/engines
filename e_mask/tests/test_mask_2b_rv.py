@@ -12,12 +12,13 @@ import unicodedata
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'goi/e_mask'))
 
+from ho_tro_mo_lich_su import mo_che as mo_che_lich_su
 import pytest
 from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_mask import tai_nguyen, ten_nguoi
 from e_mask import che_van_ban as xu_ly
-from e_mask.chay import tao_app
+from ho_tro_van_ban_lich_su import tao_app
 from e_mask.kho_ngan import KHAI_NGAN
 from e_mask.ngan import NganBoNho
 from ho_tro_kho_demo import KhoBoNho
@@ -179,7 +180,7 @@ def test_danh_xung_1_den_3_am_tiet_ca_ngoai_danh_sach(xung, ten):
     kq = xu_ly.che(chu, [], kho)
     assert kq['gui_duoc'] and kq['so_cho_thay'] == 1
     assert khoa_doc_lap(ten) not in khoa_doc_lap(kq['van_ban_da_che'])
-    mo = xu_ly.mo_che(kq['van_ban_da_che'], kq['ma_yeu_cau'], kho)
+    mo = mo_che_lich_su(kq['van_ban_da_che'], kq['ma_yeu_cau'], kho)
     assert mo['mo_day_du'] and mo['van_ban_da_mo_che'] == chu
 
 

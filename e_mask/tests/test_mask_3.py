@@ -9,6 +9,7 @@ from types import SimpleNamespace
 import sys
 from uuid import UUID
 
+from ho_tro_mo_lich_su import mo_che as mo_che_lich_su
 import pytest
 from kho_tri_thuc_sdk.engine import ChuaRo, Engine, LoiNghiepVu, ViecDaHuy
 from kho_tri_thuc_sdk.thu import CoreGia
@@ -277,7 +278,7 @@ def test_bang_chung_khac_module_phap_nhan_va_mo_bi_danh_chua_tham_chieu(tmp_path
     assert core.bang['DEMO']['yeu_cau'][ctx_b.ma_yeu_cau]['bi_danh_tam_da_dung'] == set()
     v_mo = viec_demo('mo-demo-b', van_ban=kq_a['van_ban_da_che'])
     quyen_b.cap(v_mo.id, loai='mo_che', ma_yeu_cau=ctx_b.ma_yeu_cau)
-    mo = lop_b.xu_ly(v_mo, lambda kho: che_van_ban.mo_che(kq_a['van_ban_da_che'], ctx_b.ma_yeu_cau, kho),
+    mo = lop_b.xu_ly(v_mo, lambda kho: mo_che_lich_su(kq_a['van_ban_da_che'], ctx_b.ma_yeu_cau, kho),
                      loai='mo_che', ma_yeu_cau=ctx_b.ma_yeu_cau)
     assert mo['van_ban_da_mo_che'] == kq_a['van_ban_da_che'] and not mo['mo_day_du']
     assert mo['bi_danh_khong_ro'][0]['vi_tri']['bat_dau'] == 0
@@ -510,7 +511,7 @@ def tao_app_demo(core_kho, quyen, thu_muc, cac_lan):
     def mo(viec):
         dau = viec.dau_vao['tra_loi_ai']
         ma = dau['chuyen_tiep']['ma_yeu_cau']
-        kq = lop.xu_ly(viec, lambda kho: che_van_ban.mo_che(dau['tra_loi'], ma, kho,
+        kq = lop.xu_ly(viec, lambda kho: mo_che_lich_su(dau['tra_loi'], ma, kho,
                          dong_viec=viec.tham_so['dong_viec']), loai='mo_che', ma_yeu_cau=ma)
         return {'loai': 'truong', 'truong':
                 dict(van_ban_da_mo_che=kq['van_ban_da_mo_che'], so_cho_mo=kq['so_cho_mo'],

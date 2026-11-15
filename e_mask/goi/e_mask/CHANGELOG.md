@@ -1,3 +1,11 @@
+## Chưa phát hành — 16/11/2026, MASK-R6
+
+- Nối hai handler R5 vào đúng kho RAM R4 của app và thay `mask.mo_che_van_ban@1` bằng mở che một lần theo quyền của chuỗi. Giữ nguyên `nhan/tra` và bộ trường M; không tra ngược ngăn, tải nguồn/snapshot hoặc cache bản rõ. Handler che quy tắc riêng giữ cửa chặn chất lượng R3, không quay về kho lịch sử; chuỗi Local dùng R5.
+- Chỉ mở alias thực sự có trong phép thay của bản cuối đã hậu kiểm. Giữ nguyên NFD/Cf/khoảng trắng gốc, nội dung AI thêm, khóa và kiểu số/tiền/ngày/boolean/null. Mở mềm case/space chỉ khi map duy nhất; alias lạ/hỏng/thiếu/mơ hồ hoặc mất RAM từ chối toàn bộ, không phát hành phần đã mở.
+- Mở `tra_loi`, chuỗi lồng `du_lieu` và câu trích. Khi thay chữ, hạ kiểm nguyên văn/trích dẫn, tái tính vị trí từ map/gốc đang RAM; không xác định duy nhất thì đặt tọa độ null và yêu cầu kiểm lại. `dong_viec=false` cũ vẫn dọn map và trả `DA_DONG`, kèm thông báo chuyển quy trình qua tiến độ/cảnh báo AI.
+- Cửa bàn giao cuối C-P4-02/05 chỉ là protocol đề nghị: Core giữ quyền/lease/deadline và kết quả chưa phát hành tới sau tiêu thụ RAM, chỉ trả đúng người/module, không Cloud. Thiếu cửa thì từ chối; mất ACK sau nhận trả `ChuaRo`, không tạo cache để mở lại. Dọn qua kho R4 sau thành công/lỗi/hủy/TTL.
+- Vỏ/mở che tra ngược cũ được giữ trong fixture hồi quy ngoài gói; các ca đó không là bằng chứng R6. Test mới đi trực tiếp handler hiện hành và chuỗi R5 thật qua CoreGia. Đã kiểm bằng Core giả (CoreGia), chưa Core/Local/Office/Linux thật. Chỉ bốn runtime đúng phiếu; kiểm kê đề nghị để ngoài gói cho lead vì tệp kiểm kê ngoài closure. Kết quả thật/thời gian/Cần Core ở VIEC và báo cáo R6; PR: chờ lead mở.
+
 ## Chưa phát hành — 15/11/2026, MASK-R5 (tiếp lúc 23:50)
 
 - Phân loại đủ 216 test: 207 ca an toàn dùng RAM R4 và ngăn SDK 2.2.0; 9 ca lưu snapshot đổi sang kiểm không lưu và lỗi rõ khi mất RAM. Giữ bốn xfailed cũ; fixture/công cụ snapshot cũ được lưu nguyên bản ngoài gói ở LUU-TRU.

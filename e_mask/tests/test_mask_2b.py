@@ -2,11 +2,12 @@
 import json
 import unicodedata
 
+from ho_tro_mo_lich_su import mo_che as mo_che_lich_su
 import pytest
 from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_mask import che_van_ban as x, tai_nguyen, ten_nguoi
-from e_mask.chay import tao_app
+from ho_tro_van_ban_lich_su import tao_app
 from ho_tro_duyet_lich_su import DuyetDinhDanh
 from e_mask.kho_ngan import KHAI_NGAN
 from e_mask.ngan import NganBoNho
@@ -82,7 +83,7 @@ def test_danh_xung_che_va_mo_bang_bi_danh_tam(danh_xung):
     assert kq['so_cho_thay'] == 1 and kq['cho_duyet']['so_cum_vua_them'] == 1
     assert 'tran bao long' not in json.dumps(kq, ensure_ascii=False)
     assert kq['bi_danh'][0]['nhom'] == 'CA_NHAN'
-    mo = x.mo_che(kq['van_ban_da_che'], kq['ma_yeu_cau'], kho)
+    mo = mo_che_lich_su(kq['van_ban_da_che'], kq['ma_yeu_cau'], kho)
     assert mo['mo_day_du'] and mo['van_ban_da_mo_che'] == chu
 
 

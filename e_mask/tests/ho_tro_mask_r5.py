@@ -70,7 +70,8 @@ class CongRAMCoreGia:
 
 
 def noi_handler(app, q, cong, *, seeds=()):
-    # Chay.py thuộc R6: adapter ngoài gói truyền đúng kho R4 hiện hữu.
+    # R6 đã nối kho R4 trong chay.py. Fixture chỉ nạp catalogue DEMO;
+    # toàn bộ kiểm R5 tiếp tục đi qua handler runtime thật, không thay nó.
     cb_that = app._ham[cb.NANG_LUC]
     con_seed = list(seeds)
     def chuan_bi(v):
@@ -79,12 +80,8 @@ def noi_handler(app, q, cong, *, seeds=()):
             dong['nhom'] = nhom
             _them(v, dong, alias)
         con_seed.clear()
-        return cb.ChuanBiAI(ngan=None, quyen=q, cong=cong, ram=app.kho_anh_xa_ram,
-                           phien_ban_engine='e_mask ' + app.phieu['phien_ban']).chuan_bi(v)
+        return cb_that(v)
     app._ham[cb.NANG_LUC] = chuan_bi
-    app._ham[NANG_LUC] = lambda v: HauKiemAI(
-        ngan=None, quyen=q, cong=cong, ram=app.kho_anh_xa_ram,
-        phien_ban_engine='e_mask ' + app.phieu['phien_ban']).hau_kiem(v)
     return cb_that
 
 

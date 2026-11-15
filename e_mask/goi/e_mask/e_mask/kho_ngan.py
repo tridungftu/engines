@@ -5,15 +5,17 @@ duyệt. Dấu lượt chỉ giữ băm/số đếm và lựa chọn định dan
 lại, không lưu văn bản hoặc kết quả AI. Mọi ghi nghiệp vụ trong cùng một lô.
 """
 from copy import deepcopy
+from functools import wraps
 from hashlib import sha256
 import json
 from pathlib import Path
 from uuid import uuid4
 
-from kho_tri_thuc_sdk.engine import LoiNghiepVu
+from kho_tri_thuc_sdk.engine import ChuaRo, LoiDuongTruyen, LoiNghiepVu, ViecDaHuy
 
 from .che_van_ban import chuan_hoa, chuan_bi_danh
-from .ngan import NganXungDot
+from .cau_hinh import CauHinhKhongHopLe
+from .ngan import NganKhongHopLe, NganXungDot
 from .quyen_yeu_cau import loi_kho, xac_minh
 
 
@@ -42,6 +44,30 @@ def _bam_ket_qua(kq):
                              allow_nan=False, separators=(',', ':')).encode()).hexdigest()
 
 
+def bao_ve_loi_ngan(ham):
+    """Chặn thông điệp ngoại lệ của ngăn trước khi SDK có thể in traceback."""
+    @wraps(ham)
+    def goi(*args, **kwargs):
+        try:
+            return ham(*args, **kwargs)
+        except (ChuaRo, ViecDaHuy, LoiDuongTruyen):
+            raise
+        except NganXungDot:
+            raise loi_kho('MASK_XUNG_DOT') from None
+        except (NganKhongHopLe, CauHinhKhongHopLe) as exc:
+            lop = type(exc)
+            raise LoiNghiepVu(lop.ma, lop.thong_diep, thu_lai_duoc=lop.thu_lai_duoc) from None
+        except LoiNghiepVu as exc:
+            # Ngăn tương lai có thể ném ngay LoiNghiepVu. Không coi câu của
+            # bên ngoài là an toàn chỉ vì ngoại lệ đã mang kiểu nghiệp vụ.
+            if exc.ma == 'MASK_QUA_GIOI_HAN':
+                raise LoiNghiepVu('MASK_QUA_GIOI_HAN', 'Số thay đổi vượt giới hạn một giao dịch. Cần chia nhỏ yêu cầu.') from None
+            raise loi_kho(exc.ma) from None
+        except Exception:
+            raise loi_kho() from None
+    return goi
+
+
 def doc_het(ngan, bang, vung):
     ds, tiep = {}, None
     while True:
@@ -55,6 +81,7 @@ def doc_het(ngan, bang, vung):
 
 class AnhNgan:
     """Đọc trước CAS chung; nếu snapshot đổi thì lô chốt bị từ chối toàn bộ."""
+    @bao_ve_loi_ngan
     def __init__(self, ngan, vung):
         self.ngan, self.vung = ngan, vung
         khoa = khoa_muc(vung, 'phien')
@@ -68,6 +95,7 @@ class AnhNgan:
     def dat(self, bang, khoa, gia_tri):
         self.moi[bang][khoa] = dict(deepcopy(gia_tri), **khoa_muc(self.vung, khoa))
 
+    @bao_ve_loi_ngan
     def chot(self):
         lenh = []
         for b in BANG:
@@ -108,6 +136,7 @@ class DauNgan:
     def __init__(self, ngan):
         self.ngan = ngan
 
+    @bao_ve_loi_ngan
     def ghi(self, *, vung, ma_luot, ma_yeu_cau, bam_dau_vao, trang_thai=1, bam_chot=None):
         tuong_quan = sha256(json.dumps([vung, ma_luot], ensure_ascii=True).encode()).hexdigest()
         khoa = khoa_muc(vung, khoa_dau('phuc_hoi', tuong_quan))
@@ -171,16 +200,30 @@ class PortNgan:
             raise loi_kho('MASK_MA_YEU_CAU')
         if thao_tac == 'snapshot_luot':
             danh_muc = list(dl['dinh_danh'].values()) + list(dl['cho_duyet'].values())
-            bo_sung = {k: m['gia_tri'] for k, m in dl['bi_danh_tam'].items()}
+            tam_duoc_dung = {m['bi_danh'] for m in dl['dau_gap'].values()
+                            if m.get('loai_dau') == 'tham_chieu' and m.get('ma_yeu_cau') == ma}
+            bo_sung = {k: m['gia_tri'] for k, m in dl['bi_danh_tam'].items() if k in tam_duoc_dung}
+            tam_theo_cum = {chuan_hoa(m['gia_tri']): m for b, m in dl['bi_danh_tam'].items() if b in tam_duoc_dung}
+            # Một cụm chờ có thể đã được che trong nhiều yêu cầu bằng các mã
+            # tạm khác nhau. Chỉ chọn lại mã đã sinh cho yêu cầu hiện tại.
+            for i, muc in enumerate(danh_muc):
+                if muc['nguon'] == 'tam':
+                    rieng = tam_theo_cum.get(chuan_hoa(muc['gia_tri']))
+                    if rieng:
+                        danh_muc[i] = dict(muc, bi_danh=rieng['bi_danh'])
             # Giao lại dùng đúng lựa chọn đã chốt; duyệt/dọn không đổi kết quả cũ.
             if da_chot:
                 chon = [m for m in dl['dau_gap'].values() if m.get('loai_dau') == 'lua_chon' and m.get('ma_luot') == luot]
                 danh_muc = [dict(m['dinh_danh']) for m in chon if m.get('de_che')]
-                bo_sung = {chuan_bi_danh(m['dinh_danh']['bi_danh']): m['dinh_danh']['gia_tri'] for m in chon}
+                bo_sung = {chuan_bi_danh(m['dinh_danh']['bi_danh']): m['dinh_danh']['gia_tri']
+                           for m in chon if chuan_bi_danh(m['dinh_danh']['bi_danh']) in tam_duoc_dung}
+                if loai == 'mo_che':
+                    danh_muc = list(dl['dinh_danh'].values())
             if yc and da_chot:
                 yc = dict(yc, trang_thai='DANG_XU_LY')
             return dict(da_chot=False, phien_ban=anh.phien.row_version, yeu_cau=deepcopy(yc),
                         danh_muc=deepcopy(danh_muc), bi_danh_bo_sung=bo_sung,
+                        bi_danh_tam_duoc_dung=sorted(tam_duoc_dung),
                         cum_cho_toan_vung={}, da_phuc_hoi=bool(da_chot))
         if thao_tac != 'chot_luot' or p.get('nhat_ky') is None or p.get('phien_ban') != anh.phien.row_version:
             raise loi_kho('MASK_XUNG_DOT')
@@ -196,17 +239,21 @@ class PortNgan:
         for muc in nk['cum']:
             khoa = chuan_hoa(muc['gia_tri'])
             hien = dl['dinh_danh'].get(khoa) or dl['cho_duyet'].get(khoa)
-            if hien is None:
-                b = chuan_bi_danh(muc['bi_danh'])
+            b = chuan_bi_danh(muc['bi_danh'])
+            if not muc['chi_gap_lai']:
+                if muc['bi_danh'] not in nk['bi_danh_tam_moi'] or b in dl['bi_danh_tam']:
+                    raise loi_kho('MASK_XUNG_DOT')
                 for bang in ('dinh_danh', 'cho_duyet', 'bi_danh_tam'):
                     if any(b in {chuan_bi_danh(m['bi_danh']), chuan_bi_danh(m.get('bi_danh_tam') or '')}
-                           and chuan_hoa(m['gia_tri']) != khoa for m in dl[bang].values()):
+                           for m in dl[bang].values()):
                         raise loi_kho('MASK_XUNG_DOT')
+                tam = dict(gia_tri=muc['gia_tri'], nhom=muc['nhom'], bi_danh=muc['bi_danh'], nguon='tam')
+                anh.dat('bi_danh_tam', b, tam)
+            if hien is None:
                 hien = dict(gia_tri=muc['gia_tri'], nhom=muc['nhom'], bi_danh=muc['bi_danh'],
                             nguon='tam', so_lan_gap=0)
                 anh.dat('cho_duyet', khoa, hien)
-                anh.dat('bi_danh_tam', b, {k: hien[k] for k in ('gia_tri', 'nhom', 'bi_danh', 'nguon')})
-            if hien['bi_danh'] != muc['bi_danh']:
+            if hien['nhom'] != muc['nhom'] or (hien['nguon'] == 'chinh_thuc' and hien['bi_danh'] != muc['bi_danh']):
                 raise loi_kho('MASK_XUNG_DOT')
             dau = khoa_dau('gap', ma, khoa)
             if hien['nguon'] == 'tam' and dau not in dl['dau_gap']:
@@ -215,11 +262,17 @@ class PortNgan:
                 anh.dat('dau_gap', dau, {'ma_yeu_cau': ma, 'cum': khoa})
         for bi_danh in set(nk['bi_danh_da_dung'] + nk['bi_danh_da_tra']):
             b = chuan_bi_danh(bi_danh)
-            muc = next((m for bang in ('dinh_danh', 'cho_duyet', 'bi_danh_tam') for m in dl[bang].values()
+            muc = next((m for bang in ('bi_danh_tam', 'dinh_danh', 'cho_duyet') for m in dl[bang].values()
                         if b in {chuan_bi_danh(m['bi_danh']), chuan_bi_danh(m.get('bi_danh_tam') or '')}), None)
             if muc is None:
                 continue  # Bí danh lạ được báo bởi lõi, không đoán/ghi tham chiếu.
             if b in dl['bi_danh_tam']:
+                ref = khoa_dau('tham_chieu', ma, b)
+                moi = any(chuan_bi_danh(m) == b for m in nk['bi_danh_tam_moi'])
+                if ref not in dl['dau_gap'] and not (loai == 'che' and moi):
+                    if bi_danh not in nk['bi_danh_da_dung']:
+                        continue  # Tra hụt bí danh tạm khác yêu cầu: không nhận tham chiếu.
+                    raise loi_kho('MASK_MA_YEU_CAU')
                 anh.dat('dau_gap', khoa_dau('tham_chieu', ma, b),
                         {'loai_dau': 'tham_chieu', 'ma_yeu_cau': ma, 'bi_danh': b})
             chon = {k: deepcopy(muc[k]) for k in ('gia_tri', 'nhom', 'bi_danh', 'nguon')}

@@ -7,6 +7,7 @@ import stat
 import sys
 
 CAM = re.compile(r"(?i)(?:kho_tri_thuc\.|kenh_engine|SDKEngine|Bootstrap|shim[_-]kho|\bsql\b|sqlite|psycopg|postgres|mysql|pymysql|pyodbc|sqlalchemy|https?://(?!json-schema\.org/)|urllib|requests|httpx|aiohttp|subprocess|socket)")
+LUU_TREN_MAY = re.compile(r"(?i)KTT_ENGINE_DU_LIEU|KTT_ENGINE_CAU_HINH|PROGRAMDATA")
 
 def kiem_tra(thu_muc):
     goc = Path(thu_muc).absolute()
@@ -24,12 +25,16 @@ def kiem_tra(thu_muc):
                 noi_dung = p.read_text(encoding="utf-8")
                 if CAM.search(noi_dung): loi.append(f"Có tham chiếu bị cấm: {p.relative_to(goc)}")
                 if p.suffix == ".py":
+                    if LUU_TREN_MAY.search(noi_dung):
+                        loi.append(f"Có mã lưu dữ liệu máy trong gói: {p.relative_to(goc)}")
                     cay = ast.parse(noi_dung)
                     for nut in ast.walk(cay):
                         if isinstance(nut, (ast.Import, ast.ImportFrom)):
                             ten = [a.name for a in nut.names] if isinstance(nut, ast.Import) else [nut.module or ""]
                             if any(CAM.search(t) or t == "kho_tri_thuc" for t in ten):
                                 loi.append(f"Import bị cấm: {p.relative_to(goc)}")
+                            if any(t.rsplit('.', 1)[-1] in {'kho_tam', 'cau_hinh_may'} for t in ten + [a.name for a in nut.names]):
+                                loi.append(f"Import mã lưu trữ trong gói: {p.relative_to(goc)}")
             else: loi.append("Có mục không phải tệp thường.")
         except (OSError, UnicodeError, SyntaxError, ValueError):
             loi.append("Không kiểm được một mục trong gói.")

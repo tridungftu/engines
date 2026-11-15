@@ -9,6 +9,7 @@ from pathlib import Path
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
 from .che_van_ban import _kiem_dinh_danh, LoiCheVanBan
+from .nguon.privacy.types import PrivacyError, bo_ky_tu_vo_hinh, chuan_hoa_vi_tri, la_ky_tu_vo_hinh
 
 
 # Bộ kiểm loại riêng thuộc engine; không phụ thuộc helper riêng của NGAN-0.
@@ -96,15 +97,24 @@ def kiem_chuyen_tiep(gia_tri):
         raise loi() from None
 
 
-def kiem_van_ban(chu, *, cho_rong=False):
+def kiem_van_ban(chu, *, cho_rong=False, cho_dinh_dang=False, gioi_han=500000):
     if not isinstance(chu, str) or not cho_rong and not chu.strip():
         raise loi()
     try:
         chu.encode('utf-8')
     except UnicodeError:
         raise loi() from None
-    if len(chu) > 500000:
+    if not cho_dinh_dang and any(la_ky_tu_vo_hinh(c) for c in chu):
+        raise LoiNghiepVu('MASK_DAU_VAO', 'Văn bản còn ký tự định dạng vô hình. Cần kiểm tra lại trước khi gửi.') from None
+    if not cho_rong and not bo_ky_tu_vo_hinh(chu).strip():
+        raise loi()
+    if gioi_han is not None and len(chu) > gioi_han:
         raise loi('MASK_QUA_GIOI_HAN')
+    if cho_dinh_dang:
+        try:
+            chuan_hoa_vi_tri(chu)
+        except PrivacyError:
+            raise LoiNghiepVu('MASK_DAU_VAO', 'Không thể xác định vị trí ký tự an toàn. Cần kiểm tra lại văn bản.') from None
 
 
 def _cap(cac_cap):
@@ -144,6 +154,8 @@ def kiem_loai(dau, ma):
         json_chu(dau).encode('utf-8')
         if 'chuyen_tiep' in dau[ma]:
             kiem_chuyen_tiep(dau[ma]['chuyen_tiep'])
+        if ma == 'van_ban_da_che':
+            kiem_van_ban(dau[ma]['van_ban'], gioi_han=None)
     except (ValueError, TypeError, KeyError, RecursionError, UnicodeError):
         raise loi() from None
     return deepcopy(dau[ma])
@@ -166,7 +178,7 @@ def doc_che(viec):
         chu, ds = muc.get('van_ban'), muc.get('dinh_danh_da_biet', [])
     else:
         raise loi()
-    kiem_van_ban(chu)
+    kiem_van_ban(chu, cho_dinh_dang=True)
     if isinstance(ds, (list, tuple)):
         if len(ds) > 500:
             raise loi('MASK_QUA_GIOI_HAN')

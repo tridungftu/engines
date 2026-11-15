@@ -13,12 +13,23 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 6 | Lát 6: 8 contract (Anh duyệt tên) → lát 7: bài 11 bước | — | Chờ làm |  |
 | MASK-P | Lập phiếu giao Codex theo SDK 2.0; chỉ tài liệu, không tạo gói/không sửa nguồn | MK-1…6, 10…22 | Xong — 14/11/2026 | [Phiếu giao](GIAO-CODEX-e_mask.md): 14 lát, 52–62 giờ ước tính có điều kiện. Regex 14/14 khối đạt; 5 mục/bảng lát/tổng giờ khớp; UTF-8/NFC và kiểm khoảng trắng đạt, `git diff --check` mã 0. Ba lệnh kiểm gói AGENTS.md §5 không áp dụng theo ngoại lệ lát chỉ tài liệu; không chạy hoặc nhận là đã kiểm bằng CoreGia. Đề xuất `van_ban_da_che` ở cuối sổ chung mang nhãn **ĐỀ XUẤT MASK-P, chờ Anh**. Không commit/push; PR: **chờ lead mở** |
 | MASK-3 | Port kho/quyền, kho tạm và chống trùng sau MASK-2 | MK-10…13, 16…19 | Xong phạm vi port/CoreGia — 14/11/2026 | Chỉ DEMO; đúng bốn tệp mã. Pytest 225 passed, 190 subtests passed; kiểm độc lập ĐẠT. CLI SDK 0/2 ĐẠT do handler MASK-5 còn stub; chưa đạt nghiệm thu chung. PR: **chờ lead mở** |
-| MASK-3b | Kho MASK-3 qua Ngan, tiền tố MASK, bản khai SDK 2.1 | Quyết định 15/11 câu 2, 8 | Xong — 15/11/2026; đã nối ngăn chung NGAN-0; chờ Core thật | Không ghi kho JSON; CAS nguyên tử; giữ ChuaRo khi ghi dấu lỗi. PR: **chờ lead mở** |
+| MASK-3b | Kho MASK-3 qua Ngan, tiền tố MASK, bản khai SDK 2.1 | Quyết định 15/11 câu 2, 8; kiểm độc lập của lead | Xong phần sửa an toàn — 15/11/2026; đã nối ngăn chung NGAN-0; chờ Core thật | Bỏ Cf/selector và che theo vị trí gốc; bí danh tạm riêng từng yêu cầu; bọc lỗi/log; hiện vật lưu trên máy đã ra LUU-TRU. PR: **chờ lead mở** |
 | MASK-4 | Phong bì và schema ba loại riêng | MK-20 | Xong phạm vi CoreGia — 15/11/2026 | Schema chung/bản gói so SHA; kiểm UTF-8/JSON/trần lồng. PR: **chờ lead mở** |
 | MASK-5 | Hai handler văn bản SDK và mở che dữ liệu/trích dẫn AI | MK-12…14, 18, 20, 21 | Xong phạm vi CoreGia — 15/11/2026; chờ quyền thật | DEMO qua port ngoài gói; CLI chuẩn vẫn bị chặn do thiếu quyền. PR: **chờ lead mở** |
 | MASK-6 | Duyệt/từ chối, đóng/dọn, chuyển DEMO và màn Admin | MK-11, 15…19, 22 | Xong phạm vi CoreGia/KttCore giả — 15/11/2026 | Màn trong gói; chưa nạp trong Core thật. PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## MASK-3b — sửa an toàn theo kiểm độc lập, 15/11/2026
+
+- Phạm vi theo lệnh lead lúc **08:25 ngày 15/11/2026 (UTC+07)**; PR: **chờ lead mở**, không commit/push. Giữ nguyên `_chung/**`, `ngan.py`, `cau_hinh.py`, nguồn cũ và hợp đồng chung.
+- Bỏ mọi Unicode Cf và variation selector trước dò NFC; giữ ánh xạ về nguyên văn, che cả ký tự vô hình chen giữa định danh. Dò bổ sung tên qua tab/xuống dòng; kiểm NFD/NBSP, MST/STK và bảo toàn tiền/ngày. Kết quả không còn ký tự vô hình; phong bì chặn nếu còn, vị trí không ánh xạ được trả `MASK_DAU_VAO`.
+- Bí danh tạm chỉ thuộc yêu cầu sinh ra nó, không tái dùng giữa hai yêu cầu; không ghi tham chiếu chéo. Mã chính thức đã duyệt vẫn dùng được trong cùng pháp nhân. Danh sách chờ không tăng số cụm mới khi chỉ cấp alias tạm khác cho cùng cụm. Giữ retry/CAS/đếm gặp/duyệt/từ chối/dọn.
+- Lỗi bất ngờ của ngăn/port được bọc bằng thông điệp cố định và `raise ... from None`; test bắt stdout/stderr cả che/mở/duyệt/lỗi. Công ty đã duyệt giữ mã Junsky; chốt từ chối bản che không đạt thay nhánh đóng yêu cầu không được dùng.
+- Chuyển nguyên `kho_tam.py`, `cau_hinh_may.py`, `schemas/cau_hinh_may.schema.json` sang `e_mask/LUU-TRU/mask_truoc_ngan/`; chỉ test lịch sử nạp qua helper ngoài gói. Kiểm độc lập chặn mã đọc biến cấu hình máy và import mã lưu trữ. `git mv` bị sandbox từ chối do Git index ngoài worktree; đã dùng Move-Item, giữ nguyên byte; **lead stage rename khi commit**.
+- Tách nhóm để lead review, do các phát hiện nằm ở nhiều lớp: **A** Unicode/phong bì: `types.py`, `che_van_ban.py`, `phong_bi.py` (3 tệp); **B** quyền alias/lỗi cổng: `kho_qua_core.py`, `kho_ngan.py`, `chay.py` (3 tệp); **C** chuyển lưu trữ: 3 hiện vật, không sửa nội dung. Test/tài liệu ngoài giới hạn 5 tệp mã mỗi nhóm.
+- **Đã kiểm bằng Core giả (CoreGia)**: pytest **422 passed, 190 subtests passed, 0 skipped**, 31.39 giây; adapter DEMO **2/2**, Node/KttCore giả **4/4**, kiểm độc lập và `git diff --check` mã 0. CLI SDK chuẩn **0/2, mã 1**, vẫn chặn thiếu nguồn quyền thật; không đổi cổng để vượt kiểm. [Báo cáo sửa an toàn](BAO-CAO-SUA-AN-TOAN-MASK-3b-6.md) và [kết quả lệnh thật](KET-QUA-KIEM-SUA-AN-TOAN-MASK-3b-6.txt) có đủ các lệnh AGENTS.md §5 và lệnh lead yêu cầu.
+- Thời gian phiên: **08:25:00–08:54:41 ngày 15/11/2026 (UTC+07), 0.49 giờ**; MASK-3b ước tính **3 giờ**, không có dự toán riêng cho vòng sửa này. Chưa chạy Linux/Core thật hoặc Cloud.
 
 ## MASK-3b — nối ngăn chung NGAN-0, 15/11/2026
 
@@ -160,6 +171,10 @@ Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã
 - Khác biệt **numeric_review với NUL**: cần đối chiếu riêng với nguồn, giữ ranh giới số và chứng minh tiền/ngày; không sửa trong lát kho/quyền.
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+### Sửa an toàn MASK-3b — 15/11/2026
+
+Không thêm API/schema chung. Port snapshot nội bộ nay cung cấp danh sách bí danh tạm được dùng của đúng yêu cầu từ tham chiếu trong ngăn; thiếu thì từ chối dùng bí danh tạm có sẵn. Khi nối Core thật, phải giữ ràng buộc này trong giao dịch và quyền server. SDK vẫn cần nhật ký an toàn cho lỗi ngoài phạm vi handler; engine đã bọc lỗi ngăn/port trong phạm vi được giao. Các phụ thuộc ngăn/quyền thật bên dưới giữ nguyên.
 
 ### Bổ sung MASK-3b → MASK-6 — 15/11/2026
 

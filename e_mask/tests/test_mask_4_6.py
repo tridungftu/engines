@@ -149,7 +149,7 @@ def test_duyet_tu_choi_don_hai_yeu_cau_va_giao_lai():
     ma=admin.duyet(muc['gia_tri']['khoa'],muc['row_version'])
     assert ma.startswith('[[MASKCT-') and admin.danh_sach()==[] and admin.don()==0
     _,mo=mo_demo(n,q,c,app,alias,ctx.ma_yeu_cau,dong=True)
-    assert mo['ket_qua']['truong']['van_ban_da_mo_che']==TEN and admin.don()==0
+    assert mo['ket_qua']['truong']['van_ban_da_mo_che']==TEN and admin.don()==1
     admin.dong(ctx2.ma_yeu_cau)
     assert admin.don()==1
     assert 'bi_danh_tam' not in n.tim('dinh_danh').danh_sach[0].gia_tri

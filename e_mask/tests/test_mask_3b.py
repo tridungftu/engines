@@ -145,7 +145,7 @@ def test_ngan_chot_retry_khong_ghi_tep_va_khong_luu_tai_lieu(tmp_path, monkeypat
     assert VAN_BAN not in du_lieu and 'van_ban_da_che' not in du_lieu
     v2 = viec_demo('viec-demo-2'); q.cap(v2.id)
     c = k.xu_ly(v2,xu_ly)
-    assert c['van_ban_da_che'] == a['van_ban_da_che']
+    assert c['van_ban_da_che'] != a['van_ban_da_che']  # Yêu cầu khác có bí danh tạm riêng.
     assert n.tim('cho_duyet').danh_sach[0].gia_tri['so_lan_gap'] == 2
 
 
@@ -160,7 +160,7 @@ def test_hai_snapshot_chot_nguyen_tu_xung_dot():
         b.chot(kb)
     assert e.value.ma == 'MASK_XUNG_DOT' and e.value.thu_lai_duoc
     assert {bang:n.tim(bang) for bang in truoc} == truoc
-    assert k.xu_ly(v2,xu_ly)['van_ban_da_che'] == ka['van_ban_da_che']
+    assert k.xu_ly(v2,xu_ly)['van_ban_da_che'] != ka['van_ban_da_che']
 
 
 def test_chua_ro_khong_mat_khi_ghi_dau_loi(monkeypatch, tmp_path):

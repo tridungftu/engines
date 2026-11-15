@@ -3,13 +3,14 @@ from copy import deepcopy
 from functools import wraps
 from pathlib import Path
 
-from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
+from kho_tri_thuc_sdk.engine import ChuaRo, Engine, LoiDuongTruyen, LoiNghiepVu, ViecDaHuy
 
 from . import che_van_ban as loi_che, phong_bi, tai_nguyen
 from .kho_dinh_danh import KhoDinhDanh
 from .cau_hinh import CauHinhKhongHopLe
 from .kho_ngan import KHAI_NGAN
 from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
+from .quyen_yeu_cau import loi_kho
 
 
 def _loi_cong(ham):
@@ -18,8 +19,13 @@ def _loi_cong(ham):
         try:
             return ham(viec)
         except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
-            raise LoiNghiepVu(exc.ma, exc.thong_diep,
-                             thu_lai_duoc=exc.thu_lai_duoc) from None
+            lop = type(exc)
+            raise LoiNghiepVu(lop.ma, lop.thong_diep,
+                             thu_lai_duoc=lop.thu_lai_duoc) from None
+        except (ChuaRo, ViecDaHuy, LoiDuongTruyen, LoiNghiepVu):
+            raise
+        except Exception:
+            raise loi_kho() from None
     return goi
 
 

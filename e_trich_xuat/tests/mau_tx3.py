@@ -1,52 +1,23 @@
-"""Fixture DEMO TX-3: đăng ký tạm chỉ trong test, không thay manifest runtime."""
+"""Fixture DEMO TX-3 dùng phiếu và handlers thật; không đăng ký thay runtime."""
 
 from copy import deepcopy
 import json
 from pathlib import Path
 
-from kho_tri_thuc_sdk.engine import kiem_phieu
 from kho_tri_thuc_sdk.thu import CoreGia
 
-from e_trich_xuat.chay import EngineTrichXuat, GOC_GOI, ghim_cau_hinh, tao_app
-from e_trich_xuat.docx import doc_docx
-from e_trich_xuat.hau_kiem import hau_kiem
-from e_trich_xuat.ngan import NganBoNho
+from e_trich_xuat.chay import GOC_GOI, tao_app
 from e_trich_xuat.tham_so import bam_bytes, json_bytes
-from e_trich_xuat.tich_hop import chuan_bi
-from e_trich_xuat.xuat import xuat_ket_qua
 
 
 PHIEU = json.loads((GOC_GOI / "engine.json").read_text(encoding="utf-8"))
 VD = next(v for v in PHIEU["chay_thu_demo"] if v["nang_luc"] == "trich.chuan_bi@1")
-HAU_KIEM = {"ma": "trich.hau_kiem@1", "ten": "Hậu kiểm từng ô DEMO, chưa đăng ký",
-            "nhan": ["tra_loi_ai"], "tra": "bang_trich_xuat",
-            "gioi_han": {"tep_toi_da_mib": 20, "thoi_han_giay": 120}, "huy_duoc": True}
-XUAT = {"ma": "trich.xuat_ket_qua@1", "ten": "Xuất JSON/Excel DEMO, chưa đăng ký",
-        "nhan": ["bang_trich_xuat"], "tra": "truong",
-        "truong_ra": [{"ma": "tep_json", "ten": "Tệp JSON", "kieu": "tep"},
-                      {"ma": "tep_excel", "ten": "Tệp Excel", "kieu": "tep"},
-                      {"ma": "so_tham_so", "ten": "Số tham số", "kieu": "so"},
-                      {"ma": "so_can_soat", "ten": "Số cần soát", "kieu": "so"},
-                      {"ma": "co_can_cu", "ten": "Có căn cứ", "kieu": "co_khong"}],
-        "gioi_han": {"tep_toi_da_mib": 20, "thoi_han_giay": 120}, "huy_duoc": True}
 
 
 def app_tx3():
-    p = deepcopy(PHIEU)
-    p["nang_luc"] += [deepcopy(HAU_KIEM), deepcopy(XUAT)]
-    p["loai_du_lieu_rieng"] += [{"ma": "tra_loi_ai", "ten": "Trả lời AI có trích dẫn"},
-                                {"ma": "bang_trich_xuat", "ten": "Bảng thông tin trích xuất"}]
-    p["chay_thu_demo"] = []
-    assert kiem_phieu(p, GOC_GOI) == []
-    app = EngineTrichXuat(p, thu_muc_goi=GOC_GOI)
-    app.ngan = NganBoNho()
+    app = tao_app()
     with app.ngan.lo() as lo:
         lo.them("cau_hinh", {}, {"ngan_sach_token_vao_toi_da": 100000})
-    app.nang_luc("trich.doc_docx@1")(lambda viec: doc_docx(viec, phien_ban_engine="e_trich_xuat 0.3.0"))
-    app.nang_luc("trich.chuan_bi@1")(lambda viec: chuan_bi(
-        viec, ghim_cau_hinh(viec, app), phien_ban_engine="e_trich_xuat 0.3.0"))
-    app.nang_luc("trich.hau_kiem@1")(hau_kiem)
-    app.nang_luc("trich.xuat_ket_qua@1")(xuat_ket_qua)
     return app
 
 
@@ -101,14 +72,9 @@ def bang_demo():
 
 
 def chay_demo_tx3():
-    core, app, req = chuan_bi_demo()
-    ai = ai_demo(req)
-    bang = core.chay_thu(app, "trich.hau_kiem@1", ai)
-    assert bang["trang_thai"] == "XONG", bang
-    app.phieu["chay_thu_demo"] = [
-        {"nang_luc": HAU_KIEM["ma"], "ten": "Hậu kiểm độc lập từng ô DEMO (chưa đăng ký)",
-         "dau_vao": ai},
-        {"nang_luc": XUAT["ma"], "ten": "Xuất đủ JSON/Excel DEMO (chưa đăng ký)",
-         "dau_vao": bang["ket_qua"]},
-    ]
-    return core.chay_thu_demo(app)
+    from e_trich_xuat.demo import nap_ho_so_demo
+    core, app = CoreGia(), app_tx3()
+    nap_ho_so_demo(core, app)
+    return [kq for kq in core.chay_thu_demo(app)
+            if kq["ten"] in {vd["ten"] for vd in PHIEU["chay_thu_demo"]
+                             if vd["nang_luc"] in ("trich.hau_kiem@1", "trich.xuat_ket_qua@1")}]

@@ -46,15 +46,19 @@ def doc(raw):
 def test_demo_sdk_phan_bo_dung_schema_va_khong_tu_cau_hinh():
     app, core = tao_app(), CoreGia()
     app.ngan = NganBoNho()
-    assert app.cac_nang_luc == ("trich.doc_docx@1", "trich.chuan_bi@1")
+    assert app.cac_nang_luc == ("trich.doc_docx@1", "trich.chuan_bi@1",
+                              "trich.hau_kiem@1", "trich.xuat_ket_qua@1")
     assert app.ngan.doc("cau_hinh", {}) is None
+    from e_trich_xuat.demo import nap_ho_so_demo
+    nap_ho_so_demo(core, app)
     ds = core.chay_thu_demo(app)
-    assert len(ds) == 3
+    assert len(ds) == 5
     for kq in ds[:2]:
         assert kq["trang_thai"] == "XONG"
         BO_KIEM_SCHEMA.validate(kq["ket_qua"])
     assert ds[2]["trang_thai"] == "LOI"
     assert ds[2]["loi"]["ma"] == "CHUA_CAU_HINH"
+    assert all(kq["trang_thai"] == "XONG" for kq in ds[3:])
     assert app.ngan.doc("cau_hinh", {}) is None
     assert app.ngan.doc("cau_hinh", {}) is None
     assert (GOI / "demo/DEMO-hop-dong.docx").read_bytes() == mau_thuong()

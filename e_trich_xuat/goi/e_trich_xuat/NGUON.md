@@ -1,4 +1,8 @@
-# Nguồn gói TX-1 / TX-2 / lõi TX-3 đề xuất
+# Nguồn gói TX-1 / TX-2 / TX-3 / TX-3b
+
+> TX-3b, 15/11/2026: chi tiết TX-3 đã được Anh duyệt chiều 15/11;
+> bản 0.4.0 đã đăng ký schema/năng lực/DEMO. Các nhãn “đề xuất / chưa
+> đăng ký” của biên bản TX-3 bên dưới là lịch sử trước duyệt.
 
 Nguồn nội bộ đã có trong repo; không thêm mã/thư viện bên ngoài.
 
@@ -49,21 +53,21 @@ Hai tệp mẫu ngăn trong gói không được sửa, kể cả để đổi x
 | Tệp | SHA-256 |
 |---|---|
 | `cau_hinh.schema.json` | `291d3ff81ffe0c12e31b1dd6e982b6339c3fa0992f6ec4797f33727ff06f1567` |
-| `CHANGELOG.md` | `d49491c142c3eb5ba634ccacaaa08a39d35c0089050360b6708a458f88b5b8d6` |
+| `CHANGELOG.md` | `ef575eaebdc1650f1ce6743373daab5a35f9117e70c71a85d077513a690475e0` |
 | `contract/van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
 | `contract/yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
 | `demo/DEMO-hop-dong.docx` | `22030fe7fa1a65384e696b3fdfdd9506cca22fac7f268000d579d208cb8ec471` |
 | `demo/DEMO-track-changes.docx` | `a665fac5cf0cc68fb0e1faec45984b5348185f4f34f6125fc3b2c7469edd40e7` |
-| `demo/README.md` | `449c8c5fb6569800087c01ef38203c91054bd97d8ba7b66e96f90bd261c9151e` |
+| `demo/README.md` | `1832b57855397f8618590ccc8100c4232ea515da65405a4d35109dcd885b37d2` |
 | `e_trich_xuat/__init__.py` | `132fde790e8e65934171f4d441cfd174ede92d8944e80c8ccdb23d8c5093f126` |
 | `e_trich_xuat/cau_hinh.py` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
 | `e_trich_xuat/cau_truc.py` | `1a44e428a8dc2e1e5a5d52524baaafa12e6dddc6e1dc026b17cc519470760459` |
-| `e_trich_xuat/chay.py` | `504616b003305f5e723d95eca6ec14f312feb78b617605b8d0f80ab1889df91f` |
+| `e_trich_xuat/chay.py` | `47513844092347d256eb342e7759fc863048ec679b84c4f8aa1724d5f61f1d3d` |
 | `e_trich_xuat/docx.py` | `4290748070f8d5a8deee8a051c9ccdb384b1cb3ee8780e833d2781e5f84f1653` |
 | `e_trich_xuat/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
 | `e_trich_xuat/tham_so.py` | `2106cece109ca86272e94717abd6b6e6e0489e95c0ac49f33c0f71fa617cbc12` |
 | `e_trich_xuat/tich_hop.py` | `26fa7299a3a2d992bfdeb44536031a367b06f1ad20b6575818332edbb2463d1a` |
-| `engine.json` | `c731456c391025ea23e6ab89641558b1f057de6033371fb174c03be618d7ba70` |
+| `engine.json` | `ee4f0cb36f18c775ba2dd1584adff0fa636f63bef68b142d42ef6d200e2bddda` |
 | `KHAI-SDK-2.1.json` | `9dc34efb03293ab8f314d4b7610c60bff5dc231835cb733c4add06bbc4741619` |
 | `README.md` | `d42ced193eee270ddb123ce309b05c1bb32d972be715d95327a228b4d5944664` |
 | `requirements.lock` | `f1c814f4fcea2aef4d55342db50054ea97943552ba0f5bdf72a19c892410b3b5` |
@@ -75,15 +79,15 @@ Hai tệp mẫu ngăn trong gói không được sửa, kể cả để đổi x
 |---|---|
 | `_chung/mau-ma/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
 | `_chung/mau-ma/cau_hinh.py` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
-| `e_trich_xuat/tests/test_goi.py` | `bafadb4e86ccab437f461b30586c8d3ffecf87cd2ea29830385175e7020d6ebc` |
+| `e_trich_xuat/tests/test_goi.py` | `69e88d09e2c23924bec5fc9ca45893d4715f71687003b72eae926e0287759b5e` |
 | `e_trich_xuat/tests/test_ngan_cau_hinh.py` | `914ee271e2a811056be100236bbb0f45388b7d1d44c5803516c8d46969a520d4` |
-| `e_trich_xuat/tests/test_docx.py` | `66480e3a5d4db58ec568943ada632f918140bc5e1cc198d647e4a62e30d74f9c` |
-| `e_trich_xuat/tests/test_chuan_bi.py` | `1766061b427e39d50023e7c82aa161f5c8ee7f7ec1523dfa73935eb9152351b1` |
+| `e_trich_xuat/tests/test_docx.py` | `839961cb7239c412418b2986261948a7bbe5cb004a40cb2fa5fd18bab8eb0cd2` |
+| `e_trich_xuat/tests/test_chuan_bi.py` | `e8911fa87335ca08923cf519a21ed422e13c1812f3c04c80d5420f179eac16d6` |
 | `e_trich_xuat/tests/test_cong_sdk.py` | `18cbc6fa2bbb43a3c317b89a3d455a7df487347e5146fb44cf5630a86909fdda` |
-| `e_trich_xuat/tests/chay_demo_voi_ngan_gia.py` | `aac71fd49f8eb4050b1643cdc57b26e4cc4d43cc536667f64190c8507b09f503` |
+| `e_trich_xuat/tests/chay_demo_voi_ngan_gia.py` | `01158473b3a466637814088c58b08b10c02ea22531b45c4239831cce2a2c5bc2` |
 | `e_trich_xuat/tests/requirements.lock` | `736ea02ef855c421afcaa53a43f2005d5c59212f62cf0eea241de4090f40eaf3` |
 | `e_trich_xuat/docs/TX-1-PHAM-VI.md` | `ddf797115058e114d79cddb17547740416c27003c28b5b7396c7c15149e97850` |
-| `e_trich_xuat/docs/VIEC.md` | `8de10e2daa6e960e4696cdd10d11f0170705b746d02742ed8b81d4a3b773a28d` |
+| `e_trich_xuat/docs/VIEC.md` | `f54ba977c832c3a9ec7f4943f14c83c46a9c6c19f5df7ebae1cdf53b08d9c467` |
 
 
 ## Nguồn và phạm vi TX-3 — chưa đăng ký runtime
@@ -142,7 +146,41 @@ Chi tiết review tại `../../docs/TX-3-REVIEW.md`; bằng chứng/lệnh/giờ
 | `e_trich_xuat/logic.py` | `66f6befde686bc3d86cb234889a61af0655d4c92b7b1be09e86d177fcb152950` |
 | `e_trich_xuat/xlsx_mini.py` | `b139d90d6adb186d658ad00f7970f7647f351178a035459b0913cf4298edc5e3` |
 | `e_trich_xuat/xuat.py` | `a4cc1ff456b1235ff01ecd010f588eb89e04ce2dd6eefa7b6fc856e8dc0f431c` |
-| `e_trich_xuat/tests/mau_tx3.py` | `374a64d3e3de97b2ce1300fbc4e04f93731f861479eb86a7990037e3b6616410` |
-| `e_trich_xuat/tests/test_hau_kiem.py` | `71e10bf31dc4b57547f7b247db88bd116554578f7fc73fd2b7e1e16e902f202d` |
-| `e_trich_xuat/tests/test_xuat.py` | `af063779480911dc493e20eab6ebcfab17f53db934923dd9202fb79fe71c1608` |
-| `e_trich_xuat/docs/TX-3-REVIEW.md` | `b43cfa0e35446ae5d1218637b63cc0fef074db5d20a1e78e21d0473e4961bbd0` |
+| `e_trich_xuat/tests/mau_tx3.py` | `6e3f5069692bfe0e2601bfe86219b5ca09b6b69dd73df6db119708356215124f` |
+| `e_trich_xuat/tests/test_hau_kiem.py` | `da124c55b4727d7a938ee70509a26e180c404fc0e7da965dacd8dc0e0b7c8cdb` |
+| `e_trich_xuat/tests/test_xuat.py` | `880c050fac738727260507ba2ac7055d6d72eefec6bd88efc96284bb0e6d4077` |
+| `e_trich_xuat/docs/TX-3-REVIEW.md` | `a1e35601bdd9e7dfe7aa2a6232430d808929666ce7b4bd25b3156cb8a5832b38` |
+
+
+## Nguồn TX-3b — 15/11/2026, bản 0.4.0
+
+- `_chung/docs/LOAI-DU-LIEU-RIENG.md` §4 + bổ sung tại
+  `e_trich_xuat/docs/TX-3-REVIEW.md`, đã duyệt bởi
+  `_chung/docs/QUYET-DINH-ANH-20261115-CHIEU.md` câu 3:
+  tạo `_chung/contract/bang_trich_xuat.schema.json`, chép nguyên nội dung
+  vào `contract/`; test so SHA-256 sau CRLF→LF. Không sửa văn bản loại
+  chung hoặc bốn schema chung đã có.
+- `tests/mau_tx3.py` → hai `chay_thu_demo` trong manifest và
+  `demo/DEMO-ho-so-hau-kiem.json`: lấy từ chuẩn bị/hậu kiểm thật bằng
+  CoreGia, chỉ dữ liệu giả, metadata và bytes/băm/kích thước thực.
+  Tệp hồ sơ JSON canonical là tài nguyên DEMO được đóng gói, không phải
+  dữ liệu engine tự ghi/lưu bền hoặc cấu hình thật.
+- Viết helper `e_trich_xuat/demo.py` chỉ phục vụ cổng kiểm: API công khai
+  `CoreGia.them_tep`, kiểm băm/kích thước, thay ID tệp và băm toàn request
+  AI trong bản chép mẫu. Không sửa SDK hay handlers, không nạp từ runtime.
+- `chay.py` nối lõi `hau_kiem.py`/`xuat.py` đã có; không đổi nghiệp vụ hoặc
+  sao chép đăng ký giả từ test. Bỏ phiếu RAM đề xuất trong `tests/mau_tx3.py`.
+- Không thêm dependency. **đã kiểm bằng Core giả (CoreGia)**:
+  408 passed, 0 skipped; cổng có ngăn/hồ sơ 5/5; độc lập đạt; CLI chuẩn
+  3/5, exit 1 (C-TX-04 `CHUA_CAU_HINH`, C-TX-06 hậu kiểm `DANG_CHAY`
+  do thiếu hồ sơ tham chiếu). Linux/Core thật/E6/N1 chưa chứng nhận.
+
+### SHA-256 bổ sung TX-3b (UTF-8, CRLF→LF)
+
+| Tệp | SHA-256 |
+|---|---|
+| `_chung/contract/bang_trich_xuat.schema.json` | `f36314d7e3958281966a5c4c24ca3cd9a01df507d7a07d0b96a0aebafe4ea82f` |
+| `contract/bang_trich_xuat.schema.json` | `f36314d7e3958281966a5c4c24ca3cd9a01df507d7a07d0b96a0aebafe4ea82f` |
+| `demo/DEMO-ho-so-hau-kiem.json` | `4879e0e1d270631a50bcbc27707511f464bbca369816ab35f4e0fec82ab4e02b` |
+| `e_trich_xuat/demo.py` | `117ea143d6d286516ee39408b11229279da522bb8cbfbe030750eaf875d155e0` |
+| `e_trich_xuat/tests/test_dang_ky_tx3b.py` | `9bc74afd51c249f354e2bacb56bb534d5076632e26e7a9541cd79d5553410555` |

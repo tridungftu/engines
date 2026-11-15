@@ -13,10 +13,16 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 6 | 9 câu trả lời sau (đặc tả §15) | — | Chờ Anh |  |
 | TC-P | Lập phiếu giao Codex theo SDK 2.0, chỉ tài liệu | Anh giao 15/11/2026; QĐ 15/11 câu 12 | Xong — 15/11/2026 | `GIAO-CODEX-e_tra_cuu.md`: 12 lát TC-0…TC-11, 45 giờ công ƯỚC TÍNH; TC-P 1 giờ ƯỚC TÍNH ngoài tổng; đề xuất loại `ho_so_tra_cuu` ở cuối tài liệu loại chung; PR: **chờ lead mở** |
 | TC-0 | Khung SDK 2.0 + Ngan/cấu hình + kiểm độc lập | Lead giao 15/11/2026, 12:17; phiếu TC-0 §4 | Chờ Core — 15/11/2026 | Đã làm đủ phạm vi 5 tệp mã; pytest/độc lập đạt. CLI SDK 2.0 trả 1 vì 0 demo, chưa đạt cổng chung; xem biên bản dưới. PR: **chờ lead mở** |
+| TC-1 | Contract hồ sơ và chỗ nối dữ liệu | Lead giao 15/11/2026, 12:36; TC-Q13 đã duyệt chiều 15/11 | Chờ Core — 15/11/2026 | Hoàn thành schema/tài liệu/test trong phạm vi TC-1; 192 passed, độc lập mã 0, CLI mã 1 vì 0 demo. Giữ khung đến TC-2 theo lệnh mới nhất; chưa đạt cổng chung/nghiệp vụ. PR: **chờ lead mở** |
 
 **Phạm vi sau TC-P (15/11/2026):** các mã TC ở dòng 1–5 của bảng cũ là mã lịch sử từ DAC-TA §14, không phải lát code mới. Dùng bảng §3 của `GIAO-CODEX-e_tra_cuu.md` làm phiếu giao mới: TC-0 = khung SDK 2.0 + Ngan/cấu hình + kiem_doc_lap + KHAI-SDK-2.1; khảo sát PostgreSQL/kho/cache/SDK JS/nạp hàng loạt vẫn thuộc Core. Tại thời điểm TC-P chưa giao hoặc làm TC-0…TC-11; cập nhật TC-0 ở dưới. Tại TC-P không có `ma-nguon/`, `goi/`, `tests/`, quyết định cuối/phiếu riêng trong worktree; không tạo chúng ở TC-P. TC-0 đã tạo goi/tests, tiếp tục không tạo ma-nguon.
 
-**Chờ Anh:** toàn bộ câu còn mở được gom **một bảng chọn duy nhất** TC-Q01…TC-Q15 tại phiếu §5.2; bảng này thay cách theo dõi “9 câu” ở dòng 6, không coi đề xuất là quyết định. TC-Q13 chặn kích hoạt schema/loại mới TC-1 trở đi; TC-Q14 chặn nhãn Xanh thật. Các chính sách vận hành chưa chốt không chặn khung/DEMO.
+**Quyết định cập nhật 15/11 chiều:** TC-Q13 đã duyệt loại `ho_so_tra_cuu`, mở
+TC-1; TC-Q01…15 theo cột đề xuất, trừ TC-Q06 tiếp tục **không tự xóa**.
+TC-Q14 đã chốt Xanh chỉ Python tầng 1 đủ điều kiện, mọi câu LLM soạn tối đa Vàng.
+TC-Q09 là duyệt cách rà nghiệp vụ trước khi chốt danh mục chi tiết, không mặc
+nhiên duyệt mọi loại hoặc bật nhựa/điện. Bảng chọn duy nhất tại phiếu §5.2 vẫn
+là nơi theo dõi; các dòng “chưa duyệt” trong biên bản TC-P/TC-0 dưới đây là lịch sử.
 
 **Kiểm TC-P:** theo ngoại lệ riêng của lát chỉ tài liệu, không áp dụng ba lệnh engine AGENTS.md §5 khi chưa có gói/tests. Kiểm 12/12 khối lệnh §4 bằng regex Anh yêu cầu (fence mở ``` trơn), đủ TC-0…TC-11, không trùng, tổng giờ bảng = 45; `git diff --check` không lỗi. SDK 2.0.0 cài offline trong `.venv`, SHA-256 wheel khớp SHA256SUMS.txt. Chỉ kiểm tài liệu và đọc mã SDK, **chưa chạy engine/CoreGia**. Không commit/push; không tạo `goi/`, không sửa nguồn cũ.
 
@@ -103,3 +109,75 @@ chưa có ngăn bền/CAS/quyền/cấu hình/UI Core thật. Chưa phát sinh c
 cần Anh ngoài bảng TC-Q01…15 hiện có.
 
 **Thời gian thực tế TC-0:** bắt đầu 15/11/2026 12:17 theo lead; kết thúc 15/11/2026 12:30:13 (UTC+07:00), khoảng 0.22 giờ; phiếu 3 giờ **ƯỚC TÍNH**. Thời gian gồm đọc tài liệu, cài venv offline, triển khai, kiểm và báo cáo; không phải số đo vận hành engine.
+
+### TC-1 — biên bản bàn giao ngày 15/11/2026
+
+**Kết luận: Chưa đạt cổng chung AGENTS.md §5** — đã hoàn thành phạm vi contract
+TC-1 được giao; CLI SDK 2.0.0 vẫn trả 1 khi 0 demo. Không coi là nghiệp vụ đạt.
+PR: **chờ lead mở**; không commit/push.
+
+Đã làm:
+
+- Tạo schema nguồn `ho_so_tra_cuu` theo TC-Q13 đã duyệt, bản chép gói và ba bản
+  chép schema chung nguyên trạng: **đúng 5 tệp schema nguồn/bản chép**.
+  SHA-256 chỉ chuẩn hóa CRLF→LF và nguyên bytes đều khớp 4/4 cặp; NGUON có băm.
+- `TC-1-CONTRACT.md`: required/enum/trần/phong bì một đầu vào, snapshot riêng
+  năm tác vụ, tám năng lực để TC-2 triển khai, chuyển trạng thái/summary,
+  canonical JSON/băm bytes, map Unicode nguồn/AI, ngữ cảnh và quyền Core tin cậy,
+  lỗi Việt cố định. Băm/tep_id/cờ caller không thay quyền, không có `nhan_2`.
+- Nêu rõ bộ đọc `cau_hinh.py` không phải validator chung cho `$ref/oneOf/type`
+  mảng. Không thêm dependency. Python kiểm miền thực ở TC-2…7; mô hình TC-1 và
+  bộ đánh giá giới hạn schema mới chỉ ở tests, không handler/runtime chung.
+- DEMO nạp bytes thật vào kho RAM CoreGia, tính metadata/băm thật; kiểm bảng
+  task/stage, ref/băm/size/config/danh mục sai, số đoạn/ứng viên lệch, hoán vị
+  thiếu/thêm/trùng/đổi nguồn, pháp nhân giả khác ngữ cảnh, offset Unicode,
+  JSON nghiêm và trần. Tổng bytes quá trần mô phỏng bộ đếm, không tạo tệp lớn.
+- Khung/lỗi hiện có **đã kiểm bằng Core giả (CoreGia)** qua các test TC-0 giữ
+  nguyên. Contract là mô hình test, không chứng nhận handler TC-2…8 hoặc RLS
+  thật. Không Core/AI thật, không mạng/Cloud; chưa chạy Linux/UI/máy thật.
+- Giữ nguyên manifest/chay.py và 0 demo theo lệnh Anh/lead mới nhất. TC-2 thay
+  đồng thời manifest/stub `kiem_khung` trước phát hành; không còn cần hỏi mốc.
+  Hai mẫu ngăn/config, schema nguồn đã khóa, ma-nguon/Core/SDK đều không sửa.
+  Không tệp cấu hình/sổ/cache bền: dữ liệu cần giữ qua Ngan, snapshot qua Core.
+
+Môi trường: venv `.venv` trong worktree, Python 3.13.14, SDK 2.0.0 cài offline
+`--no-index --no-deps`; SHA-256 wheel khớp SHA256SUMS. Pytest 9.1.1 có sẵn qua
+`--system-site-packages`, không tải hoặc thêm dependency runtime.
+
+Kết quả thật lần kiểm cuối (`PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`):
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_tra_cuu/goi/e_tra_cuu
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+Phiếu chưa có ví dụ chay_thu_demo.
+Mã thoát: 1 — 0 demo, chưa kiểm nghiệp vụ, không ghi 0/0 ĐẠT.
+
+.venv/Scripts/python -B -m pytest e_tra_cuu/tests -q
+........................................................................ [ 37%]
+........................................................................ [ 75%]
+................................................                         [100%]
+192 passed in 0.83s
+Mã thoát: 0; 0 skipped.
+
+.venv/Scripts/python -B e_tra_cuu/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập; không import cấm, bytecode hoặc liên kết.
+Mã thoát: 0.
+```
+
+Lượt pytest đầu có 4 lỗi do test đưa schema vào bộ đọc khi ngăn chưa có cấu
+hình (hàm trả None trước kiểm schema). Đã sửa fixture test nạp bản ghi DEMO,
+không sửa mẫu dùng chung; lần cuối không lỗi. `git diff --check` không lỗi.
+
+**Lệch khỏi phiếu / quyết định tạm:** không mở phạm vi. Giữ 0 demo/khung đúng
+lệnh TC-1 mới nhất, không làm demo thành công giả để đổi mã CLI. Mẫu Ngan RAM
+theo quyết định 15/11; schema được tạo sau khi xác minh duyệt TC-Q13 chiều 15/11.
+
+**Cần Core / Chờ Anh:** giữ **C-TC-02** ghép nguồn/quyền tệp con/vòng đời/ACK,
+**C-TC-03** dữ liệu/ngữ cảnh/danh mục/hàm/bằng chứng/quyền tin cậy và RLS trước AI,
+**C-TC-05** log an toàn/kiểm loại riêng/lỗi trần/lease. Runtime thiếu cửa phải từ
+chối, adapter chỉ ở tests. **C-TC-01** CLI khung 0 demo trả 1/ngăn thật còn tồn
+tại; không sửa SDK. Không phát sinh câu hỏi cần Anh; TC-Q06 giữ không tự xóa.
+
+**Thời gian thực tế TC-1:** 15/11/2026 12:36–12:49 (UTC+07:00), khoảng **0,22
+giờ**, so với **3 giờ ƯỚC TÍNH** của phiếu. Gồm đọc, cài venv, schema/tài liệu,
+test và báo cáo; không phải phép đo hiệu năng/chất lượng nghiệp vụ.

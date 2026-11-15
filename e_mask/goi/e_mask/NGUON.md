@@ -9,7 +9,7 @@ Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ 
 | Đường nguồn | Đích trong gói | SHA trước (byte) | SHA sau (byte) | SHA trước (LF) | SHA sau (LF) | Điều chỉnh |
 |---|---|---|---|---|---|---|
 | `e_mask/ma-nguon/nguon/privacy/__init__.py` | `e_mask/nguon/privacy/__init__.py` | `ad88cdef05aa5862fb2e34bab1b19bc2e80727e40cabdbe9246133f8e846096f` | `bff7a8d02fd5f38b6876ea7930a2cdbcbbed9e85d2b3b6883005506a92f602c3` | `089a17a5759e62cb2e7a4f160bb88ac248ea4a8e2a507f1c7aad323a123e6845` | `584c0a757e561d88a1d2e624400c3f41908ae59167c7e734c02e19cdaa9cf181` | Ghi rõ phiên bản nguồn 2.7.2 chỉ là thông tin nguồn; không gọi ứng dụng cũ. |
-| `e_mask/ma-nguon/nguon/privacy/types.py` | `e_mask/nguon/privacy/types.py` | `c99ab1584d732dd35938d2cca4202129673bb4507ada4ec77a96cea7eaa1141a` | `76e6bae89a5acfad89068a09583d2485d3d4c7010ba6b7730451ac779ffa4698` | `59acab78646831909af6da5d54b292c0ad35929fbbff8b526084853bbf02c562` | `7f81a43ed1f61a8553c73da9499c5fab1c0bb69334f27b40eabfc202b9c3b3e1` | Bỏ Cf/selector trước NFC, ánh xạ về nguyên văn; từ chối nếu không ánh xạ được. |
+| `e_mask/ma-nguon/nguon/privacy/types.py` | `e_mask/nguon/privacy/types.py` | `c99ab1584d732dd35938d2cca4202129673bb4507ada4ec77a96cea7eaa1141a` | `4a9c8ba7c5e75a10e4dd7aea371c40298742c85fbbd00a4e6dd1977c1a5105ef` | `59acab78646831909af6da5d54b292c0ad35929fbbff8b526084853bbf02c562` | `962dccced2516f246db56ab84be07d3cb3d6fdd4dfcfe43c937c3795aa5a49d4` | Bỏ Cf/selector trước NFC, ánh xạ nguyên văn; MASK-2c-1 thêm khoảng bỏ và biên tổ hợp dùng chung. |
 | `e_mask/ma-nguon/nguon/privacy/core.py` | `e_mask/nguon/privacy/core.py` | `1b0cc53af256f6cfcb3ce2eeebe28eabb574c3b2cf3f82e1bdb4535732876029` | `842a978dafacb1d9e92ebc235917cab15910c66140380f7a695b87fc94255f75` | `287616e854e5c6a59be5a2531638dd5f68dda2df387b0ff778b770da4ff44075` | `80b89e308d02212f42e3bc4ea23fcd60fdd146d2593cf5fe45ec600ccc7df990` | Bỏ mã hóa bảng và xuất TXT/Word/ZIP cùng import liên quan; detector import khi gọi, thiếu thì từ chối. Giữ KnownText/nhóm/vị trí/bảo vệ số/numeric_review; thay bí danh [[...]], giữ mã Junsky, số tự sinh tối thiểu 4 chữ số không cắt; bỏ cụm gốc khỏi lỗi trùng; replace giữ phần NFD chưa thay và verify giữ ranh giới bí danh. MASK-2: numeric_review giữ ranh giới số bằng NUL thay vì nối qua bí danh. |
 | `e_mask/ma-nguon/nguon/privacy/company_names.py` | `e_mask/nguon/privacy/company_names.py` | `b3c595c193b3711737846762112654e45d8448fd9b6922903154b1d3d302d958` | `b3c595c193b3711737846762112654e45d8448fd9b6922903154b1d3d302d958` | `56a6b584d2e78161182413df61c6391e21c9c6fa8f64d2c483e5f849fc3a2fb3` | `56a6b584d2e78161182413df61c6391e21c9c6fa8f64d2c483e5f849fc3a2fb3` | Chép nguyên byte; giữ matcher và vị trí tên doanh nghiệp. |
 | `e_mask/ma-nguon/nguon/privacy/person_names.py` | `e_mask/nguon/privacy/person_names.py` | `68d77c172b618a309722350af8910cc7323d93f11c6347cbc152dbe4d70aed7a` | `68d77c172b618a309722350af8910cc7323d93f11c6347cbc152dbe4d70aed7a` | `e1b00921cdd1374876eaa13ce9baa3a79eef7cac7614d2b9854621f728054214` | `e1b00921cdd1374876eaa13ce9baa3a79eef7cac7614d2b9854621f728054214` | Chép nguyên byte; giữ gợi ý tên người có nhãn. |
@@ -242,3 +242,22 @@ Không thêm từ điển hoặc dependency. Bản dò tên nhận diện ranh g
 | `e_mask/docs/BAO-CAO-MASK-2b.md` | `b92ca176efbb9bbf90ec7e51c99b4f692be7bc891aae5533cee6d9cf54e8123a` |
 | `e_mask/docs/VIEC.md` | `4278314ab831e5f4093a5dbc2ce9100321bba37c6e76ff0a60a1e2b02bb84d56` |
 | `e_mask/goi/e_mask/CHANGELOG.md` | `63455d7dd6a5f3a957521319e0f37f7d424fdcbb6a1a791f7c894c3487d1633b` |
+
+## MASK-2c-1 — edit script và snapshot nội bộ, 15/11/2026
+
+Mã tự viết trong repo, chỉ thư viện chuẩn và SDK 2.0.0; không thêm dependency hoặc nguồn ngoài. Đúng bốn tệp mã chạy theo phiếu. Giữ nguyên `ngan.py`, `cau_hinh.py`, nguồn cũ, manifest/API và schema chung. `types.py` chỉ thêm bộ liệt kê khoảng Cf/selector và kiểm biên dấu tổ hợp, không đổi phép dò hiện có.
+
+`anh_xa_ai.py` ghi ba script bất biến: gốc → bỏ Cf/selector, bản sạch → NFC, gốc → bản che theo đúng khoảng thay thực tế. Chuyển bản dò ↔ bản che bằng hợp thành qua gốc, trả khoảng bao khi phép đổi không song ánh; không dùng chênh chiều dài toàn văn hoặc tìm tên lần đầu. Băm UTF-8 hai đầu, phiên bản map và bảng Unicode được ghim; kiểm lại phủ/ngữ nghĩa/script trước phát hành. Chỉ một khoảng thay alias bao trọn tên mới chứng minh đã che tên.
+
+`ho_so_ai.py` chỉ xử lý RAM và port kho tệp Core có ACL. Snapshot có gốc/bản dò/bản che/map/kế hoạch đoạn, JSON chuẩn và băm bytes; Ngan chỉ lưu chỉ mục băm/tham chiếu, không toàn văn/map. Trần snapshot kỹ thuật 64 MiB, vượt từ chối; không thay trần công khai 500.000 code point. Port chưa có transport thật, adapter DEMO dùng CoreGia trong `tests/ho_tro_ho_so_ai.py`, ngoài gói. Đã kiểm bằng Core giả (CoreGia); chưa kiểm Core/Local thật, Cloud tắt.
+
+Giữ kiểm hiệu năng 500.000 ký tự: bộ liệt kê Cf bỏ qua ASCII như bộ bỏ Cf cũ; nghi vấn số dài chỉ gồm chữ số ASCII/dấu cách và trùng toàn bộ văn bản sau strip được định vị đúng chữ trực tiếp. Kết quả vẫn chặn với cùng khoảng; không miễn detector, không đổi tiền/ngày, giới hạn thời gian hoặc test cũ. Các trường hợp khác giữ matcher hiện có; test đối chiếu với KnownText trên dữ liệu DEMO.
+
+Băm hiện hành sau chuẩn hóa CRLF thành LF; thay băm lịch sử cùng tên ở các mục trước:
+
+| Tệp | SHA-256 LF |
+|---|---|
+| `e_mask/goi/e_mask/e_mask/anh_xa_ai.py` | `3432016d943c4f2cbc271a04d1f9aa39ec142e352649468dbcf6f9ed5b989a72` |
+| `e_mask/goi/e_mask/e_mask/ho_so_ai.py` | `578f204934e51cec4764cd58cd190983869da10351f0c5e55a3e952b08bc16e9` |
+| `e_mask/goi/e_mask/e_mask/che_van_ban.py` | `c6d2c76477c86af17981dc551494723d1d02fefaa17bd637641b0a4fd71a5610` |
+| `e_mask/goi/e_mask/e_mask/nguon/privacy/types.py` | `962dccced2516f246db56ab84be07d3cb3d6fdd4dfcfe43c937c3795aa5a49d4` |

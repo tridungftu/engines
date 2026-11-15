@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ktt:contract:van_ban_tai_lieu:1",
+  "title": "Văn bản tài liệu có vị trí",
+  "$comment": "Theo _chung/docs/LOAI-DU-LIEU-RIENG.md ngày 14/11/2026. Cho phép thêm trường tùy chọn để tương thích phiên bản 1.",
+  "type": "object",
+  "required": [
+    "loai",
+    "van_ban_tai_lieu"
+  ],
+  "properties": {
+    "loai": {
+      "const": "van_ban_tai_lieu"
+    },
+    "van_ban_tai_lieu": {
+      "type": "object",
+      "required": [
+        "phien_ban",
+        "van_ban",
+        "trang",
+        "nguon_doc",
+        "ly_do_chuyen_nguon",
+        "so_trang",
+        "phien_ban_engine",
+        "bam_dau_vao",
+        "canh_bao"
+      ],
+      "properties": {
+        "phien_ban": {
+          "type": "integer",
+          "const": 1
+        },
+        "van_ban": {
+          "type": "string",
+          "description": "Toàn văn; các trang nối bằng ký tự form feed (\\f)."
+        },
+        "trang": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/trang"
+          }
+        },
+        "nguon_doc": {
+          "type": "string",
+          "enum": [
+            "abbyy",
+            "tesseract",
+            "lop_chu_san",
+            "docx"
+          ]
+        },
+        "ly_do_chuyen_nguon": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "so_trang": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "phien_ban_engine": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bam_dau_vao": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "canh_bao": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "hop": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "number"
+      }
+    },
+    "tu": {
+      "type": "object",
+      "required": [
+        "van_ban",
+        "hop"
+      ],
+      "properties": {
+        "van_ban": {
+          "type": "string"
+        },
+        "hop": {
+          "$ref": "#/$defs/hop"
+        },
+        "nghi_ngo": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "dong": {
+      "type": "object",
+      "required": [
+        "van_ban",
+        "hop"
+      ],
+      "properties": {
+        "van_ban": {
+          "type": "string"
+        },
+        "hop": {
+          "$ref": "#/$defs/hop"
+        },
+        "tu": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tu"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "doan": {
+      "type": "object",
+      "required": [
+        "loai",
+        "van_ban",
+        "hop"
+      ],
+      "properties": {
+        "loai": {
+          "const": "doan"
+        },
+        "van_ban": {
+          "type": "string"
+        },
+        "hop": {
+          "$ref": "#/$defs/hop"
+        },
+        "dong": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dong"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "o": {
+      "type": "object",
+      "required": [
+        "hang",
+        "cot",
+        "gop_hang",
+        "gop_cot",
+        "van_ban"
+      ],
+      "properties": {
+        "hang": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cot": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gop_hang": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "gop_cot": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "van_ban": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "bang": {
+      "type": "object",
+      "required": [
+        "loai",
+        "hop",
+        "o"
+      ],
+      "properties": {
+        "loai": {
+          "const": "bang"
+        },
+        "hop": {
+          "$ref": "#/$defs/hop"
+        },
+        "o": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/o"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "trang": {
+      "type": "object",
+      "required": [
+        "so",
+        "rong",
+        "cao",
+        "don_vi",
+        "khoi"
+      ],
+      "properties": {
+        "so": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rong": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "cao": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "don_vi": {
+          "type": "string",
+          "minLength": 1
+        },
+        "khoi": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/doan"
+              },
+              {
+                "$ref": "#/$defs/bang"
+              }
+            ]
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-P3 | Thiết kế lại mở che/kho bí danh cho SDK 2.2.0, chỉ tài liệu | **CĐ-36 — Anh, 15/11/2026 16:28** | Xong tài liệu — 15/11/2026; **Chờ Anh chọn hệ quả nghiệp vụ / Chờ Core** | [Thiết kế trình lead/Anh](MASK-P3-MO-CHE-SDK-2.2.md): đề xuất A (alias + tham chiếu, bản rõ chỉ xem ở Core), so sánh A/B/C, tác động MASK-5/6/B5…B10, 7 lát 32–46 giờ ƯỚC TÍNH, Q1…Q4; không sửa mã. Không chờ hoặc mở đường Core giải mã hộ engine. PR: **chờ lead mở**; kết quả kiểm thật ở mục MASK-P3 cuối tài liệu này. |
 | MASK-2c-4 | Công cụ đo Local ngoài gói và gold DEMO ứng viên | Sau MASK-2c-3; quyết định Anh “Thêm AI cục bộ” | Xong phần công cụ/mock — 15/11/2026; **Chờ Anh/lead đo độc lập** | Đúng ba tệp mã/dữ liệu ngoài gói; không sửa runtime. 45 tên/45 ngữ cảnh +75 câu thường +15 tổ chức +15 địa chỉ +12 biến thể; chưa lead đóng băng gold độc lập. [Báo cáo](BAO-CAO-MASK-2c-4.md); PR: **chờ lead mở**; nợ CAO/Cloud tắt giữ nguyên |
 | MASK-2c-3 | Hậu kiểm Local, xác minh nguồn và che bổ sung theo span | Sau MASK-2c-2, AI-9; profile lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.2.0; 1109 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-3.md); PR: **chờ lead mở** |
 | 0 | Đọc yêu cầu chung/SDK 2.0, yêu cầu Mask và lập kế hoạch lát có giờ ước tính; trình Anh qua lead | MASK-P | Xong — 14/11/2026 (lập phiếu) | [GIAO-CODEX-e_mask.md](GIAO-CODEX-e_mask.md): 14 lát MASK-0…13, 52–62 giờ ước tính chưa đo; phần tệp có điều kiện, chưa triển khai; PR: **chờ lead mở** |
@@ -29,6 +30,36 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-2c-2 | Chuẩn bị yêu cầu Local, khuôn/profile/budget và kế hoạch đoạn | MASK-2c-1; profile kỹ thuật lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.1.0; 972 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-2.md); PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## MASK-P3 — mở che/kho bí danh SDK 2.2.0, 15/11/2026
+
+- **Xong phạm vi tài liệu trình lead/Anh; kiểm nền gói chưa đạt.** PR: **chờ lead mở**. Chỉ thêm [MASK-P3-MO-CHE-SDK-2.2.md](MASK-P3-MO-CHE-SDK-2.2.md) và cập nhật VIEC; không sửa mã/manifest/schema/CHANGELOG gói, không commit/push. Đề xuất A, so sánh A/B/C, liệt kê các điểm cần bản rõ kể cả dò danh mục/giao lại; bảng tác động B5…B10, 7 lát ≤5 tệp với **32–46 giờ ƯỚC TÍNH** và Q1…Q4. Đây không phải code đã được giao hay chức năng đã triển khai.
+- **CĐ-36 — Anh, 15/11/2026 16:28 (nguyên văn ý):** “KHÔNG mở đường Core giải mã hộ engine. Trường bi_mat chỉ mã hóa khi ghi, tìm theo băm, engine đọc ra null. Mask phải đổi cách gỡ che (ví dụ trả về bí danh hoặc mã tham chiếu, bản rõ chỉ người có quyền xem qua cửa Xem dữ liệu của Core). Không làm đường giải mã nào khác.” Không còn chờ phê duyệt đường giải mã. Không dùng module, tệp hồ sơ/snapshot, trường rõ hoặc JSON ánh xạ làm đường vòng. Các ghi chú cũ chờ đường giải mã trong tài liệu chung phải được lead thay theo CĐ-36; P3 không sửa tài liệu chung.
+- A giữ alias/tệp AI sửa + tham chiếu; bản rõ xem tại Core đúng quyền. B8 không còn trả bytes gốc hay tệp đã khôi phục tên. Admin xem tại Core rồi duyệt ID/phiên bản, không đọc/chuyển bản rõ trong màn engine. Kho đề xuất một dòng thực thể có trường bí mật + metadata trạng thái, alias/lịch sử riêng, chống trùng bằng tìm bí mật/duy nhất do Core quản; không dùng tên chuẩn hóa làm khóa, không SHA tên công khai. Dò danh mục kín chưa chứng minh đủ thì chặn phát hành; Cloud giữ tắt.
+
+**Môi trường và kết quả lệnh thật:** Windows, Python **3.13.14**, pytest **9.1.1**; venv `.venv` trong worktree dùng gói kiểm có sẵn (`--system-site-packages`), SDK cài wheel offline `--no-index --no-deps`, không thêm dependency vào gói. Wheel **2.2.0** SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp SHA256SUMS; kiểm phiên bản in **2.2.0**. Dùng `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`, `-B`; không tạo bytecode trong gói. Các kiểm này **đã kiểm bằng Core giả (CoreGia)** cho mã hiện có, không chứng nhận thiết kế A/Core thật/Office/Local hoặc Linux thật.
+
+| Lệnh (SDK 2.2.0) | Kết quả thật |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**; cả hai: “Chưa xác minh được phiên và quyền xử lý yêu cầu.” |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --basetemp=.pytest-tmp-mask-p3` | **1475 passed, 432 failed, 4 xfailed, 190 subtests passed, 0 skipped; 96,37 giây; mã 1.** Bốn xfail cũ của held-out lớp quy tắc giữ nguyên, không bỏ/đổi test. Nhiều ca qua handler trả `MASK_KHO_LOI`; không kết luận mọi lỗi đều do trường `bi_mat` vì gói chưa khai/chuyển kho theo 2.2. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**; không tham chiếu cấm/bytecode. |
+| `.venv/Scripts/python -B e_mask/tests/chay_demo.py` (bổ sung) | **0/2 ĐẠT, mã 1**, cả hai `MASK_KHO_LOI`; đã kiểm bằng Core giả (CoreGia). |
+
+Đối chiếu bổ sung SDK **2.0.0** (gói Mask chưa chuyển): SHA wheel `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892` khớp SHA256SUMS. CLI chuẩn vẫn **0/2, mã 1** thiếu quyền; kiểm độc lập **ĐẠT, mã 0**; adapter DEMO **2/2, mã 0**. Pytest toàn bộ dừng collection: **1 error, mã 1**, `test_mask_2c_4.py` nạp Hỏi AI đã dùng `NganXungDot` từ SDK 2.2.0 nên SDK 2.0.0 thiếu import này (13,24 giây lượt `--tb=no`; xác minh `--tb=short -x` 5,88 giây cùng lỗi). Không có kết quả pytest toàn bộ xanh dưới 2.0.0 để công bố. **Đã trả venv về SDK 2.2.0**; không sửa runtime/test để né lỗi. Đơn ca `test_core_gia_ten_da_duyet_bo_dau_giu_alias` dưới 2.2.0 cũng thất bại (1 failed, 4,34 giây), xác nhận lỗi nền handler. Giả thuyết từ đọc mã: `ngan_cua_viec` ưu tiên `viec.ngan` mới thay vì ngăn tạm tiêm trước đây; cần lát chuyển SDK kiểm tiếp, chưa kết luận nguyên nhân đủ cho 432 ca.
+
+- `git diff --check`: **mã 0**; kiểm thêm UTF-8/NFC và khoảng trắng ở cả tệp mới chưa stage. Lệnh phụ `git diff --no-index --check -- /dev/null e_mask/docs/MASK-P3-MO-CHE-SDK-2.2.md` trả mã 1 vì có khác biệt/tệp mới, không báo lỗi khoảng trắng (chỉ cảnh báo LF sẽ thành CRLF). Không lấy kiểm tài liệu đạt thay cho ba lệnh kiểm gói chưa xanh.
+- Thời gian thực tế: **17:44:00–17:58:55 ngày 15/11/2026 (UTC+07), 0,25 giờ**, theo giờ bắt đầu lead và mốc chốt bàn giao. Phiếu/lệnh giao **không ghi giờ ƯỚC TÍNH riêng MASK-P3**, không lấy 1 giờ của MASK-P cũ làm dự toán P3; 32–46 giờ là dự toán triển khai A sau này.
+- **Lệch khỏi phiếu/quyết định tạm:** không sửa mã; không dùng quyết định tạm thay CĐ-36. Chạy thêm SDK 2.0.0 để phân biệt khả năng chạy gói cũ và bộ kiểm liên engine hiện tại; báo cả lỗi, không bỏ test hoặc nhận đủ nghiệm thu chung.
+
+### Cần Core / Chờ Anh — MASK-P3, CĐ-36
+
+- **C-P3-01 — Xem dữ liệu chung:** mở đúng dòng/phiên bản bằng tham chiếu opaque, kiểm quyền và audit mỗi lần; bản rõ chỉ trong cửa Core, không callback/API giải mã/export sang engine/module. Chưa có cửa thì chỉ metadata, không tự xây màn tên gốc.
+- **C-P3-02 — Quyền/duyệt:** nguồn tin cậy yêu cầu–module–người–tài liệu–vùng và quan hệ alias, quyền xem tách quyền Admin; biên nhận ID/phiên bản không tên chống replay/thay đổi giữa xem và duyệt; đóng/thu hồi kiểm lại quyền. Không nhận `da_xem=true` tự khai.
+- **C-P3-03 — Tìm/chống trùng bí mật:** xác nhận chuẩn hóa/phiên bản, tìm đúng giá trị, duy nhất/lay_hoac_tao/CAS theo bí mật+vùng, lô ≤100, không lộ băm/lỗi; hạn mức chống dò đoán. Có thể xem xét truy vấn nhiều ứng viên chung chỉ trả metadata; không quét/giải mã danh mục cho engine. Thiếu bằng chứng dò đủ thì chặn che/Cloud.
+- **C-P3-04 — Hồ sơ/vòng đời:** tách quyền nguồn/map cho che/Local khỏi bước đối chiếu trả lời; không cho đọc gốc để trả hoặc inverse. Chốt chính sách tham chiếu sau đóng/hết hạn và giữ alias đang xử lý, kế thừa stream/trần/413/budget/cách ly upload, CAS/ACK/ChuaRo của C-MB-01…03/C-M2C-01…05.
+- **C-P3-05 — Chuyển đổi:** quy trình Core bảo vệ cả khóa/cum/JSON/bản sao cũ và cấp ID mới, đối soát DEMO/số dòng/alias/quyền; không engine xuất bản rõ. Chuyển quy trình @1 cũ sang năng lực nghĩa mới, @1 không báo thành công giả. Không sửa Core/SDK trong P3.
+- **Chờ Anh:** Q1…Q4 trong [thiết kế §7](MASK-P3-MO-CHE-SDK-2.2.md#7-bảng-cần-anh-chọn): trải nghiệm A, cửa dừng dò kín, phạm vi tham chiếu, Admin/đóng việc. Không hỏi chọn lại CĐ-36 hoặc mở bất kỳ đường giải mã khác.
 
 ## MASK-2c-4 — bàn giao công cụ ngoài gói, 15/11/2026
 

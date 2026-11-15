@@ -16,7 +16,6 @@ from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_trich_xuat import docx
 from e_trich_xuat.chay import tao_app
-from e_trich_xuat.ngan import NganBoNho
 from mau_docx import CT, NUM, REL, W_NS, bang_demo, goi_docx, mau_thuong, mau_track, o, p, so
 
 
@@ -29,7 +28,6 @@ BO_KIEM_SCHEMA = Draft202012Validator(SCHEMA)
 def chay(raw, *, mime=docx.MIME_DOCX, sua_tep=None, core=None):
     core = CoreGia() if core is None else core
     app = tao_app()
-    app.ngan = NganBoNho()
     tep = core.them_tep("DEMO.docx", raw, mime)
     tep.update(sua_tep or {})
     kq = core.chay_thu(app, "trich.doc_docx@1", {"loai": "tep", "tep": tep})
@@ -45,10 +43,9 @@ def doc(raw):
 
 def test_demo_sdk_phan_bo_dung_schema_va_khong_tu_cau_hinh():
     app, core = tao_app(), CoreGia()
-    app.ngan = NganBoNho()
     assert app.cac_nang_luc == ("trich.doc_docx@1", "trich.chuan_bi@1",
                               "trich.hau_kiem@1", "trich.xuat_ket_qua@1")
-    assert app.ngan.doc("cau_hinh", {}) is None
+    assert core.xem_ngan(app.ma, "cau_hinh") == []
     from e_trich_xuat.demo import nap_ho_so_demo
     nap_ho_so_demo(core, app)
     ds = core.chay_thu_demo(app)
@@ -56,11 +53,10 @@ def test_demo_sdk_phan_bo_dung_schema_va_khong_tu_cau_hinh():
     for kq in ds[:2]:
         assert kq["trang_thai"] == "XONG"
         BO_KIEM_SCHEMA.validate(kq["ket_qua"])
-    assert ds[2]["trang_thai"] == "LOI"
-    assert ds[2]["loi"]["ma"] == "CHUA_CAU_HINH"
+    assert ds[2]["trang_thai"] == "XONG"  # Default do SDK điền, không ghi ngăn.
     assert all(kq["trang_thai"] == "XONG" for kq in ds[3:])
-    assert app.ngan.doc("cau_hinh", {}) is None
-    assert app.ngan.doc("cau_hinh", {}) is None
+    assert core.xem_ngan(app.ma, "cau_hinh") == []
+    assert core.xem_ngan(app.ma, "cau_hinh") == []
     assert (GOI / "demo/DEMO-hop-dong.docx").read_bytes() == mau_thuong()
     assert (GOI / "demo/DEMO-track-changes.docx").read_bytes() == mau_track()
 

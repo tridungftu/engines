@@ -14,10 +14,10 @@ PHIEU = json.loads((GOC_GOI / "engine.json").read_text(encoding="utf-8"))
 VD = next(v for v in PHIEU["chay_thu_demo"] if v["nang_luc"] == "trich.chuan_bi@1")
 
 
-def app_tx3():
+def app_tx3(core):
     app = tao_app()
-    with app.ngan.lo() as lo:
-        lo.them("cau_hinh", {}, {"ngan_sach_token_vao_toi_da": 100000})
+    core.nap_engine(app)
+    core.dat_cau_hinh(app.ma, {"ngan_sach_token_vao_toi_da": 100000})
     return app
 
 
@@ -31,7 +31,8 @@ def ts_demo(bo=None, **doi):
 
 
 def chuan_bi_demo(core=None, app=None, *, ts=None, dau_vao=None):
-    core, app = core or CoreGia(), app or app_tx3()
+    core = core or CoreGia()
+    app = app or app_tx3(core)
     kq = core.chay_thu(app, "trich.chuan_bi@1", deepcopy(dau_vao or VD["dau_vao"]),
                       ts or ts_demo())
     assert kq["trang_thai"] == "XONG", kq
@@ -73,7 +74,8 @@ def bang_demo():
 
 def chay_demo_tx3():
     from e_trich_xuat.demo import nap_ho_so_demo
-    core, app = CoreGia(), app_tx3()
+    core = CoreGia()
+    app = app_tx3(core)
     nap_ho_so_demo(core, app)
     return [kq for kq in core.chay_thu_demo(app)
             if kq["ten"] in {vd["ten"] for vd in PHIEU["chay_thu_demo"]

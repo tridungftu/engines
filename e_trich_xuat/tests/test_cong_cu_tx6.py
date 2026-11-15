@@ -275,7 +275,8 @@ def test_schema_ngan_nguon_sha_va_cmd_ascii():
     for p in (goi / "contract").glob("*.json"):
         assert p.read_bytes().replace(b"\r\n", b"\n") == (h.GOC / "_chung/contract" / p.name).read_bytes().replace(b"\r\n", b"\n")
     for k in ("ngan.py", "cau_hinh.py"):
-        assert (goi / "e_trich_xuat" / k).read_bytes().replace(b"\r\n", b"\n") == (h.GOC / "_chung/mau-ma" / k).read_bytes().replace(b"\r\n", b"\n")
+        assert not (goi / "e_trich_xuat" / k).exists()
+        assert (h.ENGINE / "LUU-TRU/TX-7" / k).is_file()
     for p in (h.ENGINE / "cong-cu").glob("*.cmd"):
         p.read_bytes().decode("ascii")
     (h.ENGINE / "tests/kiem_may_sach.cmd").read_bytes().decode("ascii")

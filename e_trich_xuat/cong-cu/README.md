@@ -1,3 +1,8 @@
+> TX-7 (15/11/2026): công cụ dùng SDK 2.2.0 và `CoreGia.dat_cau_hinh`.
+> `.cmd` cài đủ lock runtime offline; đặt `TX7_KHO_WHEEL` tới kho wheel
+> phù hợp nền tảng (mặc định `.venv/offline-wheels` nếu đã chuẩn bị).
+> Các biên bản TX-6 cũ bên dưới là lịch sử; không chứng nhận máy/model thật.
+
 # Công cụ TX-6 — T3 và N1, ngoài runtime engine
 
 Mặc định **CHẠY KHÔ, Local giả, không mạng, 0 Cloud**. Chỉ người chạy cấp
@@ -15,7 +20,7 @@ e_trich_xuat\cong-cu\DO-SUC-CHUA-MODEL.cmd
 e_trich_xuat\cong-cu\CHAY-N1-MOT-LAN.cmd
 ```
 
-Hai `.cmd` ASCII tự tạo `.venv` nếu thiếu, cài wheel SDK 2.0.0 offline bằng
+Hai `.cmd` ASCII tự tạo `.venv` nếu thiếu, cài wheel SDK 2.2.0 offline bằng
 `--no-index --no-deps`. Nếu venv đã có nhưng thiếu SDK thì cài wheel theo
 AGENTS.md trước. Không cần thư viện runtime ngoài SDK/thư viện chuẩn.
 Trên Linux gọi cùng hai tệp `.py` bằng Python trong venv, với `-B`.

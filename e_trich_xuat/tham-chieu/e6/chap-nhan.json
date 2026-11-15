@@ -1,0 +1,47 @@
+{
+  "phien_ban": 2,
+  "nhan": "DEMO",
+  "chap_nhan_lead": "chờ lead",
+  "cac_ca": [
+    {
+      "ma": "DEMO-thuong",
+      "loai": "thuong",
+      "vang": {
+        "tep": "DEMO-thuong.vang.json",
+        "bam": "sha256:25972ccba8878c293e830dcb37b0aef4a08ab23af50f4538eb7aad0f92deaaca"
+      },
+      "docx": {
+        "tep": "DEMO-thuong.docx",
+        "bam": "sha256:9d632660f560d943569d6b76644c00ddc4689c2b8f038dd5ab9d97c5b2897283"
+      },
+      "ai": {
+        "tep": "DEMO-thuong.ai.json",
+        "bam": "sha256:e2c4b17c07013bc88d3553f50c01ac43da59c20f651b93f8fbcaeb1a711959be"
+      },
+      "tham_so": {
+        "tep": "DEMO-thuong.tham-so.json",
+        "bam": "sha256:02eb194ec5b462c5b7eaf6ad440208b065274dfbc33e015d3f3a295cb5077644"
+      }
+    },
+    {
+      "ma": "DEMO-track-changes",
+      "loai": "track_changes",
+      "vang": {
+        "tep": "DEMO-track-changes.vang.json",
+        "bam": "sha256:a638c23bd8f3d61b57f6aa979fe0e3a8ea1c461d2bdff2339fd51598d6994b2b"
+      },
+      "docx": {
+        "tep": "DEMO-track-changes.docx",
+        "bam": "sha256:881057802339b4185ac92a824e498191a39f8ea8b69d7e6fccbe699454eb8d71"
+      },
+      "ai": {
+        "tep": "DEMO-track-changes.ai.json",
+        "bam": "sha256:ca3a26b9fcaccb738ed866b647bad5e96c80d5a399b6f6345fd151eefeafc6a5"
+      },
+      "tham_so": {
+        "tep": "DEMO-track-changes.tham-so.json",
+        "bam": "sha256:6cb40338981b62f9699f382af468384d8379a82d0e706e331cffd60abbfa0f54"
+      }
+    }
+  ]
+}

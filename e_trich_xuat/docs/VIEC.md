@@ -9,10 +9,10 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | TX-1 | Khung SDK 2.0, ngăn/cấu hình/UI và đọc DOCX/Track Changes | TX-0 §8; TX-15, 12 | Xong | **15/11/2026 — đã nối ngăn chung NGAN-0** (PR #34); **đã kiểm bằng Core giả (CoreGia)**: SDK DEMO **2/2 ĐẠT**, pytest **73 passed, 0 skipped**, Node UI **6/6**, độc lập **exit 0**. Hai test SHA chạy bắt buộc sau CRLF→LF. Tổng TX-1 **8 giờ ước tính**; PR: **chờ lead mở**. Linux/Core thật chưa chạy; SDK 2.1 và màn Core còn cần review |
 | TX-2 | Snapshot/hash, prompt/khuôn đủ mã, hồ sơ hậu kiểm tại Core và ngân sách | TX-2, 3, 4, 16, 17 | Chờ Core | **15/11/2026** — xong code/test phần engine; **đã kiểm bằng Core giả (CoreGia)**: pytest **164 passed, 0 skipped**, độc lập **exit 0**, DEMO có ngăn **3/3 ĐẠT**. CLI SDK chuẩn **2/3 ĐẠT, exit 1**, TX-2 `CHUA_CAU_HINH`; trình lead cổng DEMO có ngăn thay thế, C-TX-04. Chưa kiểm Linux/Core thật. **7 giờ ước tính**; PR: **chờ lead mở** |
 | TX-3 | Hậu kiểm từng ô, bảng đề xuất và xuất JSON/Excel | TX-3, 5, 6 | Chờ Anh | **15/11/2026** — xong lõi/test DEMO, **chưa đăng ký runtime/schema**, chờ lead/Anh review chi tiết. Sửa kiểm độc lập trong 5 tệp mã, đóng hai nợ TX-2; **đã kiểm bằng Core giả (CoreGia)**. Pytest/CLI/DEMO và đề xuất payload ở biên bản sửa review dưới; **8 giờ ước tính**. PR: **chờ lead mở** |
-| TX-4 | Công cụ/test E6, xác minh XLSX/E1 và đối chiếu byte hai đường | TX-7, TX-2/3 | Đang làm | **15/11/2026** — xong công cụ/test; **E6 nghiệm thu chưa kiểm**, thiếu fixture/bản vàng được lead chấp nhận. Chẩn đoán kỹ thuật hai DEMO: bộ/thứ tự/370 ô/văn bản trùng; câu hỏi/bảng/phản hồi **khác byte**, chưa đạt chẩn đoán. **đã kiểm bằng Core giả (CoreGia)**; pytest **375 passed, 0 skipped**, CLI **2/3 ĐẠT, exit 1** (C-TX-04), có ngăn **5/5 ĐẠT**, độc lập **exit 0**. [TX-4-E6.md](TX-4-E6.md); **4 giờ ước tính**, chưa gồm làm lại T3. PR: **chờ lead mở** |
+| TX-4b | E6 giá trị từng mã + dẫn chứng, bộ DEMO chuẩn | TX-7, TX-2/3; quyết định chiều 15/11 | Đang làm | **15/11/2026** — phép đo **2/2 ca, 74/74 mã khớp vàng**, 74/74 dẫn chứng hợp lệ; byte E1/tham số/văn bản trùng. **Chờ lead duyệt** DEMO/vàng, manifest giữ “chờ lead”, E6 exit 2; không làm lại nhiều lượt. **đã kiểm bằng Core giả (CoreGia)**; pytest **412 passed, 0 skipped**, CLI **2/3 ĐẠT, exit 1** (C-TX-04), có ngăn **5/5 ĐẠT**, độc lập **exit 0**. [TX-4-E6.md](TX-4-E6.md); TX-4 **4 giờ ước tính**, TX-4b chưa có dự toán riêng. PR: **chờ lead mở** |
 | 1 | Tách năng lực thành **chuẩn bị** và **hậu kiểm**; bỏ gọi AI trực tiếp (`ai_chung.py`) | TX-3 | Đang làm | TX-2 đã có `trich.chuan_bi@1`, không gọi AI; hậu kiểm/xuất còn ở TX-3, theo CD-111 |
 | 2 | E2/E5: nhận bộ từ việc của module, đủ metadata module/loại/phiên bản/hash | TX-2, 4, 5 | Xong | **15/11/2026 — TX-2**, snapshot/prompt/cấu hình riêng từng việc đã kiểm bằng Core giả (CoreGia); quyền module/pháp nhân và ghim Core thật còn C-TX-01 |
-| 3 | E6: so từng byte bộ 37 xây dựng (cần tệp ghim `DANH_MUC_THAM_SO.xlsx`) | TX-7 | Đang làm | **15/11/2026 — TX-4**: băm XLSX thực khớp ghim/cũ, E1 đúng 37 mã/thứ tự/10 cột nguyên văn. **Chưa kiểm E6 nghiệm thu** do thiếu nguồn/bản vàng được lead chấp nhận; DEMO kỹ thuật đã thấy khác câu hỏi/bảng/phản hồi. Không chuyển bộ/lưu trữ, không fallback; chi tiết [TX-4-E6.md](TX-4-E6.md). PR: **chờ lead mở** |
+| 3 | E6: byte E1/văn bản + giá trị 37 mã/dẫn chứng | TX-7 | Đang làm | **15/11/2026 — TX-4b**: băm XLSX/E1 giữ nguyên; hai hợp đồng DEMO tự soạn + vàng độc lập đã đo đạt 74/74; **nghiệm thu chờ lead**, chưa review bố cục PNG vì renderer thiếu pdf2image. Câu hỏi/bảng/phản hồi chỉ tham khảo theo quyết định chiều, không mở nhiều lượt. [TX-4-E6.md](TX-4-E6.md). PR: **chờ lead mở** |
 | 4 | Cung cấp E1 (kiểm Excel) + U1a/U1b cho module dùng lại; module tự đặt màn quản lý bộ tham số | TX-8, 14 | Chờ làm | C1/C2/C4 là việc của module |
 | 5 | LHD-02b: bộ nháp thuê đất KCN + 3 hợp đồng DEMO (CRM giữ bộ) | TX-10 | Chờ Anh | Người nghiệp vụ duyệt |
 | 6 | G3-GOI-37, N1 (một lần), TRICH-READY, N2 (buổi 17:00 ≤ 30 phút) | TX-12, 13 | Chờ làm |  |
@@ -449,6 +449,10 @@ DEMO có ngăn thay CLI SDK 2.0. Không phát sinh API/năng lực đã đăng k
 
 ## Bàn giao TX-4 — 15/11/2026, PR: chờ lead mở
 
+**Lịch sử trước quyết định chiều: tiêu chí byte câu hỏi/bảng/phản hồi và
+đề nghị làm lại nhiều lượt dưới đây đã được thay thế bởi TX-4b.** Xem
+biên bản TX-4b cuối tài liệu và bản hiện tại `TX-4-E6.md`.
+
 Kết luận: **Chưa đạt điều kiện E6 — nghiệm thu chưa kiểm do thiếu nguồn
 được lead chấp nhận; chẩn đoán kỹ thuật đã thấy khác byte câu hỏi/bảng/phản hồi.**
 
@@ -499,3 +503,54 @@ Kiểm Windows, Python venv / SDK 2.0.0 offline, SHA-256 wheel khớp SHA256SUMS
 Linux và Core thật chưa chạy. Thời gian 15/11/2026 **10:15–10:19 UTC+07**, khoảng **0,07 giờ**, ước tính **3 giờ công**. Không sửa Core/SDK/nguồn cũ, không commit/push.
 
 Cần Core: giữ C-TX-01 (xác thực module/pháp nhân, ghim snapshot và prompt theo từng việc, giới hạn thực), C-TX-04 (ngăn cấu hình trong cổng chạy thử); giữ các mục C-TX-02/03 và A-TX-01 đã nêu. Module tự triển khai kho bộ, phân quyền, lịch sử, so sánh, chạy thử và kích hoạt; chưa khẳng định đã cài. E6, payload hậu kiểm/xuất và năng lực chưa đăng ký vẫn chờ quyết định/duyệt như TX-4.
+
+## Bàn giao TX-4b — 15/11/2026, PR: chờ lead mở
+
+Kết luận: **Chưa đạt điều kiện bàn giao chung** — phép đo E6 đạt trên
+2/2 ca (74/74 mã và dẫn chứng), nhưng nghiệm thu E6 chờ lead duyệt bộ
+DEMO/vàng; CLI chuẩn còn C-TX-04. Quyết định chiều 15/11 thay tiêu chí
+byte câu hỏi/bảng/phản hồi của biên bản TX-4 lịch sử bên trên.
+
+Đã làm: sửa công cụ/adapter/test E6 theo giá trị sau hậu kiểm TX-3,
+chỉ strip đầu/cuối, báo đủ bốn loại kết quả từng mã và lý do; giữ so
+byte E1/tham số/văn bản. Bộ tham-chieu/e6 có hai DOCX DEMO tự soạn
+(thường/Track Changes), hai băng AI cố định biểu diễn cùng đáp án nghiệp
+vụ, hai snapshot module, vàng 37 mã/câu căn cứ soạn từ chính văn bản,
+manifest SHA-256 từng nguồn với chap_nhan_lead: “chờ lead”. Công cụ soạn
+không đọc đầu ra engine làm vàng và từ chối ghi đè nguồn khác bytes.
+Không có mã khác trong phép đo; vàng không sửa theo đầu ra. Chi tiết
+[TX-4-E6.md](TX-4-E6.md), [artifact](TX-4b-ket-qua.json),
+[CHANGELOG](CHANGELOG.md).
+
+Kết quả kiểm thực tế: **đã kiểm bằng Core giả (CoreGia)**, Windows,
+Python 3.13.14 / SDK 2.0.0 offline (wheel khớp SHA), pytest 9.1.1:
+
+| Lệnh qua .venv/Scripts/python -B | Kết quả |
+|---|---|
+| -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat | **2/3 ĐẠT, exit 1**; chuẩn bị thiếu cấu hình CHUA_CAU_HINH, C-TX-04 |
+| -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp | **412 passed in 16.26s, 0 skipped, exit 0** |
+| e_trich_xuat/tests/kiem_doc_lap.py | **[ĐẠT], exit 0** |
+| e_trich_xuat/tests/chay_demo_voi_ngan_gia.py | **5/5 ĐẠT, exit 0** |
+| e_trich_xuat/tests/kiem_e6.py | **exit 2**, ket_qua_do=dat, trang_thai=chua_kiem; cả 2 ca 37/37 mã khớp vàng, 37/37 dẫn chứng đúng |
+
+AST/8 SHA-256/ZIP-XML hai DOCX/artifact và git diff --check đạt. Bộ E1,
+tham số và toàn văn trùng byte ở cả hai ca; nguồn cũ 9 câu hỏi/mới 1,
+các khác biệt DTO/bảng/phản hồi chỉ tham khảo. Track Changes nhận đúng
+2 thay đổi; chấp nhận giá mới 2.200.000 VND.
+
+Thời gian thực tế: **15/11/2026 12:36:00–12:52:14 (UTC+07), 0.27 giờ**;
+ước tính phiếu TX-4 **4 giờ công**, chưa có dự toán TX-4b riêng.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: CHANGELOG của lát ở docs vì
+Anh cấm sửa goi/**; bộ DEMO/vàng do Codex soạn theo giao việc TX-4b,
+lead chưa duyệt, không tự chứng nhận. Chưa render kiểm bố cục DOCX:
+renderer skill documents dừng do thiếu pdf2image; đã kiểm ZIP/XML/styles,
+Accept All và hai reader nhưng chưa thay cho kiểm PNG/Word. Giữ nguyên
+nguồn cũ/Core/SDK/ghim XLSX; không sửa goi/**, không làm lại nhiều lượt,
+không thêm dependency/mạng, không commit/push; **0 Cloud/AI thật**.
+
+Cần Core / Chờ Anh mới phát sinh: **không thêm API Core mới**; giữ
+C-TX-01/02/04/A-TX-01, CLI SDK 2.0 cần cửa nạp cấu hình ngăn. Lead cần
+duyệt hai DEMO, băng/vàng và xem trực quan DOCX trước ghi “đã duyệt” kèm
+bien_ban_lead. Chưa kiểm Linux/Core thật/ACL/TTL/vòng đời tệp, T3/N1/model
+thật; TX-3b đăng ký năng lực là lát song song, ngoài phạm vi TX-4b.

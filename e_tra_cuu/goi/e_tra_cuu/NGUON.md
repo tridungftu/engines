@@ -1,5 +1,19 @@
 # Nguồn và phụ thuộc — TC-0, 15/11/2026
 
+## TC-4 — 15/11/2026
+
+Viết mới `chuan_bi_ai.py`, `ngu_canh_ai.py` bằng thư viện chuẩn theo TC-4,
+TC-1-CONTRACT, hợp đồng loại chung và mẫu chuyển tiếp AI-2/TX-0/DC-P; sửa
+`chay.py` đăng ký handler. Đúng 3 tệp mã. Không dependency hoặc nguồn bên ngoài.
+Tái dùng bộ đọc/kiểm miền TC-2 và API SDK; không sửa Core/SDK/mẫu chung/nguồn cũ.
+Hai mẫu NGAN-0, bốn schema và requirements.lock giữ nguyên, test băm LF.
+
+Test/harness dùng fixture DEMO tự tạo, bytes thực nạp CoreGia và cấu hình
+NganBoNho; mở rộng bốn ca chuẩn bị. Consumer `hoi_yeu_cau.py`/`khuon_json.py`
+của Hỏi AI có thật chỉ được import trong tests ngoài gói; provider Local giả
+không mạng, không thay consumer/runtime engine khác. Đã kiểm bằng Core giả
+(CoreGia); chưa kiểm model/Cloud/Core/RLS thật hoặc Linux. Kết quả ở VIEC.md.
+
 Gói mới theo phiếu `e_tra_cuu/docs/GIAO-CODEX-e_tra_cuu.md` §1–5,
 API-ENGINE-v1 và hai hướng dẫn SDK 2.0.0. Không có lõi cũ tại chỗ để chuyển;
 không tạo `ma-nguon/`. Mã khung/schema/test mới viết trong lát TC-0.
@@ -66,3 +80,31 @@ Adapter `CoreGiaTepCon`/`CuaNguonGia` và dữ liệu cấu hình chỉ trong te
 gói; không đưa vào runtime. Đã kiểm bằng Core giả (CoreGia), mạng ngoài/Cloud=0;
 chưa chứng nhận RLS thật hoặc Linux. Quyền/ghép nguồn/vòng đời/ACK chờ C-TC-02/03,
 ngăn/cấu hình CLI chờ C-TC-01, log/lỗi trần/lease SDK chờ C-TC-05.
+
+## TC-3 — 15/11/2026
+
+`cat_doan.py`, `vi_tri.py` viết mới bằng thư viện chuẩn Python, theo phiếu
+TC-3, `TC-1-CONTRACT.md` §3–5 và DAC-TA §3.4/8/9; không lấy thuật toán/mã hoặc
+dependency bên ngoài. Sửa `chay.py` đăng ký handler cắt và `kiem_dau_vao.py`
+đóng ba nợ TC-2 do lead giao. Tổng **4 tệp mã**, dưới trần khoảng 5 tệp/lát.
+Không có nguồn cũ tại chỗ, không sửa Core/SDK/engine khác hoặc contract chung.
+
+Các map bảng/ô và `hang_tieu_de` là quy ước snapshot trong phần mở sẵn có của
+`van_ban_tai_lieu` v1; không sửa schema. Phép chiếu TAB + LF/CRLF được kiểm đúng
+chuỗi nguồn trước khi tạo offset, không đoán hộp/ô/tiêu đề. Kiểu nguồn khác
+chưa có map cần adapter Core cấp, ghi C-TC-02/03 và L-TC-01 trong VIEC.
+
+Giữ nguyên hai mẫu NGAN-0 và bốn schema, tiếp tục so băm CRLF→LF với các giá trị
+ở bảng trên. SDK 2.0.0 từ wheel offline, băm vẫn khớp SHA256SUMS.txt. Không
+thêm dependency; `requirements.lock` giữ nguyên. Phiên bản 0.1.0 còn nội bộ.
+
+Test/harness mới dùng dữ liệu tự tạo DEMO: Điều/Khoản xuyên trang/trang rỗng,
+bảng ô gộp/ô rỗng và tiêu đề lặp, NFC/NFD/emoji, 1.000.000 VND, 2026-10-30.
+Không dùng tài liệu thật hoặc model. Bản adapter quyền Core chỉ trong tests;
+seam ghim phong bì/metadata và quyền xuyên bước chưa là API Core thật.
+
+Kiểm hồi quy đầu trên checkout Windows phát hiện Git auto-CRLF làm lệch bytes
+DEMO nguồn so với SHA đã ghim. `e_tra_cuu/.gitattributes` cố định LF cho demo/*;
+bytes LF hiện tại khớp nguyên bytes HEAD và băm đã đăng ký, không sửa băm hay
+canonical hóa trong runtime để bỏ qua sai nguồn. Đã kiểm bằng Core giả (CoreGia),
+AI/Cloud=0; chưa kiểm Linux/RLS/Core thật/UI/chất lượng model.

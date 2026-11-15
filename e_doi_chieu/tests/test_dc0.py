@@ -55,4 +55,4 @@ def test_manifest_khung():
     phieu = json.loads((GOI / "engine.json").read_text(encoding="utf-8"))
     assert not ({"ngan_du_lieu", "cau_hinh", "giao_dien_quan_tri"} & phieu.keys())
     assert phieu["chay_thu_demo"]
-    assert [n["ma"] for n in phieu["nang_luc"]] == ["doi_chieu.doc_docx@1"]
+    assert [n["ma"] for n in phieu["nang_luc"]] == ["doi_chieu.doc_docx@1", "doi_chieu.nhan_cap@1"]

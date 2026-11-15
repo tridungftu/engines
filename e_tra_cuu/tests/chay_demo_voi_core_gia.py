@@ -13,6 +13,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "goi/e_tra_cuu"))
 
 from e_tra_cuu.kiem_dau_vao import bam, doc_json
 from ho_tro_tc_2 import BoDemo, GOI
+from ho_tro_tc_3 import BoCatDoan, bang_demo, kiem_phu_nguon, phong_bi_trang
+from ho_tro_tc_4 import chay_demo_ai
 
 
 def chay_demo():
@@ -36,6 +38,24 @@ def chay_demo():
     return kq
 
 
+def chay_demo_cat_doan():
+    """Nhận → cắt qua Core; Core cấp lại quyền snapshot và nguồn cho bước sau."""
+    kq = []
+    for ten in ("DOCX DEMO không trang", "Điều/Khoản DEMO xuyên trang rỗng", "Bảng DEMO ô gộp/trống", "Bảng DOCX DEMO không trang"):
+        bo = BoCatDoan()
+        if ten.startswith("Điều"):
+            cac_trang = ["Điều 1. DEMO\nKhoản 1. Bắt đầu DEMO", "", "Tiếp tục 1.000.000 VND, ngày 2026-10-30."]
+            bo.nguon_co_cau_truc(phong_bi_trang(bo, cac_trang))
+        elif ten.startswith("Bảng"):
+            bo.nguon_co_cau_truc(bang_demo(bo, docx="DOCX" in ten))
+        bo.nhan()
+        ket_qua = bo.cat()
+        if ket_qua["trang_thai"] == "XONG":
+            kiem_phu_nguon(bo, ket_qua)
+        kq.append({"ten": ten, **ket_qua})
+    return kq
+
+
 def main():
     dem_mang = 0
 
@@ -46,12 +66,12 @@ def main():
 
     with patch.object(socket.socket, "connect", cam_mang), patch.object(socket.socket, "connect_ex", cam_mang), \
             patch.object(socket, "create_connection", cam_mang), patch.object(socket, "getaddrinfo", cam_mang):
-        kq = chay_demo()
+        kq = chay_demo() + chay_demo_cat_doan() + chay_demo_ai()
     for k in kq:
         dat = k["trang_thai"] == "XONG"
         print(f'[{"ĐẠT" if dat else "LỖI"}] {k["ten"]}' + ("" if dat else ": " + str(k["loi"]["ma"])))
     dat = sum(k["trang_thai"] == "XONG" for k in kq)
-    print(f"{dat}/{len(kq)} DEMO ĐẠT; mạng ngoài/Cloud={dem_mang}.")
+    print(f"{dat}/{len(kq)} DEMO ĐẠT; mạng ngoài/lượt provider/Cloud={dem_mang} (không có provider trong harness).")
     print("Đã kiểm bằng Core giả (CoreGia); chưa chứng nhận quyền Core thật; ngăn RAM mất khi dừng.")
     return 0 if kq and dat == len(kq) and dem_mang == 0 else 1
 

@@ -5,6 +5,7 @@ from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
 
 from .hoi import AdapterHoiAI
 from .hoi_yeu_cau import goi_theo_yeu_cau
+from .hoi_mask import goi_mask_cuc_bo
 from .cau_hinh import CauHinhKhongHopLe
 from .ngan import NganKhongHopLe, NganXungDot, chon_ngan
 from .ngan_engine import tao_ngan_bo_nho
@@ -37,6 +38,12 @@ def hoi_tai_lieu(viec):
 @loi_ngan_sdk
 def hoi_theo_yeu_cau(viec):
     return goi_theo_yeu_cau(viec, bo_hoi.cong_ai, phien_ban=app.phieu["phien_ban"])
+
+
+@app.nang_luc("ai.hoi_mask_cuc_bo@1")
+@loi_ngan_sdk
+def hoi_mask_cuc_bo(viec):
+    return goi_mask_cuc_bo(viec, bo_hoi.cong_ai, phien_ban=app.phieu["phien_ban"])
 
 
 if __name__ == "__main__":

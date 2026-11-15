@@ -199,7 +199,8 @@ def test_timeout_theo_cau_hinh(local, tmp_path, monkeypatch):
     cho = threading.Event()
     local.khi_nhan = lambda phuong_thuc, duong: cho.wait(0.1) if phuong_thuc == "POST" else None
     kq = hoi()
-    assert kq["loi"]["ma"] == "LOCAL_AI_KHONG_SAN_SANG" and kq["loi"]["thu_lai_duoc"]
+    assert kq["trang_thai"] == "CHUA_RO" and kq["ma_tuong_quan"].startswith("local-")
+    assert kq["ket_qua"] is None and local.so_luot_hoi == 1
 
 
 def test_huy_truoc_goi_ai_khong_gui_yeu_cau(local, monkeypatch):

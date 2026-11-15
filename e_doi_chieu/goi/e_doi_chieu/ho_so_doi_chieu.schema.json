@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ktt:contract:ho_so_doi_chieu:1",
+  "title": "Hồ sơ đối chiếu bản ký",
+  "$comment": "DC-P §5, DC-Q17 đã duyệt chiều 15/11/2026. Chỉ phong bì; quan hệ snapshot, quyền, giai đoạn và trần bytes phải kiểm bằng Python theo DC-1-KHAO-SAT.md. Không chứng nhận kết quả nghiệp vụ.",
+  "type": "object",
+  "required": ["loai", "ho_so_doi_chieu"],
+  "additionalProperties": false,
+  "properties": {
+    "loai": {"const": "ho_so_doi_chieu"},
+    "ho_so_doi_chieu": {
+      "type": "object",
+      "required": ["phien_ban", "ma_cap", "giai_doan", "nguon", "ho_so", "bam_ho_so", "bam_bo_quy_tac", "phien_ban_engine", "tom_tat", "kiem_tra", "da_kiem_du", "ket_luan", "de_nghi_chan", "canh_bao"],
+      "additionalProperties": false,
+      "properties": {
+        "phien_ban": {"type": "integer", "const": 1},
+        "ma_cap": {"type": "string", "minLength": 1, "maxLength": 200},
+        "giai_doan": {"enum": ["da_nhan", "da_so", "da_quet_anh", "cho_ai", "da_hau_kiem", "da_tong_hop"]},
+        "nguon": {
+          "type": "object",
+          "required": ["word", "ban_ky"],
+          "additionalProperties": false,
+          "properties": {
+            "word": {"$ref": "#/$defs/nguon"},
+            "ban_ky": {"$ref": "#/$defs/nguon"}
+          }
+        },
+        "ho_so": {"$ref": "#/$defs/tep_json"},
+        "bam_ho_so": {"$ref": "#/$defs/bam"},
+        "bam_bo_quy_tac": {"$ref": "#/$defs/bam"},
+        "phien_ban_engine": {"type": "string", "pattern": "^e_doi_chieu [0-9]+\\.[0-9]+\\.[0-9]+$", "maxLength": 100},
+        "tom_tat": {
+          "type": "object",
+          "required": ["so_diem", "so_nghiem_trong", "so_can_xem", "so_hinh_thuc", "so_nhieu_ocr", "so_vung_sua_tay", "so_trang_ocr_kem"],
+          "additionalProperties": false,
+          "properties": {
+            "so_diem": {"$ref": "#/$defs/dem_diem"},
+            "so_nghiem_trong": {"$ref": "#/$defs/dem_diem"},
+            "so_can_xem": {"$ref": "#/$defs/dem_diem"},
+            "so_hinh_thuc": {"$ref": "#/$defs/dem_diem"},
+            "so_nhieu_ocr": {"$ref": "#/$defs/dem_diem"},
+            "so_vung_sua_tay": {"type": ["integer", "null"], "minimum": 0},
+            "so_trang_ocr_kem": {"type": ["integer", "null"], "minimum": 0, "maximum": 60}
+          }
+        },
+        "kiem_tra": {
+          "type": "object",
+          "required": ["doc_hai_ban", "so_van_ban", "quy_tac_cung", "trang", "lech_dau", "sua_tay", "phan_loai_ai"],
+          "additionalProperties": false,
+          "properties": {
+            "doc_hai_ban": {"$ref": "#/$defs/trang_thai_kiem"},
+            "so_van_ban": {"$ref": "#/$defs/trang_thai_kiem"},
+            "quy_tac_cung": {"$ref": "#/$defs/trang_thai_kiem"},
+            "trang": {"$ref": "#/$defs/trang_thai_kiem"},
+            "lech_dau": {"$ref": "#/$defs/trang_thai_kiem"},
+            "sua_tay": {"$ref": "#/$defs/trang_thai_kiem"},
+            "phan_loai_ai": {"$ref": "#/$defs/trang_thai_kiem"}
+          }
+        },
+        "da_kiem_du": {"type": "boolean"},
+        "ket_luan": {"enum": [null, "khop", "khop_co_thay_doi_hinh_thuc", "can_xem", "lech_nghiem_trong", "chua_doi_chieu_duoc"]},
+        "de_nghi_chan": {"type": "boolean"},
+        "canh_bao": {"type": "array", "maxItems": 100, "items": {"type": "string", "minLength": 1, "maxLength": 1000}}
+      }
+    }
+  },
+  "$defs": {
+    "bam": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$", "minLength": 71, "maxLength": 71},
+    "dem_diem": {"type": ["integer", "null"], "minimum": 0, "maximum": 10000},
+    "trang_thai_kiem": {"enum": ["dat", "khong_dat", "chua_kiem", "khong_ap_dung"]},
+    "nguon": {
+      "type": "object",
+      "required": ["tep_id", "phien_ban", "bam"],
+      "additionalProperties": false,
+      "properties": {
+        "tep_id": {"type": "string", "minLength": 1, "maxLength": 200},
+        "phien_ban": {"type": "string", "minLength": 1, "maxLength": 100},
+        "bam": {"$ref": "#/$defs/bam"}
+      }
+    },
+    "tep_json": {
+      "type": "object",
+      "required": ["tep_id", "ten", "mime", "kich_thuoc"],
+      "additionalProperties": false,
+      "properties": {
+        "tep_id": {"type": "string", "minLength": 1, "maxLength": 200},
+        "ten": {"type": "string", "minLength": 1, "maxLength": 255},
+        "mime": {"const": "application/json"},
+        "kich_thuoc": {"type": "integer", "minimum": 1, "maximum": 20971520}
+      }
+    }
+  }
+}

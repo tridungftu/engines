@@ -17,6 +17,7 @@ from .nguon.privacy import core, detectors, leftovers
 from .nguon.privacy.types import bo_ky_tu_vo_hinh, chuan_hoa_vi_tri
 from .tai_nguyen import ThieuTaiNguyen
 from . import ten_nguoi
+from .anh_xa_ai import tao_anh_xa, kiem_anh_xa
 
 
 class LoiCheVanBan(ValueError):
@@ -430,9 +431,17 @@ def _kiem_con_sot(van_ban, da_biet, *, da_do=None):
         vung.update((m.start(), m.end(), nhom) for m in mau.finditer(nfc)
                     if not bao_ve.hit(m.start(), m.end()))
     for gia_tri, nhom in set(cum):
-        if bo_do is None:
-            bo_do = _BoDo(nfc)
-        vi_tri = bo_do.spans(gia_tri, boundary=False)
+        if (len(gia_tri) > 300 and gia_tri.isascii()
+                and gia_tri.replace(' ', '').isdecimal() and nfc.strip() == gia_tri):
+            # Nghi vấn số phủ toàn văn: vị trí đúng chữ đã biết, không cần
+            # dựng bộ khung/KMP 500.000 ký tự lần nữa. Vẫn thêm con_sot,
+            # không miễn kiểm hoặc coi số dài là đã che.
+            dau = len(nfc) - len(nfc.lstrip())
+            vi_tri = [(dau, dau + len(gia_tri))]
+        else:
+            if bo_do is None:
+                bo_do = _BoDo(nfc)
+            vi_tri = bo_do.spans(gia_tri, boundary=False)
         if not vi_tri:
             # Không định vị được cảnh báo của lõi cũng không được báo đã kiểm hết.
             day_du = False
@@ -457,6 +466,19 @@ def che(van_ban: str, dinh_danh_da_biet, kho: Kho) -> dict:
     gui_duoc chỉ True khi đã kiểm hết, con_sot rỗng và tiền/ngày giữ nguyên.
     Không trả cụm gốc trong hàng chờ/cảnh báo. Lỗi kho được che thông tin.
     """
+    return _chay_che(van_ban, dinh_danh_da_biet, kho, noi_bo=False)
+
+
+def che_co_anh_xa(van_ban: str, dinh_danh_da_biet, kho: Kho):
+    """Cửa nội bộ cho lát Local sau: (kết quả cũ, map bất biến trong RAM).
+
+    Không cấp map khi lớp quy tắc chặn. Quyền/kho vẫn do bên tin cậy cấp,
+    không đăng ký thêm năng lực hoặc đưa map vào kết quả công khai.
+    """
+    return _chay_che(van_ban, dinh_danh_da_biet, kho, noi_bo=True)
+
+
+def _chay_che(van_ban, dinh_danh_da_biet, kho, *, noi_bo):
     _kiem_van_ban(van_ban)
     da_biet = _kiem_dinh_danh([] if dinh_danh_da_biet is None else dinh_danh_da_biet,
                              tien_ngay=frozenset(chuan_hoa(v) for _, _, _, v in _cac_tien_ngay(van_ban)),
@@ -464,12 +486,12 @@ def che(van_ban: str, dinh_danh_da_biet, kho: Kho) -> dict:
     detectors.kiem_tai_nguyen()
     try:
         with kho.giao_dich():
-            return _che(van_ban, da_biet, kho)
+            return _che(van_ban, da_biet, kho, noi_bo=noi_bo)
     except Exception:
         raise LoiCheVanBan('Không thể che văn bản an toàn. Cần kiểm tra lại trước khi gửi.') from None
 
 
-def _che(van_ban, da_biet, kho):
+def _che(van_ban, da_biet, kho, *, noi_bo=False):
     ma = kho.tao_yeu_cau()
     # Gồm danh mục chính thức và cụm tạm có sẵn trong cùng vùng của kho.
     danh_muc = kho.liet_ke_dinh_danh()
@@ -527,7 +549,7 @@ def _che(van_ban, da_biet, kho):
             continue
         da_chiem.update([(a, b)])
         chon.append((a, b, gia_tri, nhom))
-    phan, so_sanh, da_dung = [], [], {}
+    phan, so_sanh, da_dung, phep_thay = [], [], {}, []
     cuoi, so_moi = 0, 0
     for a, b, gia_tri, nhom in sorted(chon):
         muc = kho.tra_bi_danh(chuan_hoa(gia_tri))
@@ -542,6 +564,7 @@ def _che(van_ban, da_biet, kho):
         doan = bo_ky_tu_vo_hinh(van_ban[cuoi:a])
         phan.extend([doan, bi_danh])
         so_sanh.extend([doan, '\x00'])
+        phep_thay.append((a, b, bi_danh))
         cuoi = b
         da_dung[bi_danh] = {'bi_danh': bi_danh, 'nhom': muc['nhom'], 'nguon': muc['nguon']}
     duoi = bo_ky_tu_vo_hinh(van_ban[cuoi:])
@@ -585,11 +608,20 @@ def _che(van_ban, da_biet, kho):
     if not kiem_tien_ngay:
         canh_bao.append('Kiểm tra tiền và ngày chưa đạt; không được gửi.')
     gui_duoc = not con_sot and kiem_tien_ngay
+    anh_xa = None
+    if gui_duoc:
+        anh_xa = tao_anh_xa(van_ban, phep_thay)
+        kiem_anh_xa(anh_xa)
+        if anh_xa.ban_do != nfc or anh_xa.da_che != da_che:
+            raise LoiCheVanBan('Không xác minh được ánh xạ văn bản an toàn.')
+    if noi_bo and not gui_duoc:
+        raise LoiCheVanBan('Chưa kiểm tra hết định danh. Không thể tạo hồ sơ nội bộ.')
     kho.ghi_bi_danh_da_dung(ma, list(da_dung))
-    return {'ma_yeu_cau': ma, 'van_ban_da_che': da_che if gui_duoc else None,
+    ket_qua = {'ma_yeu_cau': ma, 'van_ban_da_che': da_che if gui_duoc else None,
             'con_sot': con_sot, 'kiem_tien_ngay': kiem_tien_ngay, 'gui_duoc': gui_duoc,
             'so_cho_thay': len(chon), 'bi_danh': list(da_dung.values()),
             'cho_duyet': {'so_cum_vua_them': so_moi}, 'canh_bao': canh_bao}
+    return (ket_qua, anh_xa) if noi_bo else ket_qua
 
 
 def mo_che(van_ban_co_bi_danh: str, ma_yeu_cau: str, kho: Kho,

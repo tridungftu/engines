@@ -1,0 +1,119 @@
+MASK-2c-1 - 15/11/2026
+Đã kiểm bằng Core giả (CoreGia).
+2026-11-15T12:38:23.302742+07:00
+
+> .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+Mã thoát: 1
+
+> .venv/Scripts/python -B -m pytest e_mask/tests -q
+Tóm tắt lượt trước tối ưu ASCII:
+'1; ': vượt timeout 12 giây; '1, ': 8.474 giây > 5 giây.
+2 failed, 863 passed, 4 xfailed, 188 subtests passed in 115.37s (0:01:55)
+Mã thoát: 1
+
+> .venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+
+Mã thoát: 0
+
+> .venv/Scripts/python -B e_mask/tests/chay_demo.py
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+Mã thoát: 0
+
+> git diff --check
+
+warning: in the working copy of 'e_mask/goi/e_mask/NGUON.md', LF will be replaced by CRLF the next time Git touches it
+Mã thoát: 0
+
+Lượt kiểm cuối sau tối ưu ASCII
+2026-11-15T12:44:38.842171+07:00
+
+> .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+Mã thoát: 1
+
+> .venv/Scripts/python -B -m pytest e_mask/tests -q
+Tóm tắt lượt sau tối ưu ASCII:
+'1 ': 6.734 giây > 5 giây; không chạy bộ tạo map.
+1 failed, 863 passed, 4 xfailed, 189 subtests passed in 90.04s (0:01:30)
+Mã thoát: 1
+
+> .venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+
+Mã thoát: 0
+
+> .venv/Scripts/python -B e_mask/tests/chay_demo.py
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+Mã thoát: 0
+
+> git diff --check
+
+warning: in the working copy of 'e_mask/goi/e_mask/NGUON.md', LF will be replaced by CRLF the next time Git touches it
+Mã thoát: 0
+
+
+Kiểm riêng sau tối ưu khoảng số: '1 ': 5.059 giây > 5 giây; 1 failed, 5 passed, 196 deselected, 42 subtests passed in 18.39s; mã 1.
+cProfile sau đó: 1.507.887 lời gọi/3.630 giây, trước: 5.257.903 lời gọi/5.073 giây. Không thay ngưỡng hay test cũ.
+
+Lượt kiểm toàn bộ cuối
+2026-11-15T12:53:53.408967+07:00
+
+> .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+Mã thoát: 1
+
+> .venv/Scripts/python -B -m pytest e_mask/tests -q
+.......................................................... [  6%]
+........................................ [ 11%]
+........................................................................ [ 19%]
+........................................................................ [ 27%]
+..........................................................xxxx.......... [ 36%]
+........................................................................ [ 44%]
+........................................................................ [ 52%]
+........................................................................ [ 60%]
+........................................................................ [ 69%]
+........................................................................ [ 77%]
+........................................................................ [ 85%]
+........................................................................ [ 94%]
+....................................................                     [100%]
+866 passed, 4 xfailed, 190 subtests passed in 78.34s (0:01:18)
+
+Mã thoát: 0
+
+> .venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+
+Mã thoát: 0
+
+> .venv/Scripts/python -B e_mask/tests/chay_demo.py
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+Mã thoát: 0
+
+> git diff --check
+
+warning: in the working copy of 'e_mask/goi/e_mask/NGUON.md', LF will be replaced by CRLF the next time Git touches it
+Mã thoát: 0
+
+
+> git diff --check (sau tai lieu)
+Mã thoát: 0

@@ -35,6 +35,25 @@ def bo_ky_tu_vo_hinh(text: str) -> str:
     return text if text.isascii() else _VO_HINH.sub('', text)
 
 
+_VO_HINH_LIEN = re.compile(_VO_HINH.pattern + '+')
+
+
+def cac_khoang_vo_hinh(text: str):
+    """Khoảng code point bị bỏ, kể cả chuỗi Cf/selector liên tiếp."""
+    return iter(()) if text.isascii() else (m.span() for m in _VO_HINH_LIEN.finditer(text))
+
+
+def la_bien_to_hop(text: str, vi_tri: int) -> bool:
+    """Không cắt trước dấu kết hợp, kể cả khi Cf chen trước dấu."""
+    if type(vi_tri) is not int or not 0 <= vi_tri <= len(text):
+        return False
+    if vi_tri == 0:
+        return True
+    while vi_tri < len(text) and la_ky_tu_vo_hinh(text[vi_tri]):
+        vi_tri += 1
+    return vi_tri == len(text) or not unicodedata.category(text[vi_tri]).startswith('M')
+
+
 def chuan_hoa_vi_tri(van_ban: str):
     """Bỏ ký tự vô hình rồi dò NFC; mỗi ký tự giữ khoảng trong nguyên văn.
 

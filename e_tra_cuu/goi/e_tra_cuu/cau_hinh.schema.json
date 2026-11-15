@@ -1,0 +1,51 @@
+{
+  "title": "Cấu hình Tra cứu tài liệu",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["phien_ban", "quy_tac_nhom"],
+  "properties": {
+    "phien_ban": {"type": "integer", "const": 1},
+    "quy_tac_nhom": {
+      "type": "object", "additionalProperties": false,
+      "required": ["tep_id", "bam"],
+      "properties": {
+        "tep_id": {"type": "string", "minLength": 1, "maxLength": 200, "pattern": "^[^\\s/\\\\:]+$"},
+        "bam": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "phan_loai": {
+      "type": "object", "additionalProperties": false, "default": {},
+      "properties": {
+        "trang_thai": {"type": "string", "enum": ["chua_do", "da_do"], "default": "chua_do"},
+        "nguong": {"type": "number", "minimum": 0, "maximum": 1},
+        "bam_bo_do": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "cat_doan": {
+      "type": "object", "additionalProperties": false, "default": {},
+      "properties": {
+        "do_dai_muc_tieu": {"type": "integer", "minimum": 200, "maximum": 8000, "default": 2000},
+        "ky_tu_don_vi_toi_da": {"type": "integer", "minimum": 200, "maximum": 8000, "default": 8000},
+        "so_doan_toi_da": {"type": "integer", "minimum": 1, "maximum": 5000, "default": 5000}
+      }
+    },
+    "ngan_sach": {
+      "type": "object", "additionalProperties": false, "default": {},
+      "properties": {
+        "json_chinh_toi_da_byte": {"type": "integer", "minimum": 1, "maximum": 1048576, "default": 1048576},
+        "tep_toi_da_byte": {"type": "integer", "minimum": 1, "maximum": 20971520, "default": 20971520},
+        "tong_doc_toi_da_byte": {"type": "integer", "minimum": 1, "maximum": 67108864, "default": 67108864},
+        "van_ban_toi_da_ky_tu": {"type": "integer", "minimum": 1, "maximum": 500000, "default": 500000},
+        "so_trang_toi_da": {"type": "integer", "minimum": 1, "maximum": 60, "default": 60},
+        "cau_hoi_toi_da_ky_tu": {"type": "integer", "minimum": 1, "maximum": 4000, "default": 4000},
+        "so_ham_toi_da": {"type": "integer", "minimum": 1, "maximum": 100, "default": 100},
+        "so_muc_danh_muc_toi_da": {"type": "integer", "minimum": 1, "maximum": 1000, "default": 1000},
+        "so_ung_vien_toi_da": {"type": "integer", "minimum": 1, "maximum": 50, "default": 50},
+        "ai_toi_da_ky_tu": {"type": "integer", "minimum": 1, "maximum": 100000, "default": 100000},
+        "khuon_toi_da_byte": {"type": "integer", "minimum": 1, "maximum": 32768, "default": 32768},
+        "chuyen_tiep_toi_da_byte": {"type": "integer", "minimum": 1, "maximum": 65536, "default": 65536},
+        "ho_so_toi_da_byte": {"type": "integer", "minimum": 1, "maximum": 65536, "default": 65536}
+      }
+    }
+  }
+}

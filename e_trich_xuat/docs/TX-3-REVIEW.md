@@ -1,4 +1,11 @@
-# TX-3 — Lõi hậu kiểm và xuất, chờ review đăng ký
+# TX-3 — Lõi hậu kiểm và xuất, biên bản review
+
+> **Cập nhật TX-3b, 15/11/2026:** Anh đã duyệt toàn bộ chi tiết tại
+> `_chung/docs/QUYET-DINH-ANH-20261115-CHIEU.md` câu 3.
+> Schema chung/bản trong gói, hai năng lực và hai DEMO đã đăng ký ở bản
+> **0.4.0**; test dùng manifest/handlers thật. Các nhãn “chưa đăng ký /
+> chờ Anh / đề xuất” bên dưới là lịch sử TX-3 trước duyệt.
+> Kết quả hiện tại và giới hạn CLI xem biên bản TX-3b trong `VIEC.md`.
 
 Ngày **15/11/2026** · PR: **chờ lead mở** · Dự toán **8 giờ công ước tính**.
 Hướng T2 bảng + Excel đã chốt. Tài liệu này trình chi tiết để lead/Anh review,

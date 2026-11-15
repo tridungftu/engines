@@ -21,7 +21,8 @@ GOI = GOC / "e_trich_xuat/goi/e_trich_xuat"
 def test_phieu_20_va_khai_21_tach_rieng():
     phieu = json.loads((GOI / "engine.json").read_text(encoding="utf-8"))
     assert kiem_phieu(phieu, GOI) == []
-    assert [n["ma"] for n in phieu["nang_luc"]] == ["trich.doc_docx@1", "trich.chuan_bi@1"]
+    assert [n["ma"] for n in phieu["nang_luc"]] == [
+        "trich.doc_docx@1", "trich.chuan_bi@1", "trich.hau_kiem@1", "trich.xuat_ket_qua@1"]
     for k in ["ngan_du_lieu", "cau_hinh", "giao_dien_quan_tri"]:
         assert k not in phieu
     khai = json.loads((GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))

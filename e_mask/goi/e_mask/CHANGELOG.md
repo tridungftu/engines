@@ -1,3 +1,10 @@
+## Chưa phát hành — 15/11/2026, gộp MASK-B2 + MASK-B3
+
+- Giữ trọn reader Word/Excel và hai quy ước offset ZIP khi có data descriptor; cổng ZIP chung B2 áp cho XLSX, cổng B3 dùng chung kiểm tên 256.
+- Thêm 18 ca hồi quy XLSX kiểu Office qua cả hai cổng, kiểm descriptor có/không chữ ký và chặn CRC/size sai, tên vượt 256. Giữ toàn bộ test B1/B2/B3; nguồn/SHA LF hiện hành ghi tại NGUON.md.
+- Đã kiểm bằng Core giả (CoreGia); chưa Office/Core/Local thật. Cloud giữ tắt, không đổi API/SDK/dependency hoặc commit/hoàn tất merge.
+- Kiểm sau gộp: 1907 passed, 4 xfailed cũ, 190 subtests passed, 0 skipped; kiểm độc lập đạt, DEMO có quyền 2/2. CLI SDK chuẩn 0/2 thiếu nguồn quyền như trước; lead cần stage do sandbox chặn Git index.
+
 # Thay đổi
 
 ## Chưa phát hành — 15/11/2026, MASK-B2 reader Word nội bộ
@@ -7,6 +14,27 @@
 - Kiểm cấu trúc/giá trị trước coi thuộc tính bất biến: ID style/font chỉ tập hằng có kiểm; tên style/theme/property được quét có map. Comments/revision/author markup, field/textbox/content control/extension/media/nhúng/phần lạ từ chối cả gói với câu cố định. Dữ liệu việc chỉ RAM, dọn bảng/buffer trong finally; chưa chạy hai lớp MASK-2b + Local trên tệp.
 - Cổng chung thêm cờ ZIP bit 1–2 của DEFLATE và descriptor bit 3 có/không chữ ký, kiểm CRC/size/local-central trước cho B1 kiểm lại payload. Giữ bytes/offset gốc; `le_cuoi` bao descriptor, payload dài `so_byte_nen`. Thêm theme Word có kiểm và app properties chuẩn; tên part/target dài hơn 256 bị chặn trong wrapper B2 để giữ giới hạn ba tệp. Reader/theme/calcChain Excel thuộc B3, không sửa `doc_excel.py`/`xml_excel.py`.
 - 155 test B2 mới; riêng B1+B2 **431 passed**. Toàn bộ **1540 passed, 4 xfailed giữ nguyên, 190 subtests passed, 0 skipped**; kiểm độc lập đạt, adapter DEMO 2/2. CLI SDK chuẩn 0/2 thiếu nguồn quyền như trước. Đã kiểm bằng Core giả (CoreGia) gói văn bản hiện có; reader B2 kiểm trực tiếp RAM, chưa Office/Core/Local thật hoặc Linux thực tế. Cloud tắt; PR chờ lead mở, không commit/push.
+## Chưa phát hành — 15/11/2026, MASK-B3 reader XLSX nội bộ
+
+- Thêm `doc_excel.py`, `xml_excel.py` và một khối Excel riêng trong `doc_tep.py`; giữ nguyên AST B1, manifest và handler. Chỉ SDK/stdlib, không import engine khác, nguồn cũ hoặc thêm dependency; Cloud tắt.
+- Đọc đủ shared/inline/rich text mọi ô, gồm hàng/cột ẩn, mục shared chưa dùng, tên sheet và core/app/custom properties thuộc profile. Map Unicode hai chiều về run/text/attribute/bytes UTF-8/UTF-16, entity/ST_Xstring/CR/NFD/Cf; không nối hai ô hoặc cắt 32767.
+- Giữ raw value/type/style/XML ô số, boolean và serial ngày, cả style kế thừa hàng/cột và epoch; kiểm numFmt/font/style/merge và miền giá trị attribute. Tên sheet cần thay thì chặn; sheet ẩn, formula/cache/definedNames, liên kết ngoài, bình luận/chart/drawing/nhúng/macro/part lạ hoặc mồ côi đều từ chối cả gói.
+- Thêm profile có kiểm cho theme và ZIP Office cờ nén/data descriptor; kiểm CRC/size, giữ bytes/offset gốc cho B4. CalcChain chỉ nhận rỗng; phần chứa tham chiếu công thức vẫn chặn. Nguồn/quyền/SHA bytes và LF trước–sau tại NGUON.md.
+- Test DEMO gold, đối kháng và đúng/vượt 20.000 ô, 50 sheet, 100.000 node; tiền 1000000 VND/ngày 2026-10-30 theo raw value và style, hủy/ChuaRo/không I/O/không output dở. Reader chỉ nội bộ cho B6/B7, chưa Excel/Local thật hoặc năng lực tệp. Kết quả đầy đủ ghi tại `e_mask/docs/BAO-CAO-MASK-B3.md`.
+- 299 test B3; toàn bộ 1684 passed, 4 xfailed giữ nguyên, 190 subtests passed, 0 skipped. DEMO có quyền 2/2, kiểm độc lập và diff đạt; CLI SDK chuẩn 0/2 vì thiếu nguồn quyền. Đã kiểm bằng Core giả (CoreGia) gói văn bản hiện có, reader chỉ kiểm trực tiếp RAM. CDATA trong part cần map bị chặn vì chưa có profile patch chứng minh.
+## 15/11/2026 — MASK-2c-4 sửa theo kiểm lead (không đổi runtime 1.2.0)
+
+- Bổ sung 28 ca DEMO mới ngoài gói: 18 người không dấu/Hoa đầu chữ/IN HOA/danh xưng/mép/overlap, 5 tổ chức và 5 địa chỉ không có DEMO trong span, đủ năm khung. Tổng 190 ca/124 gold span, SHA mới; **ỨNG VIÊN, chờ lead đóng băng**.
+- Công cụ tách mẫu số chặn trước AI/AI-9 thực sự hoàn tất đoạn/chưa có đoạn xong và tổng; lọt/báo nhầm riêng, không nhận 0 lọt ở ca bị chặn trước AI là thành tích AI. Đo che vượt gold cả ở ca có định danh bằng số span/ký tự.
+- Thêm --timeout mặc định 120 giây × số đoạn và trần cấu hình; CLI cách ly ca bằng process để timeout cứng, giữ kết quả từng phần và số đoạn xong; ngoại lệ xuất báo cáo trước thoát. `.cmd` ASCII/CRLF; đích báo cáo ngoài repo hoặc thư mục riêng chỉ định rõ, không ghi đè.
+- Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; chưa đo Local/Core thật. Giữ nguyên runtime, API, dependency và trạng thái Cloud tắt.
+
+## 15/11/2026 — MASK-2c-4, công cụ ngoài gói (runtime giữ 1.2.0)
+
+- Thêm công cụ đo DEMO mặc định khô/không mạng và `.cmd` ASCII; adapter CoreGia ngoài gói điều phối chuẩn bị → AI-9 → hậu kiểm đủ đoạn. Không sửa runtime engine, Core/SDK, dependency hoặc mở Cloud.
+- Bộ gold ứng viên mới: 45 tên/45 ngữ cảnh, 75 câu thường, 15 tổ chức, 15 địa chỉ và 12 biến thể riêng; có băm, tách development/bốn ca lead cũ. **Chưa lead đóng băng/gold độc lập; chưa là nghiệm thu held-out độc lập.**
+- Chấm hai chế độ trên cùng bộ; tách chặn nghiệp vụ/lỗi kỹ thuật/ChuaRo khỏi lọt và che đủ; báo nhầm bằng hợp che thừa/chặn trên toàn mẫu, kèm mẫu hợp lệ, số span/đoạn và p50/p95. Báo cáo tùy chọn không chứa nội dung gốc/URL/path/mã mở che, không lưu runtime report trong engine.
+- Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả. **CHƯA ĐO Local thật**; AI báo thiếu một phần tên vẫn có thể lọt. Chờ Anh chạy `.cmd`, lead review gold/bằng chứng và Core thật; nợ CAO giữ mở, Cloud giữ tắt.
 
 ## Chưa phát hành — 15/11/2026, MASK-B1 cổng ZIP/XML nội bộ
 

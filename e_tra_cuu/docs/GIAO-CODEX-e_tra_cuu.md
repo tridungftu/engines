@@ -373,6 +373,13 @@ Ghi đã kiểm bằng Core giả (CoreGia), phép đo thật CHỜ ANH TỰ CH�
 
 ### 5.2 Một bảng chọn duy nhất chờ Anh
 
+**Cập nhật 15/11/2026 chiều:** Anh đã duyệt theo cột đề xuất, trừ TC-Q06
+tiếp tục **không tự xóa** (`QUYET-DINH-ANH-20261115-CHIEU.md` câu 7).
+TC-Q09 là duyệt hướng rà nghiệp vụ rồi chốt danh mục, không tự duyệt mọi
+loại hoặc kích hoạt nhựa/điện. TC-Q03/15 vẫn cần số đo/duyệt ngưỡng trước áp
+dụng thật; fixture DEMO không chứng nhận các điều kiện đó. Giữ nguyên bảng
+duy nhất bên dưới để theo dõi, các nhãn TC-P “chưa duyệt” là lịch sử.
+
 **Đề xuất TC-P, chưa phải quyết định.** Gom toàn bộ chỗ còn hỏi trong DAC-TA §3, 6, 7, 13, 15/YEU-CAU §4, tách câu nhiều ý; bổ sung contract, mâu thuẫn nhãn và tiêu chí đo. Không hỏi lại bốn quyết định QĐ-1…4, ngăn/không lưu máy, 8 nhóm, Local-only M9/07. Cấu hình máy đã biết có GPU và ba họ model không còn là câu hỏi có GPU hay không; chỉ còn runtime/model/context thực tế cần đo. Không có con số chất lượng nào đã đo trong TC-P.
 
 | Mã câu | Câu hỏi một dòng | Lựa chọn đề xuất | Lý do một dòng | Lát nào bị chặn khi chưa chốt |

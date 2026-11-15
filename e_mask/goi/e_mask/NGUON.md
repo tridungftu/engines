@@ -337,3 +337,68 @@ Tổng text logic gồm metadata/style/theme và ký hiệu đếm khi dựng v�
 Comments/revision/author markup, field/textbox/content control/extension, nhúng/media/macro/customXml/binary, part mồ côi/đánh tráo type/root/relationship đều từ chối cả gói. Không Accept All, không cảnh báo thay quét. ZIP bit 1–2 chỉ DEFLATE; bit 3 có descriptor 12/16 byte đúng CRC/size central và local header tương thích. le_cuoi bao cả descriptor; payload chỉ dài so_byte_nen. Hủy/ChuaRo truyền nguyên; không I/O/mạng/log/output một phần.
 
 Giữ đúng ba tệp runtime. Nợ tên dài hơn 256 được chặn tại wrapper `_kiem_ten`/`doc_zip` trong doc_tep, không sửa tệp ZIP thứ tư; hàm độc lập trong zip_an_toan giữ nguyên B1. Khối ZIP chung dùng được XLSX tối thiểu; reader/theme/calcChain Excel thuộc B3, B2 không sửa doc_excel/xml_excel. Chưa writer/upload/năng lực tệp hoặc MASK-2b + Local trên tệp. Đã kiểm bằng Core giả (CoreGia) gói văn bản; reader B2 kiểm trực tiếp RAM, chưa Core/Office/Local thật hoặc Linux thực tế. Cloud tắt.
+## MASK-B3 — reader Excel nội bộ, 15/11/2026
+
+**Quyền tái dùng:** lệnh giao MASK-B3 của Anh/lead cho phép CHÉP chọn lọc `xlsx_toi_thieu.py` trong repo. `e_hoa_don/goi/e_hoa_don/NGUON.md` HD-7 ghi writer Python stdlib tự viết; bằng chứng CD-096 A1 ở đó dành cho nguồn Node nội bộ chỉ tham chiếu, không tự suy thành giấy phép Python hoặc quyền phân phối ngoài. Không thêm giấy phép/dependency. Mã mới B3 chỉ SDK 2.0.0 và thư viện chuẩn Python.
+
+| Đường nguồn từ gốc repo | Symbol đọc/chép | Đích và khác biệt |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/xlsx_toi_thieu.py` | `chu_xml`: escape literal ST_Xstring một lượt, control XML và CR | Chép chọn lọc vào `e_mask/xml_excel.py::chu_xml`; chỉ nhận chuỗi, từ chối surrogate lẻ, không ép số hoặc cắt độ dài. Helper escape text cho B4/B6, chưa dùng để ghi tệp trong B3. Không chép `tao_xlsx`, writer inline string hoặc bộ nén |
+| `./e_mask/ma-nguon/nguon/privacy/excel.py` | `decode_string`, `encode_string`, `_read_cells`, `_read_metadata`, `_validate_relationships`, `_audit`; đối chiếu MASK-7 §3 | Chỉ tham chiếu để xác định vùng, ST_Xstring, shared index và rủi ro. Reader/map mới không normalize gốc về NFC; map đủ surrogate pair, entity, CR và từng run/attribute/byte. Chặn formula/link/sheet ẩn/phần chưa phân loại, không giữ bằng disclosures có tên |
+| `./e_mask/ma-nguon/nguon/privacy/excel_values.py` | `clean_text`, `safe_sheet_name`, `_cell_xml`, `build_values_workbook` | Chỉ đọc tĩnh, không nạp runtime. Không dùng đường dựng workbook mới/cắt 32767/đổi tên sheet làm fallback giữ định dạng |
+| `e_mask/goi/e_mask/e_mask/{doc_tep,zip_an_toan,xml_an_toan}.py` | Cổng B1, ngân sách XML, kiểm danh mục/header/DEFLATE EOF/CRC, content types/relationship graph | Dùng trực tiếp nội bộ cùng engine. Khối B3 riêng ở cuối `doc_tep.py` kiểm cờ nén 1–2 và descriptor bit 3; không sửa 37 định nghĩa/câu lệnh AST B1 trước đó, không thay parser Word hoặc sửa nguồn mẫu |
+
+**Nguồn trước và sau:** băm lại bytes thực sau triển khai, cả ba nguồn không đổi nên trước = sau. LF chỉ thay CRLF bằng LF, không chuẩn hóa Unicode.
+
+| Đường nguồn | SHA-256 bytes trước = sau | SHA-256 LF trước = sau |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/xlsx_toi_thieu.py` | `06e185c00dc5762a4393a7223d47e234d6af39a3424dcf43263ae60933fbc304` | `ad6a6c8e89d73e5e994c4f21066c7ee76640b261eaf253dc82a69cf1337fa46d` |
+| `./e_mask/ma-nguon/nguon/privacy/excel.py` | `464456eae2a71488ef57954af2265c1bba0656254a466e3b19d90200c7e873a5` | `b837f86a9accaea662357b485fb0d835a6deef4ba4e9f8ccffb0bb9a1243fdc7` |
+| `./e_mask/ma-nguon/nguon/privacy/excel_values.py` | `12d3f14b74cba21de40ade2b5d707e8a604ea0ff72b00927c58d68c0f83c43aa` | `6bbcb1c0e19923d13923ca935970199626aca668ec3f23d903ef3e512c22e901` |
+
+**Đích trước sửa:** `doc_excel.py` và `xml_excel.py` chưa có. `doc_tep.py` trước B3 có SHA bytes `77e3b72b743e6c239f7b416eb017b8add2ecccd4e8ffdd45f1baeb95f31eb655`, SHA LF `9050f061dab051b69fd0ca7d383edf0850aeb74ee7bf560f95da00eef8186e1c`. Băm B1 lịch sử ở trên giữ nguyên; bảng dưới là toàn tệp sau B3, không là băm phát hành cả gói.
+
+| Đích từ gốc gói e_mask | SHA-256 bytes sau | SHA-256 LF sau |
+|---|---|---|
+| `e_mask/doc_tep.py` | `8490326022023e2980ac666e1c5f7f917b33e4e94a61f15500a29c86c8c24526` | `24175ad56221e4d3b3403416f1c8e7dd1d9550ad6325f292f176df2967f8ad7e` |
+| `e_mask/doc_excel.py` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` |
+| `e_mask/xml_excel.py` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` |
+
+Profile B3: XLSX transitional, đường part cố định/số thứ tự B1, đủ graph/types/root/namespace/node/attribute và ngữ nghĩa được hỗ trợ. Thêm `xl/theme/theme1.xml` với grammar màu/font/style có miền giá trị cố định; `xl/calcChain.xml` chỉ được rỗng. CalcChain có tham chiếu công thức luôn bị từ chối theo chính sách formula/cache, kể cả khi phần đó do Office lưu. Không nhận mọi OOXML hoặc mọi theme/font/numFmt thực tế.
+
+Font name, tên style mặc định và mã định dạng chỉ được giữ trong allowlist đã kiểm; numFmt tùy ý có tên, codeName hoặc attribute chưa phân loại bị chặn. Properties core/app/custom: chuỗi thành vùng có map, số/boolean/ngày kiểm kiểu và giữ nguyên; custom tên/giá trị có map inverse, HeadingPairs chỉ nhãn Worksheets với số sheet đúng, TitlesOfParts phải khớp tên sheet theo thứ tự và không được tự đổi. Sheet name có vùng riêng `duoc_sua=False`: B6/B7 phải chạy cả hai lớp trên vùng đó và gọi `kiem_thay_the`; yêu cầu thay khác gốc thì từ chối cả tệp.
+
+ST_Xstring chỉ giải mã tại shared/inline/rich text và tên sheet; text metadata theo kiểu chuỗi XML của properties. Không normalize NFD/Cf hoặc chuẩn hóa CR gốc tùy ý: map phản ánh đúng chuẩn hóa XML literal CR/CRLF thành LF, character reference và ST CR vẫn giữ CR. Chuỗi literal `_x005F_x0041_` chỉ thành literal `_x0041_`, surrogate pair thành một code point có span bao hai escape, surrogate lẻ bị chặn. Map UTF-8/UTF-16, BOM, attribute normalization và khoảng byte hai chiều; node tự đóng không có neo chèn text giả trong tail. CDATA trong part cần map bị từ chối: chưa có profile patch chứng minh cho kiểu escape khác và miền lexical không liền nhau, không giả khoảng bao delimiter là text an toàn để thay.
+
+Mỗi shared string có vùng gốc kể cả chưa được dùng; mỗi ô dùng có vùng tham chiếu riêng và danh sách đầy đủ `(số sheet, địa chỉ ô)`. Ghép rich runs trong cùng đơn vị, không nối hai ô. Đếm cả shared dùng lặp và mọi metadata, không preview. Trần Excel 32767 UTF-16 code unit được kiểm, không cắt. Giữ raw value/type/style và XML ô số/boolean/serial ngày; ghi riêng style gốc và style hiệu lực từ ô/hàng/cột, giữ epoch, merge và bytes các part.
+
+ZIP Office: B1 giải nén bounded/CRC/EOF thật sau kiểm descriptor CRC/size khớp central directory; hỗ trợ cờ nén 0x0006, bit UTF-8 và bit 3, descriptor cổ điển 12/16 bytes. Các cờ khác/extra/comment/overlap/gap/ZIP64/nhúng/part lạ vẫn chặn. `PhanZip.le_cuoi` kết thúc payload, `PhanZipExcel.le_cuoi_ban_ghi` bao descriptor; B4 phải dùng đúng hai mốc khi chép record nguyên trạng. Không sửa hoặc nén lại bytes trong B3.
+
+Chỉ RAM, không bảng ngăn mới; giữ nguyên Ngan theo mẫu và không tạo tệp tạm. Bảng làm việc dọn `finally`. Chưa phát hành năng lực tệp, chưa nối writer hoặc hai lớp/Local cho tệp. Gói văn bản đã kiểm bằng Core giả (CoreGia); reader B3 kiểm trực tiếp RAM, chưa Excel/Core/Local thật. Cloud giữ tắt, không import engine khác, Core, nguồn cũ hoặc dependency mới. B2/B3 để lead gộp khối riêng, B3 không sửa mã Word.
+
+## Gộp MASK-B2 + MASK-B3 — SHA hiện hành, 15/11/2026
+
+Giữ nguyên mọi dòng provenance/băm lịch sử B1/B2/B3 ở trên. Bảng này thay băm hiện hành của các tệp cùng tên sau gộp; LF chỉ đổi CRLF thành LF, không chuẩn hóa Unicode. Không băm chính NGUON.md để tránh tự tham chiếu.
+
+Giữ hai khối reader và cổng ZIP, không sửa `doc_word.py`, `xml_word.py`, `doc_excel.py`, `xml_excel.py`. Cổng chung B2 cũng nhận XLSX cờ 0x0006/descriptor có kiểm; cổng B3 gọi wrapper `_kiem_ten` chung tối đa 256. Quy ước offset mỗi reader giữ nguyên. Test gộp tự soạn theo fixture DEMO B1/B3 trong RAM, kiểm cả hai cổng; không thêm nguồn ngoài/dependency.
+
+| Tệp từ gốc repo (bản hợp nhất) | SHA-256 LF hiện hành |
+|---|---|
+| `e_mask/cong-cu/THU-MASK-LOCAL-AI-THAT.cmd` | `7e41c1bf14a0a1a045ce4462ed55fa259fe795fa8f83cdd8676ddcef1382b723` |
+| `e_mask/cong-cu/mask_2c_4_ung_vien_demo.json` | `b3569b357132a7f7e0a7202b6e3d3c0b5fec2228c6ebd09604e7d05092485dd8` |
+| `e_mask/cong-cu/thu_mask_local_ai_that.py` | `27a2f63e05519ddb8ab227c107a829b3b615f8cd5ad423a341d5d70b9939ee05` |
+| `e_mask/docs/BAO-CAO-MASK-2c-4.md` | `b4c41ca97fc61b1d8d0faa6e8aa24ed24d5b2ff86e11fe77769851a5a29deed4` |
+| `e_mask/docs/BAO-CAO-MASK-B3.md` | `80ede4fbb44b9412d5bde46b28f4c41f89efb2b658caab088ca56c48d6f8ac46` |
+| `e_mask/docs/KET-QUA-KIEM-MASK-2c-4.txt` | `4e55ac28e7b986cab7d88dc4bcbd1ab693b81431ccd81e6e9d3fa639776154c0` |
+| `e_mask/docs/KET-QUA-KIEM-MASK-B3.txt` | `924dceabea41bba01ef31050eeda1cb8682427ce4b6c1207fe31198667ec3d8d` |
+| `e_mask/docs/VIEC.md` | `5d85d30fd1e058ed74cd68ac0f7d2295ab60caaa7b5e52131a484f96b00b6506` |
+| `e_mask/goi/e_mask/CHANGELOG.md` | `482684dcb0d8a95f61d2e2b1fa7806f307f47d6763fc8c23aeb3189fd895b26b` |
+| `e_mask/goi/e_mask/e_mask/doc_excel.py` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` |
+| `e_mask/goi/e_mask/e_mask/doc_tep.py` | `7169ad765f8566479e9b88f4907be2d37e70fbaded112f2ced6dd75e18567646` |
+| `e_mask/goi/e_mask/e_mask/doc_word.py` | `ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77` |
+| `e_mask/goi/e_mask/e_mask/xml_excel.py` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` |
+| `e_mask/goi/e_mask/e_mask/xml_word.py` | `b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08` |
+| `e_mask/tests/ho_tro_mask_b3.py` | `c64ff8e1e27f8a8b34512adf81a79f41de69a91b6e5460c8fed513c179ed7f51` |
+| `e_mask/tests/test_gop_mask_b2_b3.py` | `58976f10be12beb8d7a4b8001e7856d49017cd3784c2230888c30c9733c95d28` |
+| `e_mask/tests/test_mask_2c_4.py` | `aaeb93c259f68e943d4ae212791e40c15909072f6d57afc1faef3cc214992510` |
+| `e_mask/tests/test_mask_b3.py` | `4f5dc6876b1ffe359c13a8aa3cc5aa938245b153fd2c923ec95d93fad3e9cd68` |

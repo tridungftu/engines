@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ktt:contract:van_ban_da_che:1",
+  "title": "Văn bản đã che định danh",
+  "$comment": "Đã duyệt 15/11/2026. Kiểm tiền/ngày và chốt kho phải thực hiện trước khi tạo. chuyen_tiep tối đa 64 KiB JSON UTF-8, kiểm lúc xử lý.",
+  "type": "object",
+  "required": [
+    "loai",
+    "van_ban_da_che"
+  ],
+  "properties": {
+    "loai": {
+      "const": "van_ban_da_che"
+    },
+    "van_ban_da_che": {
+      "type": "object",
+      "required": [
+        "phien_ban",
+        "van_ban",
+        "ma_yeu_cau",
+        "con_sot",
+        "kiem_tien_ngay",
+        "chuyen_tiep"
+      ],
+      "properties": {
+        "phien_ban": {
+          "type": "integer",
+          "const": 1
+        },
+        "van_ban": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ma_yeu_cau": {
+          "type": "string",
+          "minLength": 1
+        },
+        "con_sot": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "kiem_tien_ngay": {
+          "type": "boolean",
+          "const": true
+        },
+        "chuyen_tiep": {
+          "type": "object"
+        },
+        "so_cho_thay": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bi_danh": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "bi_danh",
+              "nhom",
+              "nguon"
+            ],
+            "properties": {
+              "bi_danh": {
+                "type": "string",
+                "pattern": "^\\[\\[[A-Za-z0-9][A-Za-z0-9_.-]{0,99}\\]\\]$"
+              },
+              "nhom": {
+                "type": "string"
+              },
+              "nguon": {
+                "enum": [
+                  "chinh_thuc",
+                  "tam"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "cho_duyet": {
+          "type": "object",
+          "required": [
+            "so_cum_vua_them"
+          ],
+          "properties": {
+            "so_cum_vua_them": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "vung_da_quet": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "phien_ban_engine": {
+          "type": "string"
+        },
+        "bam_dau_vao": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "canh_bao": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

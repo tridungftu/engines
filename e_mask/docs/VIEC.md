@@ -13,6 +13,10 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 6 | Lát 6: 8 contract (Anh duyệt tên) → lát 7: bài 11 bước | — | Chờ làm |  |
 | MASK-P | Lập phiếu giao Codex theo SDK 2.0; chỉ tài liệu, không tạo gói/không sửa nguồn | MK-1…6, 10…22 | Xong — 14/11/2026 | [Phiếu giao](GIAO-CODEX-e_mask.md): 14 lát, 52–62 giờ ước tính có điều kiện. Regex 14/14 khối đạt; 5 mục/bảng lát/tổng giờ khớp; UTF-8/NFC và kiểm khoảng trắng đạt, `git diff --check` mã 0. Ba lệnh kiểm gói AGENTS.md §5 không áp dụng theo ngoại lệ lát chỉ tài liệu; không chạy hoặc nhận là đã kiểm bằng CoreGia. Đề xuất `van_ban_da_che` ở cuối sổ chung mang nhãn **ĐỀ XUẤT MASK-P, chờ Anh**. Không commit/push; PR: **chờ lead mở** |
 | MASK-3 | Port kho/quyền, kho tạm và chống trùng sau MASK-2 | MK-10…13, 16…19 | Xong phạm vi port/CoreGia — 14/11/2026 | Chỉ DEMO; đúng bốn tệp mã. Pytest 225 passed, 190 subtests passed; kiểm độc lập ĐẠT. CLI SDK 0/2 ĐẠT do handler MASK-5 còn stub; chưa đạt nghiệm thu chung. PR: **chờ lead mở** |
+| MASK-3b | Kho MASK-3 qua Ngan, tiền tố MASK, bản khai SDK 2.1 | Quyết định 15/11 câu 2, 8 | Xong phạm vi CoreGia — 15/11/2026; chờ NGAN-0/Core | Không ghi kho JSON; CAS nguyên tử; giữ ChuaRo khi ghi dấu lỗi. PR: **chờ lead mở** |
+| MASK-4 | Phong bì và schema ba loại riêng | MK-20 | Xong phạm vi CoreGia — 15/11/2026 | Schema chung/bản gói so SHA; kiểm UTF-8/JSON/trần lồng. PR: **chờ lead mở** |
+| MASK-5 | Hai handler văn bản SDK và mở che dữ liệu/trích dẫn AI | MK-12…14, 18, 20, 21 | Xong phạm vi CoreGia — 15/11/2026; chờ quyền thật | DEMO qua port ngoài gói; CLI chuẩn vẫn bị chặn do thiếu quyền. PR: **chờ lead mở** |
+| MASK-6 | Duyệt/từ chối, đóng/dọn, chuyển DEMO và màn Admin | MK-11, 15…19, 22 | Xong phạm vi CoreGia/KttCore giả — 15/11/2026 | Màn trong gói; chưa nạp trong Core thật. PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
 
@@ -123,6 +127,18 @@ Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã
 - Khác biệt **numeric_review với NUL**: cần đối chiếu riêng với nguồn, giữ ranh giới số và chứng minh tiền/ngày; không sửa trong lát kho/quyền.
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+### Bổ sung MASK-3b → MASK-6 — 15/11/2026
+
+- **NGAN-0:** lead thay hai bản bọc tạm trong gói bằng mẫu chung, bật lại hai test so băm đang skip “chờ NGAN-0 gộp”. Không tạo/sửa `_chung/mau-ma/**` trong worktree này. API/tham số đã dùng ghi trong [báo cáo bàn giao](BAO-CAO-MASK-3b-6.md).
+- **Ngăn SDK 2.1:** cấp `app.ngan`/`viec.ngan`, giao dịch nguyên tử, CAS/duy nhất và quyền trên cả năm bảng engine. Bản khai tại `goi/e_mask/KHAI-SDK-2.1.json`; phiếu SDK 2.0 không thêm trường. RAM mất dữ liệu khi khởi động lại.
+- **Quyền/mã yêu cầu:** Core cấp module/người gửi/tài liệu/vùng cùng mã ổn định theo việc/bước; kiểm lease và quyền tại đọc/chốt, kể cả đọc kết quả/tệp đã đóng. SDK 2.0 chưa có nguồn này. CLI chuẩn 0/2 ĐẠT là chặn thiếu quyền; adapter `tests/chay_demo.py` tiêm quyền DEMO mới kiểm được nghiệp vụ.
+- **Khóa HMAC do Core cấp:** dấu/băm nội bộ hiện vẫn SHA-256 không muối; chưa tự tạo khóa hoặc đổi băm công bố theo hợp đồng. Cần cổng bí mật/khóa HMAC của Core trước khi làm. Nợ mất ChuaRo khi ghi dấu lỗi đã đóng bằng test lỗi sau khi nguồn nhận chốt.
+- **Lô lớn:** API ngăn đề nghị tối đa 100 lệnh. Engine từ chối toàn bộ nếu số thay đổi vượt mức này, không chia lô làm mất nguyên tử. Cần giao dịch lớn/staging có chốt nguyên tử để hỗ trợ tài liệu nhiều cụm; detector không bị cắt ở 500.
+- **Màn quản trị:** nạp `ui/duyet_dinh_danh.js` như module; chốt chữ ký hàm nạp/default export và dạng trả `doc/tim/ghi_lo` của KttCore, kiểm `admin_core` phía Core cho mọi lần đọc/ghi; quét/review mã màn. Đã kiểm bằng Node/KttCore giả, chưa có bằng chứng trình duyệt thật.
+- **Giao lại:** chỉ lưu định danh/lựa chọn/băm/số đếm vào ngăn, không cache toàn văn hay kết quả AI. Tái tạo kết quả và đối chiếu băm đã chốt; tài nguyên/logic đổi khiến khác kết quả thì chặn `MASK_XUNG_DOT`. Cần cửa đọc lại kết quả gốc có kiểm quyền của Core để đối soát qua các lần nâng phiên bản.
+- Trần kỹ thuật JSON mẫu 1/3 là 4 MiB; trần tệp nghiệp vụ/đầu ra và phần Word/Excel/PDF vẫn thuộc MASK-7, chưa triển khai trong đợt này. Nguồn từ điển sạch của lead đã dùng theo lệnh giao mới nhất; không dùng fixture thay thế trên đường handler.
+
 - Cổng engine chung: API HTTP v1, webhook, bộ cài engine từ thư mục/gói riêng (bỏ tiền tố `kho_tri_thuc.engines.`), K1–K5.
 - Màn Chạy thử chung và màn cấu hình dựng từ schema; nạp giao diện quản trị của engine.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
@@ -145,6 +161,8 @@ Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã
 
 ## Chờ Anh / lead — MASK-P
 
+**Cập nhật 15/11/2026:** các mục dưới đây là lịch sử MASK-P. Anh đã chốt ngăn RAM/cấu hình engine, bốn loại chung, chi tiết `van_ban_da_che`, tiền tố MASK và bỏ màn thử riêng. Bốn từ điển sạch đã được lead đặt, lệnh giao mới nhất xác nhận đã duyệt và đã dùng trong MASK-3b…6. Phần còn chờ giữ ở mục Cần Core mới và MASK-7.
+
 - Chốt đề xuất bổ sung `van_ban_da_che` ở [cuối sổ loại riêng](../../_chung/docs/LOAI-DU-LIEU-RIENG.md#3-đề-xuất-mask-p-chờ-anh--chi-tiết-van_ban_da_che), Q1/Q3/Q4 theo phiếu thứ tự; không coi Q2 dành cho OCR là quyền lưu tên gốc của Mask xuống JSON.
 - Cấp whitelist bốn tài nguyên detector sạch, chốt tiền tố tự sinh/tạm không trùng Junsky và đặc tả bản xuất danh mục sạch/quan hệ tên khác. Không dùng danh mục thật làm fixture; chuyển thật cần Anh xác nhận số dòng trước/sau.
 - MASK-7 trình số đo DEMO, trần tệp/đầu ra, nguồn hoặc phương án cho Word giữ bố cục, sheet/chart Excel và mở che tệp còn thiếu; chỉ triển khai phần thiếu sau khi được chốt, ước lại giờ trước làm.
@@ -153,3 +171,12 @@ Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã
 ## Hiện vật không mang sang gói — ghi nhận MASK-P
 
 Vỏ `ma-nguon/chay.py`, `vong_doi.py`, shim, contract bốn mẫu cũ, helper mã hóa bảng và các bản tham chiếu SQL/route/UI không dùng cho gói SDK 2.0. Giữ nguyên, không xóa/di chuyển trong MASK-P; lead xem xét chuyển `LUU-TRU/` sau khi có gói thay thế và kiểm đủ.
+
+## Bàn giao MASK-3b → MASK-6 — 15/11/2026
+
+- **Xong phạm vi triển khai bằng CoreGia/KttCore giả; chưa đạt nghiệm thu chung CLI SDK chuẩn.** PR: **chờ lead mở**. Không commit/push. Chi tiết, API/tham số Ngan và phân lát: [báo cáo bàn giao](BAO-CAO-MASK-3b-6.md).
+- Thời gian: **07:39:00–08:09:07 ngày 15/11/2026 (UTC+07), 0.50 giờ thực tế; phiếu 13 giờ ước tính (3 + 2 + 5 + 3).** Không tách thời gian thực tế từng lát trong cùng phiên.
+- Đã kiểm bằng Core giả (CoreGia): CLI SDK chuẩn **0/2 ĐẠT, mã 1**, cả hai chặn `MASK_NGU_CANH_CHUA_XAC_MINH` do thiếu nguồn quyền. Adapter `tests/chay_demo.py` với port DEMO ngoài gói **2/2 ĐẠT, mã 0**.
+- Pytest với `--basetemp=.pytest-tmp`: **269 passed, 2 skipped, 190 subtests passed, 24.30 giây; mã 0**. Hai skip đúng lý do **“chờ NGAN-0 gộp”**, so băm `ngan.py` và `cau_hinh.py`; các test SHA schema/từ điển không skip.
+- Kiểm độc lập **ĐẠT, mã 0**; Node/KttCore giả **4/4 ĐẠT, mã 0**; công cụ chuyển DEMO mặc định chạy khô, mã 0; `git diff --check` mã 0. [Nhật ký đầy đủ](KET-QUA-KIEM-MASK-3b-6.txt). Chưa kiểm Linux thực tế, trình duyệt/Core thật hoặc Cloud.
+- Lệch/điểm còn lại: hai bản bọc trong gói chờ mẫu NGAN-0; giữ tệp kho/cấu hình cũ làm hiện vật, không trên đường chạy. Thêm màn duyệt và dùng nguồn sạch theo lệnh mới. Cần Core/SDK: nguồn quyền/mã ổn định, ngăn thật, khóa HMAC, giao dịch trên 100 lệnh, nạp/review màn và đọc lại kết quả qua nâng phiên bản; đã ghi tại mục Cần Core. Không có câu hỏi mới cần Anh duyệt.

@@ -1,6 +1,6 @@
-"""Ghép port Kho hiện có với nguồn quyền; chưa nối vào handler MASK-5.
+"""Ghép protocol Kho với Ngan và nguồn quyền tin cậy cho handler văn bản.
 
-Không có kho nội dung mặc định. Các port chỉ được tiêm bởi bên tích hợp tin
+Các port quyền chỉ được tiêm bởi bên tích hợp tin
 cậy, không lấy callable/danh tính từ dữ liệu công việc. Không có vòng gửi lại
 kết quả: phần đó thuộc SDK. KhoBoNho chỉ nằm ngoài gói, trong tests.
 """
@@ -22,14 +22,21 @@ def _kiem_ket_qua(ket_qua, loai):
 
 
 class KhoDinhDanh:
-    def __init__(self, *, goi_kho=None, quyen=None, kho_tam=None):
+    def __init__(self, *, goi_kho=None, quyen=None, kho_tam=None, ngan=None):
         self._goi_kho, self._quyen, self._kho_tam = goi_kho, quyen, kho_tam
+        self._ngan = ngan
 
     def mo_luot(self, viec, *, loai='che', ma_yeu_cau=None) -> KhoQuaCore:
         bam = bam_noi_dung({'loai': loai, 'dau_vao': viec.dau_vao, 'tham_so': viec.tham_so})
-        return KhoQuaCore(goi_kho=self._goi_kho, quyen=self._quyen, viec=viec,
+        goi_kho, kho_tam = self._goi_kho, self._kho_tam
+        if self._ngan is not None:
+            from .kho_ngan import DauNgan, PortNgan
+            goi_kho = PortNgan(self._ngan, self._quyen, viec, loai=loai,
+                              ma_yeu_cau=ma_yeu_cau, bam_dau_vao=bam)
+            kho_tam = DauNgan(self._ngan)
+        return KhoQuaCore(goi_kho=goi_kho, quyen=self._quyen, viec=viec,
                           loai=loai, ma_yeu_cau=ma_yeu_cau, bam_dau_vao=bam,
-                          kho_tam=self._kho_tam)
+                          kho_tam=kho_tam)
 
     def xu_ly(self, viec, ham, *, loai='che', ma_yeu_cau=None):
         """ham nhận protocol Kho và hoàn tất giao_dich trước chot.

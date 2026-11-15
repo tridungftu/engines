@@ -73,3 +73,23 @@ Chỉ bốn tệp mã chạy mới. Không thêm dependency ngoài thư viện c
 Nguồn `ma-nguon/kho_qua_core.py` giữ nguyên: SHA byte `2dd5c5f3ea64711a31f17265ba4e3b75a17e136258ae94c157cf2e6bb91dee15`; SHA LF `3608e50f82c76cde036afcc309bc4f01656e1a0cb4a17679ba9c7e106a547c78`. KhoBoNho từ nguồn cũ đã được MASK-2 chép ra helper test, nay tập trung tại `tests/ho_tro_core_gia.py`; helper `ho_tro_kho_demo.py` chỉ chuyển tiếp import. Fixture quyền/kho, máy chia sẻ RAM cho hai tiến trình và adapter SDK thử nghiệm đều ngoài gói chạy. Mã nguồn gốc giữ nguyên, không xóa/di chuyển.
 
 Port này chưa công bố API ngăn mới. Core cần cấp mã ổn định theo việc/bước, kiểm phiên/module/người/tài liệu/vùng, quyền và lease tại snapshot/chốt/đọc lại, cùng CAS/duy nhất/ghi lô nguyên tử phía kho. Kho tạm chỉ băm mã và nội dung, không lưu nhật ký chứa cụm gốc hay kết quả; `ChuaRo` chỉ khi bên kho đã nhận chốt chưa trả, giao lại hỏi nguồn trước. Phần gửi lại kết quả thuộc SDK. Tiền tố cấp alias tại MASK-3 tập trung trong `TIEN_TO_TU_SINH`; còn chờ xác nhận họ MASK không trùng Junsky thật. Không đổi helper/matcher thuộc các lát lõi trước.
+
+
+## Bổ sung MASK-3b → MASK-6 — 15/11/2026
+
+Các mô tả stub/chờ tài nguyên/kho tệp ở các mục trên là lịch sử bàn giao. Handler hiện dùng ngăn và tài nguyên sạch đã duyệt theo lệnh giao mới nhất. Hai bản ngan.py, cau_hinh.py viết tạm bằng thư viện chuẩn theo đặc tả SDK 2.1 vì mẫu NGAN-0 đang làm song song; lead thay nguyên tệp khi gộp, hai test so SHA tạm skip. Không thêm dependency chạy.
+
+Bốn từ điển chép nguyên byte từ e_mask/tham-chieu/tu-dien/ vào e_mask/tu_dien/. Nguồn là Mask v2 nội bộ đã được lead lọc sạch; ghi chú chờ duyệt trong bản nguồn là lịch sử, lệnh giao mới nhất xác nhận Anh đã duyệt. Gói không chứa danh mục đối tác thật. Nạp kiểm SHA bằng SHA256.json, test so byte với bản tham chiếu.
+
+| Tệp | SHA-256 nguồn và bản gói |
+|---|---|
+| `common_acronyms.txt` | `920f0952f2584ece4c37d5419c073cd6f60cf151da3b38b1e68fdd6a2bb24f4e` |
+| `leftover_allowlist.txt` | `7074f53c296bd7be258610335adc270879eccb2db63fa412c7a9088b077aea4b` |
+| `vn_places.txt` | `e991d899a1fa2265082e871715a653c9ca4fd7ed233a8d3951fb80b7a2d41847` |
+| `vn_surnames.txt` | `b9fc76e5fa1ebb6abca7f4bc7c58d0dd9ecffc992e642a21958449080b2aaad1` |
+
+Kho mới giữ nguyên nguyên tắc snapshot/chốt của MASK-3, chuyển thành adapter API ngăn chung; dùng dòng CAS bảo vệ năm bảng. Chỉ dấu/băm/số đếm và định danh cần che được giữ; không cache tài liệu hoặc kết quả AI. Cổng quyền vẫn là port được bên tích hợp tin cậy cấp. Tệp kho_tam.py/cau_hinh_may.py giữ nguyên làm hiện vật, không được handler import; lead xét lưu trữ sau.
+
+Schema van_ban_da_che tạo theo phần đã duyệt của sổ loại riêng, chép nguyên byte vào gói; hai schema van_ban_tai_lieu/tra_loi_ai chép từ sổ chung, không sửa nguồn. Test so SHA cả ba. Bản khai chờ 2.1 độc lập phiếu 2.0. Màn duyệt viết bằng JavaScript chuẩn, chỉ gọi KttCore, Node dùng riêng cho kiểm với bản giả. Công cụ chuyển DEMO chỉ nhận danh sách giả tích hợp sẵn, không đọc danh mục thật.
+
+Đã kiểm bằng Core giả (CoreGia) và KttCore giả; chưa kiểm Core thật, Linux thực tế hoặc Cloud. CLI SDK chuẩn chưa được tiêm quyền Mask nên từ chối xử lý; adapter DEMO có port nằm ngoài gói. Trần 100 lệnh/lô và trần kỹ thuật JSON 4 MiB được ghi ở README; băm nội bộ chưa có khóa HMAC từ Core.

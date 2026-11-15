@@ -19,12 +19,11 @@ from uuid import uuid4
 from kho_tri_thuc_sdk.engine import ChuaRo, ViecDaHuy
 
 from .che_van_ban import _kiem_dinh_danh, chuan_bi_danh, chuan_hoa
-from .kho_tam import KhoTam
 from .nguon.privacy.core import CATEGORIES
 from .quyen_yeu_cau import loi_kho, xac_minh
 
 
-# Họ tiền tố chỉ cho DEMO, chờ xác nhận không trùng mã Junsky thật.
+# Anh chốt 15/11/2026: MASKTAM cho tạm; mã Junsky không dùng họ này.
 TIEN_TO_TU_SINH = 'MASK'
 
 
@@ -105,14 +104,16 @@ class KhoQuaCore:
         self._ma, self._luot = self._ngu_canh.ma_yeu_cau, self._ngu_canh.ma_luot
         self._loai, self._goi_kho = loai, goi_kho
         self._quyen, self._viec = quyen, viec
-        self._kho_tam = kho_tam if kho_tam is not None else KhoTam()
+        if kho_tam is None:
+            raise loi_kho('MASK_KHO_CHUA_NOI')
+        self._kho_tam = kho_tam
         self._bam_dau_vao = bam_dau_vao
         self._bam_chot = None
         self._dau = self._ghi_dau(1)
         self._snapshot = deepcopy(self._goi('snapshot_luot'))
         _kiem_snapshot(self._snapshot)
         self.da_chot = self._snapshot['da_chot']
-        if self._dau['trang_thai'] == 4 and not self.da_chot:
+        if self._dau['trang_thai'] == 4 and not self.da_chot and not self._snapshot.get('da_phuc_hoi'):
             raise loi_kho('MASK_XUNG_DOT')
         self._danh_muc = deepcopy(self._snapshot['danh_muc'])
         self._theo_cum = {chuan_hoa(m['gia_tri']): m for m in self._danh_muc}
@@ -139,7 +140,11 @@ class KhoQuaCore:
             return self._goi_kho(thao_tac, ma_yeu_cau=self._ma,
                                  ma_luot=self._luot, loai=self._loai, **payload)
         except ChuaRo:
-            self._dau = self._ghi_dau(3)
+            try:
+                self._dau = self._ghi_dau(3)
+            except Exception:
+                # Nguồn đã nhận việc: lỗi ghi dấu không được làm mất CHUA_RO.
+                pass
             # Dùng mã từ khóa lượt đã băm, không chuyển câu/mã tùy ý của nguồn.
             raise ChuaRo('mask-' + self._dau['tuong_quan']) from None
         except ViecDaHuy:
@@ -153,6 +158,8 @@ class KhoQuaCore:
             snap = self._goi('snapshot_luot')
             _kiem_snapshot(snap)
             self.da_chot = snap['da_chot']
+            if snap.get('da_phuc_hoi'):
+                self._snapshot = deepcopy(snap)
         if self.da_chot:
             # Đọc lại từ port có kiểm quyền; không lấy kết quả từ JSON/snapshot.
             kq = self._goi('chot_luot', phien_ban=None, nhat_ky=None, ket_qua=None)

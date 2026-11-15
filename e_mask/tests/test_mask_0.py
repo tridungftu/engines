@@ -19,12 +19,11 @@ def test_phieu():
     assert app.ma == "e_mask"
     assert len(app.phieu["nang_luc"]) == 2
 
-def test_stub_core_gia(module):
+def test_mac_dinh_thieu_port_tin_cay_core_gia(module):
     for vd in module.app.phieu["chay_thu_demo"]:
         kq = CoreGia().chay_thu(module.app, vd["nang_luc"], vd["dau_vao"], vd["tham_so"])
         assert kq["trang_thai"] == "LOI"
-        assert kq["loi"]["ma"] == "CHUA_LAM"
-        assert kq["loi"]["thong_diep"] == "Chức năng này chưa được hoàn tất."
+        assert kq["loi"]["ma"] == "MASK_NGU_CANH_CHUA_XAC_MINH"
         assert kq["ket_qua"] is None
 
 def test_cau_hinh_thieu(tmp_path, monkeypatch):

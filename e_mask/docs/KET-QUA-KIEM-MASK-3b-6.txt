@@ -1,0 +1,62 @@
+Kiểm MASK-3b → MASK-6, bắt đầu 2026-11-15T08:07:11 UTC+07
+Đã kiểm bằng Core giả (CoreGia); Node/KttCore giả, dữ liệu DEMO.
+Python 3.13.14; SDK 2.0.0; pytest 9.1.1; nền tảng win32.
+Không chạy Linux hoặc Core thật.
+
+$ .venv/Scripts/python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+
+Mã thoát: 1
+
+$ .venv/Scripts/python -m pytest e_mask/tests -q --basetemp=.pytest-tmp
+.......................................................... [ 21%]
+........................................ [ 36%]
+........................................................................ [ 62%]
+.......................................................ss............... [ 89%]
+.............................                                            [100%]
+269 passed, 2 skipped, 190 subtests passed in 24.30s
+
+Mã thoát: 0
+
+$ .venv/Scripts/python e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+
+Mã thoát: 0
+
+$ .venv/Scripts/python e_mask/tests/chay_demo.py
+[ĐẠT] Che văn bản DEMO XONG 
+[ĐẠT] Mở che DEMO XONG 
+Đã kiểm bằng Core giả (CoreGia).
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+
+Mã thoát: 0
+
+$ node --test e_mask/tests/ui/duyet_dinh_danh.test.mjs
+✔ Duyệt qua KttCore, cấp alias, giữ mã tạm và lọc cột (7.7628ms)
+✔ CAS lỗi hiện câu tiếng Việt và không ghi nửa lô (1.092ms)
+✔ Từ chối giữ alias đang dùng; quyền bị thu hồi chặn ghi (0.6613ms)
+✔ Từ chối Junsky trùng tiền tố MASK, mã tự sinh đúng nhóm (0.6133ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 187.5101
+
+Mã thoát: 0
+
+$ .venv/Scripts/python e_mask/cong-cu/chuyen_danh_muc_demo.py
+{"so_dong_truoc": 0, "so_dong_them": 1, "so_dong_sau": 1, "chay_kho": true}
+
+Mã thoát: 0
+
+$ git diff --check
+
+Mã thoát: 0
+
+Kết thúc kiểm: 2026-11-15T08:07:39 UTC+07

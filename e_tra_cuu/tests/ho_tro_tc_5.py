@@ -3,12 +3,12 @@
 from copy import deepcopy
 
 from e_tra_cuu.kiem_dau_vao import bam, doc_json, json_chuan
-from ho_tro_tc_2 import NGU_CANH
+from ho_tro_tc_2 import GOI, NGU_CANH
 from ho_tro_tc_4 import BoAI, THAM_SO
 
 
 PHAN_LOAI = "tra_cuu.phan_loai_tai_lieu@1"
-AI_VERSION = "e_hoi_ai 0.5.0"
+AI_VERSION = "e_hoi_ai " + doc_json((GOI.parents[2] / "e_hoi_ai/goi/e_hoi_ai/engine.json").read_bytes())["phien_ban"]
 BEN_KY = "Bên ký: Công ty DEMO Ánh Dương (DEMO-P)."
 DOI_TUONG = "Đối tượng DEMO-DT; Công trình DEMO-CT-01 tại địa điểm DEMO."
 # Chỉ fixture được nghiệp vụ giả lập; không tự cài/kích hoạt trong runtime.

@@ -4,7 +4,8 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| MASK-P3 | Thiết kế lại mở che/kho bí danh cho SDK 2.2.0, chỉ tài liệu | **CĐ-36 — Anh, 15/11/2026 16:28** | Xong tài liệu — 15/11/2026; **Chờ Anh chọn hệ quả nghiệp vụ / Chờ Core** | [Thiết kế trình lead/Anh](MASK-P3-MO-CHE-SDK-2.2.md): đề xuất A (alias + tham chiếu, bản rõ chỉ xem ở Core), so sánh A/B/C, tác động MASK-5/6/B5…B10, 7 lát 32–46 giờ ƯỚC TÍNH, Q1…Q4; không sửa mã. Không chờ hoặc mở đường Core giải mã hộ engine. PR: **chờ lead mở**; kết quả kiểm thật ở mục MASK-P3 cuối tài liệu này. |
+| MASK-P4 | Lập lại phiếu mở che cùng chu kỳ, map chỉ RAM và kho bí danh kín; chỉ tài liệu | Quyết định Anh tối 15/11 câu 10; CĐ-36 | Xong tài liệu — 15/11/2026; kiểm nền gói chưa đạt / Chờ Core | [Phiếu RAM](MASK-P4-MO-CHE-RAM.md): R1…R7 32–46 giờ ƯỚC TÍNH, B5…B10 sửa 36–56 giờ ƯỚC TÍNH, mỗi lát ≤5 tệp; TTL đề xuất 600 giây, cấu hình 60–900. Không code/commit/push; PR: **chờ lead mở**. P3 A không dùng; kết quả kiểm thật và C-P4-01…06 ở mục MASK-P4 bên dưới. |
+| MASK-P3 | Thiết kế lại mở che/kho bí danh cho SDK 2.2.0, chỉ tài liệu | **CĐ-36 — Anh, 15/11/2026 16:28** | Xong tài liệu lịch sử — 15/11/2026; **A không dùng theo quyết định Anh 15/11 tối** | [Thiết kế P3 giữ truy vết](MASK-P3-MO-CHE-SDK-2.2.md): A/lát A/Q1…Q4 không còn giao/chờ chọn; MASK-P4 thay bằng B chỉ RAM, không hồ sơ Core, không giải mã bi_mat. Kết quả kiểm P3 giữ nguyên lịch sử. PR: **chờ lead mở**. |
 | MASK-2c-4 | Công cụ đo Local ngoài gói và gold DEMO ứng viên | Sau MASK-2c-3; quyết định Anh “Thêm AI cục bộ” | Xong phần công cụ/mock — 15/11/2026; **Chờ Anh/lead đo độc lập** | Đúng ba tệp mã/dữ liệu ngoài gói; không sửa runtime. 45 tên/45 ngữ cảnh +75 câu thường +15 tổ chức +15 địa chỉ +12 biến thể; chưa lead đóng băng gold độc lập. [Báo cáo](BAO-CAO-MASK-2c-4.md); PR: **chờ lead mở**; nợ CAO/Cloud tắt giữ nguyên |
 | MASK-2c-3 | Hậu kiểm Local, xác minh nguồn và che bổ sung theo span | Sau MASK-2c-2, AI-9; profile lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.2.0; 1109 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-3.md); PR: **chờ lead mở** |
 | 0 | Đọc yêu cầu chung/SDK 2.0, yêu cầu Mask và lập kế hoạch lát có giờ ước tính; trình Anh qua lead | MASK-P | Xong — 14/11/2026 (lập phiếu) | [GIAO-CODEX-e_mask.md](GIAO-CODEX-e_mask.md): 14 lát MASK-0…13, 52–62 giờ ước tính chưa đo; phần tệp có điều kiện, chưa triển khai; PR: **chờ lead mở** |
@@ -32,7 +33,40 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
 
+## MASK-P4 — mở che RAM cùng chu kỳ, 15/11/2026
+
+**Kết luận: Đạt phạm vi lập phiếu tài liệu; chưa đạt kiểm nền gói theo AGENTS.md §5.** PR: **chờ lead mở**. Chỉ bốn tệp Markdown: phiếu [MASK-P4-MO-CHE-RAM.md](MASK-P4-MO-CHE-RAM.md), phiếu giao, nhãn lịch sử P3 và VIEC; không đổi mã/manifest/SQL/schema/CHANGELOG gói, không commit/push.
+
+**Đã làm:** thiết kế B chỉ RAM cùng chu kỳ, mã do Core cấp/ghim instance/TTL đề xuất 600 giây cấu hình 60–900/dọn ngay sau mở-hủy-lỗi-kết thúc-hết hạn; mất RAM lỗi rõ yêu cầu chạy lại, không mở thiếu. Kho chính thức chỉ alias+cột bí mật/metadata, tìm chính xác từng ứng viên qua băm, không matcher danh mục rõ; Admin chỉ metadata, xem tên tại Core. Lập R1…R7 (**32–46 giờ ƯỚC TÍNH**), sửa B5…B10 (**36–56 giờ ƯỚC TÍNH**), mỗi lát ≤5 tệp mã và khối lệnh tự đủ. Đánh dấu A của P3 **không dùng theo quyết định Anh 15/11 tối**, giữ nguyên lịch sử, không chờ chọn lại A/B/C. Các khối MASK-2c cũ chỉ để truy vết phần snapshot, R4/R5 chuyển sang RAM; Local hai lớp và Cloud tắt vẫn giữ.
+
+**Môi trường kiểm thật:** `.venv` trong worktree, Python **3.13.14**, pytest **9.1.1**, SDK wheel offline **2.2.0**; SHA-256 **0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984** khớp `SHA256SUMS.txt`. Venv dùng gói kiểm có sẵn qua `--system-site-packages`, không mạng/không thêm dependency gói. Đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1` và dùng `-B`. **Đã kiểm bằng Core giả (CoreGia)** cho mã hiện có, chưa kiểm R/B mới, Core/Office/Local/Linux thật.
+
+| Lệnh / phép kiểm | Kết quả thật |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**. Cả hai: “Chưa xác minh được phiên và quyền xử lý yêu cầu.” |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q` | **1475 passed, 434 failed, 4 xfailed, 188 subtests passed, 0 skipped; 348,28 giây; mã 1.** Bốn xfail held-out quy tắc cũ giữ nguyên. Nhiều lỗi handler là `MASK_KHO_LOI`; hai subtest hiệu năng vượt 5 giây (7,864 và 7,042 giây). Không kết luận mọi lỗi do `bi_mat` hoặc một nguyên nhân SDK. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**; không tham chiếu cấm/tệp biên dịch trong gói. |
+| Regex khối lệnh mới | **7/7 MASK-R + 6/6 MASK-B5…B10 ĐẠT**; toàn bộ B **10/10** đọc được theo regex tiêu đề + fenced block. Bảng số tệp R/B đều ≤5; giờ/tệp/phụ thuộc khớp khối lệnh. |
+| `git diff --check` và kiểm tệp mới chưa stage | **ĐẠT, mã 0**; tệp mới kiểm riêng UTF-8/NFC/fence/khoảng trắng, liên kết tương đối tồn tại. Cảnh báo LF→CRLF của Git không phải lỗi khoảng trắng. |
+
+**Thời gian thực tế:** **18:21:00–18:37:41 ngày 15/11/2026 (UTC+07), 0,28 giờ**, theo mốc bắt đầu lead và giờ chốt bàn giao. Lệnh giao **không nêu giờ ƯỚC TÍNH riêng MASK-P4**, không lấy dự toán MASK-P cũ hoặc giờ R/B tương lai làm ước tính lát tài liệu này.
+
+**Lệch khỏi phiếu / quyết định tạm:** không đổi phạm vi chỉ tài liệu, không dùng quyết định tạm thay câu 10/CĐ-36. Chạy đủ ba lệnh dù có lỗi nền, không sửa runtime/test để làm xanh. TTL/trần ứng viên là đề xuất kỹ thuật để đo, không trình bày như số đã được Anh duyệt. Chưa lấy kiểm tài liệu đạt làm nghiệm thu chung của engine.
+
+### Cần Core — MASK-P4 (thay phần mâu thuẫn của P3/P2/MASK-2c)
+
+- **C-P4-01:** mã yêu cầu từ Core/ACL tin cậy xuyên bước; ghim **cùng tiến trình/instance** cho mọi bước Mask, không spawn mỗi việc/failover tiếp tục; hàng chờ tối đa một chuỗi map sống. `cuc_bo` và `so_viec_dong_thoi=1` riêng lẻ không đủ. Thiếu thì runtime từ chối, chỉ adapter CoreGia.
+- **C-P4-02:** báo kết thúc/hủy/lỗi/lease/deadline toàn chuỗi khi Mask đang rảnh, đồng bộ tiêu thụ một lần và bàn giao ACK; không gọi mở lại sau map đã dọn, mất RAM yêu cầu chạy mới. TTL là dự phòng, không thay việc báo hủy ngay.
+- **C-P4-03:** xác nhận chuẩn hóa/băm/tìm chính xác `bi_mat`, duy nhất/lay_hoac_tao/CAS/lô ≤100/hạn mức chống dò; kết quả null+cờ/metadata, không log tên/băm, không đường giải mã. Đo lại độ phủ khi bỏ matcher danh mục rõ; thiếu bằng chứng chặn phát hành.
+- **C-P4-04:** điều phối Local đủ đoạn/nguồn xác minh/quyền, thay snapshot chứa map/gốc của C-M2C-01/05, C-MB-01/02; Core không cất hoặc cấp lại hồ sơ ánh xạ để phục hồi. Lead điều chỉnh profile/sổ chung khi cần; P4 không sửa API/SDK/nguồn chung.
+- **C-P4-05:** streaming/trần thực/413/budget RAM và thời gian cả chuỗi, quyền tệp/cách ly upload/ACK/ChuaRo; không dump payload/traceback/log/stderr/crash dump/tệp tạm bản rõ hoặc map. Kế thừa C-MB-03, không dùng giữ gốc tại Core để khứ hồi.
+- **C-P4-06:** cửa Xem dữ liệu Core và biên nhận duyệt ID+phiên bản không tên, quyền xem/duyệt tách; UI engine không nhận bản rõ. Migration dữ liệu cũ/khóa/JSON/bản sao do Core/lead kiểm soát, không để engine đọc tên cũ chuyển hộ. Thiếu cửa thì giữ chờ, không duyệt mù.
+
+Không còn câu Chờ Anh chọn A/B/C/Q1…Q4 của P3. Cần Core/lead xác nhận các cửa chung và đo TTL/budget/chất lượng; không hỏi lại cho phép giải mã `bi_mat` hoặc lưu ánh xạ. Các đề nghị lịch sử bên dưới về map/snapshot/gốc phục hồi **không còn hiệu lực**, các yêu cầu nguồn/quyền/CAS/trần/Admin không mâu thuẫn tiếp tục áp dụng theo phiếu P4.
+
 ## MASK-P3 — mở che/kho bí danh SDK 2.2.0, 15/11/2026
+
+> **Lịch sử, bị MASK-P4 thay về nghiệp vụ:** A **không dùng theo quyết định Anh 15/11 tối**, không chờ Anh chọn Q1…Q4. Các đề nghị giữ map/hồ sơ, chỉ trả alias/tham chiếu, chuyển capability theo A bên dưới không giao nữa. CĐ-36 vẫn cấm giải mã `bi_mat`; quyền/Admin/tìm bí mật phù hợp được kế thừa ở C-P4-01…06.
 
 - **Xong phạm vi tài liệu trình lead/Anh; kiểm nền gói chưa đạt.** PR: **chờ lead mở**. Chỉ thêm [MASK-P3-MO-CHE-SDK-2.2.md](MASK-P3-MO-CHE-SDK-2.2.md) và cập nhật VIEC; không sửa mã/manifest/schema/CHANGELOG gói, không commit/push. Đề xuất A, so sánh A/B/C, liệt kê các điểm cần bản rõ kể cả dò danh mục/giao lại; bảng tác động B5…B10, 7 lát ≤5 tệp với **32–46 giờ ƯỚC TÍNH** và Q1…Q4. Đây không phải code đã được giao hay chức năng đã triển khai.
 - **CĐ-36 — Anh, 15/11/2026 16:28 (nguyên văn ý):** “KHÔNG mở đường Core giải mã hộ engine. Trường bi_mat chỉ mã hóa khi ghi, tìm theo băm, engine đọc ra null. Mask phải đổi cách gỡ che (ví dụ trả về bí danh hoặc mã tham chiếu, bản rõ chỉ người có quyền xem qua cửa Xem dữ liệu của Core). Không làm đường giải mã nào khác.” Không còn chờ phê duyệt đường giải mã. Không dùng module, tệp hồ sơ/snapshot, trường rõ hoặc JSON ánh xạ làm đường vòng. Các ghi chú cũ chờ đường giải mã trong tài liệu chung phải được lead thay theo CĐ-36; P3 không sửa tài liệu chung.

@@ -26,8 +26,8 @@ class CoreAnhDEMO(CoreTepConDEMO):
         super().__init__()
         self.anh_viec = {}
 
-    def _nhan_viec(self, ma):
-        v = super()._nhan_viec(ma)
+    def _nhan_viec(self, ma, instance=None):
+        v = super()._nhan_viec(ma, instance)
         if v and v["id"] in self.anh_viec:
             v["ngu_canh"]["doi_chieu_anh"] = deepcopy(self.anh_viec[v["id"]])
         return v
@@ -67,7 +67,7 @@ def giao_quet(m, pb, *, metadata=True, pn=PN, quyen=True):
 
 
 def quet(m, monkeypatch, pb=None, **kw):
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     if pb is None:
         nhan = m.chay()
         assert nhan["trang_thai"] == "XONG", nhan
@@ -207,7 +207,7 @@ def test_thieu_metadata_core_khong_tin_vung_caller(monkeypatch):
 
 def test_thieu_mot_trang_khong_quet_do_roi_bao_xong(monkeypatch):
     m = tao_mau(so_trang=2)
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     pb = m.chay()["ket_qua"]
     pb = doi_snapshot(m, pb, lambda s: s["anh_trang"].pop())
     before = m.core.so_tai
@@ -270,7 +270,7 @@ def test_huy_khong_tra_snapshot_thanh_cong(monkeypatch, luc):
     else:
         monkeypatch.setattr(m.core, "_tai_tep_ra", m.core._tai_tep_ra)
     if luc == "tai":
-        monkeypatch.setattr(chay, "ngan", m.ngan)
+
         pb = m.chay()["ket_qua"]
         original = m.core._tai_tep_ra
         def tai(ma, vid, ten, raw, mime, khoa):
@@ -287,7 +287,7 @@ def test_huy_khong_tra_snapshot_thanh_cong(monkeypatch, luc):
 
 def test_so_truoc_quet_khong_mat_diem_lech(monkeypatch):
     m = tao_mau()
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     r = so(m)
     assert r["trang_thai"] == "XONG", r
     before = m.snapshot(r)
@@ -322,7 +322,7 @@ def test_lock_pillow_nguyen_version_hash():
 @pytest.mark.parametrize("sai", ["bam", "kich_thuoc", "quyen"])
 def test_anh_sai_bam_size_mat_quyen(monkeypatch, sai):
     m = tao_mau()
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     pb = m.chay()["ket_qua"]
     if sai == "quyen":
         m.core.cam.add(m.cap["anh_trang"][0]["tep"]["tep_id"])
@@ -342,7 +342,7 @@ def test_anh_sai_bam_size_mat_quyen(monkeypatch, sai):
 
 def test_anh_hong_qua_core_gia(monkeypatch):
     m = tao_mau()
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     pb = m.chay()["ket_qua"]
     ref = m.luu("hong.png", b"DEMO-anh-hong", "image/png")
     pb = doi_snapshot(m, pb, lambda s: s["anh_trang"][0].update(ref))
@@ -369,7 +369,7 @@ def test_thieu_toa_do_tu_khong_gia_sach(monkeypatch):
 
 def test_mot_trang_loi_khong_tai_crop_trang_truoc(monkeypatch):
     m = tao_mau(so_trang=2)
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     pb = m.chay()["ket_qua"]
     class LoiTrangHai(DetectorGia):
         lan = 0
@@ -436,7 +436,7 @@ def test_engine_khong_ghi_dia_hoac_goi_mang(monkeypatch):
     import socket
     import tempfile
     m = tao_mau()
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     pb = m.chay()["ket_qua"]
     original = builtins.open
     def mo(file, mode="r", *args, **kw):
@@ -497,9 +497,8 @@ def test_cong_cu_chay_kho_khong_bia_so_do():
 @pytest.mark.parametrize("key", ["phuong_phap_detector", "phien_ban_detector"])
 def test_thieu_phuong_phap_trong_cau_hinh(monkeypatch, key):
     m = tao_mau()
-    monkeypatch.setattr(chay, "ngan", m.ngan)
+
     pb = m.chay()["ket_qua"]
-    m.ngan = chay.NganBoNho(chay._khai["ngan_du_lieu"])
     m.cau_hinh.pop(key)
     m.dat_cau_hinh()
     kiem_loi(quet(m, monkeypatch, pb), "DC_CHUA_CO_BO_PHAT_HIEN")

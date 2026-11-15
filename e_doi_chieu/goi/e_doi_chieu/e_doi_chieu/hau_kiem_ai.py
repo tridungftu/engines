@@ -97,7 +97,7 @@ def phan_loai_diem_lech(viec, ngan, cau_hinh, *, phien_ban_engine):
     ids = [d["ma_diem"] for d in rows]
     if len(ids) != len(set(ids)) or set(ids) != set(ai["ma_diem"]) or any(not row["ly_do"].strip() for row in rows):
         cb.loi_ai("DC_AI_SAI_KHUON")
-    khoa = {"phap_nhan_id": ai["pham_vi"]["phap_nhan_id"], "bam_bo": goc["bo_quy_tac"]["bam"],
+    khoa = {"bam_bo": goc["bo_quy_tac"]["bam"],
         "phien_ban_engine": phien_ban_engine, "bam_cap": hs.bam(hs.json_bytes({"buoc": cb.PHIEN_BAN + ":hau_kiem",
             "pham_vi": ai["pham_vi"], "bam_phan_hoi": hs.bam(hs.json_bytes(viec.dau_vao))}))}
     with cb.luot(viec, ngan, khoa, "dang_hau_kiem_ai", "da_hau_kiem") as (cu, chot):

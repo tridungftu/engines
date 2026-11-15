@@ -254,7 +254,7 @@ Chi tiết review tại `../../docs/TX-3-REVIEW.md`; bằng chứng/lệnh/giờ
 | `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/ai_cuc_bo.py` | `8051a15ec015acd7bfec9c34bfc35a903746ff990bb15f2f27e172b2ed580ae1` |
 | `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/chon_model.py` | `ace9854285187c6dfd6543cd297f306ef45ddd29b9168dabe917749bdd5a3f66` |
 | `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/cong_ai.py` | `99bef752985200e2a40760a55ecd33422e844b40fb7361fd63bba070bce16ae8` |
-| `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/hoi_yeu_cau.py` | `4130ccafd39b070db959a0b6b3832f740d0cc694ff1e7747ff72089c2c705962` |
+| `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/hoi_yeu_cau.py` | `3162ba602025607ec8b6ca7de3321a76af78b43fccaf8af837d9dce524cd565c` |
 | `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/khuon_json.py` | `ab4dc18a48df5f6f7c8e8f08ae10ea87e5a0a43ced3ca0870909e44eece069df` |
 | `docs/goi-gui-engine/sdk-2.0.0/kho_tri_thuc_sdk-2.0.0-py3-none-any.whl` | `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892` |
 | `e_trich_xuat/cong-cu/CHAY-N1-MOT-LAN.cmd` | `12043a121ace003291ce89134ef9e21e54290bead8438cd0a09251317ec33635` |

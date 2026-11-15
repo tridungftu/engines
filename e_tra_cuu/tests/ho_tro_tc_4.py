@@ -66,8 +66,7 @@ def nap_hoi_ai():
         sys.path.insert(0, str(goi_ai))
     from e_hoi_ai.hoi_yeu_cau import goi_theo_yeu_cau
     from e_hoi_ai.khuon_json import khop, kiem_khuon
-    from e_hoi_ai.ngan import NganBoNho
-    return goi_ai, goi_theo_yeu_cau, khop, kiem_khuon, NganBoNho
+    return goi_ai, goi_theo_yeu_cau, khop, kiem_khuon, None
 
 
 class LocalGia:
@@ -90,17 +89,16 @@ class LocalGia:
 
 
 def dieu_phoi_hoi_ai(bo, pb, du_lieu, *, chua_ro=False):
-    goi_ai, goi, _, _, NganBoNho = nap_hoi_ai()
+    goi_ai, goi, _, _, _ = nap_hoi_ai()
     phieu = doc_json((goi_ai / "engine.json").read_bytes())
     # App kiểm riêng năng lực AI-2 nguyên khai báo; không đăng ký thành công giả
     # cho các năng lực Hỏi AI ngoài phạm vi chuỗi này.
     phieu["nang_luc"] = [n for n in phieu["nang_luc"] if n["ma"] == "ai.hoi_theo_yeu_cau@1"]
     phieu["chay_thu_demo"] = []
     app_ai = Engine(phieu, thu_muc_goi=goi_ai)
-    ngan = NganBoNho()
-    with ngan.lo() as lo:
-        lo.them("cau_hinh", {}, {"local_ai": {"url": "http://127.0.0.1:1", "timeout_giay": 2},
-                                 "quy_tac_model": []})
+    bo.core.nap_engine(app_ai)
+    bo.core.dat_cau_hinh(app_ai.ma, {"local_ai": {"url": "http://127.0.0.1:1", "timeout_giay": 2},
+                                    "quy_tac_model": []})
     local = LocalGia(du_lieu, chua_ro=chua_ro)
     local.tai_lieu = pb["yeu_cau_ai"]["tai_lieu"]
 
@@ -112,7 +110,6 @@ def dieu_phoi_hoi_ai(bo, pb, du_lieu, *, chua_ro=False):
 
     @app_ai.nang_luc("ai.hoi_theo_yeu_cau@1")
     def hoi(viec):
-        viec.ngan = ngan
         return goi(viec, CongGia(), phien_ban=app_ai.phien_ban)
 
     kq = bo.core.chay_thu(app_ai, "ai.hoi_theo_yeu_cau@1", deepcopy(pb))

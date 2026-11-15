@@ -1,4 +1,4 @@
-"""TC-4: đã kiểm bằng Core giả (CoreGia), NganBoNho; 0 Cloud/mạng."""
+"""TC-4: đã kiểm bằng Core giả (CoreGia), ngăn SDK 2.2.0; 0 Cloud/mạng."""
 
 from copy import deepcopy
 from pathlib import Path

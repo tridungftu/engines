@@ -2,6 +2,8 @@
 
 *Ngày 15/11/2026 · Codex trình lead/Anh · CHỈ TÀI LIỆU · PR: chờ lead mở.*
 
+> **MASK-P4 — cập nhật tối 15/11/2026:** phương án A **không dùng theo quyết định Anh 15/11 tối**. Toàn bộ đề xuất A, lát MASK-A1…A7 và Q1…Q4 dưới đây giữ để truy vết, không giao triển khai/không chờ chọn lại. [Phiếu MASK-P4](MASK-P4-MO-CHE-RAM.md) thay phần mở che/kho bí danh: dùng phương án B **chỉ RAM**, cùng một chu kỳ; **không dùng** nhánh hồ sơ Core của B. Không giải mã `bi_mat` theo CĐ-36. Các nhận định cũ rằng RAM-only cũng không được phép đã được quyết định câu 10 mới thay thế; nhánh hồ sơ/module giữ map vẫn bị cấm.
+
 ## 1. Kết luận và căn cứ
 
 **Đề xuất A: kết quả giữ bí danh, kèm mã tham chiếu nội bộ; người có quyền xem bản rõ tại cửa Xem dữ liệu của Core.** Engine không khôi phục bản rõ từ dữ liệu đã lưu. Đây là thay đổi nghiệp vụ so với MASK-5 và MASK-B8, cần Anh chọn trước khi giao code. Giữ định dạng Word/Excel vẫn là mục tiêu; trả tệp có tên gốc sau AI sửa không còn là tiêu chí của A.

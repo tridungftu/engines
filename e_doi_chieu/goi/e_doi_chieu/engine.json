@@ -1,0 +1,55 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_doi_chieu",
+  "ten": "??i chi?u b?n k?",
+  "phien_ban": "0.1.0",
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "api": "v1",
+    "sdk": ">=2.0.0 <3.0.0"
+  },
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {
+    "lenh": [
+      "{python}",
+      "-m",
+      "e_doi_chieu.chay"
+    ],
+    "thu_muc": "."
+  },
+  "nang_luc": [
+    {
+      "ma": "doi_chieu.doc_docx@1",
+      "ten": "??c b?n Word",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "van_ban_tai_lieu",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "mime": [
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ],
+        "thoi_han_giay": 120
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    }
+  ],
+  "loai_du_lieu_rieng": [
+    {
+      "ma": "van_ban_tai_lieu",
+      "ten": "V?n b?n t?i li?u c? v? tr?"
+    }
+  ],
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
+  "chay_thu_demo": [],
+  "bi_mat": [],
+  "webhook": null
+}

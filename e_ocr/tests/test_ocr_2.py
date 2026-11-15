@@ -3,7 +3,8 @@
 from datetime import datetime, timezone
 import io
 import json
-import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
+import threading
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -14,8 +15,7 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu, ViecDaHuy
 
 from demo.tao_pdf import DONG_DEMO, pdf_demo
 from e_ocr import abbyy, chon_nguon, tesseract
-from e_ocr.chon_nguon import KHOA_HAN_MUC, SoHanMuc
-from e_ocr.kho_tam import KhoTam
+from ngan_demo import SoHanMuc, ngan_demo, ghi_so, dat_cau_hinh, cau_hinh_hien_tai
 from e_ocr.lop_chu import doc_lop_chu
 from test_ocr_1 import ABBYYGia, DOC, VAN_BAN, chay, hot_folder, kiem_loi
 
@@ -36,11 +36,9 @@ def tess_gia(monkeypatch):
 
 
 def cau_hinh_abbyy(**phan_abbyy):
-    from e_ocr.cau_hinh_may import doc_cau_hinh
-    import os
-    cau_hinh = doc_cau_hinh(bat_buoc=True)
+    cau_hinh = cau_hinh_hien_tai()
     cau_hinh["abbyy"].update(phan_abbyy)
-    Path(os.environ["KTT_ENGINE_CAU_HINH"]).write_text(json.dumps(cau_hinh), encoding="utf-8")
+    dat_cau_hinh(cau_hinh)
 
 
 def kiem_chuyen(kq, ly_do):
@@ -57,12 +55,12 @@ def test_het_han_muc_chuyen_truoc_gui(hot_folder, tess_gia):
     # DEMO: nhận 4.999 trang bằng nhiều lượt hợp lệ, không chứa nội dung.
     luc = int(so.dong_ho())
     ngay = datetime.fromtimestamp(luc, timezone.utc).date().isoformat()
-    so.kho.ghi(KHOA_HAN_MUC, {"da_nhan": {ngay: {str(luc % 86400): 4999}}, "dang_giu": {}})
+    ghi_so(so, {"da_nhan": {ngay: {str(luc % 86400): 4999}}, "dang_giu": {}})
     _, kq = chay(pdf_demo((), (), ()))
     kiem_chuyen(kq, "het_han_muc")
     assert len(tess_gia) == 1 and not tam and not list(vao.iterdir())
     assert so.da_dung() == 4999
-    assert so.kho.doc(KHOA_HAN_MUC)["dang_giu"] == {}
+    assert so._doc()[1]["dang_giu"] == {}
 
 
 def test_dung_han_muc_van_uu_tien_abbyy(hot_folder, tess_gia):
@@ -101,7 +99,7 @@ def test_timeout_truoc_nhan_rut_roi_chuyen(hot_folder, tess_gia):
         _, kq = chay(pdf_demo(()))
     kiem_chuyen(kq, "qua_thoi_gian")
     assert len(tess_gia) == 1 and SoHanMuc().da_dung() == 0
-    assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {}
+    assert SoHanMuc()._doc()[1]["dang_giu"] == {}
 
 
 def test_loi_gui_chac_chan_chua_nhan_duoc_chuyen(hot_folder, tess_gia, monkeypatch):
@@ -137,8 +135,8 @@ def test_khong_rut_duoc_chua_chac_da_nhan_giu_cho_khong_tru(hot_folder, tess_gia
         _, kq = chay(pdf_demo(()))
     assert kq["trang_thai"] == "CHUA_RO", kq
     assert SoHanMuc().da_dung() == 0 and not tess_gia
-    assert sum(SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"].values()) == 1
-    assert kq["ma_tuong_quan"] in SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"]
+    assert sum(SoHanMuc()._doc()[1]["dang_giu"].values()) == 1
+    assert kq["ma_tuong_quan"] in SoHanMuc()._doc()[1]["dang_giu"]
     # Chỉ dọn đúng tệp DEMO vừa được ca này tạo, sau khi đã kiểm metadata.
     for tep in vao.iterdir():
         tep.unlink()
@@ -196,7 +194,8 @@ def test_thieu_tesseract_bao_ma_ro_khi_can_dung(monkeypatch, nguon):
 
 
 def test_loi_kho_khong_duoc_gia_la_het_han_muc_va_chuyen(hot_folder, tess_gia):
-    SoHanMuc().kho.ghi(KHOA_HAN_MUC, {"DEMO": 1})
+    with ngan_demo().lo() as lo:
+        lo.them("han_muc_ngay", {"ngay": "2026-11-15"}, {"da_nhan": {"0": "DEMO"}, "dang_giu": {}})
     core, kq = chay(pdf_demo(()))
     kiem_loi(core, kq, "SO_HAN_MUC_CAN_KIEM_TRA")
     assert not tess_gia
@@ -204,7 +203,7 @@ def test_loi_kho_khong_duoc_gia_la_het_han_muc_va_chuyen(hot_folder, tess_gia):
 
 def test_cua_so_truot_30_ngay_chinh_xac_va_qua_thang(tmp_path):
     luc = [int(datetime(2026, 10, 31, 23, 59, 59, tzinfo=timezone.utc).timestamp())]
-    so = SoHanMuc(KhoTam(tmp_path / "so-DEMO"), dong_ho=lambda: luc[0])
+    so = SoHanMuc(ngan_demo(), dong_ho=lambda: luc[0])
     ma = so.giu(3, 5000)
     assert so.da_dung() == 0
     so.ghi_nhan(ma)
@@ -216,46 +215,24 @@ def test_cua_so_truot_30_ngay_chinh_xac_va_qua_thang(tmp_path):
     assert so.da_dung() == 0  # Đúng biên 30 ngày thì hết hạn.
     ma = so.giu(1, 1)
     so.bo_giu(ma)
-    assert so.kho.doc(KHOA_HAN_MUC) == {"da_nhan": {}, "dang_giu": {}}
+    assert so._doc()[1] == {"da_nhan": {}, "dang_giu": {}}
 
 
-def _giu_dong_thoi(thu_muc, bat_dau, kenh):
-    bat_dau.wait(10)
-    try:
-        SoHanMuc(KhoTam(thu_muc)).giu(1, 1)
-        kenh.send("giu_duoc")
-    except LoiNghiepVu as loi:
-        kenh.send(loi.ma)
-    finally:
-        kenh.close()
+def test_hai_luong_khong_cung_vuot_han_muc():
+    bat_dau = threading.Barrier(2)
 
+    def giu():
+        bat_dau.wait(5)
+        try:
+            SoHanMuc().giu(1, 1)
+            return "giu_duoc"
+        except LoiNghiepVu as loi:
+            return loi.ma
 
-def test_hai_tien_trinh_khong_cung_vuot_han_muc(tmp_path):
-    ctx = multiprocessing.get_context("spawn")
-    bat_dau = ctx.Event()
-    tt, kenh = [], []
-    for _ in range(2):
-        cha, con = ctx.Pipe()
-        p = ctx.Process(target=_giu_dong_thoi, args=(str(tmp_path / "so-DEMO"), bat_dau, con))
-        p.start()
-        con.close()
-        tt.append(p)
-        kenh.append(cha)
-    try:
-        bat_dau.set()
-        for k in kenh:
-            assert k.poll(15), "Tiến trình DEMO chưa phản hồi."
-        assert sorted(k.recv() for k in kenh) == ["ABBYY_HET_HAN_MUC", "giu_duoc"]
-    finally:
-        for p in tt:
-            p.join(10)
-            if p.is_alive():
-                p.terminate()
-                p.join(5)
-            assert p.exitcode == 0
-        for k in kenh:
-            k.close()
-    assert SoHanMuc(KhoTam(tmp_path / "so-DEMO")).da_dung() == 0
+    with ThreadPoolExecutor(max_workers=2) as nhom:
+        cac_lan = [nhom.submit(giu) for _ in range(2)]
+        assert sorted(k.result(timeout=10) for k in cac_lan) == ["ABBYY_HET_HAN_MUC", "giu_duoc"]
+    assert SoHanMuc().da_dung() == 0
 
 
 @pytest.fixture

@@ -175,3 +175,77 @@ pytest với CoreGia/NganBoNho/adapter tệp con, không thêm DEMO thành công
 giả vào runtime thiếu quyền/cấu hình. Lớp bọc handler đổi lỗi bất ngờ thành
 câu cố định để SDK 2.0 không in nội dung ngoại lệ; không sửa SDK và chưa
 khép nợ log lỗi ngoài handler của SDK.
+
+## DC-4 — So văn bản hai bên
+
+`doi_chieu.so_van_ban@1` nhận hồ sơ `da_nhan`, trả `da_so`. Hai tham số
+`bo_quy_tac_json` và `bam_bo_quy_tac` phải khớp **nguyên bytes** bộ đã ghim
+ở DC-3, không chỉ cùng nội dung JSON. Bước so đọc lại snapshot và mọi nguồn
+qua SDK, kiểm băm/quyền/cấu hình/chuẩn hóa. Không sửa nguồn DC-3; snapshot
+mới giữ `ho_so_truoc` (tham chiếu+băm), nguồn/bộ và nguyên văn bất biến.
+
+Căn Điều → Khoản → câu, bảng → dòng → ô, kể cả bảng lồng, ô trống và ô gộp.
+Nhãn NFC/NFD được nhận diện; không biến số tiền đầu dòng thành Khoản.
+Neo theo từng lần xuất hiện và chuỗi có thứ tự (LIS); không bật autojunk,
+không chạy phép so ký tự bậc hai trên cả tài liệu. Cụm lớn không có neo
+được giữ như phép thay đầy đủ; không có neo để căn hai tài liệu hoặc bảng
+không định vị được thì trả `DC_KHONG_CAN_DUOC`. Bảng OCR lặp cần offset
+nguồn kiểm lại được; không có offset thì phải tìm được duy nhất trong trang.
+
+Snapshot có `edit_script` (toàn văn) và `diem_lech` (ứng viên):
+
+- Mỗi bước script có `phep`, `word`, `ban_ky`, `can_cu`, `ma_diem` hoặc null.
+  Mỗi bên giữ `nguyen_van`, offset Unicode `[bat_dau,ket_thuc)`, lát
+  `chuan_hoa` và `vi_tri` thật hoặc null. Script phủ liên tục từ 0 đến hết
+  **cả nguyên văn và bản chuẩn hóa**; kiểm tái dựng trước khi tải lên Core.
+  Không tách cụm Unicode co/giãn dùng chung nguồn; phần chuẩn hóa đã duyệt
+  vẫn giữ nguyên văn bằng phép `tuong_duong_chuan_hoa`.
+- Điểm chữ giữ phép `chen`/`xoa`/`thay`; điểm cấu trúc còn có `dao`, thiếu/
+  thừa Điều/Khoản/bảng và đổi hình dạng bảng. Đảo Điều vẫn kiểm các Khoản
+  bên trong. Script chữ giữ thứ tự hai nguồn bằng chèn/xóa; điểm cấu trúc
+  ghi riêng căn cứ đảo, không làm mất văn bản để tạo một neo giao nhau.
+- `ma_diem` băm nguồn/phiên bản/bộ/văn bản/offset/phép/căn cứ, không dùng UUID
+  hoặc vị trí mảng. Lượt bỏ dấu chỉ thêm nhóm `chi_lech_dau`; thuê/thuế và
+  mọi ứng viên vẫn còn. `cho_phan_loai=true`, `muc_san=null`, `muc=null`;
+  `quy_tac_cung`, `lech_dau`, AI, OCR kém và sửa tay còn chưa kiểm.
+- Điểm trang giữ ảnh/băm/số trang thực trong căn cứ; chưa có ánh xạ chữ
+  Word của ảnh render thì hai lát chữ là null, không dựng offset giả.
+  `tom_tat.so_diem` đã biết; số mức chưa phân loại vẫn null. Luôn giữ
+  `da_kiem_du=false`, `ket_luan=null`, `de_nghi_chan=true` ở DC-4.
+
+Kiểm trang bảo thủ: có PDF render và ảnh trong JSON chưa chứng minh render
+thuộc Word này. Cửa **C-DC-05 chưa có thật**. Lớp bọc tạm chỉ nhận liên kết
+do Core gắn trong `viec.ngu_canh.doi_chieu_phan_trang` (không lấy từ JSON
+caller/snapshot). Quy ước đề nghị, chưa phải API Core đã nghiệm thu:
+
+| Trường | Giá trị phải khớp nguồn ghim |
+|---|---|
+| `phien_ban` | Số nguyên 1 |
+| `bam_word`, `phien_ban_word` | Bản DOCX gốc |
+| `bam_pdf_chuan` | PDF render của đúng bản Word, Core kiểm nguồn tạo |
+| `bam_ban_ky` | PDF bản ký |
+| `anh_word`, `anh_ban_ky` | Danh sách băm ảnh từng bên theo thứ tự trang |
+
+Core phải tự xác minh liên kết render/ảnh, không chép lại tuyên bố của
+caller; metadata ≤16 KiB. Thiếu cửa → `trang=chua_kiem`. Liên kết sai băm
+→ `DC_SAI_NGUON`. Khi đủ liên kết và toàn bộ ảnh ghép được bằng băm trùng
+chính xác, kiểm được thứ tự trang; đảo trang tạo điểm `dao`. Ảnh scan khác
+pixel, khác dàn trang, thiếu ánh xạ nội dung trang hoặc số trang khác →
+vẫn `chua_kiem`, không tự suy thiếu/thừa trang. Không dùng số dòng DOCX.
+
+Ngăn có lượt riêng cho bước so, khóa gồm băm snapshot nhận, bộ, phiên bản,
+trần hiệu lực và bằng chứng phân trang Core. `lay_hoac_tao` + CAS/chủ lượt/
+hạn chiếm chống chốt trùng; cạnh tranh đang chạy trả `DC_DANG_XU_LY`, cho
+thử lại. Không đổi hàng `da_nhan` của DC-3. Tái dùng kiểm lại quyền, snapshot
+tiền nhiệm và tái dựng; tệp cũ hết quyền được dựng lại, sai băm bị từ chối.
+Lỗi/hủy nhường bằng CAS, không ghi đè chủ khác. RAM mất khi khởi động lại.
+
+Trần §2.3 và trần cấu hình lấy mức thấp hơn; kiểm 10.000 điểm, ký tự cả
+nguyên văn/bản chuẩn hóa, tệp/phong bì/bytes và hạn 300 giây. Vượt trả
+`DC_QUA_GIOI_HAN`, không tải bản cắt. Gọi `kiem_huy` theo cụm; tiến độ chỉ
+câu cố định, không nội dung. Toàn bộ runtime dùng RAM/Ngan/tệp Core.
+
+**Đã kiểm bằng Core giả (CoreGia):** ba lệnh bắt buộc đạt, 407 tests
+(110 ca DC-4), 0 skipped. DEMO Word của lệnh `thu`: 1/1; đường nhận cặp
+và so nằm trong pytest vì cần cấu hình/quyền tệp con. Phân trang dùng
+provider DEMO giả (PDF có trang/ảnh thực); chưa đo renderer/OCR/Core thật.

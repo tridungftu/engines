@@ -8,6 +8,7 @@ from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
 from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
 from .doc_docx import doc_docx as _doc_docx
 from .ho_so import nhan_cap as _nhan_cap
+from .so_chu import so_van_ban as _so_van_ban
 
 _GOI = Path(__file__).resolve().parent.parent
 app = Engine.tu_khai_bao(str(_GOI / "engine.json"))
@@ -61,6 +62,19 @@ def nhan_cap(viec):
                    if n["ma"] == "doi_chieu.nhan_cap@1")
     return _nhan_cap(viec, ngan_viec, cau_hinh,
                      phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
+
+
+@app.nang_luc("doi_chieu.so_van_ban@1")
+@_an_toan
+def so_van_ban(viec):
+    ngan_viec = getattr(viec, "ngan", None)
+    if ngan_viec is None:
+        ngan_viec = ngan
+    cau_hinh = can_cau_hinh(ngan_viec)
+    thoi_han = next(n["gioi_han"]["thoi_han_giay"] for n in app.phieu["nang_luc"]
+                   if n["ma"] == "doi_chieu.so_van_ban@1")
+    return _so_van_ban(viec, ngan_viec, cau_hinh,
+                       phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
 
 
 if __name__ == "__main__":

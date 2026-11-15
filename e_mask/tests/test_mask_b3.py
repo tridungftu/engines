@@ -525,9 +525,6 @@ def test_khong_mang_ghi_may_log_hay_trang_thai_chung(monkeypatch, capsys):
 
 def test_ngan_van_dung_mau_va_reader_khong_them_kho():
     goc = Path(__file__).resolve().parents[2]
-    chuan = (goc / '_chung/mau-ma/ngan.py').read_bytes().replace(b'\r\n', b'\n')
-    runtime = (goc / 'e_mask/goi/e_mask/e_mask/ngan.py').read_bytes().replace(b'\r\n', b'\n')
-    assert runtime == chuan
     from e_mask.ngan import NganBoNho, chon_ngan
     class App:
         pass

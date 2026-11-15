@@ -10,3 +10,5 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'LUU-TRU'))
 sys.modules['mask_truoc_ngan.quyen_yeu_cau'] = quyen_yeu_cau
 from mask_truoc_ngan import cau_hinh_may, kho_tam
 from mask_truoc_ngan.kho_tam import KhoTam
+
+from sdk_truoc_2_2 import cau_hinh

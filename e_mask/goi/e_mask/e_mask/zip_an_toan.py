@@ -43,7 +43,7 @@ def kiem_kich_thuoc_tep(du_lieu):
 def _kiem_ten(ten):
     # Chép quy tắc NFC/casefold từ closure ZIP; không sửa tên rồi đoán đích.
     phan = ten.split("/")
-    if (not ten or any(p in ("", ".", "..") for p in phan)
+    if (not ten or len(ten) > 256 or any(p in ("", ".", "..") for p in phan)
             or any(c in ten for c in '\\:%?#<>|"*')
             or any(unicodedata.category(c).startswith("C") for c in ten)
             or any(p.endswith((" ", ".")) for p in phan)):
@@ -253,3 +253,96 @@ def doc_zip(du_lieu, kiem_huy):
     finally:
         muc.clear()
         ket_qua.clear()
+
+
+@dataclass(frozen=True, repr=False)
+class BanGhiZip:
+    """Một quy ước cho writer, không đổi hai kiểu offset reader B2/B3."""
+
+    phan: PhanZip = field(repr=False)
+    co: int
+    le_cuoi_ban_ghi: int
+    descriptor_chu_ky: bool
+    local_rong: bool
+
+
+def kiem_ban_ghi(goi, kiem_huy):
+    """Đối chiếu metadata RAM với bytes ZIP đã qua B1, trước khi chép.
+
+    Chép/chuyển kiểm EOCD/header/CRC từ nguồn B1 (NGUON.md). Office chỉ
+    thêm bit 1–2 DEFLATE, bit 3 descriptor 12/16 bytes; extra vẫn rỗng.
+    Không dùng le_cuoi để đoán ranh payload/descriptor hoặc tin cờ caller.
+    """
+    if type(goi) is not GoiZip or type(goi.phan) is not tuple:
+        _sai()
+    raw = goi.goc
+    le, so = _kiem_danh_muc(raw, kiem_huy)
+    if goi.le_danh_muc != le or len(goi.phan) != so:
+        _sai()
+    ds, da_co, pos, tong = [], set(), le, 0
+    try:
+        for p in goi.phan:
+            kiem_huy()
+            if type(p) is not PhanZip:
+                _sai()
+            (_, tao, can, co, cach, gio, ngay, crc, nen, dai,
+             n, x, c, dia, noi_bo, ngoai, dau) = struct.unpack_from('<4s6H3I5H2I', raw, pos)
+            if co & ~0x80e or cach != 8 and co & 6:
+                _sai()
+            _kiem_header(tao, can, co & 0x800, cach, gio, ngay, dia, noi_bo, ngoai)
+            try:
+                ten = raw[pos + 46:pos + 46 + n].decode('utf-8' if co & 0x800 else 'ascii')
+            except UnicodeError:
+                _sai()
+            chuan = _kiem_ten(ten)
+            if chuan in da_co:
+                _sai()
+            da_co.add(chuan)
+            if (x or c or dau + 30 + n > le or raw[dau:dau + 4] != b'PK\x03\x04'
+                    or (p.ten, p.phuong_thuc, p.crc, p.so_byte_nen, p.so_byte,
+                        p.le_dau, p.le_du_lieu, p.le_danh_muc, p.cuoi_danh_muc)
+                    != (ten, cach, crc, nen, dai, dau, dau + 30 + n, pos, pos + 46 + n)):
+                _sai()
+            (_, lc, lf, lm, lt, ld, lcrc, ln, ls, lten, lx) = struct.unpack_from('<4s5H3I2H', raw, dau)
+            if ((lc, lf, lm, lt, ld, lten, lx) != (can, co, cach, gio, ngay, n, 0)
+                    or raw[dau + 30:dau + 30 + n] != raw[pos + 46:pos + 46 + n]):
+                _sai()
+            if type(p.du_lieu) is not bytes or len(p.du_lieu) != dai or zlib.crc32(p.du_lieu) != crc:
+                _sai()
+            tong += dai
+            if dai > PHAN_TOI_DA or tong > TONG_GIAI_NEN_TOI_DA or dai > TY_LE_TOI_DA * nen:
+                _vuot()
+            if cach == 0 and nen != dai:
+                _sai()
+            het = dau + 30 + n + nen
+            if het > le:
+                _sai()
+            cuoi, chu_ky = het, False
+            if co & 8:
+                if can != 20 or (lcrc, ln, ls) not in ((0, 0, 0), (crc, nen, dai)):
+                    _sai()
+                moc = []
+                if het + 16 <= le and raw[het:het + 4] == b'PK\x07\x08' and struct.unpack_from('<3I', raw, het + 4) == (crc, nen, dai):
+                    moc.append((het + 16, True))
+                if het + 12 <= le and struct.unpack_from('<3I', raw, het) == (crc, nen, dai):
+                    moc.append((het + 12, False))
+                if len(moc) != 1:
+                    _sai()
+                cuoi, chu_ky = moc[0]
+            elif (lcrc, ln, ls) != (crc, nen, dai):
+                _sai()
+            if p.le_cuoi not in (het, cuoi):
+                _sai()
+            ds.append(BanGhiZip(p, co, cuoi, chu_ky, bool(co & 8) and (lcrc, ln, ls) == (0, 0, 0)))
+            pos += 46 + n
+        cuoi = 0
+        for b in sorted(ds, key=lambda b: b.phan.le_dau):
+            kiem_huy()
+            if b.phan.le_dau != cuoi:
+                _sai()
+            cuoi = b.le_cuoi_ban_ghi
+        if cuoi != le:
+            _sai()
+        return tuple(ds)
+    finally:
+        ds.clear()

@@ -1,4 +1,4 @@
-"""TC-5 đã kiểm bằng Core giả (CoreGia), NganBoNho; chỉ fixture DEMO."""
+"""TC-5 đã kiểm bằng Core giả (CoreGia), ngăn SDK 2.2.0; chỉ fixture DEMO."""
 
 import builtins
 from copy import deepcopy
@@ -176,12 +176,12 @@ def test_goc_nhom_08_khong_tu_tao_loai_doi_tuong_va_khong_ghi_ngan():
     # Không dùng helper de_xuat vì danh mục 08 thực sự chưa có mã loại.
     v = {"nhom_de_xuat": "08", "loai_de_xuat": None, "doi_tuong": None,
          "diem": 0.95, "can_cu": [bo.can_cu()], "ly_do_cho": [], "de_nghi_chuyen_bo": False}
-    truoc = bo.app.ngan.doc("cau_hinh", {})
+    truoc = deepcopy(bo.core._doc_cau_hinh(bo.app.ma))
     kq = thanh_cong(bo, bo.phan_loai(bo.phan_hoi(v)))
     assert kq["loai_de_xuat"] is None and kq["doi_tuong"] is None and kq["nhom_de_xuat"] == "08"
-    sau = bo.app.ngan.doc("cau_hinh", {})
-    assert (truoc.gia_tri, truoc.row_version) == (sau.gia_tri, sau.row_version)
-    assert not bo.app.ngan.tim("dot_kiem", {"phap_nhan_id": "DEMO-P"}).danh_sach
+    sau = bo.core._doc_cau_hinh(bo.app.ma)
+    assert truoc == sau
+    assert not bo.core.xem_ngan(bo.app.ma, "dot_kiem")
 
 
 def test_phu_luc_doi_ban_chat_de_nghi_chuyen_ca_bo_du_model_khong_gan_co():
@@ -470,10 +470,10 @@ def test_core_dieu_phoi_hoi_ai_that_voi_provider_local_gia(monkeypatch):
     assert ra_ai["trang_thai"] == "XONG", ra_ai
     assert ra_ai["ket_qua"]["tra_loi_ai"]["phien_ban_engine"] == AI_VERSION
     assert local.so_luot == 1
-    # Consumer AI-2 hiện kiểm mọi lá metadata (mã/điểm/offset) như giá trị
-    # nguyên văn. Ghi đúng giới hạn nối thật, không sửa response để làm xanh.
-    assert ra_ai["ket_qua"]["tra_loi_ai"]["trang_thai"] == "khong_thay_can_cu"
-    thanh_cong(bo, bo.phan_loai(ra_ai["ket_qua"]), cho=True, ly_do="THIEU_CAN_CU")
+    # AI-12 kiểm metadata theo schema, vẫn kiểm trích dẫn và TC hậu kiểm nguồn.
+    assert ra_ai["ket_qua"]["tra_loi_ai"]["trang_thai"] == "co_can_cu"
+    assert ra_ai["ket_qua"]["tra_loi_ai"]["kiem_trich_dan"]["dat"] is True
+    thanh_cong(bo, bo.phan_loai(ra_ai["ket_qua"]))
 
 
 def test_khong_ghi_tep_tren_may_khong_ghi_cay_kho_hoac_k5(monkeypatch):

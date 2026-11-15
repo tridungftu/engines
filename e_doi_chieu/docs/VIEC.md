@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| DC-4 (phiếu mới) | Căn cấu trúc, so hai lượt, edit script đầy đủ và kiểm thứ tự trang có bằng chứng | DC-c, e | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 407 passed, 0 skipped (110 ca DC-4); kiểm độc lập mã 0. Lõi 450.000 ký tự lặp: 1,1848 giây; 500 bảng: 0,1856 giây. Tích hợp phân trang tin cậy vẫn chờ C-DC-05. |
 | 0 | Đọc `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` và `docs\YEU-CAU-VA-HIEN-TRANG.md`; lập kế hoạch lát có giờ ước tính; trình Anh | — | Chờ làm | Kế hoạch phải đối chiếu 3 yêu cầu bắt buộc |
 | 1 | DC-0: khảo sát ABBYY (tọa độ từ, cờ nghi ngờ), từ điển tiếng Việt, cách phát hiện sửa tay; dựng bộ mẫu | — | Chờ làm |  |
 | 2 | DC-1: đọc DOCX, chuẩn hóa, kiểm trang, căn đoạn, so 2 lượt, quy tắc cứng | DC-a…g | Chờ làm |  |
@@ -21,6 +22,111 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Đề xuất loại `ho_so_doi_chieu` đã ghi **ĐỀ XUẤT DC-P, chờ Anh** ở cuối `_chung/docs/LOAI-DU-LIEU-RIENG.md` §5; chưa tạo schema/kích hoạt. Tái dùng nguyên ba loại `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`; không đổi `bang_trich_xuat`.
 - Quy tắc mới: không lưu gì bền trên máy engine; cấu hình/chỉ mục/danh mục/xác nhận qua `Ngan`, snapshot/ảnh/báo cáo qua kho tệp Core; màn trong `goi/e_doi_chieu/ui/`. Không dùng `cau_hinh_may`/`kho_tam` cũ.
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
+
+## DC-4 — 15/11/2026
+
+**Kết luận: Đạt phạm vi DC-4; PR: chờ lead mở.** Đã kiểm bằng Core giả
+(CoreGia), NganBoNho và adapter tệp con/phân trang DEMO chỉ ở tests.
+Chưa kiểm Core thật/Linux hoặc chất lượng OCR/render. Không kết luận sạch
+từ bước so; quy tắc cứng/phân loại/sửa tay còn thuộc các lát sau.
+
+- Đúng ba tệp runtime: `can_chinh.py`, `so_chu.py`, `chay.py`; manifest
+  SDK 2.0 phiên bản 0.4.0, thêm `doi_chieu.so_van_ban@1`. Không sửa DC-3,
+  `ma-nguon/`, API/SDK/Core, schema chung hoặc hai bản chép NGAN-0.
+- Hồ sơ `da_nhan → da_so`; kiểm sâu băm/quyền mọi nguồn và snapshot/bộ,
+  tái tính chuẩn hóa để không dùng map/văn bản bị sửa. Bộ ở tham số phải
+  khớp nguyên bytes đã ghim. Snapshot mới có tham chiếu+băm tiền nhiệm.
+- Căn Điều → Khoản → câu, bảng → dòng → ô (cả bảng lồng/rỗng/gộp); neo
+  từng lần xuất hiện + LIS, so ký tự trong cụm nhỏ, giữ trọn cụm chưa có
+  neo. Không bỏ đuôi/đoạn lặp. Không căn được trả đúng mã/câu
+  `DC_KHONG_CAN_DUOC`. Nhãn NFD vẫn căn; số tiền đầu dòng không là Khoản.
+- Script phủ liên tục, kiểm tái dựng cả nguyên văn lẫn chuẩn hóa hai bên;
+  giữ mọi ký tự bị chuẩn hóa trong lát nguồn, không tách cụm NFC co/giãn
+  dùng chung nguồn. Điểm có mã băm ổn định, hai lát Unicode nửa mở/vị trí
+  thực hoặc null, phép/căn cứ. Bỏ dấu chỉ gắn `chi_lech_dau`; thuê/thuế,
+  các cặp đổi nghĩa và toàn bộ ma trận giữ khác biệt DC-3 vẫn còn điểm.
+- Kiểm thiếu/thừa/đảo Điều/Khoản, cả Khoản trong Điều bị đảo; hình dạng
+  bảng/ô cũng giữ điểm khi chữ không đổi. Trang chưa có bằng chứng giữ
+  `chua_kiem`; đổi dàn trang/số trang khác không tự coi thiếu trang.
+- Ứng viên `cho_phan_loai=true`, mức/sàn chưa đặt; số điểm đã biết, các số
+  mức chưa phân loại null. `quy_tac_cung/lech_dau/sua_tay/phan_loai_ai`
+  còn chưa kiểm; `da_kiem_du=false`, `ket_luan=null`, `de_nghi_chan=true`.
+- Trần ký tự/điểm/bytes/snapshot/300 giây và mức thấp hơn của cấu hình;
+  gọi hủy theo cụm, tiến độ không nội dung; vượt `DC_QUA_GIOI_HAN`, không
+  tải danh sách cắt. 10.000 điểm lõi giữ đủ; 10.001 điểm từ chối.
+- Snapshot/tệp chỉ tải Core; chỉ mục/lượt riêng bước so qua Ngan, không
+  ghi đĩa bền, Cloud hay gọi engine khác. CAS/chủ lượt/hạn chiếm, tranh
+  lượt, phục hồi tệp hết quyền, hủy và mất xác nhận không chốt trùng hoặc
+  đè chủ mới. Tái dùng kiểm lại quyền và tái dựng.
+
+### Kết quả kiểm DC-4
+
+Venv tại worktree, Python **3.13.14**, pytest **9.1.1** có sẵn qua
+system-site-packages. SDK **2.0.0** cài wheel nội bộ bằng
+`--no-index --no-deps`; SHA-256
+`a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`
+khớp SHA256SUMS.txt. Có `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`.
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.4.0: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 DEMO ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q
+407 passed in 29.67s
+0 skipped; mã thoát 0. Nền DC-0…3: 297; DC-4 mới: 110.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0; không import Core/kênh cũ, không pycache/pyc/symlink trong gói.
+```
+
+Đường nhận cặp/so cần cấu hình và quyền tệp con nên nằm trong pytest
+CoreGia; không thêm DEMO thành công giả vào manifest. Bao gồm cặp giống,
+khoản/Điều chèn/xóa/đảo, lặp, đuôi, bảng rỗng/gộp/lồng, ngắt dòng, Unicode
+co/giãn, 60 cặp ngẫu nhiên có seed cố định, thiếu/sai bằng chứng trang,
+trang PDF/ảnh DEMO đảo thực về thứ tự tham chiếu, quyền/CAS/hủy/giới hạn,
+log an toàn và không đọc đĩa/mạng/engine khác. Phép kiểm thời hạn dùng
+đồng hồ giả; không giữ máy chờ 300 giây.
+
+Đo riêng sau lần sửa cuối (thư viện chuẩn, dữ liệu DEMO, chỉ **lõi so**):
+**450.000 ký tự lặp: 1,1848 giây; 500 bảng: 0,1856 giây**; mỗi ca dưới
+5 giây. Không phải số đo toàn tuyến/render/OCR, không suy ra accuracy thật.
+`git diff --check` mã 0 sau cập nhật tài liệu; bản chép schema/mẫu so băm
+LF nằm trong bộ pytest. SHA-256 runtime hiện hành ở NGUON.md.
+
+**Thời gian thực tế:** 14:19:00–14:59:10 ngày 15/11/2026 (UTC+7), khoảng
+**0,67 giờ**, so với **4 giờ ƯỚC TÍNH** trong phiếu. Thời điểm chốt kết
+quả kiểm và báo cáo; không commit/push, lead mở PR.
+
+**Lệch/phương án bảo thủ:** chỉ ba tệp runtime như phiếu; manifest/test/
+README/NGUON/VIEC/CHANGELOG là metadata/tài liệu. Cụm lớn không có neo
+giữ nguyên cả cụm thành phép thay; không cam kết script tối thiểu.
+Quy ước liên kết phân trang Core dưới đây là lớp bọc tạm C-DC-05, chưa
+phải cửa Core đã có. Chỉ kiểm thứ tự vật lý khi ghép được toàn bộ ảnh
+trùng băm; chưa có ánh xạ nội dung đáng tin thì không kết luận thiếu/thừa
+trang từ số trang. Điểm trang giữ ảnh/số trang, lát chữ chưa ánh xạ là null.
+
+### Cần Core — cập nhật DC-4
+
+- **C-DC-05:** cần nguồn render đúng DOCX/font/phiên bản và liên kết
+  DOCX → PDF render → ảnh; cung cấp qua ngữ cảnh Core tin cậy, không lấy
+  tuyên bố của caller làm bằng chứng. Lớp bọc đề nghị dùng
+  `viec.ngu_canh.doi_chieu_phan_trang` gồm `phien_ban=1`,
+  `bam_word/phien_ban_word/bam_pdf_chuan/bam_ban_ky/anh_word/anh_ban_ky`
+  (hai mảng băm ảnh theo thứ tự), ≤16 KiB. Kiểm đúng nguồn ghim;
+  thiếu → chưa kiểm, sai → `DC_SAI_NGUON`. Không sửa API/manifest 2.0
+  hoặc schema chung để ép Core hỗ trợ. Test chỉ gắn bởi adapter CoreGia.
+  Cần Core/lead thống nhất cửa này trước tích hợp thật; hiện mặc định thiếu.
+- Khi đủ liên kết và ảnh trùng băm: kiểm được thứ tự; ảnh scan khác pixel/
+  khác dàn trang vẫn cần ánh xạ nội dung trang đáng tin để kiểm thiếu/thừa/
+  đảo đầy đủ. Không coi parser PDF tối thiểu của DC-3 hoặc byte ảnh như
+  kết quả renderer/OCR đã kiểm thật.
+- C-DC-01/02/03/04/06 giữ mở: ngăn bền, phạm vi/quyền/vòng đời tệp và
+  snapshot xuyên bước, xác nhận/chặn hiệu lực, lease/log an toàn phía SDK.
+  Ngăn RAM mất khi khởi động lại; chưa kiểm Core thật/Linux.
+- **Không có câu Chờ Anh mới.** Chưa phát sinh mã cũ cần chuyển LUU-TRU.
 
 ## DC-3 — 15/11/2026
 

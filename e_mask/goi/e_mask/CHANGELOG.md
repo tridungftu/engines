@@ -14,6 +14,12 @@
 - Chấm hai chế độ trên cùng bộ; tách chặn nghiệp vụ/lỗi kỹ thuật/ChuaRo khỏi lọt và che đủ; báo nhầm bằng hợp che thừa/chặn trên toàn mẫu, kèm mẫu hợp lệ, số span/đoạn và p50/p95. Báo cáo tùy chọn không chứa nội dung gốc/URL/path/mã mở che, không lưu runtime report trong engine.
 - Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả. **CHƯA ĐO Local thật**; AI báo thiếu một phần tên vẫn có thể lọt. Chờ Anh chạy `.cmd`, lead review gold/bằng chứng và Core thật; nợ CAO giữ mở, Cloud giữ tắt.
 
+## Chưa phát hành — 15/11/2026, MASK-B1 cổng ZIP/XML nội bộ
+
+- Thêm đúng `doc_tep.py`, `zip_an_toan.py`, `xml_an_toan.py`; chưa gắn handler/năng lực tệp, giữ manifest 1.1.0. Chỉ stdlib/SDK, RAM, Cloud tắt.
+- Áp trần thử nghiệm của phiếu §7.3: ZIP 1/8/2 MiB, 256 phần, ratio 200:1; XML depth 64/100.000 node tổng/50 sheet/20.000 ô/500.000 code point; helper chiều ra và JSON có trần riêng. Chặn tên/header/extra/comment, ZIP64/overlap/EOF/CRC/size giả, XXE/PI, quan hệ ngoài và part mồ côi/lạ; lỗi cố định, không trả một phần, giữ hủy.
+- Lần closure mẫu, chép chọn lọc có nguồn/quyền/symbol/SHA bytes và LF trước–sau trong NGUON.md; không sửa nguồn mẫu hoặc thêm dependency. Profile và reader ngữ nghĩa/map các lát B2/B3 được phân biệt rõ.
+- 276 test DEMO mới; toàn bộ 1248 passed, 4 xfailed giữ nguyên, 190 subtests passed, 0 skipped. Kiểm độc lập đạt; adapter DEMO 2/2. CLI SDK chuẩn 0/2 do thiếu quyền như trước. Đã kiểm bằng Core giả (CoreGia) gói hiện có; chưa kiểm năng lực tệp nối Core/Office/Local thật.
 ## 1.2.0 — 15/11/2026, MASK-2c-3 hậu kiểm Local và che bổ sung
 
 - Thêm `mask.hau_kiem_ai_cuc_bo@1`: một đầu vào `tra_loi_ai`, đầu ra cố định `van_ban_da_che`. Chỉ đọc snapshot/tập phản hồi qua tham chiếu có quyền của Core; thiếu port chứng thực nguồn AI-9/Local, hoàn tất hoặc đủ đoạn thì từ chối.

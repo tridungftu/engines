@@ -261,3 +261,43 @@ Băm hiện hành sau chuẩn hóa CRLF thành LF; thay băm lịch sử cùng t
 | `e_mask/goi/e_mask/e_mask/ho_so_ai.py` | `578f204934e51cec4764cd58cd190983869da10351f0c5e55a3e952b08bc16e9` |
 | `e_mask/goi/e_mask/e_mask/che_van_ban.py` | `c6d2c76477c86af17981dc551494723d1d02fefaa17bd637641b0a4fd71a5610` |
 | `e_mask/goi/e_mask/e_mask/nguon/privacy/types.py` | `962dccced2516f246db56ab84be07d3cb3d6fdd4dfcfe43c937c3795aa5a49d4` |
+
+## MASK-B1 — cổng ZIP/XML nội bộ, 15/11/2026
+
+Quyền tái dùng: lệnh giao MASK-B1 của Anh/lead cho phép **CHÉP chọn lọc nội repo**. Nguồn Python Hóa đơn theo `e_hoa_don/goi/e_hoa_don/NGUON.md` (HD-4/HD-6), chưa có căn cứ giấy phép riêng; không gán quyền CD-096 A1 của Node cho Python. DOCX Đối chiếu theo mục DC-2 trong `e_doi_chieu/goi/e_doi_chieu/NGUON.md`, chuyển từ nguồn nội bộ Trích xuất theo phiếu đã cho phép. Trích xuất ghi nguồn nội bộ tại `e_trich_xuat/goi/e_trich_xuat/NGUON.md`. Không suy thành quyền phân phối bên ngoài hoặc tự thêm giấy phép/dependency.
+
+| Đường nguồn từ gốc repo | Symbol thực đọc/chuyển | Đích và thay đổi |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/zip.py` | `doc_zip`: callback hủy, đoạn `JSONEncoder.iterencode` đếm byte; `_canh_bao_zip_hong` chỉ đối chiếu | `e_mask/doc_tep.py::ma_hoa_json_noi_bo`: chép có sửa đoạn encoder, trần báo cáo 256 KiB/chuyển tiếp 64 KiB/khuôn 32 KiB. Không chép báo cáo giữ tên entry hoặc tiếp tục khi lỗi |
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/hoa_don_xml.py` (**closure thực của wrapper**) | `doc_goi_hoa_don_zip`: khóa NFC/casefold, kiểm symlink, ZIP lồng, hàm lồng `dem_byte`, CRC và hủy | `e_mask/zip_an_toan.py::{_kiem_ten,_kiem_header,_giai_nen,doc_zip}`: chép/chuyển có sửa các kiểm; thay mọi số cũ bằng trần B1; không mang DTO hoặc đường đọc lỗi một phần |
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/doc_docx.py` | `_kiem_danh_muc`, `_kiem_zip`, `_doc_xml`, `_BoDungCay`, `_quan_he`, `_kieu_noi_dung` | Ba tệp B1: chép có sửa tiền kiểm EOCD/header, DEFLATE bounded/EOF/CRC, ngân sách cây tổng, part/type/graph. Siết whitelist; Expat stdlib phân biệt XML declaration với PI |
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/cau_truc.py` | `W`, `W_NS`, `_sai`, `_vuot` (closure import của DOCX) | Chỉ đối chiếu. Namespace và hai lỗi định nghĩa tại chỗ theo Mask; không chép `DanhSo`, `_DocNoiDung`, `_gan_vi_tri`, `_noi_khoi` hoặc reader nghiệp vụ |
+| `e_trich_xuat/goi/e_trich_xuat/e_trich_xuat/docx.py` | `_BoDungCay`, `_doc_xml`, `_kiem_zip`, nhánh Accept All | Chỉ đối chiếu trần/hủy và giới hạn reader thân. Không chép Accept All, bỏ vùng hoặc adapter tệp của mẫu |
+
+Closure dừng tại các kiểm và hai lỗi/namespace tại chỗ, **đúng ba tệp mã**. Không nạp module engine nguồn; không sửa nguồn mẫu/Core/SDK/ngăn chung. B1 kiểm record bằng `struct`, giải nén bằng `zlib`; không dùng API riêng của `zipfile` hoặc hook cảnh báo toàn cục, không có cảnh báo mang tên entry từ `zipfile`.
+
+**Băm nguồn trước và sau:** đo bytes checkout khi đọc và kiểm lại sau triển khai; nguồn không đổi nên băm trước = sau. Cột LF chỉ thay CRLF bằng LF, không đổi Unicode. LF wrapper/DOCX/Trích xuất khớp P2; closure Hóa đơn được lần và băm bổ sung thực tế.
+
+| Đường nguồn | SHA-256 bytes (trước = sau) | SHA-256 LF (trước = sau) |
+|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/zip.py` | `6212ab75f8f1e0cb8cc2103d11ce4a5d4ea08ab213d5191745c3721ecc215149` | `3be2a2156de2ba8f63c5a9679b8c4d344a6d7e5a8d12f838d5d440b2d4b3e733` |
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/hoa_don_xml.py` | `fb201bbb723c4c739596dbbbe0270584a8ab2dbc368886428cde7ef0e3fbcab1` | `8b7cb17848a5861b7384aefa31b22d6cc39f28b2e3486a0c4bc938929d397f32` |
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/doc_docx.py` | `5d261c682d130a7cc5fba80759d9a94512ba773e6d463af5b16a9a58592d476c` | `7e63532c8ae2358ccc1b90a1bb65cb85e83c5c743fb3d8d9287fb2ed3cce3945` |
+| `e_doi_chieu/goi/e_doi_chieu/e_doi_chieu/cau_truc.py` | `1acb9e949370b8f25efda2e9d491469af620226a762068f30d1dd58df5fab7ad` | `ddde14383f97bf5c1fa1a2161aed7db8f3ea1e36004c16350a2db52018c2d333` |
+| `e_trich_xuat/goi/e_trich_xuat/e_trich_xuat/docx.py` | `165e4da8a5f791aa49ee2f4c2525b2f32e25b17c3cc33eea0facfa01c83a6ef2` | `4290748070f8d5a8deee8a051c9ccdb384b1cb3ee8780e833d2781e5f84f1653` |
+
+**Băm bản gói sau sửa:** ba đích chưa tồn tại trước MASK-B1. Đây là bản chuyển có sửa, không nhận còn nguyên bytes mẫu; băm toàn tệp đích sau sửa, không phải băm phát hành toàn gói.
+
+| Đích từ gốc gói e_mask | Trước MASK-B1 | SHA-256 bytes sau | SHA-256 LF sau |
+|---|---|---|---|
+| `e_mask/doc_tep.py` | Chưa có | `9050f061dab051b69fd0ca7d383edf0850aeb74ee7bf560f95da00eef8186e1c` | `9050f061dab051b69fd0ca7d383edf0850aeb74ee7bf560f95da00eef8186e1c` |
+| `e_mask/zip_an_toan.py` | Chưa có | `0628d86ff80985b365c0ac7fc1c25583b102254e8892a4de70b508d1f7d7d25e` | `0628d86ff80985b365c0ac7fc1c25583b102254e8892a4de70b508d1f7d7d25e` |
+| `e_mask/xml_an_toan.py` | Chưa có | `b44819c30f722ce833329a945e97b6d72540fc2c83eb7c4444599570032d21be` | `b44819c30f722ce833329a945e97b6d72540fc2c83eb7c4444599570032d21be` |
+
+Profile B1 chỉ dùng **nội bộ**: ZIP cổ điển một đĩa, STORED/DEFLATE; không ZIP64, prefix tự chạy, data descriptor, khoảng trống/overlap/đuôi, mã hóa, extra/comment hoặc header ngoài whitelist. Tên part cố định/số thứ tự 1–256; không nhận tên tệp máy. Giữ bytes gốc/local record/payload và offset cho B4, B1 chưa ghi ZIP mới.
+
+XML chỉ UTF-8/UTF-16 và namespace/prefix đã liệt kê; DTD/entity/quan hệ ngoài/PI/comment XML đều từ chối. Part whitelist gồm thân/story Word, styles/numbering/settings/fontTable/webSettings, workbook/worksheet/sharedStrings/styles và core/app/custom properties; graph phải tới mọi part, đúng loại/gốc/quan hệ. Theme, phần mở rộng và các vùng bị cấm ở phiếu §7.2 bị từ chối, kể cả mồ côi. Whitelist node/attribute là cửa đầu vào, **chưa thay reader/map/kiểm ngữ nghĩa B2/B3 hoặc chứng minh đã che**.
+
+Trần thử nghiệm: container vào/ra 1 MiB riêng mỗi chiều; 8 MiB giải nén tổng, 2 MiB/phần, 256 phần, ratio 200:1 kể cả nhỏ; depth 64, 100.000 node tổng, 50 sheet, 20.000 ô; vào 500.000 code point. B1 đếm bảo thủ mọi text/tail và giá trị attribute, cộng shared string ở từng ô dùng, không preview; có thể từ chối sớm hơn reader ngữ nghĩa. Reader sau vẫn kiểm ký tự logic/vùng thực đọc. Helper ra kiểm đồng thời 2.000.000 code point/8 MiB UTF-8 và JSON 256/64/32 KiB; B4/B7/B9 phải gọi khi có writer/phát hành, B1 chưa upload. Unicode hợp lệ: 2 triệu code point tối đa 8.000.000 byte, nhỏ hơn 8 MiB; test riêng cửa đếm byte 8 MiB/+1, không nâng trần ký tự để tạo biên giả.
+
+Dữ liệu việc chỉ RAM, không thêm trạng thái bền hoặc bảng ngăn. Buffer/bảng tạm dọn `finally`; dữ liệu cần giữ ở lát sau dùng Ngan/kho tệp Core đúng mẫu. Lỗi parse/trần chỉ hai mã và câu Việt cố định, không tên/path/nội dung; hủy/mất lease/ChuaRo truyền nguyên. Từng lỗi DEMO kiểm không trả một phần, không ghi đĩa, không mạng hoặc in log. Không thêm dependency/PDF/Office automation. Gói hiện có đã kiểm bằng Core giả (CoreGia); cổng B1 kiểm trực tiếp RAM, **chưa nối năng lực tệp, Core thật, Word/Excel hay Local thật**, Cloud giữ tắt.

@@ -13,6 +13,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 1 | Tách năng lực thành **chuẩn bị** và **hậu kiểm**; bỏ gọi AI trực tiếp (`ai_chung.py`) | TX-3 | Đang làm | TX-2 đã có `trich.chuan_bi@1`, không gọi AI; hậu kiểm/xuất còn ở TX-3, theo CD-111 |
 | TX-3 | Lõi hậu kiểm và xuất JSON/Excel; đăng ký sau duyệt ở TX-3b | TX-3, 5, 6 | Chờ Core | **15/11/2026** — payload đã được Anh duyệt chiều 15/11; schema/năng lực/DEMO đã đăng ký trong **0.4.0**, xem TX-3b. Giữ lịch sử review bên dưới; phiếu TX-3 **8 giờ công ước tính**. PR: **chờ lead mở** |
 | TX-3b | Đăng ký schema bảng, hậu kiểm và xuất | TX-3, 5, 6 | Chờ Core | **15/11/2026** — xong đăng ký và test thật: **408 passed, 0 skipped**, DEMO có ngăn **5/5**, độc lập **ĐẠT**; **đã kiểm bằng Core giả (CoreGia)**. CLI **3/5 ĐẠT, exit 1**, C-TX-04/C-TX-06. PR: **chờ lead mở** |
+| TX-6 | DEMO toàn chuỗi, venv offline, công cụ T3/N1 một lần và checklist 17:00 | TX-3/4/5, TX-12/13 | Đang làm | **15/11/2026** — code/công cụ khô đã có, **đã kiểm bằng Core giả (CoreGia)**; kết quả thật và giới hạn tại [TX-6-KET-QUA.md](TX-6-KET-QUA.md). Còn lỗi SHA fixture E6 do checkout CRLF; giữ nguồn/băm/tiêu chí, chờ lead phục hồi đúng bytes. T3 **chưa đo**, N1 **chưa kiểm**, chưa có nền/biên bản máy thật. **7 giờ công ước tính**, không gồm chờ máy/làm lại E6/batch. PR: **chờ lead mở** |
 | TX-4 | Công cụ/test E6, xác minh XLSX/E1 và đối chiếu byte hai đường | TX-7, TX-2/3 | Đang làm | **15/11/2026** — xong công cụ/test; **E6 nghiệm thu chưa kiểm**, thiếu fixture/bản vàng được lead chấp nhận. Chẩn đoán kỹ thuật hai DEMO: bộ/thứ tự/370 ô/văn bản trùng; câu hỏi/bảng/phản hồi **khác byte**, chưa đạt chẩn đoán. **đã kiểm bằng Core giả (CoreGia)**; pytest **375 passed, 0 skipped**, CLI **2/3 ĐẠT, exit 1** (C-TX-04), có ngăn **5/5 ĐẠT**, độc lập **exit 0**. [TX-4-E6.md](TX-4-E6.md); **4 giờ ước tính**, chưa gồm làm lại T3. PR: **chờ lead mở** |
 | 1 | Tách năng lực thành **chuẩn bị** và **hậu kiểm**; bỏ gọi AI trực tiếp (`ai_chung.py`) | TX-3 | Xong | **15/11/2026 — TX-3b**: đã đăng ký chuẩn bị/hậu kiểm/xuất riêng, dùng lõi TX-3; Core điều phối, engine không gọi AI |
 | 2 | E2/E5: nhận bộ từ việc của module, đủ metadata module/loại/phiên bản/hash | TX-2, 4, 5 | Xong | **15/11/2026 — TX-2**, snapshot/prompt/cấu hình riêng từng việc đã kiểm bằng Core giả (CoreGia); quyền module/pháp nhân và ghim Core thật còn C-TX-01 |
@@ -54,6 +55,19 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
   `bang_trich_xuat` đã duyệt, không còn chờ Anh duyệt lại trong TX-3b.
 
 ## Cần phối hợp sau TX-0 — cập nhật 15/11/2026
+
+- **TX-6 / lead, 15/11/2026:** checkout `core.autocrlf=true` đã đổi JSON
+  `tham-chieu/e6/` từ LF sang CRLF, làm băm bytes khác manifest. Bản LF
+  khớp đúng băm đã ghim. Codex giữ nguồn tham chiếu chỉ đọc và không sửa
+  tiêu chí/tool E6; đề nghị lead khôi phục đúng blob LF và giữ đóng gói
+  bytes ổn định. Test staging TX-6 không thay bằng chứng E6 thật. Nền N1
+  và biên bản model/runtime/context đã ghim chưa thấy trong worktree;
+  công cụ thật từ chối khi thiếu, không tự tạo nền hoặc bịa số đo.
+- **C-TX-04/C-TX-06, bổ sung TX-6:** cổng DEMO có ngăn/hồ sơ vẫn ngoài
+  runtime, gọi đúng handlers/mẫu thật. CLI chuẩn chưa nạp ngăn hoặc tệp
+  tham chiếu trong loại riêng, không thể coi cổng này là CLI chuẩn đạt.
+  MayChuGia chỉ kiểm bootstrap stdin/HTTP/hủy/ACK giả; quyền/vòng đời tệp
+  và ACK lưu-đóng Core thật vẫn C-TX-01/02, chưa chứng nhận.
 - **TX-4 / lead (15/11/2026):** đã xác minh XLSX PR #30, không cần cấp lại tệp này. Cần fixture hợp đồng thường/Track Changes, snapshot/prompt hai module, băng AI giả cố định và bản vàng đủ sáu artifact được lead chấp nhận, kèm SHA/biên bản. `tests/kiem_e6.py` mặc định **exit 2**, “Thiếu nguồn đối chiếu E6.”; `--chan-doan` cũng luôn **exit 2**. Hai DEMO kỹ thuật chưa được duyệt đã lộ khác byte thật; giữ E6, không nhận 375 test passed là E6 đạt. Phương án làm lại riêng tại [TX-4-E6.md](TX-4-E6.md): batch có contract mới **12–18 giờ ước tính** hoặc lặp v1 Core điều phối **18–24 giờ ước tính**, chưa gồm Core/AI/module; chưa triển khai và không tính vào 4 giờ TX-4. Cần xử lý cả tương thích bảng/phản hồi, không chỉ số lượt. Giữ C-TX-01/02/04/A-TX-01, chưa phát sinh API mới hoặc đo N1/Core thật.
 - **Cần phối hợp AI-2: bước Hỏi AI phải bao/thoát nội dung** (sửa review TX-3, 15/11/2026). Test Trích xuất xác nhận tài liệu chứa chỉ dẫn/dấu phân cách/JSON giả chỉ đi vào trường `tai_lieu`, không sửa prompt hệ thống hoặc khuôn; chưa chứng nhận lớp bọc request tới model của Hỏi AI.
 
@@ -632,3 +646,53 @@ không commit/push; nhánh `codex/e_trich_xuat-tx-3b`.
 
 Cần Core / Chờ Anh mới phát sinh: **C-TX-06** cho DEMO tệp tham chiếu;
 giữ C-TX-01/02/03/04/05 và A-TX-01. Không còn câu duyệt payload TX-3b.
+
+## Bàn giao TX-6 — 15/11/2026, PR: chờ lead mở
+
+Kết luận: **Chưa đạt kiểm chung** — code/công cụ/chuỗi giả đã kiểm;
+checkout CRLF làm 2 test E6 nguồn thật thất bại, CLI SDK chuẩn còn
+C-TX-04/C-TX-06. Giữ nguồn chỉ đọc và cổng đã chốt. **T3 chưa đo, N1
+chưa kiểm**, chưa chuyển bộ mặc định/lưu trữ.
+
+Đã làm: hai chuỗi DOCX thật hoặc PDF/OCR giả → chuẩn bị → Local AI giả →
+hậu kiểm → xuất; schema/metadata/băm/snapshot/JSON/Excel/tiền/ngày; Node
+KttCore giả; MayChuGia loopback chạy tiến trình `app.chay()` đọc stdin,
+hủy và mất xác nhận. Ba Python công cụ + hai `.cmd` ASCII, nguồn/lock,
+scripts venv mới offline, mẫu nền/biên bản và checklist 17:00 ≤30 phút.
+Cấu hình DEMO nạp qua ngăn ở cổng ngoài runtime; không tự tạo cấu hình
+trong handler. **đã kiểm bằng Core giả (CoreGia)**; **0 Cloud**, không
+gọi máy AI/OCR thật hoặc chạy `--that`.
+
+Kết quả kiểm thật trên Windows, Python 3.13.14 / SDK 2.0.0 offline (wheel
+khớp SHA phát hành), pytest 9.1.1/jsonschema 4.26.0 đã ghim:
+
+| Lệnh bằng `.venv/Scripts/python -B` nếu không ghi khác | Kết quả |
+|---|---|
+| `-m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat` | **3/5 ĐẠT, exit 1**; CHUA_CAU_HINH (C-TX-04), hậu kiểm DANG_CHAY vì thiếu tệp tham chiếu (C-TX-06) |
+| `-m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp-tx6-day-du-chot --tb=short` | **481 passed, 2 failed, 0 skipped in 26.23s, exit 1**; 44 test TX-6 mới đạt; hai lỗi E6 nguồn thật đã tái hiện trước khi sửa |
+| `e_trich_xuat/tests/kiem_doc_lap.py` | **ĐẠT, exit 0** |
+| `e_trich_xuat/tests/chay_demo_voi_ngan_gia.py` | **5/5 ĐẠT, exit 0**; đúng năm mẫu/handlers thật |
+| Node `tests/ui/cau_hinh.test.mjs` | **6/6, 0 failed/skipped, exit 0** |
+| Hai `.cmd` công cụ chạy khô, N1 dùng staging test LF đúng băm | **T3 9 tải/model; N1 2 ca; exit 0**, không tiêu thụ lượt N1, token/thời gian runtime null |
+| `tests/kiem_may_sach.cmd` mặc định | **exit 1** tại nguồn JSON E6 sai băm; venv mới đã cài SDK/đọc gói/DEMO/T3 khô |
+| `tests/kiem_may_sach.cmd --bo-demo <staging-test-LF>/chap-nhan.json` | **exit 0**; venv mới không system-site-packages/pytest/jsonschema, cài wheel/lock offline, SHA/độc lập/DEMO ngăn/T3/N1 khô; vẫn ghi CLI chuẩn exit 1 riêng |
+| `bash -n tests/kiem_may_sach.sh` (từ engine) | **exit 0**, chỉ kiểm cú pháp shell trên Windows |
+| Linux/CI/máy Windows OS sạch/Core thật | **Chưa kiểm**; WSL chưa cài, Docker không có; venv mới không là máy OS sạch |
+
+Thời gian thực tế: **15/11/2026 13:09–14:01 (UTC+07), khoảng 0,87 giờ**;
+phiếu **7 giờ công ước tính**. Không có giờ chờ AI/OCR, làm lại E6 hoặc batch.
+Nhánh `codex/e_trich_xuat-tx-6`, PR: **chờ lead mở**. `git diff --check`
+exit 0; runtime/manifest/schema/ngăn chung/Core/SDK/nguồn cũ không đổi,
+không dependency mới, không xóa/commit/push.
+
+Lệch khỏi phiếu / quyết định tạm: không nới cổng. Hai lỗi nguồn E6 do Git
+`core.autocrlf=true` đổi LF→CRLF, trong khi băm LF khớp bản đã ghim.
+Không sửa nguồn tham chiếu hoặc công cụ E6; staging đúng bytes LF chỉ
+kiểm cơ chế TX-6, không thay nghiệm thu E6 thật. Biên bản chi tiết,
+artifact khô và checklist tại [TX-6-KET-QUA.md](TX-6-KET-QUA.md).
+
+Cần Core / Chờ Anh mới phát sinh: giữ C-TX-01/02/04/05/06 và A-TX-01;
+lead review cổng có ngăn/hồ sơ, khôi phục đúng bytes LF của JSON E6 rồi
+chạy lại kiểm chung. Nền N1/model/cấu hình/biên bản đã ghim chưa thấy
+trong worktree: công cụ thật từ chối khi thiếu, chờ lead/Anh cung cấp;
+chưa chứng nhận sức chứa/chất lượng model hoặc quyền/vòng đời/ACK Core thật.

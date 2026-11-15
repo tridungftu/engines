@@ -1,5 +1,21 @@
 # Thay đổi
 
+## Chưa phát hành — 15/11/2026, TX-6
+
+- Thêm ngoài runtime: công cụ T3 DEMO-1/20/60 × ba ID model, N1 một lần,
+  hai `.cmd` ASCII, cổng kiểm venv mới offline Windows/Linux, mẫu nền/biên
+  bản và checklist 17:00. Mặc định chạy khô Local giả, 0 mạng/Cloud;
+  không chạy `--that`, T3/N1 thật chưa đo/chưa kiểm.
+- Kiểm CoreGia hai chuỗi, schema/metadata/snapshot/tệp/tiền/ngày; Node
+  KttCore giả; MayChuGia loopback cho tiến trình đọc stdin, hủy/mất ACK.
+  Không chứng nhận quyền/TTL/lưu-đóng/ACK của Core thật.
+- Ghi riêng C-TX-04/C-TX-06: CLI SDK chuẩn còn 3/5 ĐẠT, exit 1; cổng có
+  ngăn/hồ sơ 5/5. Kiểm nguồn E6 gặp CRLF do checkout được báo riêng,
+  không đổi tiêu chí/băm nguồn. Kết quả thật tại `../../docs/TX-6-KET-QUA.md`.
+- Runtime/manifest/schema/ngăn chung không đổi; giữ lock SDK 2.0.0,
+  không dependency runtime mới, không chuyển bộ mặc định/lưu trữ,
+  không commit/push. **đã kiểm bằng Core giả (CoreGia)**.
+
 ## 0.4.0 — 15/11/2026, TX-3b
 
 - Đăng ký `trich.hau_kiem@1` và `trich.xuat_ket_qua@1` bằng handlers lõi

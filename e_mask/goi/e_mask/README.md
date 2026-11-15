@@ -1,5 +1,11 @@
 # e_mask — Che định danh văn bản
 
+MASK-2c-2 (1.1.0) thêm `mask.chuan_bi_ai_cuc_bo@1`: chạy nguyên lớp quy tắc, giữ snapshot nội bộ ở Core, trả `yeu_cau_ai` cho đoạn gốc đầu tiên và bắt buộc Local. Core điều phối các đoạn tiếp theo từ kế hoạch đã ghim; engine không thực hiện lượt AI. Hai năng lực che/mở cũ giữ nguyên loại trả. Chưa có hậu kiểm lớp hai trong lát này; Cloud tiếp tục tắt.
+
+Tích hợp cần `tao_app(ngan=..., quyen=..., cong_chuan_bi_ai=...)`. `CongChuanBiAI` trong `chuan_bi_ai.py` là **port nội bộ đề nghị, chưa có transport SDK 2.0**: Core cấp prompt của module/quy trình gồm chỉ dẫn profile, mã/phiên bản và model; đo budget bằng tokenizer thực cho cả prompt/khuôn/từng đoạn/đầu ra; giữ deadline gốc; lưu/đọc snapshot với ACL/lease và ghim bàn giao. Ngăn cần bảng `chuan_bi_ai` theo `KHAI_NGAN_CHUAN_BI_AI`; chỉ mục chỉ chứa băm/tham chiếu. Snapshot bao nguyên `HoSoAI` MASK-2c-1 cùng kết quả quy tắc, prompt, khuôn, profile và biên nhận; đọc bằng `doc_snapshot`. Không tự thêm bảng vào phiếu SDK 2.0 hoặc thay ngăn được cấp.
+
+Đoạn tối đa 8.000 code point, overlap 512 mỗi phía được làm tròn vào biên khoảng trắng/câu an toàn, giữ ít nhất 300 khi còn đủ nguồn; vùng chính phủ đủ gốc, tối đa 128 đoạn. Không cắt từ/NFD/Cf hoặc vượt 500.000. Span nhận diện dài hơn 300 thì từ chối. `tai_lieu` giữ nguyên gốc kể cả NFD/Cf; metadata chuyển tiếp chỉ có mã opaque, tham chiếu, băm và chỉ số. Thiếu cổng/quyền/snapshot/budget/deadline thì từ chối. Các số token trong adapter DEMO là fixture, chưa là số đo model thật hoặc bằng chứng chạy dài.
+
 MASK-3b, MASK-4, MASK-5, MASK-6 đã được kiểm bằng Core giả (CoreGia) với port quyền DEMO được tiêm ngoài gói. Hai năng lực che/mở che văn bản đã có handler; phần tệp Word/Excel/PDF chưa được công bố. Không gọi Cloud hoặc engine khác.
 
 Mọi trạng thái đi qua `Ngan`: định danh, bí danh tạm, danh sách chờ, mã yêu cầu, dấu gặp/chống trùng. Chốt trong một lô có CAS chung; xung đột trả `MASK_XUNG_DOT`, thử lại được. Khi SDK chưa có ngăn thật, `chon_ngan(app)` dùng RAM và cảnh báo một lần. Khởi động lại mất dữ liệu RAM. Hai tệp `kho_tam.py`, `cau_hinh_may.py` cùng schema cấu hình cũ đã chuyển nguyên nội dung sang `e_mask/LUU-TRU/mask_truoc_ngan/`, nằm ngoài gói. Các test lịch sử nạp chúng qua helper riêng.

@@ -1,0 +1,25 @@
+{
+  "phien_ban": 1,
+  "nhan": "DEMO",
+  "chap_nhan_lead": "chưa kiểm",
+  "bien_ban_lead": null,
+  "cach_cham": "review-2026-10-15a/compare-gia-tri-v1",
+  "bam_nguon_cham": "sha256:47ee35567cb7b864a6b3d6825bc90f93a7a26c0c6872a326e99ead9160467f12",
+  "model": null,
+  "bam_cau_hinh": null,
+  "bam_bo_demo": null,
+  "cac_ca": [
+    {
+      "ma": "DEMO-thuong",
+      "bam_nguon": {"docx": null, "vang": null, "tham_so": null},
+      "ghim": {"bam_bo": null, "bam_prompt": null, "bam_tai_lieu": null, "bam_khuon": null, "bam_cau_hinh_trich_xuat": null},
+      "cham": {"tong": 37, "da_do": null, "dat": null, "ty_le": null, "tham_so": []}
+    },
+    {
+      "ma": "DEMO-track-changes",
+      "bam_nguon": {"docx": null, "vang": null, "tham_so": null},
+      "ghim": {"bam_bo": null, "bam_prompt": null, "bam_tai_lieu": null, "bam_khuon": null, "bam_cau_hinh_trich_xuat": null},
+      "cham": {"tong": 37, "da_do": null, "dat": null, "ty_le": null, "tham_so": []}
+    }
+  ]
+}

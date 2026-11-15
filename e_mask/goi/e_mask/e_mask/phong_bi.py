@@ -251,3 +251,27 @@ def ket_qua_mo(kq, ai):
         'bi_danh_khong_ro_json': json_chu(kq['bi_danh_khong_ro']), 'mo_day_du': kq['mo_day_du'],
         'trang_thai_ma_yeu_cau': kq['trang_thai_ma_yeu_cau'],
         'tra_loi_ai_da_mo_json': json_chu(ai) if ai is not None else None}}
+
+
+def kiem_yeu_cau_ai(dau):
+    """Kiểm đầu ra loại đã có, không thêm schema chung/tệp mã thứ sáu."""
+    if type(dau) is not dict or set(dau) != {'loai', 'yeu_cau_ai'} or dau['loai'] != 'yeu_cau_ai':
+        raise loi()
+    v = dau['yeu_cau_ai']
+    if (type(v) is not dict or set(v) != {
+            'phien_ban', 'ma_prompt', 'phien_ban_prompt', 'prompt', 'tai_lieu',
+            'khuon_tra_loi', 'bat_buoc_trich_dan', 'model_uu_tien', 'chuyen_tiep'}
+            or type(v['phien_ban']) is not int or v['phien_ban'] != 1
+            or v['bat_buoc_trich_dan'] is not True
+            or any(type(v[k]) is not str or not v[k].strip() for k in
+                   ('ma_prompt', 'phien_ban_prompt', 'prompt', 'model_uu_tien'))
+            or type(v['khuon_tra_loi']) is not dict
+            or len(json_chu(v['khuon_tra_loi']).encode('utf-8')) > 32768):
+        raise loi()
+    kiem_van_ban(v['tai_lieu'], cho_dinh_dang=True, gioi_han=8000)
+    kiem_chuyen_tiep(v['chuyen_tiep'])
+    if (set(v['chuyen_tiep']) != {'mask_2c'}
+            or type(v['chuyen_tiep']['mask_2c']) is not dict
+            or v['chuyen_tiep']['mask_2c'].get('nha_cung_cap_bat_buoc') != 'local'):
+        raise loi()
+    json_chu(dau).encode('utf-8')

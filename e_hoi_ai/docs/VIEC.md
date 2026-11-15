@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| AI-10 | Đóng nợ phân loại lỗi Local sau POST từ kiểm độc lập AI-9 | AI-8; AI-9 | Xong — 15/11/2026 | Đã kiểm bằng Core giả (CoreGia) và socket Local giả; pytest 568 passed, 0 skipped; DEMO 3/3 và AI-9 1/1, SDK thu qua cổng Local giả 3/3; kiểm độc lập đạt. CLI SDK thu độc lập 0/3 do thiếu cấu hình ngăn RAM. PR: **chờ lead mở**. |
 | AI-8 | Cấu hình/model vào ngăn, màn Cổng Local AI/Cổng Cloud AI | AI-10, AI-11; quyết định 15/11 | Xong — 15/11/2026, đã kiểm bằng Core giả (CoreGia); đã nối ngăn chung NGAN-0 | pytest 370 passed, 0 skipped; SDK thu qua cổng DEMO 3/3; kiểm độc lập mã 0; so băm hai tệp chung đạt. PR: **chờ lead mở** |
 | 0 | Đọc tài liệu bắt buộc; đối chiếu kế hoạch lát AI-0 đã giao | — | Xong — 14/11/2026 | Phạm vi, kiến trúc và cách triển khai theo `GIAO-CODEX-e_hoi_ai.md` và lệnh giao của Anh |
 | 1 | Đóng gói độc lập theo cổng chung: bỏ shim, chỉ import SDK, build/cài wheel trên máy sạch | AI-13 | Đang làm — 14/11/2026 | Khung AI-0 xong; ghim đầy đủ và kiểm máy sạch thuộc AI-5 |

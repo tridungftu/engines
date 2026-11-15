@@ -68,18 +68,22 @@ Các đường dẫn dưới đây tính từ thư mục `e_hoi_ai/` trong repo 
 - `e_hoi_ai/ai_cuc_bo.py`: giữ socket IP/bind nguồn, kiểm URL/model và trần cũ; thêm POST theo trạng thái gửi, hoàn tất API và budget AI-9. `nha_cung_cap.py` truyền tùy chọn budget và giữ nguyên ChuaRo; `chay.py` đăng ký năng lực. Manifest 0.5.0 thêm năng lực, giữ ba DEMO cũ tương thích AI-7.
 - Năm tệp mã đúng phạm vi được giao; không sửa SDK, schema chung, mẫu ngăn/cấu hình, Core hoặc nguồn cũ; không thêm dependency. Snapshot/profile DEMO chỉ fixture ngoài gói, CoreGia giữ bytes trong RAM. Chưa kiểm model/Core thật.
 
+## AI-10 — 15/11/2026
+
+- `e_hoi_ai/ai_cuc_bo.py`: điều chỉnh phân loại lỗi sau khi bắt đầu POST; giữ kết nối IP, các kiểm nguồn và giới hạn hiện có. Không thêm dependency.
+
 ## SHA-256 hiện hành
 
 ```text
 c2809e0ff68b11d6c4627c2fa58a5e2abf8b421be8002af4dc5a5479c6a381a5  cau_hinh.schema.json
-9b5bc4160a78b34170dbabced5786b34208aa0e4aefe17e47512b165644420db  CHANGELOG.md
+692e7d7ae1207a270202e8ba86d1b68f80771af9ca3f1ea57dbbccda25cc20f2  CHANGELOG.md
 e42b1dee5af2da90583ee94eeac4df0404935de27da7b14a88f79f3f3a27e69c  contract/cau_hinh_may.schema.json
 5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f  contract/tra_loi_ai.schema.json
 81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977  contract/van_ban_tai_lieu.schema.json
 36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d  contract/yeu_cau_ai.schema.json
 3464bd7a36b7019edc741ffaa4aea0da193b0ffa0229ac6d03237ee0d6f0024e  demo/mau.txt
 514cf09ba8f776418f50b892a22f72c27d02d87c78acc4a196aa2350ecd3649c  e_hoi_ai/__init__.py
-3af0752bcc3ac5e641cb669ca02d7721186131257ea1c51031a70d0f53239652  e_hoi_ai/ai_cuc_bo.py
+8051a15ec015acd7bfec9c34bfc35a903746ff990bb15f2f27e172b2ed580ae1  e_hoi_ai/ai_cuc_bo.py
 7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252  e_hoi_ai/cau_hinh.py
 111ebeafcf253df6e012078d12fefd27250292d3fe03953933f01bbfd98bfd73  e_hoi_ai/cau_hinh_may.py
 543f29a2909d71cf1db24ca6baa99cb38c6c61de359a8fdf89ede2b082dc9226  e_hoi_ai/chay.py

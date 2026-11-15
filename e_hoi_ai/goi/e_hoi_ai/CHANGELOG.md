@@ -1,3 +1,8 @@
+## AI-10 — 15/11/2026 (PR: chờ lead mở)
+
+- Phân loại lỗi transport và phản hồi Local sau khi bắt đầu POST là `ChuaRo`; lỗi kết nối chắc chắn trước gửi vẫn cho thử lại. Áp dụng chung cho ba năng lực, Cloud vẫn tắt.
+- Kiểm bằng server socket thô và Core giả (CoreGia); chi tiết tại `e_hoi_ai/docs/VIEC.md`.
+
 ## 0.5.0 — AI-9 — 15/11/2026 (PR: chờ lead mở)
 
 - Thêm `ai.hoi_mask_cuc_bo@1`, kiểm profile Local đã duyệt, băm prompt/khuôn/đoạn và span nguyên văn Unicode; giữ từng lần tên lặp, nhận rỗng đúng khuôn, không tạo thực thể giả.

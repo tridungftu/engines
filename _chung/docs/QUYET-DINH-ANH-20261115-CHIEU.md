@@ -9,6 +9,7 @@
 - **Duyệt theo đề xuất** toàn bộ câu chọn: 17 câu Đối chiếu, 15 câu Tra cứu (trừ TC-Q06), 5 câu TX0-06.
 - **Lớp an toàn tên viết thường của Mask: thêm AI cục bộ** (chọn trước đó trong phiên). Thiết kế ở `e_mask/docs/GIAO-CODEX-e_mask.md` mục MASK-2c.
 - **Tệp Word/Excel của Mask: Anh cần nhận lại tệp giữ định dạng** → phương án **B** của MASK-7 (tự viết ZIP/XML Python thư viện chuẩn, chỉ giữ phần đã kiểm, từ chối phần lạ). Trần: dùng bộ trần thử nghiệm MASK-7 §5 (lead quyết, đo lại tại biên rồi trình Anh nếu cần đổi).
+- **Mở che của Mask (Anh chốt tối 15/11, sau MASK-P3):** che và mở che nằm trong **cùng một chu kỳ** (ví dụ Mask → Hỏi AI → mở che ngay khi có kết quả); **không lưu ánh xạ ở bất kỳ đâu** (không ngăn, không tệp, không hồ sơ Core) để tránh lộ dữ liệu. Ánh xạ chỉ nằm trong RAM của tiến trình Mask trong thời gian chuỗi chạy; mất RAM thì không mở che được, người dùng chạy lại chuỗi.
 - **Chưa quyết:** TC-Q06 (thời hạn giữ nhật ký hỏi đáp) — Anh trả lời riêng.
 
 ## 2. Bảng quyết định
@@ -24,3 +25,4 @@
 | 7 | 15 câu Tra cứu TC-Q01…Q15 | **Theo đề xuất**, trừ TC-Q06 | TC-Q06 giữ "không tự xóa" tới khi Anh chọn |
 | 8 | 5 câu TX0-06 | **Theo đề xuất**: tối đa 5 câu hỏi thêm; hoãn hỏi lại nhiều vòng; TT-21 chỉ tính khi bộ module khai công thức đã duyệt; 3 hợp đồng KCN DEMO; hoãn nhánh trích bảng | Không mở phạm vi mới trong TX-1…TX-6 |
 | 9 | Phương án tệp Word/Excel Mask | **Cần tệp giữ định dạng → phương án B** (MASK-7 §6, 54–80 giờ ước tính) | Lập lại phiếu MASK-8…11 theo B (lát MASK-P2), rồi giao; trần thử nghiệm MASK-7 §5 |
+| 10 | Mở che của Mask | **Cùng một chu kỳ, không lưu ánh xạ ở đâu** (chỉ RAM tiến trình Mask khi chuỗi chạy) | Lập lại phiếu mở che (MASK-P4) theo hướng này; MASK-P3 phương án A không dùng; kho bí danh chính thức chỉ giữ bí danh + băm |

@@ -1,5 +1,13 @@
 # Thay đổi
 
+## Chưa phát hành — 15/11/2026, MASK-B3 reader XLSX nội bộ
+
+- Thêm `doc_excel.py`, `xml_excel.py` và một khối Excel riêng trong `doc_tep.py`; giữ nguyên AST B1, manifest và handler. Chỉ SDK/stdlib, không import engine khác, nguồn cũ hoặc thêm dependency; Cloud tắt.
+- Đọc đủ shared/inline/rich text mọi ô, gồm hàng/cột ẩn, mục shared chưa dùng, tên sheet và core/app/custom properties thuộc profile. Map Unicode hai chiều về run/text/attribute/bytes UTF-8/UTF-16, entity/ST_Xstring/CR/NFD/Cf; không nối hai ô hoặc cắt 32767.
+- Giữ raw value/type/style/XML ô số, boolean và serial ngày, cả style kế thừa hàng/cột và epoch; kiểm numFmt/font/style/merge và miền giá trị attribute. Tên sheet cần thay thì chặn; sheet ẩn, formula/cache/definedNames, liên kết ngoài, bình luận/chart/drawing/nhúng/macro/part lạ hoặc mồ côi đều từ chối cả gói.
+- Thêm profile có kiểm cho theme và ZIP Office cờ nén/data descriptor; kiểm CRC/size, giữ bytes/offset gốc cho B4. CalcChain chỉ nhận rỗng; phần chứa tham chiếu công thức vẫn chặn. Nguồn/quyền/SHA bytes và LF trước–sau tại NGUON.md.
+- Test DEMO gold, đối kháng và đúng/vượt 20.000 ô, 50 sheet, 100.000 node; tiền 1000000 VND/ngày 2026-10-30 theo raw value và style, hủy/ChuaRo/không I/O/không output dở. Reader chỉ nội bộ cho B6/B7, chưa Excel/Local thật hoặc năng lực tệp. Kết quả đầy đủ ghi tại `e_mask/docs/BAO-CAO-MASK-B3.md`.
+- 299 test B3; toàn bộ 1684 passed, 4 xfailed giữ nguyên, 190 subtests passed, 0 skipped. DEMO có quyền 2/2, kiểm độc lập và diff đạt; CLI SDK chuẩn 0/2 vì thiếu nguồn quyền. Đã kiểm bằng Core giả (CoreGia) gói văn bản hiện có, reader chỉ kiểm trực tiếp RAM. CDATA trong part cần map bị chặn vì chưa có profile patch chứng minh.
 ## 15/11/2026 — MASK-2c-4 sửa theo kiểm lead (không đổi runtime 1.2.0)
 
 - Bổ sung 28 ca DEMO mới ngoài gói: 18 người không dấu/Hoa đầu chữ/IN HOA/danh xưng/mép/overlap, 5 tổ chức và 5 địa chỉ không có DEMO trong span, đủ năm khung. Tổng 190 ca/124 gold span, SHA mới; **ỨNG VIÊN, chờ lead đóng băng**.

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| AI-12 | Tương thích khuôn TC bốn tác vụ và DC-6; tách metadata/giá trị trích | Lệnh lead 15/11/2026 17:08; AI-2 | Chờ Core — 15/11/2026 | Phần AI-12 đạt 5/5 fixture; pytest 637 passed, 0 skipped (63 ca AI-12); DEMO 3/3 + AI-9 1/1, độc lập mã 0, kiểm kê 27/27 khớp. CLI chuẩn 0/3 CHUA_CAU_HINH/mã 1, nợ AI-11. Đã kiểm bằng Core giả (CoreGia); đề xuất annotation ở sổ loại chung §8 chờ lead duyệt. PR: **chờ lead mở**. |
 | AI-11 | Chuyển ngăn/cấu hình và gói sang SDK 2.2.0 | CHUYEN-SDK-2.2 §2, §4 | Chờ Core — 15/11/2026 | Phần chuyển đổi xong; đã kiểm bằng Core giả (CoreGia). Pytest 574 passed, 0 skipped; độc lập mã 0; kiểm kê SQL 26/26 khớp. CLI SDK thu 0/3, mã 1: thiếu cửa cấu hình DEMO/Local giả; không thay cổng nghiệm thu. PR: **chờ lead mở**. |
 | AI-10 | Đóng nợ phân loại lỗi Local sau POST từ kiểm độc lập AI-9 | AI-8; AI-9 | Xong — 15/11/2026 | Đã kiểm bằng Core giả (CoreGia) và socket Local giả; pytest 568 passed, 0 skipped; DEMO 3/3 và AI-9 1/1, SDK thu qua cổng Local giả 3/3; kiểm độc lập đạt. CLI SDK thu độc lập 0/3 do thiếu cấu hình ngăn RAM. PR: **chờ lead mở**. |
 | AI-8 | Cấu hình/model vào ngăn, màn Cổng Local AI/Cổng Cloud AI | AI-10, AI-11; quyết định 15/11 | Xong — 15/11/2026, đã kiểm bằng Core giả (CoreGia); đã nối ngăn chung NGAN-0 | pytest 370 passed, 0 skipped; SDK thu qua cổng DEMO 3/3; kiểm độc lập mã 0; so băm hai tệp chung đạt. PR: **chờ lead mở** |
@@ -648,3 +649,71 @@ Thời gian thực tế: **16:44–17:03 ngày 15/11/2026 (+07), khoảng 0,32 g
 Lệch khỏi phiếu / quyết định tạm đã dùng: không thay cửa nghiệm thu hoặc tạo nhánh DEMO runtime. CLI không đạt do SDK chưa hỗ trợ fixture cấu hình/Local giả; trường json chuyển thành văn bản; khai màn quản trị chưa thể đưa vào engine.json. Các khác biệt schema/kiểu/cột hệ thống và băm LF mô tả ở trên.
 
 Cần Core / Chờ Anh mới phát sinh: xem ba mục AI-11 ở phần Cần Core. Cần cửa CLI chung cho cấu hình DEMO/Local giả và cửa nạp màn engine/quyền Admin. Không có câu hỏi mới cần Anh quyết về nghiệp vụ.
+
+## Cần Core — AI-12, 15/11/2026
+
+- Giữ nợ CLI chung của AI-11: cấp cấu hình DEMO/nguồn Local giả qua cửa SDK/Core chính thức. CLI hiện 0/3 `CHUA_CAU_HINH`, mã 1; không đưa cấu hình/fixture vào runtime để làm đạt giả.
+- Lead duyệt **ĐỀ XUẤT AI-12** tại `_chung/docs/LOAI-DU-LIEU-RIENG.md` §8: annotation `$comment` đã có của JSON Schema, không đổi schema chung/trường bắt buộc. Trong lát này dùng quy ước và adapter nội bộ trên bản sao khuôn, theo lệnh giao. Không có quyết định nghiệp vụ mới cần Anh.
+- Phần gây chặn metadata ở L-TC-01/C-DC-07 đã có bằng chứng consumer AI-12 đạt bằng fixture DEMO độc lập. Cần lead TC/DC nối lại pipeline với quyền nguồn/tệp xuyên bước của Core; việc này chưa được chứng nhận bởi bài kiểm e_hoi_ai. Không sửa VIEC của producer hoặc tuyên bố đóng các cửa Core còn thiếu của họ.
+
+## Bàn giao AI-12 — 15/11/2026
+
+Kết luận: **Chưa đạt toàn bộ điều kiện §5** do CLI SDK chuẩn thiếu cấu hình DEMO/Local giả (nợ AI-11); phần tương thích AI-12 đạt bằng bộ giả. **Đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả, chưa kiểm Core/model thật hoặc Linux thực tế.
+
+PR: **chờ lead mở**; nhánh `codex/e_hoi_ai-ai-12`. Tiêu đề đề nghị: `[e_hoi_ai] AI-12 — Tách metadata và giá trị trích trong khuôn TC/DC`. Không commit/push.
+
+### Tái hiện trước sửa
+
+Chép dữ liệu DEMO từ `e_tra_cuu/tests/ho_tro_tc_2/4/5/6/7.py` và `e_doi_chieu/tests/test_dc6.py` vào `tests/fixture_ai_12.json`, kèm đường nguồn/SHA-256 LF. Ngữ cảnh/khuôn được tạo bằng định nghĩa hàm thuần producer đã đọc qua AST; không import chéo package, không sửa producer. Bộ test chỉ đọc bản chép, không cần các engine kia. Tham chiếu snapshot chỉ kiểm chuyển tiếp, không chứng nhận quyền/vòng đời tệp hoặc toàn pipeline producer.
+
+Chạy đúng `ai.hoi_theo_yeu_cau@1` qua CoreGia SDK 2.2.0, cấu hình chính thức `dat_cau_hinh`, Local HTTP giả trả JSON `du_lieu` đúng khuôn cùng `truong` có quote nguồn đúng. **Cả năm ca đều qua kiểm đầu vào, chọn/gọi Local và `khop(du_lieu,khuon)`**; SDK kết thúc `XONG`, nhưng `_kiem_tra_loi` duyệt `_cac_la` rồi `_duoc_dan` hạ kết quả về `khong_thay_can_cu`, `kiem_trich_dan={dat:false,loi:[DU_LIEU_NGOAI_TRICH_DAN]}`. Đây là từ chối căn cứ sau schema, không phải lỗi nhận khuôn.
+
+| Fixture | Các trường bị coi nhầm là nguyên văn |
+|---|---|
+| TC phân loại | Nhóm/loại đề xuất, điểm 0.95, cờ chuyển bộ và offset căn cứ |
+| TC phân tích câu hỏi | Ý định `gia_tri`, loại thực thể, tên/phiên bản hàm, cờ thời điểm và mốc Core |
+| TC xếp hạng lại | Mã ứng viên và điểm 0.5 |
+| TC soạn trả lời | Mã trường, câu tổng hợp, cờ mâu thuẫn và offset căn cứ |
+| DC-6 | Mã điểm, nhãn `can_xem`, lý do phân loại và offset hai phía |
+
+Lệnh tái hiện trước sửa: `.venv/Scripts/python -B -m pytest e_hoi_ai/tests/test_ai_12.py -q --basetemp=.pytest-tmp-ai12-truoc --tb=short` → **5 failed in 2.33s**, đều tại assertion `kiem_trich_dan.dat`; mã thoát 1. Không nhét nhãn/điểm/offset vào quote để làm qua kiểm.
+
+### Đã làm
+
+- Hai mô-đun runtime: thêm `vai_tro_khuon.py`, sửa `hoi_yeu_cau.py`; manifest tăng 0.12.0, kiểm kê gói tự sinh. Không sửa `khuon_json.py`: dùng đúng tập từ khóa/schema checker đang có, annotation nằm trong `$comment` đã được hỗ trợ. Không đổi schema/API chung hoặc thêm trường bắt buộc/dependency.
+- Lớp tương thích nhận cấu trúc object đóng và profile phiên bản 1 của bốn tác vụ TC/DC-6, gán vai trò trên bản sao. Metadata kiểm schema/enum/const/kiểu; giá trị thực thể/tham số và khẳng định vẫn kiểm nguyên văn. Khuôn khác/trường mới giữ kiểm bảo thủ; không tự miễn mọi enum/const. Annotation xung đột không hạ chuẩn trích.
+- Câu trích kiểm `tai_lieu[a:b] == cau`, int thật/code point/nửa mở; giữ các vị trí lặp, không dò sửa offset. Giá trị trong mục có `can_cu` chỉ dùng quote của mục đó; tiền phải cùng số và mã tiền trong một cụm, không ghép hai khoản. Chuỗi số/ngày phải khớp token đầy đủ; giữ chuyển đổi nhóm ba/ngày ISO đã có. Câu tổng hợp không cần nguyên văn nhưng số bịa vẫn bị chặn.
+- Không sửa khuôn gửi Local/chuyển tiếp/băm đầu vào; không dùng metadata để cấp quyền. Sai giá trị/span tiếp tục hạ trạng thái và cảnh báo, sai enum/kiểu vẫn hỏi lại đúng một lần rồi `AI_TRA_SAI_KHUON`; 0 Cloud. Các handler AI-1/AI-9 và transport giữ nguyên.
+- 63 ca AI-12: năm fixture thành công, enum/const/kiểu/thang điểm sai, bịa số/tiền/ngày/tham số, mượn quote khoản khác, ghép sai tiền tệ, offset/câu bịa, quote ngoài sai, câu tổng hợp bịa số, `$ref`/nhánh schema/annotation xung đột, NFD/Cf/emoji/từng vị trí lặp, offset bool/float, citation null và căn cứ rỗng. Hồi quy cũ giữ đạt.
+- Cập nhật VIEC/CHANGELOG/NGUON và kiểm kê. Ngoài e_hoi_ai chỉ thêm đề xuất đúng phạm vi cho phép vào sổ loại chung §8; không sửa engine khác, docs/goi-gui-engine, Core hoặc mã cũ.
+
+### Kết quả kiểm thật
+
+Windows x64, Python 3.13.14, venv `.venv` trong worktree. SDK 2.2.0 cài wheel offline `--no-index --no-deps`; SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp `SHA256SUMS.txt`. Phụ thuộc test sao offline từ distribution đã cài theo `tests/requirements.lock`; không tải mạng. Đặt `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+0/3 ĐẠT: cả ba ví dụ CHUA_CAU_HINH; mã thoát 1.
+Engine e_hoi_ai 0.12.0: có ví dụ chạy thử DEMO chưa đạt.
+
+.venv/Scripts/python -B e_hoi_ai/tests/chay_demo_voi_local_gia.py
+3/3 DEMO ĐẠT, 3 lượt Local HTTP giả; AI-9 1/1 ĐẠT, 1 lượt Local HTTP giả.
+Đã kiểm bằng Core giả (CoreGia); mã thoát 0.
+
+.venv/Scripts/python -B -m pytest e_hoi_ai/tests -q --basetemp=.pytest-tmp
+637 passed in 261.40s (0:04:21); 0 skipped; mã thoát 0.
+Trong đó 63 ca mới AI-12; 5/5 fixture XONG/co_can_cu/kiem_trich_dan.dat=true.
+
+.venv/Scripts/python -B e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát 0.
+
+Kiểm kê sql/kiem_ke.json: 27/27 tệp khớp bytes/SHA-256.
+git diff --check: mã 0.
+```
+
+Thời gian thực tế: bắt đầu **15/11/2026 17:08** theo lead; bộ kiểm chính kết thúc **17:32:07 (+07)**, kiểm bàn giao kết thúc **17:33:25 (+07)**; tổng khoảng **0,42 giờ**. Phiếu `GIAO-CODEX-e_hoi_ai.md` và lệnh lead **không ghi ước tính riêng AI-12**; 4 giờ trong phiếu là AI-2 gốc, không dùng thay ước tính AI-12.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: quy ước annotation tùy chọn và adapter schema nội bộ theo đề xuất AI-12 §8, chờ lead duyệt; không yêu cầu producer đổi payload. Không thay cổng nghiệm thu CLI bằng harness. Dữ liệu/shape fixture được chép độc lập, không phải nghiệm thu toàn pipeline TC/DC hoặc model thật.
+
+Cần Core / Chờ Anh mới phát sinh: không có nợ kỹ thuật Core mới ngoài cửa CLI của AI-11; cần lead duyệt đề xuất §8 và nối lại TC/DC với nguồn/quyền Core thật. Không có câu hỏi nghiệp vụ mới cho Anh.

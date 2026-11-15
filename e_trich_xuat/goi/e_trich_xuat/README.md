@@ -1,5 +1,10 @@
 # Trích thông tin hợp đồng — TX-3b, bản 0.4.0
 
+TX-6 bổ sung kiểm toàn chuỗi/công cụ ngoài runtime, không đổi năng lực hay
+phiên bản gói. Xem [`../../cong-cu/README.md`](../../cong-cu/README.md) và
+[`../../docs/TX-6-KET-QUA.md`](../../docs/TX-6-KET-QUA.md).
+Chỉ **đã kiểm bằng Core giả (CoreGia)**; T3/N1 máy thật chưa đo/chưa kiểm.
+
 Gói công bố **`trich.doc_docx@1`** (`tep` DOCX → `van_ban_tai_lieu`) và
 **`trich.chuan_bi@1`** (`van_ban_tai_lieu` → một `yeu_cau_ai` phiên bản 1).
 Đã đăng ký **`trich.hau_kiem@1`** (`tra_loi_ai` → `bang_trich_xuat`) và
@@ -186,3 +191,25 @@ RAM và tải lên Core; chỉ trả `XONG` khi đủ hai tệp. Trường tĩnh
 `tep_json`, `tep_excel`, `so_tham_so`, `so_can_soat`, `co_can_cu`.
 Module dùng JSON chuẩn để ghép cột, quyết định lưu và quản lý lịch sử.
 Không ghi kết quả/bộ/lịch sử lên máy engine. E6/N1/Core thật chưa kiểm.
+
+## Bằng chứng TX-6, 15/11/2026
+
+Hai chuỗi DOCX lõi thật hoặc PDF/OCR giả → chuẩn bị → Local AI giả → hậu
+kiểm → xuất `truong` được CoreGia điều phối. Đã kiểm schema, metadata,
+snapshot không đổi khi bộ/cấu hình thay, tải lại JSON/Excel, đơn vị tiền và
+ngày ISO; hậu kiểm hiện giữ chuỗi và exporter kiểm riêng kiểu tiền/ngày.
+Node dùng KttCore giả; MayChuGia loopback kiểm tiến trình `app.chay()` đọc
+stdin, hủy và mất xác nhận cùng Idempotency-Key. **0 Cloud**.
+
+`tests/chay_demo_voi_ngan_gia.py` vẫn nạp cấu hình DEMO vào ngăn bằng lô,
+nạp bytes hồ sơ qua API CoreGia rồi gọi `CoreGia.chay_thu_demo` đúng năm
+mẫu/handlers thật. Runtime không tự tạo cấu hình để vượt `CHUA_CAU_HINH`.
+CLI SDK chuẩn vẫn **3/5 ĐẠT, exit 1**: thiếu cấu hình C-TX-04, thiếu tệp
+tham chiếu hậu kiểm C-TX-06. Cổng ngăn/hồ sơ thay thế chờ lead review,
+không được ghi lệnh SDK chuẩn đã đạt.
+
+Kiểm venv Windows mới offline tách khỏi pytest: chỉ stdlib + wheel SDK,
+không system-site-packages/pytest/jsonschema. Báo riêng lần chạy mặc định
+và staging fixture LF, vì checkout Git tự đổi CRLF có thể làm SHA nguồn E6
+lệch. Không nới kiểm bytes hoặc sửa nguồn tham chiếu để làm xanh. Không
+coi kiểm venv là kiểm máy OS sạch; Linux/CI/Core thật chưa kiểm.

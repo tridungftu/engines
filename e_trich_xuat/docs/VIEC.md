@@ -5,6 +5,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
 | 0 | TX-0: sửa bản nháp theo quyết định 15/11; T1/T2, phép đếm T3, ngăn/cấu hình/màn và nguồn E6 | TX-2, 3, 5, 7 | Xong | **15/11/2026** — [TX-0-THIET-KE.md](TX-0-THIET-KE.md); xong cập nhật tài liệu, chưa có số đo model thật/E6. Bản trước PR #4; PR cập nhật: **chờ lead mở** |
+| TX-P | Hoàn thiện lệnh giao TX-1…TX-6, bảng chọn TX0-06 và độ khó gợi ý | TX-0 §8; quyết định 15/11 | Xong | **15/11/2026** — [GIAO-CODEX-e_trich_xuat.md](GIAO-CODEX-e_trich_xuat.md), sáu khối tự đủ theo dự toán **37 giờ ước tính** (8/7/8/4/3/7), màn cấu hình ở TX-1, công cụ đo T3/N1 ở TX-6 do Anh tự chạy; XLSX E6 đã đặt (PR #30). Chỉ tài liệu; PR: **chờ lead mở** |
 | 1 | Tách năng lực thành **chuẩn bị** và **hậu kiểm**; bỏ gọi AI trực tiếp (`ai_chung.py`) | TX-3 | Chờ làm | Theo CD-111 |
 | 2 | E2/E5: nhận bộ từ việc của module, đủ metadata module/loại/phiên bản/hash | TX-2, 4, 5 | Chờ làm |  |
 | 3 | E6: so từng byte bộ 37 xây dựng (cần tệp ghim `DANH_MUC_THAM_SO.xlsx`) | TX-7 | Chờ làm | `e_trich_xuat/tham-chieu/DANH_MUC_THAM_SO.xlsx`: **lead đã đặt 15/11 (PR #30)** + NGUON/SHA-256, xác nhận không dữ liệu thật theo đợt 2 §4; chưa kiểm E6 |
@@ -17,6 +18,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - **C-TX-02 (14/11/2026):** xác nhận quyền đọc qua SDK đối với tệp hồ sơ hậu kiểm do bước chuẩn bị tải lên rồi chuyển tham chiếu qua Hỏi AI; giữ tệp/kết quả cùng chuỗi tới khi module lưu/đóng; ca khác quyền và ACK lặp. SDK có `tai_tep_ra`/`mo_tep` nhưng TX-0 chưa kiểm Core thật phần cấp quyền/vòng đời xuyên bước.
 - **C-TX-03 (cập nhật 15/11/2026, dài hạn):** đề nghị cửa chung **“trường do tham số quyết định”** (`truong_ra` động theo snapshot). Anh đã chốt đợt 1 bảng loại riêng + Excel, module tự ghép cột; bước xuất trả `truong` tĩnh là thiết kế thích nghi API hiện có, không thêm khóa ngoài manifest 2.0. Payload/schema chi tiết còn cần review.
 - **C-TX-04 (15/11/2026):** ngăn và cấu hình/màn theo `_chung/docs/DE-NGHI-SDK-2.1.md` §2–5. Bảng cần: `cau_hinh`, phạm vi `engine`, một bản mặc định, giá trị JSON ≤ 64 KiB, CAS, không hết hạn; chi tiết `TX-0-THIET-KE.md` §6.3. Core thống nhất định danh bản ghi cấu hình hệ thống, `phien_ban_cau_hinh`/snapshot/sự kiện đổi; hỗ trợ `KttCore.engine("e_trich_xuat").cau_hinh`. Chờ mẫu NGAN-0 (chưa có trong worktree), tạm RAM qua `chon_ngan`, không tệp cấu hình/kho đĩa. Khi code khai riêng `KHAI-SDK-2.1.json`, không sửa phiếu 2.0. Cấu hình model/IP thuộc Hỏi AI, bộ thuộc module.
+- **Bổ sung C-TX-04 từ TX-P (15/11/2026):** CLI `kho_tri_thuc_sdk.thu` 2.0 chưa có cửa nạp cấu hình ngăn cho DEMO cần cấu hình. Phiếu giao yêu cầu báo kết quả lệnh chuẩn riêng và thêm `tests/chay_demo_voi_ngan_gia.py` nạp cấu hình DEMO vào `NganBoNho` trước `CoreGia.chay_thu_demo`, trình lead review cổng thay thế trong lúc chờ SDK; không tự tạo cấu hình mặc định trong engine hay dùng tệp cấu hình để làm xanh. Đây là giới hạn cần xử lý ở lát code, TX-P không chạy runtime để chứng nhận.
 - Các quyết định tạm ở `_chung/docs/GIAO-CODEX-THU-TU.md` §2 về tệp cấu hình/kho đĩa/không có màn **đã được Anh thay ngày 15/11**: không lưu gì trên máy, có màn cấu hình engine nạp như màn module; schema chỉ đọc trong gói, giá trị qua ngăn; tệp tạm của việc dọn trong `finally`. Chạy thử DEMO vẫn dùng màn chung Core. TX-0 không sửa Core/SDK và chưa kiểm nối Core thật.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
 
@@ -43,6 +45,15 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 ## Phần đề xuất lưu trữ sau chuyển đổi — chưa chuyển, không xóa
 
 Giữ nguyên toàn bộ `ma-nguon/`, `tu-core-cu/`, `tests-tu-core/`, shim và schema chung trong TX-0. Khi lead xác nhận thay thế/không còn consumer, đề xuất lưu bản lịch sử của vỏ socket trong `tich_hop.py`/`chay.py`, adapter gọi AI `ai_chung.py`/`tham_so._ai_legacy`, đường catalog máy cũ, CRUD danh mục/đọc `YEU_CAU_THEM.txt`, phần cập nhật `DANH_MUC_HD`/sửa tay của `vendor/review/xuat.py` và pipeline lặp trong `quy_trinh.py`. Chỉ tách phần không dùng; giữ thuật toán/chuẩn chấm còn cần đối chiếu. Bộ 37 chỉ đề xuất lưu trữ **sau E6 đạt**; bộ DV 30 và mẫu DV theo quyết định cuối, không đổi nhãn thành KCN để dùng lại nghiệp vụ.
+
+## Bằng chứng TX-P — 15/11/2026, PR: chờ lead mở
+
+- Chỉ sửa `docs/GIAO-CODEX-e_trich_xuat.md` và `docs/VIEC.md`; không tạo gói/màn/công cụ runtime, không sửa nguồn cũ/Core/SDK, không commit/push. Bảng chọn giữ đủ năm câu TX0-06 còn mở và không chặn TX-1…TX-3; không coi việc hoàn thiện phiếu là duyệt payload hoặc cho phép code ngay.
+- Kiểm regex theo mẫu Anh giao, bắt đầu `^### TX-n —` và lấy nội dung giữa hai dòng ba backtick trơn (thay `n` bằng từng số 1…6, bật MULTILINE/DOTALL): **6/6 khối đọc được**; từng khối có đầu vào/đầu ra, `LoiNghiepVu`, test `CoreGia` + `NganBoNho`, chỉ DEMO, giờ ước tính và điều kiện đạt. `git diff --check`: **exit 0**. Kiểm thêm UTF-8/hàng rào/phạm vi diff; không tính đây là test runtime.
+- Ba lệnh AGENTS.md §5 **không áp dụng, không chạy** theo yêu cầu riêng TX-P chỉ tài liệu; ghi chú lead yêu cầu chạy chung được thay bằng chỉ dẫn cụ thể này. Không báo số DEMO/pytest passed hoặc nhận đã kiểm bằng Core giả (CoreGia) cho TX-P.
+- Môi trường `.venv` trong worktree, Python **3.13.14**, SDK **2.0.0** cài từ wheel repo bằng `--no-index --no-deps`; SHA-256 wheel `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892` khớp `SHA256SUMS.txt`, không mạng/dependency mới.
+
+Thời gian TX-P (UTC+07): bắt đầu **15/11/2026 07:42:00** theo lead; kết thúc **15/11/2026 07:51:09**; thực tế **0.15 giờ**. Phiếu chưa có giờ ước tính riêng cho TX-P; **37 giờ** là dự toán TX-1…TX-6, không phải dự toán lát tài liệu này.
 
 ## Bằng chứng cập nhật TX-0 — 15/11/2026, PR: chờ lead mở
 

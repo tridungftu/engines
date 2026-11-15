@@ -81,3 +81,13 @@ Chỉ CHANGELOG trong gói được bổ sung bằng chứng sửa công cụ ki
 | Tệp đổi trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
 |---|---|---|
 | `CHANGELOG.md` | `a4e08324b4f21865b36351f3dee137ae7ccc3523f84734c3f60904e552f6d00e` | `a4e08324b4f21865b36351f3dee137ae7ccc3523f84734c3f60904e552f6d00e` |
+
+## HD-P2 — cập nhật tài liệu 15/11/2026
+
+Chỉ bổ sung CHANGELOG trong gói để ghi phiếu ZIP/XLSX HD-5…HD-8 tại `e_hoa_don/docs/`; không đổi runtime/manifest/schema/DEMO/lock, không đưa nguồn Node hoặc dependency mới vào gói. Quyền CD-096 A1 chỉ dùng nội bộ của nguồn Node được dẫn trong phiếu thiết kế, chưa là bằng chứng gói SDK 2.0 đã đóng XLSX. Giữ nguyên mọi bảng SHA lịch sử ở trên; đây là băm CHANGELOG sau bổ sung HD-P2, không là băm toàn gói phát hành.
+
+| Tệp đổi trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `CHANGELOG.md` | `d8adc3e10866662a32d9b890add47bf95d37c2ca2c5b597107fad6d5d46ff420` | `d8adc3e10866662a32d9b890add47bf95d37c2ca2c5b597107fad6d5d46ff420` |
+
+Quyết định lead 15/11: XLSX dự kiến dùng Python stdlib; `bang_ke.cjs` chỉ tham chiếu tĩnh cách chiếu cột/định dạng. Chưa thêm mã hay dependency XLSX.

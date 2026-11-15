@@ -17,7 +17,7 @@ import e_tra_cuu.ngan as mau_ngan
 from kiem_doc_lap import GOI, kiem_goi
 
 REPO = Path(__file__).resolve().parents[2]
-MA = "tra_cuu.kiem_khung@1"
+MA = "tra_cuu.cat_doan@1"  # TC-2 bỏ stub khung; năng lực này chờ TC-3.
 
 
 @pytest.fixture
@@ -49,7 +49,10 @@ def them_dot(ngan, p="DEMO-P", ma="DEMO-1"):
 
 def chay_cong_cau_hinh(ngan):
     # Handler chỉ có trong test: kiểm lỗi cấu hình qua biên SDK thật.
-    app = Engine(deepcopy(chay.app.phieu), thu_muc_goi=GOI)
+    phieu = deepcopy(chay.app.phieu)
+    phieu["nang_luc"] = [n for n in phieu["nang_luc"] if n["ma"] == MA]
+    phieu["chay_thu_demo"] = []
+    app = Engine(phieu, thu_muc_goi=GOI)
     chay.khoi_tao_ngan(app)
     app.ngan = ngan
 
@@ -59,8 +62,7 @@ def chay_cong_cau_hinh(ngan):
         raise LoiNghiepVu("CHUA_LAM", "Chức năng tra cứu đang được hoàn thiện.")
 
     core = CoreGia()
-    tep = core.them_tep("yeu-cau-DEMO.json", b'{"nhan":"DEMO"}', "application/json")
-    return core.chay_thu(app, MA, {"loai": "tep", "tep": tep})
+    return core.chay_thu(app, MA, {"loai": "ho_so_tra_cuu", "ho_so_tra_cuu": {}})
 
 
 @pytest.mark.parametrize("ten", ["ngan.py", "cau_hinh.py"])
@@ -72,9 +74,10 @@ def test_bam_hai_mau_nguyen_trang(ten):
 
 def test_phieu_khung_va_khai_sdk_rieng():
     assert kiem_phieu(chay.app.phieu, GOI) == []
-    assert chay.app.phieu["chay_thu_demo"] == []
-    assert chay.app.phieu["loai_du_lieu_rieng"] == []
-    assert {n["ma"] for n in chay.app.phieu["nang_luc"]} == {MA}
+    assert len(chay.app.phieu["chay_thu_demo"]) >= 1
+    assert len(chay.app.phieu["loai_du_lieu_rieng"]) == 4
+    assert len(chay.app.phieu["nang_luc"]) == 8
+    assert "tra_cuu.kiem_khung@1" not in {n["ma"] for n in chay.app.phieu["nang_luc"]}
     assert not {"ngan_du_lieu", "cau_hinh", "giao_dien_quan_tri"} & chay.app.phieu.keys()
     assert [b["bang"] for b in chay.KHAI_BAO["ngan_du_lieu"]] == ["cau_hinh", "dot_kiem"]
     assert len(chay.KHAI_BAO["giao_dien_quan_tri"]) == 2
@@ -84,8 +87,7 @@ def test_phieu_khung_va_khai_sdk_rieng():
 def test_stub_core_gia_khong_thanh_cong_gia():
     assert chay.ngan.doc("cau_hinh", {}) is None
     core = CoreGia()
-    tep = core.them_tep("yeu-cau-DEMO.json", b'{"nhan":"DEMO"}', "application/json")
-    kq = core.chay_thu(chay.app, MA, {"loai": "tep", "tep": tep})
+    kq = core.chay_thu(chay.app, MA, {"loai": "ho_so_tra_cuu", "ho_so_tra_cuu": {}})
     assert kq["trang_thai"] == "LOI"
     assert kq["loi"]["ma"] == "CHUA_LAM"
     assert kq["loi"]["thong_diep"] == "Chức năng tra cứu đang được hoàn thiện."

@@ -16,10 +16,8 @@ def _loi_cong(ham):
     @wraps(ham)
     def goi(viec):
         try:
-            # Snapshot SDK đã kiểm schema; không đọc bảng cấu hình của kho RAM.
-            # Mask hiện không có trường cấu hình engine bắt buộc.
-            if viec.cau_hinh:
-                raise CauHinhKhongHopLe()
+            # SDK đã kiểm schema và điền TTL mặc định vào snapshot cấu hình.
+            # Không chặn snapshot có trường mới trước kiểm ngữ cảnh/port của ham.
             return ham(viec)
         except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
             lop = type(exc)

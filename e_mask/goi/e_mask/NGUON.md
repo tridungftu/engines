@@ -2,6 +2,12 @@
 
 Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Handler che/mở che hiện đã có nghiệp vụ qua ngăn; các mô tả stub/kho tệp dưới đây là lịch sử từng lát. Trạng thái và băm mới nhất của lượt sửa nằm tại mục Sửa MASK-2b theo kiểm độc lập ở cuối tài liệu. Đã kiểm bằng Core giả (CoreGia).
 
+## MASK-R1 — sửa tương thích cấu hình, 15/11/2026
+
+Sửa mã nội bộ `e_mask/chay.py` theo ngoại lệ lead cho phép thêm tệp ngoài giới hạn 5 tệp R1. Bỏ guard cấu hình phải rỗng đã lỗi thời; SDK 2.2.0 kiểm schema và điền TTL default 600 trước handler. Giữ nguyên các bước xác minh ngữ cảnh/port, mã lỗi, hậu kiểm và kho RAM vận hành cũ tới R2/R4. Không chép nguồn ngoài hoặc thêm dependency; schema đã có default cho mọi trường mới, TTL số nguyên 60–900. Test cập nhật ở `e_mask/tests/test_mask_s22.py`; đã kiểm bằng Core giả (CoreGia).
+
+SHA-256 LF của `e_mask/chay.py`: trước `3afb29b2364a5dca5d35f6dc5a1ca12a447badf52f77a281aecb1f6bfbadc5ff`, sau `028927044ad00d3533bcfc81c94326a9348a194ab21030ff36002a2ad6c46811`. Kiểm kê gói giữ bytes/SHA thực tế của toàn gói trừ chính kiểm kê, bao gồm tài liệu đã cập nhật; không dùng SHA LF thay SHA bytes đóng gói.
+
 ## Năm tệp chép vào gói
 
 Đường nguồn tính từ gốc repo; đường đích tính từ thư mục chứa tài liệu này. SHA trước giữ bản nguồn, SHA sau trong bảng privacy phản ánh bản gói hiện tại. Hai cột SHA LF tính sau đổi CRLF thành LF để kiểm trên Linux/Windows; không đổi nội dung ngoài xuống dòng. Test so SHA LF, vì checkout Git có thể đổi xuống dòng. Hai matcher tên chép nguyên byte trong worktree này.

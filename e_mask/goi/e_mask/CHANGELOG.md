@@ -1,3 +1,12 @@
+## 1.4.0 — 15/11/2026, MASK-R1 (chưa phát hành)
+
+- Khai kho nhận diện `dinh_danh` và kho bí danh chính thức/lịch sử `bi_danh` theo SDK 2.2.0; khóa ID opaque, không trường JSON hoặc quan hệ yêu cầu–alias–tên. Hai cột `gia_tri_goc`/`gia_tri_chuan` đều bí mật; không giải mã hoặc tự giữ khóa/băm tên.
+- Thêm migration trong schema riêng và kiểm kê bytes/SHA-256 mọi tệp gói trừ chính kiểm kê, theo mẫu SDK. Chỉ bảo đảm duy nhất ID/alias; duy nhất theo bí mật còn **C-P4-03**, chưa đủ nghiệm thu.
+- Khai `thoi_han_anh_xa_giay` mặc định 600, số nguyên 60–900 qua cấu hình SDK; thêm cửa lấy `viec.ngan` không tạo ngăn dự phòng. Chưa triển khai map, timer hay nối adapter/nghiệp vụ R2–R7.
+- Giữ nguyên bản khai cũ ở LUU-TRU. Giữ `cuc_bo`, một việc đồng thời và khoảng SDK `>=2.2.0 <3.0.0`. Chỉ DEMO, không Cloud.
+- Bổ sung tích hợp theo ngoại lệ lead 15/11: bỏ guard chỉ cho cấu hình rỗng trong `chay.py::_loi_cong`, dùng snapshot đã kiểm schema/điền default của SDK. Giữ nguyên thứ tự kiểm ngữ cảnh/port và mã lỗi nghiệp vụ trong handler, cùng kho RAM cũ tới R2/R4; không đổi kiểm an toàn hoặc nối kho R1 vào vận hành. Schema đã có default cho mọi trường mới (TTL 600, số nguyên 60–900), không cần sửa schema.
+- Test S22 cập nhật khai báo ngăn/migration R1 và snapshot TTL, kiểm handler thật qua CoreGia với cấu hình rỗng và TTL 60/600/900; giữ kiểm từ chối cấu hình sai ở R1 và các ca an toàn cũ. Đã kiểm bằng Core giả (CoreGia); kết quả thật, giới hạn CLI và thời gian ở `e_mask/docs/VIEC.md`, mục MASK-R1.
+
 ## 1.3.0 — 15/11/2026, MASK-S22 (chưa phát hành)
 
 - Nâng SDK 2.2.0, khai schema cấu hình rỗng đúng hiện trạng; handler đọc `viec.cau_hinh`. Lưu trữ nguyên byte bản khai 2.1 và bộ đọc cấu hình tạm; bỏ bảng cấu hình khỏi kho RAM.

@@ -1,4 +1,4 @@
-"""TX-3 hậu kiểm: chỉ DEMO, CoreGia + NganBoNho, 0 Cloud/model thật."""
+"""TX-3 hậu kiểm: chỉ DEMO, CoreGia SDK 2.2.0, 0 Cloud/model thật."""
 
 from copy import deepcopy
 import hashlib
@@ -448,3 +448,22 @@ def test_ho_so_sdk_413_tra_ma_vuot_gioi_han_co_dinh(monkeypatch):
         raise LoiDuongTruyen("VUOT_GIOI_HAN_KICH_THUOC", "DEMO quá lớn.", http_status=413)
     monkeypatch.setattr(core, "_mo_tep", qua_lon)
     loi(core.chay_thu(app, "trich.hau_kiem@1", ai_demo(req)), "VUOT_GIOI_HAN")
+
+
+@pytest.mark.parametrize("doi", [
+    lambda c: c.pop("bam_cau_hinh"),
+    lambda c: c.update(bam_cau_hinh="sha256:" + "0" * 64),
+    lambda c: c["gia_tri"].update(ngan_sach_token_vao_toi_da=16000),
+])
+def test_snapshot_22_khong_co_phien_ban_bat_buoc_bam_khop(doi):
+    core, app, req = chuan_bi_demo()
+    ai = ai_demo(req)
+    meta = ai["tra_loi_ai"]["chuyen_tiep"]["trich_xuat"]
+    hs = json.loads(core.doc_tep(meta["ho_so_hau_kiem"]["tep_id"]))
+    assert hs["cau_hinh_da_ghim"]["phien_ban_cau_hinh"] is None
+    doi(hs["cau_hinh_da_ghim"])
+    raw = json_bytes(hs)
+    meta["ho_so_hau_kiem"] = core.them_tep("DEMO-ho-so.json", raw, "application/json")
+    meta["bam_ho_so_hau_kiem"] = bam_bytes(raw)
+    kq = core.chay_thu(app, "trich.hau_kiem@1", ai)
+    loi(kq, "HO_SO_HAU_KIEM_KHONG_HOP_LE")

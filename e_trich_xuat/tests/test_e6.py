@@ -127,7 +127,7 @@ def test_ai_gia_co_dinh_tai_lap_khong_mang_khong_ghi_dia(dm, monkeypatch):
 
 
 def test_hai_module_cung_app_ngan_bo_rieng_khong_ghi_de(dm):
-    app = app_tx3()
+    app = app_tx3(CoreGia())
     a = ts_bo(dm, "DEMO-crm")
     b = ts_bo(dm, "DEMO-m3")
     bo_b = json.loads(b["bo_tham_so_json"])
@@ -148,7 +148,8 @@ def test_runtime_hash_sai_tra_nguyen_loi_khong_fallback(dm):
         doc_bo(ts)
     assert exc.value.ma == "SAI_BAM_BO_THAM_SO"
     assert exc.value.thong_diep == "Bộ tham số không khớp mã kiểm tra."
-    core, app = CoreGia(), app_tx3()
+    core = CoreGia()
+    app = app_tx3(core)
     vao = deepcopy(__import__("mau_tx3").VD["dau_vao"])
     kq = core.chay_thu(app, "trich.chuan_bi@1", vao, ts)
     assert kq["trang_thai"] == "LOI" and kq["loi"]["ma"] == "SAI_BAM_BO_THAM_SO"

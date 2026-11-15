@@ -1,7 +1,6 @@
-# Trích thông tin hợp đồng — TX-3b, bản 0.4.0
+# Trích thông tin hợp đồng — TX-7, bản 0.5.0 (SDK 2.2.0)
 
-TX-6 bổ sung kiểm toàn chuỗi/công cụ ngoài runtime, không đổi năng lực hay
-phiên bản gói. Xem [`../../cong-cu/README.md`](../../cong-cu/README.md) và
+TX-7 chuyển cấu hình/ngăn sang SDK 2.2.0, giữ năng lực và nghiệp vụ TX-6. Xem [`../../cong-cu/README.md`](../../cong-cu/README.md) và
 [`../../docs/TX-6-KET-QUA.md`](../../docs/TX-6-KET-QUA.md).
 Chỉ **đã kiểm bằng Core giả (CoreGia)**; T3/N1 máy thật chưa đo/chưa kiểm.
 
@@ -72,8 +71,8 @@ của bytes tệp thực; không có bộ/toàn văn và không gửi phần nà
 Không tạo tệp tạm hoặc lưu hồ sơ/bộ trên máy engine.
 
 **Hash không chứng minh quyền.** C-TX-01 cần Core xác nhận quyền module/
-pháp nhân, ghim bộ/prompt/cấu hình theo việc; SDK 2.0 chỉ mô phỏng bản chụp
-khi bắt đầu handler. C-TX-02 cần quyền/vòng đời đọc tệp xuyên bước trong
+pháp nhân, ghim bộ/prompt/cấu hình theo việc; SDK 2.2.0 cấp bản chụp cấu hình cho việc; quyền ghim bộ/prompt
+và phạm vi module vẫn cần Core xác nhận. C-TX-02 cần quyền/vòng đời đọc tệp xuyên bước trong
 cùng chuỗi tới module lưu/đóng, gồm ACL và ACK lặp. Test CoreGia đọc hồ sơ
 cũ bằng `mo_tep` qua bước AI giả không chứng nhận quyền/vòng đời Core thật.
 
@@ -107,70 +106,64 @@ dùng Word, không OCR/AI hoặc gọi engine khác. Số lượt Cloud: **0**.
 Các DOCX hiếm có `vMerge continue` chứa chữ, `w:tr` không có `w:tc`, hoặc
 lệch `gridSpan` bị từ chối **cả tài liệu**, không bỏ riêng dòng/ô lỗi.
 
-## Cấu hình và cổng kiểm
+## Cấu hình và kiểm SDK 2.2.0
 
-`cau_hinh.schema.json` chỉ là tài nguyên khai cấu trúc. Giá trị nằm trong
-bảng `cau_hinh`, phạm vi `engine`, khóa `{}`, giá trị trực tiếp là dict cấu
-hình, không hết hạn; cập nhật bằng CAS `row_version`.
-Màn `ui/cau_hinh.js` dùng `KttCore.engine("e_trich_xuat").cau_hinh.doc/luu`;
-đầu vào/đầu ra cổng màn là `{gia_tri, phien_ban_cau_hinh}`. Export `nap`
-(đồng thời default) nhận `{goc, KttCore}` và trả hàm tháo màn. Cần lead Core
-review adapter nạp màn trước cài. UI chỉ có trần ngân sách và nút Lưu;
-model/IP thuộc Hỏi AI, bộ tham số thuộc module.
+`engine.json` khai `cau_hinh.schema: "cau_hinh.schema.json"`, yêu cầu SDK
+`>=2.2.0 <3.0.0`. Core kiểm schema và điền mặc định ngân sách **16.000**;
+handler đọc đúng `viec.cau_hinh`, sao chép vào hồ sơ để thay đổi sau đó
+không ảnh hưởng việc cũ. Thiếu trường bắt buộc vẫn trả `CHUA_CAU_HINH`.
+Không có cache cấu hình nên không cần `@app.khi_doi_cau_hinh`.
 
-Thiếu bản ghi không làm engine chết. DOCX độc lập với ngân sách AI nên hai
-DEMO DOCX không cần cấu hình. TX-2 gọi `ghim_cau_hinh(viec, app)` trước xử lý,
-trả `CHUA_CAU_HINH` nếu thiếu; chỉ điền mặc định 16.000 vào bản đã có.
-Hàm đọc một bản và giữ phiên bản; ưu tiên snapshot SDK 2.1 trên việc nếu có.
-SDK 2.1 sẽ tự xử lý `engine.cau_hinh_doi`; thay đổi cấu hình không sửa bản
-chụp của việc cũ. Chưa có API/sự kiện này trong SDK 2.0.0.
+Không còn bảng `cau_hinh` hoặc bảng ngăn TX khác; vì vậy không khai
+`ngan_du_lieu`, `du_lieu.goi_migration`, không có SQL/kiểm kê SQL.
+`KHAI-SDK-2.1.json`, `ngan.py`, `cau_hinh.py` tạm và script cổng DEMO cũ
+được giữ nguyên tại `../../LUU-TRU/TX-7/`, không nằm trên đường chạy.
+Màn `ui/cau_hinh.js` tiếp tục dùng
+`KttCore.engine("e_trich_xuat").cau_hinh.doc()/luu(gia_tri, phien_ban)`.
+SDK 2.2.0 chưa nhận khóa `giao_dien_quan_tri`; lead Core cần nối/review
+màn theo cổng chung (C-TX-08), không thêm khóa ngoài schema manifest.
 
-Khai ngăn/cấu hình/màn dự kiến nằm riêng ở `KHAI-SDK-2.1.json`, không thêm
-khóa vào phiếu 2.0. `chon_ngan(app)` ưu tiên `app.ngan`; tạm dùng RAM và cảnh
-báo stderr một lần. Khởi động lại sẽ mất cấu hình. Đã nối ngăn chung NGAN-0
-(PR #34): hai tệp ngăn/cấu hình giữ nguyên bản chung, test so SHA-256 sau
-khi đổi CRLF thành LF. RAM nhận khai báo từ `KHAI-SDK-2.1.json/ngan_du_lieu`.
-Không lưu cấu hình/bộ/log/kết quả
-trên máy. Đường DOCX không tạo tệp tạm.
+**Giới hạn SDK còn mở:**
 
-SDK 2.0 kiểm MIME/kích thước trước handler với câu lỗi khác phiếu TX-1.
-`EngineTrichXuat` kế thừa `Engine.tu_khai_bao`, chỉ bọc `_ket_thuc` để dịch
-hai lỗi đó sang lỗi TX-1. `_ghi` chỉ che dòng “Lỗi khi xử lý việc” hoặc
-traceback, giữ các dòng SDK có mã lỗi để chẩn đoán vận hành. Khởi động
-chặn SDK khác 2.0.0 hoặc chữ ký `_ghi`/`_ket_thuc` đã đổi, chờ review hook.
-Vòng việc,
-gia hạn, hủy và ACK vẫn do SDK thực hiện. Cần Core cung cấp hook công khai
-(C-TX-05); khi nâng SDK phải kiểm lại hai seam này, không sửa SDK/wheel.
+- C-TX-06: CLI chỉ tự nạp `tep_demo` ở đầu vào loại `tep`, chưa nạp tệp
+  hồ sơ được tham chiếu trong `tra_loi_ai`. CLI chuẩn hiện **4/5 ĐẠT,
+  exit 1**, DEMO hậu kiểm ở `DANG_CHAY` sau 404. Không đổi ID tệp theo
+  thứ tự cấp hoặc sửa handler/SDK để làm xanh. Giữ đủ năm ví dụ.
+- C-TX-07: `Viec` chưa công bố `phien_ban_cau_hinh`. Hồ sơ mới ghi
+  `phien_ban_cau_hinh: null` và `bam_cau_hinh` trên canonical JSON UTF-8
+  của bản chụp. Hậu kiểm bắt buộc băm đúng; vẫn đọc hồ sơ cũ có phiên bản
+  nguyên dương. Băm chỉ kiểm toàn vẹn, không chứng minh quyền/phiên bản Core.
+- C-TX-05: chưa có hook công khai đổi câu lỗi trước handler. Hai hook
+  `_ket_thuc`/`_ghi` đã kiểm lại trên 2.2.0; giữ khóa đúng phiên bản và
+  chữ ký để dừng khi SDK thay đổi. SDK 2.2.0 đã ẩn nội dung exception
+  khỏi log. Wrapper giữ câu lỗi DOCX/chuẩn bị đã cam kết.
 
-Từ gốc repo, dùng `.venv/Scripts/python -B` trên Windows hoặc
-`.venv/bin/python -B` trên Linux:
+Từ gốc repo, tạo `.venv` mới, cài wheel nội bộ rồi phụ thuộc đã ghim từ
+kho wheel offline đã chuẩn bị cho nền tảng đang chạy:
 
 ```text
+python -m venv .venv
+.venv/Scripts/python -m pip install --no-index --no-deps docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl
+.venv/Scripts/python -m pip install --no-index --no-deps --find-links KHO_WHEEL -r e_trich_xuat/goi/e_trich_xuat/requirements.lock -r e_trich_xuat/tests/requirements.lock
 python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat
 python -B -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp
 python -B e_trich_xuat/tests/kiem_doc_lap.py
-python -B e_trich_xuat/tests/chay_demo_voi_ngan_gia.py
-node --test e_trich_xuat/tests/ui/cau_hinh.test.mjs
 ```
 
-Luôn chạy `-B` hoặc `PYTHONDONTWRITEBYTECODE=1` để giữ gói sạch bytecode.
-Test chỉ dùng DEMO, CoreGia, NganBoNho và KttCore giả; không cần mạng.
-Ngày 15/11/2026, TX-3b: pytest **408 passed, 0 skipped**; độc lập **exit 0**.
-CLI SDK chuẩn **3/5 ĐẠT, exit 1**: chuẩn bị trả `CHUA_CAU_HINH`
-(C-TX-04); hậu kiểm ở `DANG_CHAY` vì chưa nạp tệp hồ sơ tham chiếu
-(C-TX-06, SDK coi 404 là mất quyền giữ việc). SDK 2.0 CLI chỉ tự nạp
-`tep_demo` khi đầu vào có loại `tep`, không nạp tệp bên trong loại riêng.
-Không sửa vòng đời SDK hoặc điền cấu hình trong handler.
+Ba lệnh cuối dùng Python trong `.venv` (`Scripts/python` trên Windows,
+`bin/python` trên Linux). Dùng `-B` hoặc `PYTHONDONTWRITEBYTECODE=1` để giữ
+gói sạch bytecode. Phiên TX-7 dùng venv Python 3.13.14 mới, SDK 2.2.0,
+phụ thuộc offline; `pip check` đạt. Nguồn phụ thuộc/lock ở `NGUON.md`.
 
-Cổng `chay_demo_voi_ngan_gia.py` nạp cấu hình DEMO vào `NganBoNho`,
-gọi `e_trich_xuat.demo.nap_ho_so_demo(core, app)` để tải hồ sơ có sẵn trong
-gói qua `CoreGia.them_tep`, rồi chạy đúng 5 mẫu manifest bằng
-`CoreGia.chay_thu_demo`: **5/5 ĐẠT, exit 0**. Helper chỉ đổi mã tệp do
-Core cấp và băm toàn request AI tương ứng; không thay snapshot/handlers,
-không tạo cấu hình hoặc được gọi từ runtime. Core thật cần cấp tệp tham
-chiếu cho màn DEMO chung; cổng kiểm hiện tại chưa chứng nhận quyền/TTL.
-Máy kiểm phiên này là Windows; Linux chưa chạy thực tế (WSL chưa cài,
-không có Docker). Test dùng API Python/Node đa nền tảng. Core thật chưa kiểm.
+Các test dùng ngăn/cấu hình của `CoreGia` 2.2.0, `dat_cau_hinh`,
+`gay_xung_dot_ngan`, `xem_ngan`, không dùng ngăn RAM tự viết. Giữ các ca
+hành vi cũ; ca xóa/RAM đổi sang cấm xóa/trạng thái và Core giữ dữ liệu qua
+app mới. Các ca trần byte của lõi dùng phiếu test riêng để đi tới handler,
+vì SDK mới đã chặn mọi chuỗi metadata dài trước handler; trần gói thật
+không đổi. Helper nạp hồ sơ DEMO chỉ phục vụ unit fixture, không có cổng
+CLI thay thế. **đã kiểm bằng Core giả (CoreGia)**; Linux/Core thật chưa kiểm.
+Pytest **486 passed, 0 skipped**, kiểm độc lập exit 0.
+TX-7 **chưa đạt nghiệm thu** vì C-TX-06; kết quả cuối tại `../../docs/VIEC.md`.
 
 
 ## Hậu kiểm và xuất — TX-3b, 15/11/2026
@@ -192,24 +185,13 @@ RAM và tải lên Core; chỉ trả `XONG` khi đủ hai tệp. Trường tĩnh
 Module dùng JSON chuẩn để ghép cột, quyết định lưu và quản lý lịch sử.
 Không ghi kết quả/bộ/lịch sử lên máy engine. E6/N1/Core thật chưa kiểm.
 
-## Bằng chứng TX-6, 15/11/2026
+## Bằng chứng toàn chuỗi
 
-Hai chuỗi DOCX lõi thật hoặc PDF/OCR giả → chuẩn bị → Local AI giả → hậu
-kiểm → xuất `truong` được CoreGia điều phối. Đã kiểm schema, metadata,
-snapshot không đổi khi bộ/cấu hình thay, tải lại JSON/Excel, đơn vị tiền và
-ngày ISO; hậu kiểm hiện giữ chuỗi và exporter kiểm riêng kiểu tiền/ngày.
-Node dùng KttCore giả; MayChuGia loopback kiểm tiến trình `app.chay()` đọc
-stdin, hủy và mất xác nhận cùng Idempotency-Key. **0 Cloud**.
-
-`tests/chay_demo_voi_ngan_gia.py` vẫn nạp cấu hình DEMO vào ngăn bằng lô,
-nạp bytes hồ sơ qua API CoreGia rồi gọi `CoreGia.chay_thu_demo` đúng năm
-mẫu/handlers thật. Runtime không tự tạo cấu hình để vượt `CHUA_CAU_HINH`.
-CLI SDK chuẩn vẫn **3/5 ĐẠT, exit 1**: thiếu cấu hình C-TX-04, thiếu tệp
-tham chiếu hậu kiểm C-TX-06. Cổng ngăn/hồ sơ thay thế chờ lead review,
-không được ghi lệnh SDK chuẩn đã đạt.
-
-Kiểm venv Windows mới offline tách khỏi pytest: chỉ stdlib + wheel SDK,
-không system-site-packages/pytest/jsonschema. Báo riêng lần chạy mặc định
-và staging fixture LF, vì checkout Git tự đổi CRLF có thể làm SHA nguồn E6
-lệch. Không nới kiểm bytes hoặc sửa nguồn tham chiếu để làm xanh. Không
-coi kiểm venv là kiểm máy OS sạch; Linux/CI/Core thật chưa kiểm.
+Giữ hai chuỗi DOCX lõi thật hoặc PDF/OCR giả → chuẩn bị → Local AI giả →
+hậu kiểm → xuất `truong`, kiểm tệp JSON/Excel và snapshot sau đổi cấu hình.
+Node kiểm UI bằng KttCore giả; MayChuGia kiểm HTTP loopback, stdin, hủy,
+ACK lặp. Công cụ TX-6 chuyển cách nạp cấu hình sang CoreGia 2.2.0;
+không gọi model thật, không phát sinh lượt Cloud. T3/N1 máy thật chưa đo.
+`tests/kiem_may_sach.py --tao-venv --kho-wheel KHO_WHEEL` cài runtime mới
+bằng kho offline; trả lỗi nếu CLI chuẩn chưa đạt, không quy đổi thành đạt.
+Linux dùng `TX7_KHO_WHEEL` với `tests/kiem_may_sach.sh`.

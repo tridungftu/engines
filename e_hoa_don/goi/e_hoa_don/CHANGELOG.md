@@ -1,3 +1,7 @@
+## HD-9 — 15/11/2026
+
+Nâng yêu cầu SDK lên 2.2.0; engine không dùng ngăn hoặc cấu hình nên không cần migration. Hạ trần ZIP và JSON bảng kê đầu vào qua `mo_tep` xuống 20 MiB theo trần SDK; giữ trần XLSX và JSON đầu ra 32 MiB. Đúng 20 MiB được chấp nhận; vượt một byte bị từ chối bởi engine hoặc SDK. Đã kiểm bằng Core giả (CoreGia).
+
 # CHANGELOG — e_hoa_don
 
 ## HD-7 — Bảng kê XLSX exact trong RAM, 15/11/2026

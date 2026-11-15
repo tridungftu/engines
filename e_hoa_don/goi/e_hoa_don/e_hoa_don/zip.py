@@ -12,7 +12,7 @@ from kho_tri_thuc_sdk.primitives import DataError
 from .doc import PHIEN_BAN_ENGINE, _kiem_tran_dong_hang, chieu_truong
 from .hoa_don_xml import MAX_ZIP_BYTES, doc_goi_hoa_don_zip, ra_json
 
-ZIP_TOI_DA_BYTE = MAX_ZIP_BYTES
+ZIP_TOI_DA_BYTE = min(MAX_ZIP_BYTES, 20 * 1024 * 1024)
 JSON_TOI_DA_BYTE = 32 * 1024 * 1024
 CAU_VUOT_TRAN = "Gói ZIP vượt giới hạn xử lý. Anh hãy gửi gói nhỏ hơn."
 CAU_KHONG_DOC = "Không kiểm kê được gói ZIP. Anh hãy kiểm tra lại tệp."

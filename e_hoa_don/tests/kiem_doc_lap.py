@@ -112,7 +112,7 @@ def kiem_doc_lap(thu_muc_goi=THU_MUC_GOI):
 def kiem_tien_trinh_sach(thu_muc_goi=THU_MUC_GOI):
     spec = importlib.util.find_spec("kho_tri_thuc_sdk")
     if spec is None or spec.origin is None:
-        return ["Chưa cài SDK 2.0.0 để kiểm độc lập."]
+        return ["Chưa cài SDK 2.2.0 để kiểm độc lập."]
     # -I -S loại cwd, PYTHONPATH, site-packages và .pth. SDK nạp bằng đường
     # package chính xác, không thêm cả site-packages vào đường tìm module.
     ma = r"""
@@ -141,7 +141,7 @@ spec = importlib.util.spec_from_file_location('kho_tri_thuc_sdk', sys.argv[2],
 sdk = importlib.util.module_from_spec(spec)
 sys.modules['kho_tri_thuc_sdk'] = sdk
 spec.loader.exec_module(sdk)
-assert sdk.__version__ == '2.0.0'
+assert sdk.__version__ == '2.2.0'
 from e_hoa_don.chay import app
 from e_hoa_don import cau_hinh_may
 from kho_tri_thuc_sdk.engine import LoiNghiepVu

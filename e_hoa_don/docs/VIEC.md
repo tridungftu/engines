@@ -344,3 +344,12 @@ Cần Core / Chờ Anh mới phát sinh: không có cửa mới. **Giữ nợ fi
 B? sung ki?m chu?i ZIP ? XLSX trong ti?n tr?nh c? l?p c?a b?n g?i sao ch?p; gi? audit ch?n m?ng, ti?n tr?nh ngo?i v? import ngo?i SDK/stdlib. Oracle HD-5?7 ki?m entry, CRC/m? h?a, gi?i h?n, XML, OOXML, cell/style v? c?ng CoreGia; th?m ca pin SHA XML VND/USD, l?i v? ch?n ghi ??a. Runtime kh?ng ??i. C?i s?ch Windows d?ng wheel SDK ?? ??i chi?u SHA, kh?ng PYTHONPATH Core/ma-nguon. Ch?a ch?y Linux (WSL ch?a c?i), Core th?t, Excel app ho?c quy?n kho t?p; kh?ng coi b?i nghi?p v? 120 ph?t l? ??t. SDK ch?a c? fixture t?p l?ng trong `truong` cho Ch?y th? XLSX: c?n Core/SDK b? sung; hi?n ki?m b?ng CoreGia. Bytes/t?p b?n giao do Core qu?n. Kh?ng d?ng fixture l?m b?ng ch?ng quy?n t?p th?t.
 
 K?t qu? Windows/Python 3.13.14: `kho_tri_thuc_sdk.thu` **4/4 ??T**, m? 0; pytest **653 passed in 115.12s, 0 skipped**, m? 0; `kiem_doc_lap.py` **??T**, m? 0; `KIEM-MAY-SACH.cmd` **??T**, m? 0. Test m?i sau ch?nh h?nh th?c c?ng ch?y ri?ng 1 passed. ?? ki?m b?ng Core gi? (CoreGia). Th?i gian th?c t? 09:06?09:12:19 ng?y 15/11/2026, kho?ng **0,105 gi?**, so ??c t?nh **2 gi?**; kh?ng ??i API hay runtime.
+### HD-9 — 15/11/2026, PR: chờ lead mở
+
+**Đạt theo phạm vi kiểm**: SDK 2.2.0 đã cài offline, SHA wheel khớp; manifest và lock đã nâng. Theo quyết định lead, hạ trần ZIP và JSON bảng kê đầu vào qua `mo_tep` xuống 20 MiB (20.971.520 byte), giữ XLSX và JSON đầu ra 32 MiB. Không có bảng ngăn hoặc cấu hình tạm trong đường chạy nên không cần migration. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core thật hoặc Linux.
+
+Kết quả: `.venv\Scripts\python -B -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_hoa_don` 4/4 ĐẠT, mã 0; `.venv\Scripts\python -B -m pytest e_hoa_don/tests -q --basetemp=.pytest-tmp` 654 passed, 0 skipped, 129,85 giây, mã 0; `.venv\Scripts\python -B e_hoa_don/tests/kiem_doc_lap.py` ĐẠT, mã 0. Biên đúng 20 MiB ZIP và JSON đạt; thêm một byte bị từ chối với `HD_ZIP_VUOT_GIOI_HAN` hoặc `HD_BANG_KE_VUOT_GIOI_HAN`. Không có SQL nên không áp dụng kiểm kê SQL.
+
+**Cần Core:** Nếu cần bảng kê từ JSON lớn hơn 20 MiB, Core/SDK phải nâng trần kênh tệp hoặc hỗ trợ đọc theo luồng. SDK chưa có fixture tệp lồng trong `truong` cho CLI DEMO XLSX; kiểm XLSX bằng CoreGia qua pytest. Không suy ra giới hạn Core thật từ CoreGia.
+
+Thời gian lượt tiếp: 16:53–16:57 ngày 15/11/2026, khoảng 0,07 giờ; lượt trước 16:45–16:52, tổng khoảng 0,18 giờ so với ước tính 0,5 giờ. Chưa commit/push.

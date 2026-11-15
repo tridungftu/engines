@@ -18,7 +18,7 @@
       "type": "object", "default": {}, "additionalProperties": false,
       "properties": {
         "duong_dan": {"type": "string", "maxLength": 4096, "default": ""},
-        "ngon_ngu": {"type": "string", "minLength": 1, "maxLength": 200, "default": "vie+eng"}
+        "ngon_ngu": {"type": "string", "enum": ["vie", "eng", "vie+eng", "eng+vie"], "default": "vie+eng"}
       }
     }
   }

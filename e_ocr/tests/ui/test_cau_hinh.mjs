@@ -4,6 +4,16 @@ import test from "node:test";
 
 const nguon = await readFile(new URL("../../goi/e_ocr/ui/cau_hinh.js", import.meta.url), "utf8");
 const {mount} = await import("data:text/javascript;base64," + Buffer.from(nguon).toString("base64"));
+const khai = JSON.parse(await readFile(new URL("../../goi/e_ocr/KHAI-SDK-2.1.json", import.meta.url), "utf8"));
+const schema = JSON.parse(await readFile(new URL("../../goi/e_ocr/cau_hinh.schema.json", import.meta.url), "utf8"));
+
+function kiemPhamVi(ten, loc) {
+  const bang = khai.ngan_du_lieu.find(b => b.bang === ten);
+  if (!bang || (bang.pham_vi === "phap_nhan" &&
+      (typeof loc?.phap_nhan_id !== "string" || !loc.phap_nhan_id.trim()))) {
+    throw Object.assign(Error("Thiếu phạm vi pháp nhân."), {ma: "NGAN_KHONG_HOP_LE"});
+  }
+}
 
 class Nut {
   constructor(ten, doc) { this.tagName = ten; this.ownerDocument = doc; this.children = []; this.events = {}; this.chu = ""; }
@@ -18,7 +28,7 @@ class Nut {
 function tim(goc, ham) { return ham(goc) ? goc : goc.children.map(n => tim(n, ham)).find(Boolean); }
 function duyet(goc) { return [goc, ...goc.children.flatMap(duyet)]; }
 
-async function dung({cauHinh = {}, phien = 4, loiLuu = null, loiDoc = false, loiNgan = false, tt = null, bang = {}} = {}) {
+async function dung({cauHinh = {}, phien = 4, loiLuu = null, loiDoc = false, loiNgan = false, loiPhan = null, tt = null, chuaRo = null, bang = {}} = {}) {
   let luc = Date.parse("2026-11-15T12:00:00Z"), soLuu = 0, daDong = false, chuKy;
   const lenh = [];
   const doc = {createElement: ten => new Nut(ten, doc)};
@@ -42,12 +52,18 @@ async function dung({cauHinh = {}, phien = 4, loiLuu = null, loiDoc = false, loi
       },
       ngan: {
         async doc(bang, khoa) {
-          assert.equal(bang, "trang_thai_engine"); assert.deepEqual(khoa, {ma: "abbyy"});
-          if (loiNgan) throw Error("DEMO lỗi nguồn riêng");
-          return tt == null ? null : {gia_tri: tt, row_version: 1};
+          kiemPhamVi(bang, khoa);
+          lenh.push({ten: bang, khoa});
+          assert.equal(bang, "trang_thai_engine");
+          assert.ok(["abbyy", "chua_ro"].includes(khoa.ma));
+          if (loiNgan || loiPhan === khoa.ma) throw Error("DEMO lỗi nguồn riêng");
+          const b = khoa.ma === "abbyy" ? tt : chuaRo;
+          return b == null ? null : {gia_tri: b, row_version: 1};
         },
         async tim(ten, {loc, gioi_han, tiep}) {
+          kiemPhamVi(ten, loc);
           lenh.push({ten, loc, tiep});
+          if (loiNgan || loiPhan === ten) throw Error("DEMO lỗi nguồn riêng");
           assert.equal(gioi_han, 500);
           const ds = (bang[ten] ?? []).filter(b => Object.entries(loc).every(([k, v]) => b[k] === v));
           const dau = Number(tiep ?? 0);
@@ -61,12 +77,13 @@ async function dung({cauHinh = {}, phien = 4, loiLuu = null, loiDoc = false, loi
     lapLai(ham, n) { assert.equal(n, 30000); chuKy = ham; return 123; },
     dungLap(ma) { assert.equal(ma, 123); daDong = true; },
   });
-  return {goc, man, lenh,
+  return {goc, man, lenh, ngan: gia.engine("e_ocr").ngan,
     input: ma => tim(goc, n => n.name === ma),
     form: () => tim(goc, n => n.tagName === "form"),
     button: text => tim(goc, n => n.tagName === "button" && n.textContent === text),
     cauHinh: () => cauHinh, soLuu: () => soLuu, daDong: () => daDong,
     doiLoi: v => {loiLuu = v;}, tienGio: n => {luc += n;}, chuKy: () => chuKy,
+    doiLoiPhan: v => {loiPhan = v;},
   };
 }
 
@@ -77,20 +94,19 @@ test("đọc đủ phân trang; cửa sổ đúng 30 ngày, trừ cả trang đa
       {ngay: "2026-10-16", da_nhan: {43199: 99, 43200: 20, 43201: 3}, dang_giu: {}},
       {ngay: "2026-11-15", da_nhan: {43200: 1250}, dang_giu: {DEMO: 2}},
     ],
-    luot_abbyy: [
-      {ma_tuong_quan: "MA_KY_THUAT_DEMO", trang_thai: "chua_ro", so_trang: 1, luc_giu: now / 1000},
-      {ma_tuong_quan: "MA_KY_THUAT_KHAC", trang_thai: "chua_ro", so_trang: 2, luc_giu: now / 1000},
-      {trang_thai: "dang_gui", so_trang: 3, luc_giu: now / 1000},
-      {trang_thai: "xong", so_trang: 60, luc_giu: now / 1000},
-    ],
-  }});
+  }, chuaRo: {so_luot: 3, theo_ngay: {"2026-11-15": 2, "2026-11-14": 1},
+    ma_tuong_quan: "MA_KY_THUAT_DEMO", ten_tep: "DEMO-ten-rieng", phap_nhan_id: "DEMO-phap-nhan"}});
   assert.match(a.goc.textContent, /Đã dùng 1\.253 trang/);
   assert.match(a.goc.textContent, /Đang giữ 2 trang · Còn lại 3\.745 trang/);
   assert.match(a.goc.textContent, /ABBYY: Bật/);
   assert.match(a.goc.textContent, /15\/11\/2026/);
   assert.match(a.goc.textContent, /Lượt 3/);
-  assert.doesNotMatch(a.goc.textContent, /MA_KY_THUAT|Lượt 4/);
-  assert.ok(a.lenh.some(l => l.ten === "luot_abbyy" && l.tiep === "1"));
+  assert.match(a.goc.textContent, /Có 3 lượt chưa rõ kết quả/);
+  assert.match(a.goc.textContent, /Lượt 1 · 14\/11\/2026/);
+  assert.doesNotMatch(a.goc.textContent, /MA_KY_THUAT|DEMO-ten-rieng|DEMO-phap-nhan|Lượt 4/);
+  assert.ok(a.lenh.some(l => l.ten === "han_muc_ngay" && l.tiep === "1"));
+  assert.ok(a.lenh.some(l => l.ten === "trang_thai_engine" && l.khoa?.ma === "chua_ro"));
+  assert.ok(a.lenh.every(l => l.ten !== "luot_abbyy"));
   a.man.destroy(); assert.equal(a.daDong(), true); assert.equal(a.goc.textContent, "");
 });
 
@@ -161,4 +177,47 @@ test("nội dung lạ chỉ vào ô chữ, mã màn không dùng mạng hoặc t
   const a = await dung({cauHinh: {abbyy: {thu_muc_vao: '<img src=x onerror="DEMO">'}}});
   assert.equal(a.input("thu_muc_vao").value, '<img src=x onerror="DEMO">');
   assert.ok(duyet(a.goc).every(n => n.tagName !== "img")); a.man.destroy();
+});
+
+test("KttCore giả từ chối bảng pháp nhân thiếu ngữ cảnh như NganBoNho", async () => {
+  const a = await dung();
+  for (const phap_nhan_id of [undefined, null, "", "   ", 1]) {
+    const loc = {phap_nhan_id};
+    await assert.rejects(a.ngan.doc("luot_abbyy", loc), {ma: "NGAN_KHONG_HOP_LE"});
+    await assert.rejects(a.ngan.tim("luot_abbyy", {loc, gioi_han: 500}), {ma: "NGAN_KHONG_HOP_LE"});
+  }
+  assert.deepEqual(await a.ngan.tim("luot_abbyy", {loc: {phap_nhan_id: "DEMO-P"}, gioi_han: 500}),
+    {danh_sach: [], tiep: null});
+  a.man.destroy();
+});
+
+for (const phan of ["abbyy", "han_muc_ngay", "chua_ro"]) {
+  test(`lỗi riêng ${phan} không làm mất hai phần khác; tải lại khôi phục`, async () => {
+    const a = await dung({loiPhan: phan,
+      tt: {abbyy_bat: true, luc_kiem: "2026-11-15T12:00:00Z"},
+      chuaRo: {so_luot: 1, theo_ngay: {"2026-11-15": 1}}});
+    assert.match(a.goc.textContent, phan === "abbyy" ? /Chưa đọc được trạng thái ABBYY/ : /ABBYY: Bật/);
+    assert.match(a.goc.textContent, phan === "han_muc_ngay" ? /Chưa đọc được hạn mức/ : /Đã dùng 0 trang/);
+    assert.match(a.goc.textContent, phan === "chua_ro" ? /Chưa đọc được các lượt chưa rõ/ : /Lượt 1/);
+    assert.doesNotMatch(a.goc.textContent, /lỗi nguồn riêng/);
+    a.doiLoiPhan(null); await a.man.refresh();
+    assert.doesNotMatch(a.goc.textContent, /Chưa đọc được/);
+    a.man.destroy();
+  });
+}
+
+test("ngôn ngữ là ô chọn đúng enum; từ chối giá trị ngoài danh sách", async () => {
+  const a = await dung();
+  const input = a.input("ngon_ngu");
+  assert.equal(input.tagName, "select");
+  assert.deepEqual(input.children.map(n => n.value), schema.properties.tesseract.properties.ngon_ngu.enum);
+  assert.equal(input.value, "vie+eng");
+  input.value = "fra";
+  await a.form().bam("submit"); assert.equal(a.soLuu(), 0);
+  for (const v of ["vie", "eng", "vie+eng", "eng+vie"]) {
+    input.value = v;
+    await a.form().bam("submit");
+    assert.equal(a.cauHinh().tesseract.ngon_ngu, v);
+  }
+  assert.equal(a.soLuu(), 4); a.man.destroy();
 });

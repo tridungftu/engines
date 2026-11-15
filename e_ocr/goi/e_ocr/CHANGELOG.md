@@ -2,6 +2,13 @@
 
 ## 1.0.8 — 15/11/2026 — OCR-8
 
+- Sửa theo kiểm độc lập của lead: màn Admin đọc tổng hợp chưa rõ cấp engine,
+  chỉ số đếm/ngày, cập nhật cùng lô với lượt; ba phần hiển thị bắt lỗi riêng.
+  KttCore giả kiểm phạm vi pháp nhân theo NganBoNho.
+- Dọn dần hàng hạn mức hết cửa sổ 30 ngày trong cùng lô; giữ nguyên chỗ giữ
+  còn dở, khai lưu tối đa 45 ngày. Ngôn ngữ Tesseract dùng enum/ô chọn bốn giá trị.
+- README cấm chạy thật trên RAM, ghi quyền thư mục cha Hot Folder và cách dọn
+  tạm `.e-ocr-…`; phân biệt công cụ OCR-7 đọc JSON qua `--cau-hinh` do Anh tự chạy.
 - Đã nối ngăn chung NGAN-0 (PR #34), giữ nguyên hai tệp mẫu chung.
   Khai báo bảng truyền vào RAM từ `KHAI-SDK-2.1.json`, khóa cấu hình `{}`;
   đọc `TrangNgan` và `KetQuaLenh` theo API chung, kết quả lô chỉ đọc sau commit.

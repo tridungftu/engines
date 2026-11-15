@@ -256,7 +256,11 @@ def test_nhieu_ngay_het_han_khong_lam_lo_vuot_100_lenh():
     so = SoHanMuc(dong_ho=lambda: datetime(2026, 11, 15, tzinfo=timezone.utc).timestamp())
     ma = so.giu(1, 1)
     assert so.da_dung() == 0 and so._doc()[1]["dang_giu"] == {ma: 1}
-    assert len(ngan.tim("han_muc_ngay", loc={}, gioi_han=500).danh_sach) == 121
+    assert len(ngan.tim("han_muc_ngay", loc={}, gioi_han=500).danh_sach) == 71
+    so.bo_giu("DEMO-khong-co")
+    assert len(ngan.tim("han_muc_ngay", loc={}, gioi_han=500).danh_sach) == 21
+    so.bo_giu("DEMO-khong-co")
+    assert len(ngan.tim("han_muc_ngay", loc={}, gioi_han=500).danh_sach) == 1
 
 
 def test_engine_chi_can_ba_ham_public_cua_ngan(hot_folder, monkeypatch):
@@ -358,3 +362,140 @@ def test_khai_21_khong_chen_vao_manifest_20():
     assert ds["luot_abbyy"]["duy_nhat"] == [["phap_nhan_id", "bam_noi_dung"]]
     assert "giu_toi_da_ngay" not in ds["luot_abbyy"]  # Không tự hết hạn lượt chưa rõ.
     assert ds["han_muc_ngay"]["pham_vi"] == "engine"
+    assert ds["han_muc_ngay"]["giu_toi_da_ngay"] == 45
+
+
+@pytest.mark.parametrize("ngon_ngu", ["vie", "eng", "vie+eng", "eng+vie"])
+def test_schema_chap_nhan_dung_bon_ngon_ngu(ngon_ngu):
+    dat_cau_hinh({"tesseract": {"ngon_ngu": ngon_ngu}})
+    assert doc_cau_hinh(ngan_demo(), SCHEMA)["tesseract"]["ngon_ngu"] == ngon_ngu
+
+
+@pytest.mark.parametrize("ngon_ngu", ["fra", "vie+fra", "vie+eng+vie", " eng", "VIE"])
+def test_schema_tu_choi_ngon_ngu_ngoai_danh_sach(ngon_ngu):
+    dat_cau_hinh({"tesseract": {"ngon_ngu": ngon_ngu}})
+    with pytest.raises(CauHinhKhongHopLe):
+        doc_cau_hinh(ngan_demo(), SCHEMA)
+
+
+def doc_chua_ro(ngan):
+    b = ngan.doc("trang_thai_engine", {"ma": "chua_ro"})
+    return None if b is None else b.gia_tri
+
+
+def test_tong_hop_chua_ro_chi_co_so_dem_va_ngay_khong_lo_phap_nhan():
+    ngan = ngan_demo()
+    luc = int(datetime(2026, 11, 14, 23, 59, 59, tzinfo=timezone.utc).timestamp())
+    so = SoHanMuc(dong_ho=lambda: luc)
+    a = NhatKyLuot(so, "pn-DEMO-A", "sha256:" + "a" * 64, 1)
+    b = NhatKyLuot(so, "pn-DEMO-B", "sha256:" + "b" * 64, 2)
+    a.giu(5000)
+    assert doc_chua_ro(ngan) is None  # Đang gửi không phải chưa rõ.
+    a.cap_nhat("chua_ro")
+    a.cap_nhat("chua_ro")
+    luc += 2
+    b.giu(5000)
+    b.cap_nhat("chua_ro", nhan=True)
+    assert doc_chua_ro(ngan) == {"ma": "chua_ro", "so_luot": 2,
+                                "theo_ngay": {"2026-11-14": 1, "2026-11-15": 1}}
+    for nk in (a, b):
+        for rieng in (nk.phap_nhan_id, nk.bam, nk.ma):
+            assert rieng not in json.dumps(doc_chua_ro(ngan))
+    a.cap_nhat("xong", nhan=True)
+    a.cap_nhat("xong", nhan=True)
+    assert doc_chua_ro(ngan)["theo_ngay"] == {"2026-11-15": 1}
+    b.cap_nhat("tu_choi")
+    assert doc_chua_ro(ngan) == {"ma": "chua_ro", "so_luot": 0, "theo_ngay": {}}
+    assert so.da_dung() == 1
+
+
+@pytest.mark.parametrize("ra_chua_ro", [False, True])
+def test_tong_hop_luot_va_han_muc_cung_rollback_khi_lo_loi(monkeypatch, ra_chua_ro):
+    so = SoHanMuc()
+    nk = nhat_ky(so=so)
+    nk.giu(5000)
+    if ra_chua_ro:
+        nk.cap_nhat("chua_ro")
+    cu = (nk.doc(), doc_chua_ro(nk.ngan), so._doc()[1])
+    ghi_goc = so._ghi
+
+    def hong(*args):
+        ghi_goc(*args)
+        raise NganXungDot()
+
+    monkeypatch.setattr(so, "_ghi", hong)
+    with pytest.raises(LoiNghiepVu, match="Dữ liệu OCR vừa thay đổi"):
+        nk.cap_nhat("xong" if ra_chua_ro else "chua_ro", nhan=True)
+    assert (nk.doc(), doc_chua_ro(nk.ngan), so._doc()[1]) == cu
+    monkeypatch.setattr(so, "_ghi", ghi_goc)
+    nk.cap_nhat("xong" if ra_chua_ro else "chua_ro", nhan=True)
+    assert doc_chua_ro(nk.ngan)["so_luot"] == (0 if ra_chua_ro else 1)
+    assert so.da_dung() == 1
+
+
+def test_hai_phap_nhan_cap_nhat_chua_ro_dong_thoi_khong_mat_dem(monkeypatch):
+    ngan = ngan_demo()
+    so = SoHanMuc(dong_ho=lambda: datetime(2026, 11, 15, tzinfo=timezone.utc).timestamp())
+    cac_nk = [NhatKyLuot(so, "pn-DEMO-" + c, "sha256:" + c * 64, 1) for c in ("a", "b")]
+    for nk in cac_nk:
+        nk.giu(5000)
+    doc_goc = ngan.doc
+    bat_dau = threading.Barrier(2)
+    da_doc = set()
+
+    def doc(bang, khoa):
+        b = doc_goc(bang, khoa)
+        ma = threading.get_ident()
+        if bang == "trang_thai_engine" and khoa == {"ma": "chua_ro"} and ma not in da_doc:
+            da_doc.add(ma)
+            bat_dau.wait(5)
+        return b
+
+    monkeypatch.setattr(ngan, "doc", doc)
+    with ThreadPoolExecutor(max_workers=2) as nhom:
+        cac_lan = [nhom.submit(nk.cap_nhat, "chua_ro") for nk in cac_nk]
+        for lan in cac_lan:
+            lan.result(timeout=10)
+    monkeypatch.setattr(ngan, "doc", doc_goc)
+    assert doc_chua_ro(ngan) == {"ma": "chua_ro", "so_luot": 2, "theo_ngay": {"2026-11-15": 2}}
+
+
+def test_don_ngay_cu_giu_dung_bien_30_ngay_va_khong_mat_cho_giu():
+    ngan = ngan_demo()
+    luc = int(datetime(2026, 10, 1, tzinfo=timezone.utc).timestamp())
+    so = SoHanMuc(dong_ho=lambda: luc)
+    ma_cu = so.giu(2, 5000)
+    with ngan.lo() as lo:
+        lo.them("han_muc_ngay", {"ngay": "2026-10-16"},
+                {"da_nhan": {"43200": 1, "43201": 3}, "dang_giu": {}})
+    luc = int(datetime(2026, 11, 15, 12, tzinfo=timezone.utc).timestamp())
+    ma_moi = so.giu(1, 5000)
+    assert ngan.doc("han_muc_ngay", {"ngay": "2026-10-01"}) is None
+    assert ngan.doc("han_muc_ngay", {"ngay": "2026-10-16"}) is not None
+    assert so.da_dung() == 3
+    assert so._doc()[1]["dang_giu"] == {ma_cu: 2, ma_moi: 1}
+    assert ngan.doc("han_muc_ngay", {"ngay": "2026-11-15"}).gia_tri["dang_giu"] == {ma_cu: 2, ma_moi: 1}
+
+
+def test_don_ngay_cu_cung_lo_rollback_va_thu_lai_khong_mat_han_muc(monkeypatch):
+    ngan = ngan_demo()
+    with ngan.lo() as lo:
+        lo.them("han_muc_ngay", {"ngay": "2026-01-01"}, {"da_nhan": {"0": 1}, "dang_giu": {}})
+    so = SoHanMuc(dong_ho=lambda: datetime(2026, 11, 15, tzinfo=timezone.utc).timestamp())
+    lo_goc = ngan.lo
+
+    @contextmanager
+    def hong():
+        with lo_goc() as lo:
+            yield lo
+            raise NganXungDot()
+
+    monkeypatch.setattr(ngan, "lo", hong)
+    with pytest.raises(LoiNghiepVu):
+        so.giu(1, 1)
+    assert ngan.doc("han_muc_ngay", {"ngay": "2026-01-01"}) is not None
+    assert so._doc()[1]["dang_giu"] == {}
+    monkeypatch.setattr(ngan, "lo", lo_goc)
+    ma = so.giu(1, 1)
+    assert ngan.doc("han_muc_ngay", {"ngay": "2026-01-01"}) is None
+    assert so._doc()[1]["dang_giu"] == {ma: 1}

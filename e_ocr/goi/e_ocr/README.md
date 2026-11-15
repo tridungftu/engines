@@ -30,8 +30,9 @@ Trong thư mục gốc repo, sau khi cài SDK vào `.venv`:
 $env:PYTHONDONTWRITEBYTECODE = '1'
 $env:PYTHONUTF8 = '1'
 .venv\Scripts\python -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
-.venv\Scripts\python -m pytest e_ocr/tests -q
+.venv\Scripts\python -m pytest e_ocr/tests -q --basetemp=.pytest-tmp
 .venv\Scripts\python e_ocr/tests/kiem_doc_lap.py
+node --test e_ocr/tests/ui/test_cau_hinh.mjs
 ```
 
 Trên Linux dùng `.venv/bin/python`, đặt `PYTHONDONTWRITEBYTECODE=1` trước khi
@@ -86,7 +87,9 @@ Thời gian chạy xong action chưa bao gồm nộp kết quả/kết thúc ph�
   được dùng làm tín hiệu đã nhận, chưa có ACK riêng từ ABBYY.
 - Tệp đệm được ghi/`fsync` trong thư mục tạm riêng của lượt, nằm **cạnh**
   thư mục vào, rồi đổi tên nguyên tử trên cùng filesystem. Tài khoản engine
-  cần quyền tạo/dọn thư mục đệm tại đó. Thư mục đệm được dọn ở `finally`.
+  phải có quyền ghi ở **thư mục cha của thư mục Hot Folder vào** để tạo/dọn
+  thư mục tạm `.e-ocr-…`. Thư mục tạm được dọn ở `finally`; nếu tiến trình
+  dừng đột ngột, Admin có thể dọn thủ công phần còn sót khi lượt đã ngừng xử lý.
   Khi hủy, engine gọi `kiem_huy()` trong vòng chờ và rút đúng tệp còn chờ;
   không ép dừng ABBYY khi tệp đã được nhận.
 - Chỉ đọc kết quả đúng mã sau khi kích thước/mtime ổn định qua hai lượt,
@@ -162,7 +165,7 @@ trên máy; tọa độ bảng được ghi trong XML, chưa kiểm hiển thị
 
 Admin dùng màn `ui/cau_hinh.js` trong Quản lý engine › OCR › Cấu hình.
 Schema: `cau_hinh.schema.json`. Cấu hình là bản ghi bảng `cau_hinh`, khóa
-`{"ma": "cau_hinh"}`; giá trị có `abbyy` và `tesseract`. Engine đọc bằng
+`{}`; giá trị có `abbyy` và `tesseract`. Engine đọc bằng
 `doc_cau_hinh(ngan, schema)`, kiểm kiểu/giới hạn và điền mặc định.
 Không đọc cấu hình máy hoặc thư mục dữ liệu từ biến môi trường.
 
@@ -174,16 +177,17 @@ cần cấu hình. Cấu hình sai trả câu lỗi cố định, không lộ gi
 
 Mọi trạng thái đi qua `viec.ngan` khi SDK cấp; nếu không có thì dùng
 `chon_ngan(app)`. Có `app.ngan` thì dùng ngăn Core; SDK 2.0 tạm dùng
-`NganBoNho`. RAM chỉ sống trong tiến trình, **khởi động lại sẽ mất hạn mức
-và dấu chống trùng**, theo quyết định Anh 15/11. Cảnh báo này in đúng một
-lần trên stderr khi chọn RAM. Không tự nhập dữ liệu từ sổ đĩa cũ.
+`NganBoNho`. **Cấm chạy thật trên ngăn RAM:** khởi động lại sẽ mất cấu hình,
+lượt chưa rõ, hạn mức và dấu chống trùng. RAM chỉ dùng kiểm DEMO trong lúc
+chờ ngăn bền của Core/SDK 2.1. Cảnh báo in một lần trên stderr khi chọn RAM.
+Không tự nhập dữ liệu từ sổ đĩa cũ.
 
 | Bảng | Khóa/phạm vi | Nội dung |
 |---|---|---|
-| `cau_hinh` | `ma`, engine | Cấu hình ABBYY/Tesseract |
+| `cau_hinh` | `{}`, engine | Cấu hình ABBYY/Tesseract |
 | `han_muc_ngay` | `ngay`, engine | Trang nhận theo giây UTC trong ngày; trang đang giữ theo mã lượt |
 | `luot_abbyy` | `ma_tuong_quan`, phap_nhan | Duy nhất `[phap_nhan_id, bam_noi_dung]`; chỉ metadata |
-| `trang_thai_engine` | `ma`, engine | Bản `abbyy` cập nhật 30 giây/lần; bản `han_muc` là mốc CAS của sổ |
+| `trang_thai_engine` | `ma`, engine | Bản `abbyy` cập nhật 30 giây/lần; `han_muc` là mốc CAS; `chua_ro` chỉ tổng số lượt theo ngày UTC |
 
 Giữ trang và `lay_hoac_tao` lượt nằm trong **một lô nguyên tử** trước khi
 gửi. Tất cả thay đổi sổ cùng tăng mốc CAS `han_muc`, kể cả qua nửa đêm;
@@ -191,6 +195,11 @@ xung đột thì đọc lại và thử tối đa 12 lần, không cộng trang 
 Đọc ban đầu đã cũ thì nhập lượt vừa có, không tạo thế hệ gửi tiếp.
 Trang đã dùng tính đúng cửa sổ trượt 30 × 86.400 giây; trang đang giữ vẫn
 chặn hạn mức cho tới khi có căn cứ chốt/nhả, kể cả quá 30 ngày.
+Khi ghi, dọn tối đa 50 hàng ngày đã hoàn toàn ngoài cửa sổ trong cùng lô
+(tránh vượt 100 lệnh/lô); dữ liệu tồn nhiều ngày được dọn tiếp qua các lần ghi.
+Chỗ giữ còn dở chuyển sang hàng ngày hiện tại cùng lô trước khi xóa hàng cũ,
+không mất chỗ giữ, không xóa lượt. Khai thời hạn lưu bảng ngày là 45 ngày;
+Core cần bảo toàn hàng còn chỗ giữ khi áp dụng tự dọn, kể cả engine dừng lâu.
 
 Quyền xử lý một lượt dùng CAS trên `chu_xu_ly`/`han_xu_ly`, không dùng
 khóa tệp. Quyền kéo dài 30 giây, kiểm trong vòng chờ, gia hạn khi còn
@@ -203,7 +212,13 @@ thì yêu cầu tải lại trước khi lưu. Hạn mức còn lại đã trừ
 Trạng thái ABBYY lấy từ ngăn (bật cấu hình và truy cập được hai thư mục),
 không khẳng định tiến trình FineReader đang chạy. Bản trạng thái quá 90
 giây thì hiển thị chưa có cập nhật; không suy trạng thái từ công tắc.
-Danh sách chờ đọc cả `chua_ro` và `dang_gui`, đọc hết phân trang, ẩn băm/mã.
+Danh sách chưa rõ chỉ đọc bản `trang_thai_engine/chua_ro` phạm vi engine:
+`so_luot` và `theo_ngay` (ngày UTC → số lượt), được cập nhật bằng CAS trong
+cùng lô khi lượt vào/ra `chua_ro`. Chỉ hiện số đếm, ngày và “Lượt N”; không
+đọc bảng pháp nhân, không đưa nội dung/tên tệp/pháp nhân/băm/mã vào bản tổng hợp.
+Mỗi phần trạng thái ABBYY, hạn mức và danh sách bắt lỗi riêng; lỗi một phần
+chỉ thay phần đó bằng câu tiếng Việt. Ngôn ngữ Tesseract là ô chọn đúng bốn
+giá trị `vie`, `eng`, `vie+eng`, `eng+vie`, schema từ chối giá trị khác.
 Ngày dd/mm/yyyy, số có dấu chấm hàng nghìn; mọi nội dung qua `textContent`.
 `mount(goc, {KttCore})` trả `{refresh, destroy}`; Core cần gọi `destroy`
 khi đóng màn để dừng chu kỳ đọc 30 giây.
@@ -216,6 +231,11 @@ Ngăn RAM nhận khai báo bảng từ `KHAI-SDK-2.1.json/ngan_du_lieu`;
 bảng cấu hình có khóa `{}`, giá trị chính là dict cấu hình.
 `kho_tam.py`, `cau_hinh_may.py` và schema máy cũ giữ nguyên để chuyển
 `LUU-TRU/` sau; chúng không thuộc đường chạy engine hiện tại.
+
+Công cụ OCR-7 `e_ocr/cong-cu/thu_abbyy_that.py` là công cụ Anh tự chạy,
+nằm ngoài gói/runtime engine. Mặc định chạy khô; chỉ `--that --cau-hinh <JSON>`
+mới đọc tệp JSON cấu hình do Anh chỉ định và thử nguồn bằng DEMO.
+Đây là giao diện dòng lệnh của công cụ kiểm, không phải nguồn cấu hình engine.
 
 Lượt `dang_gui`/`chua_ro` luôn tìm PDF đúng mã trong thư mục ra trước; không
 có kết quả hợp lệ thì tiếp tục `ChuaRo`, không gửi lần hai, không chạy

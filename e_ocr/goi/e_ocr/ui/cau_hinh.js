@@ -3,6 +3,7 @@ const macDinh = {
   abbyy: {bat: false, thu_muc_vao: "", thu_muc_ra: "", thoi_han_giay: 900, han_muc_trang_30_ngay: 5000},
   tesseract: {duong_dan: "", ngon_ngu: "vie+eng"},
 };
+const ngonNgu = {vie: "Tiếng Việt", eng: "Tiếng Anh", "vie+eng": "Tiếng Việt + Tiếng Anh", "eng+vie": "Tiếng Anh + Tiếng Việt"};
 const so = n => new Intl.NumberFormat("vi-VN").format(n);
 const ngayGio = luc => new Intl.DateTimeFormat("vi-VN", {
   day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
@@ -28,9 +29,10 @@ export async function mount(goc, {
   const form = nut("form");
   function truong(ma, nhan, kieu, cha, min, max) {
     const label = nut("label", nhan, cha);
-    const input = nut("input", undefined, label);
+    const input = nut(kieu === "select" ? "select" : "input", undefined, label);
     input.name = ma;
-    input.type = kieu;
+    if (kieu !== "select") input.type = kieu;
+    else for (const [ma, ten] of Object.entries(ngonNgu)) nut("option", ten, input).value = ma;
     if (min !== undefined) input.min = String(min);
     if (max !== undefined) input.max = String(max);
     if (kieu !== "checkbox") input.required = kieu === "number" || ma === "ngon_ngu";
@@ -47,7 +49,7 @@ export async function mount(goc, {
   const tess = nut("fieldset", undefined, form);
   nut("legend", "Tesseract dự phòng", tess);
   truong("duong_dan", "Đường dẫn Tesseract (để trống để tự tìm)", "text", tess);
-  truong("ngon_ngu", "Ngôn ngữ", "text", tess);
+  truong("ngon_ngu", "Ngôn ngữ", "select", tess);
   const luu = nut("button", "Lưu cấu hình", form);
   luu.type = "submit";
   luu.disabled = true;
@@ -89,46 +91,67 @@ export async function mount(goc, {
   }
 
   async function refresh() {
-    try {
-      const [tt, ngay, chuaRo, dangGui] = await Promise.all([
-        cong.ngan.doc("trang_thai_engine", {ma: "abbyy"}),
-        timHet("han_muc_ngay", {}),
-        timHet("luot_abbyy", {trang_thai: "chua_ro"}),
-        timHet("luot_abbyy", {trang_thai: "dang_gui"}),
-      ]);
-      if (daDong) return;
-      const moc = Math.floor(dongHo() / 1000) - 30 * 86400;
-      let daDung = 0, dangGiu = 0;
-      for (const b of ngay) {
-        const dauNgay = Date.parse(b.ngay + "T00:00:00Z") / 1000;
-        for (const [giay, n] of Object.entries(b.da_nhan)) {
-          if (dauNgay + Number(giay) > moc) daDung += n;
+    await Promise.all([
+      (async () => {
+        try {
+          const tt = await cong.ngan.doc("trang_thai_engine", {ma: "abbyy"});
+          if (daDong) return;
+          const b = tt?.gia_tri;
+          const luc = Date.parse(b?.luc_kiem);
+          if (!Number.isFinite(luc) || dongHo() - luc > 90000 || luc > dongHo() + 5000) {
+            trangThai.textContent = "ABBYY: chưa có cập nhật gần đây.";
+          } else {
+            const lyDo = {chua_cau_hinh: "chưa cấu hình", dang_tat: "đã tắt trong cấu hình",
+              khong_ket_noi: "không truy cập được thư mục", cau_hinh_loi: "cần kiểm tra cấu hình"};
+            trangThai.textContent = `ABBYY: ${b.abbyy_bat ? "Bật" : "Tắt"}${lyDo[b.ly_do] ? " — " + lyDo[b.ly_do] : ""}. Kiểm tra lúc ${ngayGio(luc)}.`;
+          }
+        } catch {
+          if (!daDong) trangThai.textContent = "Chưa đọc được trạng thái ABBYY.";
         }
-        dangGiu += Object.values(b.dang_giu).reduce((a, b) => a + b, 0);
-      }
-      const conLai = Math.max(0, cauHinh.abbyy.han_muc_trang_30_ngay - daDung - dangGiu);
-      hanMuc.textContent = `Đã dùng ${so(daDung)} trang trong 30 ngày · Đang giữ ${so(dangGiu)} trang · Còn lại ${so(conLai)} trang`;
-      const b = tt?.gia_tri;
-      const luc = Date.parse(b?.luc_kiem);
-      if (!Number.isFinite(luc) || dongHo() - luc > 90000 || luc > dongHo() + 5000) {
-        trangThai.textContent = "ABBYY: chưa có cập nhật gần đây.";
-      } else {
-        const lyDo = {chua_cau_hinh: "chưa cấu hình", dang_tat: "đã tắt trong cấu hình",
-          khong_ket_noi: "không truy cập được thư mục", cau_hinh_loi: "cần kiểm tra cấu hình"};
-        trangThai.textContent = `ABBYY: ${b.abbyy_bat ? "Bật" : "Tắt"}${lyDo[b.ly_do] ? " — " + lyDo[b.ly_do] : ""}. Kiểm tra lúc ${ngayGio(luc)}.`;
-      }
-      danhSach.replaceChildren();
-      const ds = [...chuaRo, ...dangGui].sort((a, b) => a.luc_giu - b.luc_giu);
-      if (!ds.length) nut("li", "Không có lượt đang chờ đối chiếu.", danhSach);
-      ds.forEach((b, i) => nut("li", `Lượt ${so(i + 1)} · ${so(b.so_trang)} trang · ${ngayGio(b.luc_giu * 1000)} · ${b.trang_thai === "chua_ro" ? "Chưa rõ kết quả" : "Đang gửi hoặc chờ đối chiếu"}`, danhSach));
-    } catch {
-      if (!daDong) {
-        trangThai.textContent = "Chưa đọc được trạng thái ABBYY.";
-        hanMuc.textContent = "Chưa đọc được hạn mức. Hãy tải lại màn hình.";
-        danhSach.replaceChildren();
-        nut("li", "Chưa đọc được các lượt đang chờ đối chiếu.", danhSach);
-      }
-    }
+      })(),
+      (async () => {
+        try {
+          const ngay = await timHet("han_muc_ngay", {});
+          if (daDong) return;
+          const moc = Math.floor(dongHo() / 1000) - 30 * 86400;
+          let daDung = 0, dangGiu = 0;
+          for (const b of ngay) {
+            const dauNgay = Date.parse(b.ngay + "T00:00:00Z") / 1000;
+            for (const [giay, n] of Object.entries(b.da_nhan)) {
+              if (dauNgay + Number(giay) > moc) daDung += n;
+            }
+            dangGiu += Object.values(b.dang_giu).reduce((a, b) => a + b, 0);
+          }
+          const conLai = Math.max(0, cauHinh.abbyy.han_muc_trang_30_ngay - daDung - dangGiu);
+          hanMuc.textContent = `Đã dùng ${so(daDung)} trang trong 30 ngày · Đang giữ ${so(dangGiu)} trang · Còn lại ${so(conLai)} trang`;
+        } catch {
+          if (!daDong) hanMuc.textContent = "Chưa đọc được hạn mức. Hãy tải lại màn hình.";
+        }
+      })(),
+      (async () => {
+        try {
+          const tt = await cong.ngan.doc("trang_thai_engine", {ma: "chua_ro"});
+          if (daDong) return;
+          const b = tt?.gia_tri;
+          danhSach.replaceChildren();
+          if (!b?.so_luot) nut("li", "Không có lượt chưa rõ kết quả.", danhSach);
+          else {
+            nut("li", `Có ${so(b.so_luot)} lượt chưa rõ kết quả.`, danhSach);
+            let i = 0;
+            for (const [ngay, dem] of Object.entries(b.theo_ngay).sort(([a], [b]) => a.localeCompare(b))) {
+              for (let n = 0; n < dem; n++) {
+                nut("li", `Lượt ${so(++i)} · ${ngay.split("-").reverse().join("/")} · Chưa rõ kết quả`, danhSach);
+              }
+            }
+          }
+        } catch {
+          if (!daDong) {
+            danhSach.replaceChildren();
+            nut("li", "Chưa đọc được các lượt chưa rõ kết quả.", danhSach);
+          }
+        }
+      })(),
+    ]);
   }
 
   form.addEventListener("submit", async event => {
@@ -141,8 +164,8 @@ export async function mount(goc, {
     moi.tesseract = {duong_dan: o.duong_dan.value.trim(), ngon_ngu: o.ngon_ngu.value.trim()};
     if (!Number.isInteger(moi.abbyy.thoi_han_giay) || moi.abbyy.thoi_han_giay < 1 || moi.abbyy.thoi_han_giay > 900 ||
         !Number.isInteger(moi.abbyy.han_muc_trang_30_ngay) || moi.abbyy.han_muc_trang_30_ngay < 0 || moi.abbyy.han_muc_trang_30_ngay > 5000 ||
-        !moi.tesseract.ngon_ngu) {
-      thongBao.textContent = "Thời hạn phải từ 1 đến 900 giây, hạn mức từ 0 đến 5.000 trang và cần có ngôn ngữ.";
+        !Object.hasOwn(ngonNgu, moi.tesseract.ngon_ngu)) {
+      thongBao.textContent = "Thời hạn phải từ 1 đến 900 giây, hạn mức từ 0 đến 5.000 trang và cần chọn ngôn ngữ trong danh sách.";
       return;
     }
     luu.disabled = true;

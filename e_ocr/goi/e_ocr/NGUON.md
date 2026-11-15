@@ -6,6 +6,15 @@ Chuyển lõi từ `ma-nguon/` ngay trong repo; mã nguồn cũ giữ nguyên. K
 chép thư mục dữ liệu/cấu hình ABBYY hoặc model. OCR-2 chỉ chuyển phần cần
 dùng của `vendor/mask_ocr` đã có trong repo; không đọc nguồn ngoài workspace.
 
+OCR-8 sửa theo kiểm độc lập của lead ngày 15/11/2026: tổng hợp lượt chưa rõ
+chỉ số đếm/ngày ở phạm vi engine, giao dịch CAS cùng lượt; dọn ngày hết cửa sổ,
+khai lưu 45 ngày; schema/ô chọn đúng bốn ngôn ngữ Tesseract. Không thêm dependency.
+Công cụ OCR-7 `e_ocr/cong-cu/thu_abbyy_that.py` và `THU-ABBYY-THAT.cmd` nằm
+ngoài gói, mã nội bộ do Anh tự chạy. `--cau-hinh <JSON>` đọc tệp JSON Anh chỉ
+định khi có `--that`; mặc định chạy khô không đọc cấu hình/không gửi PDF.
+Đây là ngoại lệ cho công cụ kiểm OCR-7 theo quyết định Anh 15/11/2026,
+không phải nguồn cấu hình runtime engine; runtime chỉ đọc ngăn.
+
 | Tệp | Nguồn / giấy phép |
 |---|---|
 | `CHANGELOG.md` | Giữ lịch sử OCR-0…OCR-6; bổ sung OCR-8, phiên bản 1.0.8. |
@@ -96,8 +105,8 @@ Quy ước này áp dụng cả hai bản mẫu NGAN-0, không cần sửa tệp
 Git chuyển kiểu xuống dòng trên Windows.
 
 ```text
-aeddb6e290d09b7ca683e77123969e48500dda0e3dfed632461e3db4929a0028  cau_hinh.schema.json
-ffc7c760705c06c75728338b9b8d56a6b124958f86c0f59947d6f0e5ef03ab4a  CHANGELOG.md
+ad152ecfb225dc8b0c3bf6e6db1a8524a2e07e79649c9808257911253a15041e  cau_hinh.schema.json
+4352e20961e95d85890084827b6c14b4a01d774335f89a2cba5a0771236f3a41  CHANGELOG.md
 1b56ef1a5de686b4359857b68ad86bd909d250714fbc7f43c44e0e78887b0f04  contract/cau_hinh_may.schema.json
 81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977  contract/van_ban_tai_lieu.schema.json
 e6a148a20c0bda845df9beff217e86657f63c6c75bc3fa0a0e292d389f6551cd  demo/cau_hinh.demo.json
@@ -120,10 +129,10 @@ b11102034a8b77d18bf2a5043c05ac2d1f71a12614a7fb3a7f87f60056c1b5ad  e_ocr/bang.py
 7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252  e_ocr/cau_hinh.py
 298732214730d25b21e98b63e6af92f4159c4c2f1a9599de0a86719ec6023046  e_ocr/cau_hinh_may.py
 d5ce6c204551508b44ff13de047714b4e7f63b95c004defdb3c3ba7124e8fbc7  e_ocr/chay.py
-3c7a7490560c3cb56a919c804a34cdbfe2ecfabd6e4524f0048e084f772fcadf  e_ocr/chon_nguon.py
+7b2d946daccb73421d718e249393d47933bcb24f8813c2f5acc0fe1f644afecb  e_ocr/chon_nguon.py
 16dbcd9625c7cdf4d19df1cfbac7ff7a619bc2f008eecb99b1232f421c2e6a0d  e_ocr/kho_tam.py
 46abf54b034eed40233efac67f0f50e2c8a7e46b446b0e75fca6d59e3c749115  e_ocr/lop_chu.py
-dd6109c5ca08c515119ed5000ecde270cf82b954ab047ca37675454c1d643aa8  e_ocr/luot_abbyy.py
+65bef4bd7c406188d5a507f309ca36ed1e79d1eb97936259b31fdb631793fe81  e_ocr/luot_abbyy.py
 2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0  e_ocr/ngan.py
 28603912217c0ac6b6d6d5b5c3982ac0a3b436970f26d7a26afc0bc619b6f9b2  e_ocr/nhat_ky.py
 6c7fec7a0497f3d0fa9ac1ae7037fb2b4c15dc12471b61f38a999dcc8da3c029  e_ocr/tesseract.py
@@ -135,8 +144,8 @@ aac81c7cf8d09c7eace619fb4543b69dd7211c1095e88a65940b0b7291ba953e  e_ocr/vendor/m
 7f0205ee63a89a6634e1443b165e06968884b07bd5c3aa27129d3dad9a728c66  e_ocr/vendor/mask_ocr/LICENSE
 9ade7360ae708ba872814a082cb77ca60e1577d6aec39be9559bbd5bad9335e9  e_ocr/xuat_word.py
 09ceeef8b76bbc84295452f8036362d2d38a4e02d4f67378cbe22c79d7a6f357  engine.json
-bf598525893dbed6f3494d422558dd8681839da97c4c120a19f9946e75dc5a2a  KHAI-SDK-2.1.json
-c7acee26015f821042ea093c6a0151be91cb6563655e03f42f475ea3b6765f73  README.md
+6f1fb097084a73ed858756a71ddea4c0b630fd0fbba39fe039b18a63604f6bd3  KHAI-SDK-2.1.json
+85d035028dbaeb0ddcea10ecbab142963a8ba134d79e373a63f05339441a7fe3  README.md
 a6e0b765087fa3707acab44063cb697610f231657a410b88ae1ff6e3bae2107c  requirements.lock
-10150cc470f1416a63d960ba3d227228e17b48a5fbb07874f867ad62ab30bd21  ui/cau_hinh.js
+8c77c591da623286527f5acc0336ebee47682dc3bec56e0949441a19e789bbe8  ui/cau_hinh.js
 ```

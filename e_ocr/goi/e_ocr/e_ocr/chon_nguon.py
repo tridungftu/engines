@@ -66,11 +66,17 @@ class SoHanMuc:
 
     def _ghi(self, lo, anh, so):
         moc, hang = anh
-        ngay_nay = datetime.fromtimestamp(int(self.dong_ho()), timezone.utc).date().isoformat()
+        luc = int(self.dong_ho())
+        ngay_nay = datetime.fromtimestamp(luc, timezone.utc).date().isoformat()
+        # Dọn dần tối đa 50 ngày/lô, chừa chỗ cho lệnh lượt, sổ và CAS
+        # dưới trần 100 lệnh. Ngày biên còn trong cửa sổ không bị xóa.
+        don = set(sorted(ngay for ngay in hang
+                         if int(datetime.fromisoformat(ngay).replace(tzinfo=timezone.utc).timestamp())
+                         + 86400 <= luc - CUA_SO_GIAY)[:50])
         dang_giu = {}
         for ngay, b in hang.items():
             giu = {ma: n for ma, n in b.gia_tri["dang_giu"].items() if ma in so["dang_giu"]}
-            if giu:
+            if giu and ngay not in don:
                 dang_giu[ngay] = giu
         da_co = {ma for giu in dang_giu.values() for ma in giu}
         for ma, n in so["dang_giu"].items():
@@ -81,11 +87,16 @@ class SoHanMuc:
                        "dang_giu": dang_giu.get(ngay, {})}
             cu = hang.get(ngay)
             if cu is not None:
+                if ngay in don:
+                    # Chỗ giữ còn dở đã chuyển sang ngày nay trong cùng lô;
+                    # chỉ xóa hàng ngày, không hoàn trang hoặc xóa lượt.
+                    lo.xoa("han_muc_ngay", {"ngay": ngay}, row_version=cu.row_version)
+                    continue
                 cu_hieu_luc = self._doc_so({"da_nhan": {ngay: cu.gia_tri["da_nhan"]},
                                           "dang_giu": cu.gia_tri["dang_giu"]})
                 if (gia_tri["da_nhan"] == cu_hieu_luc["da_nhan"].get(ngay, {})
                         and gia_tri["dang_giu"] == cu.gia_tri["dang_giu"]):
-                    continue  # Không dọn hàng loạt ngày cũ trong một việc (trần 100 lệnh/lô).
+                    continue
             if not gia_tri["da_nhan"] and not gia_tri["dang_giu"]:
                 if cu is not None:
                     lo.xoa("han_muc_ngay", {"ngay": ngay}, row_version=cu.row_version)

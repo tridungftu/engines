@@ -137,6 +137,29 @@ class NhatKyLuot:
                                     luot["han_xu_ly"] <= self.so.dong_ho()):
             raise ChuaRo(self.ma)
 
+    def _ghi_chua_ro(self, lo, luot, trang_thai_cu):
+        """Chỉ tổng số theo ngày UTC, không đưa định danh ra phạm vi engine."""
+        cu_chua_ro = trang_thai_cu == "chua_ro"
+        moi_chua_ro = luot["trang_thai"] == "chua_ro"
+        if cu_chua_ro == moi_chua_ro:
+            return
+        khoa = {"ma": "chua_ro"}
+        cu = self.ngan.doc("trang_thai_engine", khoa)
+        theo_ngay = {} if cu is None else dict(cu.gia_tri["theo_ngay"])
+        ngay = datetime.fromtimestamp(luot["luc_giu"], timezone.utc).date().isoformat()
+        dem = theo_ngay.get(ngay, 0) + (1 if moi_chua_ro else -1)
+        if dem < 0:
+            raise LoiNghiepVu("NHAT_KY_LUOT_CAN_KIEM_TRA", "Số lượt chưa rõ cần được đối chiếu lại.")
+        if dem:
+            theo_ngay[ngay] = dem
+        else:
+            theo_ngay.pop(ngay, None)
+        gia_tri = {"so_luot": sum(theo_ngay.values()), "theo_ngay": theo_ngay}
+        if cu is None:
+            lo.them("trang_thai_engine", khoa, gia_tri)
+        else:
+            lo.sua("trang_thai_engine", khoa, gia_tri, row_version=cu.row_version)
+
     def cap_nhat(self, trang_thai=None, *, nhan=False):
         if trang_thai is not None and trang_thai not in DANG_DO | DA_CHOT:
             raise ValueError("Trạng thái lượt không hợp lệ.")
@@ -149,6 +172,7 @@ class NhatKyLuot:
             self._kiem_quyen(luot)
             if luot["trang_thai"] not in DANG_DO:
                 return luot
+            trang_thai_cu = luot["trang_thai"]
             if nhan and not luot["da_nhan"]:
                 if so["dang_giu"].pop(self.ma, None) != self.so_trang:
                     raise LoiNghiepVu("SO_HAN_MUC_CAN_KIEM_TRA", "Chưa xác nhận được hạn mức của lượt ABBYY.")
@@ -181,6 +205,7 @@ class NhatKyLuot:
             try:
                 with self.ngan.lo() as lo:
                     lo.sua("luot_abbyy", self._khoa(), self._kiem(luot), row_version=b.row_version)
+                    self._ghi_chua_ro(lo, luot, trang_thai_cu)
                     self.so._ghi(lo, anh, so)
                 return luot
             except NganXungDot:

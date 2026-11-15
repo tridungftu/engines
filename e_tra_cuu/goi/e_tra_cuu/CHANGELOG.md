@@ -1,5 +1,42 @@
 # Thay đổi
 
+## 0.2.0 — 15/11/2026 — TC-S22
+
+- Chuyển ngăn/cấu hình sang SDK 2.2.0, bỏ ngăn RAM/cổng cấu hình tạm khỏi
+  runtime; ba tệp cũ chuyển LUU-TRU/TC-S22, không xóa. Manifest khai ngăn,
+  schema cấu hình và migration thực; ghim wheel SHA đúng SHA256SUMS.txt.
+- Bảng dot_kiem đi qua viec.ngan, pháp nhân do Core gắn; không khóa/lọc chứa
+  pháp nhân, không xóa hoặc tự đặt hạn giữ khi TC-Q06 chưa chốt. Lô/CAS dùng
+  KetQuaLenh thật; chi_so/bao_cao JSON có kiểm trong text vì SDK chưa có json/tep.
+- Cấu hình dùng bản chụp viec.cau_hinh; thiếu trường bắt buộc giữ CHUA_CAU_HINH.
+  Snapshot nội bộ row_version=null khi SDK chưa công khai phiên bản CAS, ghim
+  giá trị bằng băm; không thay hợp đồng loại chung. Không cần đệm/callback riêng.
+- Bốn khuôn AI gắn vai trò AI-12; giữ kiểm trích xuất/citation/offset và hậu kiểm
+  nguồn độc lập. Fixture tích hợp dùng Hỏi AI 0.12.0 đã có trên origin/main.
+- Giữ ca hồi quy, đổi môi trường sang ngăn CoreGia thật, dat_cau_hinh,
+  gay_xung_dot_ngan, xem_ngan; bỏ đúng hai ca so băm cổng tạm theo yêu cầu.
+- SQL chỉ CREATE TABLE trong eng_e_tra_cuu, đủ cột hệ thống, kiểm kê băm toàn
+  gói; LF toàn gói để giữ bytes qua Windows/Linux. Không thêm dependency runtime.
+- Đã kiểm bằng Core giả (CoreGia). CLI chuẩn vẫn 0/5 CHUA_CAU_HINH/mã 1:
+  wheel chưa nạp cấu hình DEMO/tệp con/quyền nguồn. Không thêm cổng thay thế.
+  Giới hạn UI/cursor/phiên bản cấu hình và số kiểm thật ghi trong VIEC.md.
+
+
+## 0.1.0 — 15/11/2026 — TC-9
+
+- Hai màn module cấu hình/trạng thái qua KttCore của chính engine; CAS cấu
+  hình, ngưỡng chưa đo/đã đo chỉ đọc, không kích hoạt giả. UI dùng textContent,
+  sự kiện DOM, không mạng ngoài; lỗi Việt không phản chiếu dữ liệu SDK.
+- Trạng thái chỉ đọc bài đo theo pháp nhân, cursor cùng phạm vi, trần 500;
+  quyền xem riêng đề nghị Core kiểm, không cấp Admin toàn engine cho user.
+  Thu quyền xóa dữ liệu đang hiện, mỗi phần đọc/báo lỗi riêng.
+- Seam Python bài đo DEMO qua Ngăn: lấy hoặc tạo chống trùng, số đếm tuyệt
+  đối, cập nhật CAS ≤100 mục/lô, rollback cả lô. Chỉ metadata/băm, tử số/mẫu
+  số và tham chiếu báo cáo Core; không nhật ký hỏi đáp/nội dung nguồn.
+- Đúng 4 tệp mã TC-9; không thêm trường engine.json, dependency hoặc API quản
+  trị giả. Đã kiểm bằng Core giả (CoreGia)/KttCore giả, chưa kiểm trình duyệt
+  thật. Cổng CLI SDK chuẩn vẫn 0/5 CHUA_CAU_HINH; xem VIEC và Cần Core.
+
 ## 0.1.0 — 15/11/2026 — TC-8
 
 - Xuất kết quả hậu kiểm thành JSON tại Core và các trường tĩnh; kiểm nguồn,

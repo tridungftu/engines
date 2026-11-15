@@ -39,7 +39,8 @@ def test_nam_tac_vu_hop_le_snapshot_that(tac_vu):
     assert s["tac_vu"] == tac_vu and s["giai_doan"] == "da_nhan"
     assert s["ket_qua"] is None and s["ngu_canh_core"] == yc["ngu_canh_core"]
     assert h["bam_cau_hinh"] == bam(json_chuan(s["cau_hinh"]["gia_tri"]))
-    assert s["cau_hinh"]["row_version"] == bo.app.ngan.doc("cau_hinh", {}).row_version
+    assert s["cau_hinh"]["row_version"] is None  # SDK chưa công khai CAS trên Viec.
+    assert s["cau_hinh"]["gia_tri"] == bo.app.cau_hinh
     assert h["tom_tat"]["trang_thai"] is None
     assert all(h["tom_tat"][k] is None for k in ("co_can_cu", "co_mau_thuan", "can_duyet", "nhan"))
     assert set(h) == set(SCHEMA["properties"]["ho_so_tra_cuu"]["required"])
@@ -94,7 +95,7 @@ def test_cli_sdk_thieu_ngan_dung_chua_cau_hinh():
     assert len(kq) == 5
     for k in kq:
         loi(k, "CHUA_CAU_HINH")
-    assert chay.app.ngan.doc("cau_hinh", {}) is None
+    assert not any(b["bang"] == "cau_hinh" for b in chay.app.phieu["ngan_du_lieu"])
     assert core.so_lan_ghi["ket_qua"] == core.so_lan_ghi["tep"] == 0
 
 
@@ -234,19 +235,13 @@ def test_sai_kieu_khong_traceback_du_lieu(duong, gia_tri, capsys):
 ])
 def test_cau_hinh_sai_qua_handler_that_khong_lo_log(ban_va, capsys):
     bo = BoDemo()
-    # Surrogate không thể vào NganBoNho: mô phỏng phản hồi Core hỏng riêng.
-    if "quy_tac_nhom" in ban_va:
-        from types import SimpleNamespace
-
-        class NganHong:
-            def doc(self, bang, khoa):
-                return SimpleNamespace(gia_tri={**bo.cau_hinh, **ban_va}, row_version=1)
-
-        bo.app.ngan = NganHong()
-    else:
-        ban = bo.app.ngan.doc("cau_hinh", {})
-        with bo.app.ngan.lo() as lo:
-            lo.sua("cau_hinh", {}, ban_va, row_version=ban.row_version)
+    # Phản hồi cấu hình Core hỏng: tiêm ở đường đọc, không nới schema lúc lưu.
+    doc_goc = bo.core._doc_cau_hinh
+    def hong(ma):
+        ban = doc_goc(ma)
+        ban["cau_hinh"].update(ban_va)
+        return ban
+    bo.core._doc_cau_hinh = hong
     loi(bo.chay(), "CAU_HINH_KHONG_HOP_LE")
     assert bo.core.luot_doc == [] and capsys.readouterr().err == ""
 
@@ -322,9 +317,8 @@ def test_ung_vien_sai_quan_he_nguon(kieu):
 @pytest.mark.parametrize("ten,tran", [("ho_so_toi_da_byte", 100), ("tep_toi_da_byte", 1500)])
 def test_tran_dau_ra_khong_upload_roi_bao_thanh_cong(ten, tran):
     bo = BoDemo()
-    ban = bo.app.ngan.doc("cau_hinh", {})
-    with bo.app.ngan.lo() as lo:
-        lo.sua("cau_hinh", {}, {"ngan_sach": {ten: tran}}, row_version=ban.row_version)
+    bo.cau_hinh["ngan_sach"] = {ten: tran}
+    bo.core.dat_cau_hinh(bo.app.ma, bo.cau_hinh)
     loi(bo.chay(), "TC_QUA_GIOI_HAN")
     assert bo.core.so_lan_ghi["tep"] == bo.core.so_lan_ghi["ket_qua"] == 0
 
@@ -442,27 +436,21 @@ def test_tran_cau_hoi_ham_danh_muc_ung_vien(kieu):
 
 def test_chup_config_va_version_chi_mot_lan_doc():
     bo = BoDemo()
-    ngan = bo.app.ngan
-    truoc = ngan.doc("cau_hinh", {})
-    cau_hinh_cu = chay.yeu_cau_cau_hinh(ngan)
-
-    class DoiCauHinhSauDoc:
-        dem = 0
-
-        def doc(self, bang, khoa):
-            self.dem += 1
-            ban = ngan.doc(bang, khoa)
-            with ngan.lo() as lo:
-                lo.sua(bang, khoa, {"cat_doan": {"do_dai_muc_tieu": 300}}, row_version=ban.row_version)
-            return ban
-
-    bo.app.ngan = DoiCauHinhSauDoc()
+    from types import SimpleNamespace
+    cau_hinh_cu = chay.yeu_cau_cau_hinh(SimpleNamespace(cau_hinh=bo.cau_hinh))
+    dem = []
+    def doi_sau_doc(viec_id, tep):
+        if not dem:
+            dem.append(tep)
+            bo.cau_hinh["cat_doan"] = {"do_dai_muc_tieu": 300}
+            bo.core.dat_cau_hinh(bo.app.ma, bo.cau_hinh)
+    bo.core.sau_doc = doi_sau_doc
     kq = bo.chay()
     assert kq["trang_thai"] == "XONG"
     s = bo.snapshot(kq)
-    assert bo.app.ngan.dem == 1
-    assert s["cau_hinh"] == {"gia_tri": cau_hinh_cu, "row_version": truoc.row_version}
-    assert ngan.doc("cau_hinh", {}).row_version != truoc.row_version
+    assert len(dem) == 1
+    assert s["cau_hinh"] == {"gia_tri": cau_hinh_cu, "row_version": None}
+    assert bo.core._doc_cau_hinh(bo.app.ma)["cau_hinh"]["cat_doan"]["do_dai_muc_tieu"] == 300
 
 
 @pytest.mark.parametrize("sau_tep", ["chinh", "goc", "ocr"])

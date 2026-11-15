@@ -609,6 +609,8 @@ def test_consumer_hoi_ai_hien_co_voi_local_gia_khong_duoc_lam_xanh():
     ra, local = dieu_phoi_hoi_ai(bo, bo.pb_ai, bo.du_lieu_soan())
     assert ra["trang_thai"] == "XONG" and local.so_luot == 1, ra
     a = ra["ket_qua"]["tra_loi_ai"]
-    assert a["trang_thai"] == "khong_thay_can_cu" and not a["kiem_trich_dan"]["dat"]
+    assert a["trang_thai"] == "co_can_cu" and a["kiem_trich_dan"]["dat"]
+    # LocalGia trả thêm quote toàn ngữ cảnh, chứa vùng ngoài map nguồn. Hỏi AI
+    # chấp nhận vai trò/schema nhưng TC vẫn từ chối chứng cứ rộng không hợp lệ.
     r = khong_can_cu(bo, bo.soan(ra["ket_qua"]))
     assert "KHANG_DINH_AI_KHONG_DAT" in r["ly_do"]

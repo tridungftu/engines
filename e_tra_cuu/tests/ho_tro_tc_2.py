@@ -12,7 +12,6 @@ from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_tra_cuu import chay
 from e_tra_cuu.kiem_dau_vao import bam, json_chuan
-from e_tra_cuu.ngan import NganBoNho
 
 
 GOI = Path(__file__).resolve().parents[1] / "goi/e_tra_cuu"
@@ -82,9 +81,8 @@ class BoDemo:
         self.nguon_duoc_cap = {self.nguon["ma_nguon"]: deepcopy(self.nguon)}
         self.cau_hinh = {"phien_ban": 1, "quy_tac_nhom": {"tep_id": self.dm["tep"]["tep_id"], "bam": self.dm["bam"]}}
         self.app = Engine(deepcopy(chay.app.phieu), thu_muc_goi=GOI)
-        self.app.ngan = NganBoNho(chay.KHAI_BAO["ngan_du_lieu"])
-        with self.app.ngan.lo() as lo:
-            lo.them("cau_hinh", {}, self.cau_hinh)
+        self.core.nap_engine(self.app)
+        self.core.dat_cau_hinh(self.app.ma, self.cau_hinh)
         self.app.cua_nguon = self.core.cua
         chay.dang_ky_nang_luc(self.app)
         self.viec_id = None

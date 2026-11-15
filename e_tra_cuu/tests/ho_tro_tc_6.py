@@ -70,6 +70,9 @@ class BoHauKiem(BoAI):
         phieu.update(ma="e_demo_local_gia", chay_thu_demo=[], nang_luc=[{
             "ma": "demo.local_gia@1", "ten": "Local giả DEMO", "nhan": ["yeu_cau_ai"], "tra": "tra_loi_ai",
             "gioi_han": {"thoi_han_giay": 30}, "huy_duoc": True}])
+        phieu.pop("ngan_du_lieu", None)
+        phieu.pop("du_lieu", None)
+        phieu.pop("cau_hinh", None)
         local = Engine(phieu, thu_muc_goi=GOI)
 
         @local.nang_luc("demo.local_gia@1")

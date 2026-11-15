@@ -1,4 +1,19 @@
-# Đối chiếu bản ký — SDK 2.2.0, DC-10, phiên bản 0.8.0 chưa phát hành
+# Đối chiếu bản ký — SDK 2.2.0, DC-11, phiên bản 0.9.0 chưa phát hành
+
+## Học lỗi OCR có duyệt — DC-11
+
+Lõi học chỉ kiểm qua CoreGia/NganBoNho; chưa đăng ký thao tác quản trị
+SDK. Chỉ cặp vô danh được chứng minh không đổi nghĩa theo Q14 và xác
+nhận `loi_ocr` trong hồ sơ đã ghim mới được đếm. Ngưỡng `hoc_loi_ocr`
+phải đã đo/duyệt, không mặc định. Đủ ngưỡng chỉ đề xuất; Admin qua cửa
+chung, CAS và một lô chốt đề xuất/nhật ký/bộ phiên bản mới trong ngăn.
+Đề xuất chưa duyệt không ảnh hưởng máy; snapshot cũ giữ nguyên.
+
+`ui/loi_ocr.js` chỉ đọc/phân trang trong pháp nhân Core cấp, không nút
+duyệt hoặc ghi kho. Q14 nguồn thật, ngưỡng đo thật và C-DC-03 quyền/xác
+nhận/thao tác quản trị vẫn **bắt buộc trước vận hành thật**. Hợp đồng,
+trần và phần chưa kiểm: `../../docs/DC-11-CONG-CORE.md`. Đã kiểm bằng
+Core giả (CoreGia), chỉ DEMO, 0 Cloud; chưa nghiệm thu Core thật.
 
 ## Màn và xác nhận — DC-10
 

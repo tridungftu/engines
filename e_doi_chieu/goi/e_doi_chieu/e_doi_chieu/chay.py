@@ -14,6 +14,8 @@ from . import chuan_bi_ai as cb
 from . import ho_so as hs
 from .tong_hop import xuat_ket_qua as _xuat_ket_qua
 from . import xac_nhan as xn
+# DC-11 chưa có thao tác quản trị SDK/C-DC-03. Lõi loi_ocr chỉ kiểm bằng
+# CoreGia/NganBoNho; không đăng ký handler/decorator hoặc tự gọi lúc so.
 
 _GOI = Path(__file__).resolve().parent.parent
 app = Engine.tu_khai_bao(str(_GOI / "engine.json"))

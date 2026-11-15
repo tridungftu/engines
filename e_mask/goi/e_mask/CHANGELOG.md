@@ -6,6 +6,14 @@
 - `che_word`/`che_them_word` chỉ trả băm/số đếm; primitive che bổ sung nhận vị trí gốc, vẫn ở `CHO_LOCAL`, không chứng thực nguồn Local. B7/B9 còn phải nối SDK, đủ hai lớp Local và cửa phát hành; B8 mở che tệp chưa triển khai. Giữ cửa chất lượng R3/tên mới C-P4-03 đóng. Trần B1/B4 áp cả hai chiều; reader đọc lại hiện bảo thủ 500.000 ký tự, có thể chặn sớm hơn trần ra 2 triệu.
 - Đã kiểm bằng Core giả (CoreGia), chưa Core/Office/Local/Linux thật; Cloud tắt. Chỉ thêm một runtime trong bốn tệp cho phép; kiểm kê đóng gói tự sinh lại do thêm tệp/tài liệu. Chi tiết kiểm, thời gian và C-P4-01…05 tại VIEC/báo cáo B5; PR chờ lead mở.
 
+## Chưa phát hành — 16/11/2026, MASK-R6b
+
+- Thay dò từng alias bằng automaton chung cho alias/mảnh alias; tái dùng bộ dò trong mỗi lượt mở. Gom tiền tố thành cây regex, chỉ dò cạnh ngoặc trong cửa sổ hữu hạn. Kiểm hạn/hủy mỗi 2.048 ký tự và trong các vòng dựng/duyệt; không cache bộ dò giữa các chuỗi.
+- Trần kỹ thuật thử nghiệm: 1.000 alias/map, 10.000 chuỗi kể cả khóa dict trong nội dung mở, 200.000 nút bảng dò. Vượt trần trả MASK_QUA_GIOI_HAN, không cắt ngầm, dọn map theo vòng đời R4. Giữ trần 500.000 ký tự, tính cả khóa khi kiểm đầu vào.
+- Chỉ mở alias thuộc tập xuất hiện trong bản cuối anh_xa_cuoi.da_che R5 đã bàn giao; không đọc ngăn/snapshot hay thêm nơi lưu trữ. Khóa dict giữ nguyên theo contract; có dấu vết alias thì mo_day_du=false.
+- Chụp map dưới khóa timer, kiểm lại vòng đời trước kết luận lỗi map; hết hạn giữa lượt trả MASK_ANH_XA_KHONG_CON. Bỏ biến chứa bản rõ/bytes trong finally của handler, mở chuỗi, duyệt và đọc JSON, giữ ngữ nghĩa lỗi/hủy/ChuaRo.
+- Đã kiểm bằng Core giả (CoreGia); chưa Core/Local/Linux thật. API v1, Core, e_hoi_ai và dependency giữ nguyên. Cửa kết quả qua port và return handler vẫn Cần Core; kết quả kiểm và thời gian thật tại VIEC.md. PR: chờ lead mở.
+
 ## Chưa phát hành — 16/11/2026, MASK-R6
 
 - Nối hai handler R5 vào đúng kho RAM R4 của app và thay `mask.mo_che_van_ban@1` bằng mở che một lần theo quyền của chuỗi. Giữ nguyên `nhan/tra` và bộ trường M; không tra ngược ngăn, tải nguồn/snapshot hoặc cache bản rõ. Handler che quy tắc riêng giữ cửa chặn chất lượng R3, không quay về kho lịch sử; chuỗi Local dùng R5.

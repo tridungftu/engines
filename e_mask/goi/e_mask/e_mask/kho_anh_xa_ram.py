@@ -11,12 +11,14 @@ from threading import Lock, RLock, Timer, get_ident
 from time import monotonic
 from uuid import uuid4
 
-from kho_tri_thuc_sdk.engine import ChuaRo
+from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu
 
 from .khoi_tao_ngan import THOI_HAN_ANH_XA_TOI_DA, thoi_han_anh_xa_giay
 from .quyen_yeu_cau import (
     GhimTienTrinh, SuKienRAM, kiem_ngu_canh_ram, loi_kho, loi_ram, xac_minh_ram,
 )
+
+TRAN_ALIAS_MO = 1000
 
 
 def _hen_gio(giay, ham):
@@ -113,6 +115,19 @@ class _BuocRAM:
         if self._loai != 'che':
             raise loi_ram('MASK_VONG_DOI_KHONG_HOP_LE')
         self._cho_ai = True
+
+    def chup_map_mo(self):
+        """Chụp map dưới khóa timer; bản sao chỉ sống trong lượt mở hiện tại."""
+        self.kiem()
+        with self._kho._khoa:
+            self._kho._kiem_buoc(self)
+            v = self._ban_ghi.du_lieu
+            aliases = v.get('alias_nguyen_van')
+            if type(aliases) is dict and len(aliases) > TRAN_ALIAS_MO:
+                raise LoiNghiepVu('MASK_QUA_GIOI_HAN',
+                    'Nội dung vượt giới hạn cho phép. Cần chia nhỏ yêu cầu.')
+            return (v.get('giai_doan_ai'), v.get('anh_xa_cuoi'),
+                    aliases.copy() if type(aliases) is dict else None)
 
 
 class KhoAnhXaRAM:

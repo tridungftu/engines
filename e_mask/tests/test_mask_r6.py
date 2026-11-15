@@ -43,7 +43,7 @@ def test_du_truong_ai_giu_khoa_kieu_noi_dung_moi_va_tinh_lai_trich():
     k = ket(b)
     moi = json.loads(k['tra_loi_ai_da_mo_json'])
     assert k['van_ban_da_mo_che'] == TEN + DUOI + ' AI thêm [ghi chú], 42.5, 2026-11-16.'
-    assert k['so_cho_mo'] == 4 and k['mo_day_du'] is True
+    assert k['so_cho_mo'] == 4 and k['mo_day_du'] is False  # R6b: alias trong khóa du_lieu chưa mở
     assert k['trang_thai_ma_yeu_cau'] == 'DA_DONG' and k['bi_danh_khong_ro_json'] == '[]'
     muc = moi['du_lieu'][ALIAS][0]
     assert muc['ten'] == TEN and type(muc['so']) is float and muc['so'] == 42.5

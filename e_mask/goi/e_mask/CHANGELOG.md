@@ -1,5 +1,12 @@
 # Thay đổi
 
+## 15/11/2026 — MASK-2c-4, công cụ ngoài gói (runtime giữ 1.2.0)
+
+- Thêm công cụ đo DEMO mặc định khô/không mạng và `.cmd` ASCII; adapter CoreGia ngoài gói điều phối chuẩn bị → AI-9 → hậu kiểm đủ đoạn. Không sửa runtime engine, Core/SDK, dependency hoặc mở Cloud.
+- Bộ gold ứng viên mới: 45 tên/45 ngữ cảnh, 75 câu thường, 15 tổ chức, 15 địa chỉ và 12 biến thể riêng; có băm, tách development/bốn ca lead cũ. **Chưa lead đóng băng/gold độc lập; chưa là nghiệm thu held-out độc lập.**
+- Chấm hai chế độ trên cùng bộ; tách chặn nghiệp vụ/lỗi kỹ thuật/ChuaRo khỏi lọt và che đủ; báo nhầm bằng hợp che thừa/chặn trên toàn mẫu, kèm mẫu hợp lệ, số span/đoạn và p50/p95. Báo cáo tùy chọn không chứa nội dung gốc/URL/path/mã mở che, không lưu runtime report trong engine.
+- Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả. **CHƯA ĐO Local thật**; AI báo thiếu một phần tên vẫn có thể lọt. Chờ Anh chạy `.cmd`, lead review gold/bằng chứng và Core thật; nợ CAO giữ mở, Cloud giữ tắt.
+
 ## 1.2.0 — 15/11/2026, MASK-2c-3 hậu kiểm Local và che bổ sung
 
 - Thêm `mask.hau_kiem_ai_cuc_bo@1`: một đầu vào `tra_loi_ai`, đầu ra cố định `van_ban_da_che`. Chỉ đọc snapshot/tập phản hồi qua tham chiếu có quyền của Core; thiếu port chứng thực nguồn AI-9/Local, hoàn tất hoặc đủ đoạn thì từ chối.

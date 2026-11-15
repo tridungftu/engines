@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-2c-4 | Công cụ đo Local ngoài gói và gold DEMO ứng viên | Sau MASK-2c-3; quyết định Anh “Thêm AI cục bộ” | Xong phần công cụ/mock — 15/11/2026; **Chờ Anh/lead đo độc lập** | Đúng ba tệp mã/dữ liệu ngoài gói; không sửa runtime. 45 tên/45 ngữ cảnh +75 câu thường +15 tổ chức +15 địa chỉ +12 biến thể; chưa lead đóng băng gold độc lập. [Báo cáo](BAO-CAO-MASK-2c-4.md); PR: **chờ lead mở**; nợ CAO/Cloud tắt giữ nguyên |
 | MASK-2c-3 | Hậu kiểm Local, xác minh nguồn và che bổ sung theo span | Sau MASK-2c-2, AI-9; profile lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.2.0; 1109 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-3.md); PR: **chờ lead mở** |
 | 0 | Đọc yêu cầu chung/SDK 2.0, yêu cầu Mask và lập kế hoạch lát có giờ ước tính; trình Anh qua lead | MASK-P | Xong — 14/11/2026 (lập phiếu) | [GIAO-CODEX-e_mask.md](GIAO-CODEX-e_mask.md): 14 lát MASK-0…13, 52–62 giờ ước tính chưa đo; phần tệp có điều kiện, chưa triển khai; PR: **chờ lead mở** |
 | 1 | Chuyển kho bí danh sang **ngăn của engine** theo cổng chung (thay `mask.py`/`kho_mask.py`/SQL 113, 117–120 trong Core) | MK-10, 19 | Chờ Core | Bàn cùng lead Core qua Anh |
@@ -26,6 +27,23 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-2c-2 | Chuẩn bị yêu cầu Local, khuôn/profile/budget và kế hoạch đoạn | MASK-2c-1; profile kỹ thuật lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.1.0; 972 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-2.md); PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## MASK-2c-4 — bàn giao công cụ ngoài gói, 15/11/2026
+
+- **Đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả; **CHƯA ĐO Local thật**. Không có tỷ lệ lọt/báo nhầm Local thật để công bố. PR: **chờ lead mở**, không commit/push.
+- Kiểm cuối: Mask **1143 passed, 4 xfailed giữ nguyên, 190 subtests passed**, riêng tool **34 passed** sau chỉnh metadata/đích báo cáo; Hỏi AI **560 passed**; tất cả 0 skipped trên Windows. DEMO Mask **2/2**, Hỏi AI **3/3 + 1 AI-9**, hai kiểm độc lập và `git diff --check` đạt. CLI chuẩn Mask **0/2 mã 1** thiếu quyền, Hỏi AI **0/3 mã 1** thiếu cấu hình. [Kết quả lệnh thật](KET-QUA-KIEM-MASK-2c-4.txt). Thời gian **14:22–14:53, 0,52 giờ** (5 giờ ƯỚC TÍNH).
+- `cong-cu/thu_mask_local_ai_that.py` mặc định chạy khô không mạng; `.cmd` ASCII, trích dẫn Python/script/tham số, chạy được khi thư mục có khoảng trắng. Chỉ `--that --url --model` mới cho gửi DEMO. `--bao-cao` tùy chọn, JSON mới ngoài thư mục engine, không ghi đè; chỉ đếm/phiên bản/băm/thời gian, không gốc/trích dẫn/URL/path/mã mở che.
+- Adapter ngoài gói gọi chuẩn bị Mask → AI-9 → hậu kiểm Mask bằng CoreGia, lặp đủ đoạn và ghép phản hồi trước hậu kiểm; giữ kiểm IP/model/context/budget/hoàn tất của AI-9, chặn model tự dự phòng khác model Anh chỉ định. Cấu hình và snapshot chỉ RAM/ngăn DEMO. **Biên nhận tokenizer/budget và chứng thực Core là fixture**; không là bằng chứng Core/tokenizer/ACL thật.
+- JSON mới là **ứng viên do Codex soạn**, chưa được lead xác nhận độc lập: 162 ca, 96 gold span; 45 tên cơ sở/45 ngữ cảnh, 75 câu thường (giữ cả mập mờ), 15 tổ chức, 15 địa chỉ, 12 biến thể NFD/Cf/selector/tab/NBSP/lặp/overlap/mép đoạn/văn bản dài. Tách `development` và bốn ca lead cũ; biến thể không tăng mẫu số 45. SHA nội dung: `a32a84a90f5f3391761f07a24ccdad4a5349f52626c7564fddef0c0cbb1ea076`.
+- Hai chế độ dùng cùng bộ; bộ chấm độc lập detector dựng lại khoảng alias từ hai chuỗi và ngăn đã chốt, kiểm phủ toàn gold span và dò bỏ dấu/Cf/khoảng trắng/dấu câu. Báo riêng phát hành che đủ/còn lọt/chặn nghiệp vụ/lỗi kỹ thuật/chưa rõ; báo nhầm tính hợp che thừa hoặc chặn nghiệp vụ/75, kèm số hợp lệ/tổng; không dùng timeout/sai khuôn/model thiếu làm “0 lọt đạt”. Có số đoạn kế hoạch/xong, p50/p95, số gọi provider Local và Cloud.
+- Test bốn ca lead cũ: AI giả báo đủ thì che hết. **AI chỉ cứu được khi báo đủ; AI báo thiếu một phần tên thì phần còn lại vẫn lọt.** Không sửa detector/prompt dựa trên bộ ứng viên rồi nhận cùng bộ là held-out mới.
+
+### Cần Core / Chờ Anh — MASK-2c-4
+
+- Giữ mở **C-M2C-01…05**: snapshot/quyền xuyên bước, điều phối đủ đoạn/deadline, nguồn AI-9 và chứng cứ bước cuối, cửa Cloud, ngăn CAS/lượt bền. CoreGia không chứng nhận các cửa này. Không viết route/Core/SDK riêng.
+- Lead giữ khâu soạn/đóng băng gold độc lập trước đo; bộ ứng viên này chưa là nghiệm thu held-out độc lập. Nếu dùng bộ đã xem để chỉnh, phải thay bộ nghiệm thu mới. Lead xác nhận backend chạy model tại chỗ và chặn egress Cloud trước chạy thật.
+- Chờ Anh chạy `cong-cu/THU-MASK-LOCAL-AI-THAT.cmd` theo hướng dẫn trong báo cáo. Nợ **CAO** chỉ xem xét sau lead review đủ bằng chứng và Core thật; **Local đạt cũng không bật Cloud**.
+- Không chạm `e_hoi_ai` trong lát này; nợ transport AI-9 sau POST lead đã nêu giữ nguyên, lỗi đó vẫn là lỗi kỹ thuật/chưa rõ khi đo, không đổi thành thành công/rỗng.
 
 ## MASK-2c-3 — bàn giao hậu kiểm Local, 15/11/2026
 

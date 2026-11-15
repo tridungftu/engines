@@ -1,0 +1,74 @@
+MASK-2c-4 — 15/11/2026
+Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; CHƯA ĐO Local thật.
+Nhánh codex/e_mask-mask-2c-4; PR chờ lead mở; không commit/push.
+Môi trường: Windows, Python 3.13.14; SDK 2.0.0 offline; pytest 9.1.1 có sẵn.
+Wheel SHA-256: a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892 (khớp SHA256SUMS.txt).
+
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.2.0: có ví dụ chạy thử DEMO chưa đạt.
+0/2 ĐẠT; mã thoát 1. Không nới quyền, dùng cổng DEMO có quyền bên dưới.
+
+.venv/Scripts/python -B -m pytest e_mask/tests -q
+1143 passed, 4 xfailed, 190 subtests passed in 189.07s (0:03:09)
+Mã thoát 0; 0 skipped. Bốn xfail strict lớp quy tắc giữ nguyên.
+
+.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_2c_4.py -q
+34 passed in 26.53s
+Mã thoát 0; 0 skipped. Lượt cuối sau chỉnh metadata/đích báo cáo.
+Gồm cmd ASCII/quote và thư mục/tệp báo cáo có khoảng trắng; 0 mạng mặc định;
+toàn chuỗi, nhiều đoạn/overlap, thiếu đoạn, sai JSON, NFD/Cf/selector/lặp;
+model thiếu/model khác/remote/context thiếu; timeout/202/mất phản hồi => ChuaRo;
+4 ca lead cũ AI giả báo đủ; AI báo prefix vẫn lọt; báo nhầm hợp/mẫu số; 0 Cloud.
+Lượt đầu 12 failed, 20 passed: thiếu khai bảng RAM chuan_bi_ai trong adapter.
+Đã sửa adapter ngoài gói, không sửa runtime/gold. Các lượt sau đạt.
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_mask/tests/chay_demo.py
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+2/2 ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -B -m pytest e_hoi_ai/tests -q
+560 passed in 181.10s (0:03:01)
+Mã thoát 0; 0 skipped. Không sửa tệp e_hoi_ai.
+
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+[LỖI] Hỏi số tiền và ngày thanh toán DEMO: "Engine chưa được cấu hình. Admin vào Quản lý engine › Hỏi AI › Cấu hình."
+[LỖI] Hỏi người bảo lãnh không có trong tài liệu DEMO: "Engine chưa được cấu hình. Admin vào Quản lý engine › Hỏi AI › Cấu hình."
+[LỖI] Trích tiền và ngày theo khuôn DEMO: "Engine chưa được cấu hình. Admin vào Quản lý engine › Hỏi AI › Cấu hình."
+Engine e_hoi_ai 0.5.0: có ví dụ chạy thử DEMO chưa đạt.
+0/3 ĐẠT; mã thoát 1 (CHUA_CAU_HINH), không có model/cấu hình thật.
+
+.venv/Scripts/python -B e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/chay_demo_voi_local_gia.py
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+[ĐẠT] Hỏi người bảo lãnh không có trong tài liệu DEMO
+[ĐẠT] Trích tiền và ngày theo khuôn DEMO
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia); 3/3 DEMO, 3 lượt Local HTTP giả.
+[ĐẠT] AI-9 nhận diện tổ chức DEMO; CoreGia, 1 lượt Local HTTP giả.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_mask/cong-cu/thu_mask_local_ai_that.py
+Trạng thái: CHƯA ĐO Local thật; held_out_doc_lap=false.
+162 ca ứng viên; 45 tên cơ sở; 96 gold span; ket_qua=null.
+0 lượt provider Local; 0 lượt Cloud. Không có số lọt/báo nhầm/p50/p95 Local để điền.
+SHA nội dung: a32a84a90f5f3391761f07a24ccdad4a5349f52626c7564fddef0c0cbb1ea076.
+Mã thoát 0. Bộ ứng viên chưa lead đóng băng/gold độc lập.
+
+git diff --check
+Không có đầu ra lỗi; mã thoát 0.
+
+Thời gian: 14:22–14:53 ngày 15/11/2026 (UTC+07), 0,52 giờ; 5 giờ ƯỚC TÍNH.
+Không chạy model thật/--that ngoài test Local HTTP giả; chưa kiểm Linux/Core thật.
+AI chỉ cứu khi báo đủ; báo thiếu một phần tên thì phần còn lại có thể lọt.
+Chờ lead giữ gold độc lập và review bằng chứng, Anh chạy .cmd thật.
+Nợ CAO giữ mở; Local đạt cũng không bật Cloud. CoreGia không chứng nhận cửa Core thật.

@@ -13,7 +13,9 @@ from e_trich_xuat.chay import GOC_GOI
 
 @pytest.mark.parametrize("ca", ["mat_xac_nhan", "huy"])
 def test_app_chay_stdin_http_loopback(ca, monkeypatch):
+    from e_trich_xuat.chay import tao_app
     core = CoreGia()
+    core.nap_engine(tao_app())
     tep = core.them_tep("DEMO.docx", (GOC_GOI / "demo/DEMO-hop-dong.docx").read_bytes(),
                         "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     viec = core.giao_viec("trich.doc_docx@1", {"loai": "tep", "tep": tep}, gui_kem_dau_vao=False)

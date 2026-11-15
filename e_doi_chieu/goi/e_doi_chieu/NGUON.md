@@ -1,5 +1,84 @@
 # Nguồn của gói Đối chiếu
 
+## DC-6 — 15/11/2026 · 0.6.0 chưa phát hành
+
+`chuan_bi_ai.py`, `hau_kiem_ai.py` viết mới theo phiếu DC-6, DAC-TA §5.2,
+API-ENGINE-v1 và loại dữ liệu chung §2.2–2.3. `chay.py` chỉ thêm khối
+đăng ký/import hai handler. Tái dùng nội bộ kiểm tệp/băm/JSON/phong bì
+của `ho_so.py`, edit script/giới hạn của `so_chu.py`, kiểm bất biến/quy
+tắc của DC-5. Không sửa các lõi đó, DC-8, mã Core hoặc `ma-nguon/`.
+Không nguồn ngoài/dependency mới; chỉ thư viện chuẩn và SDK 2.0.0.
+
+Nguyên văn, snapshot, yêu cầu và kết quả chỉ ở Core/RAM; chỉ mục chống
+trùng qua đúng API mẫu NGAN-0. Hai tệp `ngan.py`, `cau_hinh.py` và bốn
+schema chung giữ nguyên, test so SHA-256 sau CRLF→LF. Không tải model,
+từ điển, dữ liệu, wheel hoặc tài nguyên từ mạng. SDK 2.0.0 cài offline
+vào `.venv`; wheel có SHA-256
+`a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`,
+khớp `SHA256SUMS.txt` trong repo.
+
+`tests/test_dc6.py` dùng DOCX/PDF/PNG/văn bản DEMO của bộ DC-3…5 và tự
+dựng phản hồi Local giả. Điều phối/Core/quyền và nguồn OCR đều giả,
+không đo chất lượng model. Riêng test handler Hỏi AI-2 tham khảo mã
+`e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/hoi_yeu_cau.py` hiện có, chỉ import trong
+tests; provider giả chặn mạng/Cloud. Không import/gọi engine khác trong
+runtime hoặc sửa engine Hỏi AI. Test chứng minh giữ chuyển tiếp/băm và
+đường thiếu căn cứ/ChuaRo; nợ metadata phân loại C-DC-07 ghi ở VIEC.
+
+SHA-256 hiện hành UTF-8 sau CRLF→LF (các bảng lát trước là lịch sử):
+
+| Tệp | SHA-256 LF |
+|---|---|
+| `e_doi_chieu/chuan_bi_ai.py` | `ce9e650e8e49b9a669a2a9fdc1c2c9164cc46390b03e6afd5ccfa517112096df` |
+| `e_doi_chieu/hau_kiem_ai.py` | `4d2c994ce7066bf1a61f143e4d838c7b61378af82f6adaeca0e950b330229fd4` |
+| `e_doi_chieu/chay.py` | `e654431fdd7173a4e1db0e4a2df942069f923801ee5631db1a3b6c17b6ed4c93` |
+| `engine.json` | `0bfafdc1550405313b48fd4066b8448cc77f8f7548a39e42d2326fa7ff645d8c` |
+| Repo: `e_doi_chieu/tests/test_dc6.py` | `5ed55b425d889d76bfa4889a64ca5fd69824168a502d977f76b0de2a341e92d1` |
+
+## DC-5 — 15/11/2026
+
+Sửa theo kiểm độc lập lead: bỏ regex wildcard nối chữ số với đơn vị;
+quét token có kiểm hủy, tách lần quét số khỏi lần kiểm đơn vị để không
+quét lại hậu tố số dài. Rà toàn bộ regex của hai tệp: không còn `.*`/`.+`;
+regex phân cách trong `doc_so` chỉ nhận tối đa 200 ký tự, các nhóm còn
+lại có dấu phân cách tách biệt hoặc chiều dài hữu hạn. Không thêm nguồn
+ngoài/dependency. Phiên bản thuật toán `DC-5-2` tránh dùng lại kết quả cũ.
+
+Parser giới hạn toàn cụm tiền chữ **64 từ**, giữ nguyên văn và Cần xem
+khi vượt. Ngữ pháp bổ sung nghìn tỷ (số nguyên dưới 10^15), linh/lẻ sau
+hàng lớn, cách đọc năm/lăm và hàng trăm đọc gọn. Ngoặc chữ ngay sau một
+số tiền duy nhất cùng dòng/ô được kiểm kể cả không có nhãn. Bộ test
+hiệu năng sinh chuỗi DEMO trong RAM; tiến trình con có timeout để chặn
+test hồi quy ReDoS treo pytest. Số đo chỉ cho bộ quét tiền/đặc trưng,
+adapter offset đồng nhất; không phải thời gian toàn tuyến Core/OCR.
+
+`quy_tac.py`, `tien_chu.py` viết mới trong workspace theo DAC-TA §5.1,
+DC-g và phiếu DC-5. Chỉ dùng thư viện chuẩn Python/SDK 2.0.0; không tải
+mạng, chép từ điển/model/font hoặc thêm dependency. `chay.py` chỉ đổi
+import handler tại khối DC-5 riêng, giữ đăng ký API hiện có.
+
+Tái dùng nội bộ `so_chu.py`/`can_chinh.py`/`ho_so.py`/`chuan_hoa.py` của
+DC-3/DC-4, không sửa chúng. Vòng giữ/chốt lượt DC-5 chuyển từ quy ước
+DC-4 vào coordinator riêng để giữ phạm vi đúng ba tệp và không tạo hai
+snapshot trung gian. Không import runtime engine khác hoặc mã Core.
+
+Ngữ pháp số tiếng Việt được cài hữu hạn trong `tien_chu.py`, không phải
+từ điển mua ngoài hay chứng nhận xử lý mọi cách viết. Bản không phân
+tích đủ luôn giữ cần xem/chưa đủ kiểm. Bộ, tệp DOCX/PDF/PNG và phản hồi
+AI đề xuất trong tests đều DEMO; OCR/ảnh/quyền/ngăn do CoreGia/adapter
+giả, không là số đo OCR/Core/model thật.
+
+SHA-256 hiện hành UTF-8 sau CRLF→LF (các bảng lát trước là lịch sử):
+
+| Tệp trong gói | SHA-256 LF |
+|---|---|
+| `e_doi_chieu/quy_tac.py` | `11e9163fb90842dd35ff51d605f8a44918742efb23f55c285bb47a3e4f892291` |
+| `e_doi_chieu/tien_chu.py` | `d0aba9de44269b62fe1a1506780b3a3459c1a462a9fc9988b502ad6a8d48224d` |
+| `e_doi_chieu/chay.py` | `821f0c57ea9bfb980f146231ce5ac201b32bf6fd3a3ef8e323ddb812ac42f591` |
+| Repo: `e_doi_chieu/tests/test_dc5.py` | `a90501217248846257fb6c471d831206cee5c192e23272dd7c3af45107c6f2c0` |
+
+Hai bản chép NGAN-0 và mọi schema chung giữ nguyên; test so băm LF vẫn
+đạt. SDK offline/wheel/phiên bản và giấy phép nguồn giữ theo DC-4 bên dưới.
 ## DC-8 — 15/11/2026 · 0.4.8 chưa phát hành
 
 - `anh.py`, `sua_tay.py` viết mới trong lát DC-8; `chay.py` chỉ thêm khối

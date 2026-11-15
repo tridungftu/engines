@@ -5,15 +5,9 @@ Bỏ tham chiếu/UUID, parser DOCX và cổng lib.cong_ocr cũ. PDF có chữ �
 """
 
 import hashlib
-import json
-from pathlib import Path
 
-from .cau_hinh import doc_cau_hinh
 from .chon_nguon import doc_theo_nguon
 from .lop_chu import MAX_BYTES, LoiLopChu, dem_trang, doc_lop_chu
-
-
-SCHEMA = json.loads((Path(__file__).resolve().parents[1] / "cau_hinh.schema.json").read_text(encoding="utf-8"))
 
 
 def trich_van_ban(viec, *, phien_ban_engine, ngan):
@@ -35,7 +29,7 @@ def trich_van_ban(viec, *, phien_ban_engine, ngan):
     nguon_doc = "lop_chu_san"
     ly_do = None
     if ket_qua is None:
-        cau_hinh = doc_cau_hinh(ngan, SCHEMA) or {}
+        cau_hinh = viec.cau_hinh
         chon = doc_theo_nguon(raw, tep["mime"], so_trang, viec=viec, cau_hinh=cau_hinh, ngan=ngan)
         ket_qua, nguon_doc, ly_do = chon.ket_qua, chon.nguon_doc, chon.ly_do_chuyen_nguon
     viec.tien_do(95, "Đang hoàn tất văn bản và vị trí trang.")

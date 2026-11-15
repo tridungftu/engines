@@ -5,6 +5,7 @@ import unicodedata
 
 import pytest
 from kho_tri_thuc_sdk.thu import CoreGia
+from local_gia import core_demo
 
 from e_hoi_ai import chay, nha_cung_cap
 from e_hoi_ai.hoi_mask import KHUON_MASK
@@ -15,7 +16,7 @@ from test_hoi_tai_lieu import khong_mang_ngoai_va_khong_cloud, local
 
 
 def hoi(yc=None, core=None):
-    core = CoreGia() if core is None else core
+    core = core_demo() if core is None else core
     yc = yeu_cau_demo(core=core) if yc is None else yc
     return core.chay_thu(chay.app, "ai.hoi_mask_cuc_bo@1", {"loai": "yeu_cau_ai", "yeu_cau_ai": yc})
 
@@ -184,7 +185,7 @@ def test_prompt_injection_khong_the_cap_nguon_hoac_doi_profile(local, monkeypatc
 
 
 def test_snapshot_fixture_co_byte_bam_thuc_trong_core_gia(local):
-    core = CoreGia()
+    core = core_demo()
     yc = yeu_cau_demo(core=core)
     p = yc["chuyen_tiep"]["mask_2c"]
     raw = core.doc_tep(p["ho_so"]["tep_id"])
@@ -206,7 +207,7 @@ def test_chon_model_du_phong_local_tu_ngan(local):
 
 @pytest.mark.parametrize("giai_doan", ["truoc_gui", "sau_post", "truoc_tra"])
 def test_huy_khong_nop_ket_qua(local, monkeypatch, giai_doan):
-    core = CoreGia()
+    core = core_demo()
     goc = core._tien_do
     ma = []
     def tien_do(engine, viec_id, phan_tram, cau):
@@ -225,7 +226,7 @@ def test_huy_khong_nop_ket_qua(local, monkeypatch, giai_doan):
 
 
 def test_mat_ack_core_khong_goi_local_hai_lan(local):
-    core = CoreGia()
+    core = core_demo()
     core.gay_mat_xac_nhan("ket_qua")
     local.tra_loi = phan_hoi_demo()
     assert hoi(core=core)["trang_thai"] == "XONG"
@@ -267,8 +268,7 @@ def test_tran_doan_goc_khong_cat_ngam(local, so):
 
 
 def test_thieu_cau_hinh_khong_kich_hoat_local(local):
-    from e_hoi_ai.ngan_engine import tao_ngan_bo_nho
-    chay.app.ngan = tao_ngan_bo_nho()
+    core_demo().dat_cau_hinh(chay.app.ma, {})
     assert hoi()["loi"]["ma"] == "CHUA_CAU_HINH" and not local.luot
 
 

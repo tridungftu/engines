@@ -1,4 +1,4 @@
-"""TX-2: DEMO, CoreGia + NganBoNho; kiểm bất biến, giới hạn và bàn giao."""
+"""TX-2: DEMO, CoreGia SDK 2.2.0; kiểm bất biến, giới hạn và bàn giao."""
 
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
@@ -19,9 +19,7 @@ from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_trich_xuat.chay import CAU_CHUA_CAU_HINH, tao_app
 from e_trich_xuat import cau_truc
-from e_trich_xuat.ngan import NganBoNho
 from e_trich_xuat import tich_hop
-from chay_demo_voi_ngan_gia import chay_demo
 
 
 GOI = Path(__file__).resolve().parents[1] / "goi/e_trich_xuat"
@@ -62,18 +60,16 @@ def bo_demo():
     return json.loads(VD["tham_so"]["bo_tham_so_json"])
 
 
-def app_demo(tran=16000):
+def app_demo(core, tran=16000):
     app = tao_app()
-    app.ngan = NganBoNho()
-    if tran is not None:
-        with app.ngan.lo() as lo:
-            lo.them("cau_hinh", {}, {"ngan_sach_token_vao_toi_da": tran})
+    core.nap_engine(app)
+    core.dat_cau_hinh(app.ma, {"ngan_sach_token_vao_toi_da": tran})
     return app
 
 
 def chay(ts=None, *, dv=None, app=None, core=None):
-    app = app if app is not None else app_demo()
     core = core if core is not None else CoreGia()
+    app = app if app is not None else app_demo(core)
     kq = core.chay_thu(app, "trich.chuan_bi@1", deepcopy(dv or VD["dau_vao"]),
                       ts if ts is not None else tham_so())
     return kq, core
@@ -226,10 +222,16 @@ def test_prompt_thuoc_module_khong_co_mac_dinh(doi):
 
 
 def test_thieu_cau_hinh_khong_tu_tao_ban_ghi():
-    app = app_demo(None)
+    # Core điền default. Giả lập snapshot thiếu ngay tại cửa handler.
+    app = tao_app()
+    ham = app._ham["trich.chuan_bi@1"]
+    def thieu(viec):
+        viec.cau_hinh = {}
+        return ham(viec)
+    app._ham["trich.chuan_bi@1"] = thieu
     kq, core = chay(app=app)
     tu_choi(kq, core, "CHUA_CAU_HINH")
-    assert app.ngan.doc("cau_hinh", {}) is None
+    assert core.xem_ngan(app.ma, "cau_hinh") == []
 
 
 @pytest.mark.parametrize("vuot", [False, True])
@@ -334,7 +336,8 @@ def test_ngan_sach_uoc_luong_cham_nguong_va_tran_cau_hinh_thap():
     assert kq["trang_thai"] == "XONG"
     kq, core = chay(tham_so(ngan_sach_token_vao=uoc - 1), dv=dv)
     tu_choi(kq, core, "VUOT_NGAN_SACH")
-    kq, core = chay(app=app_demo(1024))  # Mặc định bước 16.000 không được hạ ngầm.
+    core = CoreGia()
+    kq, core = chay(app=app_demo(core, 1024), core=core)  # Mặc định bước 16.000 không được hạ ngầm.
     tu_choi(kq, core, "VUOT_NGAN_SACH")
 
 
@@ -370,7 +373,7 @@ def test_vi_tri_unicode_va_noi_dung_goc_docx_ocr_khong_cat(nguon):
 
 def test_hai_module_dong_thoi_khong_lan_bo_prompt_ho_so(monkeypatch):
     # Hai handler thật dùng chung app/ngăn; CoreGia riêng để cấp đúng việc.
-    app, rao = app_demo(), threading.Barrier(2)
+    app, rao = tao_app(), threading.Barrier(2)
     ham = tich_hop.build_prompt
     def doi(*a):
         rao.wait(timeout=10)
@@ -393,34 +396,36 @@ def test_hai_module_dong_thoi_khong_lan_bo_prompt_ho_so(monkeypatch):
 
 
 def test_doi_bo_cau_hinh_giua_chuoi_khong_sua_snapshot_cu(monkeypatch):
-    app, core = app_demo(), CoreGia()
-    ban_cu = app.ngan.doc("cau_hinh", {})
+    core = CoreGia()
+    app = app_demo(core)
+    from e_trich_xuat.chay import ghim_cau_hinh
+    ban_cu = ghim_cau_hinh(SimpleNamespace(cau_hinh={"ngan_sach_token_vao_toi_da": 16000}))
     ts = tham_so()
     bao = core._tien_do
     def doi(ma, viec, phan_tram, cau):
         if phan_tram == 15:
-            with app.ngan.lo() as lo:
-                lo.sua("cau_hinh", {}, {"ngan_sach_token_vao_toi_da": 20000}, row_version=ban_cu.row_version)
+            core.dat_cau_hinh(app.ma, {"ngan_sach_token_vao_toi_da": 20000})
             ts.update(tham_so(bo=dict(bo_demo(), phien_ban_bo="DEMO-2"), prompt="DEMO prompt mới"))
         return bao(ma, viec, phan_tram, cau)
     monkeypatch.setattr(core, "_tien_do", doi)
     req1, hs1 = ho_so(*reversed(chay(ts, app=app, core=core)))
     assert hs1["bo_tham_so"]["phien_ban_bo"] == "DEMO-1"
-    assert hs1["cau_hinh_da_ghim"] == {"gia_tri": ban_cu.gia_tri, "phien_ban_cau_hinh": ban_cu.row_version}
+    assert hs1["cau_hinh_da_ghim"] == ban_cu
     tep_id = req1["chuyen_tiep"]["trich_xuat"]["ho_so_hau_kiem"]["tep_id"]
     raw_cu = core.doc_tep(tep_id)
     monkeypatch.setattr(core, "_tien_do", bao)
     req2, hs2 = ho_so(*reversed(chay(ts, app=app, core=core)))
     assert hs2["bo_tham_so"]["phien_ban_bo"] == "DEMO-2"
     assert hs2["cau_hinh_da_ghim"]["gia_tri"]["ngan_sach_token_vao_toi_da"] == 20000
-    assert hs2["cau_hinh_da_ghim"]["phien_ban_cau_hinh"] > ban_cu.row_version
+    assert hs2["cau_hinh_da_ghim"]["phien_ban_cau_hinh"] is None
+    assert hs2["cau_hinh_da_ghim"]["bam_cau_hinh"] != ban_cu["bam_cau_hinh"]
     # Bước AI giả qua CoreGia: model chỉ nhận prompt/tài liệu/khuôn, chuyển tiếp trả nguyên.
     p = deepcopy(app.phieu)
     p.update(ma="e_ai_demo", nang_luc=[{"ma": "ai.hoi_theo_yeu_cau@1", "ten": "AI giả DEMO",
         "nhan": ["yeu_cau_ai"], "tra": "tra_loi_ai", "gioi_han": {"thoi_han_giay": 30}}],
         loai_du_lieu_rieng=p["loai_du_lieu_rieng"],
         chay_thu_demo=[])
-    ai = Engine(p)
+    ai = Engine(p, thu_muc_goi=GOI)
     model_da_nhan = []
     @ai.nang_luc("ai.hoi_theo_yeu_cau@1")
     def ai_gia(viec):
@@ -445,7 +450,7 @@ def test_doi_bo_cau_hinh_giua_chuoi_khong_sua_snapshot_cu(monkeypatch):
     p["ma"] = "e_hau_kiem_demo"
     p["nang_luc"] = [{"ma": "demo.doc_ho_so@1", "ten": "Đọc hồ sơ DEMO",
         "nhan": ["tra_loi_ai"], "tra": "van_ban", "gioi_han": {"thoi_han_giay": 30}}]
-    sau = Engine(p)
+    sau = Engine(p, thu_muc_goi=GOI)
     @sau.nang_luc("demo.doc_ho_so@1")
     def doc_ho_so(viec):
         meta = viec.dau_vao["tra_loi_ai"]["chuyen_tiep"]["trich_xuat"]
@@ -474,7 +479,8 @@ def test_huy_khong_nop_ket_qua_khong_goi_ai(monkeypatch, moc):
 
 
 def test_mat_ack_tep_ket_qua_khong_nop_trung_va_khong_ghi_dia_mang(monkeypatch):
-    app, core = app_demo(), CoreGia()
+    core = CoreGia()
+    app = app_demo(core)
     for thao_tac in ("tep", "ket_qua", "ket_thuc"):
         core.gay_mat_xac_nhan(thao_tac)
     mo = builtins.open
@@ -505,9 +511,13 @@ def test_chuyen_tiep_64_kib_tu_choi_khong_cat_tham_chieu(monkeypatch):
     assert core.so_lan_ghi["ket_qua"] == 0  # Tệp đã lên Core, chờ vòng đời C-TX-02.
 
 
-def test_cong_demo_ngan_thay_the_co_du_cau_hinh():
-    ds = chay_demo()
-    assert len(ds) == 5 and all(kq["trang_thai"] == "XONG" for kq in ds)
+def test_demo_sdk_mac_dinh_du_cau_hinh_khong_con_cong_thay_the():
+    app, core = tao_app(), CoreGia()
+    ds = core.chay_thu_demo(app)
+    assert len(ds) == 5
+    assert ds[2]["trang_thai"] == "XONG"
+    assert ds[3]["trang_thai"] == "DANG_CHAY"  # C-TX-06: CLI chưa nạp tệp phụ.
+    assert core.xem_ngan(app.ma, "cau_hinh") == []
 
 
 def test_ai_2_nhan_duoc_request_va_khuon_defs_khong_goi_model(monkeypatch):
@@ -564,7 +574,11 @@ def test_tran_byte_trang_canh_bao_unicode_khong_cat(truong, tran, vuot):
     else:
         tl[truong][0] = chu
     assert len(json_chuan(tl[truong]).encode("utf-8")) == tran + int(vuot)
-    kq, core = chay(dv=dv)
+    core = CoreGia()
+    app = app_demo(core)
+    # Kiểm trần byte của lõi bên dưới trần chuỗi metadata mới của SDK.
+    app._nang_luc["trich.chuan_bi@1"]["gioi_han"].pop("ky_tu_toi_da", None)
+    kq, core = chay(dv=dv, app=app, core=core)
     if vuot:
         tu_choi(kq, core, "VUOT_GIOI_HAN")
     else:
@@ -575,11 +589,19 @@ def test_tran_byte_trang_canh_bao_unicode_khong_cat(truong, tran, vuot):
 def test_tran_ho_so_20_mib_unicode_ke_ca_metadata_mo(vuot):
     dv = deepcopy(VD["dau_vao"])
     dv["van_ban_tai_lieu"]["ghi_chu_demo"] = ""
-    kq, core = chay(dv=dv)
+    core = CoreGia()
+    app = app_demo(core)
+    # Kiểm trần byte của lõi bên dưới trần chuỗi metadata mới của SDK.
+    app._nang_luc["trich.chuan_bi@1"]["gioi_han"].pop("ky_tu_toi_da", None)
+    kq, core = chay(dv=dv, app=app, core=core)
     req, _ = ho_so(core, kq)
     con = tich_hop.HO_SO_TOI_DA_BYTE + int(vuot) - req["chuyen_tiep"]["trich_xuat"]["ho_so_hau_kiem"]["kich_thuoc"]
     dv["van_ban_tai_lieu"]["ghi_chu_demo"] = "Đ" * (con // 2) + "a" * (con % 2)
-    kq, core = chay(dv=dv)
+    core = CoreGia()
+    app = app_demo(core)
+    # Kiểm trần byte của lõi bên dưới trần chuỗi metadata mới của SDK.
+    app._nang_luc["trich.chuan_bi@1"]["gioi_han"].pop("ky_tu_toi_da", None)
+    kq, core = chay(dv=dv, app=app, core=core)
     if vuot:
         tu_choi(kq, core, "VUOT_GIOI_HAN")
     else:

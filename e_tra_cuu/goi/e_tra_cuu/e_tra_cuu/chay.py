@@ -13,6 +13,9 @@ from .chuan_bi_ai import chuan_bi_ai, doc_snapshot_ai
 from .cau_hoi import phan_tich_cau_hoi
 from .xep_hang import xep_hang_lai
 from .phan_loai import phan_loai_tai_lieu
+from .tra_loi import soan_tra_loi
+from .xuat_ket_qua import xuat_ket_qua
+from .bang_chung import chuan_bi_tang_mot
 from .kiem_dau_vao import doi_tuong, loi
 
 
@@ -129,6 +132,9 @@ def dang_ky_nang_luc(ung_dung):
     def chuan_bi(viec):
         try:
             h = viec.dau_vao.get("ho_so_tra_cuu", {})
+            if h.get("tac_vu") == "soan_tra_loi" and h.get("tom_tat", {}).get("tang") == 1:
+                return chuan_bi_tang_mot(viec, getattr(ung_dung, "cua_nguon", None),
+                                        ung_dung.phien_ban, kiem_cau_hinh_da_chup)
             if (h.get("tac_vu") == "xep_hang_lai"
                     and h.get("tom_tat", {}).get("so_ung_vien") == 0):
                 # Kiểm nguồn trước khi từ chối nhánh AI rỗng. Core rẽ từ da_nhan.
@@ -159,6 +165,7 @@ def dang_ky_nang_luc(ung_dung):
 
     ung_dung.nang_luc("tra_cuu.phan_tich_cau_hoi@1")(hau_kiem_tc_6(phan_tich_cau_hoi))
     ung_dung.nang_luc("tra_cuu.xep_hang_lai@1")(hau_kiem_tc_6(xep_hang_lai))
+    ung_dung.nang_luc("tra_cuu.soan_tra_loi@1")(hau_kiem_tc_6(soan_tra_loi))
 
     @ung_dung.nang_luc("tra_cuu.phan_loai_tai_lieu@1")
     def phan_loai(viec):
@@ -172,10 +179,22 @@ def dang_ky_nang_luc(ung_dung):
         except Exception:
             raise LoiNghiepVu("ENGINE_LOI_XU_LY", "Engine gặp lỗi khi xử lý việc này.") from None
 
+    @ung_dung.nang_luc("tra_cuu.xuat_ket_qua@1")
+    def xuat(viec):
+        try:
+            return xuat_ket_qua(viec, getattr(ung_dung, "cua_nguon", None),
+                                ung_dung.phien_ban, kiem_cau_hinh_da_chup)
+        except (LoiNghiepVu, LoiDuongTruyen, ChuaRo, ViecDaHuy):
+            raise
+        except (ValueError, TypeError, KeyError, AttributeError, RecursionError, OverflowError):
+            loi("TC_SAI_NGUON")
+        except Exception:
+            raise LoiNghiepVu("ENGINE_LOI_XU_LY", "Engine gặp lỗi khi xử lý việc này.") from None
+
     for nang_luc in ung_dung.phieu["nang_luc"]:
         if nang_luc["ma"] not in {"tra_cuu.nhan_yeu_cau@1", "tra_cuu.cat_doan@1", "tra_cuu.chuan_bi_ai@1",
                                  "tra_cuu.phan_loai_tai_lieu@1", "tra_cuu.phan_tich_cau_hoi@1",
-                                 "tra_cuu.xep_hang_lai@1"}:
+                                 "tra_cuu.xep_hang_lai@1", "tra_cuu.soan_tra_loi@1", "tra_cuu.xuat_ket_qua@1"}:
             ung_dung.nang_luc(nang_luc["ma"])(chua_lam)
 
 

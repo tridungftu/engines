@@ -33,7 +33,7 @@ XML hỏng trả `HD_XML_KHONG_DOC_DUOC`; encoding/DOCTYPE/namespace/path ngoài
 
 XML không cần cấu hình. Không đọc cấu hình ở import/khởi động/handler XML, không tạo `kho_tam`, thư mục dữ liệu hoặc tệp cấu hình mặc định.
 
-`cau_hinh_may.py`, schema và các test cấu hình cũ được giữ làm lịch sử, chờ chuyển `LUU-TRU/` ở lát sau; không được dùng làm nguồn cấu hình theo quyết định 15/11/2026. `chay.py` không import/nạp tệp này. XML/ZIP/bảng kê không cần cấu hình, dữ liệu bền hoặc ngăn; chưa thêm `Ngan`. Khi có nhu cầu lưu về sau, dùng cửa `Ngan` của Core, tạm RAM theo đề nghị SDK 2.1.
+`cau_hinh_may.py`, schema và các test cấu hình cũ được giữ làm lịch sử, chờ chuyển `LUU-TRU/` ở lát sau; không được dùng làm nguồn cấu hình theo quyết định 15/11/2026. `chay.py` không import/nạp tệp này. XML/ZIP/bảng kê không cần cấu hình, dữ liệu bền hoặc ngăn; khi có nhu cầu lưu về sau, dùng ngăn Core qua SDK 2.2.0.
 
 ## ZIP qua SDK — HD-6
 
@@ -45,7 +45,7 @@ Tái dùng `doc_goi_hoa_don_zip`, parser strict/DTO và phép chiếu XML hiện
 
 Băm SHA-256 lấy từ bytes giải nén đã đọc hết và kiểm CRC. CRC lỗi, mã hóa/không mở được, sai độ dài hoặc luồng chưa kết thúc: `bam=null`, `kich_thuoc=null` và lý do cố định; không băm phần đầu. Tệp XML hỏng nhưng đọc đủ/CRC đúng vẫn có băm. Binding nguồn gồm tham chiếu ZIP, băm gói, ordinal, tên và băm entry; không tạo `tep_id` của entry.
 
-Trần: ZIP 64 MiB, 1.000 entry kể cả thư mục, 16 MiB/tệp, tổng giải nén 128 MiB, 1.000 HHDVu/XML và JSON UTF-8 32 MiB. Kiểm metadata rồi đếm bytes thực, kể cả chunk lỗi CRC/non-XML/trùng; dùng gate HHDVu sẵn có trước DTO. Trần bổ sung chống bom nén **1.000:1** (lựa chọn kỹ thuật HD-5, chưa đo corpus): **một entry vượt tỉ lệ này, kể cả tệp không phải XML, làm từ chối cả việc**. Vượt bất kỳ trần nào: toàn việc lỗi `HD_ZIP_VUOT_GIOI_HAN`, câu “Gói ZIP vượt giới hạn xử lý. Anh hãy gửi gói nhỏ hơn.” ZIP không kiểm kê được: `HD_ZIP_KHONG_DOC_DUOC`, câu “Không kiểm kê được gói ZIP. Anh hãy kiểm tra lại tệp.” Không trả tập con hoặc cắt JSON.
+Trần: ZIP 20 MiB (20.971.520 byte), 1.000 entry kể cả thư mục, 16 MiB/tệp, tổng giải nén 128 MiB, 1.000 HHDVu/XML và JSON UTF-8 32 MiB. Kiểm metadata rồi đếm bytes thực, kể cả chunk lỗi CRC/non-XML/trùng; dùng gate HHDVu sẵn có trước DTO. Trần bổ sung chống bom nén **1.000:1** (lựa chọn kỹ thuật HD-5, chưa đo corpus): **một entry vượt tỉ lệ này, kể cả tệp không phải XML, làm từ chối cả việc**. Vượt bất kỳ trần nào: toàn việc lỗi `HD_ZIP_VUOT_GIOI_HAN`, câu “Gói ZIP vượt giới hạn xử lý. Anh hãy gửi gói nhỏ hơn.” ZIP không kiểm kê được: `HD_ZIP_KHONG_DOC_DUOC`, câu “Không kiểm kê được gói ZIP. Anh hãy kiểm tra lại tệp.” Không trả tập con hoặc cắt JSON.
 
 Lớp đọc chặn việc `ZipExtFile` tự cắt theo `file_size` giả bằng các hook bộ nhớ `_left`/`_update_crc`, xác nhận EOF/độ dài sau đọc. Dùng `_EndRecData` của stdlib để đối chiếu số entry EOCD/central directory và từ chối ZIP nhiều đĩa; kiểm lại các hook bằng test hồi quy khi nâng Python. Không dùng API này để mở đường máy. Hủy/mất lease từ callback đi xuyên ra ngoài, chỉ lỗi đọc ZIP được báo cục bộ. Không tệp tạm hoặc lưu bền.
 
@@ -53,11 +53,11 @@ Lớp đọc chặn việc `ZipExtFile` tự cắt theo `file_size` giả bằng
 
 ## Cài và kiểm offline
 
-Python ≥ 3.11; runtime chỉ stdlib + SDK đã ghim trong `requirements.lock`. Wheel ở `docs/goi-gui-engine/sdk-2.0.0/` của repo, đối chiếu SHA-256 trước cài:
+Python ≥ 3.11; runtime chỉ stdlib + SDK đã ghim trong `requirements.lock`. Wheel ở `docs/goi-gui-engine/sdk-2.2.0/` của repo, đối chiếu SHA-256 trước cài:
 
 ```text
 python -m venv .venv
-.venv\Scripts\python -B -m pip install --no-index --no-deps docs/goi-gui-engine/sdk-2.0.0/kho_tri_thuc_sdk-2.0.0-py3-none-any.whl
+.venv\Scripts\python -B -m pip install --no-index --no-deps docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl
 .venv\Scripts\python -B -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_hoa_don
 .venv\Scripts\python -B -m pytest e_hoa_don/tests -q --basetemp=.pytest-tmp
 .venv\Scripts\python -B e_hoa_don/tests/kiem_doc_lap.py
@@ -86,8 +86,8 @@ Tại gốc repo chạy `e_hoa_don\tests\KIEM-MAY-SACH.cmd` trên Windows, hoặ
 
 XLSX có hai sheet `Hoa don`, `Kiem ke tep`, inline string/format text `@`, style/width/freeze header. Giữ mọi entry, lỗi, thư mục và trùng. Số hóa đơn/MST giữ chuỗi; ngày hiển thị dd/mm/yyyy. Tiền exact giữ số 0 thập phân, kể cả ngoài 18/6 lấy từ DTO với cảnh báo, luôn kèm currency; thiếu/sai/mơ hồ để trống. Không công thức/tổng/hyperlink; text bắt đầu = + - @ giữ literal. Không xác nhận đủ hóa đơn trong kỳ, thuế hoặc ghi nhận nghiệp vụ.
 
-Trần: JSON 32 MiB (metadata và bytes thực), 1.000 dòng hóa đơn/1.000 entry gồm thư mục, 16.000 ký tự/cell, XLSX 32 MiB, 600 giây; vượt trả `HD_BANG_KE_VUOT_GIOI_HAN`, không upload phần cắt. Xử lý và upload bytes hoàn toàn RAM, không JSON/XLSX/cấu hình/sổ/cache trên máy, không cần ngăn/màn riêng.
+Trần: JSON 20 MiB (20.971.520 byte; metadata và bytes thực), 1.000 dòng hóa đơn/1.000 entry gồm thư mục, 16.000 ký tự/cell, XLSX 32 MiB, 600 giây; vượt trả `HD_BANG_KE_VUOT_GIOI_HAN`, không upload phần cắt. Vì báo cáo JSON đầu ra của bước đọc có thể tới 32 MiB, báo cáo trên 20 MiB chưa thể đưa vào bước bảng kê qua kênh SDK hiện tại. Xử lý và upload bytes hoàn toàn RAM, không JSON/XLSX/cấu hình/sổ/cache trên máy, không cần ngăn/màn riêng.
 
-SDK 2.0.0 chưa cấp fixture tệp lồng trong `truong`: bốn Chạy thử DEMO đang khai chỉ phủ XML/ZIP. XLSX kiểm qua pytest với CoreGia.them_tep và kết quả đọc thật; không ID giả. Đã kiểm bằng Core giả (CoreGia); chưa kiểm Core thật, quyền kho tệp hoặc Excel app; chưa chạy Linux. Nguồn/quyền CD-096 A1, SHA thực và khác biệt cột tại NGUON.md HD-7.
+SDK 2.2.0 chưa cấp fixture tệp lồng trong `truong`: bốn Chạy thử DEMO đang khai chỉ phủ XML/ZIP. XLSX kiểm qua pytest với CoreGia.them_tep và kết quả đọc thật; không ID giả. Đã kiểm bằng Core giả (CoreGia); chưa kiểm Core thật, quyền kho tệp hoặc Excel app; chưa chạy Linux. Nguồn/quyền CD-096 A1, SHA thực và khác biệt cột tại NGUON.md HD-7.
 
 K? t? kh?ng h?p l? trong XML c?a XLSX ???c m? h?a d?ng `_xHHHH_`: Excel gi?i m?; b? ??c kh?c c? th? th?y nguy?n chu?i. Tr?n 16.000 k? t? t?nh tr?n chu?i g?c tr??c m? h?a.

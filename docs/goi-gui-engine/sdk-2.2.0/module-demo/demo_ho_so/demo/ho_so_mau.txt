@@ -1,0 +1,3 @@
+Hồ sơ DEMO số 1
+Đây là tệp văn bản thử cho nút Đọc tệp.
+Dữ liệu giả, không có thông tin thật.

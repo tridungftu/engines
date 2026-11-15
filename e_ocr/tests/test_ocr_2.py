@@ -195,7 +195,7 @@ def test_thieu_tesseract_bao_ma_ro_khi_can_dung(monkeypatch, nguon):
 
 def test_loi_kho_khong_duoc_gia_la_het_han_muc_va_chuyen(hot_folder, tess_gia):
     with ngan_demo().lo() as lo:
-        lo.them("han_muc_ngay", {"ngay": "2026-11-15"}, {"da_nhan": {"0": "DEMO"}, "dang_giu": {}})
+        lo.them("han_muc_ngay", {"ngay": "2026-11-15", "da_nhan": '{"0":"DEMO"}'})
     core, kq = chay(pdf_demo(()))
     kiem_loi(core, kq, "SO_HAN_MUC_CAN_KIEM_TRA")
     assert not tess_gia

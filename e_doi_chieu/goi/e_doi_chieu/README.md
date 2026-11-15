@@ -1,4 +1,76 @@
-# Đối chiếu bản ký — DC-8, phiên bản 0.4.8 chưa phát hành
+# Đối chiếu bản ký — SDK 2.0, DC-6/DC-8, phiên bản 0.6.0 chưa phát hành
+
+## Chuẩn bị và hậu kiểm Local AI — DC-6
+
+Core điều phối `ho_so_doi_chieu → doi_chieu.chuan_bi_ai@1 → yeu_cau_ai →
+ai.hoi_theo_yeu_cau@1 → tra_loi_ai → doi_chieu.phan_loai_diem_lech@1 →
+ho_so_doi_chieu`. Engine Đối chiếu không gọi Hỏi AI, Local, Cloud hoặc OCR.
+Hai năng lực mới dùng đúng API v1 và ba schema chung hiện có.
+
+Chuẩn bị chỉ nhận snapshot `da_so` đã áp DC-5-2 hoặc `da_quet_anh` có
+tiền nhiệm DC-5. Bản DC-5 phải khớp chỉ mục Ngan trong đúng pháp nhân;
+mọi tệp mở lại qua Core, kiểm bytes/băm/nguyên văn/edit script. Core phải
+cấp `ngu_canh.module`, `phap_nhan_id` tin cậy và quyền đọc tệp con xuyên
+bước. Băm hoặc module do caller khai không cấp quyền.
+
+Tham số bắt buộc nghiệp vụ: `module`, `ma_prompt`, `phien_ban_prompt`,
+`prompt`; `model_uu_tien` tùy chọn, chỉ là ưu tiên Local. Không có prompt
+mặc định. Thiếu/rỗng → `THIEU_PROMPT`; thiếu cấu hình ngăn → `CHUA_CAU_HINH`.
+Do SDK 2.0 kiểm `bat_buoc` trước handler và chưa cho đặt mã lỗi riêng,
+manifest để engine kiểm bắt buộc và ghi rõ trên nhãn/mô tả. Mã module/
+prompt ≤200, phiên bản ≤100, prompt module ≤16.000 ký tự. Nội dung module
+giữ nguyên, nối thêm chỉ dẫn cố định về dữ liệu nguồn/khuôn/offset.
+
+Chỉ các điểm `cho_phan_loai=true` được giao AI. `tai_lieu` chứa ngữ cảnh
+nguyên văn trọn đoạn/dòng/ô chứa điểm, có mã điểm và nhãn TRÁI (`word`)/
+PHẢI (`ban_ky`). Không rút ngắn ngữ cảnh để vừa trần. `khuon_tra_loi`
+đòi `{diem:[{ma_diem,nhan,ly_do,trai,phai}]}`; hai phía có câu/offset
+Unicode code point nửa mở trong **toàn chuỗi tai_lieu**. Phía không có
+nguồn dùng null và không thể tạo kết luận có căn cứ hai phía. Model
+không được thêm nguồn, quyền, nguyên văn thay thế hoặc `muc_san`.
+
+Snapshot `cho_ai` giữ yêu cầu chính xác, bộ, phạm vi Core, danh sách điểm,
+bản đồ AI→nguồn và tham chiếu snapshot gốc trong kho tệp Core. Phần
+`chuyen_tiep.doi_chieu` chỉ có mã cặp, phiên bản, tham chiếu tệp và băm
+hồ sơ/bộ/nguồn/ngữ cảnh/prompt/khuôn; DEMO kể cả 100 điểm vẫn ≤4 KiB.
+Hỏi AI phải chép nguyên `chuyen_tiep`, không gửi phần này cho model.
+`bam_dau_vao` là SHA-256 JSON chuẩn hóa **toàn phong bì yêu cầu**, theo
+AI-2; không thay bằng băm văn bản. JSON: UTF-8, `ensure_ascii=False`,
+`sort_keys=True`, `separators=(",",":")`, `allow_nan=False`.
+
+Hậu kiểm đọc lại bản ghim Ngan/tệp Core và snapshot DC-5 độc lập, dựng
+lại đúng yêu cầu và kiểm `kiem_bat_bien(out,goc)`. Sai cặp/nguồn/băm/
+chuyển tiếp/prompt/phiên bản → `DC_SAI_NGUON`; Cloud → `DC_CHI_LOCAL`;
+sai khuôn hoặc thiếu/thừa/trùng mã → `DC_AI_SAI_KHUON`. Trích dẫn phải
+thuộc đúng block AI, đúng phía/điểm, khớp nguyên văn nguồn và phủ vị trí
+lệch. Trích bịa, offset sai, không chắc hoặc `khong_thay_can_cu` giữ
+Cần xem. Nghiêm trọng chỉ được nâng khi có căn cứ; điểm Python đã chốt
+giữ nguyên. Đề nghị hình thức/nhiễu lưu ở `ai.ket_qua` với `cho_dc7`,
+chưa hạ sàn `can_xem`; DC-7 còn phải kiểm đủ bằng chứng từ điển/OCR lại.
+
+Trần một lượt: 100 điểm, ngữ cảnh 500.000 ký tự, khuôn 32 KiB, chuyển
+tiếp 64 KiB; vượt → `DC_QUA_NGAN_SACH_AI`, không cắt hoặc tự chia lượt.
+Không có ứng viên: Core bỏ qua AI/chọn chuỗi không AI; gọi nhầm chuẩn bị
+→ `DC_KHONG_CAN_AI`, không dựng phản hồi thành công giả. Nguồn đã nhận
+nhưng chưa trả: tầng Hỏi AI sở hữu lượt báo `ChuaRo(ma_tuong_quan)`.
+
+Giữ/chốt lượt bằng Ngan `lay_hoac_tao`/CAS; cùng yêu cầu hoặc phản hồi
+giao lại dùng cùng tham chiếu đã ghim. ACK tệp/kết quả/kết thúc do SDK
+gửi lại cùng khóa chống trùng. Toàn văn chỉ ở tệp Core/RAM, không có
+kho/cấu hình/đệm bền trên engine. NganBoNho mất chỉ mục khi khởi động
+lại thì từ chối hồ sơ chưa chứng thực lại, không suy quyền từ băm.
+
+**Giới hạn tích hợp Hỏi AI-2:** test chạy handler thật với provider DEMO
+không mạng cho thấy phép kiểm mọi lá `du_lieu` còn coi nhãn/lý do/ID/
+offset là giá trị trích xuất. Có thể trả `khong_thay_can_cu` dù câu trích
+đúng; DC-6 giữ bảo thủ. Lead Hỏi AI cần quy ước hậu kiểm metadata phân
+loại trong khuôn đã có, không nhét metadata vào câu trích để qua kiểm.
+Chưa kiểm model/Core thật, Linux hoặc bằng chứng OCR của DC-7.
+
+Đã kiểm bằng Core giả (CoreGia); kết quả ba lệnh và phụ thuộc tích hợp
+ghi tại `../../docs/VIEC.md`. Phần DC-8 bên dưới giữ phạm vi thử nghiệm.
+
+## Phát hiện vùng nghi sửa tay — DC-8
 
 DC-8 thêm `doi_chieu.phat_hien_sua_tay@1`: `ho_so_doi_chieu` → cùng loại,
 quét ảnh qua SDK, phát hiện ứng viên gạch/chèn, tải PNG vùng có ngữ cảnh và
@@ -17,7 +89,94 @@ chưa đo. Quy ước nguồn/biến đổi, đầu ra và số đo tại
 `doi_chieu.doc_docx@1` nhận DOCX qua `viec.mo_tep`, kiểm bản đã chốt và
 trả `van_ban_tai_lieu`. Đọc trong RAM bằng SDK và thư viện chuẩn, không
 OCR/AI/Cloud, không chương trình ngoài. `doi_chieu.nhan_cap@1` nhận JSON cặp,
-kiểm nguồn và chuẩn hóa có dấu vết; chưa triển khai so/đánh giá bản ký.
+kiểm nguồn và chuẩn hóa có dấu vết. `doi_chieu.so_van_ban@1` so toàn văn,
+căn cấu trúc và áp sàn quy tắc Python; kết luận toàn tuyến còn ở các lát sau.
+
+## Quy tắc cứng và tiền bằng chữ — DC-5
+
+Handler vẫn nhận hồ sơ `da_nhan`, trả hồ sơ `da_so`, không thêm năng lực
+hay sửa hợp đồng API/schema chung. `quy_tac.py` dùng kiểm nguồn/căn/so của
+DC-4, chốt snapshot một lần bằng cùng cơ chế Ngan/CAS/chủ lượt/hạn chiếm;
+khóa chống trùng có thêm `DC-5-1`. Không sửa `so_chu.py`/`can_chinh.py`
+hoặc phần ảnh DC-8. Snapshot đã áp quy tắc không được áp lại để reset mức.
+
+Các quy tắc bắt buộc luôn bật: `DC_CHU_SO`, `DC_NGAY_THOI_HAN`,
+`DC_TIEN_TY_LE`, `DC_TIEN_CHU`, `DC_DINH_DANH`, `DC_CAU_TRUC`,
+`DC_PHU_DINH_BAT_BUOC`, `DC_OCR_NHAM`. Quét Python trên toàn văn NFC có
+ánh xạ về nguồn, giữ cả đầu/chân trang, tab/ranh giới ô và nguyên văn;
+không phụ thuộc vùng AI. Diff chỉ chứa một chữ vẫn xét từ/cụm đầy đủ.
+Các lát chữ/ngắt dòng của Điều/Khoản thiếu/thừa/đảo giữ sàn cấu trúc.
+0/O, 1/l, 5/S, 8/B không bị sửa ngầm, vẫn Nghiêm trọng và có ghi chú.
+Lát được DC-4 coi tương đương chuẩn hóa vẫn kiểm lại trên bản chỉ NFC:
+gạch/nháy/khoảng trắng không được che khác biệt số, mã hoặc vùng bảo vệ.
+
+Phần tùy chọn `quy_tac_cung` của **bộ JSON đã được duyệt và ghim bytes**
+có quy ước nội bộ dưới đây. Ví dụ DEMO, không phải bộ dùng trên hồ sơ thật:
+
+```json
+{
+  "phien_ban": 1,
+  "dinh_dang_so": [{"nghin": ".", "thap_phan": ","}],
+  "don_vi_tien": {"VND": "VND", "đồng": "VND", "USD": "USD"},
+  "dinh_dang_ngay": ["YYYY-MM-DD"],
+  "vung_bao_ve": []
+}
+```
+
+- `dinh_dang_so`: tối đa 10 quy ước. `nghin` nhận null/chấm/phẩy/khoảng
+  trắng; `thap_phan` nhận null/chấm/phẩy, phải khác dấu nghìn. Nhiều quy
+  ước đọc cùng chuỗi ra nhiều giá trị → mơ hồ. Thiếu quy ước chỉ đọc số
+  nguyên không phân cách. Chỉ khác phân cách được coi hình thức khi bộ
+  đọc được cùng giá trị và **cùng chuỗi chữ số, giữ mọi số 0 đầu**, ngoài
+  vùng định danh. Không dùng giá trị Decimal để gộp hai MST/STK/mã khác.
+- `don_vi_tien`: ánh xạ tên/đơn vị ghi rõ sang mã ba chữ hoa; không suy
+  mã tiền từ dấu phân cách hoặc ký hiệu `$`. Ký hiệu chỉ đọc được khi bộ
+  khai tường minh. Mã VND/USD… không được ánh xạ sang mã khác.
+- `dinh_dang_ngay`: `YYYY-MM-DD`, `DD/MM/YYYY`, `MM/DD/YYYY`; chỉ xuất
+  ngày ISO đã kiểm lịch. Nhiều cách đọc khác nhau, ngày sai hoặc thời hạn
+  bằng lời chưa có parser giữ hạng mục chưa đủ kiểm; không tự đoán.
+- Mỗi `vung_bao_ve` có `ben` (word/ban_ky), `loai`, `bat_dau`, `ket_thuc`,
+  `nguyen_van`, `bam_van_ban` (SHA-256 UTF-8 nguyên văn). Phải khớp chính
+  xác nguồn; sai → `DC_SAI_NGUON`. Các loại: `ben_ky`, `nguoi_dai_dien`,
+  `chuc_vu`, `mst`, `stk`, `dia_chi`, `so_hop_dong`. Nhãn Python Việt/Anh
+  cũng bảo vệ điểm lệch nhưng **không tự chứng nhận nhận diện đủ**. Muốn
+  đánh dấu đủ vùng phải có metadata khớp nguồn cho mọi loại ở cả hai bản.
+  Metadata thuộc bộ đã ghim, không nhận từ nội dung model.
+
+Bộ DC-3 cũ thiếu phần trên vẫn áp tất cả quy tắc bắt buộc, giữ
+`quy_tac_cung=chua_kiem`. Phần khai sai/null/khóa tắt hoặc hạ quy tắc bị
+từ chối `DC_BO_QUY_TAC_KHONG_HOP_LE`. Không có bộ nới lỏng mặc định.
+
+Kiểm tiền nội bộ bản ký: chỉ ghép duy nhất một cụm bằng số + đơn vị với
+nhãn “Bằng chữ” trong cùng dòng/ô, giữ cả hai nguyên văn, offset, giá trị
+và căn cứ. Ngữ pháp tiếng Việt hỗ trợ số nguyên từ 0 đến dưới 10^12,
+nghìn/ngàn, tỷ/tỉ, linh/lẻ, mốt/tư/lăm ở vị trí hợp lệ, đơn vị/chẵn.
+Số tiền hoặc tiền tệ trái nhau sau khi phân tích đủ → Nghiêm trọng, kể
+cả nguyên văn hai bản giống nhau. Thiếu nhãn/cụm/đơn vị, nhiều số tiền,
+ngữ pháp khác, tiền lẻ bằng chữ hoặc phần ngôn ngữ chưa hiểu → Cần xem,
+`khop=null`, `da_kiem_du=false`. Không ghép qua dòng/ô, không diễn giải
+viết tắt/OCR hoặc tự coi danh sách chưa nhận diện được là đã kiểm xong.
+
+Tính số bằng Decimal hoặc int. Trong JSON snapshot, tiền luôn có
+`{so, tien_te}`: `so` nguyên dùng int, phần thập phân dùng chuỗi chính xác
+(ví dụ `"1000.25"`), không đi qua float. Ngày đã đọc dùng `YYYY-MM-DD`;
+nguyên văn, mã và số 0 đầu giữ riêng nguyên vẹn.
+
+Mỗi điểm có `muc_san`, `muc`, `quy_tac_trung`, `can_cu_quy_tac`,
+`vung_bao_ve`. Phần còn chưa đủ căn cứ giữ `can_xem`; hạng mục cụ thể ở
+`kiem_quy_tac`, số đếm giữ các Nghiêm trọng đã biết. `nhat_ky_quy_tac`
+cùng băm ghim sàn/lịch sử; `kiem_bat_bien(snapshot, goc)` so với bản gốc
+**đọc lại từ Core**, chặn tự băm lại, xóa điểm, thay căn cứ hoặc hạ mức.
+`ap_muc_ai` chỉ nhận mã/mức/lý do, không nhận sàn/quy tắc, chặn mọi hạ
+mức. Đây là cửa thuần cho DC-6; chưa thay hậu kiểm nguồn/trích dẫn Local
+của DC-6/DC-7. DC-5 không gọi Local hoặc Cloud.
+
+`ket_luan=null`, `da_kiem_du=false`, `de_nghi_chan=true` ở bước này vì
+còn các hạng mục khác; không tự mở hiệu lực. Bộ DEMO chỉ kiểm hành vi đã
+cài, không chứng minh tỷ lệ phát hiện trên tài liệu thực tế. Đã kiểm bằng
+Core giả (CoreGia); chi tiết ma trận và giới hạn tại `docs/VIEC.md`.
+
+## Đọc DOCX — DC-2
 
 Đọc thân, đầu/chân trang, footnote/endnote, đoạn và bảng lồng; giữ ô trống,
 gộp ngang/dọc. Quét sửa đổi/comment trong mọi phần XML Word, kể cả phần

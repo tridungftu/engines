@@ -1,1 +1,2 @@
-# Python standard library only; SDK 2.0.0 is installed separately from the bundled wheel.
+# Phụ thuộc chạy; cài offline từ wheel SDK trong repo.
+kho_tri_thuc_sdk==2.2.0

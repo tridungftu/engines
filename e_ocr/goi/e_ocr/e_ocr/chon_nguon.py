@@ -10,11 +10,10 @@ from datetime import date, datetime, timezone
 import time
 from uuid import uuid4
 
-from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu
+from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu, NganXungDot
 
 from .abbyy import BackendABBYY, LoiABBYYChuaNhan, LoiABBYYTuChoi
-from .ngan import NganXungDot
-from .luot_abbyy import DA_CHOT, DANG_DO, NhatKyLuot, tim_luot
+from .luot_abbyy import DA_CHOT, DANG_DO, NhatKyLuot, tim_luot, doc_map, ghi_map, doc_so_nguyen
 from .lop_chu import KetQuaLopChu, LoiLopChu, doc_lop_chu
 from .nhat_ky import cho_nguon, ghi_nguon, het_cho
 from . import tesseract
@@ -54,60 +53,41 @@ class SoHanMuc:
             tiep = trang.tiep
             if tiep is None:
                 break
-        so = {"da_nhan": {}, "dang_giu": {}}
-        for ngay, b in hang.items():
-            if (set(b.gia_tri) != {"ngay", "da_nhan", "dang_giu"}
-                    or type(b.gia_tri["dang_giu"]) is not dict
-                    or set(so["dang_giu"]) & set(b.gia_tri["dang_giu"])):
-                raise LoiNghiepVu("SO_HAN_MUC_CAN_KIEM_TRA", "Sổ hạn mức ABBYY cần được đối chiếu lại.")
-            so["da_nhan"][ngay] = b.gia_tri["da_nhan"]
-            so["dang_giu"].update(b.gia_tri["dang_giu"])
+        try:
+            so = {"da_nhan": {}, "dang_giu": {} if moc is None else doc_map(moc.gia_tri["dang_giu"])}
+            for ngay, b in hang.items():
+                so["da_nhan"][ngay] = doc_map(b.gia_tri["da_nhan"])
+        except (ValueError, TypeError, KeyError, RecursionError):
+            raise LoiNghiepVu("SO_HAN_MUC_CAN_KIEM_TRA", "Sổ hạn mức ABBYY cần được đối chiếu lại.") from None
         return (moc, hang), self._doc_so(so)
 
     def _ghi(self, lo, anh, so):
         moc, hang = anh
-        luc = int(self.dong_ho())
-        ngay_nay = datetime.fromtimestamp(luc, timezone.utc).date().isoformat()
-        # Dọn dần tối đa 50 ngày/lô, chừa chỗ cho lệnh lượt, sổ và CAS
-        # dưới trần 100 lệnh. Ngày biên còn trong cửa sổ không bị xóa.
-        don = set(sorted(ngay for ngay in hang
-                         if int(datetime.fromisoformat(ngay).replace(tzinfo=timezone.utc).timestamp())
-                         + 86400 <= luc - CUA_SO_GIAY)[:50])
-        dang_giu = {}
-        for ngay, b in hang.items():
-            giu = {ma: n for ma, n in b.gia_tri["dang_giu"].items() if ma in so["dang_giu"]}
-            if giu and ngay not in don:
-                dang_giu[ngay] = giu
-        da_co = {ma for giu in dang_giu.values() for ma in giu}
-        for ma, n in so["dang_giu"].items():
-            if ma not in da_co:
-                dang_giu.setdefault(ngay_nay, {})[ma] = n
-        for ngay in set(hang) | set(so["da_nhan"]) | set(dang_giu):
-            gia_tri = {"ngay": ngay, "da_nhan": so["da_nhan"].get(ngay, {}),
-                       "dang_giu": dang_giu.get(ngay, {})}
+        # Chỉ sửa các ngày còn trong cửa sổ hoặc vừa được hoàn trang.
+        # Dòng lịch sử do Core ẩn sau 45 ngày; không ghi lại để kéo dài TTL.
+        cac_ngay = set(so["da_nhan"])
+        moc_giay = int(self.dong_ho()) - CUA_SO_GIAY
+        for ngay in hang:
+            dau = int(datetime.fromisoformat(ngay).replace(tzinfo=timezone.utc).timestamp())
+            if dau + 86400 > moc_giay:
+                cac_ngay.add(ngay)
+        for ngay in sorted(cac_ngay):
+            gia_tri = {"ngay": ngay, "da_nhan": ghi_map(so["da_nhan"].get(ngay, {}))}
             cu = hang.get(ngay)
             if cu is not None:
-                if ngay in don:
-                    # Chỗ giữ còn dở đã chuyển sang ngày nay trong cùng lô;
-                    # chỉ xóa hàng ngày, không hoàn trang hoặc xóa lượt.
-                    lo.xoa("han_muc_ngay", {"ngay": ngay}, row_version=cu.row_version)
+                if gia_tri["da_nhan"] == cu.gia_tri["da_nhan"]:
                     continue
-                cu_hieu_luc = self._doc_so({"da_nhan": {ngay: cu.gia_tri["da_nhan"]},
-                                          "dang_giu": cu.gia_tri["dang_giu"]})
-                if (gia_tri["da_nhan"] == cu_hieu_luc["da_nhan"].get(ngay, {})
-                        and gia_tri["dang_giu"] == cu.gia_tri["dang_giu"]):
-                    continue
-            if not gia_tri["da_nhan"] and not gia_tri["dang_giu"]:
-                if cu is not None:
-                    lo.xoa("han_muc_ngay", {"ngay": ngay}, row_version=cu.row_version)
-            elif cu is None:
-                lo.them("han_muc_ngay", {"ngay": ngay}, gia_tri)
+            if cu is None:
+                lo.them("han_muc_ngay", gia_tri)
             else:
                 lo.sua("han_muc_ngay", {"ngay": ngay}, gia_tri, row_version=cu.row_version)
+        # Chỗ giữ không hết hạn, kể cả ngừng engine lâu hơn 45 ngày.
+        gia_tri = {"dang_giu": ghi_map(so["dang_giu"])}
         if moc is None:
-            lo.them("trang_thai_engine", {"ma": "han_muc"}, {"lan": 1})
+            lo.them("trang_thai_engine", {"ma": "han_muc", "lan": 1, **gia_tri})
         else:
-            lo.sua("trang_thai_engine", {"ma": "han_muc"}, {"lan": moc.gia_tri["lan"] + 1},
+            gia_tri["lan"] = doc_so_nguyen(moc.gia_tri["lan"]) + 1
+            lo.sua("trang_thai_engine", {"ma": "han_muc"}, gia_tri,
                    row_version=moc.row_version)
 
     def _cap_nhat(self, sua):
@@ -246,9 +226,10 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh, ngan):
 
     try:
         viec.kiem_huy()
-        if not cau_hinh and nguon == "chi_abbyy" and not doc_lai:
-            raise LoiNghiepVu("CHUA_CAU_HINH", "Engine chưa được cấu hình. Admin vào Quản lý engine › OCR › Cấu hình.")
         abbyy = cau_hinh.get("abbyy", {"bat": False})
+        if (nguon == "chi_abbyy" and not doc_lai
+                and (not abbyy.get("thu_muc_vao") or not abbyy.get("thu_muc_ra"))):
+            raise LoiNghiepVu("CHUA_CAU_HINH", "Engine chưa được cấu hình. Admin vào Quản lý engine › OCR › Cấu hình.")
         backend = BackendABBYY(abbyy, chi_doc=doc_lai)
         if not doc_lai:
             luot, moi = nhat_ky.giu(abbyy["han_muc_trang_30_ngay"])

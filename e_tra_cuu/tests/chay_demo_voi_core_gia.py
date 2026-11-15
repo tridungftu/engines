@@ -17,6 +17,7 @@ from ho_tro_tc_3 import BoCatDoan, bang_demo, kiem_phu_nguon, phong_bi_trang
 from ho_tro_tc_4 import chay_demo_ai
 from ho_tro_tc_6 import chay_demo_hau_kiem
 from ho_tro_tc_5 import chay_demo_phan_loai
+from ho_tro_tc_7 import chay_demo_tra_loi
 
 
 def chay_demo():
@@ -58,6 +59,26 @@ def chay_demo_cat_doan():
     return kq
 
 
+def chay_demo_xuat():
+    from test_tc_8 import bo_cat, bo_phan_loai, bo_hau, bo_tra, xuat
+    kq = []
+    for ten, tao in (("Cắt đoạn", bo_cat), ("Phân loại", bo_phan_loai),
+                     ("Phân tích", lambda: bo_hau("phan_tich_cau_hoi")),
+                     ("Xếp hạng", lambda: bo_hau("xep_hang_lai")),
+                     ("Trả lời Xanh", bo_tra), ("Không căn cứ", lambda: bo_tra(False)),
+                     ("Trả lời Vàng", lambda: bo_tra(ai=True))):
+        bo, truoc = tao()
+        ra = xuat(bo, truoc)
+        if ra["trang_thai"] == "XONG":
+            from json import loads
+            tep = ra["ket_qua"]["truong"]["tep_json"]
+            noi_dung = bo.core.doc_tep(tep["tep_id"])
+            assert len(noi_dung) == tep["kich_thuoc"]
+            assert loads(noi_dung)["ket_qua"] == bo.snapshot(truoc)["ket_qua"]
+        kq.append({"ten": "Xuất DEMO — " + ten, **ra})
+    return kq
+
+
 def main():
     dem_mang = 0
 
@@ -69,7 +90,7 @@ def main():
     with patch.object(socket.socket, "connect", cam_mang), patch.object(socket.socket, "connect_ex", cam_mang), \
             patch.object(socket, "create_connection", cam_mang), patch.object(socket, "getaddrinfo", cam_mang):
         kq = (chay_demo() + chay_demo_cat_doan() + chay_demo_ai()
-              + chay_demo_phan_loai() + chay_demo_hau_kiem())
+              + chay_demo_phan_loai() + chay_demo_hau_kiem() + chay_demo_tra_loi() + chay_demo_xuat())
     for k in kq:
         dat = k["trang_thai"] == "XONG"
         print(f'[{"ĐẠT" if dat else "LỖI"}] {k["ten"]}' + ("" if dat else ": " + str(k["loi"]["ma"])))

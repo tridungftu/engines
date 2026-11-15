@@ -70,7 +70,7 @@ def test_manifest_tam_nang_luc_va_stub_khong_xong_gia():
         assert n["gioi_han"]["tep_toi_da_mib"] == 20 and n["huy_duoc"] is True
         if n["ma"] in {MA, "tra_cuu.cat_doan@1", "tra_cuu.chuan_bi_ai@1",
                        "tra_cuu.phan_loai_tai_lieu@1",
-                       "tra_cuu.phan_tich_cau_hoi@1", "tra_cuu.xep_hang_lai@1"}:
+                       "tra_cuu.phan_tich_cau_hoi@1", "tra_cuu.xep_hang_lai@1", "tra_cuu.soan_tra_loi@1", "tra_cuu.xuat_ket_qua@1"}:
             continue
         loai = n["nhan"][0]
         ts = {} if "chuan_bi_ai" not in n["ma"] else {

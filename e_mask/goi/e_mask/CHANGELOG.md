@@ -6,6 +6,20 @@
 - Đọc lại bytes cuối qua B5/B6, đối chiếu map/tiền/ngày/ô số/format/trần, giới hạn báo cáo và lô metadata trước chốt. Chỉ upload bản che có tên kỹ thuật cố định; bộ C không phải đầu vào Cloud. Bản văn bản cuối dùng map RAM cho R6; mở tệp B8 và phát hành Core thật B9 còn riêng.
 - Các port quyền/ghim/lifecycle/Local/chốt metadata/ACK vẫn là đề nghị C-P4-01…05, thiếu thì runtime từ chối. Adapter chỉ ngoài gói, đã kiểm bằng Core giả (CoreGia); chưa Core/Office/Local/Linux thật. Không nhận là “0 lọt”, Cloud tắt; PR: chờ lead mở. Kết quả và giờ thực tế ở VIEC.md/báo cáo B7.
 
+## Ch?a ph?t h?nh ? 16/11/2026, MASK-B6b l??t 2
+
+- Theo quy?t ??nh lead 16/11: formatCode th?c t? thu?c TI?N/K? TO?N gi? nguy?n s? c? ph?n th?p ph?n kh?c 0 ho?c s? nguy?n t?i ?a 12 ch? s?, kh?ng t?nh d?u; gi? nguy?n bytes/format. S? nguy?n t? 13 ch? s? qua c?ng c?a d?/ch?n nh? General. `.00`, exponent v? s? ?m ???c x?t theo gi? tr? Decimal.
+- ??nh danh khai trong ds v?n b? t? ch?i ??u v?o; gi? tr? kh?p ch?nh x?c ng?n b? m?t v?n ch?n b?t k? format ti?n/ng?y. Tra ??ng raw value v? c?c d?ng s? chu?n h?a c?a ? ti?n qua SDK, c?ng v?ng/quy?n R4, ch? ??c k?t qu? c?/kh?ng; cache RAM t?i ?a 2.000 ?ng vi?n, v??t t? ch?i. Gi? mi?n serial ng?y v? h?nh vi General/0 c?a l??t 1; gi? ch?t exponent c?c ?oan tr??c m? r?ng chu?i.
+- Test B6 c? v?i `1000000000` gi? nguy?n k? v?ng/bytes; c?p nh?t B6b cho m?c 12/13/16 ch? s?, ph?n l?, s? ?m, exponent, ng?n b? m?t v? ng?y. C?p nh?t NGUON/ki?m k?; ?? ki?m b?ng Core gi? (CoreGia), k?t qu? th?t t?i VIEC.md. PR: ch? lead m?.
+- R?i ro c?n l?i: s? ??nh danh ch?a khai b?o ?12 ch? s? c? ? ??nh d?ng ti?n s? kh?ng b? d?; ch? Anh x?c nh?n.
+
+## Chưa phát hành — 16/11/2026, MASK-B6b
+
+- Bỏ miễn kiểm ô số theo riêng `numFmtId` hoặc ký tự y/d/h/s. Dùng `formatCode` hiệu lực; chỉ tra định dạng builtin khi không có khai báo. Reader B3 tiếp tục từ chối khai lại ID builtin dưới 164, không nới whitelist.
+- Chỉ miễn serial ngày trong năm 1900–2100 theo epoch 1900/1904, gồm phần giờ; ngoài miền từ chối toàn tệp. Tiền vẫn qua detector định danh, chặn số nguyên từ 9 chữ số, kể cả exponent/.0/dấu.
+- Phân biệt dấu thập phân của ô tiền với dấu tách chữ số trong văn bản: chỉ dung sai cảnh báo số phủ toàn giá trị khi cả hai vế thập phân qua detector; chưa quét đủ hoặc còn nghi vấn thì chặn. Tiền thật `1500000`, `1234567.89` và ngày `46325` giữ nguyên bytes/số/format.
+- Chỉ sửa runtime `tep_excel.py`, thêm regression B6b; map vẫn chỉ RAM, API v1 và các tệp B7 giữ nguyên. Đã kiểm bằng Core giả (CoreGia); kết quả, giới hạn và giờ thực tế tại VIEC.md. PR: chờ lead mở.
+
 ## Chưa phát hành — 16/11/2026, MASK-B5b
 
 - Sửa miễn trừ ngày dùng chung cho Word và văn bản: phải hợp lệ theo lịch, năm 1900–2100; không suy năm hai chữ số. Giữ ngày thật, kể cả năm nhuận, ngày ISO và ngày viết bằng chữ.

@@ -1,0 +1,53 @@
+# Họ phổ biến của người Việt. Dấu * = cho phép nhận cả dạng VIẾT HOA TOÀN BỘ (khối chữ ký, tiêu đề).
+# Chỉ dùng để gợi ý; người dùng vẫn duyệt. Không thêm các họ trùng từ thông dụng (Văn, Phí, Từ, Đồng...).
+Nguyễn *
+Trần *
+Lê *
+Phạm *
+Hoàng *
+Huỳnh *
+Phan *
+Vũ *
+Võ *
+Đặng *
+Bùi *
+Đỗ *
+Hồ *
+Ngô *
+Dương *
+Lý *
+Đinh *
+Đoàn *
+Trịnh *
+Trương *
+Lâm *
+Mai *
+Tô *
+Hà *
+Cao *
+Lương *
+Đào *
+Quách *
+Tạ *
+Chu *
+Lưu *
+Thái *
+Kiều *
+Vương
+Triệu
+Tăng
+Lại
+Mạc
+Diệp
+Doãn
+Phùng
+Hứa
+Đàm
+Tống
+Lã
+Bạch
+Nghiêm
+Hàn
+Giang
+Châu
+Kim

@@ -193,3 +193,18 @@ bốn schema, DEMO và dependency giữ nguyên các băm/nguồn đã ghi phía
 | `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/quy_tac_nhom.py` | `aa787e8fef6cca744c777a3bf820350f5947a40cadfc3b15db2f9cc9a271c793` |
 | `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/cau_hoi.py` | `c58c2aa90d1784933960d39d5797a7e575642475d45e12f3372ee8784e08c50f` |
 | `e_tra_cuu/goi/e_tra_cuu/e_tra_cuu/xep_hang.py` | `6d062ebd1bbd67cd554d7d7f1404caa6ddc05d1860692446d1f20358e9018c02` |
+
+## TC-9 — 15/11/2026
+
+Viết mới `ui/cau_hinh.js`, `ui/trang_thai.js`, `trang_thai.py`, bổ sung seam
+thuần trong `chay.py` theo phiếu TC-9; đúng 4 tệp mã, không nguồn/dependency
+bên ngoài. Hai mẫu NGAN-0 và bốn schema tiếp tục giữ nguyên, test SHA-256 LF.
+Các băm TC-6 ở bảng trên là lịch sử tại thời điểm gộp, không là băm hiện tại
+của chay/README/CHANGELOG/VIEC đã cập nhật qua TC-7…9.
+
+UI dùng ES module/DOM/Intl có sẵn, chỉ KttCore của chính engine. Node
+24.18.0 chạy test không mạng/không npm. Tên quyền xem theo pháp nhân và hình
+dạng phản hồi KttCore là đề nghị chờ Core đối chiếu; chưa phải SDK thật.
+Fixture báo cáo/cấu hình/bài đo đều DEMO trong RAM, CoreGia tạo tệp+băm thật;
+không dùng nguyên văn/câu hỏi trong bản ghi dot_kiem. Không sửa Core/SDK,
+nguồn cũ hoặc requirements.lock. Chưa kiểm trình duyệt thật/Linux/lưu bền.

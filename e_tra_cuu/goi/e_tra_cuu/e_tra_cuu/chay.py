@@ -17,6 +17,7 @@ from .tra_loi import soan_tra_loi
 from .xuat_ket_qua import xuat_ket_qua
 from .bang_chung import chuan_bi_tang_mot
 from .kiem_dau_vao import doi_tuong, loi
+from .trang_thai import lay_hoac_tao_dot, cap_nhat_cac_dot
 
 
 _GOI = Path(__file__).resolve().parent.parent
@@ -89,6 +90,29 @@ def kiem_cau_hinh_da_chup(cau_hinh):
 
 app = Engine.tu_khai_bao("engine.json")
 ngan = khoi_tao_ngan(app)
+
+
+def ghi_bai_do_demo(viec, ung_dung, *, ma_dot=None, gia_tri=None, cac_dot=None):
+    """Seam thuần cho test/cửa Core sau này, KHÔNG đăng ký API quản trị SDK.
+
+    Core kiểm quyền trước khi gọi; pháp nhân chỉ lấy từ ngữ cảnh việc.
+    Không nhận pháp nhân từ dữ liệu bài đo, không ghi tự động từ pipeline.
+    """
+    ngu_canh = getattr(viec, "ngu_canh", None)
+    p = ngu_canh.get("phap_nhan_id") if isinstance(ngu_canh, dict) else None
+    if not isinstance(p, str) or not p.strip():
+        raise LoiNghiepVu("TC_THIEU_NGU_CANH", "Thiếu ngữ cảnh pháp nhân do Core cấp.")
+    ngan_viec = getattr(viec, "ngan", None)
+    if ngan_viec is None:
+        ngan_viec = ung_dung.ngan
+        if isinstance(ngan_viec, NganBoNho):
+            try:
+                ngan_viec = ngan_viec.cho_phap_nhan(p)
+            except NganKhongHopLe as exc:
+                raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None
+    if cac_dot is not None:
+        return cap_nhat_cac_dot(ngan_viec, p, cac_dot)
+    return lay_hoac_tao_dot(ngan_viec, p, ma_dot, gia_tri)
 
 
 def dang_ky_nang_luc(ung_dung):

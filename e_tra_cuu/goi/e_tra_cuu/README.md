@@ -378,8 +378,11 @@ dùng phản hồi fixture DEMO hợp lệ độc lập; không chứng nhận n
 - `dot_kiem`: phạm vi pháp nhân, khóa `ma_dot`, unique `[phap_nhan_id,ma_dot]`;
   chỉ metadata/băm, tử số/mẫu số trong `chi_so`, tham chiếu+băm báo cáo Core.
   Không ghi câu hỏi/nguyên văn, không đặt TTL khi chính sách chưa duyệt.
-- Hai màn dự kiến `ui/cau_hinh.js`, `ui/trang_thai.js`, quyền `admin_core`;
-  **chưa có mã UI**, làm ở TC-9, dùng `KttCore.engine("e_tra_cuu")` và Core kiểm quyền.
+- Hai màn TC-9 `ui/cau_hinh.js`, `ui/trang_thai.js` dùng
+  `KttCore.engine("e_tra_cuu")`. Cấu hình cần `admin_core`; trạng thái đề nghị
+  quyền riêng `xem_dot_kiem_theo_phap_nhan`, Core kiểm quyền từng truy vấn.
+  Tên quyền này là **bản khai đề nghị**, chưa có SDK/Core thật; Core chưa hỗ trợ
+  thì không mở màn, không thay bằng quyền Admin toàn engine cho người xem.
 
 Mọi thao tác `dot_kiem` phải có pháp nhân tin cậy trong `khoa/loc` từng lệnh,
 ưu tiên `viec.ngan`; RAM dùng view cùng pháp nhân. Ngăn gốc RAM phục vụ test,
@@ -398,19 +401,64 @@ $env:PYTHONDONTWRITEBYTECODE='1'
 .venv/Scripts/python -B -m pytest e_tra_cuu/tests -q
 .venv/Scripts/python -B e_tra_cuu/tests/kiem_doc_lap.py
 .venv/Scripts/python -B e_tra_cuu/tests/chay_demo_voi_core_gia.py
+node --test e_tra_cuu/tests/ui/*.test.js
 ```
 
 Linux đổi `Scripts/python` thành `bin/python`, đặt hai biến môi trường tương ứng.
 Test chặn mạng, chỉ DEMO. Handler nhận/cắt/chuẩn bị/hậu kiểm TC-5…7, stub và cổng cấu hình
 **đã kiểm bằng Core giả (CoreGia)**; adapter quyền/tệp con chỉ trong tests.
-CAS/unique/rollback/pháp nhân/cursor kiểm trực tiếp trên `NganBoNho`.
+CAS/unique/rollback/pháp nhân/cursor kiểm trên `NganBoNho`; seam TC-9 cũng
+được gọi qua handler chỉ có trong test CoreGia. Node 24.18.0 chạy test DOM/
+KttCore giả không mạng, không cần npm/dependency. Chưa kiểm trình duyệt thật.
 Symlink của bộ quét kiểm bằng giả lập cờ, không yêu cầu Windows cấp quyền tạo symlink.
 Chưa kiểm Core thật, lưu bền, UI thật hoặc Linux.
 
 **Cổng CLI chuẩn chưa đạt:** SDK 2.0.0 chạy cả 5 demo và trả mã 1 vì thiếu
-ngăn/cấu hình (`CHUA_CAU_HINH`). Harness bổ sung có 36/36 ĐẠT, không
+ngăn/cấu hình (`CHUA_CAU_HINH`). Harness bổ sung có 43/43 ĐẠT, không
 thay kết quả CLI chuẩn. Cần Core C-TC-01/02/03/05; số kiểm thật ở VIEC.md ngoài
-gói. Chưa nối Core thật, chưa kiểm RLS/AI/UI/Linux hoặc chất lượng tra cứu.
+gói. Chưa nối Core thật, chưa kiểm RLS/AI/UI thật/Linux hoặc chất lượng tra cứu.
+
+## Màn cấu hình/trạng thái — TC-9
+
+Core nạp module ES và gọi `mount(goc, {KttCore})`; màn trạng thái nhận thêm
+`phapNhanId` từ ngữ cảnh host Core đã cấp quyền. Host đổi pháp nhân phải gọi
+`unmount()` rồi mount lại; không lấy pháp nhân từ query string hoặc mã bài đo.
+Hàm trả về có `unmount()` để gỡ sự kiện, bỏ các response đến sau khi đóng màn.
+Trạng thái chỉ dùng `.ngan.tim/.doc("dot_kiem", ...)`, mỗi truy vấn có
+`phap_nhan_id` trong `loc/khoa`, tối đa 500 bản/trang. Cursor chỉ được dùng
+trong màn/phạm vi đã nhận; Core vẫn phải xác thực cursor và quyền mỗi lần.
+Lỗi 401/403 xóa dữ liệu đang hiển thị; lỗi đọc phần nào báo tại phần đó.
+Không có cây kho, hỏi đáp, K5, mạng ngoài hoặc quyền ghi bài đo từ UI.
+
+Màn cấu hình dùng `.cau_hinh.doc()` → `null` hoặc
+`{gia_tri,phien_ban_cau_hinh}`; `.luu(gia_tri,phien_ban_cau_hinh)` nhận
+`null` khi tạo lần đầu, phiên bản đã đọc khi sửa. Đây là quy ước KttCore giả
+chờ đối chiếu SDK thật. Không tự ghi default khi mở màn; Core kiểm lại schema.
+CAS 409 đọc lại, yêu cầu Anh kiểm tra và lưu lại, không retry/ghi đè tự động.
+Ngưỡng chưa đo không có số mặc định; ngưỡng đã đo chỉ đọc, không có nút kích hoạt
+hoặc ô URL/model/khóa AI. Các giới hạn/mục tiêu bám schema đóng gói, có test so.
+
+`trang_thai.py` cung cấp seam thuần `lay_hoac_tao_dot` và
+`cap_nhat_cac_dot`; `chay.ghi_bai_do_demo(viec,ung_dung,...)` lấy pháp nhân
+từ ngữ cảnh việc, ưu tiên ngăn việc, fallback view RAM cùng pháp nhân.
+**Không đăng ký thao tác quản trị hoặc năng lực mới**, không tự ghi khi xuất
+kết quả TC-8. Core phải xác thực quyền, nguồn báo cáo và gọi seam khi có cửa
+chung; mã/băm/`ma_dot` không chứng minh danh tính/quyền đọc tệp báo cáo.
+
+Bài đo dùng mã `DEMO-...`; dữ liệu đóng theo bản khai, bốn chỉ số
+`tra_loi_dung,trich_dan_dung,tu_choi_dung,phan_loai_dung` đều `null` hoặc
+`{tu_so,mau_so}` nguyên không âm, tử số không vượt mẫu số. `null`/mẫu số 0
+hiện “Chưa đo”; không gộp tỷ lệ hoặc lấy điểm model làm accuracy. Trạng thái
+`chua_do` chỉ chứa các chỉ số null; `da_do` cần ít nhất một mẫu số dương và
+báo cáo Core. Báo cáo chỉ giữ đối tượng tệp (`ten=bao-cao-DEMO.json`) + băm,
+không nội dung câu hỏi/tài liệu. Tham chiếu thật/băm thật do CoreGia tạo trong
+test, chưa chứng minh cửa ghi bài đo thật. Sửa nhận ảnh số đo tuyệt đối cùng
+`row_version` trong một lô ≤100; lệch một mục hủy cả lô, đọc lại/thử lại có chủ ý.
+Gửi lại cùng khóa tạo trả bản cũ, không cộng số đếm và không sửa bản cũ ngầm.
+
+Đã kiểm bằng Core giả (CoreGia)/NganBoNho/KttCore giả; chưa kiểm trình duyệt thật,
+SDK 2.1, lưu bền/RLS hay chất lượng model. Tất cả chỉ DEMO, 0 Cloud. Runtime/UI
+không tạo tệp cấu hình, sổ, cache hoặc tệp tạm. Hai mẫu NGAN-0 giữ nguyên.
 
 ## TC-7 — Bằng chứng trả lời do Core cấp
 

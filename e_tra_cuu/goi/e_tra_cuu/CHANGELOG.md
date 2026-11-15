@@ -1,5 +1,20 @@
 # Thay đổi
 
+## 0.1.0 — 15/11/2026 — TC-9
+
+- Hai màn module cấu hình/trạng thái qua KttCore của chính engine; CAS cấu
+  hình, ngưỡng chưa đo/đã đo chỉ đọc, không kích hoạt giả. UI dùng textContent,
+  sự kiện DOM, không mạng ngoài; lỗi Việt không phản chiếu dữ liệu SDK.
+- Trạng thái chỉ đọc bài đo theo pháp nhân, cursor cùng phạm vi, trần 500;
+  quyền xem riêng đề nghị Core kiểm, không cấp Admin toàn engine cho user.
+  Thu quyền xóa dữ liệu đang hiện, mỗi phần đọc/báo lỗi riêng.
+- Seam Python bài đo DEMO qua Ngăn: lấy hoặc tạo chống trùng, số đếm tuyệt
+  đối, cập nhật CAS ≤100 mục/lô, rollback cả lô. Chỉ metadata/băm, tử số/mẫu
+  số và tham chiếu báo cáo Core; không nhật ký hỏi đáp/nội dung nguồn.
+- Đúng 4 tệp mã TC-9; không thêm trường engine.json, dependency hoặc API quản
+  trị giả. Đã kiểm bằng Core giả (CoreGia)/KttCore giả, chưa kiểm trình duyệt
+  thật. Cổng CLI SDK chuẩn vẫn 0/5 CHUA_CAU_HINH; xem VIEC và Cần Core.
+
 ## 0.1.0 — 15/11/2026 — TC-8
 
 - Xuất kết quả hậu kiểm thành JSON tại Core và các trường tĩnh; kiểm nguồn,

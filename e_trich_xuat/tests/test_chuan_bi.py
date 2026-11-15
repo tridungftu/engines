@@ -418,7 +418,7 @@ def test_doi_bo_cau_hinh_giua_chuoi_khong_sua_snapshot_cu(monkeypatch):
     p = deepcopy(app.phieu)
     p.update(ma="e_ai_demo", nang_luc=[{"ma": "ai.hoi_theo_yeu_cau@1", "ten": "AI giả DEMO",
         "nhan": ["yeu_cau_ai"], "tra": "tra_loi_ai", "gioi_han": {"thoi_han_giay": 30}}],
-        loai_du_lieu_rieng=p["loai_du_lieu_rieng"] + [{"ma": "tra_loi_ai", "ten": "Trả lời AI có trích dẫn"}],
+        loai_du_lieu_rieng=p["loai_du_lieu_rieng"],
         chay_thu_demo=[])
     ai = Engine(p)
     model_da_nhan = []
@@ -507,7 +507,7 @@ def test_chuyen_tiep_64_kib_tu_choi_khong_cat_tham_chieu(monkeypatch):
 
 def test_cong_demo_ngan_thay_the_co_du_cau_hinh():
     ds = chay_demo()
-    assert len(ds) == 3 and all(kq["trang_thai"] == "XONG" for kq in ds)
+    assert len(ds) == 5 and all(kq["trang_thai"] == "XONG" for kq in ds)
 
 
 def test_ai_2_nhan_duoc_request_va_khuon_defs_khong_goi_model(monkeypatch):

@@ -52,7 +52,7 @@ def doi_ho_so(core, ai, doi):
     return hs
 
 
-def test_dung_du_o_thu_tu_tom_tat_bam_nguon_va_khong_dang_ky():
+def test_dung_du_o_thu_tu_tom_tat_bam_nguon_va_dang_ky_that():
     core, app, pb = bang_demo()
     b = pb["bang_trich_xuat"]
     assert [r["ma"] for r in b["bang"]] == ["TT-01", "TT-02"]
@@ -63,10 +63,12 @@ def test_dung_du_o_thu_tu_tom_tat_bam_nguon_va_khong_dang_ky():
     assert b["don_vi_offset"] == "unicode"
     assert all(r["kieu_da_chuyen"] is False for r in b["bang"])
     assert all(r["dau_kiem_tam_e6"].startswith("OK") and "kiem_tra_legacy" not in r for r in b["bang"])
-    assert [n["ma"] for n in PHIEU["nang_luc"]] == ["trich.doc_docx@1", "trich.chuan_bi@1"]
+    assert [n["ma"] for n in PHIEU["nang_luc"]] == [
+        "trich.doc_docx@1", "trich.chuan_bi@1", "trich.hau_kiem@1", "trich.xuat_ket_qua@1"]
     goc = Path(__file__).resolve().parents[2]
-    assert not (goc / "_chung/contract/bang_trich_xuat.schema.json").exists()
-    # Schema đã duyệt được chép nguyên; không biến đề xuất bảng thành contract.
+    schema = json.loads((goc / "_chung/contract/bang_trich_xuat.schema.json").read_text(encoding="utf-8"))
+    Draft202012Validator(schema).validate(pb)
+    # Bốn loại chung trước giữ nguyên.
     a = (goc / "_chung/contract/tra_loi_ai.schema.json").read_bytes()
     z = (goc / "e_trich_xuat/goi/e_trich_xuat/contract/tra_loi_ai.schema.json").read_bytes()
     assert a == z and hashlib.sha256(a).digest() == hashlib.sha256(z).digest()

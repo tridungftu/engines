@@ -1,0 +1,42 @@
+{
+  "nhan": "Toàn bộ tên và ngữ cảnh là DEMO giả; gold soạn tách khỏi detector, đóng băng trước phép đo R3. Chưa có người soạn độc lập hoặc Local thật.",
+  "duong": [
+    ["CONG_TY", "mây&lá/27", "Đề nghị gửi bản nháp cho mây&lá/27 để đối chiếu."],
+    ["CONG_TY", "hạt.dẻ+q", "Bên hạt.dẻ+q đã gửi bản dự toán."],
+    ["CONG_TY", "vệt-nắng_đỏ", "Dự án do vệt-nắng_đỏ theo dõi."],
+    ["CONG_TY", "Công ty DEMO Đá Cuội", "Công ty DEMO Đá Cuội; thanh toán 1.000.000 VND ngày 2026-10-30."],
+    ["CONG_TY", "xưởng DEMO ốc sên", "Đề nghị xưởng DEMO ốc sên xác nhận."],
+    ["CONG_TY", "dệt lụa", "dệt lụa"],
+    ["CA_NHAN", "tạ miên khê", "Bản nháp đã chuyển cho tạ miên khê kiểm tra."],
+    ["CA_NHAN", "đinh ngọc trúc", "chị đinh ngọc trúc; thanh toán 1.000.000 VND ngày 2026-10-30."],
+    ["CA_NHAN", "hòa bình", "Giao hòa bình tổng hợp bản kê."],
+    ["CA_NHAN", "mai yên", "mai yên"],
+    ["CA_NHAN", "trúc mây", "Người nhận: trúc mây; bản nháp DEMO."],
+    ["CA_NHAN", "lâm o'khê", "Đề nghị lâm o'khê ký bản nháp."],
+    ["DIA_CHI", "ngách DEMO 57, vườn mưa", "Địa chỉ: ngách DEMO 57, vườn mưa; thanh toán 1.000.000 VND ngày 2026-10-30."],
+    ["DIA_CHI", "bến lá/4", "Hẹn nhận bản nháp ở bến lá/4."],
+    ["DIA_CHI", "khu DEMO dốc sương", "Chuyển bản kê đến khu DEMO dốc sương."],
+    ["DIA_CHI", "đồi hoa", "đồi hoa"]
+  ],
+  "am": [
+    "Dự kiến tăng trưởng trong kỳ kế hoạch.",
+    "Giá trị hàng tồn kho giữ nguyên.",
+    "Đã chuyển bản nháp để đối chiếu.",
+    "Báo cáo phản ánh đúng số liệu tổng hợp.",
+    "Đề nghị duy trì hòa bình trong nhóm.",
+    "Dự án phục hồi nghề dệt lụa.",
+    "Tổng hợp chi phí theo từng nhóm.",
+    "Kiểm tra định mức nguyên vật liệu.",
+    "Đơn giá dự toán đã được cập nhật.",
+    "Kế hoạch giải ngân theo tiến độ.",
+    "Tiền thanh toán 1.000.000 VND ngày 2026-10-30.",
+    "Số văn bản 27/2026; kỳ báo cáo tháng 10.",
+    "Dòng tiền còn cân đối trong kỳ.",
+    "Thu nhập dự kiến tăng nhẹ.",
+    "Nguyên tắc là giữ chứng từ đầy đủ.",
+    "hòa bình",
+    "dệt lụa",
+    "đồi hoa"
+  ],
+  "bien_the": ["goc", "nfd", "cf_chen", "cf_thay_cach", "viet_thuong"]
+}

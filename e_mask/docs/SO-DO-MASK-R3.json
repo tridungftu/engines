@@ -1,0 +1,1630 @@
+{
+  "phien_ban": 1,
+  "gold_sha256": "b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181",
+  "moi_truong": "SDK 2.2.0 / CoreGia / Windows / chỉ DEMO",
+  "gioi_han": "Khảo sát RAM, chưa người soạn độc lập, chưa Local/Core thật; không chứng nhận độ phủ/chi phí.",
+  "phat_hanh_thuc_te": 0,
+  "luot_local_thuc_te": 0,
+  "tong": {
+    "duong": {
+      "so_ca": 16,
+      "trang_thai": {
+        "lot_ban_khao_sat": 7,
+        "chan_nghiep_vu": 8,
+        "che_du": 1
+      },
+      "gold_che_du_ke_ca_bi_chan": 4,
+      "matcher_cu_che_du": 16,
+      "bao_nham_ke_ca_bi_chan": 0,
+      "giay": 0.045731
+    },
+    "nfd": {
+      "so_ca": 16,
+      "trang_thai": {
+        "lot_ban_khao_sat": 7,
+        "chan_nghiep_vu": 8,
+        "che_du": 1
+      },
+      "gold_che_du_ke_ca_bi_chan": 4,
+      "matcher_cu_che_du": 16,
+      "bao_nham_ke_ca_bi_chan": 0,
+      "giay": 0.052143
+    },
+    "cf_chen": {
+      "so_ca": 16,
+      "trang_thai": {
+        "lot_ban_khao_sat": 7,
+        "chan_nghiep_vu": 8,
+        "che_du": 1
+      },
+      "gold_che_du_ke_ca_bi_chan": 4,
+      "matcher_cu_che_du": 16,
+      "bao_nham_ke_ca_bi_chan": 0,
+      "giay": 0.058079
+    },
+    "cf_thay_cach": {
+      "so_ca": 16,
+      "trang_thai": {
+        "lot_ban_khao_sat": 12,
+        "chan_nghiep_vu": 4
+      },
+      "gold_che_du_ke_ca_bi_chan": 0,
+      "matcher_cu_che_du": 15,
+      "bao_nham_ke_ca_bi_chan": 0,
+      "giay": 0.052247
+    },
+    "viet_thuong": {
+      "so_ca": 16,
+      "trang_thai": {
+        "lot_ban_khao_sat": 9,
+        "chan_nghiep_vu": 6,
+        "che_du": 1
+      },
+      "gold_che_du_ke_ca_bi_chan": 3,
+      "matcher_cu_che_du": 16,
+      "bao_nham_ke_ca_bi_chan": 0,
+      "giay": 0.040139
+    },
+    "am": {
+      "so_ca": 18,
+      "trang_thai": {
+        "giu_nguyen": 14,
+        "chan_nghiep_vu": 4
+      },
+      "gold_che_du_ke_ca_bi_chan": 0,
+      "matcher_cu_che_du": 0,
+      "bao_nham_ke_ca_bi_chan": 0,
+      "giay": 0.044723
+    }
+  },
+  "bien_2000": {
+    "ma_loi": "MASK_UNG_VIEN_QUA_TRAN",
+    "giay": 0.218428,
+    "rpc": {
+      "dinh_danh": 2000
+    }
+  },
+  "bien_500k": {
+    "ky_tu": 500000,
+    "so_ung_vien": 0,
+    "so_phep": 0,
+    "giay": 11.150106,
+    "rpc": {},
+    "chan": false
+  },
+  "cac_ca": [
+    {
+      "nhom": "duong",
+      "ca": 0,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.004815,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 1,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002489,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 2,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.0024,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 3,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 1,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.004421,
+      "rpc": {
+        "dinh_danh": 2,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 4,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 2,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002765,
+      "rpc": {
+        "dinh_danh": 2
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 5,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.00114,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 6,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002621,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 7,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 1,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.003758,
+      "rpc": {
+        "dinh_danh": 2,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 8,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002312,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 9,
+      "matcher_cu_che_du": true,
+      "trang_thai": "che_du",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 0,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.002042,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 10,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 3,
+      "so_chua_co": 3,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002894,
+      "rpc": {
+        "dinh_danh": 3
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 11,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002425,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 12,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 3,
+      "so_chua_co": 2,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.004229,
+      "rpc": {
+        "dinh_danh": 3,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 13,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003477,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 14,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 2,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002739,
+      "rpc": {
+        "dinh_danh": 2
+      }
+    },
+    {
+      "nhom": "duong",
+      "ca": 15,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.001204,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 0,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003599,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 1,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002931,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 2,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002829,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 3,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 1,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.004249,
+      "rpc": {
+        "dinh_danh": 2,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 4,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 2,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.004582,
+      "rpc": {
+        "dinh_danh": 2
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 5,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.001369,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 6,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003192,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 7,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 1,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.003832,
+      "rpc": {
+        "dinh_danh": 2,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 8,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002669,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 9,
+      "matcher_cu_che_du": true,
+      "trang_thai": "che_du",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 0,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.00224,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 10,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 3,
+      "so_chua_co": 3,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003195,
+      "rpc": {
+        "dinh_danh": 3
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 11,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.00332,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 12,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 3,
+      "so_chua_co": 2,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.004753,
+      "rpc": {
+        "dinh_danh": 3,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 13,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.00483,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 14,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 2,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003259,
+      "rpc": {
+        "dinh_danh": 2
+      }
+    },
+    {
+      "nhom": "nfd",
+      "ca": 15,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.001294,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 0,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.004486,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 1,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002697,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 2,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002724,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 3,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 1,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.005778,
+      "rpc": {
+        "dinh_danh": 2,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 4,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 2,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003766,
+      "rpc": {
+        "dinh_danh": 2
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 5,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.001296,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 6,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003851,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 7,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 1,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.006369,
+      "rpc": {
+        "dinh_danh": 2,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 8,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002673,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 9,
+      "matcher_cu_che_du": true,
+      "trang_thai": "che_du",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 0,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.002405,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 10,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 3,
+      "so_chua_co": 3,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003061,
+      "rpc": {
+        "dinh_danh": 3
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 11,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002687,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 12,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 3,
+      "so_chua_co": 2,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.007534,
+      "rpc": {
+        "dinh_danh": 3,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 13,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003429,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 14,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 2,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003264,
+      "rpc": {
+        "dinh_danh": 2
+      }
+    },
+    {
+      "nhom": "cf_chen",
+      "ca": 15,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.002059,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 0,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.00456,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 1,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002602,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 2,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.00253,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 3,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.005142,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 4,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.004322,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 5,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002964,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 6,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.00305,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 7,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 2,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.004333,
+      "rpc": {
+        "dinh_danh": 2
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 8,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002988,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 9,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.001952,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 10,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 3,
+      "so_chua_co": 3,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003628,
+      "rpc": {
+        "dinh_danh": 3
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 11,
+      "matcher_cu_che_du": false,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002441,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 12,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 2,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.004361,
+      "rpc": {
+        "dinh_danh": 2
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 13,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002728,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 14,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002564,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "cf_thay_cach",
+      "ca": 15,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002082,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 0,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002809,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 1,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002513,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 2,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002438,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 3,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.001666,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 4,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002483,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 5,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.001169,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 6,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002619,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 7,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 1,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.004238,
+      "rpc": {
+        "dinh_danh": 2,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 8,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002383,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 9,
+      "matcher_cu_che_du": true,
+      "trang_thai": "che_du",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 0,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.002031,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 10,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 3,
+      "so_chua_co": 3,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002703,
+      "rpc": {
+        "dinh_danh": 3
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 11,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002463,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 12,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": true,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 1,
+      "so_phep": 1,
+      "kiem_tien_ngay": true,
+      "giay": 0.003764,
+      "rpc": {
+        "dinh_danh": 2,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 13,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002255,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 14,
+      "matcher_cu_che_du": true,
+      "trang_thai": "lot_ban_khao_sat",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002436,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "viet_thuong",
+      "ca": 15,
+      "matcher_cu_che_du": true,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.002169,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 0,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.004507,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 1,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002433,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 2,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002655,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 3,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.004645,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 4,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002465,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 5,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002298,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 6,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002371,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 7,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002415,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 8,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002402,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 9,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002328,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 10,
+      "matcher_cu_che_du": false,
+      "trang_thai": "chan_nghiep_vu",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 0,
+      "so_chua_co": 0,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002413,
+      "rpc": {}
+    },
+    {
+      "nhom": "am",
+      "ca": 11,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 2,
+      "so_chua_co": 2,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.003274,
+      "rpc": {
+        "dinh_danh": 2
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 12,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002417,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 13,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002252,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 14,
+      "matcher_cu_che_du": false,
+      "trang_thai": "giu_nguyen",
+      "gold_che_du": false,
+      "bao_nham": false,
+      "so_ung_vien": 1,
+      "so_chua_co": 1,
+      "so_phep": 0,
+      "kiem_tien_ngay": true,
+      "giay": 0.002404,
+      "rpc": {
+        "dinh_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 15,
+      "matcher_cu_che_du": false,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.00116,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 16,
+      "matcher_cu_che_du": false,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.001129,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    },
+    {
+      "nhom": "am",
+      "ca": 17,
+      "matcher_cu_che_du": false,
+      "trang_thai": "chan_nghiep_vu",
+      "ma_loi": "MASK_XUNG_DOT",
+      "giay": 0.001155,
+      "rpc": {
+        "dinh_danh": 1,
+        "bi_danh": 1
+      }
+    }
+  ]
+}

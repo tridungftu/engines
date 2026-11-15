@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-R3 | Khảo sát ứng viên RAM, tìm chính xác qua kho R2, chặn mơ hồ alias | MASK-P4 §3–5; sau R2; câu 10 tối 15/11 | Chờ Core — kết thúc khảo sát 15/11/2026; **chưa đạt triển khai/nghiệm thu** | Đúng ba runtime; R3 25/25, full 2285 passed, 4 xfailed cũ, 190 subtests, 0 failed/skip; độc lập/diff mã 0, CLI 0/2 thiếu quyền. Ca gốc: 1 che đủ không chặn, 7 lọt bản khảo sát, 8 chặn trên 16. Báo nhầm câu thường: 4/18 = 22,22%. Không phát hành/Cloud. PR: **chờ lead mở**; số kiểm và C-P4-03 ở mục R3 bên dưới. |
 | MASK-R4 | Kho ánh xạ chỉ RAM, ghim instance/quyền xuyên bước, TTL/timer/tiêu thụ một lần | MASK-P4 §2/4/5; C-P4-01/02; sau R1 | Xong phần kho/port CoreGia / Chờ Core — 15/11/2026; **chưa đạt nghiệm thu chung** | Đúng ba runtime theo phiếu; adapter chỉ ngoài gói, thiếu ghim/lifecycle thì runtime từ chối. [Báo cáo](BAO-CAO-MASK-R4.md). Chuyển nghiệp vụ cũ ở R2/R5/R6/B7 còn riêng; PR: **chờ lead mở**. |
 | MASK-R2 | Adapter nhận diện SDK chỉ bí mật/metadata, không snapshot/map | MASK-P4 §2–5; sau R1; CĐ-36 | Xong phần adapter / Chờ Core — 15/11/2026; chưa đạt nghiệm thu chung | Đúng bốn runtime; R2 32/32, full 2260 passed, 4 xfailed cũ, 190 subtests passed, 0 failed/skip. Độc lập/diff mã 0; CLI chuẩn 0/2 thiếu quyền, C-P4-03 còn mở, tạo tên/tăng đếm bị chặn. PR: **chờ lead mở**; chi tiết ở mục MASK-R2 bên dưới. |
 | MASK-R1 | Khai ngăn bí mật/alias, TTL SDK 2.2 và migration/kiểm kê | MASK-P4 §1–5; CĐ-36; câu 10 tối 15/11 | Xong sửa hồi quy / Chờ Core — 15/11/2026; **chưa đạt nghiệm thu chung** | Ngoại lệ lead cho sửa thêm chay.py/test: full pytest 2228 passed, 4 xfailed cũ, 190 subtests passed, 0 failed/skip; R1 46/46; độc lập mã 0, kiểm kê 50/50. CLI 0/2 thiếu quyền Core, C-P4-03 còn mở; kho RAM cũ giữ tới R2/R4. PR: **chờ lead mở**; kết quả thật ở mục MASK-R1 bên dưới. |
@@ -35,6 +36,53 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-2c-2 | Chuẩn bị yêu cầu Local, khuôn/profile/budget và kế hoạch đoạn | MASK-2c-1; profile kỹ thuật lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.1.0; 972 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-2.md); PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## MASK-R3 — kết thúc khảo sát ứng viên, 15/11/2026
+
+**Kết luận: Chưa đạt triển khai/nghiệm thu — độ phủ giảm so với matcher danh mục DEMO, chi phí Core/Local thật chưa đo. Kết thúc khảo sát bằng giới hạn, giữ cửa phát hành đóng.** PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); không commit/push.
+
+**Đã làm:** ba runtime đúng bảng P4 §4: `che_van_ban.py`, `tra_cuu_dinh_danh.py`, `hau_kiem_ai.py`. Đầu dò mới tạo ứng viên có span từ detector/quy tắc/trường/danh sách của đầu vào hiện tại trong RAM; từng giá trị gọi `tim_ung_vien` của R2 qua `viec.ngan` SDK thật. Không liệt kê ngăn/dựng matcher danh mục trong nhánh mới, không fuzzy/prefix kho, không quét mọi chuỗi con hoặc giải mã. Kết quả ngăn chỉ metadata/null+cờ; tên mở che lấy đúng lát nguyên văn đầu vào, giữ NFD/Cf/hoa-thường/khoảng trắng. Cùng alias ứng với nhiều nguyên văn khác nhau thì hủy toàn lượt; không chọn tên đầu/chuỗi chuẩn hóa. Dò cùng giá trị chuẩn hóa một lần, kể cả kết quả không thấy; hai nhóm mâu thuẫn chặn.
+
+Trần khảo sát đề xuất **2.000 giá trị phân biệt**, **20.000 vị trí**, **8 triệu ký tự** cộng dồn qua các lượt định vị giá trị detector; deadline monotonic tuyệt đối do caller tin cậy cấp, kiểm trước/sau RPC và giữa các lượt. Vượt trần/hạn, hủy, `ChuaRo`, metadata sai hoặc mơ hồ không trả phần đã làm; bỏ tham chiếu khi kết thúc. Deadline là hợp tác, không cắt ngang regex/RPC đang chạy; cần Core cưỡng chế budget. R4/R5 phải giữ **cùng** đối tượng lượt dò/budget cho toàn chuỗi, không tạo lại để né trần. `thu_thap_ung_vien` và `_tra_ung_vien_ram` nhận cùng `TraCuuDinhDanh`; điểm nối Local chỉ dùng sau kiểm `_span`/nguồn, chưa nối runtime Local. `khao_sat_che_chinh_xac` là wrapper khảo sát một lượt, đóng trong `finally`, không dùng wrapper này để giữ trạng thái xuyên bước. Giữ kiểm tiền/ngày/numeric độc lập và mọi kiểm nguồn/đủ đoạn/span Local.
+
+**Cửa dừng:** nhánh SDK R2 trong che/hậu kiểm chặn cố định `MASK_R3_CHUA_CHUNG_MINH` trước giao dịch lịch sử, không có cờ bật khảo sát từ payload/cấu hình. Đầu dò không ghi kho, cấp alias tạm, chốt hay tạo phong bì phát hành. Phần `_che`/mở che RAM lịch sử vẫn giữ để bảo toàn hồi quy trước R5/R6; **chưa xóa matcher khỏi toàn gói hoặc hoàn tất chuyển consumer P4**. Hậu kiểm lịch sử đã bỏ đọc danh mục và chỉ so với vùng gốc đang có trong RAM. Không sửa handler/vòng đời R4 hoặc snapshot R5 để mở đường vượt closure.
+
+**Đo DEMO mới:** [số đo từng ca, chỉ số đếm/mã/thời gian](SO-DO-MASK-R3.json), tái lập bằng `.venv/Scripts/python -B e_mask/tests/do_mask_r3.py`. Gold `tests/demo_mask_r3.json` đóng băng trước phép đo, SHA-256 `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`; 16 tên cơ sở (6 tổ chức, 6 người, 4 địa chỉ), 18 câu thường và 64 biến thể. Soạn tách khỏi detector/tập cũ nhưng **chưa có người soạn độc lập**, chưa đủ held-out 45/75/15/15 của §6.6. Không chỉnh detector/ngưỡng sau khi xem số đo. Đối chứng matcher cũ chỉ chạy ngoài gói trên fixture DEMO đã đóng băng, không đọc tên/ngăn Core để bù.
+
+| Bộ đo | Ca | Che đủ, không chặn | Lọt trong bản khảo sát | Chặn nghiệp vụ | Lỗi kỹ thuật | Matcher cũ che đủ gold |
+|---|---:|---:|---:|---:|---:|---:|
+| Tên cơ sở | 16 | 1 | 7 | 8 | 0 | 16/16 |
+| NFD | 16 | 1 | 7 | 8 | 0 | 16/16 |
+| Cf chèn | 16 | 1 | 7 | 8 | 0 | 16/16 |
+| Cf thay khoảng trắng | 16 | 0 | 12 | 4 | 0 | 15/16 |
+| Viết thường | 16 | 1 | 9 | 6 | 0 | 16/16 |
+
+Đây là bản khảo sát trong RAM, **không có kết quả nghiệp vụ nào được phát hành**, không phải số lọt sau hai lớp Local. Tổng 80 ca dương gồm 16 cơ sở +64 biến thể, không tính thành 80 tên độc lập. Trong 8 ca cơ sở bị chặn có 3 ca đã che đủ gold nhưng còn nghi vấn khác; gold che đủ bất kể chặn là **4/16**, không coi 8 chặn là detector tìm đúng. 18 câu thường: **14 giữ nguyên, 0 che thừa, 4 chặn nghiệp vụ, 0 lỗi kỹ thuật**; báo nhầm theo §6.6 = **(che thừa hoặc chặn) 4/18 = 22,22%**. Chuỗi âm tiết thường đã duyệt không chứng minh chính nó đang là tên trong ngữ cảnh hiện tại. Local thật **0 lượt, chưa đo**; không công bố 0 lọt do mọi cửa vận hành bị đóng.
+
+Chi phí CoreGia: 2.000 ứng viên không thấy cần đúng **2.000 RPC tìm định danh, 0,218428 giây**; ứng viên thứ 2.001 bị từ chối trước RPC, không cắt ngầm. Đây là phép tìm không thấy trên kho DEMO nhỏ, không đại diện trường hợp trúng/khóa/CAS/network hoặc quota Core thật. Mẫu thường lặp **500.000 ký tự**, 0 ứng viên/RPC, mất **11,150106 giây**; không đại diện văn bản đa dạng/nhiều thực thể. Chưa đo RAM đỉnh, chi phí model/chuỗi Local/Office, concurrency hoặc máy đích; không chốt trần/SLA bằng hai con số này. Cf thay khoảng trắng còn giảm khả năng tạo ứng viên; không dùng fuzzy hoặc tên giải mã để bù.
+
+**Môi trường:** `.venv` trong worktree, Python 3.13.14, SDK 2.2.0 cài offline từ wheel repo `--no-index --no-deps`; SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp SHA256SUMS. Có jsonschema 4.26.0, pytest 9.1.1 qua `--system-site-packages`; không đổi dependency/lock. Các lệnh dùng `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`, `-B`. Kiểm kê bytes/SHA tự sinh lại đủ **51 tệp**, ngoài đúng ba runtime, bắt buộc theo SDK khi đổi gói đã khai migration; không đổi manifest/schema/SQL/Core/SDK.
+
+**Kết quả kiểm:** [nguyên lệnh/kết quả thật](KET-QUA-KIEM-MASK-R3.txt). Đã kiểm bằng Core giả (CoreGia).
+
+| Lệnh / phép kiểm | Kết quả thật cuối |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**, 1,17 giây. Cả hai DEMO thiếu xác minh phiên/quyền; không bỏ cửa quyền hoặc dùng adapter có quyền thay CLI chuẩn. Kế thừa C-MS22-01. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q` | **2285 passed, 4 xfailed cũ, 190 subtests passed, 0 failed, 0 skipped; 210,94 giây, mã 0**. Bốn xfail strict MASK-2b giữ nguyên lý do giới hạn quy tắc/nợ CAO. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**, 0,62 giây; không tham chiếu cấm, bytecode hoặc symlink trong gói. |
+| Kiểm riêng R3 trước lượt full cuối | **25 passed, 1,31 giây, mã 0**, không skip/xfail. |
+| Kiểm kê và `git diff --check` | **51/51 tệp** đủ bytes/SHA thực, trừ chính kiểm kê; **diff mã 0**. |
+
+Ca R3 kiểm ngăn SDK/null+cờ thật, tên chỉ từ đầu vào RAM, alias nhiều nguyên văn bị chặn, Local dùng chung budget và không đếm lặp, 2.000/2.001 ứng viên/RPC, budget âm/sai kiểu, deadline trước/sau RPC, hủy/ChuaRo, metadata bị nguồn trả sai, caller đề nghị tên ngoài đầu vào không được gửi tìm, giữ tiền/ngày và cửa phát hành đóng. Giữ nguyên tất cả test an toàn cũ; không sửa hoặc bỏ test, không thêm skip/xfail. Hai lỗi mục tiêu ban đầu thuộc fixture/test R3 mới (chưa nạp từ điển; cấm nhầm cả bộ định vị detector thay vì cấm danh mục) đã được sửa; test hiện chặn liệt kê kho và buộc hậu kiểm không nhận danh mục. Không sửa detector/ngưỡng dựa trên gold.
+
+**Thời gian thực tế:** **20:54:00–21:22:00 ngày 15/11/2026 (UTC+07), 0,47 giờ**, tại mốc chốt kiểm và báo cáo. Bắt đầu theo lead; phiếu **6–8 giờ ƯỚC TÍNH**, độ khó `kho`.
+
+**Lệch khỏi phiếu / quyết định tạm:** dừng ở khảo sát theo cửa dừng Anh giao vì chưa chứng minh chất lượng/chi phí, chưa thay toàn bộ consumer lịch sử hoặc phát hành. Thêm hai trần kỹ thuật 20.000 vị trí/8 triệu ký tự dò như đề xuất thử, chưa coi là quyết định nghiệp vụ. Test an toàn cũ giữ nguyên; không bổ sung xfail/skip, không nâng ngưỡng hiệu năng. Ngoài ba runtime có test/tài liệu và kiểm kê tự sinh bắt buộc. Chưa Core/Local/Office/Linux thật; Cloud tắt, không engine-to-engine/mạng ngoài.
+
+### Cần Core — MASK-R3
+
+- **C-P4-03:** kế thừa chặn R2 về duy nhất bí mật theo vùng/phiên bản, `lay_hoac_tao`, CAS/lô ≤100 và dấu chống lặp sau mất ACK. Cần ghim nghĩa chuẩn hóa/chỉ mục, quota truy vấn/chống dò đoán và xác nhận không ghi ứng viên/băm vào log. 2.000 tìm chính xác không tự bảo đảm chi phí hoặc recall; tên đặc biệt/âm tiết thường/Cf thay khoảng trắng đang là khoảng thiếu cụ thể. Không đề nghị giải mã danh mục hoặc đọc tên cũ để bù. Chưa có bảo đảm thì giữ chặn tên mới/đếm/phát hành.
+- **C-P4-04/05, phối hợp R4/R5:** cần nguồn Local thật đủ đoạn và cùng budget/ngữ cảnh/TTL RAM, không hồ sơ Core chứa map/gốc; Core cưỡng chế deadline/RAM/CPU/RPC cả chuỗi, bao gồm lúc detector hoặc RPC chưa trả. Đầu dò R3 chưa chứng minh các cửa đó. Giữ C-P4-01/02 cho ghim instance/vòng đời và C-MS22-01 cho CLI DEMO thiếu quyền. Không có câu Chờ Anh chọn lại nghiệp vụ; lead cần bộ DEMO có người soạn độc lập và phép đo Local/Core thật trước giao lát nâng chất lượng.
 
 ## MASK-R4 — kho ánh xạ RAM và vòng đời chuỗi, 15/11/2026
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 from bisect import bisect_right
 from collections import Counter
 from contextlib import AbstractContextManager
+from dataclasses import dataclass
 import re
 from typing import Protocol
 import unicodedata
@@ -18,6 +19,8 @@ from .nguon.privacy.types import bo_ky_tu_vo_hinh, chuan_hoa_vi_tri
 from .tai_nguyen import ThieuTaiNguyen
 from . import ten_nguoi
 from .anh_xa_ai import tao_anh_xa, kiem_anh_xa
+from .tra_cuu_dinh_danh import (TraCuuDinhDanh, UngVien, TRAN_VI_TRI,
+                               chan_phat_hanh, loi as loi_ung_vien)
 
 
 class LoiCheVanBan(ValueError):
@@ -25,7 +28,7 @@ class LoiCheVanBan(ValueError):
 
 
 class Kho(Protocol):
-    """Mỗi instance gắn một phiên tin cậy. Mọi thao tác nằm trong giao_dich.
+    """Protocol RAM lịch sử, chỉ giữ hồi quy trước R4/R5/R6.
 
     Tra cứu dùng giá trị NFC/lower/gộp khoảng trắng, chung toàn tập đoàn nhưng
     tách DEMO/thật. doc_yeu_cau phải từ chối sai module/người gửi/vùng/đã đóng.
@@ -460,6 +463,116 @@ def _kiem_con_sot(van_ban, da_biet, *, da_do=None):
     return con_sot, day_du
 
 
+@dataclass(frozen=True, repr=False)
+class KhaoSatChe:
+    """Bản khảo sát nội bộ RAM, không phải van_ban_da_che được phát hành."""
+    anh_xa: object
+    doi_chieu: object
+    con_sot: tuple
+    kiem_tien_ngay: bool
+
+
+def thu_thap_ung_vien(van_ban, da_biet, luot):
+    """Ứng viên có vị trí từ đầu vào/quy tắc; không nhận danh mục kho.
+
+    Chỉ định vị giá trị detector đã đề nghị bằng chữ/NFC/khoảng trắng,
+    không fuzzy, prefix hoặc thử mọi n-gram. Từng giá trị gửi kho vẫn là
+    nguyên văn của vị trí hiện tại; không dùng tên detector làm tên mở che.
+    """
+    luot.kiem_han()
+    nfc, toa_do = _nfc_vi_tri(van_ban)
+    bao_ve = _vung_tien_ngay(van_ban)
+    vi_tri = {}
+
+    def them(a, b, nhom, nguon):
+        if a >= b:
+            return
+        a, b = toa_do[a][0], toa_do[b - 1][1]
+        if not 2 <= b - a <= 300 or bao_ve.hit(a, b):
+            return
+        if (a, b) not in vi_tri:
+            if len(vi_tri) >= TRAN_VI_TRI:
+                raise loi_ung_vien('MASK_UNG_VIEN_QUA_TRAN')
+            vi_tri[a, b] = UngVien(a, b, nhom, nguon)
+
+    def dinh_vi(gia_tri, nhom, nguon):
+        luot.kiem_han()
+        if not 2 <= len(gia_tri) <= 300:
+            return
+        luot.tinh_chi_phi(len(nfc))
+        phan = chuan_hoa(gia_tri).split(' ')
+        mau = re.compile(r'(?<!\w)' + r'\s+'.join(re.escape(p) for p in phan) + r'(?!\w)', re.I)
+        for m in mau.finditer(nfc):
+            luot.kiem_han()
+            them(m.start(), m.end(), nhom, nguon)
+
+    # Danh sách này do caller đưa cùng đầu vào hiện tại, không phải từ kho.
+    for gia_tri, nhom, _ in da_biet:
+        dinh_vi(gia_tri, nhom, 'dau_vao')
+    for a, b, nhom in _vung_nhan(nfc):
+        luot.kiem_han()
+        them(a, b, nhom, 'truong')
+    for ten in ten_nguoi.tim(nfc):
+        luot.kiem_han()
+        them(ten.bat_dau, ten.ket_thuc, 'CA_NHAN', 'quy_tac')
+    phat_hien, day_du = _phat_hien(nfc)
+    luot.kiem_han()
+    if not day_du:
+        raise loi_ung_vien()
+    da_do = set()
+    for gia_tri, nhom in phat_hien:
+        khoa = (chuan_hoa(gia_tri), nhom)
+        if khoa not in da_do:
+            dinh_vi(gia_tri, nhom, 'quy_tac')
+            da_do.add(khoa)
+    # Mỗi trường/đoạn nguyên vẹn là một ứng viên, không tách mọi chuỗi con.
+    # Trường không có nhãn dùng nhóm KHAC; xung đột nhóm tại Core thì chặn.
+    for m in re.finditer(r'[^\r\n\t;|]+', nfc):
+        luot.kiem_han()
+        a, b = m.span()
+        while a < b and nfc[a].isspace():
+            a += 1
+        while b > a and nfc[b - 1].isspace():
+            b -= 1
+        if 2 <= b - a <= 300:
+            them(a, b, 'KHAC', 'truong')
+    for muc in sorted(vi_tri.values(), key=lambda v: (v.bat_dau, -v.ket_thuc)):
+        luot.them(muc)
+    return luot.ket_qua()
+
+
+def khao_sat_che_chinh_xac(van_ban, dinh_danh_da_biet, kho, *, han_monotonic, kiem_huy):
+    """Đầu dò nội bộ cho R3, không ghi kho/chốt/kết quả hoặc gọi Local.
+
+    Chỉ trả bằng chứng trong RAM để đo thiếu sót. Chưa có Local thật và
+    C-P4-03 nên mọi handler SDK vẫn bị chan_phat_hanh đóng cố định.
+    """
+    _kiem_van_ban(van_ban)
+    da_biet = _kiem_dinh_danh([] if dinh_danh_da_biet is None else dinh_danh_da_biet,
+                             la_khai_bao=True)
+    luot = TraCuuDinhDanh(van_ban, kho, han_monotonic=han_monotonic, kiem_huy=kiem_huy)
+    try:
+        kq = thu_thap_ung_vien(van_ban, da_biet, luot)
+        anh_xa = tao_anh_xa(van_ban, kq.phep_thay)
+        kiem_anh_xa(anh_xa)
+        con_sot, day_du = _kiem_con_sot(anh_xa.da_che, [])
+        luot.kiem_han()
+        if not day_du:
+            raise loi_ung_vien()
+        tien_ngay = _kiem_tien_ngay(van_ban, anh_xa.da_che)
+        phan, cuoi = [], 0
+        for a, b, _ in kq.phep_thay:
+            phan.extend((bo_ky_tu_vo_hinh(van_ban[cuoi:a]), '\x00'))
+            cuoi = b
+        phan.append(bo_ky_tu_vo_hinh(van_ban[cuoi:]))
+        tien_ngay = tien_ngay and not core.numeric_review(
+            ''.join(phan), _an_bi_danh(anh_xa.da_che), [])['changed']
+        luot.kiem_han()
+        return KhaoSatChe(anh_xa, kq, tuple(con_sot), tien_ngay)
+    finally:
+        luot.dong()
+
+
 def che(van_ban: str, dinh_danh_da_biet, kho: Kho) -> dict:
     """Che theo mẫu 1–2. Định danh đã biết: [{gia_tri, nhom}], hoặc None.
 
@@ -479,6 +592,9 @@ def che_co_anh_xa(van_ban: str, dinh_danh_da_biet, kho: Kho):
 
 
 def _chay_che(van_ban, dinh_danh_da_biet, kho, *, noi_bo):
+    if callable(getattr(kho, 'tim_ung_vien', None)):
+        # Ngăn SDK R2 không được rơi về matcher/snapshot RAM lịch sử.
+        chan_phat_hanh()
     _kiem_van_ban(van_ban)
     da_biet = _kiem_dinh_danh([] if dinh_danh_da_biet is None else dinh_danh_da_biet,
                              tien_ngay=frozenset(chuan_hoa(v) for _, _, _, v in _cac_tien_ngay(van_ban)),
@@ -492,6 +608,10 @@ def _chay_che(van_ban, dinh_danh_da_biet, kho, *, noi_bo):
 
 
 def _che(van_ban, da_biet, kho, *, noi_bo=False):
+    # Nhánh hồi quy RAM lịch sử; ngăn SDK phải đi lõi ứng viên R3 và hiện
+    # bị chặn chất lượng. Giữ nhánh này tới R5/R6, không coi là P4 vận hành.
+    if callable(getattr(kho, 'tim_ung_vien', None)):
+        chan_phat_hanh()
     ma = kho.tao_yeu_cau()
     # Gồm danh mục chính thức và cụm tạm có sẵn trong cùng vùng của kho.
     danh_muc = kho.liet_ke_dinh_danh()

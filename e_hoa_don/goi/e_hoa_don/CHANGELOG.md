@@ -1,5 +1,13 @@
 # CHANGELOG — e_hoa_don
 
+## HD-5 — Lõi ZIP và kiểm kê từng entry, 15/11/2026
+
+- Thêm zip.py và schema JSON kỹ thuật; tái dùng lõi ZIP/parser strict/DTO/phép chiếu XML. Chỉ sửa 2/4 runtime; manifest/hoa_don.doc_xml@2 không đổi, ZIP chưa đăng ký (HD-6). Giữ ordinal/tên gốc/entry lỗi và mọi bản trùng; trạng thái đọc tách khỏi dấu trùng; thư mục báo riêng.
+- SHA-256 chỉ sau đọc hết/CRC đúng; băm và kích thước null khi đọc thiếu. Chặn tên nguy hiểm/symlink/ZIP lồng khỏi parser; non-XML đọc có trần để băm. Đối chiếu EOCD với central directory; không kế thừa COMPLETE hoặc suy đủ kỳ/thuế/ghi nhận. Giữ context=None, UNKNOWN/NOT_PERFORMED.
+- Chặn metadata và byte thật: 64 MiB ZIP, 1.000 entry, 16 MiB/tệp, 128 MiB tổng, 1.000 HHDVu trước DTO, 32 MiB JSON; toàn việc lỗi khi vượt trần. Theo lead bổ sung trần nén 1.000:1 (chưa đo corpus). Chỉ STORED/DEFLATE, method khác báo chưa hỗ trợ. Hook bộ nhớ ZipExtFile chống file_size giả và đếm chunk lỗi CRC; kiểm lại khi nâng Python. Không giải nén đĩa/cấu hình/sổ/cache/ngăn/tệp tạm; giữ tệp/test cấu hình lịch sử ngoài đường chạy, chờ lưu trữ sau.
+- 69 unit tests HD-5; hồi quy parser XML/DTO nguyên AST. Sửa nợ subprocess UTF-8 ở test_hd_2 và cập nhật danh mục gói trong test độc lập. Windows/Python 3.13.14/SDK 2.0.0: SDK **3/3 DEMO ĐẠT**, pytest **367 passed in 45.80s, 0 skipped**, kiểm độc lập **ĐẠT**, mọi mã thoát 0. **Đã kiểm bằng Core giả (CoreGia)**; ZIP mới kiểm unit, chưa nối Core thật/đăng ký SDK; chưa chạy Linux hoặc cài sạch ZIP.
+- Thời gian thực tế: **07:51:00–08:15:19, 15/11/2026 UTC+07; 0.406 giờ**, phiếu **4 giờ ước tính**. PR: **chờ lead mở**. Không commit/push; không phát sinh Cần Core/Chờ Anh mới.
+
 ## HD-P2 — Phiếu ZIP + bảng kê XLSX, 15/11/2026 (chỉ tài liệu)
 
 - Điều chỉnh theo lead: HD-7/HD-8 dùng Python stdlib, kiểm OOXML và đọc tĩnh nguồn đối chiếu. SDK 3/3 ĐẠT, pytest 298 passed (39.33s), kiểm độc lập ĐẠT; đã kiểm bằng Core giả (CoreGia), chưa triển khai ZIP/XLSX.
@@ -73,3 +81,14 @@ QA thêm: JSON Schema Draft 2020-12 hợp lệ và khớp báo cáo thật qua C
 **Đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật.** Chưa chạy Linux hoặc bài máy sạch HD-4; test dùng pathlib/stdlib và mock I/O nên giữ khả năng chạy Windows/Linux, chưa coi đây là bằng chứng đã chạy Linux. Không chạy Node/Cloud/cổng thuế. Không thực hiện bài Core thật 120 phút.
 
 Thời gian thực tế: 0.243 giờ (00:55:00–01:09:33, 15/11/2026, UTC+07; ước tính trong phiếu: 4 giờ). Mốc cập nhật VIEC theo giao việc: 14/11/2026; kiểm thực tế ngày 15/11/2026. PR: **chờ lead mở**; không commit/push. XML HD-1…HD-4 giữ theo phiếu, ZIP/bảng kê/tải còn chờ Anh chốt. Cần Core đã có: cửa context tin cậy/quyền tệp và kênh cấu hình máy; không phát sinh yêu cầu mới.
+
+
+## HD-6 — 15/11/2026 — PR: chờ lead mở
+
+- Đăng ký `hoa_don.doc_zip@1`: nhận tep, trả đủ 13 trường tĩnh và báo cáo `hoa-don-goi-chi-tiet.json` upload qua SDK; MIME ZIP, 64 MiB, 600 giây, hủy được. Giữ nguyên hợp đồng/handler `doc_xml@2`; chỉ 2 runtime `chay.py`/`zip.py` đổi. Giữ phiên bản 1.0.0 hiện có, ghim phát hành ZIP/XLSX ở HD-8/lead.
+- Đọc qua `viec.mo_tep`, kiểm bytes thật/khối ngắn, hủy xuyên entry/chunk, trước upload/trả; lỗi/hủy/mất lease/upload lỗi không XONG, không dùng ChuaRo che lỗi cục bộ. Giữ tep_zip/băm bytes gốc; không tạo tep_id entry, không gọi engine khác hoặc ghi nhận nghiệp vụ, RAM thuần.
+- Thêm ZIP DEMO hỗn hợp: 5 tệp/1 thư mục; 3 đọc được, 1 lỗi, 1 PDF chưa hỗ trợ, 1 trùng bytes, tên trùng khác bytes. XONG chỉ đã trả báo cáo; da_doc_het=false/can_kiem_tra=true; UNKNOWN/NOT_PERFORMED/context=None giữ nguyên.
+- Đóng nợ HD-5: chặn UserWarning overlap, đổi thành lỗi entry an toàn/giữ bản ghi; chốt API riêng zipfile (EOCD/CRC/EOF/STORED/DEFLATE), lưu ý nâng Python tại NGUON; README ghi non-XML vượt 1.000:1 từ chối cả việc.
+- 105 ca HD-6 đối chiếu toàn JSON với oracle literal, không sinh expected từ reader; từng băm/ordinal/đếm, SDK bộ nhớ + HTTP loopback, ACK/Idempotency-Key, hủy/gia hạn/mất lease/upload lỗi, canary và không filesystem. Điều chỉnh ba assertion chỉ-XML theo năng lực mới; không bỏ test hồi quy.
+- Ba lệnh AGENTS.md §5 bằng `.venv\Scripts\python -B`: SDK **4/4 DEMO ĐẠT**, pytest `e_hoa_don/tests -q --basetemp=.pytest-tmp` **472 passed in 79.93s, 0 skipped**, kiểm độc lập **ĐẠT**, đều mã 0. Windows/Python 3.13.14/SDK 2.0.0 offline đúng SHA; đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật/quyền kho tệp, chưa chạy Linux/Excel app. Chi tiết lệnh và lần kiểm ban đầu được sửa tại VIEC.md.
+- Thời gian thực tế **0.230 giờ** (08:21:00–08:34:48, UTC+07), phiếu 3 giờ ước tính. Không Cần Core/Chờ Anh mới; giữ nợ hook nhật ký/context/quyền tệp thật. Không sửa Core/SDK/ma-nguon, không dependency runtime mới, không xóa/commit/push; PR chờ lead mở.

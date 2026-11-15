@@ -20,7 +20,9 @@ def goi_demo(tmp_path, ma):
 def test_goi_that_ast_va_tien_trinh_sach():
     assert kiem_doc_lap() == []
     assert kiem_tien_trinh_sach() == []
-    assert len(list((THU_MUC_GOI / "e_hoa_don").glob("*.py"))) == 5
+    assert {p.name for p in (THU_MUC_GOI / "e_hoa_don").glob("*.py")} == {
+        "__init__.py", "cau_hinh_may.py", "chay.py", "doc.py", "hoa_don_xml.py", "zip.py",
+    }
 
 
 @pytest.mark.parametrize("ma", [

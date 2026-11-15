@@ -4,6 +4,7 @@ from kho_tri_thuc_sdk.engine import Engine, LoiDuongTruyen, LoiNghiepVu
 
 from .doc import JSON_TOI_DA_BYTE, doc_xml
 from .hoa_don_xml import MAX_XML_BYTES
+from .zip import CAU_VUOT_TRAN, ZIP_TOI_DA_BYTE, doc_zip
 
 
 if not callable(getattr(Engine, "_ghi", None)):
@@ -62,6 +63,44 @@ def doc_hoa_don(viec):
         "hoa-don-chi-tiet.json", bao_cao, "application/json"
     )
     viec.tien_do(100, "Đã đọc XML hóa đơn; cần kiểm tra kết quả nguồn.")
+    viec.kiem_huy()
+    return {"loai": "truong", "truong": truong}
+
+
+@app.nang_luc("hoa_don.doc_zip@1")
+def doc_hoa_don_zip(viec):
+    tep = viec.dau_vao["tep"]
+    viec.kiem_huy()
+    viec.tien_do(10, "Đang đọc gói ZIP hóa đơn.")
+    try:
+        with viec.mo_tep(tep["tep_id"]) as luong:
+            # Không tin kích thước metadata, kể cả nguồn trả các khối ngắn.
+            raw = bytearray()
+            while len(raw) <= ZIP_TOI_DA_BYTE:
+                viec.kiem_huy()
+                chunk = luong.read(min(64 * 1024, ZIP_TOI_DA_BYTE + 1 - len(raw)))
+                if not chunk:
+                    break
+                raw.extend(chunk)
+    except (LoiDuongTruyen, LoiNghiepVu) as loi:
+        if not (
+            isinstance(loi, LoiDuongTruyen) and loi.ma == "VUOT_GIOI_HAN_KICH_THUOC"
+            or isinstance(loi, LoiNghiepVu) and loi.ma == "VUOT_GIOI_HAN"
+        ):
+            raise
+        raise LoiNghiepVu("HD_ZIP_VUOT_GIOI_HAN", CAU_VUOT_TRAN) from None
+    if len(raw) > ZIP_TOI_DA_BYTE:
+        raise LoiNghiepVu("HD_ZIP_VUOT_GIOI_HAN", CAU_VUOT_TRAN)
+    viec.kiem_huy()
+    truong, bao_cao = doc_zip(bytes(raw), tep_zip=tep, kiem_huy=viec.kiem_huy)
+    viec.tien_do(60, "Đã kiểm kê gói ZIP hóa đơn; kết quả cần kiểm tra.")
+    viec.kiem_huy()
+    viec.tien_do(80, "Đang lưu báo cáo kiểm kê gói ZIP.")
+    viec.kiem_huy()
+    truong["chi_tiet_nguon"] = viec.tai_tep_ra(
+        "hoa-don-goi-chi-tiet.json", bao_cao, "application/json"
+    )
+    viec.tien_do(100, "Đã trả báo cáo gói ZIP; cần kiểm tra kết quả nguồn.")
     viec.kiem_huy()
     return {"loai": "truong", "truong": truong}
 

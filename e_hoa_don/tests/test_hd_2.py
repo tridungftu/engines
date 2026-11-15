@@ -488,6 +488,7 @@ def test_sdk_ghim_va_thieu_hook_khong_khoi_dong():
     assert kho_tri_thuc_sdk.__version__ == "2.0.0"
     ma = "from kho_tri_thuc_sdk.engine import Engine; del Engine._ghi; import e_hoa_don.chay"
     kq = subprocess.run([sys.executable, "-B", "-c", ma], cwd=GOI,
-                        capture_output=True, text=True, encoding="utf-8")
+                        capture_output=True, text=True, encoding="utf-8",
+                        env={**os.environ, "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"})
     assert kq.returncode != 0
     assert "SDK không có hook nhật ký" in kq.stderr

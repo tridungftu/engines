@@ -8,14 +8,12 @@ from copy import deepcopy
 from functools import wraps
 from hashlib import sha256
 import json
-from pathlib import Path
 from uuid import uuid4
 
 from kho_tri_thuc_sdk.engine import ChuaRo, LoiDuongTruyen, LoiNghiepVu, ViecDaHuy
 
 from .che_van_ban import chuan_hoa, chuan_bi_danh
-from .cau_hinh import CauHinhKhongHopLe
-from .ngan import NganKhongHopLe, NganXungDot
+from .ngan import CauHinhKhongHopLe, NganKhongHopLe, NganXungDot
 from .quyen_yeu_cau import loi_kho, xac_minh
 
 
@@ -23,8 +21,10 @@ BANG = ('dinh_danh', 'bi_danh_tam', 'cho_duyet', 'ma_yeu_cau', 'dau_gap')
 TIEN_TO = {'CONG_TY': 'MASKCT', 'CA_NHAN': 'MASKCN', 'DIA_CHI': 'MASKDC',
            'MA_SO_THUE': 'MASKMST', 'TAI_KHOAN': 'MASKTK'}
 CAC_TIEN_TO = frozenset((*TIEN_TO.values(), 'MASKKHAC', 'MASKTAM'))
-KHAI_NGAN = json.loads((Path(__file__).resolve().parents[1] / 'KHAI-SDK-2.1.json')
-                       .read_text(encoding='utf-8'))['ngan_du_lieu']
+# Chỉ khai kho RAM nội bộ; không khai ngan_du_lieu/migration trong engine.json.
+KHAI_NGAN = [dict(bang=bang, pham_vi='engine', khoa=['vung', 'khoa'],
+                  duy_nhat=[['vung', 'bi_danh']] if bang in BANG[:3] else [])
+             for bang in BANG]
 
 
 def khoa_dau(*phan):

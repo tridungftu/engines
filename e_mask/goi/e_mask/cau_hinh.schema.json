@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cấu hình Che định danh",
+  "description": "Chưa có trường cấu hình engine. Prompt và model Local thuộc cấu hình module/quy trình do Core cấp.",
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}

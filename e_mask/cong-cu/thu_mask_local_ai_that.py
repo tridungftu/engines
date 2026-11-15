@@ -240,19 +240,17 @@ class DemCloud:
 
 def ai_ram(url, model, timeout):
     from e_hoi_ai import chay as ai
-    from e_hoi_ai.ngan_engine import tao_ngan_bo_nho
     from e_hoi_ai.cong_ai import CongAI
     from e_hoi_ai.nha_cung_cap import NhaCungCapLocal
-    ngan = tao_ngan_bo_nho()
-    with ngan.lo() as lo:
-        lo.them('cau_hinh', {}, {'local_ai': {'url': url, 'timeout_giay': timeout},
-                                'quy_tac_model': [{'mau_ma_prompt': MA_PROMPT,
-                                                   'uu_tien': model, 'du_phong': []}]})
+    core = CoreGia(ai.app)
+    cfg = {'local_ai': {'url': url, 'timeout_giay': timeout},
+           'quy_tac_model': [{'mau_ma_prompt': MA_PROMPT,
+                              'uu_tien': model, 'du_phong': []}]}
+    core.dat_cau_hinh(ai.app.ma, cfg)
     local, cloud = DemLocal(NhaCungCapLocal(), model), DemCloud()
-    cu = ai.app.ngan, ai.bo_hoi.cong_ai
-    ai.app.ngan = ngan
+    cu = ai.bo_hoi.cong_ai
     ai.bo_hoi.cong_ai = CongAI(nha_cung_cap={'local': local, 'cloud': cloud})
-    return ai, local, cloud, cu
+    return SimpleNamespace(app=ai.app, core=core, cfg=cfg), local, cloud, cu
 
 
 def hai_lop(b, ai, model, thong_ke=None, cap_nhat=None):
@@ -276,12 +274,10 @@ def hai_lop(b, ai, model, thong_ke=None, cap_nhat=None):
             return {'trang_thai': 'LOI', 'loi': {'ma': 'HET_HAN_CHUOI'}}, thong_ke
         # Một lần gọi không được dùng lại toàn bộ deadline của ca. Giữ
         # trần timeout 600 giây của cấu hình AI-9 nguyên bản.
-        ban = ai.app.ngan.doc('cau_hinh', {})
-        cfg = deepcopy(ban.gia_tri)
+        cfg = deepcopy(ai.cfg)
         cfg['local_ai']['timeout_giay'] = min(600, con_lai)
-        with ai.app.ngan.lo() as lo:
-            lo.sua('cau_hinh', {}, cfg, row_version=ban.row_version)
-        kq = CoreGia().chay_thu(ai.app, 'ai.hoi_mask_cuc_bo@1', deepcopy(y))
+        ai.core.dat_cau_hinh(ai.app.ma, cfg)
+        kq = ai.core.chay_thu(ai.app, 'ai.hoi_mask_cuc_bo@1', deepcopy(y))
         if cap_nhat:
             cap_nhat()
         if time.monotonic() - b.cong.bat_dau >= b.cong.han_giay:
@@ -294,8 +290,9 @@ def hai_lop(b, ai, model, thong_ke=None, cap_nhat=None):
             cap_nhat()
         if kq['ket_qua']['tra_loi_ai']['model'] != model:
             return {'trang_thai': 'LOI', 'loi': {'ma': 'SAI_MODEL'}}, thong_ke
-        ban_model = ai.app.ngan.doc('model_phat_hien', {'id_model': model})
-        loai_api = ban_model.gia_tri['loai'] if ban_model else ''
+        ban_model = next((r for r in ai.core.xem_ngan(ai.app.ma, 'model_phat_hien')
+                          if r['id_model'] == model), None)
+        loai_api = ban_model['loai'] if ban_model else ''
         ds.append(dict(yeu_cau_ai=y, tra_loi_ai=kq['ket_qua'], nguon=dict(
             engine='e_hoi_ai', nang_luc='ai.hoi_mask_cuc_bo@1', nha_cung_cap='local', model=model,
             trang_thai='XONG', hoan_tat=dict(giao_thuc='ollama' if loai_api == 'ollama' else 'openai_compatible',
@@ -492,7 +489,8 @@ def do(bo, *, that=False, url=None, model=None, timeout=None, timeout_toi_da=TRA
                 row['ma_loi'] = 'NGOAI_LE_KHI_DO'
     finally:
         if cu is not None:
-            ai.app.ngan, ai.bo_hoi.cong_ai = cu
+            from e_hoi_ai import chay as ai_module
+            ai_module.bo_hoi.cong_ai = cu
     tien_do()
     return ket
 

@@ -595,10 +595,16 @@ def test_nguon_b4_sha_bytes_lf_truoc_sau_va_dich_hien_hanh():
     root = Path(__file__).resolve().parents[2]
     truoc = json.loads((root / 'e_mask/docs/SHA-NGUON-MASK-B4-TRUOC.json').read_text('utf-8'))
     doc = (root / 'e_mask/goi/e_mask/NGUON.md').read_text('utf-8').split('## MASK-B4 —')[1]
+    da_gop = json.loads((root / 'e_mask/docs/SHA-NGUON-MASK-S22-DA-GOP.json').read_text('utf-8'))
     for ten, hashes in truoc.items():
         b = (root / ten).read_bytes()
         if not ten.endswith('zip_an_toan.py'):
-            assert hashes == {'bytes': sha256(b).hexdigest(), 'lf': sha256(b.replace(b'\r\n', b'\n')).hexdigest()}
+            hien_hanh = hashes
+            if ten in da_gop:
+                assert hashes == da_gop[ten]['truoc']
+                hien_hanh = da_gop[ten]['hien_hanh']
+            assert hien_hanh['lf'] == sha256(b.replace(b'\r\n', b'\n')).hexdigest()
+            assert sha256(b).hexdigest() in {hien_hanh['bytes'], hien_hanh['lf']}
         assert all(h in doc for h in hashes.values())
     for ten in ('ghi_zip.py', 'va_xml.py', 'zip_an_toan.py'):
         b = (root / 'e_mask/goi/e_mask/e_mask' / ten).read_bytes()

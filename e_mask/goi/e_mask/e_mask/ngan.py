@@ -1,4 +1,4 @@
-"""Cổng ngăn theo đề nghị SDK 2.1; bản thay thế chỉ giữ dữ liệu trong RAM."""
+"""Kho bí danh RAM nội bộ giữ cho MASK-S22; chưa nối ngăn SDK, chờ MASK-P3."""
 
 from __future__ import annotations
 
@@ -11,6 +11,16 @@ import json
 import secrets
 import sys
 from threading import RLock
+
+
+class CauHinhKhongHopLe(ValueError):
+    # Giữ loại lỗi an toàn cho các port cũ, không còn bộ đọc cấu hình tạm.
+    ma = "CAU_HINH_KHONG_HOP_LE"
+    thong_diep = "Cấu hình engine không hợp lệ. Hãy nhờ quản trị viên kiểm tra lại."
+    thu_lai_duoc = False
+
+    def __init__(self):
+        super().__init__(self.thong_diep)
 
 
 class NganXungDot(Exception):
@@ -166,7 +176,7 @@ class _LopGhi:
 
 
 class NganBoNho(Ngan):
-    """khai_bao là danh sách ngan_du_lieu; cau_hinh luôn có khóa {}.
+    """khai_bao chỉ mô tả bảng của kho RAM; không có bảng cấu hình.
 
     Mỗi đối tượng gốc thuộc một engine. Các view pháp nhân chia sẻ cùng dữ liệu
     và cùng khóa luồng; tạo gốc mới sẽ có ngăn độc lập hoàn toàn.
@@ -178,19 +188,13 @@ class NganBoNho(Ngan):
         self._chi_muc = {}
         self._phien_ban = 0
         self._khoa_tiep = secrets.token_bytes(32)
-        self._khai_bao = {"cau_hinh": {"bang": "cau_hinh", "khoa": [],
-                                         "pham_vi": "engine", "duy_nhat": []}}
+        self._khai_bao = {}
         try:
             for muc in deepcopy(khai_bao):
                 _json(muc)
                 ten = muc["bang"]
-                if not isinstance(ten, str) or not ten or (ten in self._khai_bao and ten != "cau_hinh"):
+                if not isinstance(ten, str) or not ten or ten in self._khai_bao or ten == "cau_hinh":
                     raise NganKhongHopLe()
-                if ten == "cau_hinh":
-                    if (muc.get("khoa") != [] or muc.get("pham_vi", "engine") != "engine"
-                            or muc.get("duy_nhat", [])):
-                        raise NganKhongHopLe()
-                    continue
                 if muc.get("pham_vi", "engine") not in ("engine", "phap_nhan"):
                     raise NganKhongHopLe()
                 cac_khoa = [muc["khoa"], *muc.get("duy_nhat", [])]

@@ -440,3 +440,47 @@ Part bất biến chép nguyên local header/payload nén/descriptor; central ch
 Giới hạn được kiểm trước/từng lần encode, thêm buffer, nén/ghi và đóng ZIP, gồm cả central+EOCD: output 1 MiB; giải nén tổng 8 MiB/phần 2 MiB; ratio 200. Các trần phần/node/depth/ô/sheet và tính hợp lệ XML/graph tiếp tục qua lại B1/readers. Nội dung dự kiến đếm cả shared dùng lặp, kiểm 2 triệu code point/8 MiB UTF-8 và 32767 UTF-16/ô; không thêm báo cáo JSON nên giữ helper 256/64/32 KiB của B1 nguyên trạng. **Giới hạn hiện hành:** B1/B2/B3 đọc lại output vẫn đếm bảo thủ 500.000 ký tự cả text/tail/attribute kỹ thuật, có thể từ chối sớm hơn trần ra 2 triệu; không nới reader bằng cờ hoặc monkey-patch. Điều chỉnh profile đọc chiều ra cần lát reader riêng trước khi cam kết hỗ trợ phần khuếch đại đó.
 
 Không ghi Ngan/bền máy hoặc tạo tệp tạm; chỉ RAM và dọn buffer trong `finally`. Hủy/mất lease/ChuaRo truyền nguyên, không output dở, mạng/log/tên gốc. Chưa công bố năng lực tệp; B7/B9 mới nối hai lớp/quyền/chốt/upload. Đã kiểm bằng Core giả (CoreGia) gói văn bản hiện có; writer tệp kiểm trực tiếp RAM/fixture Office DEMO, **chưa Word/Excel/Core/Local thật hoặc Linux thực tế**. Cloud vẫn tắt.
+
+## MASK-S22 — 15/11/2026, SDK 2.2.0
+
+Mục này là hiện trạng mới nhất; các mục SDK 2.0/2.1 ở trên là lịch sử. Đã kiểm bằng Core giả (CoreGia). Runtime chỉ thư viện chuẩn và `kho_tri_thuc_sdk==2.2.0`, không thêm dependency chạy. Wheel từ `docs/goi-gui-engine/sdk-2.2.0/`, SHA-256 bytes `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`, khớp SHA256SUMS.txt. Venv mới `.venv`, SDK cài bằng `--no-index --no-deps`; môi trường cũ được giữ tại `.venv-truoc-mask-s22`. Bộ kiểm offline sao các tệp phân phối đã cài từ venv cũ theo đúng phiên bản ở `e_mask/tests/requirements.lock`: pytest 9.1.1, packaging 26.3, pluggy 1.6.0, Pygments 2.21.0, iniconfig 2.3.0, colorama 0.4.6. Không cần mạng hoặc phụ thuộc khác của SDK dành cho module.
+
+Không chép nguồn engine khác hoặc sửa SDK/mẫu chung. Bốn runtime được điều chỉnh từ chính HEAD trước lát; adapter công cụ ngoài gói đổi sang cấu hình/ngăn CoreGia của Hỏi AI AI-11/AI-12. Theo chỉ dẫn Lead riêng Mask, giữ cổng bí danh RAM và các ca hành vi hiện tại, không tự nối kho này với ngăn SDK; không có đường giải mã mới. Schema cấu hình rỗng theo hiện trạng; prompt/model Local do module/quy trình cấp qua port tin cậy, không là cấu hình engine. Không có đệm phụ thuộc cấu hình cần làm mới. Bản khai 2.1 và bộ đọc cấu hình tạm chuyển nguyên byte ra LUU-TRU; test bộ đọc cũ chỉ nạp hiện vật ngoài gói. Hai test so băm mẫu và phép so mẫu trong ca B3 đã bỏ, các kiểm hành vi còn giữ.
+
+Băm LF dưới đây chuẩn hóa CRLF → LF, không đổi nội dung khác. Nguồn trước là Git HEAD của worktree bắt đầu lát, đích sau là tệp hiện tại. Tệp mới ghi “mới”.
+
+| Tệp từ thư mục e_mask | SHA-256 trước (LF) | SHA-256 sau (LF) |
+|---|---|---|
+| `goi/e_mask/e_mask/chay.py` | `af5bfbdaf8bb2ea90aad75c84375b16be65a4ab2207b4e4c0ca675f26198fdb0` | `3afb29b2364a5dca5d35f6dc5a1ca12a447badf52f77a281aecb1f6bfbadc5ff` |
+| `goi/e_mask/e_mask/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` | `a2304ef100f2650227d06f5ec0b64ea4026626de967b8d256d87e5a05f180f59` |
+| `goi/e_mask/e_mask/kho_ngan.py` | `dd7f47f871a8b1bced793855a79a9a98b66a6c11d6559a8112d99f3b39d7f67b` | `e8ca52d6a8e81a512e11c4ef093e9c60a9a741f967dd19c92d5f1580825e4cd5` |
+| `goi/e_mask/e_mask/kho_qua_core.py` | `ead192d13252dab309692c1f7e95ebbf3100930a73a1f2ed9ced051a03c292c3` | `eab5abe60566e0874a1f989cacf6813d84ab5c75de364a2b214e484054e9c24f` |
+| `cong-cu/thu_mask_local_ai_that.py` | `27a2f63e05519ddb8ab227c107a829b3b615f8cd5ad423a341d5d70b9939ee05` | `a8e091d14e1c9992cfcf02d885ce977caf1231b166ba054346c1c33d29139eb2` |
+| `goi/e_mask/engine.json` | `9edc5cdb2becd61e3ae880a59157691f1e9a0c2564b013d67c08c90bce5d9c82` | `cdf368cd4fa86a0f64271f33303d2717a131a7985046f66cee54e13f159b54c2` |
+| `goi/e_mask/cau_hinh.schema.json` | `mới` | `3804ad4a504016a6a80a752c51d7ab05a3f5289b8bf7ac329b4512c570150175` |
+| `goi/e_mask/requirements.lock` | `mới` | `2042fa331b34afc8df48dcfa2d46909276abd557f828865360618b07b64de5a9` |
+
+Hiện vật được bảo toàn (SHA bytes trước = sau; SHA LF kiểm được ở mọi checkout):
+
+| Nguồn trước trong gói | Đích từ thư mục e_mask | SHA bytes | SHA LF |
+|---|---|---|---|
+| `KHAI-SDK-2.1.json` | `LUU-TRU/sdk_truoc_2_2/KHAI-SDK-2.1.json` | `c9d215451c1c1d9f3857803a2526681daf6820f2a8a33ed9cdcb7029c1e70958` | `db2ca7378f08d4d5c9fd60d77d79b403c4c1f9b8ea80a5f26e796c5349306cb5` |
+| `e_mask/cau_hinh.py` | `LUU-TRU/sdk_truoc_2_2/cau_hinh.py` | `fc36c496f3f7717b3f05512c21ef5dea84f34d3929cba3d2a8d5acefe453acbf` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
+
+CLI chuẩn chưa có cửa cấp quyền/mã yêu cầu tin cậy cho hai ví dụ Mask; không đổi quyền hoặc thêm chế độ DEMO runtime để báo đạt. Cần Core và kết quả kiểm cuối ghi trong `e_mask/docs/BAO-CAO-MASK-S22.md`; màn duyệt chỉ giữ kiểm với KttCore giả, chưa nối ngăn Core mới.
+
+Nguồn tham chiếu đã thay trên main trước MASK-S22 (không phải thay đổi do lát này):
+
+| Nguồn | Commit đã gộp | SHA bytes hiện hành | SHA LF hiện hành |
+|---|---|---|---|
+| `e_hoa_don/goi/e_hoa_don/e_hoa_don/zip.py` | `55f0f761fed03460a0039cd791da0684303ede88` | `0d9abdf12d0a5767ab2f46b445f4baeda8e7e6e0ca264f971eec11ca6aa99567` | `5b60d342be6f9e109c75df7b266e779a0aa389c0937288f7e7ed77e992685e52` |
+
+Giữ nguyên băm nguồn B1/B4 lịch sử và hiện vật `SHA-NGUON-MASK-B4-TRUOC.json`; test so với bằng chứng chuyển nguồn `SHA-NGUON-MASK-S22-DA-GOP.json` cho đúng tệp đã đổi trên main, các nguồn khác vẫn kiểm nguyên trạng. Mã B1/B4 đã chép không đổi.
+
+Băm bản checkout MASK-B4 hiện tại, mã LF không đổi; bytes khác do checkout Windows dùng CRLF:
+
+| Tệp trong gói Python | SHA bytes checkout | SHA LF |
+|---|---|---|
+| `ghi_zip.py` | `c98b6d8ad273ca9d6946c0362446f292cf40e8b871b01a3d4aa5054a7f44a470` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` |
+| `va_xml.py` | `6b826f350c567b04587bd4f6e227af136037a28400fabd38a131fb37e7b48f17` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` |
+| `zip_an_toan.py` | `d55a1555fd3fb05aed323b3fd9146d26e773c19bfcd57ac32d836905b53880db` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` |

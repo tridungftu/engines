@@ -1,3 +1,10 @@
+## 1.3.0 — 15/11/2026, MASK-S22 (chưa phát hành)
+
+- Nâng SDK 2.2.0, khai schema cấu hình rỗng đúng hiện trạng; handler đọc `viec.cau_hinh`. Lưu trữ nguyên byte bản khai 2.1 và bộ đọc cấu hình tạm; bỏ bảng cấu hình khỏi kho RAM.
+- Theo ngoại lệ Lead/CĐ-36, giữ cổng kho bí danh RAM; tách khỏi ngăn SDK, không khai bảng/migration, không thêm đường giải mã. MASK-P3 xử lý thiết kế nghiệp vụ sau.
+- Adapter công cụ Local dùng cấu hình và ngăn CoreGia 2.2.0 cho Hỏi AI AI-11/AI-12; hai test deadline dùng checkpoint xác định, không đo tải máy. Giữ các ca hành vi/an toàn cũ; chỉ bỏ so băm mẫu tạm.
+- Đã kiểm bằng Core giả (CoreGia). CLI chuẩn vẫn bị chặn ở cả hai ví dụ do thiếu cửa cấp quyền/mã yêu cầu tin cậy; Cần Core, chưa đạt điều kiện nghiệm thu chung. Pytest lượt chốt: 2179 passed, một subtest hiệu năng cũ failed, 4 xfailed giữ nguyên, 189 subtests passed, 0 skipped; hai ca deadline đã qua. Kiểm độc lập đạt. Kết quả lệnh và thời gian cuối tại `e_mask/docs/BAO-CAO-MASK-S22.md`.
+
 ## Chưa phát hành — 15/11/2026, MASK-B4 writer ZIP/XML nội bộ
 
 - Thêm `ghi_zip.py`, `va_xml.py`, mở kiểm record trong `zip_an_toan.py`; đúng ba runtime, chỉ stdlib/SDK và RAM. Không đổi manifest/năng lực/handler hoặc bật Cloud; B7/B9 mới nối hai lớp và phát hành.

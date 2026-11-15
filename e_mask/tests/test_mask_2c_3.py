@@ -44,7 +44,7 @@ def test_ten_lop_mot_lot_ai_che_them_giu_tien_ngay_khong_ro_log(capsys):
     assert '1.000.000 VND ngày 30/10/2026' in v['van_ban']
     assert v['con_sot'] == [] and v['kiem_tien_ngay'] is True
     assert v['so_cho_thay'] == b.s['ket_qua_quy_tac']['so_cho_thay'] + 1
-    assert v['phien_ban_engine'] == 'e_mask 1.2.0'
+    assert v['phien_ban_engine'] == 'e_mask ' + b.app.phieu['phien_ban']
     assert v['chuyen_tiep'] == {} and 'map' not in str(v)
     assert len(b.n.tim('cho_duyet').danh_sach) >= 1 and len(b.cong.chung_cu) == 1
     log = capsys.readouterr()

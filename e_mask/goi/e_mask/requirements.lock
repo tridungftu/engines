@@ -1,0 +1,2 @@
+# Phụ thuộc chạy; cài offline từ wheel SDK trong repo.
+kho_tri_thuc_sdk==2.2.0

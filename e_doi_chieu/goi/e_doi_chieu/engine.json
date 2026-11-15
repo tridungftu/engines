@@ -2,7 +2,7 @@
   "phien_ban_manifest": 2,
   "loai": "engine",
   "ma": "e_doi_chieu",
-  "ten": "??i chi?u b?n k?",
+  "ten": "Đối chiếu bản ký",
   "phien_ban": "0.1.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
@@ -21,7 +21,7 @@
   "nang_luc": [
     {
       "ma": "doi_chieu.doc_docx@1",
-      "ten": "??c b?n Word",
+      "ten": "Đọc bản Word",
       "nhan": [
         "tep"
       ],
@@ -40,7 +40,19 @@
   "loai_du_lieu_rieng": [
     {
       "ma": "van_ban_tai_lieu",
-      "ten": "V?n b?n t?i li?u c? v? tr?"
+      "ten": "Văn bản tài liệu có vị trí"
+    },
+    {
+      "ma": "yeu_cau_ai",
+      "ten": "Yêu cầu hỏi AI"
+    },
+    {
+      "ma": "tra_loi_ai",
+      "ten": "Trả lời AI có trích dẫn"
+    },
+    {
+      "ma": "ho_so_doi_chieu",
+      "ten": "Hồ sơ đối chiếu bản ký"
     }
   ],
   "tai_nguyen": {

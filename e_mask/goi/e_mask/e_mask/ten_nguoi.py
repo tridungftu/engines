@@ -1,7 +1,8 @@
-"""MASK-2b: dò họ + âm tiết, không phụ thuộc dấu hoặc chữ hoa.
+"""MASK-2b: chấm điểm tên, chỉ trả ứng viên/toạ độ và căn cứ nội bộ.
 
-Chỉ trả ứng viên/toạ độ nội bộ; không cấp bí danh, quyền hay lưu nội dung.
-Tên dài/mơ hồ giữ lại để chặn, không tự cắt thành một tên được phép che.
+Điểm >= 8: che; 4..7: con_sot; < 4: bỏ qua. Tên dài, trùng bỏ dấu,
+tên nước ngoài và ranh giới hỏng bị giới hạn điểm ở mức cần duyệt.
+Danh sách bổ sung do lead cấp/tự soạn, chỉ họ hoặc âm tiết; xem NGUON.md.
 """
 from bisect import bisect_right
 from dataclasses import dataclass
@@ -12,16 +13,52 @@ from .nguon.privacy import detectors, leftovers
 
 
 _TU = re.compile(r'[^\W\d_]+')
-_CHU_VIET = frozenset('aăâbcdđeêghiklmnoôơpqrstuưvxy')
 _DANH_XUNG = frozenset('ong ba anh chi em co chu bac mr mrs ms'.split())
-# Không dùng "thì/thi", "nhận/nhan", "năm/nam", "đang/dang": trùng
-# Thị, Nhân, Nam, Đăng. Khi không tách được lời văn, chặn để người dùng duyệt.
+_XUNG_CO_DAU = frozenset('ông bà anh chị em cô chú bác mr mrs ms'.split())
+_XUNG_TAT = frozenset('a c o b'.split())  # Bắt buộc có dấu chấm.
 _NGAT = frozenset('va voi da duoc se la cua cho gui giua ben khi neu '
-                  'de tren theo den'.split())
+                  'de tren theo den ky boi truoc sau ngay hom nay tai trong'.split())
+_DONG_TU = frozenset('ky gui voi giua boi cua'.split())
+_AM_DEM = frozenset('van thi duc minh thanh quoc bao xuan ngoc hoai huu'.split())
+_LOI_VAN = frozenset('là đã được sẽ đang với của cho gửi giữa bởi trước sau '
+                     'hôm nay ngày tại trong trên theo đến khi nếu để'.split())
 _CHUC_DANH = re.compile(r'\s*\(\s*(?:ke toan|giam doc|truong phong|chu tich|thu ky)(?!\w)')
-# Cụm thông dụng trùng họ; chỉ áp dụng khi không có danh xưng/tên đã duyệt.
-# Dùng cả cụm, không miễn mọi từ bắt đầu bằng họ như "lê", "cao", "lý".
+_NHAN_NUOC_NGOAI = re.compile(r'(?<!\w)(?:ten\s+)?nguoi\s+nuoc\s+ngoai\s*$')
+_SAU_KY = re.compile(r'\s+(?:(?:đã|da)\s+)?(?:ký|ky|gửi|gui)(?!\w)', re.I)
+NGUONG_CHE = 8
+NGUONG_CON_SOT = 4
+
+# Nguyên các họ hiếm do lead cung cấp trong lệnh sửa ngày 15/11/2026.
+_HO_BO_SUNG = 'Ưng Âu Khúc Lục Thân Ninh Quan Ông Vi Mẫn Khổng Bế Nông Lò Hầu'
+# Tự soạn âm tiết tên/đệm phổ biến, không chứa tổ hợp tên một người cụ thể.
+_AM_TEN = '''
+a an anh ánh ân ấn ba bách bạch bảo bích bình bội bửu cẩm cam cát chấn châu
+chi chiến chính chung chương công cường dã dân danh dần di diễm diên diệu
+doanh du duy duyên dũng dương đạt đan đăng đạo đồng đông đức định đinh đoan
+gia giang giao hạ hải hà hân hạnh hằng hằng hảo hiền hiển hiếu hiệp hoài
+hoan hoàng hoa hòa hoàn hồng huấn huệ hùng hưng hương huy huyền hữu khải
+khang khánh khanh khiêm khoa khôi khương kiên kiệt kim kính kỳ lam lan
+lâm lệ lê liên liêm linh loan long lợi lộc luân luận lương lưu ly lý mai
+mẫn mạnh minh mỹ nam ngân ngọc nguyên nguyệt nga nghĩa nghị nhi nhiên
+nhân nhật như nhu nhung nho ninh nữ oanh phan phong phúc phú phượng
+phương phụng quân quang quảng quốc quý quyền quyên sang sơn sĩ sỹ sinh
+tài tân tấn tâm tây thạch thái thắng thanh thành thảo thiên thiện thị thi
+thịnh thọ thuận thu thủy thụy thư thương thường tiến tiền tín tình tinh
+toàn tôn trang trâm trân trí triết trinh trình trọng trung trúc trường
+tú tuấn tuệ tuyền tuyết tùng uy uyên văn vân vĩ vi việt vinh vĩnh võ vọng
+vũ vương xuân xuyến y yên ý
+'''
+# Cụm 2–3 âm tiết: áp dụng ở MỌI vị trí, kể cả họ nằm giữa cụm.
 _CUM_THONG_DUNG = (
+    'báo cáo', 'tài chính', 'phương thức', 'thanh toán', 'thanh lý',
+    'thuế giá trị', 'giá trị', 'lý thuyết', 'phạm vi', 'đoàn kiểm toán',
+    'hoàng hôn', 'lương thực', 'mai sau', 'kim ngạch', 'châu á',
+    'trịnh trọng', 'võ đoán', 'dương tính', 'vương quốc', 'tạ ơn',
+    'ngô nghê', 'bùi nhùi', 'mạc định', 'trương mục', 'phan bổ', 'đinh kèm',
+    'trần nợ', 'lâm thời', 'tăng giá', 'tài sản', 'cố định', 'hữu hình',
+    'đường thẳng', 'làm việc', 'văn phòng', 'nguyên liệu', 'thị trường',
+    'hóa đơn', 'hoa đơn', 'kế toán', 'kiểm toán', 'chuyển khoản',
+    'chi phí', 'tổng tiền', 'phụ lục', 'hiệu lực', 'quản lý',
     'lê thê', 'lệ phí', 'lễ tết', 'lý do', 'lý luận', 'lý lịch',
     'hồ sơ', 'hỗ trợ', 'hồ chứa', 'cao hơn', 'cao nhất', 'cao cấp', 'cao điểm',
     'cao tốc', 'cao su', 'lương tháng', 'lương cơ bản', 'lương phải trả',
@@ -42,7 +79,12 @@ def chuan_ten(chu):
 
 
 def la_danh_xung(chu):
-    return chuan_ten(chu) in _DANH_XUNG
+    khoa = chuan_ten(chu)
+    return khoa.rstrip('.') in _DANH_XUNG or (khoa.endswith('.') and khoa[:-1] in _XUNG_TAT)
+
+
+_HO_THEM = frozenset(chuan_ten(s) for s in _HO_BO_SUNG.split())
+_AM = frozenset(chuan_ten(s) for s in _AM_TEN.split())
 
 
 @dataclass(frozen=True)
@@ -53,19 +95,21 @@ class UngVienTen:
     tin_cay: bool
     co_ngu_canh: bool
     bat_buoc_duyet: bool = False
+    diem: int = 0
+    can_cu: tuple[str, ...] = ()
+    nuoc_ngoai: bool = False
 
 
 def tim(chu, danh_muc=()):
-    """Bản dò phải được bỏ Cf/selector và NFC, caller ánh xạ về nguyên văn.
+    """Bản dò đã bỏ Cf/selector, NFC; caller ánh xạ về nguyên văn.
 
-    2–4 âm tiết: danh xưng hoặc đúng một tên chính thức => được che. "và"
-    và ngoặc chức danh chỉ củng cố nghi vấn, không đủ để tự cho phát hành.
-    5 âm tiết trở lên => chặn; không coi phần đầu là toàn bộ tên.
+    Cửa sinh ứng viên Việt: họ trong từ điển/họ bổ sung hoặc danh xưng.
+    Cụm thường trừ 8 điểm; danh xưng/tên chính thức không bị miễn ngầm.
+    Tên nước ngoài cần ngữ cảnh, luôn chặn; không suy họ Việt từ từ bất kỳ.
     """
-    ho = {chuan_ten(s) for s in detectors.surnames()[0]}
-    cum_thuong, tu_thuong = leftovers.allowlist()
+    ho = {chuan_ten(s) for s in detectors.surnames()[0]} | _HO_THEM
+    cum_thuong, _ = leftovers.allowlist()
     cum_mien = {chuan_ten(s) for s in cum_thuong | detectors.places()}
-    tu_mien = {chuan_ten(s) for s in tu_thuong}
     viet_tat = {chuan_ten(s) for s in detectors.acronyms()}
     thong_dung = {chuan_ten(s) for s in _CUM_THONG_DUNG}
     da_duyet = {}
@@ -80,7 +124,7 @@ def tim(chu, danh_muc=()):
     for cum in cum_mien | thong_dung:
         am = tuple(cum.split())
         theo_dau.setdefault(am[0], []).append(am)
-    mien = set()
+    mien, dau_cum = set(), set()
     for i, khoa in enumerate(khoa_tu):
         for am in theo_dau.get(khoa, ()):
             cuoi = i + len(am)
@@ -88,47 +132,112 @@ def tim(chu, danh_muc=()):
                     and all(chu[tu[k - 1].end():tu[k].start()].isspace()
                             for k in range(i + 1, cuoi))):
                 mien.update(range(i, cuoi))
+                dau_cum.add(i)
     ket_qua = []
     for i, dau in enumerate(tu):
-        if (khoa_tu[i] not in ho or (dau.start() and (chu[dau.start() - 1].isalnum()
-                                                    or chu[dau.start() - 1] == '_'))):
+        if dau.start() and (chu[dau.start() - 1].isalnum() or chu[dau.start() - 1] == '_'):
             continue
+        goc = dau.group().casefold()
+        if goc in _LOI_VAN:
+            continue  # "là" không phải họ Lã, "đang" không phải tên Đăng.
+        la_xung = khoa_tu[i] in _DANH_XUNG and (goc in _XUNG_CO_DAU or goc.isascii())
+        if la_xung and goc != 'chu':
+            continue  # Không lấy chính danh xưng làm từ đầu một tên nước ngoài.
         if (dau.group().casefold() == 'chú' and i + 1 < len(tu)
                 and khoa_tu[i + 1] in ho and chu[dau.end():tu[i + 1].start()].isspace()):
             continue  # "chú trần ...": Chú là danh xưng, không phải họ Chu.
+        a = dau.start()
+        truoc = chu[tu[i - 1].end():a] if i else ''
+        co_the_xung = bool(i and khoa_tu[i - 1] in _DANH_XUNG | _XUNG_TAT)
+        lien_truoc = bool(co_the_xung and re.fullmatch(r'\s*[.:：=]?\s+', truoc))
+        goc_truoc = tu[i - 1].group().casefold() if i else ''
+        danh_xung = bool(lien_truoc and (i - 1 not in mien or '.' in truoc)
+                         and ((khoa_tu[i - 1] in _DANH_XUNG
+                               and (goc_truoc in _XUNG_CO_DAU or goc_truoc.isascii()))
+                              or (khoa_tu[i - 1] in _XUNG_TAT and '.' in truoc)))
+        dong_tu = bool(i and truoc.isspace() and khoa_tu[i - 1] in _DONG_TU)
+        nhan_ngoai = bool(i and khoa_tu[i - 1] == 'ngoai'
+                          and _NHAN_NUOC_NGOAI.search(chuan_ten(chu[max(0, a - 80):a])))
+        la_ho = khoa_tu[i] in ho
+        if not la_ho and not danh_xung and not dau.group().isascii():
+            continue
+        # Không nhận danh xưng là họ Ông khi theo ngay sau là họ của tên.
+        if (dau.group().casefold() == 'ông' and i + 1 < len(tu)
+                and khoa_tu[i + 1] in ho and chu[dau.end():tu[i + 1].start()].isspace()):
+            continue
         j = i + 1
         while j < min(len(tu), i + 5):
             m = tu[j]
             if (not chu[tu[j - 1].end():m.start()].isspace()
                     or khoa_tu[j] in _NGAT
                     or m.group().casefold() == 'đang'
-                    or not all(c in _CHU_VIET for c in khoa_tu[j])):
+                    or (j in dau_cum and not danh_xung)):
                 break
             j += 1
-        if j - i < 2:
-            continue
-        a, b = dau.start(), tu[j - 1].end()
+        b = tu[j - 1].end()
+        am = khoa_tu[i:j]
         gia_tri = ' '.join(m.group() for m in tu[i:j])
-        khoa = ' '.join(khoa_tu[i:j])
-        truoc = chu[tu[i - 1].end():a] if i else ''
-        danh_xung = bool(i and khoa_tu[i - 1] in _DANH_XUNG
-                         and re.fullmatch(r'\s*[.:：]?\s+', truoc))
-        va_truoc = bool(i and khoa_tu[i - 1] == 'va' and truoc.isspace())
-        va_sau = bool(j < len(tu) and khoa_tu[j] == 'va'
-                      and chu[b:tu[j].start()].isspace())
-        ngu_canh = va_truoc or va_sau or bool(_CHUC_DANH.match(chuan_ten(chu[b:b + 80])))
+        khoa = ' '.join(am)
+        sau_ky = bool(_SAU_KY.match(chu, b))
+        latin = all(m.group().isascii() for m in tu[i:j])
+        nuoc_ngoai = bool(latin and len(am) >= 2
+                          and (not la_ho or any(s not in _AM for s in am[1:]))
+                          and not (danh_xung and not la_ho and all(s in _AM for s in am))
+                          and (dong_tu or danh_xung or nhan_ngoai or sau_ky))
+        if not la_ho and not danh_xung and not nuoc_ngoai:
+            continue
+        if len(am) < (1 if danh_xung else 2):
+            continue
+        diem, can_cu = 0, []
+
+        def cong(so, ly_do):
+            nonlocal diem
+            diem += so
+            can_cu.append(f'{ly_do}:{so:+d}')
+
+        if la_ho:
+            cong(3, 'HO_TU_DIEN')
+            ten_dung = sum(s in _AM for s in am[1:])
+            cong(min(ten_dung, 2), 'AM_TEN')
+            if len(am) >= 3 and am[1] in _AM_DEM:
+                cong(1, 'AM_DEM')
+            if not danh_xung:
+                cong(-(len(am) - 1 - ten_dung), 'AM_CHUA_BIET')
+            if len(am) >= 2 and all(m.group()[:1].isupper() for m in tu[i:j]):
+                cong(4, 'VIET_HOA_TEN')
+        if danh_xung:
+            cong(5, 'DANH_XUNG')
+            if not la_ho:
+                cong(3, 'TEN_SAU_DANH_XUNG')
+        if nuoc_ngoai:
+            cong(4, 'LATIN_CO_NGU_CANH')
+        if dong_tu:
+            cong(1, 'DONG_TU_LIEN_TRUOC')
+        chuc_danh = bool(chu[b:b + 10].lstrip().startswith('(')
+                         and _CHUC_DANH.match(chuan_ten(chu[b:b + 80])))
+        if chuc_danh:
+            cong(1, 'CHUC_DANH_LIEN_SAU')
+        if any(k in mien for k in range(i, j)) or khoa in viet_tat:
+            cong(-8, 'CUM_THONG_DUNG')
         ten_chinh_thuc = da_duyet.get(khoa, [])
-        tin_cay = j - i <= 4 and (danh_xung or len(ten_chinh_thuc) == 1)
-        if len(ten_chinh_thuc) > 1:
-            tin_cay = False  # Không chọn tuỳ tiện hai tên trùng nhau sau bỏ dấu.
-        if not tin_cay and not danh_xung and not ten_chinh_thuc:
-            if (i in mien or khoa in cum_mien or khoa in viet_tat
-                    or (not ngu_canh and all(s in tu_mien for s in khoa_tu[i:j]))):
-                continue
+        if len(ten_chinh_thuc) == 1:
+            cong(8, 'TEN_CHINH_THUC')
+        mo_ho_chu = bool(dau.group().casefold() == 'chu' and i + 1 < j and khoa_tu[i + 1] in ho)
+        qua_dai = len(am) > (4 if la_ho else 3)
+        loi_bien = bool(b < len(chu) and (chu[b].isalnum() or chu[b] == '_'))
+        bat_buoc = qua_dai or loi_bien or nuoc_ngoai or len(ten_chinh_thuc) > 1 or mo_ho_chu
+        if (len(ten_chinh_thuc) > 1 or mo_ho_chu
+                or danh_xung and diem < NGUONG_CON_SOT):
+            cong(max(0, NGUONG_CON_SOT - diem), 'BAT_BUOC_DUYET')
+            bat_buoc = True
+        if diem < NGUONG_CON_SOT:
+            continue
+        if bat_buoc and diem >= NGUONG_CHE:
+            cong(NGUONG_CHE - 1 - diem, 'GIOI_HAN_CAN_DUYET')
+        tin_cay = diem >= NGUONG_CHE and not bat_buoc
         ket_qua.append(UngVienTen(a, b, ten_chinh_thuc[0] if len(ten_chinh_thuc) == 1
-                                 else gia_tri, tin_cay, ngu_canh,
-                                 len(ten_chinh_thuc) > 1
-                                 or (not tin_cay and dau.group()[0].islower())))
+                                 else gia_tri, tin_cay, dong_tu or danh_xung or chuc_danh or nuoc_ngoai,
+                                 bat_buoc or not tin_cay, diem, tuple(can_cu), nuoc_ngoai))
     vung_tin_cay = detectors.Spans((m.bat_dau, m.ket_thuc) for m in ket_qua if m.tin_cay)
     loc = []
     for ten in ket_qua:

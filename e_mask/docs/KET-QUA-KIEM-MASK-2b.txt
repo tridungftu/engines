@@ -1,21 +1,28 @@
+MASK-2b — sửa theo kiểm độc lập, 15/11/2026. Chỉ DEMO; đã kiểm bằng Core giả (CoreGia).
+Môi trường: Windows x64; Python 3.13.14; SDK 2.0.0; pytest 9.1.1.
+Biến môi trường cho từng lệnh: PYTHONDONTWRITEBYTECODE=1, PYTHONUTF8=1.
+
 .venv/Scripts/python -m pytest e_mask/tests -q --basetemp=.pytest-tmp
-.......................................................... [ 10%]
-........................................ [ 17%]
-........................................................................ [ 31%]
-........................................................................ [ 44%]
-........................................................................ [ 57%]
-........................................................................ [ 70%]
-........................................................................ [ 84%]
-........................................................................ [ 97%]
-...............                                                          [100%]
-545 passed, 190 subtests passed in 29.81s
+[Đầu ra đoạn cuối; lược thanh tiến độ đầu.]
+............................... [  8%]
+........................................ [ 13%]
+........................................................................ [ 23%]
+........................................................................ [ 33%]
+........................................................................ [ 43%]
+........................................................................ [ 53%]
+........................................................................ [ 63%]
+........................................................................ [ 73%]
+........................................................................ [ 83%]
+........................................................................ [ 94%]
+...........................................                              [100%]
+717 passed, 190 subtests passed in 43.68s
 Mã thoát: 0
 
 .venv/Scripts/python e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
 [ĐẠT] Che văn bản DEMO XONG 
 [ĐẠT] Mở che DEMO XONG 
 Đã kiểm bằng Core giả (CoreGia).
-Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
 Mã thoát: 0
 
 .venv/Scripts/python e_mask/tests/kiem_doc_lap.py
@@ -23,62 +30,13 @@ Mã thoát: 0
 Mã thoát: 0
 
 .venv/Scripts/python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
 [LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
 [LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
 Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
-Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
 Mã thoát: 1
 
-.venv/Scripts/python e_mask/tests/do_mask_2b.py --moc sau
-{
-  "am_tinh_co_san": {
-    "so_mau": 14,
-    "so_chan_nham": 0,
-    "so_che_nham": 1,
-    "ti_le_bao_nham": 0.07142857142857142,
-    "vi_tri_chan_nham": [],
-    "vi_tri_che_nham": [
-      10
-    ]
-  },
-  "am_tinh_bo_sung": {
-    "so_mau": 30,
-    "so_chan_nham": 1,
-    "so_che_nham": 1,
-    "ti_le_bao_nham": 0.06666666666666667,
-    "vi_tri_chan_nham": [
-      15
-    ],
-    "vi_tri_che_nham": [
-      30
-    ]
-  },
-  "ten_nguoi": [
-    {
-      "ca": 1,
-      "gui_duoc": false,
-      "so_cho_thay": 0,
-      "so_con_sot": 1
-    },
-    {
-      "ca": 2,
-      "gui_duoc": true,
-      "so_cho_thay": 1,
-      "so_con_sot": 0
-    },
-    {
-      "ca": 3,
-      "gui_duoc": true,
-      "so_cho_thay": 1,
-      "so_con_sot": 0
-    },
-    {
-      "ca": 4,
-      "gui_duoc": false,
-      "so_cho_thay": 0,
-      "so_con_sot": 1
-    }
-  ]
-}
+.venv/Scripts/python e_mask/tests/test_mask_2b_rv.py --moc rv_sau
+{"t9_so_ca":32,"t9_lot":0,"t9_chan":24,"t9_che":8,"t10_so_ca":41,"t10_chan":2,"t10_che_thua":0,"t10_bao_nham":2}
 Mã thoát: 0
 

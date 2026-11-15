@@ -1,6 +1,6 @@
 # NGUỒN — gói e_mask, MASK-1…7, MASK-2b và sửa an toàn
 
-Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Handler che/mở che hiện đã có nghiệp vụ qua ngăn; các mô tả stub/kho tệp dưới đây là lịch sử từng lát. Trạng thái và băm mới nhất của tệp sửa ở MASK-2b nằm tại mục MASK-2b cuối tài liệu. Đã kiểm bằng Core giả (CoreGia).
+Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Handler che/mở che hiện đã có nghiệp vụ qua ngăn; các mô tả stub/kho tệp dưới đây là lịch sử từng lát. Trạng thái và băm mới nhất của lượt sửa nằm tại mục Sửa MASK-2b theo kiểm độc lập ở cuối tài liệu. Đã kiểm bằng Core giả (CoreGia).
 
 ## Năm tệp chép vào gói
 
@@ -192,3 +192,39 @@ Bảng này thay các băm lịch sử cùng tên ở trên cho bản MASK-2b. Q
 | `e_mask/docs/BAO-CAO-MASK-2b.md` | `523778d62fe4294fda317e576f4fc2e77b55b6085296c7c87bb391a2dc400b6d` |
 | `e_mask/docs/KET-QUA-KIEM-MASK-2b.txt` | `221b8669bd261ec15e49085832405beda14fcb91f1b69b4e143b02855c9c6aff` |
 | `e_mask/docs/SO-DO-MASK-2b.json` | `94645b2b9baed0f86190eeedb20db0e3a866332ede8629fc115baf8e1c3162fe` |
+
+## Sửa MASK-2b theo kiểm độc lập — 15/11/2026
+
+Mục này thay mô tả hiện hành và các băm lịch sử cùng tên của MASK-2b ở trên. Chỉ sửa hai tệp runtime `e_mask/ten_nguoi.py`, `e_mask/che_van_ban.py`; không thêm thư viện, không sửa nguồn cũ, mẫu chung, ngăn/cấu hình hoặc bốn tệp từ điển đã duyệt. Đã kiểm bằng Core giả (CoreGia).
+
+Nguồn danh sách bổ sung, không dùng dữ liệu hồ sơ thật:
+
+- **Họ:** `_HO_BO_SUNG` lấy nguyên 15 họ từ lệnh giao sửa của Anh/lead ngày 15/11/2026 lúc 09:47: Ưng, Âu, Khúc, Lục, Thân, Ninh, Quan, Ông, Vi, Mẫn, Khổng, Bế, Nông, Lò, Hầu. Đây chỉ là họ, không phải danh sách người. Không suy họ từ từ thường hay từ tên/đệm. `vn_surnames.txt` sạch giữ nguyên; họ bổ sung nằm trong mã, không giả nhận là từ điển nguồn đã thay đổi.
+- **Âm tiết tên/đệm:** `_AM_TEN`, `_AM_DEM` tự soạn trong repo theo phạm vi lead cho phép, chỉ gồm từ đơn thường dùng như văn, thị, đức, minh, thanh, hải, an, hoa, long, khoa; không lấy tổ hợp tên cụ thể của hồ sơ/người thật. Không tải bộ tên ngoài hoặc thêm dependency. Danh sách hữu hạn, không chứng nhận đủ mọi tên.
+- **Từ ghép:** `_CUM_THONG_DUNG` tự soạn từ cụm 2–3 âm tiết của lệnh giao và thuật ngữ kế toán/hợp đồng/phổ thông. Áp dụng ở mọi vị trí của ứng viên; phân biệt danh xưng có dấu với từ thường và loại danh xưng không dấu khi nằm trong cụm thường. Không miễn cả họ Phan vì có phân bổ.
+- **Quy tắc:** ≥8 che, 4–7 con_sot, <4 bỏ qua; mỗi điều chỉnh có mã căn cứ nội bộ. Tên dài/ranh giới hỏng/trùng nhiều tên chính thức/tên Latin bị giới hạn điểm tối đa 7; không lộ cụm gốc trong cảnh báo. Tên Latin có ngữ cảnh được chặn; nếu cả cụm đã che như công ty thì không còn nghi vấn tên để phát hành. Giữ số văn bản dạng số/năm sau số; mã có hậu tố chữ vẫn được kiểm.
+- **Test của lead:** 32 ca t9 và 41 câu t10 là literal DEMO được chuyển bằng AST sang `tests/test_mask_2b_rv.py`, không import/thực thi script tham khảo. Hai bản `.py.txt` chuyển nguyên nội dung từ `tests/rv_mask_2b/` sang `LUU-TRU/rv_mask_2b/` ngoài gói. SHA LF từng tệp đã đối chiếu blob HEAD trước chuyển; test xác nhận đủ literal.
+
+Kết quả thật: t9 từ 6/32 lọt xuống 0/32 (24 chặn, 8 che); t10 từ 28 chặn + 1 che thừa xuống 2 chặn, 0 che thừa, tức báo nhầm 29/41 → 2/41 (4,88%), gồm cả ca mập mờ. Còn câu mập mờ lê thị hoa đơn gốc và câu số sổ cái 331 bị lớp nhãn tài khoản cũ chặn. Pytest 717 passed, 190 subtests passed, 0 skipped; DEMO 2/2, kiểm độc lập đạt; CLI SDK chuẩn 0/2 do thiếu quyền. Báo cáo/số đo/lệnh thật ở e_mask/docs; chưa kiểm Core thật/Linux/Cloud. Nợ tên nước ngoài thiếu ngữ cảnh/N.V. An/ngoại lệ từ vựng ghi trong VIEC.
+
+SHA-256 dưới đây tính đúng `read_bytes().replace(b'\r\n', b'\n')`; không tự băm NGUON.md. Nguồn trước sửa là blob HEAD của worktree (không sửa Git index).
+
+| Tệp runtime (từ gốc repo) | SHA-256 LF trước | SHA-256 LF sau |
+|---|---|---|
+| `e_mask/goi/e_mask/e_mask/ten_nguoi.py` | `6b5b0a21fbbc7ce438f82725589391c234febc58fc1d4c239a9c5df075693886` | `e6bd9bd4c1c5027f23dfc6280d8602425b3380f2281e5456145f889e027423a4` |
+| `e_mask/goi/e_mask/e_mask/che_van_ban.py` | `766552691ca30d4fca2cde61d1c1b11423216823d5fa136218a757b732bc45d4` | `ce5a3965168768e6a3ec2a5661908a206441925bbce35b084ff9523cbe1186b0` |
+
+<!-- SHA-MASK-2b-RV -->
+
+| Tệp (từ gốc repo) | SHA-256 LF |
+|---|---|
+| `e_mask/goi/e_mask/e_mask/ten_nguoi.py` | `e6bd9bd4c1c5027f23dfc6280d8602425b3380f2281e5456145f889e027423a4` |
+| `e_mask/goi/e_mask/e_mask/che_van_ban.py` | `ce5a3965168768e6a3ec2a5661908a206441925bbce35b084ff9523cbe1186b0` |
+| `e_mask/tests/test_mask_2b_rv.py` | `0a0b2d494fb857fc4880d19692150d5f47359e45383ed94a38b388289f773b48` |
+| `e_mask/LUU-TRU/rv_mask_2b/tan_cong_t9.py.txt` | `fbba30698bd4e0586e4a81dbb489b325318672d6ed4162816824f34f6092b9d9` |
+| `e_mask/LUU-TRU/rv_mask_2b/bao_nham_t10.py.txt` | `f5481fa3e40c0dca77ac0052ed37054996738f7b11f50503cdd7fee6375da8a1` |
+| `e_mask/docs/BAO-CAO-MASK-2b.md` | `8dd734b87caaa734e2f8702d0154d12844346c39f8ca3ee8d3fb9d7e1fa2b377` |
+| `e_mask/docs/VIEC.md` | `e1506277ecc9c2352a18c76c9af4b273e9d7ba1b67fd1a4c8fd2682cd9e13f77` |
+| `e_mask/goi/e_mask/CHANGELOG.md` | `84dd68b4eb6bc9c32b4c02638157487d70249a17f6b26342882882070afe1af0` |
+| `e_mask/docs/KET-QUA-KIEM-MASK-2b.txt` | `95b811a16861db299942da113849625b7cb7eaec4c99cdb5a4052de7388e8672` |
+| `e_mask/docs/SO-DO-MASK-2b.json` | `f8929d3e65731da3476c39e27e93808e3dd1e6c44f3e1e28070941ebfc971dfc` |

@@ -100,6 +100,7 @@ _DIEN_THOAI_VN = re.compile(
 _EMAIL = re.compile(r'(?<![\w.+-])[\w.+-]{1,64}@[\w.-]{1,253}\.[\w-]{2,63}(?![\w.-])')
 _KHOI_DAI = re.compile(r'[^\s\x00]{1025,}')
 _DAU_TIEN_NGAY = re.compile(r'[^\W\d_]|[$₫]|(?<=\d)(?:[.,]+|[/-])(?=\d)')
+_SO_VAN_BAN = re.compile(r'(?<!\w)số[^\S\r\n]+(?P<so>\d{1,6}/\d{4})(?![\w/.-])', re.I)
 
 
 class _ViTriGiuNguyen:
@@ -255,6 +256,11 @@ def _an_bi_danh(van_ban):
 def _phat_hien(van_ban):
     """Dùng các lớp privacy hiện có, không dùng suggest vốn cắt ở 500 dòng."""
     cum, day_du = [], True
+    # Số văn bản dạng số/năm được giữ theo lệnh MASK-2b. Chỉ ẩn trên bản
+    # dò, giữ nguyên chiều dài/toạ độ; không miễn số tài khoản/MST hoặc
+    # mã hợp đồng có hậu tố chữ như 01/2026/HD-DEMO.
+    van_ban = _SO_VAN_BAN.sub(lambda m: m.group()[:m.start('so') - m.start()]
+                             + '\x00' * len(m.group('so')), van_ban)
     # Regex email/URL của nguồn thử lại ở từng ký tự trên một từ rất dài.
     # Đánh dấu CHƯA KIỂM, không cắt đầu vào hay công bố bản che là đã đạt.
     # NUL cùng chiều dài giữ nguyên ranh giới và tọa độ của các lớp còn lại.
@@ -437,7 +443,9 @@ def _kiem_con_sot(van_ban, da_biet, *, da_do=None):
     # Lớp độc lập trên bản đã che: không phụ thuộc việc detector cũ có tìm
     # ra tên hay không. Chỉ trả nhóm/vị trí/lý do, không nguyên văn tên.
     for ten in ten_nguoi.tim(nfc):
-        con_sot.append({'nhom': 'CA_NHAN', 'ly_do': 'nghi tên người viết thường',
+        con_sot.append({'nhom': 'CA_NHAN', 'ly_do': ('nghi tên người nước ngoài' if ten.nuoc_ngoai
+                                                  else 'nghi tên người viết thường'),
+                        'diem': ten.diem, 'can_cu': list(ten.can_cu),
                         'vi_tri': _vi_tri(toa_do[ten.bat_dau][0],
                                           toa_do[ten.ket_thuc - 1][1], xuong_dong)})
     return con_sot, day_du
@@ -546,14 +554,21 @@ def _che(van_ban, da_biet, kho):
     # nghi vấn từ bản gốc để không phát hành phần đuôi chưa che của tên.
     xuong_dong_goc = [i for i, c in enumerate(van_ban) if c == '\n']
     vung_da_che = detectors.Spans((a, b) for a, b, _, _ in chon)
+    cong_ty_da_che = detectors.Spans((a, b) for a, b, _, nhom in chon if nhom == 'CONG_TY')
     for ten in cac_ten:
         a, b = toa_do[ten.bat_dau][0], toa_do[ten.ket_thuc - 1][1]
         i = bisect_right(vung_da_che.starts, a) - 1
         che_du = i >= 0 and b <= vung_da_che.ends[i]
+        if ten.nuoc_ngoai:
+            c = bisect_right(cong_ty_da_che.starts, a) - 1
+            if c >= 0 and b <= cong_ty_da_che.ends[c]:
+                continue  # Cả cụm Latin đã được che như công ty, không còn tên để lọt.
         if not ten.bat_buoc_duyet and che_du:
             continue
         if vung_da_che.hit(a, b):
-            con_sot.append({'nhom': 'CA_NHAN', 'ly_do': 'nghi tên người viết thường',
+            con_sot.append({'nhom': 'CA_NHAN', 'ly_do': ('nghi tên người nước ngoài' if ten.nuoc_ngoai
+                                                      else 'nghi tên người viết thường'),
+                            'diem': ten.diem, 'can_cu': list(ten.can_cu),
                             'vi_tri': _vi_tri(a, b, xuong_dong_goc)})
     canh_bao = []
     if not day_du or not da_kiem_het:

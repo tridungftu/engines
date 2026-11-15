@@ -1,51 +1,78 @@
-# Bàn giao MASK-2b — 15/11/2026
+# Bàn giao sửa MASK-2b theo kiểm độc lập — 15/11/2026
 
-**Kết luận:** Đạt phạm vi đóng nợ CAO tên người viết thường không nhãn; đã kiểm bằng Core giả (CoreGia). Chưa đạt nghiệm thu chung CLI SDK chuẩn do thiếu nguồn quyền Core, đúng giới hạn đã có. PR: **chờ lead mở**; không commit/push.
+**Kết luận: Đạt phạm vi sửa MASK-2b** — 0/32 ca t9 lọt, báo nhầm t10 2/41 (4,88%); đã kiểm bằng Core giả (CoreGia). CLI SDK chuẩn vẫn 0/2 vì thiếu nguồn quyền Core thật, chưa đạt nghiệm thu tích hợp. Bản này thay kết luận bàn giao 09:42 đã bị lead đánh giá **KHÔNG ĐẠT**. PR: **chờ lead mở**; không commit/push.
 
-**Đã làm:** Hai tệp runtime: thêm `ten_nguoi.py`, sửa `che_van_ban.py`. Dò họ từ từ điển sạch theo sau bởi 1–3 âm tiết, so sau bỏ dấu/hoa thường, giữ ánh xạ NFC/NFD/Cf/xuống dòng về nguyên văn. Tên có danh xưng hoặc khớp đúng một tên chính thức được che bằng bí danh; khớp bỏ dấu vẫn dùng bí danh chính thức. Tên chưa đủ tin cậy vào `con_sot` với lý do **“nghi tên người viết thường”**, không trả nội dung che hoặc phong bì `van_ban_da_che`. “và”/ngoặc chức danh củng cố nghi vấn; bí danh tạm chưa phải tên đã duyệt.
+**Đã làm:** Thay bộ dò tên bằng chấm điểm có căn cứ; thêm 15 họ hiếm do lead cấp, danh sách âm tiết tên/đệm và cụm từ thông dụng tự soạn. Nhận danh xưng đầy đủ/viết tắt và tên Latin có ngữ cảnh; giữ số văn bản `số 01/2026`. Chỉ sửa **hai tệp runtime**: `ten_nguoi.py`, `che_van_ban.py`. Giữ nguyên API, `_chung/**`, `ngan.py`, `cau_hinh.py`, bốn tệp từ điển và nguồn cũ; không thêm dependency.
 
-**Kết quả kiểm:** `kho_tri_thuc_sdk.thu` chuẩn **0/2 ĐẠT, mã 1**, cả hai báo thiếu nguồn quyền tin cậy. Cổng thay thế được phép `chay_demo.py` **2/2 ĐẠT, mã 0**. `pytest e_mask/tests -q --basetemp=.pytest-tmp`: **545 passed, 190 subtests passed, 0 skipped, 29,81 giây, mã 0**; gồm **107 test MASK-2b**. `kiem_doc_lap.py` **ĐẠT, mã 0**. Đã kiểm bằng Core giả (CoreGia), không nối Core thật. Kết quả lệnh nguyên văn ở [KET-QUA-KIEM-MASK-2b.txt](KET-QUA-KIEM-MASK-2b.txt).
+**Kết quả kiểm:** `kho_tri_thuc_sdk.thu` chuẩn → **0/2 ĐẠT, mã 1**, hai lỗi “Chưa xác minh được phiên và quyền xử lý yêu cầu.”; cổng thay thế `chay_demo.py` theo phiếu MASK-5 → **2/2 ĐẠT, mã 0**. `pytest e_mask/tests -q --basetemp=.pytest-tmp` → **717 passed, 190 subtests passed, 0 skipped, 43,68 giây, mã 0**; gồm **172 test mới** trong `test_mask_2b_rv.py` và toàn bộ 545 test cũ. `kiem_doc_lap.py` → **ĐẠT, mã 0**. [Đầu ra lệnh thực tế](KET-QUA-KIEM-MASK-2b.txt). Đã kiểm bằng Core giả (CoreGia); chưa chạy Linux hoặc Core thật, không gọi Cloud.
 
-**Thời gian thực tế:** Bắt đầu **09:19**, chốt báo cáo **09:42:22 ngày 15/11/2026 (UTC+07)**, khoảng **0.39 giờ**. Phiếu không có ước tính riêng MASK-2b; MASK-2 gốc là **3 giờ ước tính**, không lấy đó làm dự toán riêng đã duyệt cho MASK-2b.
+**Thời gian thực tế:** 09:47:00–10:15:57 ngày 15/11/2026 (UTC+07), **0.48 giờ thực tế**. Phiếu không có ước tính riêng cho MASK-2b/lượt sửa này; MASK-2 gốc là **3 giờ ước tính**, không coi là dự toán riêng đã duyệt cho lượt sửa.
 
-Môi trường kiểm: Windows x64, Python **3.13.14**; `.venv` dùng pytest **9.1.1** có sẵn qua `--system-site-packages`. SDK **2.0.0** cài offline từ wheel repo bằng `--no-index --no-deps`; SHA-256 wheel `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892` khớp SHA256SUMS. Đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`; không có mã biên dịch trong gói.
+**Lệch khỏi phiếu / quyết định tạm:** Không vượt phạm vi hai tệp runtime. CLI SDK chuẩn dùng cổng thay thế DEMO có quyền tin cậy ngoài gói theo phiếu MASK-5; không nới quyền để làm xanh CLI. Điểm ngữ cảnh hỗ trợ thêm động từ ngay sau tên và nhãn “tên người nước ngoài” để chặn cả hai ca Latin t9. Cho qua nghi vấn Latin chỉ khi cả cụm đã được che đầy đủ bằng một vùng công ty, nhằm giữ recall công ty/Cf cũ; không cho qua khi chỉ che prefix.
 
-Chặn tên chỉ che được prefix, tên dài và danh mục có nhiều tên trùng sau bỏ dấu. Bộ hậu kiểm mới chạy độc lập detector cũ; NUL do caller chèn không được giả làm bí danh đã che. Bộ dò cũ vẫn che tên chữ hoa như trước nếu đã che đủ; phát hiện mới không tự thay phạm vi nghiệp vụ đó. Chỉ danh xưng ở đúng lần xuất hiện mới tăng tin cậy, không nâng tất cả lần gặp cùng tên. Không trả tên gốc trong `con_sot`/lỗi/log.
+**Cần Core / Chờ Anh mới phát sinh:** Không. Các phụ thuộc ngăn/quyền, xác minh nguồn sinh `van_ban_da_che` trước Cloud giữ nguyên trong VIEC. Nợ tên nước ngoài thiếu ngữ cảnh, N.V. An và báo nhầm do lớp số/công ty còn ghi rõ bên dưới.
 
-**Lệch khỏi phiếu / quyết định tạm:** Không mở rộng ngoài lát, chỉ hai tệp runtime, không dependency mới. Giữ nguyên `_chung/**`, `ngan.py`, `cau_hinh.py`, bốn từ điển và nguồn cũ. Điều chỉnh test lưới nhãn để giả lập cả hai bộ dò không tìm thấy, vì bộ dò mới giờ đã nhận ra tên sau Ông/Bà. CLI SDK dùng cổng thay thế DEMO đã được phiếu MASK-5 cho phép; không đổi quyền để làm xanh CLI.
+## Số đo độc lập trên t9/t10
 
-**Cần Core / Chờ Anh mới phát sinh:** Không. Các việc ngăn/quyền thật và kiểm nguồn sinh `van_ban_da_che` trước Cloud giữ nguyên trong VIEC. Cloud không được gọi; chưa kiểm Linux hoặc Core thật.
+Chuyển đủ **32 + 41 literal** DEMO thành pytest tham số hóa ở `tests/test_mask_2b_rv.py`; không thực thi script tham khảo hoặc import `h2`. Chuyển nguyên hai tệp `.py.txt` sang `LUU-TRU/rv_mask_2b/`; test đối chiếu lại literal bằng AST, đã so SHA-256 theo LF với blob HEAD. Không bỏ câu mập mờ khỏi mẫu số.
 
-## Đo báo nhầm
+Đo thật trước khi sửa runtime và sau khi sửa bằng cùng CoreGia + NganBoNho + QuyenNganDemo, không danh mục người thật. Trạng thái lỗi chỉ được tính là chặn hợp lệ nếu cổng trả `MASK_DINH_DANH_CHUA_DAT`; test không chấp nhận lỗi kỹ thuật thay cho chặn. Phép dò lọt độc lập bỏ dấu, khoảng trắng, Cf và dấu câu; dấu chấm của `a. long`/`c. hoa` cũng được bỏ, tránh đếm thiếu hai ca này.
 
-Đã đo thật trước khi nối bộ dò vào lõi và sau khi sửa, trên Windows/Python 3.13.14, SDK 2.0.0. Nền trước sửa: `35bd626ffa81b01d5b23652a369063b24c82162a`. Cùng tập đầu vào và bốn từ điển sạch ở cả hai mốc. Dữ liệu đều giả DEMO; không có fixture recall được Git quản lý trong repo. Đây là mẫu nhỏ gán nhãn thủ công, không đại diện tỉ lệ ngoài vận hành.
+| Tập | Trước sửa | Sau sửa |
+|---|---|---|
+| t9, 30 ca tiếng Việt | 4 lọt, 21 chặn, 5 che | **0 lọt, 22 chặn, 8 che** |
+| t9, 2 ca nước ngoài | 2 lọt | **0 lọt, 2 chặn** |
+| t9 tổng, 32 ca | 6 lọt, 21 chặn, 5 che | **0 lọt, 24 chặn, 8 che** |
+| t10, 41 câu | 28 chặn + 1 che thừa; **29/41 (70,73%)** báo nhầm | 2 chặn + 0 che thừa; **2/41 (4,88%)** |
 
-Tập cũ gồm **14 đoạn/câu literal có sẵn** trong ba tệp test; công cụ kiểm lại nguồn bằng AST, không sinh mẫu thay thế. Tập mới gồm **30 câu** nghiệp vụ kế toán/hợp đồng không chứa tên người/tổ chức nhạy cảm. Mẫu và thứ tự tại `tests/do_mask_2b.py`; số đo máy đọc tại [SO-DO-MASK-2b.json](SO-DO-MASK-2b.json). Báo nhầm = có che thừa **hoặc** bị chặn, đếm hợp của hai nhóm, không suy từ toàn bộ số test passed.
+Chênh với ghi chú 28/41 của lead: đo lại xác nhận **28/41 câu bị chặn (68,29%)**, đồng thời câu 1 bị che thừa `01/2026`; tính hợp hai nhóm là **29/41**. Các số nền được lưu trước khi sửa, không suy từ số test passed.
 
-| Tập | Trước: chặn / che thừa | Sau: chặn / che thừa | Báo nhầm trước → sau | Báo nhầm tăng thêm |
-|---|---|---|---|---|
-| 14 mẫu có sẵn | 0 / 1 | 0 / 1 | 1/14 (7,14%) → 1/14 (7,14%) | 0 |
-| 30 câu bổ sung | 1 / 1 | 1 / 1 | 2/30 (6,67%) → 2/30 (6,67%) | 0 |
+Hai câu t10 còn bị chặn, đều được giữ trong tỉ lệ 4,88%:
 
-Không giấu ba ca nền:
+| Ca | Nguyên văn DEMO | Lý do |
+|---|---|---|
+| 2 | Công ty đã giao hàng tại hà nội và lê thị hoa đơn gốc. | `lê thị` đạt 4 điểm (họ + âm tiết tên), giữ nghi vấn khi gặp cụm `hoa đơn`; đồng thời lớp công ty cũ thấy “Công ty …”. Không phân định chắc đây là tên hay lỗi gõ hóa đơn nên chặn. |
+| 7 | Mai sau khi nhận hóa đơn sẽ hạch toán vào tài khoản 331. | Bộ hậu kiểm nhãn `TAI_KHOAN` cũ còn coi **331** là giá trị tài khoản. Bộ tên không còn cảnh báo; chưa sửa bộ phân biệt tài khoản sổ cái/tài khoản ngân hàng trong lát này. |
 
-- Mẫu cũ 10: “— nội dung DEMO giữ nguyên;” bị che thừa chữ DEMO.
-- Mẫu mới 15: “Đáo hạn khoản vay vào ngày 2026-10-30.” bị lớp số/ngày cũ báo `GIAY_TO`/`TAI_KHOAN`. Tên người không gây chặn mới ở ca này; chưa sửa bộ số/ngày trong lát MASK-2b.
-- Mẫu mới 30: “Dữ liệu giả DEMO dùng để kiểm tra quy trình kế toán.” bị che thừa chữ DEMO. Cả 30 câu vẫn nằm trong phép đo; **29 câu không bị chặn** có test riêng, vượt yêu cầu ít nhất 20 câu.
+Cả 39 câu còn lại giữ nguyên văn, `so_cho_thay=0`, tiền/ngày được kiểm thật. `số 01/2026` có test riêng, còn mã `01/2026/HD-DEMO` và tài khoản số dài vẫn bị che/chặn.
 
-Bốn ví dụ giao việc trước sửa đều phát hành nguyên tên (**4/4 lọt**). Sau sửa: ví dụ 1 và 4 bị chặn bởi nghi tên người; ví dụ 2 và 3 che tên bằng bí danh tạm rồi phát hành. **0/4 lọt** trên bốn ví dụ gốc. Test thêm không dấu, chữ hoa toàn bộ, xuống dòng/tab/NBSP, NFD và Cf; không suy rộng thành recall 100% cho mọi tên.
-
-Chạy lại số đo sau sửa:
+[Số đo máy đọc](SO-DO-MASK-2b.json): giữ các mốc cũ `truoc`/`sau`, bổ sung `rv_truoc`/`rv_sau` với từng ca, trạng thái, nhóm/vị trí/căn cứ chặn. Chạy lại mốc sau:
 
 ```text
+.venv/Scripts/python e_mask/tests/test_mask_2b_rv.py --moc rv_sau
 .venv/Scripts/python e_mask/tests/do_mask_2b.py --moc sau
 ```
 
-Mốc `truoc` đã ghi khi chưa nối mã; không chạy `--moc truoc` trên bản sau sửa để thay số nền.
+Không chạy lại `rv_truoc` trên mã sau sửa để thay nền.
 
-## Ngoại lệ và giới hạn
+## Điểm, ngưỡng và căn cứ
 
-- `leftover_allowlist`, `vn_places`, `common_acronyms` được so sau bỏ dấu/hoa thường, giữ ranh giới từ. Danh sách cụm thông dụng trùng họ ở `_CUM_THONG_DUNG` trong `ten_nguoi.py`, ví dụ “lê thê”, “lý do”, “nghiệm thu”, “phân bổ”, “giữ nguyên”. Không miễn toàn bộ các từ “lê”, “lý”, “cao”. Danh xưng/tên chính thức ưu tiên hơn ngoại lệ; nhiều tên chính thức trùng nhau sau bỏ dấu phải duyệt.
-- Họ + 1–3 âm tiết là cửa chọn che; đoạn có 5 âm tiết nghi tên không tự cắt để báo đạt. Từ nối/lời văn được tách bằng quy tắc hữu hạn, tên hiếm vẫn có thể báo nhầm hoặc không được nhận diện. Chú không dấu trùng họ Chu được xử lý bảo thủ.
-- Họ ngoài từ điển, tên viết tắt N.V. An, tên trùng hẳn địa danh/cụm miễn và cách viết ngoài dạng âm tiết chữ Việt chưa có chứng minh nhận diện đầy đủ. Ngoại lệ theo cụm có thể loại cả tên thật trùng cụm đó khi thiếu danh xưng/danh mục chính thức. Đây không phải chứng nhận đủ điều kiện bật Cloud.
-- `con_sot` chỉ chứa nhóm/vị trí/lý do. Vị trí cảnh báo từ bản hậu kiểm thuộc bản đã che; cảnh báo một ứng viên bị che dở hoặc chưa đủ tin cậy giữ vị trí bản gốc để không mất phần đuôi.
+| Tín hiệu | Điểm |
+|---|---:|
+| Họ chỉ thuộc `vn_surnames` hoặc 15 họ bổ sung của lead | +3 |
+| Mỗi âm tiết đệm/tên thuộc danh sách tự soạn | +1, tối đa +2 |
+| Có ít nhất 3 âm tiết và âm tiết thứ hai là đệm phổ biến | +1 |
+| Mỗi âm tiết sau họ chưa biết, khi không có danh xưng | −1 |
+| Tất cả âm tiết trong tên viết hoa đầu âm tiết | +4 |
+| Danh xưng đầy đủ hoặc a./c./ô./b. ngay trước | +5 |
+| Sau danh xưng là 1–3 âm tiết, không bắt đầu bằng họ | +3 |
+| ký/gửi/với/giữa/bởi/của ngay trước | +1 |
+| Ngoặc chức danh ngay sau | +1 |
+| Hai+ từ Latin không dấu có ngữ cảnh, chưa có họ Việt hoặc có âm tiết lạ | +4; bắt buộc duyệt |
+| Cụm từ ghép thông dụng/địa danh/allowlist hoặc viết tắt miễn | −8 |
+| Khớp đúng một tên chính thức sau bỏ dấu | +8, giữ bí danh chính thức |
+
+**Điểm ≥8 → che; 4–7 → `con_sot`, không phát hành; <4 → bỏ qua.** Tên dài, ranh giới chữ/số hỏng, trùng nhiều tên chính thức sau bỏ dấu và tên nước ngoài bị giới hạn điểm tối đa 7. Danh xưng rõ nhưng vướng cụm thường giữ tối thiểu 4 để duyệt; không miễn ngầm tên sau danh xưng. Mỗi điều chỉnh điểm có mã căn cứ nội bộ, cảnh báo chỉ chứa nhóm/vị trí/điểm/căn cứ, không chứa tên gốc.
+
+Không sinh họ từ từ thông dụng hoặc từ tên/đệm. Danh sách họ mới lấy nguyên từ lệnh lead: **Ưng, Âu, Khúc, Lục, Thân, Ninh, Quan, Ông, Vi, Mẫn, Khổng, Bế, Nông, Lò, Hầu**; nguồn và SHA LF ở NGUON. Danh sách tên/đệm chỉ gồm âm tiết đơn tự soạn, không tổ hợp tên thật. Cụm ghép áp dụng ở mọi vị trí, kể cả “cáo” trong “báo cáo”, “lý” trong “thanh lý”, “tăng” trong “gia tăng”; gặp cụm nghiệp vụ phía sau thì kết thúc ứng viên trước cụm đó. “Phan” không bị miễn toàn cục vì “phân bổ”. Dấu của “có/cô”, “chủ/chú”, “chí/chị” được phân biệt; `chi phí`, `chu kỳ` không tự trở thành danh xưng không dấu.
+
+Latin: sau các động từ nêu trên hoặc danh xưng → duyệt, có bổ sung động từ ký/gửi ngay sau và nhãn người nước ngoài. Vì vậy cả `john smith đã ký hợp đồng` và ca có nhãn `michael johnson` đều bị chặn. Chuỗi Latin không ngữ cảnh như tên đứng trần, tên nối gạch/nháy, cách viết không thuộc dạng đang dò vẫn là nợ; không tuyên bố phủ hết tên nước ngoài.
+
+## Hồi quy và giới hạn còn lại
+
+- Toàn bộ ca cũ Cf/selector, NFD/tab/NBSP/xuống dòng, bí danh, quyền/ngăn, tiền/ngày và bốn ví dụ MASK-2b vẫn đạt. Tên quá dài, che prefix, trùng bỏ dấu và bí danh tạm chưa duyệt vẫn chặn; hậu kiểm mới độc lập detector cũ.
+- Đo lại 14 mẫu cũ: 1/14 che thừa chữ DEMO; 30 câu cũ bổ sung: ca 15 ngày ISO bị lớp số/ngày chặn và ca 30 che thừa DEMO, tổng 2/30. Không tăng trên hai tập này; không bỏ ca lỗi nền.
+- Hai báo nhầm t10 nêu trên vẫn còn. Các lớp dò công ty/số cũ tiếp tục độc lập, có thể còn che thừa với cách viết khác ngoài tập đo; bộ từ ghép tên không thay bộ phân loại mọi định danh.
+- N.V. An, tên/âm tiết ngoài danh sách không danh xưng, tên trùng hẳn địa danh/cụm thường và ngữ cảnh ngoài quy tắc hữu hạn chưa có chứng minh recall. Chỉ có số đo DEMO, không suy ra tỉ lệ vận hành hoặc đủ điều kiện bật Cloud.
+
+Môi trường: Windows x64, Python 3.13.14, pytest 9.1.1 từ môi trường sẵn có; `.venv` dùng SDK 2.0.0 cài offline từ wheel repo. SHA-256 wheel `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892` khớp SHA256SUMS. Mọi lệnh đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`; gói không có mã biên dịch. Không sửa Core, không lưu dữ liệu runtime xuống đĩa.

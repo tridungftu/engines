@@ -18,16 +18,18 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-5 | Hai handler văn bản SDK và mở che dữ liệu/trích dẫn AI | MK-12…14, 18, 20, 21 | Xong phạm vi CoreGia — 15/11/2026; chờ quyền thật | DEMO qua port ngoài gói; CLI chuẩn vẫn bị chặn do thiếu quyền. PR: **chờ lead mở** |
 | MASK-6 | Duyệt/từ chối, đóng/dọn, chuyển DEMO và màn Admin | MK-11, 15…19, 22 | Xong phạm vi CoreGia/KttCore giả — 15/11/2026 | Màn trong gói; chưa nạp trong Core thật. PR: **chờ lead mở** |
 | MASK-7 | Khảo sát từng vùng tệp, đo DEMO và trình phương án/trần | MK-1, 4, 21; quyết định 15/11 câu 11 | Xong khảo sát — 15/11/2026; Chờ Anh/lead chốt phần tệp | [Bảng bằng chứng và phương án](MASK-7-KHAO-SAT-TEP.md), [số đo thật](SO-DO-MASK-7.json). Không thêm thuật toán/năng lực tệp; MASK-8…11 chưa code. PR: **chờ lead mở** |
-| MASK-2b | Đóng nợ CAO tên người viết thường không nhãn | MK-2, 18, 20; lệnh giao 15/11 | Xong phạm vi CoreGia — 15/11/2026 | Bộ dò không phụ thuộc chữ hoa/dấu; tên có danh xưng/đã duyệt được che, nghi vấn vào con_sot để chặn phát hành. [Báo cáo](BAO-CAO-MASK-2b.md), [số đo](SO-DO-MASK-2b.json); PR: **chờ lead mở** |
+| MASK-2b | Sửa theo kiểm độc lập: chấm điểm tên, giảm báo nhầm | MK-2, 18, 20; lệnh lead 15/11 lúc 09:47 | Xong phạm vi CoreGia — 15/11/2026 | t9: 0/32 lọt; t10: 2/41 báo nhầm (4,88%); 717 passed, 190 subtests. [Báo cáo](BAO-CAO-MASK-2b.md), [số đo](SO-DO-MASK-2b.json); PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
 
-## MASK-2b — bàn giao, 15/11/2026
+## MASK-2b — sửa theo kiểm độc lập, 15/11/2026
 
-- **Đạt phạm vi MASK-2b**, đóng nợ CAO trong phạm vi họ/tên được mô tả; đã kiểm bằng Core giả (CoreGia). Hai tệp runtime, không sửa ngăn/cấu hình chung hoặc từ điển. PR: **chờ lead mở**; không commit/push. [Báo cáo](BAO-CAO-MASK-2b.md), [lệnh kiểm thật](KET-QUA-KIEM-MASK-2b.txt).
-- Pytest: **545 passed, 190 subtests passed, 0 skipped, 29,81 giây, mã 0**; 107 test riêng MASK-2b. Adapter DEMO **2/2 ĐẠT, mã 0**; kiểm độc lập **ĐẠT, mã 0**. CLI SDK chuẩn **0/2 ĐẠT, mã 1** do thiếu nguồn quyền, không thành công giả. Core thật/Linux/Cloud chưa kiểm.
-- Đo báo nhầm trước/sau: 14 mẫu cũ **1/14 (7,14%)**, 30 câu bổ sung **2/30 (6,67%)**, không tăng trên hai tập. 29 câu không tên không bị chặn được kiểm riêng. Bốn ví dụ giao việc: **4/4 lọt trước → 0/4 lọt sau**, hai che/hai chặn; không suy ra recall chung.
-- Thời gian **09:19–09:42:22 ngày 15/11/2026 (UTC+07), khoảng 0.39 giờ**. Không có dự toán riêng MASK-2b; MASK-2 gốc 3 giờ ước tính. Cần Core/Chờ Anh mới: **không**; các phụ thuộc ngăn/quyền/nguồn sinh trước Cloud giữ nguyên.
+- **Đạt phạm vi sửa**, đã kiểm bằng Core giả (CoreGia). Kết luận bàn giao 09:42 trước đây bị lead bác; lần sửa bắt đầu 09:47. Chỉ hai tệp runtime, không đổi ngăn/cấu hình/từ điển chung. PR: **chờ lead mở**; không commit/push. [Báo cáo](BAO-CAO-MASK-2b.md), [lệnh kiểm thật](KET-QUA-KIEM-MASK-2b.txt).
+- Chấm điểm có căn cứ: ≥8 che, 4–7 con_sot chặn, <4 bỏ qua. Bổ sung họ hiếm theo lệnh lead, âm tiết tên/đệm và cụm ghép tự soạn; danh xưng đầy đủ/viết tắt; tên Latin có ngữ cảnh chặn. Giữ `số 01/2026`. Hai script DEMO chuyển nguyên nội dung vào `LUU-TRU/rv_mask_2b`, 73 literal thành pytest tham số hóa, không thực thi script tham khảo.
+- t9 **6/32 lọt → 0/32** (30 tiếng Việt: 22 chặn/8 che; 2 nước ngoài: đều chặn). t10 **28 chặn + 1 che thừa → 2 chặn, 0 che thừa**, báo nhầm **29/41 → 2/41 (4,88%)**, đếm cả ca mập mờ. Còn ca 2 `lê thị hoa đơn gốc` và ca 7 số sổ cái 331 bị lớp nhãn tài khoản cũ chặn; chi tiết lý do trong báo cáo/số đo.
+- **717 passed, 190 subtests passed, 0 skipped, 43,68 giây, mã 0** (172 test mới + 545 cũ); Cf/bí danh/bốn ví dụ/recall cũ đều đạt. Adapter DEMO **2/2, mã 0**; kiểm độc lập **ĐẠT, mã 0**. CLI SDK chuẩn **0/2, mã 1** vì thiếu nguồn quyền. Chưa kiểm Core thật/Linux/Cloud.
+- Tập đo cũ vẫn 1/14 và 2/30 báo nhầm, không tăng. Thời gian 09:47:00–10:15:57 ngày 15/11/2026 (UTC+07), **0.48 giờ thực tế**; không có ước tính riêng lượt sửa MASK-2b, MASK-2 gốc 3 giờ ước tính. Cần Core/Chờ Anh mới: **không**, các phụ thuộc tích hợp giữ nguyên.
+- **Nợ còn lại:** tên nước ngoài không ngữ cảnh, tên nối gạch/nháy, N.V. An, họ/tên ngoài danh sách hoặc trùng địa danh/cụm thường; phân biệt số sổ cái 331 với tài khoản ngân hàng ở bộ nhãn chung. Không coi số đo này là recall vận hành hoặc đủ điều kiện bật Cloud.
 
 ## MASK-7 — bàn giao khảo sát, 15/11/2026
 
@@ -192,6 +194,10 @@ Lệch phiếu / quyết định tạm: không mở rộng tập bốn tệp mã
 - **Báo nhầm nền đo ở MASK-2b:** 1/14 mẫu cũ che thừa chữ DEMO; tập bổ sung có 1 câu ngày ISO bị lớp số/ngày cũ chặn và 1 câu che thừa chữ DEMO. Đã có trước MASK-2b, không tăng trên hai tập đo; giữ nguyên và ghi chi tiết trong báo cáo, chưa sửa ở lát tên người.
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+### MASK-2b sửa kiểm độc lập — 15/11/2026
+
+Không phát sinh yêu cầu Core mới. CLI chuẩn còn thiếu nguồn quyền tin cậy như đã ghi dưới đây; cổng DEMO CoreGia không chứng nhận quyền/ngăn Core thật.
 
 ### Bổ sung MASK-7 — 15/11/2026
 

@@ -1,5 +1,37 @@
 # Thay đổi
 
+## Chưa phát hành — 15/11/2026, TX-4 chưa kiểm E6 nghiệm thu
+
+- Thêm công cụ/wrapper/test E6 ngoài gói runtime; XLSX thật khớp SHA ghim,
+  E1 giữ đúng 37 mã/thứ tự/10 cột nguyên văn, ghi riêng ba băm.
+- So bytes bộ/câu hỏi/toàn bộ dòng bảng/phản hồi, báo offset/độ dài/băm;
+  chặn nguồn thiếu/sai băm và bản vàng thiếu/chưa được lead chấp nhận.
+- Hai DEMO kỹ thuật gồm Track Changes: bộ/văn bản trùng nhưng câu hỏi,
+  bảng, phản hồi khác byte; **chưa đạt chẩn đoán**, **chưa kiểm E6 nghiệm thu**.
+  Không chuyển bộ/lưu trữ hoặc thay đổi runtime để fallback XD.
+- **đã kiểm bằng Core giả (CoreGia)**; 375 test passed, 0 skipped; CLI
+  2/3 ĐẠT (C-TX-04), DEMO có ngăn 5/5 ĐẠT. N1/Core thật chưa kiểm.
+
+## Chưa phát hành — 15/11/2026, TX-3 chờ review
+
+- Sửa kiểm độc lập: giá trị phải khớp trọn token/cụm, không cắt số qua dấu
+  phân cách/khoảng trắng; strip hai phía như nhau, giữ nguyên văn AI riêng.
+- `so_tien.so` chỉ int/chuỗi thập phân chính xác, từ chối float/bool.
+- Đóng nợ TX-2: hồ sơ/tài liệu nguồn ≤20 MiB UTF-8; trang ≤2.000/8 MiB,
+  cảnh báo ≤200/64 KiB; kiểm trước sao chép/tải, không cắt ngầm. Bỏ bản chép
+  toàn văn trong request của hồ sơ, vẫn kiểm băm/đọc được hồ sơ TX-2 cũ.
+- Payload đề xuất thêm `don_vi_offset="unicode"`, `kieu_da_chuyen=false`;
+  đổi dấu cũ thành `dau_kiem_tam_e6`. `phan_hoi_ai` chỉ kiểm toán, có thể lộ
+  nội dung, module không hiển thị mặc định. Không đăng ký năng lực/schema mới.
+- Thêm regression test token, typed money round trip, trần byte/số phần tử,
+  hồ sơ gọn/cũ và prompt injection; ghi phối hợp AI-2 bao/thoát nội dung.
+
+- Lõi hậu kiểm từng ô và xuất JSON/Excel theo đề xuất; chưa đăng ký runtime/schema.
+- Kiểm snapshot/offset/logic theo loại, giữ dấu legacy và nguyên văn AI riêng; không tự chuyển kiểu hoặc tính TT-21.
+- Hai tệp trong RAM, text không thành công thức, kiểm trần trước escape, không cắt; hủy/lỗi/mất ACK không nộp thiếu/trùng.
+- Hai DEMO đề xuất chỉ đăng ký trong phiếu RAM của test; cổng có ngăn **5/5 ĐẠT**, CLI chuẩn vẫn **2/3 ĐẠT, exit 1, CHUA_CAU_HINH** (C-TX-04).
+- **đã kiểm bằng Core giả (CoreGia)**; chờ lead/Anh review tại **../../docs/TX-3-REVIEW.md**. Linux/Core thật/E6/N1 chưa kiểm; không đổi nguồn cũ/Core/SDK/dependency.
+
 ## 0.3.0 — 15/11/2026, TX-2
 
 - Thêm `trich.chuan_bi@1`: nhận snapshot theo việc, SHA-256 đúng bytes UTF-8
@@ -42,3 +74,7 @@
 - Màn cấu hình qua KttCore, khai SDK 2.1 riêng, kiểm bằng Node/KttCore giả.
 - Phạm vi kiểm: **đã kiểm bằng Core giả (CoreGia)** trên Windows;
   chưa chạy Linux hoặc nối Core thật. Không AI/OCR thật, 0 Cloud.
+
+## TX-5 — 15/11/2026
+
+Bàn giao ngoài runtime helper chuyển E1 thành snapshot cùng hướng dẫn U1a/U1b cho module; không thay engine runtime hoặc đăng ký năng lực. Kiểm chi tiết và giới hạn CLI/Core tại `docs/VIEC.md`.

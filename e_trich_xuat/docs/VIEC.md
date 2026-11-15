@@ -8,9 +8,11 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | TX-P | Hoàn thiện lệnh giao TX-1…TX-6, bảng chọn TX0-06 và độ khó gợi ý | TX-0 §8; quyết định 15/11 | Xong | **15/11/2026** — [GIAO-CODEX-e_trich_xuat.md](GIAO-CODEX-e_trich_xuat.md), sáu khối tự đủ theo dự toán **37 giờ ước tính** (8/7/8/4/3/7), màn cấu hình ở TX-1, công cụ đo T3/N1 ở TX-6 do Anh tự chạy; XLSX E6 đã đặt (PR #30). Chỉ tài liệu; PR: **chờ lead mở** |
 | TX-1 | Khung SDK 2.0, ngăn/cấu hình/UI và đọc DOCX/Track Changes | TX-0 §8; TX-15, 12 | Xong | **15/11/2026 — đã nối ngăn chung NGAN-0** (PR #34); **đã kiểm bằng Core giả (CoreGia)**: SDK DEMO **2/2 ĐẠT**, pytest **73 passed, 0 skipped**, Node UI **6/6**, độc lập **exit 0**. Hai test SHA chạy bắt buộc sau CRLF→LF. Tổng TX-1 **8 giờ ước tính**; PR: **chờ lead mở**. Linux/Core thật chưa chạy; SDK 2.1 và màn Core còn cần review |
 | TX-2 | Snapshot/hash, prompt/khuôn đủ mã, hồ sơ hậu kiểm tại Core và ngân sách | TX-2, 3, 4, 16, 17 | Chờ Core | **15/11/2026** — xong code/test phần engine; **đã kiểm bằng Core giả (CoreGia)**: pytest **164 passed, 0 skipped**, độc lập **exit 0**, DEMO có ngăn **3/3 ĐẠT**. CLI SDK chuẩn **2/3 ĐẠT, exit 1**, TX-2 `CHUA_CAU_HINH`; trình lead cổng DEMO có ngăn thay thế, C-TX-04. Chưa kiểm Linux/Core thật. **7 giờ ước tính**; PR: **chờ lead mở** |
+| TX-3 | Hậu kiểm từng ô, bảng đề xuất và xuất JSON/Excel | TX-3, 5, 6 | Chờ Anh | **15/11/2026** — xong lõi/test DEMO, **chưa đăng ký runtime/schema**, chờ lead/Anh review chi tiết. Sửa kiểm độc lập trong 5 tệp mã, đóng hai nợ TX-2; **đã kiểm bằng Core giả (CoreGia)**. Pytest/CLI/DEMO và đề xuất payload ở biên bản sửa review dưới; **8 giờ ước tính**. PR: **chờ lead mở** |
+| TX-4 | Công cụ/test E6, xác minh XLSX/E1 và đối chiếu byte hai đường | TX-7, TX-2/3 | Đang làm | **15/11/2026** — xong công cụ/test; **E6 nghiệm thu chưa kiểm**, thiếu fixture/bản vàng được lead chấp nhận. Chẩn đoán kỹ thuật hai DEMO: bộ/thứ tự/370 ô/văn bản trùng; câu hỏi/bảng/phản hồi **khác byte**, chưa đạt chẩn đoán. **đã kiểm bằng Core giả (CoreGia)**; pytest **375 passed, 0 skipped**, CLI **2/3 ĐẠT, exit 1** (C-TX-04), có ngăn **5/5 ĐẠT**, độc lập **exit 0**. [TX-4-E6.md](TX-4-E6.md); **4 giờ ước tính**, chưa gồm làm lại T3. PR: **chờ lead mở** |
 | 1 | Tách năng lực thành **chuẩn bị** và **hậu kiểm**; bỏ gọi AI trực tiếp (`ai_chung.py`) | TX-3 | Đang làm | TX-2 đã có `trich.chuan_bi@1`, không gọi AI; hậu kiểm/xuất còn ở TX-3, theo CD-111 |
 | 2 | E2/E5: nhận bộ từ việc của module, đủ metadata module/loại/phiên bản/hash | TX-2, 4, 5 | Xong | **15/11/2026 — TX-2**, snapshot/prompt/cấu hình riêng từng việc đã kiểm bằng Core giả (CoreGia); quyền module/pháp nhân và ghim Core thật còn C-TX-01 |
-| 3 | E6: so từng byte bộ 37 xây dựng (cần tệp ghim `DANH_MUC_THAM_SO.xlsx`) | TX-7 | Chờ làm | `e_trich_xuat/tham-chieu/DANH_MUC_THAM_SO.xlsx`: **lead đã đặt 15/11 (PR #30)** + NGUON/SHA-256, xác nhận không dữ liệu thật theo đợt 2 §4; chưa kiểm E6 |
+| 3 | E6: so từng byte bộ 37 xây dựng (cần tệp ghim `DANH_MUC_THAM_SO.xlsx`) | TX-7 | Đang làm | **15/11/2026 — TX-4**: băm XLSX thực khớp ghim/cũ, E1 đúng 37 mã/thứ tự/10 cột nguyên văn. **Chưa kiểm E6 nghiệm thu** do thiếu nguồn/bản vàng được lead chấp nhận; DEMO kỹ thuật đã thấy khác câu hỏi/bảng/phản hồi. Không chuyển bộ/lưu trữ, không fallback; chi tiết [TX-4-E6.md](TX-4-E6.md). PR: **chờ lead mở** |
 | 4 | Cung cấp E1 (kiểm Excel) + U1a/U1b cho module dùng lại; module tự đặt màn quản lý bộ tham số | TX-8, 14 | Chờ làm | C1/C2/C4 là việc của module |
 | 5 | LHD-02b: bộ nháp thuê đất KCN + 3 hợp đồng DEMO (CRM giữ bộ) | TX-10 | Chờ Anh | Người nghiệp vụ duyệt |
 | 6 | G3-GOI-37, N1 (một lần), TRICH-READY, N2 (buổi 17:00 ≤ 30 phút) | TX-12, 13 | Chờ làm |  |
@@ -28,7 +30,11 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Các quyết định tạm ở `_chung/docs/GIAO-CODEX-THU-TU.md` §2 về tệp cấu hình/kho đĩa/không có màn **đã được Anh thay ngày 15/11**: không lưu gì trên máy, có màn cấu hình engine nạp như màn module; schema chỉ đọc trong gói, giá trị qua ngăn; tệp tạm của việc dọn trong `finally`. Chạy thử DEMO vẫn dùng màn chung Core. TX-0 không sửa Core/SDK và chưa kiểm nối Core thật.
 - Gỡ mã riêng của engine này khỏi Core (danh sách: `_chung\docs\YEU-CAU-CHUNG-ENGINE.md` mục 9).
 
+- **Bổ sung C-TX-02/04 từ TX-3 (15/11/2026):** lõi hậu kiểm/xuất chỉ kiểm bằng CoreGia, quyền/module/pháp nhân/TTL/ACK lưu-đóng vẫn là mô phỏng. Khi JSON đã tải nhưng Excel lỗi/hủy, không nộp kết quả; Core cần dọn tệp tải dở theo vòng đời chung. CLI chuẩn vẫn **2/3 ĐẠT, exit 1, CHUA_CAU_HINH**; cổng có ngăn **5/5 ĐẠT** gồm hai DEMO TX-3 chưa đăng ký, trình lead xác nhận như TX-2. Payload/schema và bước xuất tĩnh chờ lead/Anh review tại **TX-3-REVIEW.md**; chưa tạo schema nguồn hoặc đăng ký runtime, không tự đổi contract.
+
 ## Cần phối hợp sau TX-0 — cập nhật 15/11/2026
+- **TX-4 / lead (15/11/2026):** đã xác minh XLSX PR #30, không cần cấp lại tệp này. Cần fixture hợp đồng thường/Track Changes, snapshot/prompt hai module, băng AI giả cố định và bản vàng đủ sáu artifact được lead chấp nhận, kèm SHA/biên bản. `tests/kiem_e6.py` mặc định **exit 2**, “Thiếu nguồn đối chiếu E6.”; `--chan-doan` cũng luôn **exit 2**. Hai DEMO kỹ thuật chưa được duyệt đã lộ khác byte thật; giữ E6, không nhận 375 test passed là E6 đạt. Phương án làm lại riêng tại [TX-4-E6.md](TX-4-E6.md): batch có contract mới **12–18 giờ ước tính** hoặc lặp v1 Core điều phối **18–24 giờ ước tính**, chưa gồm Core/AI/module; chưa triển khai và không tính vào 4 giờ TX-4. Cần xử lý cả tương thích bảng/phản hồi, không chỉ số lượt. Giữ C-TX-01/02/04/A-TX-01, chưa phát sinh API mới hoặc đo N1/Core thật.
+- **Cần phối hợp AI-2: bước Hỏi AI phải bao/thoát nội dung** (sửa review TX-3, 15/11/2026). Test Trích xuất xác nhận tài liệu chứa chỉ dẫn/dấu phân cách/JSON giả chỉ đi vào trường `tai_lieu`, không sửa prompt hệ thống hoặc khuôn; chưa chứng nhận lớp bọc request tới model của Hỏi AI.
 
 - **Hỏi AI A-TX-01:** xác minh context hiệu dụng, ngân sách đầu ra/reasoning, cách đếm token và hỗ trợ `$defs` của model đã chọn; không gửi `chuyen_tiep` vào model; thống nhất trích dẫn từng ô với danh sách chung của `tra_loi_ai`. Phiếu AI-1/AI-2/AI-3 chưa đủ bằng chứng rằng phần kiểm context này đã có. Gemma chưa có ID cụ thể, ngữ cảnh máy thật **chưa rõ**.
 - **Lead cấp cho TX-4:** `e_trich_xuat/tham-chieu/DANH_MUC_THAM_SO.xlsx` — **lead đã đặt 15/11 (PR #30)**, cùng `tham-chieu/NGUON.md` ghi SHA-256 thực và xác nhận chỉ danh mục tham số. Anh đã chốt nguồn bản review gốc (câu 7), không xin nguồn lại. Băm `05846a2acd60f2cde708d13a163a137ee3fb0b4e08fd84f85a7e14e7ef861bcd` là băm nguồn cũ, phải đối chiếu tệp được cấp, khác thì lead xác minh, không tự đổi ghim. Còn thiếu fixture/đáp án/bản vàng DEMO gồm Track Changes và câu hỏi nguồn. `MAC_DINH` chỉ khảo sát độ dài, không tự tạo Excel thay bản ghim hoặc tuyên bố E6 đạt.
@@ -310,3 +316,186 @@ Thời gian phiên cập nhật 15/11/2026 (UTC+07): bắt đầu **07:29:00** t
 | Kiểm tài liệu/diff cuối | Hai chuỗi DOCX/OCR khớp kiểu, cuối trả `truong`; 3 khối JSON đề xuất đúng cú pháp; dẫn chứng DEMO `[405:471]` khớp nguyên văn. Cả 3 tài liệu UTF-8 nghiêm ngặt, không BOM, NFC, không khoảng trắng cuối dòng; `git diff --check` **mã 0**. Nội dung loại chung cũ giữ nguyên; chỉ sửa/thêm đúng 3 tệp Markdown, không sửa mã/API/schema, không tạo `goi/` |
 
 Thời gian: bắt đầu **14/11/2026 22:40:00** (UTC+07, theo lead), chốt kiểm tài liệu lúc **14/11/2026 22:59:17**; thực tế **0,32 giờ** so với phiếu TX-0 **3 giờ công ước tính**. Số thực tế là thời gian phiên TX-0, không phải giờ thực hiện TX-1…TX-6. Không commit/push; lead commit và mở PR.
+
+## Bàn giao TX-3 — 15/11/2026, PR: chờ lead mở
+
+**Kết luận: Chưa đạt cổng đăng ký/CLI chuẩn — đã xong lõi và test DEMO
+hậu kiểm + xuất theo cấu trúc đề xuất, chờ lead/Anh review payload/schema
+chi tiết và bước xuất tĩnh.** Không đăng ký runtime hoặc tạo schema
+`bang_trich_xuat` trước duyệt. Hướng T2 bảng + Excel giữ nguyên.
+
+Đã làm đúng **5 tệp Python lõi**: `hau_kiem.py`, `kiem_tra.py`,
+`logic.py`, `xlsx_mini.py`, `xuat.py`; không sửa nền TX-2. Chưa cần
+tách TX-3a/3b ở phạm vi hiện tại; tổng dự toán vẫn **8 giờ công ước tính**.
+Chi tiết review tại [TX-3-REVIEW.md](TX-3-REVIEW.md).
+
+- Hồ sơ mở qua `viec.mo_tep`, kiểm bytes/hash/phiên bản và quan hệ với bộ
+  E1/module/loại/prompt/văn bản/khuôn/ngân sách đã ghim. Không đọc bộ hay
+  cấu hình đang kích hoạt; hash không thay quyền Core. Băm gốc tài liệu,
+  băm toàn văn và băm request AI được tách rõ.
+- Kiểm độc lập từng ô, đúng lát chuỗi Python, Unicode ngoài BMP/dấu tổ hợp.
+  Câu giả/thiếu căn cứ/AI bỏ sót về null/cần soát với lý do riêng, giữ
+  nguyên phản hồi AI. Mã lạ/trùng/đảo thứ tự/sai cấu trúc bị từ chối;
+  mã thiếu bổ sung ô null đúng vị trí, không mất dòng. Không tin cờ chung.
+- Chép có sửa logic L1–L5 và dấu kiểm legacy riêng cho E6. XD chạy đủ,
+  loại khác chỉ L1/L4 và quy tắc E1 đã ghim; phạm vi hỏi có mục tiêu không
+  bị buộc có mã ngoài danh sách. Vi phạm logic giữ giá trị có căn cứ,
+  không tự sửa. Bộ TX-2 chưa khai quy tắc chuyển kiểu: giữ tiền/ngày
+  nguyên văn ở hậu kiểm, không đoán tiền tệ/tính TT-21 hoặc sửa bộ 37.
+- DOCX chưa phân trang để trang/hộp null, giữ đoạn/Điều/Khoản. Câu qua
+  nhiều trang/khối OCR được tách theo offset thực và giữ từng hộp nguồn,
+  câu AI gốc vẫn ở phản hồi riêng. Không lấy tọa độ của câu lặp đầu tiên.
+- Bảng ≤200 dòng, phong bì UTF-8 ≤20 MiB; số đếm/cờ đúng quan hệ.
+  Xuất `truong` tĩnh đủ hai tệp và ba trường tổng hợp; JSON canonical,
+  Excel chuẩn Python trong RAM, text không thành công thức, giữ số dài/
+  Unicode/tiền/ngày/nguyên văn. Kiểm ô 32.767 đơn vị UTF-16 trước escape,
+  bỏ cắt ngầm; BytesIO đóng finally cả lỗi/hủy. Không XONG thiếu tệp.
+- Phiếu **runtime 2.0 bản 0.3.0 giữ nguyên**, chỉ có hai năng lực TX-1/2.
+  Phiếu đề xuất trong RAM của `tests/mau_tx3.py` hợp lệ SDK 2.0,
+  có hai năng lực/hai DEMO TX-3; schema `tra_loi_ai` chép nguyên byte,
+  không sửa bốn loại chung. Module vẫn sở hữu ghép cột/lưu/lịch sử.
+
+### Kết quả kiểm thực tế
+
+Môi trường `.venv/Scripts/python -B`, Python **3.13.14**, SDK **2.0.0**
+từ wheel repo, băm khớp `SHA256SUMS.txt`:
+`a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`.
+Venv dùng `--system-site-packages`; pytest **9.1.1**, jsonschema **4.26.0**
+có sẵn và đã ghim test. Không mạng/dependency runtime mới. Khi kiểm đặt
+`PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`, tắt plugin tự nạp pytest.
+
+| Lệnh thật trong worktree | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat` | **2/3 ĐẠT, exit 1**; hai DOCX đạt, TX-2 `CHUA_CAU_HINH` vì CLI chưa nạp ngăn, giữ C-TX-04; không tự cấu hình để xanh |
+| `.venv/Scripts/python -B -m pytest e_trich_xuat/tests -q` | **275 passed in 3.81s, 0 skipped, exit 0** |
+| `.venv/Scripts/python -B e_trich_xuat/tests/kiem_doc_lap.py` | **[ĐẠT], exit 0**; không import Core/kênh cũ, không bytecode/symlink trong gói |
+| `.venv/Scripts/python -B e_trich_xuat/tests/chay_demo_voi_ngan_gia.py` | **5/5 ĐẠT, exit 0**: ba DEMO runtime có ngăn và hai DEMO TX-3 đề xuất, ghi rõ chưa đăng ký; cổng thay thế chờ lead xác nhận |
+
+**đã kiểm bằng Core giả (CoreGia)**: DOCX/OCR giả → chuẩn bị → AI giả →
+hậu kiểm → xuất; bước cuối `truong`. Đã kiểm đúng/sai offset, câu giả khi
+cờ chung true, thiếu/null/mã lạ/trùng/đảo thứ tự, snapshot sai hash/module/
+phiên bản, bộ đổi giữa chuỗi, logic theo loại, đúng 200 dòng, đúng 20 MiB/
+vượt một byte, ô sát/vượt trần, tải lại đủ JSON/Excel, xuất lỗi, hủy giữa
+writer/tại các chặng, mất ACK tệp/kết quả/kết thúc không nộp trùng, chặn ghi
+đĩa/mạng và lỗi/log không lộ nội dung DEMO. **0 Cloud/model thật**.
+
+Linux **chưa chạy thực tế** trong worktree Windows; lệnh `wsl --list --quiet` xác nhận WSL chưa cài, không có Docker; chưa chứng nhận
+Core thật/ACL/TTL/lưu-đóng, E6/N1 hoặc context/chất lượng model thật.
+Quyền/vòng đời tệp chỉ mô phỏng C-TX-02, tệp đã tải trước lỗi/hủy do Core
+dọn theo cổng đó. Không sửa Core/SDK/nguồn cũ, không xóa tệp, không commit/push.
+
+Thời gian thực tế (UTC+07), **15/11/2026**: bắt đầu **09:03:00** theo lead,
+kết thúc **09:31:41**, khoảng **0.48 giờ** so với phiếu
+**8 giờ công ước tính**. PR: **chờ lead mở**. Rà cuối: **50 SHA khớp**, **16 tệp** đổi/thêm
+đúng UTF-8/AST/JSON/phạm vi, đúng **5 tệp lõi**; manifest/mẫu NGAN-0 giữ
+nguyên, chưa có schema bảng. `git diff --check` theo cấu hình repo **exit 0**.
+
+## Sửa kiểm độc lập TX-3 — 15/11/2026, PR: chờ lead mở
+
+Kết luận: **Đạt phần sửa review trong engine; chưa đạt cổng CLI chuẩn** do
+C-TX-04 đã có. Trạng thái TX-3 giữ **Chờ Anh** duyệt chi tiết payload,
+chưa đăng ký `bang_trich_xuat`/năng lực/schema hoặc nối runtime mới.
+
+Đã làm:
+- Chặn đủ 9 cặp số khớp một phần do lead nêu; giữ hai ca đúng và kiểm thêm
+  dấu âm, ngày, NBSP, biên chữ/số, strip đối xứng, lần xuất hiện đúng phía sau.
+  Cách chấm cũ không đổi; đổi tên trường tạm đối chiếu thành `dau_kiem_tam_e6`.
+- `so_tien.so` chỉ int (không bool) hoặc chuỗi thập phân chính xác; float bị
+  từ chối. Round trip JSON/Excel giữ kiểu chuỗi, số dài và phần thập phân.
+- Đóng nợ TX-2: nguồn/hồ sơ mỗi phần ≤20 MiB JSON UTF-8; trang ≤2.000 và
+  ≤8 MiB; cảnh báo ≤200 và ≤64 KiB. Kiểm trước deepcopy/tải, có ca sát trần
+  và vượt một byte, tái hiện 50.000 trang + 20.000 cảnh báo ×1.000 ký tự →
+  `VUOT_GIOI_HAN`, 0 tệp/kết quả đã nộp. Không cắt ngầm.
+- Hồ sơ chỉ lưu toàn văn nguồn một lần thay vì chép thêm trong request;
+  hậu kiểm dựng lại request đầy đủ để kiểm băm. Test cả hồ sơ gọn và TX-2 cũ.
+- Test prompt injection giữ nguyên prompt hệ thống/giao thức/khuôn; nội
+  dung chen chỉ ở `tai_lieu`. **Cần phối hợp AI-2: bước Hỏi AI phải bao/thoát nội dung**.
+- Đề xuất payload có `don_vi_offset:"unicode"`, `kieu_da_chuyen:false`;
+  `phan_hoi_ai` chỉ kiểm toán, có thể lộ nội dung, module không hiển thị
+  mặc định. Chi tiết **ĐỀ XUẤT TX-0, chờ Anh** tại `TX-3-REVIEW.md`.
+
+Kết quả kiểm thực tế — **đã kiểm bằng Core giả (CoreGia)**, Windows,
+Python 3.13.14 / SDK 2.0.0 (wheel khớp SHA-256), pytest 9.1.1;
+`PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`:
+
+| Lệnh thật | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat` | **2/3 ĐẠT, exit 1**; TX-2 thiếu cấu hình ngăn `CHUA_CAU_HINH`, giữ C-TX-04 |
+| `.venv/Scripts/python -B -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp` | **337 passed in 4.11s, 0 skipped, exit 0** |
+| `.venv/Scripts/python -B e_trich_xuat/tests/chay_demo_voi_ngan_gia.py` | **5/5 ĐẠT, exit 0**, gồm hai DEMO đề xuất chưa đăng ký |
+| `.venv/Scripts/python -B e_trich_xuat/tests/kiem_doc_lap.py` | **[ĐẠT], exit 0**, không bytecode/liên kết/import Core/kênh cũ |
+| `git -c core.safecrlf=false diff --check` | **exit 0** |
+
+Regression trước sửa: **16 failed, 23 passed** trong nhóm token/tiền mới,
+bao gồm đủ 9 lỗi số của lead; sau sửa toàn bộ nhóm/bộ kiểm đều đạt.
+Không mạng/dependency runtime mới, **0 Cloud/model thật**; Linux/Core thật,
+ACL/TTL/lưu-đóng, E6/N1 và context/chất lượng model **chưa kiểm**.
+
+Thời gian thực tế (UTC+07), **15/11/2026**: bắt đầu **09:35:00** theo lead,
+kết thúc **09:52:25**, **0.29 giờ** cho đợt sửa review; phiếu TX-3
+**8 giờ công ước tính** cho cả lát, không phải dự toán riêng đợt sửa này.
+
+Lệch khỏi phiếu / quyết định tạm: đúng **5 tệp mã sửa** trong đợt review,
+gồm hai tệp TX-2 để đóng nợ được giao; không đổi `_chung/**`, `ngan.py`,
+`cau_hinh.py`, manifest hoặc đăng ký năng lực. Do giới hạn cấm sửa `_chung/**`
+và ngoại lệ §4 chưa được xác nhận, phần bổ sung đề xuất TX-0 được ghi trọn
+ở `TX-3-REVIEW.md` để lead đồng bộ riêng §4; giữ nhãn **ĐỀ XUẤT**.
+NGUON cập nhật SHA-256 sau CRLF→LF; không sửa nguồn cũ, không xóa tệp,
+không commit/push. PR: **chờ lead mở**.
+
+Cần Core / Chờ Anh: giữ C-TX-01/02/04 và A-TX-01; chờ duyệt chi tiết
+`bang_trich_xuat`, phối hợp AI-2 bao/thoát nội dung và lead xác nhận cổng
+DEMO có ngăn thay CLI SDK 2.0. Không phát sinh API/năng lực đã đăng ký mới.
+
+## Bàn giao TX-4 — 15/11/2026, PR: chờ lead mở
+
+Kết luận: **Chưa đạt điều kiện E6 — nghiệm thu chưa kiểm do thiếu nguồn
+được lead chấp nhận; chẩn đoán kỹ thuật đã thấy khác byte câu hỏi/bảng/phản hồi.**
+
+Đã làm: xác minh băm XLSX thật khớp NGUON/nguồn cũ; E1 đủ 37 mã đúng thứ
+tự/10 tiêu đề/370 ô nguyên văn, ghi riêng băm XLSX/E1/snapshot. Thêm ba tệp
+ngoài runtime `tests/kiem_e6.py`, `doi_chieu_cu_e6.py`, `test_e6.py`; wrapper
+chỉ đọc nguồn, giữ nhóm/dò/rà lại, AI giả cố định và Track Changes. Báo cáo
+[TX-4-E6.md](TX-4-E6.md) và artifact chẩn đoán đi kèm ghi đủ offset/độ dài/
+băm. Công cụ mặc định và chế độ chẩn đoán đều **exit 2**, không nhận E6 đạt.
+
+Kết quả kiểm: `kho_tri_thuc_sdk.thu` **2/3 ĐẠT, exit 1** (`CHUA_CAU_HINH`,
+CLI SDK 2.0/C-TX-04); pytest **375 passed in 11.68s, 0 skipped, exit 0**;
+kiểm độc lập **[ĐẠT], exit 0**; DEMO có ngăn **5/5 ĐẠT, exit 0** (hai DEMO
+TX-3 chỉ đăng ký trong RAM). **đã kiểm bằng Core giả (CoreGia)**. AST/UTF-8/
+NFC/artifact tái lập và `git diff --check` đạt. Python 3.13.14, SDK 2.0.0
+wheel offline khớp SHA; không thêm dependency, không mạng/AI thật, **0 Cloud**.
+Linux/Core thật/ACL/TTL/lưu-đóng và N1/T3 thật **chưa kiểm**.
+
+Thời gian thực tế: **15/11/2026 09:54:00–10:12:54 (UTC+07), 0,32 giờ**;
+phiếu **4 giờ công ước tính**, chưa gồm làm lại T3 khi E6 thất bại.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: chưa có fixture/bản vàng E6 được
+lead chấp nhận nên chỉ kiểm cơ chế bằng DEMO kỹ thuật, không chứng nhận
+tương đương hoặc tạo đáp án để đạt. Nguồn cũ có 9/8 câu hỏi ở hai mẫu so
+với 1 câu hỏi mới; bộ/tham số/văn bản trùng nhưng ba phần còn lại khác.
+Không nới cổng; không sửa runtime/manifest/schema/Core/SDK/mã cũ/hai mẫu
+NGAN-0 hoặc ghim nguồn, không chuyển bộ/lưu trữ, không xóa/commit/push.
+
+Cần Core / Chờ Anh mới phát sinh: **không thêm API đã triển khai**; giữ
+C-TX-01/02/04/A-TX-01 và chờ duyệt TX-3. Lead cấp nguồn/bản vàng đúng checklist
+trong biên bản; trình lựa chọn làm lại riêng batch **12–18 giờ ước tính**
+hoặc lặp v1 **18–24 giờ ước tính**, chưa gồm Core/module/AI. Không tự mở code
+batch/nhiều vòng hoặc chuyển bộ trước E6 đạt.
+
+## Bàn giao TX-5 — 15/11/2026, PR: chờ lead mở
+
+Kết luận: **Chưa đạt điều kiện kiểm chung CLI** do SDK 2.0 CLI chưa cấp ngăn cấu hình (C-TX-04); phần bàn giao module và kiểm Core giả đã thực hiện.
+
+Đã làm: `ban-giao-module/` có helper thuần gọi trực tiếp E1, chuyển snapshot giữ đủ 10 cột/dòng ngừng dùng/quy tắc và ba băm; tài liệu ánh xạ nguồn E1/U1a/U1b, trách nhiệm và quyền module/Core, ví dụ nạp/lỗi/ghim việc. Không chép E1, không thay bộ 37, không mở route/SQL/UI/kho engine. Test DEMO đối chiếu SDK, lỗi Excel/hash và hai module đổi bộ với việc cũ; **đã kiểm bằng Core giả (CoreGia)**, ngăn RAM chỉ chứa cấu hình engine.
+
+Kiểm Windows, Python venv / SDK 2.0.0 offline, SHA-256 wheel khớp SHA256SUMS; 0 Cloud, không mạng/dependency runtime mới:
+
+- `python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat`: **2/3 ĐẠT, exit 1**, DEMO chuẩn bị thiếu cấu hình `CHUA_CAU_HINH`; giới hạn CLI SDK 2.0/C-TX-04 như TX-2.
+- `python -B -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp`: **381 passed, 0 skipped, exit 0**.
+- `python -B e_trich_xuat/tests/kiem_doc_lap.py`: **ĐẠT, exit 0**.
+- `python -B e_trich_xuat/tests/chay_demo_voi_ngan_gia.py`: **5/5 ĐẠT, exit 0**; hai năng lực TX-3 đăng ký chỉ trong RAM.
+
+Linux và Core thật chưa chạy. Thời gian 15/11/2026 **10:15–10:19 UTC+07**, khoảng **0,07 giờ**, ước tính **3 giờ công**. Không sửa Core/SDK/nguồn cũ, không commit/push.
+
+Cần Core: giữ C-TX-01 (xác thực module/pháp nhân, ghim snapshot và prompt theo từng việc, giới hạn thực), C-TX-04 (ngăn cấu hình trong cổng chạy thử); giữ các mục C-TX-02/03 và A-TX-01 đã nêu. Module tự triển khai kho bộ, phân quyền, lịch sử, so sánh, chạy thử và kích hoạt; chưa khẳng định đã cài. E6, payload hậu kiểm/xuất và năng lực chưa đăng ký vẫn chờ quyết định/duyệt như TX-4.

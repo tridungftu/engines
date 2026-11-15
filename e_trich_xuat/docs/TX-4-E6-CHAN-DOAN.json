@@ -1,0 +1,157 @@
+{
+  "bam_xlsx": "sha256:05846a2acd60f2cde708d13a163a137ee3fb0b4e08fd84f85a7e14e7ef861bcd",
+  "bam_noi_dung_e1": "6b8190a73e73ced8784fb22e3339a42d72785826ae15b1a499955facb4d65812",
+  "bam_snapshot_json_DEMO": "sha256:36ede31d53aab2af694e3856f84dc0851c1d51d4a2e2ece9a212a6475b3ff67a",
+  "bam_ma_nguon_cu_LF": {
+    "quy_trinh.py": "sha256:236000766047fd789709d0150873fe6c9ecff06c6de2dd92e762fc1ea4d0e0d6",
+    "ai_chung.py": "sha256:b82abcb6a92a8d9dfc90b92d053497bc8cbb251c71ab9ee1ddb37ed395a45f45",
+    "docx.py": "sha256:84b5662856ecf2742360077012377f913698a917e1fd4a4a08f87568e1af6a5b",
+    "vendor/review/danh_muc.py": "sha256:f0796984f7b18a4d0d3389b557a6324f3ad59ca488c29ad3284e11ca97ca2ff2",
+    "vendor/review/xlsx_mini.py": "sha256:a29ed16811637daa756fcb2640557ec817734d3d2ee617c30deca51d3799857b",
+    "vendor/review/doc_hop_dong.py": "sha256:1a73354377cd5a13aaa9c45254756d54099796150c7ad798ef26cff5e86c556f",
+    "vendor/review/cau_truc.py": "sha256:2817a46ec2fc967d1e64eae1dd68e35047e687a7b654a9c8ce03f106b9aad5c6",
+    "vendor/review/kiem_tra.py": "sha256:47ee35567cb7b864a6b3d6825bc90f93a7a26c0c6872a326e99ead9160467f12",
+    "vendor/review/logic.py": "sha256:f7cfcf37ff2293d8f8ea994f1ae0a69f57d1d1d9a844f0620f018a3d285a4452"
+  },
+  "so_ma": 37,
+  "so_cot": 10,
+  "nguyen_van_10_cot": true,
+  "thu_tu_37_ma": true,
+  "trang_thai": "chua_kiem",
+  "nhan": "DEMO kỹ thuật chưa được lead chấp nhận",
+  "ai_that": 0,
+  "cloud": 0,
+  "cac_ca": [
+    {
+      "ma": "DEMO-thuong",
+      "bam_docx": "sha256:07811a00035a1624072f0a7c3b20b55c3c8a0a6cd28a66b1825bafcec862dfe4",
+      "bam_bang_ai_gia": "sha256:70bc5bf9dc3293e1cc3f5ebbdeea08c14db90a941bba66182c4333f6ea0db873",
+      "track_changes_da_nhan": 0,
+      "so_cau_hoi_cu": 9,
+      "so_cau_hoi_moi": 1,
+      "ket_qua_chan_doan": "chua_dat",
+      "metadata": {
+        "module": "DEMO-crm",
+        "phien_ban_bo": "DEMO-E6-1",
+        "bam_snapshot_json": "sha256:36ede31d53aab2af694e3856f84dc0851c1d51d4a2e2ece9a212a6475b3ff67a",
+        "so_dong": 37
+      },
+      "mac_dinh_voi_module": {
+        "bo_10_cot": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 8661,
+          "so_byte_phai": 8661,
+          "bam_trai": "sha256:f942f4c117ae1b92eed4dd1ad7629a4f273dd2ed2fae8886016f3276be1c3bbd",
+          "bam_phai": "sha256:f942f4c117ae1b92eed4dd1ad7629a4f273dd2ed2fae8886016f3276be1c3bbd"
+        },
+        "tham_so": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 13243,
+          "so_byte_phai": 13243,
+          "bam_trai": "sha256:8450c4a622e02779f181b2a0fc4c47a6f88365933ffd844136d58b903d6e4c94",
+          "bam_phai": "sha256:8450c4a622e02779f181b2a0fc4c47a6f88365933ffd844136d58b903d6e4c94"
+        },
+        "van_ban": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 116,
+          "so_byte_phai": 116,
+          "bam_trai": "sha256:20eaaf1d151263711d5caa3fcce3b9a323d782628a95ed3f644f7aecfdfb779e",
+          "bam_phai": "sha256:20eaaf1d151263711d5caa3fcce3b9a323d782628a95ed3f644f7aecfdfb779e"
+        },
+        "cau_hoi": {
+          "trung_byte": false,
+          "byte_khac_dau": 3,
+          "so_byte_trai": 16111,
+          "so_byte_phai": 8035,
+          "bam_trai": "sha256:f849b0b5ff80d0e8902fd7f1beb484bbe856c0b46e1909eed3ab618150292747",
+          "bam_phai": "sha256:1d39a49745ce89f24330da1305eddfc72a2f72f3f6e57c120858ec25e8f571c4"
+        },
+        "bang": {
+          "trung_byte": false,
+          "byte_khac_dau": 3,
+          "so_byte_trai": 24581,
+          "so_byte_phai": 14642,
+          "bam_trai": "sha256:5c132dd7337656ded9464347a1426c5fcbb6809779411cef96bb9b6162fc0f89",
+          "bam_phai": "sha256:c0dc78dee4f41767bfc557a7cbbc42a89d9d0c3d5416da34aa19e2f02802cfe7"
+        },
+        "phan_hoi": {
+          "trung_byte": false,
+          "byte_khac_dau": 13,
+          "so_byte_trai": 308,
+          "so_byte_phai": 2587,
+          "bam_trai": "sha256:0cce0d2e00aec8b183ddc6b7aec36ac161c3498d54b0353b8d7518ae7cae5cf0",
+          "bam_phai": "sha256:8306684fad91394dddd7f8d5cfdd24be76882974d19844000ed7d3341b6cda47"
+        }
+      }
+    },
+    {
+      "ma": "DEMO-track-changes",
+      "bam_docx": "sha256:a665fac5cf0cc68fb0e1faec45984b5348185f4f34f6125fc3b2c7469edd40e7",
+      "bam_bang_ai_gia": "sha256:e50f7fbddfb085500fbd9bb647a59338ffc01a34541d034f18f84af5fdd8447f",
+      "track_changes_da_nhan": 2,
+      "so_cau_hoi_cu": 8,
+      "so_cau_hoi_moi": 1,
+      "ket_qua_chan_doan": "chua_dat",
+      "metadata": {
+        "module": "DEMO-crm",
+        "phien_ban_bo": "DEMO-E6-1",
+        "bam_snapshot_json": "sha256:36ede31d53aab2af694e3856f84dc0851c1d51d4a2e2ece9a212a6475b3ff67a",
+        "so_dong": 37
+      },
+      "mac_dinh_voi_module": {
+        "bo_10_cot": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 8661,
+          "so_byte_phai": 8661,
+          "bam_trai": "sha256:f942f4c117ae1b92eed4dd1ad7629a4f273dd2ed2fae8886016f3276be1c3bbd",
+          "bam_phai": "sha256:f942f4c117ae1b92eed4dd1ad7629a4f273dd2ed2fae8886016f3276be1c3bbd"
+        },
+        "tham_so": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 13243,
+          "so_byte_phai": 13243,
+          "bam_trai": "sha256:8450c4a622e02779f181b2a0fc4c47a6f88365933ffd844136d58b903d6e4c94",
+          "bam_phai": "sha256:8450c4a622e02779f181b2a0fc4c47a6f88365933ffd844136d58b903d6e4c94"
+        },
+        "van_ban": {
+          "trung_byte": true,
+          "byte_khac_dau": null,
+          "so_byte_trai": 100,
+          "so_byte_phai": 100,
+          "bam_trai": "sha256:e62e51be8349a8ac7d8d7f12bb184f98e551ba609925069b55a913e21f911a3f",
+          "bam_phai": "sha256:e62e51be8349a8ac7d8d7f12bb184f98e551ba609925069b55a913e21f911a3f"
+        },
+        "cau_hoi": {
+          "trung_byte": false,
+          "byte_khac_dau": 3,
+          "so_byte_trai": 15418,
+          "so_byte_phai": 8018,
+          "bam_trai": "sha256:b8d48da51ad21cd4261c8742e6a623aa8775f7a66c00bf64987fd95574d07576",
+          "bam_phai": "sha256:24f2e216192688c42873239541ad7bec9d55ab3c0ff6b1ef77bcdca0bbd9e53a"
+        },
+        "bang": {
+          "trung_byte": false,
+          "byte_khac_dau": 3,
+          "so_byte_trai": 24836,
+          "so_byte_phai": 14642,
+          "bam_trai": "sha256:998901ddf2aa0719150b78a982d9a3f750bc3bebcd75b155e32bb11a82842cc0",
+          "bam_phai": "sha256:c0dc78dee4f41767bfc557a7cbbc42a89d9d0c3d5416da34aa19e2f02802cfe7"
+        },
+        "phan_hoi": {
+          "trung_byte": false,
+          "byte_khac_dau": 13,
+          "so_byte_trai": 274,
+          "so_byte_phai": 2587,
+          "bam_trai": "sha256:7be3885f3530a2d0c44e8f09c0b068edadce12d62dd19dc8fc27fb0c67c50a8d",
+          "bam_phai": "sha256:8306684fad91394dddd7f8d5cfdd24be76882974d19844000ed7d3341b6cda47"
+        }
+      }
+    }
+  ],
+  "loi": "Thiếu nguồn đối chiếu E6."
+}

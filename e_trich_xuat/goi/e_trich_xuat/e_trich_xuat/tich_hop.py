@@ -7,7 +7,7 @@ Toàn bộ hồ sơ được tạo trong RAM rồi tải lên kho tệp Core b�
 from copy import deepcopy
 import re
 
-from .cau_truc import build_structure, doc_tai_lieu
+from .cau_truc import build_structure, doc_tai_lieu, json_bytes_co_tran
 from .tham_so import (MA, bam_bytes, chon_tham_so, doc_bo, json_bytes,
                       kiem_hoi_them, loi)
 
@@ -15,6 +15,7 @@ from .tham_so import (MA, bam_bytes, chon_tham_so, doc_bo, json_bytes,
 PROMPT_TOI_DA = 20_000
 KHUON_TOI_DA_BYTE = 32 * 1024
 CHUYEN_TIEP_TOI_DA_BYTE = 64 * 1024
+HO_SO_TOI_DA_BYTE = 20 * 1024 * 1024
 MODEL = re.compile(r"[A-Za-z0-9._:/-]{1,200}\Z")
 
 
@@ -85,11 +86,12 @@ def kiem_ngan_sach(tham_so, cau_hinh, prompt, tai_lieu, khuon):
 
 def chuan_bi(viec, cau_hinh, *, phien_ban_engine):
     viec.kiem_huy()
-    tham_so, dau_vao = deepcopy(viec.tham_so), deepcopy(viec.dau_vao)
+    # Kiểm trần trước deepcopy; không nhân đôi cấu trúc OCR/cảnh báo quá lớn.
+    tai_lieu = deepcopy(doc_tai_lieu(viec.dau_vao))
+    tham_so = deepcopy(viec.tham_so)
     bo, danh_muc, bam_bo = doc_bo(tham_so)
     params = chon_tham_so(tham_so, danh_muc)
     kiem_hoi_them(tham_so)
-    tai_lieu = doc_tai_lieu(dau_vao)
     model = tham_so.get("model_uu_tien")
     if isinstance(model, str) and not model.strip():
         model = None
@@ -117,10 +119,13 @@ def chuan_bi(viec, cau_hinh, *, phien_ban_engine):
             "tham_so_viec": tham_so, "cau_hinh_da_ghim": deepcopy(cau_hinh),
             "tai_lieu": tai_lieu, "bam_van_ban": bam_bytes(tai_lieu["van_ban"].encode("utf-8")),
             "cau_truc": build_structure(tai_lieu["van_ban"], viec.kiem_huy),
-            "yeu_cau_ai": yeu_cau, "bam_yeu_cau_ai": bam_yeu_cau,
+            # Toàn văn chỉ lưu tại tai_lieu.van_ban; hậu kiểm dựng lại request
+            # nguyên vẹn trước khi kiểm băm, không đổi request gửi Hỏi AI.
+            "yeu_cau_ai": {k: v for k, v in yeu_cau.items() if k != "tai_lieu"},
+            "bam_yeu_cau_ai": bam_yeu_cau,
             "sang_loc_ngan_sach": ngan_sach,
         }
-        raw = json_bytes(ho_so)
+        raw = json_bytes_co_tran(ho_so, HO_SO_TOI_DA_BYTE)
     except (ValueError, TypeError, RecursionError, OverflowError, UnicodeError):
         loi("BO_THAM_SO_KHONG_HOP_LE")
     viec.tien_do(70, "Đang gửi hồ sơ hậu kiểm tới Core.")

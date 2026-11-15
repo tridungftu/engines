@@ -163,3 +163,7 @@ SHA triển khai HD-7 đo trên bytes thực tại bàn giao, không phải băm
 | `e_hoa_don/bang_ke.py` | `93407052b3ff30d089903889548291ef0109e20184381c8d45df494b71a8c5dd` | `93407052b3ff30d089903889548291ef0109e20184381c8d45df494b71a8c5dd` |
 | `e_hoa_don/xlsx_toi_thieu.py` | `ad6a6c8e89d73e5e994c4f21066c7ee76640b261eaf253dc82a69cf1337fa46d` | `ad6a6c8e89d73e5e994c4f21066c7ee76640b261eaf253dc82a69cf1337fa46d` |
 | `engine.json` | `f269a40b342df76456e5a5cab8e726afefaec9bdf490594fb56c3e62499d9b44` | `726356b63682629eac6361afbd600461f6c1079d6d46bb38ccac3827c8ef6858` |
+
+## HD-8 ? ??i chi?u ngu?n 15/11/2026
+
+??i chi?u l?i quy?n CD-096 A1 trong `ma-nguon/NGUON.md`: ch? d?ng n?i b?; ngu?n Node ch? ??c t?nh, kh?ng ch?y v? kh?ng c?p quy?n ph?n ph?i. Test ??i chi?u SHA bytes th?c v? d?ng LF c?a `bang_ke.cjs`, `vendor/config.js`, `vendor/build.js`, `NGUON.md` v?i b?ng HD-7; c?c SHA theo t?p kh?ng ph?i m? b?m g?i ph?t h?nh. Kh?ng th?m runtime hay dependency.

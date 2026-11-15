@@ -20,7 +20,8 @@ def chay_demo():
 
 
 def main():
-    ket_qua = chay_demo()
+    from mau_tx3 import chay_demo_tx3
+    ket_qua = chay_demo() + chay_demo_tx3()
     for kq in ket_qua:
         dat = kq["trang_thai"] == "XONG"
         print(f"[{'ĐẠT' if dat else 'LỖI'}] {kq['ten']}" +

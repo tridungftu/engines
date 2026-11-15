@@ -997,3 +997,9 @@ C?n Core / Ch? Anh m?i ph?t sinh: **kh?ng**. C?n c?c vi?c ?? ghi ? m?c
 C?n Core: ng?n b?n SDK 2.1, quy?n/ph?m vi th?t v? m?n qu?n tr? trong Core;
 kh?ng c?n ch? NGAN-0. N? OCR-4 s? 2, 3 gi? nguy?n ngo?i ph?m vi.
 Kh?ng commit/push; lead th?c hi?n commit v? m? PR.
+
+## Giới hạn đã biết sau OCR-9 (kiểm độc lập 15/11/2026)
+
+- `luot_abbyy` không có hạn giữ và SDK 2.2.0 không có lệnh xóa: mỗi (pháp nhân, tài liệu) giữ 1 hàng vĩnh viễn. Cần Core: hạn giữ riêng cho lượt đã chốt.
+
+- Chỗ giữ `dang_giu` nằm trong một map ≤ 64 KiB; chỗ giữ bỏ dở không tự giải phóng; đầy thì mọi lượt mới báo NGAN_DU_LIEU_QUA_LON — Admin đối chiếu thủ công.

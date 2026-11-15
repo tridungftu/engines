@@ -282,9 +282,3 @@ Không dùng hàm `ocr_*_luot` hoặc cổng riêng cũ.
 
 `demo/van_ban_tai_lieu.demo.json` chỉ minh họa hợp đồng bằng dữ liệu giả có
 nhãn DEMO, gồm vị trí, ô trống và ô gộp; băm toàn số 0 là băm minh họa.
-
-## Giới hạn đã biết (kiểm độc lập 15/11/2026)
-
-- `luot_abbyy` không có hạn giữ và SDK 2.2.0 không có lệnh xóa: mỗi (pháp nhân, tài liệu) giữ 1 hàng vĩnh viễn (lượt chưa rõ không được tự hết hạn). Cần Core: hạn giữ riêng cho lượt đã chốt.
-
-- Chỗ giữ `dang_giu` nằm trong một map ≤ 64 KiB; chỗ giữ bỏ dở (tiến trình chết lúc đang gửi) không tự giải phóng. Khi đầy, mọi lượt mới báo NGAN_DU_LIEU_QUA_LON — Admin đối chiếu và giải phóng thủ công.

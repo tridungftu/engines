@@ -1,6 +1,6 @@
-# PHIẾU — Bật màn "Chạy thử che định danh" trên Core DEMO
+# [BỎ — 15/11/2026] PHIẾU — Bật màn "Chạy thử che định danh" trên Core DEMO
 
-Lead soạn 07/11/2026 16:15. Trạng thái: **CHỜ ANH ĐỒNG Ý** trước khi lập trình (CLAUDE.md mục 0b). Căn cứ khảo sát: `KS-MASK-3J-BAT-CHAY-THU.md`.
+Lead soạn 07/11/2026 16:15. Trạng thái: **BỎ — 15/11/2026** (Anh chốt, `_chung/docs/QUYET-DINH-ANH-20261115.md` câu 10: thử DEMO dùng màn Chạy thử chung của Core; màn duyệt danh sách chờ là màn của engine Mask). Giữ tệp để tra lịch sử, không làm theo phiếu này. Căn cứ khảo sát: `KS-MASK-3J-BAT-CHAY-THU.md`.
 
 ## 1. Anh sẽ thấy gì khi xong
 Admin làm lần lượt trên Core DEMO:

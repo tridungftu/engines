@@ -1,0 +1,67 @@
+# Cụm viết hoa thông thường trong văn bản, không cần rà soát (so khớp cả cụm, không phân biệt hoa thường).
+# Dòng bắt đầu bằng "words:" liệt kê từ đơn: cụm chỉ gồm các từ này được bỏ qua.
+Bên A
+Bên B
+Bên C
+Bên Bán
+Bên Mua
+Bên Thuê
+Bên Cho Thuê
+Bên Giao
+Bên Nhận
+Việt Nam
+Cộng Hòa Xã Hội Chủ Nghĩa Việt Nam
+Độc Lập Tự Do Hạnh Phúc
+Hợp Đồng
+Phụ Lục
+Tổng Giám Đốc
+Phó Tổng Giám Đốc
+Giám Đốc
+Kế Toán Trưởng
+Hội Đồng Quản Trị
+Ban Giám Đốc
+Ban Kiểm Soát
+Đại Hội Đồng Cổ Đông
+Ngân Hàng Nhà Nước
+Tòa Án Nhân Dân
+Ủy Ban Nhân Dân
+Bộ Luật Dân Sự
+Luật Thương Mại
+Luật Doanh Nghiệp
+Nghị Định
+Thông Tư
+Quyết Định
+Trân Trọng
+Kính Gửi
+Nơi Nhận
+Tổng Cộng
+Thành Tiền
+Đơn Giá
+Số Lượng
+Đơn Vị Tính
+Ghi Chú
+Họ Và Tên
+Chức Vụ
+Địa Chỉ
+Điện Thoại
+Mã Số Thuế
+Số Tài Khoản
+Thứ Hai
+Thứ Ba
+Thứ Tư
+Thứ Năm
+Thứ Sáu
+Thứ Bảy
+Chủ Nhật
+words: điều khoản mục chương phần phụ lục hợp đồng bên bán mua thuê giao nhận các hai ba một số ngày tháng năm quý
+words: giám đốc tổng phó trưởng phòng ban chủ tịch hội thành viên kế toán thư ký nhân viên chuyên viên trưởng nhóm tổ
+words: căn cứ luật nghị định thông tư quyết chỉ thị công văn tờ trình báo cáo biên bản thông báo đơn giấy thư
+words: cộng hòa xã nghĩa việt nam độc lập tự do hạnh phúc kính gửi trân trọng nơi nhận lưu
+words: tổng giá trị tiền thuế phí đơn thành lượng vị tính ghi chú stt họ và tên chức vụ địa chỉ điện thoại email fax
+words: đại diện người liên hệ ký nhận lập xác theo quy chung riêng khác mới cũ
+words: hà nội hồ chí minh tp thành phố tỉnh quận huyện phường miền bắc trung
+words: dear hi hello regards best sincerely thank thanks please the and of for to in on at by with from subject date
+words: monday tuesday wednesday thursday friday saturday sunday january february march april may june july august
+words: september october november december agreement contract party appendix article section
+words: quản lý dự án hành chính kinh doanh tài nhân sự kỹ thuật hàng vận chuyển sản xuất đầu tư xây dựng kho
+words: chief executive operating financial officer director manager head legal counsel partner senior

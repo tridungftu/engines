@@ -1,0 +1,10 @@
+{
+  "ma_engine": "e_doi_chieu",
+  "ghi_chu": "Bản khai màn/quyền đề nghị C-DC-01/03/04, chưa đăng ký thật. Ngăn và cấu hình đã khai thật bằng SDK 2.2.0; không thêm khóa màn vào manifest 2.0.",
+  "giao_dien_quan_tri": [
+    {"ma": "cau_hinh", "ten": "Cấu hình", "tep": "ui/cau_hinh.js", "quyen": "admin_core"},
+    {"ma": "ket_qua", "ten": "Kết quả đối chiếu", "tep": "ui/ket_qua.js", "quyen": "xem_doi_chieu"}
+  ],
+  "quyen_de_nghi": ["xem_doi_chieu", "xac_nhan_doi_chieu", "duyet_thay_doi_nghiem_trong", "gui_yeu_cau_module"],
+  "hop_dong_chua_tich_hop": ["C-DC-01", "C-DC-03", "C-DC-04"]
+}

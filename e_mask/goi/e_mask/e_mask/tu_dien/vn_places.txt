@@ -1,0 +1,80 @@
+# Địa danh dễ bị nhận nhầm là tên người (so khớp không phân biệt hoa thường, cả cụm).
+Hà Nội
+Hà Nam
+Hà Giang
+Hà Tĩnh
+Hà Đông
+Hà Tiên
+Hà Thành
+Lâm Đồng
+Cao Bằng
+Hoàng Mai
+Hoàng Sa
+Trường Sa
+Hồ Chí Minh
+TP Hồ Chí Minh
+Phan Thiết
+Phan Rang
+Mai Châu
+Lý Sơn
+Hồ Tây
+Bà Rịa
+Bà Đen
+Châu Đốc
+Châu Thành
+Kim Bảng
+Kim Sơn
+Giang Nam
+Đồng Nai
+Đồng Tháp
+Đồng Hới
+Đồng Xoài
+Thái Bình
+Thái Nguyên
+Lạng Sơn
+Quan Hoa
+Văn Lâm
+Văn Giang
+Tây Ninh
+Ninh Bình
+Ninh Thuận
+Ninh Kiều
+Việt Nam
+Viet Nam
+Miền Nam
+Miền Bắc
+Miền Trung
+Tân Bình
+Nam Từ Liêm
+Bắc Từ Liêm
+Hoàn Kiếm
+Đống Đa
+Cầu Giấy
+Thanh Xuân
+Hai Bà Trưng
+Long Biên
+Tây Hồ
+Nha Trang
+Khanh Hoa
+Khánh Hòa
+Bình Dương
+Bình Định
+Bình Thuận
+Bình Phước
+Quảng Ninh
+Quảng Nam
+Quảng Ngãi
+Đà Nẵng
+Hải Phòng
+Cần Thơ
+Sài Gòn
+Thăng Long
+Hàn Quốc
+Châu Á
+Châu Âu
+Châu Phi
+Châu Mỹ
+Châu Úc
+Cao Lãnh
+Hồ Gươm
+Hồ Hoàn Kiếm

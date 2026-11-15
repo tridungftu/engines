@@ -6,6 +6,7 @@ này gọi nap_cau_hinh trước khi nhận việc; MASK-2 chưa nối kênh c�
 from functools import lru_cache
 from hashlib import sha256
 from pathlib import Path
+import json
 import re
 
 from .nguon.privacy.types import PrivacyError
@@ -84,3 +85,32 @@ def doc_dong(ten):
     if ten not in TEN_TAI_NGUYEN or ten not in _du_lieu:
         raise ThieuTaiNguyen()
     return _du_lieu[ten]
+
+
+def nap_tu_goi():
+    """Từ điển sạch lead cấp, có SHA cố định trong gói; không cấu hình máy."""
+    global _du_lieu
+    thu_muc = Path(__file__).parent / 'tu_dien'
+    try:
+        bam = json.loads((thu_muc / 'SHA256.json').read_text('utf-8'))
+        if set(bam) != TEN_TAI_NGUYEN:
+            raise ValueError
+        moi = {}
+        for ten in TEN_TAI_NGUYEN:
+            tep = thu_muc / ten
+            if tep.is_symlink():
+                raise ValueError
+            raw = tep.read_bytes()
+            if sha256(raw).hexdigest() != bam[ten]:
+                raise ValueError
+            moi[ten] = tuple(s.strip() for s in raw.decode('utf-8-sig').splitlines()
+                            if s.strip() and not s.lstrip().startswith('#'))
+            if not moi[ten]:
+                raise ValueError
+        if moi != _du_lieu:
+            xoa_cache()
+            _du_lieu = moi
+    except (OSError, ValueError, TypeError, UnicodeError):
+        _du_lieu = {}
+        xoa_cache()
+        raise ThieuTaiNguyen() from None

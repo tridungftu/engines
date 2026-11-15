@@ -1,0 +1,63 @@
+Kiểm sửa an toàn MASK-3b…6 — 15/11/2026
+Bắt đầu phiên: 08:25:00; chốt kiểm: 08:54:41 (UTC+07), 0.49 giờ.
+Python 3.13.14; SDK 2.0.0 từ wheel offline, SHA-256 khớp SHA256SUMS.txt.
+PYTHONDONTWRITEBYTECODE=1; PYTHONUTF8=1; PYTHONIOENCODING=utf-8.
+Đã kiểm bằng Core giả (CoreGia); dữ liệu DEMO. Node dùng KttCore giả.
+
+$ .venv/Scripts/python -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.0.0: có ví dụ chạy thử DEMO chưa đạt.
+
+Mã thoát: 1
+
+$ .venv/Scripts/python e_mask/tests/chay_demo.py
+Đang lưu tạm trong bộ nhớ; khởi động lại sẽ mất hạn mức/dấu chống trùng
+[ĐẠT] Che văn bản DEMO XONG 
+[ĐẠT] Mở che DEMO XONG 
+Đã kiểm bằng Core giả (CoreGia).
+
+Mã thoát: 0
+
+$ .venv/Scripts/python -m pytest e_mask/tests -q --basetemp=.pytest-tmp
+............................... [ 13%]
+........................................ [ 23%]
+........................................................................ [ 40%]
+........................................................................ [ 57%]
+........................................................................ [ 74%]
+........................................................................ [ 91%]
+....................................                                     [100%]
+422 passed, 190 subtests passed in 31.39s
+
+Mã thoát: 0
+
+$ .venv/Scripts/python e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+
+Mã thoát: 0
+
+$ node --test e_mask/tests/ui/duyet_dinh_danh.test.mjs
+✔ Duyệt qua KttCore, cấp alias, giữ mã tạm và lọc cột (4.9594ms)
+✔ CAS lỗi hiện câu tiếng Việt và không ghi nửa lô (1.0539ms)
+✔ Từ chối giữ alias đang dùng; quyền bị thu hồi chặn ghi (0.6596ms)
+✔ Từ chối Junsky trùng tiền tố MASK, mã tự sinh đúng nhóm (0.6066ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 215.1762
+
+Mã thoát: 0
+
+$ git diff --check
+
+Mã thoát: 0
+
+Pytest: 422 passed, 190 subtests passed; 0 skipped. Gồm 142 ca bổ sung.
+CLI SDK chuẩn 0/2 do thiếu nguồn quyền tin cậy; adapter DEMO 2/2 đạt.
+Ba hiện vật đã chuyển khỏi gói; SHA LF của bản lưu trữ khớp Git blob gốc.
+Không sửa _chung/**, ngan.py/cau_hinh.py, nguồn cũ hoặc bộ SDK; không commit/push.

@@ -116,7 +116,7 @@
       "ten": "Che văn bản DEMO",
       "dau_vao": {
         "loai": "van_ban",
-        "van_ban": "Dữ liệu giả DEMO."
+        "van_ban": "Công ty DEMO Ánh Dương; 1.000.000 VND ngày 30/10/2026."
       },
       "tham_so": {}
     },
@@ -127,10 +127,25 @@
         "loai": "tra_loi_ai",
         "tra_loi_ai": {
           "phien_ban": 1,
-          "tra_loi": "DEMO [[CT-0001]]",
+          "trang_thai": "co_can_cu",
+          "tra_loi": "DEMO [[KH-DEMO-001]]; 1.000.000 VND ngày 30/10/2026.",
+          "du_lieu": null,
+          "trich_dan": [],
+          "kiem_trich_dan": {
+            "dat": true,
+            "loi": []
+          },
+          "nha_cung_cap": "local",
+          "model": "model-demo",
+          "ly_do_chon_model": "DEMO",
+          "ma_prompt": "demo",
+          "phien_ban_prompt": "1",
+          "phien_ban_engine": "e_hoi_ai 1.0.0",
+          "bam_dau_vao": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
           "chuyen_tiep": {
             "ma_yeu_cau": "DEMO"
-          }
+          },
+          "canh_bao": []
         }
       },
       "tham_so": {}

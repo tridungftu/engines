@@ -13,6 +13,7 @@ import math
 import re
 import sys
 import time
+import subprocess
 from types import SimpleNamespace
 import unicodedata
 
@@ -41,6 +42,7 @@ MA_KY_THUAT = {'AI_TRA_SAI_KHUON', 'LOCAL_AI_KHONG_SAN_SANG', 'MASK_AI_SPAN_KHON
                'MASK_AI_NGUON', 'MASK_AI_HO_SO', 'MASK_AI_CHUA_DAT', 'MASK_AI_CHUA_CO_CUA_CORE',
                'MASK_AI_NGAN_SACH', 'MASK_AI_QUA_GIOI_HAN', 'MASK_AI_PROFILE_KHONG_HOP_LE',
                'VUOT_GIOI_HAN', 'HET_HAN_CHUOI', 'SAI_MODEL'}
+TRAN_TIMEOUT = 3600
 
 
 def bam(v):
@@ -132,6 +134,7 @@ def cham(ca, kq, ngan):
     trang = kq['trang_thai']
     ma = (kq.get('loi') or {}).get('ma', '')
     ket = dict(trang_thai='loi_ky_thuat', so_span_lot=None, che_thua=None,
+               so_span_che_thua=None, so_ky_tu_che_thua=None,
                ma_loi=ma if ma in MA_KY_THUAT | CHAN_NGHIEP_VU else 'LOI_KHAC' if ma else None)
     if trang == 'CHUA_RO':
         ket['trang_thai'] = 'chua_ro'
@@ -148,8 +151,19 @@ def cham(ca, kq, ngan):
         so_lot = sum(not any(a <= t['bat_dau'] and t['ket_thuc'] <= b for a, b in phep)
                      or bool(khung(t['nguyen_van']) and khung(t['nguyen_van']) in khung(ALIAS.sub('', ra)))
                      for t in ca['gold'])
+        # Hợp các khoảng vàng, kể cả khi chồng nhau. Đếm phần phép che nằm
+        # ngoài hợp này trên MỌI ca, không chỉ các câu không có định danh.
+        vang = []
+        for t in sorted(ca['gold'], key=lambda t: t['bat_dau']):
+            a, b = t['bat_dau'], t['ket_thuc']
+            if vang and a <= vang[-1][1]:
+                vang[-1] = (vang[-1][0], max(b, vang[-1][1]))
+            else:
+                vang.append((a, b))
+        thua = [b - a - sum(max(0, min(b, z) - max(a, x)) for x, z in vang) for a, b in phep]
         ket.update(trang_thai='phat_hanh_con_lot' if so_lot else 'phat_hanh_che_du',
-                   so_span_lot=so_lot, che_thua=not ca['gold'] and bool(phep))
+                   so_span_lot=so_lot, che_thua=any(thua),
+                   so_span_che_thua=sum(n > 0 for n in thua), so_ky_tu_che_thua=sum(thua))
     return ket
 
 
@@ -171,7 +185,7 @@ class CongDoCoreGia(CongHauKiemCoreGia):
         if not hasattr(self, '_han'):
             self._han = (datetime.now(timezone.utc) + timedelta(seconds=self.han_giay)).isoformat()
         cu['han_chuoi'] = self._han
-        cu['han_local_giay'] = self.han_giay
+        cu['han_local_giay'] = max(1, math.ceil(self.han_giay))
         v.update(han_chuoi=cu['han_chuoi'], han_local_giay=cu['han_local_giay'])
         return v
 
@@ -206,6 +220,8 @@ class DemLocal:
         if model != self.model:
             raise LoiNghiepVu('LOCAL_AI_KHONG_SAN_SANG', 'Model được chỉ định không khả dụng.')
         self.so_luot += 1
+        if getattr(self, 'khi_goi', None):
+            self.khi_goi()
         t = time.perf_counter()
         try:
             return self.provider.hoi(cau_hinh, model, *a, **kw)
@@ -239,10 +255,12 @@ def ai_ram(url, model, timeout):
     return ai, local, cloud, cu
 
 
-def hai_lop(b, ai, model):
+def hai_lop(b, ai, model, thong_ke=None, cap_nhat=None):
+    if thong_ke is None:
+        thong_ke = dict(so_doan_ke_hoach=0, so_doan_ai_xong=0, du_doan=False)
     truoc = chay_buoc(b, cb.NANG_LUC)
-    thong_ke = dict(so_doan_ke_hoach=0, so_doan_ai_xong=0, du_doan=False)
     if truoc['trang_thai'] != 'XONG':
+        thong_ke['chan_truoc_ai'] = (truoc.get('loi') or {}).get('ma') == 'MASK_DINH_DANH_CHUA_DAT'
         return truoc, thong_ke
     meta = truoc['ket_qua']['yeu_cau_ai']['chuyen_tiep']['mask_2c']
     raw = b.c.doc_tep(meta['ho_so']['tep_id'])
@@ -252,12 +270,28 @@ def hai_lop(b, ai, model):
     thong_ke['so_doan_ke_hoach'] = len(b.ys)
     ds = []
     for y in b.ys:
-        if time.monotonic() - b.cong.bat_dau >= b.cong.han_giay:
+        con_lai = b.cong.han_giay - (time.monotonic() - b.cong.bat_dau)
+        if con_lai <= 0:
+            thong_ke['het_han'] = True
             return {'trang_thai': 'LOI', 'loi': {'ma': 'HET_HAN_CHUOI'}}, thong_ke
+        # Một lần gọi không được dùng lại toàn bộ deadline của ca. Giữ
+        # trần timeout 600 giây của cấu hình AI-9 nguyên bản.
+        ban = ai.app.ngan.doc('cau_hinh', {})
+        cfg = deepcopy(ban.gia_tri)
+        cfg['local_ai']['timeout_giay'] = min(600, con_lai)
+        with ai.app.ngan.lo() as lo:
+            lo.sua('cau_hinh', {}, cfg, row_version=ban.row_version)
         kq = CoreGia().chay_thu(ai.app, 'ai.hoi_mask_cuc_bo@1', deepcopy(y))
+        if cap_nhat:
+            cap_nhat()
+        if time.monotonic() - b.cong.bat_dau >= b.cong.han_giay:
+            thong_ke['het_han'] = True
+            return {'trang_thai': 'CHUA_RO'}, thong_ke
         if kq['trang_thai'] != 'XONG':
             return kq, thong_ke
         thong_ke['so_doan_ai_xong'] += 1
+        if cap_nhat:
+            cap_nhat()
         if kq['ket_qua']['tra_loi_ai']['model'] != model:
             return {'trang_thai': 'LOI', 'loi': {'ma': 'SAI_MODEL'}}, thong_ke
         ban_model = ai.app.ngan.doc('model_phat_hien', {'id_model': model})
@@ -283,12 +317,13 @@ def phan_vi(ds, p):
     return round(ds[a] + (ds[min(a + 1, len(ds) - 1)] - ds[a]) * (vi - a), 3)
 
 
-def tong_hop(rows):
+def tong_hop(rows, *, tach=True):
     ket = {}
     for che_do in ('quy_tac', 'hai_lop'):
         ds = [r for r in rows if r['che_do'] == che_do]
         thuong = [r for r in ds if r['nhom'] == 'thuong']
-        hop_le = [r for r in ds if r['trang_thai'] not in {'loi_ky_thuat', 'chua_ro'}]
+        hop_le = [r for r in ds if r['trang_thai'] not in {'loi_ky_thuat', 'chua_ro'}
+                  and r.get('tinh_trang_do') != 'chưa đo đủ']
         thuong_hop_le = [r for r in thuong if r in hop_le]
         nham = sum(r['trang_thai'] == 'chan_nghiep_vu' or r['che_thua'] is True for r in thuong)
         ket[che_do] = dict(
@@ -312,14 +347,65 @@ def tong_hop(rows):
             so_doan_ai_xong=sum(r['so_doan_ai_xong'] for r in ds),
             so_ca_co_ke_hoach=sum(r['so_doan_ke_hoach'] > 0 for r in ds),
             so_ca_ai_du_doan=sum(r.get('du_doan', False) for r in ds),
+            so_ca_chua_do_du=sum(r.get('tinh_trang_do') == 'chưa đo đủ' for r in ds),
+            che_thua_dinh_danh=dict(
+                so_ca=sum(r['so_span_gold'] > 0 and r['che_thua'] is True for r in ds),
+                so_ca_da_cham=sum(r['so_span_gold'] > 0 and r['che_thua'] is not None for r in ds),
+                tong_ca_co_gold=sum(r['so_span_gold'] > 0 for r in ds),
+                so_span=sum(r.get('so_span_che_thua') or 0 for r in ds if r['so_span_gold']),
+                so_ky_tu=sum(r.get('so_ky_tu_che_thua') or 0 for r in ds if r['so_span_gold'])),
             p50_ms=phan_vi([r['thoi_gian_ms'] for r in ds], .5),
             p95_ms=phan_vi([r['thoi_gian_ms'] for r in ds], .95))
         ket[che_do]['theo_nhom'] = {g: {s: sum(r['nhom'] == g and r['trang_thai'] == s for r in ds)
             for s in ket[che_do]['trang_thai']} for g in ('nguoi', 'to_chuc', 'dia_chi', 'thuong', 'bien_the')}
+        v = ket[che_do]
+        v['ti_le_lot_ca_phat_hanh'] = v['so_ca_lot'] / v['so_ca_phat_hanh'] if v['so_ca_phat_hanh'] else None
+        v['ti_le_lot_span_phat_hanh'] = (v['so_span_lot'] / v['so_span_gold_phat_hanh']
+                                       if v['so_span_gold_phat_hanh'] else None)
+    if tach:
+        ds = [r for r in rows if r['che_do'] == 'hai_lop']
+        ket['hai_lop']['phan_tach'] = {
+            ten: tong_hop(loc, tach=False)['hai_lop'] for ten, loc in (
+                ('chan_truoc_ai', [r for r in ds if r.get('chan_truoc_ai')]),
+                ('ai_thuc_su_do', [r for r in ds if r['so_doan_ai_xong'] > 0]),
+                ('chua_co_doan_ai_xong', [r for r in ds if not r.get('chan_truoc_ai')
+                                         and not r['so_doan_ai_xong']]))}
+        ket['hai_lop']['so_ca_ai_da_goi_provider'] = sum(r.get('so_luot_local', 0) > 0 for r in ds)
+        ket['hai_lop']['ghi_chu'] = ('0 lọt trên ca bị chặn trước AI là hiển nhiên. '
+            'AI thực sự đo = có ít nhất một đoạn AI-9 XONG; đủ đoạn/hợp lệ báo riêng. '
+            'Số lọt chưa đo để null từng ca; số 0 tổng chỉ là số quan sát, không chứng minh an toàn.')
     return ket
 
 
-def do(bo, *, that=False, url=None, model=None, timeout=120, tap='ung_vien'):
+def han_ca(ca, timeout=None, timeout_toi_da=TRAN_TIMEOUT):
+    for n in (timeout, timeout_toi_da):
+        if n is not None and (isinstance(n, bool) or not math.isfinite(n) or n <= 0):
+            raise ValueError('Thời hạn phải là số giây dương hữu hạn.')
+    so_doan = len(cb.lap_ke_hoach(ca['van_ban']))
+    return min(timeout if timeout is not None else 120 * so_doan, timeout_toi_da), so_doan
+
+
+def dong_chua_do(ca, che_do, *, ma='CHUA_DO', **dem):
+    return dict(ca=ca['ma'], nhom=ca['nhom'], che_do=che_do,
+                so_span_gold=len(ca['gold']), trang_thai='loi_ky_thuat',
+                so_span_lot=None, che_thua=None, so_span_che_thua=None, so_ky_tu_che_thua=None,
+                ma_loi=ma, thoi_gian_ms=0, so_doan_ke_hoach=0, so_doan_ai_xong=0,
+                du_doan=False, chan_truoc_ai=False, tinh_trang_do='chưa đo đủ', **dem)
+
+
+def chot_bao_cao(ket, rows):
+    ket.update(trang_thai_local='ĐÃ THỬ Local qua CoreGia; chưa nghiệm thu độc lập',
+               ket_qua=tong_hop(rows), tung_ca=rows)
+    hai = ket['ket_qua']['hai_lop']
+    ai = hai['phan_tach']['ai_thuc_su_do']
+    ket['muc_tieu_0_lot'] = ('KHÔNG ĐẠT' if hai['so_ca_lot'] else 'CHƯA ĐO ĐỦ'
+        if hai['ca_hop_le'] < ket['so_ca'] or not ai['so_span_gold_phat_hanh']
+        or ket.get('loi_giua_chung') else '0 lọt quan sát trên ứng viên; chờ lead')
+    return ket
+
+
+def do(bo, *, that=False, url=None, model=None, timeout=None, timeout_toi_da=TRAN_TIMEOUT,
+       tap='ung_vien', cap_nhat=None):
     ca = bo['noi_dung'][tap]
     ket = dict(nhan='DEMO', trang_thai_local='CHƯA ĐO Local thật', core='CoreGia',
                canh_bao='CoreGia không chứng nhận cửa Core thật; nợ CAO còn mở, Cloud giữ tắt.',
@@ -335,9 +421,13 @@ def do(bo, *, that=False, url=None, model=None, timeout=120, tap='ung_vien'):
                phien_ban_mask=tao_app().phieu['phien_ban'],
                budget_core='Fixture CoreGia; token chưa đo, AI-9 kiểm context/byte bảo thủ nguyên bản.',
                so_luot_cloud=0, so_luot_local=0, ket_qua=None)
-    ket.update(phien_ban_sdk=kho_tri_thuc_sdk.__version__, phien_ban_cong_cu='MASK-2c-4-1',
+    for c in ca:
+        han_ca(c, timeout, timeout_toi_da)
+    ket.update(phien_ban_sdk=kho_tri_thuc_sdk.__version__, phien_ban_cong_cu='MASK-2c-4-2',
                bam_cong_cu=bam_bytes(Path(__file__).read_bytes()),
-               bam_cau_hinh_khong_url=bam(dict(model=model, timeout_giay=timeout, profile=cb.profile())),
+               timeout=dict(giay=timeout, mac_dinh_giay_moi_doan=120, tran_giay=timeout_toi_da),
+               bam_cau_hinh_khong_url=bam(dict(model=model, timeout_giay=timeout,
+                                               timeout_toi_da=timeout_toi_da, profile=cb.profile())),
                thoi_diem_utc=datetime.now(timezone.utc).isoformat(),
                dinh_nghia_luot_local='Số gọi provider Local, kể cả lỗi trước POST; số đoạn AI xong báo riêng.',
                so_timeout_xac_dinh=None,
@@ -348,36 +438,117 @@ def do(bo, *, that=False, url=None, model=None, timeout=120, tap='ung_vien'):
         return ket
     if not url or not model:
         raise ValueError('Chạy thật cần đủ URL và model.')
-    ai, local, cloud, cu = ai_ram(url, model, timeout)
-    ket['phien_ban_hoi_ai'] = ai.app.phieu['phien_ban']
-    rows = []
+    rows = [dong_chua_do(c, che_do) for c in ca for che_do in ('quy_tac', 'hai_lop')]
+    ai = local = cloud = cu = None
+    def tien_do():
+        if local:
+            ket.update(so_luot_cloud=cloud.so_luot, so_luot_local=local.so_luot,
+                       local_p50_ms=phan_vi(local.thoi_gian, .5),
+                       local_p95_ms=phan_vi(local.thoi_gian, .95),
+                       thoi_gian_local_ms=local.thoi_gian[:])
+        chot_bao_cao(ket, rows)
+        if cap_nhat:
+            cap_nhat(ket)
     try:
-        for c in ca:
-            for che_do in ('quy_tac', 'hai_lop'):
-                b = tao_bo(c, model, max(1, math.ceil(timeout)))
+        ai, local, cloud, cu = ai_ram(url, model, min(timeout or 120, timeout_toi_da, 600))
+        ket['phien_ban_hoi_ai'] = ai.app.phieu['phien_ban']
+        for i, c in enumerate(ca):
+            han, so_doan = han_ca(c, timeout, timeout_toi_da)
+            for j, che_do in enumerate(('quy_tac', 'hai_lop')):
+                row = rows[2 * i + j]
+                b = tao_bo(c, model, han)
                 start = time.perf_counter()
-                thong_ke = dict(so_doan_ke_hoach=0, so_doan_ai_xong=0, du_doan=False)
+                thong_ke = dict(so_doan_ke_hoach=0, so_doan_ai_xong=0, du_doan=False,
+                                chan_truoc_ai=False, het_han=False)
+                luot = local.so_luot
+                row.update(timeout_giay=han, so_doan_du_kien=so_doan)
+                def cap_nhat_ca():
+                    row.update(**thong_ke, so_luot_local=local.so_luot - luot)
+                    tien_do()
+                local.khi_goi = cap_nhat_ca
+                cap_nhat_ca()
                 if che_do == 'quy_tac':
                     kq = chay_buoc(b, 'mask.che_van_ban@1')
                 else:
-                    kq, thong_ke = hai_lop(b, ai, model)
-                row = cham(c, kq, b.n)
+                    kq, thong_ke = hai_lop(b, ai, model, thong_ke, cap_nhat_ca)
                 # Chỉ mã ca cố định/đếm/băm/thời gian; không phản chiếu lỗi/provider.
-                row.update(ca=c['ma'], nhom=c['nhom'], che_do=che_do, so_span_gold=len(c['gold']),
+                row.update(cham(c, kq, b.n))
+                row.update(tinh_trang_do='chưa đo đủ' if thong_ke['het_han']
+                           or row['trang_thai'] in {'loi_ky_thuat', 'chua_ro'} else 'đã đo',
+                           so_luot_local=local.so_luot - luot,
                            thoi_gian_ms=round((time.perf_counter() - start) * 1000, 3), **thong_ke)
-                rows.append(row)
-        ket.update(trang_thai_local='ĐÃ THỬ Local qua CoreGia; chưa nghiệm thu độc lập',
-                   so_luot_cloud=cloud.so_luot, so_luot_local=local.so_luot,
-                   local_p50_ms=phan_vi(local.thoi_gian, .5), local_p95_ms=phan_vi(local.thoi_gian, .95),
-                   ket_qua=tong_hop(rows), tung_ca=rows)
-        hai = ket['ket_qua']['hai_lop']
-        ket['muc_tieu_0_lot'] = ('KHÔNG ĐẠT' if hai['so_ca_lot']
-                                    else 'CHƯA ĐO ĐỦ' if hai['ca_hop_le'] < len(ca) or not local.so_luot
-                                    or not hai['so_span_gold_phat_hanh']
-                                    else '0 lọt quan sát trên ứng viên; chờ lead')
+                tien_do()
+    except (Exception, KeyboardInterrupt):
+        ket['loi_giua_chung'] = 'NGOAI_LE_KHI_DO'
+        # Không phản chiếu message/traceback của provider hay dữ liệu gốc.
+        for row in rows:
+            if row['tinh_trang_do'] == 'chưa đo đủ' and row['ma_loi'] == 'CHUA_DO':
+                row['ma_loi'] = 'NGOAI_LE_KHI_DO'
     finally:
-        ai.app.ngan, ai.bo_hoi.cong_ai = cu
+        if cu is not None:
+            ai.app.ngan, ai.bo_hoi.cong_ai = cu
+    tien_do()
     return ket
+
+
+def do_cach_ly(bo, *, url, model, timeout=None, timeout_toi_da=TRAN_TIMEOUT, tap='ung_vien'):
+    """Mỗi ca một process để timeout cứng không để transport treo nền.
+
+    Child chỉ gửi checkpoint đếm/băm, không message lỗi/gốc/URL. Pipe chỉ
+    giữ trong RAM; dừng child chưa chứng minh backend đã hủy request.
+    """
+    ket = do(bo, model=model, timeout=timeout, timeout_toi_da=timeout_toi_da, tap=tap)
+    cac = bo['noi_dung'][tap]
+    rows = [dong_chua_do(c, cd) for c in cac for cd in ('quy_tac', 'hai_lop')]
+    thoi_gian = []
+    so_het_han = 0
+    try:
+        for i, c in enumerate(cac):
+            han, so_doan = han_ca(c, timeout, timeout_toi_da)
+            mot = deepcopy(bo)
+            mot['noi_dung'] = {tap: [c]}
+            tham_so = dict(bo=mot, url=url, model=model, timeout=timeout,
+                           timeout_toi_da=timeout_toi_da, tap=tap)
+            het_han = False
+            try:
+                p = subprocess.run([sys.executable, '-B', '-X', 'utf8', str(Path(__file__).resolve()),
+                                    '--_ca-con'], input=json.dumps(tham_so, ensure_ascii=False).encode('utf-8'),
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=han)
+                raw = p.stdout
+                loi = p.returncode != 0
+            except subprocess.TimeoutExpired as exc:
+                # subprocess.run đã kill VÀ wait child trước khi trả ngoại lệ.
+                raw, loi, het_han = exc.stdout or b'', False, True
+                so_het_han += 1
+            ban = None
+            for dong in raw.decode('utf-8', errors='replace').splitlines():
+                try:
+                    v = json.loads(dong)
+                    if isinstance(v, dict) and 'bao_cao' in v:
+                        ban = v['bao_cao']
+                except ValueError:
+                    continue  # Checkpoint cuối có thể bị cắt lúc kill.
+            if ban:
+                rows[2*i:2*i+2] = ban['tung_ca']
+                ket['so_luot_local'] += ban['so_luot_local']
+                ket['so_luot_cloud'] += ban['so_luot_cloud']
+                thoi_gian.extend(ban.get('thoi_gian_local_ms', []))
+                if 'phien_ban_hoi_ai' in ban:
+                    ket['phien_ban_hoi_ai'] = ban['phien_ban_hoi_ai']
+                loi = loi or bool(ban.get('loi_giua_chung'))
+            if het_han:
+                for row in rows[2*i:2*i+2]:
+                    if row['tinh_trang_do'] == 'chưa đo đủ':
+                        row.update(ma_loi='HET_HAN_CHUOI', het_han=True,
+                                   timeout_giay=han, so_doan_du_kien=so_doan)
+            elif loi or ban is None:
+                ket['loi_giua_chung'] = 'NGOAI_LE_KHI_DO'
+                break
+    except (Exception, KeyboardInterrupt):
+        ket['loi_giua_chung'] = 'NGOAI_LE_KHI_DO'
+    ket.update(so_ca_het_han_cung=so_het_han, local_p50_ms=phan_vi(thoi_gian, .5),
+               local_p95_ms=phan_vi(thoi_gian, .95))
+    return chot_bao_cao(ket, rows)
 
 
 def main(argv=None):
@@ -386,19 +557,36 @@ def main(argv=None):
     p.add_argument('--url')
     p.add_argument('--model')
     p.add_argument('--bao-cao')
+    p.add_argument('--thu-muc-bao-cao', help='Thư mục đích chỉ định rõ khi lưu báo cáo trong repo.')
+    p.add_argument('--timeout', type=float, help='Giây mỗi ca; mặc định 120 × số đoạn.')
+    p.add_argument('--timeout-toi-da', type=float, default=TRAN_TIMEOUT,
+                   help='Trần giây mỗi ca, mặc định 3600; không đổi trần runtime AI-9.')
     p.add_argument('--tap', choices=['ung_vien', 'development', 'hoi_quy_lead_cu'], default='ung_vien')
     a = p.parse_args(argv)
     if a.that and (not a.url or not a.model):
         p.error('--that cần đủ --url và --model.')
     try:
         dich = Path(a.bao_cao).resolve() if a.bao_cao else None
+        thu_dich = Path(a.thu_muc_bao_cao).resolve() if a.thu_muc_bao_cao else None
+        if thu_dich is not None and (not thu_dich.is_dir() or thu_dich == GOC or dich is None):
+            raise ValueError('Cần chỉ định thư mục báo cáo riêng và tệp báo cáo mới.')
         if dich is not None:
-            tuong_doi = dich.relative_to(GOC) if dich.is_relative_to(GOC) else None
-            trong_engine = (tuong_doi is not None and len(tuong_doi.parts) > 1
-                            and tuong_doi.parts[0].startswith('e_'))
-            if dich.suffix.lower() != '.json' or trong_engine or dich.exists() or not dich.parent.is_dir():
-                raise ValueError('Báo cáo phải là tệp JSON mới ngoài thư mục engine.')
-        ket = do(doc_bo(), that=a.that, url=a.url, model=a.model, tap=a.tap)
+            trong_repo = dich.is_relative_to(GOC)
+            chi_dinh = thu_dich is not None and dich.parent == thu_dich
+            # Không dùng cờ chỉ định để ghi vào mã/gói/tài liệu hoặc .git.
+            tuong_doi = dich.relative_to(GOC) if trong_repo else None
+            thu_cam = tuong_doi is not None and (tuong_doi.parts[0].startswith(('e_', '.git'))
+                                                or tuong_doi.parts[0] in {'docs', '_chung'})
+            if (dich.suffix.lower() != '.json' or dich.exists() or not dich.parent.is_dir()
+                    or trong_repo and (not chi_dinh or thu_cam)
+                    or thu_dich is not None and not chi_dinh):
+                raise ValueError('Báo cáo cần ở ngoài repo hoặc đúng thư mục báo cáo riêng đã chỉ định.')
+        bo = doc_bo()
+        if a.that:
+            ket = do_cach_ly(bo, url=a.url, model=a.model, timeout=a.timeout,
+                             timeout_toi_da=a.timeout_toi_da, tap=a.tap)
+        else:
+            ket = do(bo, timeout=a.timeout, timeout_toi_da=a.timeout_toi_da, tap=a.tap)
         raw = json.dumps(ket, ensure_ascii=False, allow_nan=False, indent=2) + '\n'
         if dich is not None:
             with dich.open('x', encoding='utf-8') as f:
@@ -413,4 +601,10 @@ def main(argv=None):
 
 
 if __name__ == '__main__':
-    raise SystemExit(main())
+    if sys.argv[1:] == ['--_ca-con']:
+        tham_so = json.load(sys.stdin)
+        bo = tham_so.pop('bo')
+        do(bo, that=True, cap_nhat=lambda k: print(json.dumps({'bao_cao': k}, ensure_ascii=False,
+            allow_nan=False), flush=True), **tham_so)
+    else:
+        raise SystemExit(main())

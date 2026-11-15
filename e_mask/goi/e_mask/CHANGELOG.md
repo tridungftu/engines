@@ -1,5 +1,12 @@
 # Thay đổi
 
+## 15/11/2026 — MASK-2c-4 sửa theo kiểm lead (không đổi runtime 1.2.0)
+
+- Bổ sung 28 ca DEMO mới ngoài gói: 18 người không dấu/Hoa đầu chữ/IN HOA/danh xưng/mép/overlap, 5 tổ chức và 5 địa chỉ không có DEMO trong span, đủ năm khung. Tổng 190 ca/124 gold span, SHA mới; **ỨNG VIÊN, chờ lead đóng băng**.
+- Công cụ tách mẫu số chặn trước AI/AI-9 thực sự hoàn tất đoạn/chưa có đoạn xong và tổng; lọt/báo nhầm riêng, không nhận 0 lọt ở ca bị chặn trước AI là thành tích AI. Đo che vượt gold cả ở ca có định danh bằng số span/ký tự.
+- Thêm --timeout mặc định 120 giây × số đoạn và trần cấu hình; CLI cách ly ca bằng process để timeout cứng, giữ kết quả từng phần và số đoạn xong; ngoại lệ xuất báo cáo trước thoát. `.cmd` ASCII/CRLF; đích báo cáo ngoài repo hoặc thư mục riêng chỉ định rõ, không ghi đè.
+- Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; chưa đo Local/Core thật. Giữ nguyên runtime, API, dependency và trạng thái Cloud tắt.
+
 ## 15/11/2026 — MASK-2c-4, công cụ ngoài gói (runtime giữ 1.2.0)
 
 - Thêm công cụ đo DEMO mặc định khô/không mạng và `.cmd` ASCII; adapter CoreGia ngoài gói điều phối chuẩn bị → AI-9 → hậu kiểm đủ đoạn. Không sửa runtime engine, Core/SDK, dependency hoặc mở Cloud.

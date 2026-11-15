@@ -8,6 +8,8 @@ if not exist "%MASK_PY%" (
   exit /b 2
 )
 rem Default: dry run, no network. Real DEMO: --that --url "IP URL" --model "model"
-rem Optional: --bao-cao "file outside engine directories.json"
+rem Optional: --bao-cao "file outside repository.json"
+rem In repo: also --thu-muc-bao-cao "explicit report directory"
+rem Deadline: --timeout SECONDS --timeout-toi-da SECONDS
 "%MASK_PY%" -B "%~dp0thu_mask_local_ai_that.py" %*
 exit /b %errorlevel%

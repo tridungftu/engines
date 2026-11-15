@@ -72,3 +72,69 @@ Không chạy model thật/--that ngoài test Local HTTP giả; chưa kiểm Lin
 AI chỉ cứu khi báo đủ; báo thiếu một phần tên thì phần còn lại có thể lọt.
 Chờ lead giữ gold độc lập và review bằng chứng, Anh chạy .cmd thật.
 Nợ CAO giữ mở; Local đạt cũng không bật Cloud. CoreGia không chứng nhận cửa Core thật.
+
+
+=== KIỂM LẠI THEO LEAD — 15/11/2026 ===
+Phạm vi: đúng ba tệp mã/dữ liệu ngoài gói, test/tài liệu; không sửa runtime, không commit/push.
+Nhánh: codex/e_mask-mask-2c-4; PR: chờ lead mở.
+Đã kiểm bằng Core giả (CoreGia), Local HTTP giả; CHƯA ĐO Local thật.
+Bắt đầu theo lead: 15:01:00; kết thúc bàn giao: 15:23:45 UTC+07; 0.38 giờ thực tế.
+Phiếu MASK-2c-4: 5 giờ ƯỚC TÍNH, không có ước tính riêng lượt sửa.
+
+.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_2c_4.py -q --basetemp=.pytest-tmp
+50 passed in 41.13s
+Mã thoát 0; 0 skipped.
+
+.venv/Scripts/python -B -m pytest e_mask/tests -q --basetemp=.pytest-tmp
+1159 passed, 4 xfailed, 190 subtests passed in 160.89s (0:02:40)
+Mã thoát 0; 0 skipped. Bốn xfail strict lớp quy tắc cũ giữ nguyên.
+Fixture HTTP bị ngắt kết nối ở bài timeout có in ConnectionResetError; pytest không lỗi,
+không phải log/báo cáo provider thật; báo cáo JSON vẫn sạch và được test kiểm.
+
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.2.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát 1; 0/2 ĐẠT. Thiếu quyền qua CLI chuẩn giữ nguyên; không nới cửa để xanh.
+
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập, không có tham chiếu bị cấm hoặc tệp biên dịch.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_mask/tests/chay_demo.py
+[ĐẠT] Che văn bản DEMO XONG
+[ĐẠT] Mở che DEMO XONG
+Đã kiểm bằng Core giả (CoreGia).
+Mã thoát 0; 2/2 ĐẠT với adapter quyền/ngăn DEMO ngoài gói.
+
+.venv/Scripts/python -B e_mask/cong-cu/thu_mask_local_ai_that.py
+Khô: mã 0; không gọi mạng; 190 ca, 63 ca người, 124 gold span;
+ket_qua=null; so_luot_local=0; so_luot_cloud=0; CHƯA ĐO Local thật.
+
+cmd.exe /d /c e_mask/cong-cu/THU-MASK-LOCAL-AI-THAT.cmd
+Mã thoát 0; chạy khô 190 ca/63 ca người/124 gold span, ket_qua=null, 0 Local/Cloud.
+SHA noi_dung hiện hành:
+sha256:b720fb2d9a330110ed5c4d5fd777b9728887f863651a2b0c46dc395dc45c95ad
+Trạng thái: ỨNG VIÊN, chờ lead đóng băng; held_out_doc_lap=false.
+
+Kiểm dữ liệu/cách đóng gói:
+- So trực tiếp với HEAD: 162 ca cũ/development/hồi quy giữ nguyên.
+- 28/28 định danh mới không trùng sau chuẩn hóa dấu/hoa/khoảng trắng trên 803 tệp UTF-8
+  Git quản lý, trừ chính bộ mới và đường cấm (được lọc trước khi mở).
+- Gold/SHA/nhãn/6 vị trí mép-overlap theo lap_ke_hoach thực: test đạt.
+- CMD chỉ ASCII, mọi xuống dòng CRLF, không LF lẻ; test đường có khoảng trắng đạt trên Windows.
+- SDK 2.0.0 trong .venv, Python 3.13.14; SHA wheel khớp SHA256SUMS.txt:
+  a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892
+- Không chạy model thật hoặc Linux thực tế; không thay Core/SDK/schema/dependency.
+
+Các lượt trung gian (không dùng làm kết luận cuối):
+4 failed, 43 passed in 39.66s: test chưa chỉ định thư mục, deadline fixture quá ngắn,
+dữ liệu mới chưa ghi xong. Sau sửa: 46 passed/1 deselected; 47 passed in 33.41s.
+Thêm kiểm sâu: 2 failed, 48 passed in 46.21s; che thừa phải tính cả DEMO ngoài gold,
+fixture nhiều đoạn cần deadline đủ để tới đoạn đầu. Đã sửa kỳ vọng/thời hạn fixture,
+không sửa runtime/gold để làm xanh. Sau cùng 50 passed như trên.
+Một lượt toàn suite được dừng để sửa fixture; không tính là lượt kiểm hoàn tất.
+
+git diff --check
+Không lỗi khoảng trắng; mã thoát 0.
+Git diff gói: chỉ CHANGELOG.md, runtime Mask/Hỏi AI giữ nguyên.

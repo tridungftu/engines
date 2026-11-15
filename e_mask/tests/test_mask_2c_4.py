@@ -84,7 +84,7 @@ def do_gia(may, ca, **kw):
 
 def test_bo_ung_vien_gold_bam_du_so_luong_tach_ca_cu():
     v = tool.doc_bo()
-    ds = v['noi_dung']['ung_vien']
+    ds = [c for c in v['noi_dung']['ung_vien'] if not c['ma'].startswith('BS')]
     assert len([c for c in ds if c['nhom'] == 'nguoi']) == 45
     assert len([c for c in ds if c['nhom'] == 'thuong']) >= 75
     assert len([c for c in ds if c['nhom'] == 'to_chuc']) == 15
@@ -213,8 +213,8 @@ def test_loi_ky_thuat_va_chua_ro_khong_thanh_0_dat(dang):
         if dang == 'cat': may.cat_sau_post = True
         if dang == '202': may.ma_http = 202
         if dang == 'timeout':
-            may.khi_nhan = lambda method, path: time.sleep(.1) if method == 'POST' else None
-        k = do_gia(may, ca_demo(), timeout=.02 if dang == 'timeout' else 120)
+            may.khi_nhan = lambda method, path: time.sleep(.8) if method == 'POST' else None
+        k = do_gia(may, ca_demo(), timeout=.3 if dang == 'timeout' else 120)
     hai = k['ket_qua']['hai_lop']
     assert hai['trang_thai']['loi_ky_thuat'] + hai['trang_thai']['chua_ro'] == 1, k
     assert hai['trang_thai']['chan_nghiep_vu'] == 0
@@ -267,7 +267,8 @@ def test_bao_cao_khong_ro_goc_url_path_ma_yeu_cau(capsys, tmp_path, monkeypatch)
         tra_gold(may, ['orvella linero'])
         monkeypatch.setattr(tool, 'doc_bo', lambda: bo_demo(ca))
         tep = tmp_path / 'bao cao DEMO.json'
-        assert tool.main(['--that','--url',may.url,'--model','model-demo','--bao-cao',str(tep)]) == 0
+        assert tool.main(['--that','--url',may.url,'--model','model-demo','--bao-cao',str(tep),
+                          '--thu-muc-bao-cao',str(tmp_path)]) == 0
     log = capsys.readouterr()
     raw = tep.read_text('utf-8')
     for bi_mat in (ca['van_ban'], 'orvella linero', may.url, str(tep), 'yeu-cau-demo-', 'luot-demo-'):
@@ -303,3 +304,194 @@ def test_cmd_ascii_quote_va_B():
     raw = (GOC/'e_mask/cong-cu/THU-MASK-LOCAL-AI-THAT.cmd').read_bytes()
     raw.decode('ascii')
     assert b'"%MASK_PY%" -B "%~dp0thu_mask_local_ai_that.py" %*' in raw
+    assert b'\r\n' in raw and b'\n' not in raw.replace(b'\r\n', b'')
+
+
+def test_28_ca_bo_sung_du_nhan_gold_khung_va_ke_hoach_thuc():
+    ds = [c for c in tool.doc_bo()['noi_dung']['ung_vien'] if c['ma'].startswith('BS')]
+    assert len(ds) == 28
+    assert len({c['van_ban'] for c in ds}) == 28
+    assert all(c['nhan'] == 'DEMO' and 'DEMO' in c['van_ban'] for c in ds)
+    assert len({c['gold'][0]['nguyen_van'].casefold() for c in ds}) == 28
+    nguoi = [c for c in ds if c['nhom'] == 'nguoi']
+    assert {c.get('danh_xung') for c in nguoi} >= {'ông','bà','anh','chị','TS.','ThS.','Mr.'}
+    assert {c['so_am_tiet'] for c in nguoi} == {2,4}
+    for c in nguoi:
+        ten = c['gold'][0]['nguyen_van']
+        assert ten.isascii() and (ten.istitle() or ten.isupper())
+    assert {c['gold'][0]['nguyen_van'].split()[0].lower() for c in nguoi} == {
+        'ha','ho','luong','van','phan','mai'}
+    for nhom in ('to_chuc','dia_chi'):
+        cac = [c for c in ds if c['nhom'] == nhom]
+        assert len(cac) == 5
+        assert {c['khung_cau'] for c in cac} == {'hop_dong','email','bien_ban','bang_ke','chu_ky'}
+        assert all('demo' not in t['nguyen_van'].casefold() for c in cac for t in c['gold'])
+    bien = [c for c in nguoi if c.get('vi_tri_doan')]
+    assert len(bien) == 6
+    for c in bien:
+        ke = tool.cb.lap_ke_hoach(c['van_ban'])
+        a, b = c['gold'][0]['bat_dau'], c['gold'][0]['ket_thuc']
+        assert len(ke) >= 2
+        kieu = c['vi_tri_doan']
+        if kieu == 'dau_van_ban': assert a == ke[0].bat_dau == 0
+        if kieu == 'cuoi_van_ban': assert b == ke[-1].ket_thuc == len(c['van_ban'])
+        if kieu == 'dau_doan_noi': assert any(a == d.bat_dau for d in ke[1:])
+        if kieu == 'cuoi_doan_noi': assert any(b == d.ket_thuc for d in ke[:-1])
+        if kieu == 'vung_chong':
+            assert sum(d.bat_dau <= a < b <= d.ket_thuc for d in ke) >= 2
+        if kieu == 'bien_chinh': assert any(a < d.ket_thuc_chinh < b for d in ke[:-1])
+
+
+def test_tach_chan_truoc_ai_khoi_ai_do_va_mau_so_bao_nham():
+    cac = [ca_demo('',chu='Mai sau khi nhận hóa đơn sẽ hạch toán vào tài khoản 331.',nhom='thuong'),
+           ca_demo(), ca_demo('',chu='nội dung tổng hợp.',nhom='thuong')]
+    with LocalGia() as may:
+        tra_gold(may, ['orvella linero', 'nội dung'])
+        k = tool.do(bo_demo(*cac),that=True,url=may.url,model='model-demo')
+    tong = k['ket_qua']['hai_lop']
+    tach = tong['phan_tach']
+    assert tong['tong_ca'] == 3
+    assert tach['chan_truoc_ai']['tong_ca'] == 1
+    assert tach['chan_truoc_ai']['so_doan_ai_xong'] == 0
+    assert tach['chan_truoc_ai']['so_ca_lot'] == 0
+    assert tach['ai_thuc_su_do']['tong_ca'] == 2
+    assert tach['ai_thuc_su_do']['cau_thuong']['mau_so'] == 1
+    assert tong['cau_thuong']['mau_so'] == 2
+    assert '0 lọt trên ca bị chặn trước AI là hiển nhiên' in tong['ghi_chu']
+
+
+@pytest.mark.parametrize('loai', ['nguoi','to_chuc','dia_chi'])
+def test_che_vuot_gold_cua_ca_dinh_danh_do_doc_lap(loai, monkeypatch):
+    ca = ca_demo('vùng cần che', chu='DEMO vùng cần che ngoài vàng', nhom=loai)
+    ca['gold'][0]['loai'] = loai
+    a, b = ca['gold'][0]['bat_dau'], ca['gold'][0]['ket_thuc']
+    monkeypatch.setattr(tool, 'map_doc_lap', lambda *args: [(a,b+5)])
+    kq = {'trang_thai':'XONG','ket_qua':{'van_ban_da_che':{'van_ban':'DEMO [[MASKTAM-0001]] vàng'}}}
+    r = tool.cham(ca,kq,None)
+    assert r['so_span_lot'] == 0
+    assert r['che_thua'] is True and r['so_span_che_thua'] == 1 and r['so_ky_tu_che_thua'] == 5
+    r.update(ca='D-test', che_do='hai_lop', nhom=loai, so_span_gold=1,
+             so_doan_ke_hoach=1, so_doan_ai_xong=1, thoi_gian_ms=1)
+    t = tool.tong_hop([r])['hai_lop']['che_thua_dinh_danh']
+    assert t == dict(so_ca=1,so_ca_da_cham=1,tong_ca_co_gold=1,so_span=1,so_ky_tu=5)
+
+
+def test_han_mac_dinh_theo_doan_va_tran_cau_hinh():
+    ca = ca_demo('', chu='DEMO; '+ 'nội dung tổng hợp; '*900,nhom='thuong')
+    n = len(tool.cb.lap_ke_hoach(ca['van_ban']))
+    assert n > 1
+    assert tool.han_ca(ca) == (120*n,n)
+    assert tool.han_ca(ca,timeout_toi_da=200) == (200,n)
+    assert tool.han_ca(ca,timeout=40,timeout_toi_da=200) == (40,n)
+    assert tool.han_ca(ca,timeout=300,timeout_toi_da=200) == (200,n)
+
+
+@pytest.mark.parametrize('gia_tri', ['0','-1','nan','inf'])
+def test_timeout_khong_hop_le_khong_tao_bao_cao(gia_tri, tmp_path):
+    tep = tmp_path/'timeout.json'
+    assert tool.main(['--timeout',gia_tri,'--bao-cao',str(tep)]) == 2
+    assert not tep.exists()
+
+
+def test_ngoai_le_giua_chung_giu_ca_xong_va_danh_dau_ca_chua_do(monkeypatch):
+    c1, c2 = ca_demo(), ca_demo('norella finero')
+    c2['ma'] = 'D-test-2'
+    goc = tool.tao_bo
+    def tao(ca,*a,**kw):
+        if ca['ma'] == 'D-test-2': raise RuntimeError('DEMO không được phản chiếu')
+        return goc(ca,*a,**kw)
+    monkeypatch.setattr(tool,'tao_bo',tao)
+    with LocalGia() as may:
+        tra_gold(may,['orvella linero'])
+        k = tool.do(bo_demo(c1,c2),that=True,url=may.url,model='model-demo')
+    assert len(k['tung_ca']) == 4
+    assert k['tung_ca'][1]['trang_thai'] == 'phat_hanh_che_du'
+    assert all(r['tinh_trang_do'] == 'chưa đo đủ' and r['so_span_lot'] is None for r in k['tung_ca'][2:])
+    assert k['loi_giua_chung'] == 'NGOAI_LE_KHI_DO' and k['muc_tieu_0_lot'] == 'CHƯA ĐO ĐỦ'
+    assert 'không được phản chiếu' not in json.dumps(k,ensure_ascii=False)
+
+
+def test_timeout_cung_cli_dung_child_va_ghi_bao_cao_tung_phan(tmp_path, monkeypatch, capsys):
+    ca = ca_demo()
+    monkeypatch.setattr(tool,'doc_bo',lambda: bo_demo(ca))
+    tep = tmp_path/'timeout-cung.json'
+    # Server trì hoãn POST lâu hơn deadline cứng; transport vẫn là AI-9 gốc.
+    with LocalGia() as may:
+        may.khi_nhan = lambda method,path: time.sleep(4) if method == 'POST' else None
+        bat_dau = time.monotonic()
+        code = tool.main(['--that','--url',may.url,'--model','model-demo',
+                          '--timeout','2','--bao-cao',str(tep),'--thu-muc-bao-cao',str(tmp_path)])
+        thoi_gian = time.monotonic()-bat_dau
+    k = json.loads(tep.read_text('utf-8'))
+    assert code == 1 and thoi_gian < 3.5
+    assert k['so_ca_het_han_cung'] == 1
+    assert k['tung_ca'][0]['tinh_trang_do'] == 'đã đo'
+    assert k['tung_ca'][1]['tinh_trang_do'] == 'chưa đo đủ'
+    assert k['tung_ca'][1]['ma_loi'] == 'HET_HAN_CHUOI'
+    assert k['muc_tieu_0_lot'] == 'CHƯA ĐO ĐỦ'
+    assert 'orvella' not in tep.read_text('utf-8') + capsys.readouterr().out
+
+
+def test_bao_cao_trong_repo_can_thu_muc_chi_dinh(tmp_path, monkeypatch):
+    monkeypatch.setattr(tool,'GOC',tmp_path)
+    thu = tmp_path/'bao-cao-duoc-chi-dinh'
+    thu.mkdir()
+    tep = thu/'dem.json'
+    assert tool.main(['--bao-cao',str(tep)]) == 2
+    assert not tep.exists()
+    assert tool.main(['--bao-cao',str(tep),'--thu-muc-bao-cao',str(thu)]) == 0
+    assert json.loads(tep.read_text('utf-8'))['ket_qua'] is None
+
+
+def test_che_thua_dinh_danh_qua_toan_chuoi_local_gia():
+    ca = ca_demo('linero',chu='DEMO; orvella linero; nội dung.')
+    with LocalGia() as may:
+        tra_gold(may,['orvella linero'])
+        k = do_gia(may,ca)
+    r = k['tung_ca'][1]
+    assert r['trang_thai'] == 'phat_hanh_che_du'
+    # Lớp quy tắc cũng che nhãn DEMO (4 ký tự) ngoài gold. Không bỏ qua
+    # phần che thừa này để làm đẹp số đo ca có định danh.
+    assert r['so_ky_tu_che_thua'] == len('orvella ') + 4 and r['so_span_che_thua'] == 2
+    assert k['ket_qua']['hai_lop']['che_thua_dinh_danh']['so_ca'] == 1
+
+
+def test_ngoai_le_tien_trinh_cli_van_ghi_ca_truoc(tmp_path,monkeypatch,capsys):
+    c1, c2 = ca_demo(), ca_demo('norella finero')
+    c2['ma'] = 'D-test-2'
+    monkeypatch.setattr(tool,'doc_bo',lambda: bo_demo(c1,c2))
+    chay_goc = tool.subprocess.run
+    so_lan = 0
+    def chay_con(*a,**kw):
+        nonlocal so_lan
+        so_lan += 1
+        if so_lan == 2: raise OSError('DEMO chi tiết bí mật không được in')
+        return chay_goc(*a,**kw)
+    monkeypatch.setattr(tool.subprocess,'run',chay_con)
+    tep = tmp_path/'ngoai-le.json'
+    with LocalGia() as may:
+        tra_gold(may,['orvella linero'])
+        code = tool.main(['--that','--url',may.url,'--model','model-demo','--bao-cao',str(tep),
+                          '--thu-muc-bao-cao',str(tmp_path)])
+    k = json.loads(tep.read_text('utf-8'))
+    assert code == 1 and len(k['tung_ca']) == 4
+    assert k['tung_ca'][1]['trang_thai'] == 'phat_hanh_che_du'
+    assert k['tung_ca'][3]['tinh_trang_do'] == 'chưa đo đủ'
+    assert k['loi_giua_chung'] == 'NGOAI_LE_KHI_DO'
+    assert 'chi tiết bí mật' not in tep.read_text('utf-8') + capsys.readouterr().out
+
+
+def test_timeout_cung_giu_dem_doan_ai_da_xong(tmp_path,monkeypatch):
+    ca = ca_demo(chu='DEMO; '+ 'nội dung tổng hợp; '*900+' orvella linero')
+    monkeypatch.setattr(tool,'doc_bo',lambda: bo_demo(ca))
+    tep = tmp_path/'mot-phan-doan.json'
+    with LocalGia(tra_loi={'da_quet_het':True,'thuc_the':[]}) as may:
+        may.khi_nhan = lambda method,path: time.sleep(7) if method == 'POST' and may.so_luot_hoi > 1 else None
+        code = tool.main(['--that','--url',may.url,'--model','model-demo','--timeout','5',
+                          '--bao-cao',str(tep),'--thu-muc-bao-cao',str(tmp_path)])
+    k = json.loads(tep.read_text('utf-8'))
+    r = k['tung_ca'][1]
+    assert code == 1 and r['so_doan_ai_xong'] == 1
+    assert r['so_doan_ke_hoach'] > 1 and r['du_doan'] is False
+    assert r['so_span_lot'] is None and r['tinh_trang_do'] == 'chưa đo đủ'
+    assert k['ket_qua']['hai_lop']['phan_tach']['ai_thuc_su_do']['tong_ca'] == 1

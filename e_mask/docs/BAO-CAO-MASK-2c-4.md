@@ -1,3 +1,77 @@
+# MASK-2c-4 — Sửa theo kiểm độc lập của lead, 15/11/2026
+
+**Kết luận: Đạt phần sửa công cụ/dữ liệu theo lead; đã kiểm bằng Core giả (CoreGia). CHƯA ĐO Local thật, chưa nghiệm thu Core thật.** Bộ vẫn là **ỨNG VIÊN, chờ lead đóng băng**; `held_out_doc_lap=false`. PR: **chờ lead mở**. Không commit/push, không sửa runtime gói.
+
+**Đã làm:** bổ sung 28 ca, tách mẫu số chặn trước AI/AI thực sự đo/tổng, thêm timeout theo số đoạn với dừng tiến trình con và báo cáo từng phần, đo che thừa ở ca có định danh, `.cmd` ASCII/CRLF và giới hạn thư mục báo cáo. Vẫn đúng ba tệp mã/dữ liệu ngoài gói; test/tài liệu cập nhật riêng.
+
+**Kết quả kiểm:** riêng công cụ **50 passed, 0 skipped, 41,13 giây, mã 0**; toàn Mask **1159 passed, 4 xfailed giữ nguyên, 190 subtests passed, 0 skipped, 160,89 giây, mã 0**. SDK CLI **0/2, mã 1**, cả hai thiếu nguồn phiên/quyền; adapter DEMO **2/2 ĐẠT, mã 0**; kiểm độc lập **ĐẠT, mã 0**. Chạy khô: **190 ca, 63 ca người, 124 gold span**, `ket_qua=null`, 0 lượt Local/Cloud. [Đầu ra lệnh](KET-QUA-KIEM-MASK-2c-4.txt).
+
+**Thời gian thực tế:** **15:01–15:23:45 ngày 15/11/2026 (UTC+07), 0,38 giờ**; phiếu MASK-2c-4 **5 giờ ƯỚC TÍNH**, không có dự toán riêng cho lượt sửa. Mốc bắt đầu theo lead.
+
+**Lệch khỏi phiếu / quyết định tạm:** CLI thật tách từng ca sang tiến trình con để áp timeout cứng trên Windows/Linux; không thêm dependency. Các tiến trình dùng CoreGia và ngăn/snapshot RAM. Biên nhận budget/tokenizer/nguồn vẫn là fixture, không chứng nhận Core/model thật. Không chạy model thật, không dùng oracle trên bộ ứng viên mới hoặc đổi detector/prompt theo ứng viên.
+
+**Cần Core / Chờ Anh mới phát sinh:** không thêm yêu cầu Core/SDK; giữ C-M2C-01…05 và nợ CAO. Lead đóng băng/gold độc lập, xác minh backend Local/egress trước đo thật; Anh chạy `.cmd`. Local đạt cũng chưa bật Cloud.
+
+## Bộ ứng viên sau sửa
+
+| Nhóm | Cũ giữ nguyên | Mới | Tổng |
+|---|---:|---:|---:|
+| Người | 45 | 18 | 63 |
+| Câu thường | 75 | 0 | 75 |
+| Tổ chức | 15 | 5 | 20 |
+| Địa chỉ | 15 | 5 | 20 |
+| Biến thể cũ | 12 | 0 | 12 |
+| Tổng | 162 | **28** | **190** |
+
+Có **124 gold span**. 18 ca người mới đều không dấu: Hoa đầu chữ/IN HOA, 2 hoặc 4 âm tiết; đủ họ hà/hồ/lương/văn/phan/mai và danh xưng ông/bà/anh/chị/TS./ThS./Mr. Năm tổ chức và năm địa chỉ mới có span không chứa chữ DEMO; mỗi nhóm phủ đủ hợp đồng, email, biên bản, bảng kê, chữ ký. Nhãn DEMO và nguồn hư cấu nằm ngoài span. Sáu ca dài kiểm theo `lap_ke_hoach` thực: đầu/cuối toàn văn, đầu/cuối đoạn nội bộ, tên nằm trọn trong overlap và tên vắt biên đoạn chính; không ước lượng mép bằng hằng số. Gold có loại, nguyên văn và offset code point nửa mở chính xác.
+
+Giữ nguyên 162 ca cũ, development và bốn ca hồi quy lead. Đã kiểm 28/28 định danh mới không trùng trên **803 tệp UTF-8 Git quản lý**, trừ chính bộ mới và đường cấm; chuẩn hóa dấu/hoa/khoảng trắng trước đối chiếu. Không dùng hồ sơ thật hoặc tên nhân vật nhận ra được; đây là dữ liệu hư cấu tự soạn, chưa phải gold độc lập.
+
+SHA-256 `noi_dung` JSON UTF-8 chuẩn (`ensure_ascii=False,sort_keys=True,separators=(",",":"),allow_nan=False`):
+
+```text
+b720fb2d9a330110ed5c4d5fd777b9728887f863651a2b0c46dc395dc45c95ad
+```
+
+## Mẫu số và che thừa
+
+`ket_qua.hai_lop` là tổng toàn bộ ca; `phan_tach` có ba nhóm loại trừ nhau:
+
+- `chan_truoc_ai`: lớp quy tắc từ chối nghiệp vụ trước AI; số đoạn AI hoàn tất bằng 0.
+- `ai_thuc_su_do`: ít nhất một đoạn AI-9 trả XONG; kèm số đủ đoạn, số hợp lệ và số chưa đo đủ. Có một đoạn xong không chứng minh đã đo xong ca.
+- `chua_co_doan_ai_xong`: chưa có đoạn AI-9 XONG, gồm lỗi trước gửi/model/context, lỗi trả lời, timeout hoặc chưa chạy. Số gọi provider báo riêng, không tự coi là số POST thành công.
+
+**0 lọt trên ca bị chặn trước AI là hiển nhiên.** Không lấy các ca này làm bằng chứng AI có recall tốt. Từng nhóm và tổng đều có số lọt theo ca/span, mẫu số ca/span thực sự phát hành, tỷ lệ lọt tương ứng; báo nhầm câu thường = hợp che thừa hoặc chặn nghiệp vụ / số câu thường của chính nhóm, kèm mẫu hợp lệ. Mẫu phát hành rỗng cho tỷ lệ `null`. Ca chưa đo đủ giữ số span lọt và che thừa `null`; không đổi lỗi/timeout thành đạt 0 lọt.
+
+Che thừa được tính cho mọi phép che đã đối chiếu độc lập: phần khoảng che nằm ngoài **hợp các gold span**. Báo từng ca số span che thừa/số ký tự che thừa, và tổng `che_thua_dinh_danh` trên các ca có gold (người/tổ chức/địa chỉ và biến thể). Giữ riêng tử số/mẫu số báo nhầm câu thường. Nếu nhãn DEMO ngoài gold bị lớp quy tắc che, phần đó cũng bị tính che thừa; không bỏ để làm đẹp số đo.
+
+## Timeout và báo cáo từng phần
+
+- `--timeout` là số giây mỗi ca; mặc định **120 × số đoạn thực**, chặn bởi `--timeout-toi-da` (mặc định **3600 giây**). Giá trị phải dương, hữu hạn. Timeout socket mỗi lượt vẫn tuân thủ trần AI-9 **600 giây** và thời gian còn lại; không sửa runtime.
+- CLI `--that` chạy từng ca trong tiến trình con, timeout cứng tính cả khởi tạo/đo quy tắc/hai lớp của ca. Parent kill và wait child khi hết hạn; giữ checkpoint hoàn chỉnh gần nhất trong RAM, số đoạn đã hoàn tất và mọi ca trước đó. Ca/đoạn chưa đủ được ghi `tinh_trang_do="chưa đo đủ"`, `HET_HAN_CHUOI`; tiếp tục ca kế tiếp. Số timeout cứng xác định báo riêng với ChuaRo mơ hồ của transport.
+- Ngoại lệ giữa chừng: giữ kết quả trước đó, đánh dấu ca còn lại chưa đo đủ, ghi JSON từng phần rồi thoát mã 1. Message/traceback/provider output không được phản chiếu vào báo cáo. Dừng child không xác nhận backend đã hủy request; không tự gửi lại ca timeout.
+- Không chỉ định `--bao-cao` thì chỉ in JSON. Có đích thì phải là `.json` mới, thư mục đã tồn tại, không ghi đè. Mặc định đích phải ngoài repo; trong repo cần `--thu-muc-bao-cao` trỏ đúng thư mục cha riêng, không phải repo root/mã engine/docs/_chung/.git.
+
+Ví dụ sau khi lead đóng băng (placeholder, không chứa địa chỉ máy thật):
+
+```cmd
+"e_mask\cong-cu\THU-MASK-LOCAL-AI-THAT.cmd" --that --url "<URL-IP-LOCAL>" --model "<MODEL-LOCAL>" --bao-cao "<THU-MUC-NGOAI-REPO>\mask-demo.json"
+```
+
+Có thể thêm `--timeout 300 --timeout-toi-da 1800`. Nếu chủ động lưu trong một thư mục báo cáo riêng của repo, cần thêm `--thu-muc-bao-cao "<THU-MUC-BAO-CAO-RIENG>"` và chọn tệp ngay trong thư mục đó. `.cmd` được ghi **CRLF** đúng `.gitattributes`, giữ ASCII/quote/`-B`; có test Windows đường dẫn chứa khoảng trắng. Chạy khô mặc định không mạng, không đo detector/Local giả; mã 0 khi khô không phải nghiệm thu.
+
+## Kiểm lại và giới hạn
+
+Toàn bộ tích hợp mới **đã kiểm bằng Core giả (CoreGia)** và Local HTTP giả. 50 test công cụ gồm dữ liệu/gold/SHA/mép/overlap, mẫu số tách, ba loại che thừa, che thừa toàn chuỗi, timeout tham số/socket/cứng, giữ đoạn đã xong, ngoại lệ giữa chừng, ghi báo cáo từng phần không lộ gốc/URL/path, đích chỉ định và CRLF. Không kiểm Linux thực tế; test Python/subprocess dùng thư viện chuẩn, test cmd chỉ Windows có skip có lý do trên Linux. Bốn xfail held-out lớp 1 giữ nguyên. Không chạy lại riêng toàn bộ Hỏi AI vì không sửa runtime/adapter của engine đó; chuỗi AI-9 được chạy qua bộ test công cụ.
+
+Các lượt thử trung gian: 4 failed/43 passed (test cũ chưa chỉ định thư mục báo cáo, budget timeout quá ngắn để đến POST và dữ liệu mới chưa ghi xong); sau đó 47 passed. Thêm ba bài kiểm sâu có lượt 2 failed/48 passed: kỳ vọng che thừa chưa tính nhãn DEMO bị che ngoài gold, và deadline test dài chưa đủ tới đoạn đầu. Đã sửa kỳ vọng để tính đầy đủ che thừa, tăng thời hạn fixture rồi đạt 50 passed; không sửa runtime/gold để làm xanh. Một lượt full test đang chạy được dừng để sửa fixture, không tính là lượt kiểm hoàn tất.
+
+---
+
+## Lịch sử bàn giao trước kiểm độc lập (14:22–14:53)
+
+Phần dưới lưu số liệu/băm/hướng dẫn **của bản trước**, không thay thông số hiện hành ở trên.
+
 # MASK-2c-4 — Công cụ đo DEMO Local ngoài gói
 
 **Kết luận: Chưa đạt nghiệm thu Local/Core thật; phần công cụ và mock đã kiểm bằng Core giả (CoreGia). CHƯA ĐO Local thật.** Bộ mới là ứng viên, **chưa lead đóng băng/gold độc lập**, không tự nhận là held-out độc lập. PR: **chờ lead mở**; không commit/push.

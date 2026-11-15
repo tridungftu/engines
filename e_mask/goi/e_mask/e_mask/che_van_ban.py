@@ -477,7 +477,11 @@ def _che(van_ban, da_biet, kho):
     nfc, toa_do = _nfc_vi_tri(van_ban)
     bo_do = None
     phat_hien, day_du = _phat_hien(nfc)
-    cac_ten = ten_nguoi.tim(nfc, danh_muc)
+    cac_ten = [(ten, toa_do) for ten in ten_nguoi.tim(nfc, danh_muc)]
+    ban_cf = ten_nguoi.ban_do_cf(van_ban)
+    if ban_cf != van_ban:
+        nfc_cf, toa_do_cf = _nfc_vi_tri(ban_cf)
+        cac_ten.extend((ten, toa_do_cf) for ten in ten_nguoi.tim(nfc_cf, danh_muc))
     nhan = list(_vung_nhan(nfc))
     co_dia_chi = any(nhom == 'DIA_CHI' for _, _, nhom in nhan)
     ung_vien, da_xet = [], set()
@@ -497,9 +501,9 @@ def _che(van_ban, da_biet, kho):
                 ung_vien.append((toa_do[a][0], toa_do[b - 1][1], gia_tri, nhom))
     # Dùng toạ độ từng lần gặp, không truyền tên có danh xưng cho matcher
     # toàn văn rồi mặc nhiên nâng tin cậy các lần không có danh xưng.
-    for ten in cac_ten:
+    for ten, toa_do_ten in cac_ten:
         if ten.tin_cay:
-            ung_vien.append((toa_do[ten.bat_dau][0], toa_do[ten.ket_thuc - 1][1],
+            ung_vien.append((toa_do_ten[ten.bat_dau][0], toa_do_ten[ten.ket_thuc - 1][1],
                              ten.gia_tri, 'CA_NHAN'))
     bao_ve = _vung_tien_ngay(van_ban)
     # Không mất nhãn công ty do che riêng tiền tố của một tên dài hơn.
@@ -555,8 +559,8 @@ def _che(van_ban, da_biet, kho):
     xuong_dong_goc = [i for i, c in enumerate(van_ban) if c == '\n']
     vung_da_che = detectors.Spans((a, b) for a, b, _, _ in chon)
     cong_ty_da_che = detectors.Spans((a, b) for a, b, _, nhom in chon if nhom == 'CONG_TY')
-    for ten in cac_ten:
-        a, b = toa_do[ten.bat_dau][0], toa_do[ten.ket_thuc - 1][1]
+    for ten, toa_do_ten in cac_ten:
+        a, b = toa_do_ten[ten.bat_dau][0], toa_do_ten[ten.ket_thuc - 1][1]
         i = bisect_right(vung_da_che.starts, a) - 1
         che_du = i >= 0 and b <= vung_da_che.ends[i]
         if ten.nuoc_ngoai:
@@ -565,7 +569,7 @@ def _che(van_ban, da_biet, kho):
                 continue  # Cả cụm Latin đã được che như công ty, không còn tên để lọt.
         if not ten.bat_buoc_duyet and che_du:
             continue
-        if vung_da_che.hit(a, b):
+        if vung_da_che.hit(a, b) or toa_do_ten is not toa_do:
             con_sot.append({'nhom': 'CA_NHAN', 'ly_do': ('nghi tên người nước ngoài' if ten.nuoc_ngoai
                                                       else 'nghi tên người viết thường'),
                             'diem': ten.diem, 'can_cu': list(ten.can_cu),

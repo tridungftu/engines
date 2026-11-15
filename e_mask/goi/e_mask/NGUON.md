@@ -228,3 +228,17 @@ SHA-256 dưới đây tính đúng `read_bytes().replace(b'\r\n', b'\n')`; khôn
 | `e_mask/goi/e_mask/CHANGELOG.md` | `84dd68b4eb6bc9c32b4c02638157487d70249a17f6b26342882882070afe1af0` |
 | `e_mask/docs/KET-QUA-KIEM-MASK-2b.txt` | `95b811a16861db299942da113849625b7cb7eaec4c99cdb5a4052de7388e8672` |
 | `e_mask/docs/SO-DO-MASK-2b.json` | `f8929d3e65731da3476c39e27e93808e3dd1e6c44f3e1e28070941ebfc971dfc` |
+
+
+## Ranh giới Cf và held-out MASK-2b — 15/11/2026
+
+Không thêm từ điển hoặc dependency. Bản dò tên nhận diện ranh giới Cf bằng hình thức âm tiết và họ trong `vn_surnames`; ánh xạ về nguyên văn. Kết quả held-out do lead cung cấp: lọt 4/45, báo nhầm 15/75; nợ CAO vẫn mở, Cloud tắt cứng. Đã kiểm bằng Core giả (CoreGia). SHA-256 sau chuẩn hóa CRLF thành LF, thay cho băm lịch sử cùng tên; không tự băm NGUON.md.
+
+| Tệp | SHA-256 LF |
+|---|---|
+| `e_mask/goi/e_mask/e_mask/ten_nguoi.py` | `39ce61691967aaf6866013725eaaa9ea21dbb4f83c0d0075ec083ebcc56fdca1` |
+| `e_mask/goi/e_mask/e_mask/che_van_ban.py` | `b2f96b6e009ae06de5be592dea893963640ba844bf2083ded9f07466476168b7` |
+| `e_mask/tests/test_mask_2b.py` | `11a101ec37209cc97ba3a9428f05e079d17e3b0ed0909095aa4cb2f6f2600fa9` |
+| `e_mask/docs/BAO-CAO-MASK-2b.md` | `b92ca176efbb9bbf90ec7e51c99b4f692be7bc891aae5533cee6d9cf54e8123a` |
+| `e_mask/docs/VIEC.md` | `4278314ab831e5f4093a5dbc2ce9100321bba37c6e76ff0a60a1e2b02bb84d56` |
+| `e_mask/goi/e_mask/CHANGELOG.md` | `63455d7dd6a5f3a957521319e0f37f7d424fdcbb6a1a791f7c894c3487d1633b` |

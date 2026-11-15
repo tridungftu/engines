@@ -87,6 +87,30 @@ _HO_THEM = frozenset(chuan_ten(s) for s in _HO_BO_SUNG.split())
 _AM = frozenset(chuan_ten(s) for s in _AM_TEN.split())
 
 
+# Nhận dạng hình thức âm tiết, không bổ sung từ vào danh sách tên.
+_AM_TIET = re.compile(r"(?:ngh|ng|nh|gh|gi|kh|ph|th|tr|ch|qu|[bcdghklmnpqrstvx])?"
+                      r"[aeiouy]+(?:ch|nh|ng|[cmnpt])?$")
+
+
+def ban_do_cf(chu):
+    """Chỉ dùng để dò tên; thay Cf giữa hai âm tiết bằng khoảng trắng."""
+    ho = {chuan_ten(s) for s in detectors.surnames()[0]}
+    ket_qua = list(chu)
+    for i, c in enumerate(chu):
+        if (unicodedata.category(c) != 'Cf' or i == 0 or i + 1 == len(chu)
+                or not chu[i - 1].isalpha() or not chu[i + 1].isalpha()):
+            continue
+        a, b = i - 1, i + 1
+        while a > 0 and (chu[a - 1].isalpha() or unicodedata.combining(chu[a - 1])):
+            a -= 1
+        while b < len(chu) and (chu[b].isalpha() or unicodedata.combining(chu[b])):
+            b += 1
+        truoc, sau = chuan_ten(chu[a:i]), chuan_ten(chu[i + 1:b])
+        if (truoc in ho or _AM_TIET.fullmatch(truoc)) and _AM_TIET.fullmatch(sau):
+            ket_qua[i] = ' '
+    return ''.join(ket_qua)
+
+
 @dataclass(frozen=True)
 class UngVienTen:
     bat_dau: int

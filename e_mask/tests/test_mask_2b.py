@@ -235,3 +235,23 @@ def test_core_gia_ten_da_duyet_bo_dau_giu_alias():
     kq = c.xem(v)
     assert kq['trang_thai'] == 'XONG', kq
     assert kq['ket_qua']['van_ban_da_che']['van_ban'] == 'gửi [[CN-DEMO-001]]'
+
+
+@pytest.mark.parametrize('cf', ['\u200b', '\u200c', '\u200d', '\u2060', '\ufeff', '\u00ad'])
+@pytest.mark.parametrize('ten', ['nguyễn văn an', 'nguyen van an'])
+@pytest.mark.parametrize('ranh_gioi', [0, 1])
+def test_cf_thay_dau_cach_khong_lot(cf, ten, ranh_gioi):
+    am = ten.split()
+    am[ranh_gioi] += cf + am.pop(ranh_gioi + 1)
+    chu = 'thanh toán cho ' + ' '.join(am)
+    kq = x.che(chu, [], KhoBoNho())
+    assert not kq['gui_duoc'] or (kq['so_cho_thay'] and bo_dau(ten).replace(' ', '') not in bo_dau(kq['van_ban_da_che']).replace(' ', ''))
+    assert kq['van_ban_da_che'] is None or cf not in kq['van_ban_da_che']
+
+
+@pytest.mark.xfail(strict=True, reason="giới hạn quy tắc, nợ CAO")
+@pytest.mark.parametrize('chu', ['mạc đĩnh chi', 'lương thế vinh', 'từ minh tâm',
+                                  'phụ trách hạng mục: văn tiến dũng'])
+def test_held_out_ten_khong_lot(chu):
+    kq = x.che(chu, [], KhoBoNho())
+    assert not kq['gui_duoc'] or kq['so_cho_thay'] > 0

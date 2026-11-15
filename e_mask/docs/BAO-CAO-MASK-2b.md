@@ -76,3 +76,12 @@ Latin: sau các động từ nêu trên hoặc danh xưng → duyệt, có bổ 
 - N.V. An, tên/âm tiết ngoài danh sách không danh xưng, tên trùng hẳn địa danh/cụm thường và ngữ cảnh ngoài quy tắc hữu hạn chưa có chứng minh recall. Chỉ có số đo DEMO, không suy ra tỉ lệ vận hành hoặc đủ điều kiện bật Cloud.
 
 Môi trường: Windows x64, Python 3.13.14, pytest 9.1.1 từ môi trường sẵn có; `.venv` dùng SDK 2.0.0 cài offline từ wheel repo. SHA-256 wheel `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892` khớp SHA256SUMS. Mọi lệnh đặt `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`; gói không có mã biên dịch. Không sửa Core, không lưu dữ liệu runtime xuống đĩa.
+
+
+## Kiểm held-out 15/11 (lead)
+
+Bộ ca mới do lead kiểm gồm 45 tên và 75 câu thường: lọt **4/45** (mạc đĩnh chi; lương thế vinh; từ minh tâm; “phụ trách hạng mục: văn tiến dũng”), báo nhầm **15/75 (20%)**. Đây là số đo lead cung cấp, không phải kết quả tự chạy lại bộ held-out. Bốn ca lọt được ghi nhận bằng xfail strict.
+
+Dò tên viết thường bằng quy tắc và danh sách **không bảo đảm 0 lọt**; nợ **CAO vẫn mở**, Cloud giữ tắt cứng. Không vá thêm từng ca. Lượt sửa này chỉ xử lý Cf thay dấu cách, không mở rộng danh sách từ.
+
+**Kiểm lại sửa Cf:** pytest 741 passed, 4 xfailed (bốn giới hạn held-out), 190 subtests passed, 0 skipped, mã 0; `chay_demo.py` 2/2 ĐẠT, mã 0; `kiem_doc_lap.py` ĐẠT, mã 0. CLI `kho_tri_thuc_sdk.thu` 0/2, mã 1 do chưa xác minh được phiên và quyền. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core thật.

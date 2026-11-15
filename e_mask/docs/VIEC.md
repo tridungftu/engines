@@ -261,3 +261,10 @@ Vỏ `ma-nguon/chay.py`, `vong_doi.py`, shim, contract bốn mẫu cũ, helper m
 - Pytest với `--basetemp=.pytest-tmp`: **269 passed, 2 skipped, 190 subtests passed, 24.30 giây; mã 0**. Hai skip đúng lý do **“chờ NGAN-0 gộp”**, so băm `ngan.py` và `cau_hinh.py`; các test SHA schema/từ điển không skip.
 - Kiểm độc lập **ĐẠT, mã 0**; Node/KttCore giả **4/4 ĐẠT, mã 0**; công cụ chuyển DEMO mặc định chạy khô, mã 0; `git diff --check` mã 0. [Nhật ký đầy đủ](KET-QUA-KIEM-MASK-3b-6.txt). Chưa kiểm Linux thực tế, trình duyệt/Core thật hoặc Cloud.
 - Lệch/điểm còn lại: hai bản bọc trong gói chờ mẫu NGAN-0; giữ tệp kho/cấu hình cũ làm hiện vật, không trên đường chạy. Thêm màn duyệt và dùng nguồn sạch theo lệnh mới. Cần Core/SDK: nguồn quyền/mã ổn định, ngăn thật, khóa HMAC, giao dịch trên 100 lệnh, nạp/review màn và đọc lại kết quả qua nâng phiên bản; đã ghi tại mục Cần Core. Không có câu hỏi mới cần Anh duyệt.
+
+
+## MASK-2b — kiểm held-out và ranh giới Cf (15/11/2026)
+
+PR: **chờ lead mở**. Đã bổ sung bản dò ranh giới Cf và test hồi quy; đã kiểm bằng Core giả (CoreGia). Nợ **CAO vẫn mở**: held-out do lead đo lọt 4/45 tên, báo nhầm 15/75 câu thường (20%); quy tắc và danh sách không bảo đảm 0 lọt, Cloud giữ tắt cứng. Không vá từng ca held-out.
+
+**Cần Core:** nguồn xác minh phiên/quyền cho CLI SDK và tích hợp thật vẫn chưa có; hai ví dụ CLI hiện bị từ chối.

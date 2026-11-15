@@ -12,7 +12,8 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
 from . import ai_cuc_bo
 from .dto import MA_MODEL
-from .ngan import NganBoNho, NganXungDot
+from .ngan import NganXungDot
+from .ngan_engine import tao_ngan_bo_nho
 
 THOI_GIAN_DEM = 300
 CAC_API = (
@@ -137,8 +138,8 @@ def _doc_models(ngan, url):
     ds, tiep = [], None
     while True:
         trang = ngan.tim("model_phat_hien", loc={"url": url}, gioi_han=500, tiep=tiep)
-        ds.extend(trang["danh_sach"])
-        tiep = trang["tiep"]
+        ds.extend(trang.danh_sach)
+        tiep = trang.tiep
         if tiep is None:
             return ds
 
@@ -185,7 +186,7 @@ def _luu_catalog(ngan, url, catalog):
 
 def chon_model(yeu_cau, cau_hinh, *, kiem_huy=lambda: None, ngan=None):
     # Công cụ độc lập AI-7 có thể không có app; vẫn chỉ dùng RAM, không đọc tệp.
-    ngan = NganBoNho() if ngan is None else ngan
+    ngan = tao_ngan_bo_nho() if ngan is None else ngan
     catalog = bo_phat_hien.kha_dung_hien_tai(cau_hinh["local_ai"], kiem_huy=kiem_huy)
     url = cau_hinh["local_ai"]["url"]
     _luu_catalog(ngan, url, catalog)

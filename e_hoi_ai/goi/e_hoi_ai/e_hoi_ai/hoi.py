@@ -8,8 +8,8 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu, ViecDaHuy
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from .cau_hinh import doc_cau_hinh
-from .ngan import chon_ngan
+from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
+from .ngan import NganKhongHopLe, chon_ngan
 from .cong_ai import CongAI
 from .dto import MA_DINH_DANH, YeuCauAI
 
@@ -32,6 +32,10 @@ def yeu_cau_cau_hinh(viec):
                 raise ValueError
             url.port
             return cau_hinh
+    except NganKhongHopLe:
+        raise
+    except CauHinhKhongHopLe as exc:
+        raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None
     except (ValueError, OverflowError):
         raise LoiNghiepVu("CAU_HINH_KHONG_HOP_LE", "Cấu hình Hỏi AI không hợp lệ. Admin hãy kiểm tra lại.") from None
     raise LoiNghiepVu("CHUA_CAU_HINH", "Engine chưa được cấu hình. Admin vào Quản lý engine › Hỏi AI › Cấu hình.")

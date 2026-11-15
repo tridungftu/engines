@@ -95,6 +95,7 @@ def test_goi_chay_doc_lap_ngoai_repo_khi_thieu_cau_hinh(tmp_path):
         "from e_hoi_ai.chay import app; from e_hoi_ai.cau_hinh import doc_cau_hinh; "
         "from e_hoi_ai.ngan import chon_ngan; "
         "assert app.ma == 'e_hoi_ai'; assert doc_cau_hinh(chon_ngan(app), {}) is None; "
+        "assert app.ngan.tim('model_phat_hien').danh_sach == []; "
         "assert 'e_hoi_ai.cau_hinh_may' not in sys.modules"
     )
     ket_qua = subprocess.run([sys.executable, "-X", "utf8", "-I", "-S", "-B", "-c", ma_kiem], cwd=tmp_path,

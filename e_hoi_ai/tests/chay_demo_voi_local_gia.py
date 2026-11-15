@@ -22,12 +22,12 @@ def chuan_bi_local_demo(local):
 
 
 def main(*, sdk_thu=False):
-    from e_hoi_ai.ngan import NganBoNho
+    from e_hoi_ai.ngan_engine import tao_ngan_bo_nho
     import kho_tri_thuc_sdk.thu as thu
     co_ngan = hasattr(app, "ngan")
     ngan_cu = getattr(app, "ngan", None)
     try:
-        app.ngan = NganBoNho()
+        app.ngan = tao_ngan_bo_nho()
         with LocalGia() as local:
             nap_cau_hinh(local.url)
             chuan_bi_local_demo(local)

@@ -4,7 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| AI-8 | Cấu hình/model vào ngăn, màn Cổng Local AI/Cổng Cloud AI | AI-10, AI-11; quyết định 15/11 | Xong — 15/11/2026, đã kiểm bằng Core giả (CoreGia) | pytest 360 passed, 2 skipped (chờ NGAN-0 gộp); DEMO 3/3; UI Node 4/4; kiểm độc lập mã 0; Cloud 0 lượt. PR: **chờ lead mở** |
+| AI-8 | Cấu hình/model vào ngăn, màn Cổng Local AI/Cổng Cloud AI | AI-10, AI-11; quyết định 15/11 | Xong — 15/11/2026, đã kiểm bằng Core giả (CoreGia); đã nối ngăn chung NGAN-0 | pytest 370 passed, 0 skipped; SDK thu qua cổng DEMO 3/3; kiểm độc lập mã 0; so băm hai tệp chung đạt. PR: **chờ lead mở** |
 | 0 | Đọc tài liệu bắt buộc; đối chiếu kế hoạch lát AI-0 đã giao | — | Xong — 14/11/2026 | Phạm vi, kiến trúc và cách triển khai theo `GIAO-CODEX-e_hoi_ai.md` và lệnh giao của Anh |
 | 1 | Đóng gói độc lập theo cổng chung: bỏ shim, chỉ import SDK, build/cài wheel trên máy sạch | AI-13 | Đang làm — 14/11/2026 | Khung AI-0 xong; ghim đầy đủ và kiểm máy sạch thuộc AI-5 |
 | 2 | Chạy thử DEMO khai trong phiếu; màn cấu hình/trạng thái Local/Cloud dùng cửa chung của Core | AI-10, 11, 12 | Đang làm — 14/11/2026 | AI-4 xong phần engine: ba DEMO đã kiểm bằng Core giả (CoreGia); màn chung/phân quyền Admin chờ nghiệm thu Core thật. Bản cũ chỉ tham chiếu ở `tu-core-cu\phia-core\` |
@@ -27,7 +27,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 ## Cần Core (chuyển lead Core qua Anh)
 
 - **AI-8 — 15/11/2026:** cần SDK 2.1 cấp `app.ngan`/`viec.ngan`, ngăn hệ thống cấu hình, schema/CAS và nạp màn module qua `KttCore.engine`. Khai dự kiến ở `goi/e_hoi_ai/KHAI-SDK-2.1.json`, không đổi manifest 2.0. Với SDK 2.0 chưa thể cấu hình/lưu bền qua Core thật; RAM khởi động lại sẽ rỗng.
-- **AI-8 — đối chiếu NGAN-0:** hai tệp gói `ngan.py`, `cau_hinh.py` là bản tạm viết theo đặc tả, chưa sao từ mẫu. Lead thay nguyên hai tệp sau khi NGAN-0 gộp và bật hai test so băm. Thống nhất bản ghi `cau_hinh` khóa `{}` chứa trực tiếp `local_ai`/`quy_tac_model`; kết quả `tim` và chữ ký trình duyệt được ghi trong phần bàn giao AI-8. Không tạo/sửa `_chung/mau-ma/**`.
+- **AI-8 — đối chiếu NGAN-0: đã đóng ngày 15/11/2026.** Đã nối ngăn chung NGAN-0 sau PR #34; hai tệp mẫu trong gói giữ nguyên, test so băm chuẩn LF đã bật. `cau_hinh` khóa `{}` chứa trực tiếp cấu hình; `tim` trả `TrangNgan`, lô trả `KetQuaLenh`; không sửa `_chung/**`. Phần bảng chữ ký và quyết định tạm trong bàn giao AI-8 ban đầu bên dưới chỉ còn giá trị lịch sử; xem bàn giao nối ngăn ở cuối tệp.
 - **AI-8 — màn quản trị:** Core cần xác nhận cách nạp ES module xuất hàm mặc định `(goc, KttCore)`. Trình duyệt giả dùng `cau_hinh.doc()` → `{cau_hinh, phien_ban_cau_hinh}`, `luu(gia_tri, phien_ban_cau_hinh)` → phiên bản mới; `ngan.tim(bang, {loc, gioi_han, tiep})`. Phần giá trị/phiên bản này chưa được đặc tả đầy đủ ở SDK trình duyệt phát hành; cần đối chiếu khi nối. Chưa có thao tác discovery quản trị nên màn chỉ hiện kết quả kiểm gần nhất khi xử lý việc.
 - **AI-8 thay quyết định tạm cũ:** các mục AI-0…AI-3 dưới đây nói đọc JSON ngoài gói chỉ còn giá trị lịch sử; đường chạy hiện tại đã bỏ hoàn toàn cách đó.
 
@@ -491,3 +491,42 @@ Các test hai năng lực đếm provider Cloud **0 lượt**, chặn DNS và k�
 - Không phát sinh câu Chờ Anh. Cần Core/SDK và đồng bộ NGAN-0 như mục Cần Core phía trên. Chưa chạy Linux thực tế; mã/test không phụ thuộc Windows ngoài kịch bản chạy có sẵn.
 
 **Thời gian thực tế:** bắt đầu **15/11/2026 07:38:00 +07:00** (theo lead), kết thúc **15/11/2026 07:55:09 +0700**; **0.29 giờ** theo đồng hồ. Ước tính phiếu AI-8: **4 giờ**.
+
+## Nối ngăn chung NGAN-0 — AI-8, 15/11/2026
+
+Kết luận: **Đạt — đã nối ngăn chung NGAN-0**, đã kiểm bằng Core giả (CoreGia), Local HTTP giả và KttCore/DOM giả. PR: **chờ lead mở**; nhánh `codex/e_hoi_ai-ai-8`. Không commit/push.
+
+Đã làm: giữ nguyên `ngan.py`, `cau_hinh.py` do lead chép từ mẫu PR #34, không sửa `_chung/**`. Tạo ngăn RAM với khai báo `KHAI-SDK-2.1.json/ngan_du_lieu` cho engine, công cụ độc lập và cổng DEMO; giữ ngăn SDK nếu có. Sửa đọc `TrangNgan`, test dùng `KetQuaLenh` sau commit, `cho_phap_nhan`, khóa duy nhất và ngoại lệ đúng API. Giữ test hành vi riêng của engine: đổi cấu hình/catalog, model mất, discovery lỗi, CAS thử lại có giới hạn; bổ sung ca 501 model qua phân trang, lỗi ngăn/cấu hình qua hai năng lực không lộ traceback và gói khởi động ngoài repo. Hai test so SHA-256 chuẩn CRLF → LF đều chạy, không skip. Đã cập nhật SHA-256 chuẩn LF của toàn bộ 27 tệp gói trong NGUON.md, CHANGELOG, README và hiện trạng.
+
+Kết quả kiểm thật trên Windows/Python 3.13.14, `.venv` trong worktree; SDK 2.0.0 từ wheel nội bộ, SHA-256 khớp SHA256SUMS.txt. Biến môi trường: `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`; pytest thêm `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+0/3 ĐẠT, 3 ca CHUA_CAU_HINH; mã thoát 1.
+CLI độc lập chưa có cấu hình/ngăn và Local giả. Dùng cổng thay thế có sẵn:
+
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py --sdk-thu
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+[ĐẠT] Hỏi người bảo lãnh không có trong tài liệu DEMO
+[ĐẠT] Trích tiền và ngày theo khuôn DEMO
+Engine e_hoi_ai 0.4.0: mọi ví dụ chạy thử DEMO đều đạt.
+3/3 ĐẠT, mã thoát 0; gọi kho_tri_thuc_sdk.thu.main với ngăn RAM/Local giả.
+
+.venv/Scripts/python e_hoi_ai/tests/chay_demo_voi_local_gia.py
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia); 3/3 DEMO, 3 lượt Local HTTP giả.
+Mã thoát 0.
+
+.venv/Scripts/python -m pytest e_hoi_ai/tests -q --basetemp=.pytest-tmp
+370 passed in 41.30s; 0 skipped, mã thoát 0.
+Gồm kiểm UI Node/KttCore giả và hai test so băm NGAN-0.
+
+.venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát 0.
+```
+
+Thời gian thực tế phần nối: **15/11/2026 07:57–08:04 +07:00**, khoảng **0,12 giờ**; phiếu AI-8 ước tính **4 giờ** cho toàn lát (phần trước đã bàn giao riêng).
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: cổng DEMO thay thế có sẵn, nạp cấu hình qua ngăn và bật Local giả theo phiếu AI-4/AI-8; không nạp DEMO vào đường chạy thật. Giữ nguyên test hợp đồng RAM hiện có, sửa theo API chung. Bản bàn giao ban đầu có hai skip và cổng tạm phía trên là lịch sử, được thay bởi kết quả này.
+
+Cần Core / Chờ Anh mới phát sinh: **không**. Vẫn chờ SDK 2.1 cấp ngăn bền/cấu hình và cửa màn quản trị như mục Cần Core. Chưa kiểm Linux thực tế, Core thật hoặc model thật; Cloud bản 1 **0 lượt**. Thư mục `.pytest-tmp` là dữ liệu kiểm DEMO, không thuộc gói và không đưa vào PR.

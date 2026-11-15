@@ -92,8 +92,7 @@ import ipaddress
 import socket
 from e_hoi_ai import chay
 from e_hoi_ai.cong_ai import CongAI, NhaCungCapLocal
-from e_hoi_ai.ngan import NganBoNho
-chay.app.ngan = NganBoNho()
+# Dùng ngăn engine đã khởi tạo từ KHAI-SDK-2.1.json.
 with chay.app.ngan.lo() as lo:
     lo.them("cau_hinh", {}, CAU_HINH_DEMO)
 

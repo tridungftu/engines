@@ -5,6 +5,14 @@
 - Timer daemon dọn cả khi chờ AI; `finally` dọn khi mở/hủy/lỗi/kết thúc/mất quyền/lease. Đồng bộ timer và tín hiệu kết thúc với khởi tạo/mở/chốt kết quả, chặn phát hành nếu RAM đã mất; lỗi cố định `MASK_ANH_XA_KHONG_CON` yêu cầu chạy lại cả chuỗi. Không ghi map/gốc/bytes vào ngăn/tệp/tạm/hồ sơ/log/stderr/chuyen_tiep.
 - Cửa ghim/vòng đời là protocol nội bộ còn thiếu ở SDK/Core (C-P4-01/02); handler từ chối khi thiếu, không suy quyền từ dữ liệu việc hoặc `so_viec_dong_thoi=1`. Adapter CoreGia chỉ ngoài gói. Chuyển nghiệp vụ cũ khỏi kho/snapshot và nối mở che mới thuộc R2/R5/R6/B7, chưa thực hiện trong R4.
 - Đã kiểm bằng Core giả (CoreGia); chưa Core/Local/Office/Linux thật. Kết quả kiểm và giới hạn kiểm kê/CLI ghi tại `e_mask/docs/VIEC.md` và `e_mask/docs/BAO-CAO-MASK-R4.md`. PR: chờ lead mở.
+## Chưa phát hành — 15/11/2026, MASK-R2 adapter nhận diện bí mật
+
+- Thêm `KhoNganBiMat` dùng đúng `viec.ngan.doc/tim/lo` SDK 2.2.0. Ứng viên chỉ tìm bằng giá trị chính xác ở cột bí mật, cùng vùng và phiên bản chuẩn hóa; trả ID/alias/metadata/null+cờ, không băm tên công khai hoặc nạp danh mục bản rõ. Số gặp đọc theo chuỗi thập phân của SDK.
+- `KhoDinhDanh.mo_kho_nhan_dien` và `KhoNhanDienQuaCore` kiểm nguồn quyền trước/sau truy cập. Dùng lại alias chính thức qua nhiều việc; không giữ ứng viên/map/alias tạm hoặc snapshot. Mở che từ kho bị chặn; ánh xạ thuộc R4/R6.
+- Bản vá metadata bỏ hoàn toàn khóa bí mật và cờ mã hóa. Primitive cho R7 duyệt trên cùng ID bằng CAS, tạo alias chính thức trong cùng lô với ràng buộc duy nhất; từ chối bằng trạng thái, không xóa. Primitive nội bộ chưa thay cửa xác minh biên nhận Admin C-P4-06.
+- Lô metadata tối đa 100 lệnh; vượt từ chối trước khi gửi, không chia giả nguyên tử. SDK gửi lại cùng khóa lô; mất mọi ACK chuyển `ChuaRo`, khóa đối tượng ghi chưa rõ, không tự thử lô mới/cấp alias hoặc tăng đếm lại. Giao lại dùng ID và phiên bản cũ chịu CAS.
+- **C-P4-03 còn mở:** R1 chưa có duy nhất/`lay_hoac_tao` theo bí mật + vùng + phiên bản chuẩn hóa hoặc dấu gặp chống lặp xuyên lần giao việc. Tạo tên mới và tăng số gặp bị chặn `MASK_KHO_CAN_CORE`; không thêm cờ cấu hình để bỏ chặn. Hạn mức dò/không log ứng viên và bảo đảm Core thật vẫn cần xác nhận.
+- Đúng bốn tệp runtime của R2; phần RAM lịch sử giữ nguyên hành vi hồi quy, chặn nhận `NganEngine` tại mọi cửa snapshot/dấu/liệt kê cũ. R3/R4/R5 chuyển consumer/handler theo phiếu, không sửa `chay.py` của R4. Kiểm kê gói được sinh lại theo bytes thực tế. Test và số kiểm thật ở VIEC, đã kiểm bằng Core giả (CoreGia), chưa Core/Local/Office/Linux thật. Cloud tắt; PR chờ lead mở, không commit/push.
 
 ## 1.4.0 — 15/11/2026, MASK-R1 (chưa phát hành)
 

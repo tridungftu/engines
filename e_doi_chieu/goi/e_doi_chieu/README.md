@@ -1,4 +1,54 @@
-# Đối chiếu bản ký — SDK 2.2.0, DC-S22, phiên bản 0.7.1 chưa phát hành
+# Đối chiếu bản ký — SDK 2.2.0, DC-11, phiên bản 0.9.0 chưa phát hành
+
+## Học lỗi OCR có duyệt — DC-11
+
+Lõi học chỉ kiểm qua CoreGia/NganBoNho; chưa đăng ký thao tác quản trị
+SDK. Chỉ cặp vô danh được chứng minh không đổi nghĩa theo Q14 và xác
+nhận `loi_ocr` trong hồ sơ đã ghim mới được đếm. Ngưỡng `hoc_loi_ocr`
+phải đã đo/duyệt, không mặc định. Đủ ngưỡng chỉ đề xuất; Admin qua cửa
+chung, CAS và một lô chốt đề xuất/nhật ký/bộ phiên bản mới trong ngăn.
+Đề xuất chưa duyệt không ảnh hưởng máy; snapshot cũ giữ nguyên.
+
+`ui/loi_ocr.js` chỉ đọc/phân trang trong pháp nhân Core cấp, không nút
+duyệt hoặc ghi kho. Q14 nguồn thật, ngưỡng đo thật và C-DC-03 quyền/xác
+nhận/thao tác quản trị vẫn **bắt buộc trước vận hành thật**. Hợp đồng,
+trần và phần chưa kiểm: `../../docs/DC-11-CONG-CORE.md`. Đã kiểm bằng
+Core giả (CoreGia), chỉ DEMO, 0 Cloud; chưa nghiệm thu Core thật.
+
+## Màn và xác nhận — DC-10
+
+Hai màn `ui/cau_hinh.js`, `ui/ket_qua.js` dùng `KttCore.engine("e_doi_chieu")`,
+nạp như màn module. Khai màn/quyền đề nghị tại `KHAI-SDK-2.1.json` mới;
+không thêm khóa UI chưa được SDK hỗ trợ vào manifest 2.0. Cấu hình lưu
+qua schema/CAS, xung đột khóa lưu tới khi tải lại. Bảy trường bộ kiểm
+đã ghim được giữ nguyên, không hiển thị mã/băm/phiên bản trong form giới
+hạn. Bộ/ngưỡng chưa duyệt không được tự tạo. Kết quả có hai cột, nguyên
+văn/ảnh qua Core, bộ lọc, nhiễu ẩn mặc định và phần chưa kiểm rõ ràng.
+
+Adapter `xac_nhan.py` chỉ hoạt động khi host cấp cổng C-DC-03 tin cậy;
+không đăng ký năng lực hoặc endpoint giả. Bốn lựa chọn, nội dung/lý do
+bắt buộc, người/giờ/quyền từ Core, chỉ thêm nhật ký + CAS phiên bản lượt
+trong một lô, chống trùng theo mã yêu cầu. Q03 cần hai người khác nhau
+và người duyệt có thẩm quyền cho thay đổi Nghiêm trọng đã thống nhất.
+Không sửa kết quả máy; mọi xác nhận mâu thuẫn hoặc Bản ký sai giữ điều
+kiện chặn. Module/Core tính lại hiệu lực qua C-DC-04; engine chỉ gửi yêu
+cầu qua cổng được cấp, không tự phát event/mở chặn hoặc gửi người dùng.
+
+**Chưa tích hợp thật C-DC-01/03/04**: UI không có nút lưu xác nhận khi
+thiếu cổng/quyền. Hợp đồng adapter, cách nạp, yêu cầu ACL/chỉ-thêm/bền,
+quy trình module và phần chưa kiểm tại `../../docs/DC-10-CONG-CORE.md`.
+Ngăn thật luôn `viec.ngan` SDK 2.2; hai mẫu NGAN-0 chép nguyên theo lead
+nằm riêng `tham_chieu_ngan_0/`, chỉ dùng test so băm/hợp đồng RAM. Không
+thay bản lưu trữ DC-S22 và không import mẫu vào runtime. Migration 002
+thêm ba cột, phiên bản dữ liệu 2; chỉ soạn, chưa chạy CSDL/Core thật.
+
+Đã kiểm bằng Core giả (CoreGia), NganBoNho và Node với KttCore/DOM giả,
+chỉ DEMO, 0 Cloud. RAM không chứng minh nhật ký đã bền; chưa kiểm Linux,
+trình duyệt Core, CSP/quyền/đồng hồ thật và hiệu lực module.
+
+```powershell
+node --test e_doi_chieu/tests/ui/dc10.test.mjs
+```
 
 ## Ngăn và cấu hình — DC-S22
 
@@ -26,9 +76,9 @@ provider Local giả; 0 Cloud, chưa chứng nhận chất lượng model/Core t
 
 SDK chưa hỗ trợ cột `json`, khóa UI `giao_dien_quan_tri` trong phiếu hoặc
 cấu hình riêng từng ví dụ CLI. DEMO hiện chỉ đọc Word nên không cần cấu
-hình. Ba màn trong bản khai cũ vẫn là dự kiến DC-10/DC-11, chưa có tệp UI;
-không khai đường dẫn màn chưa tồn tại. Quyền tệp con/provenance OCR vùng,
-xác nhận chỉ-thêm và mapping chặn hiệu lực tiếp tục cần Core.
+hình. Bản khai cũ giữ lịch sử; DC-10 phía trên đã có hai màn, màn danh
+mục OCR còn DC-11. Quyền tệp con/provenance OCR vùng, xác nhận chỉ-thêm
+và mapping chặn hiệu lực tiếp tục cần Core.
 
 Kiểm bằng `.venv/Scripts/python` mới, wheel nội bộ 2.2.0 cài
 `--no-index --no-deps`, SHA đối chiếu `SHA256SUMS.txt`. Dependency ghim

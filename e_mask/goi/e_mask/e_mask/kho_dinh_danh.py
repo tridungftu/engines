@@ -6,10 +6,10 @@ kết quả: phần đó thuộc SDK. KhoBoNho chỉ nằm ngoài gói, trong te
 """
 from __future__ import annotations
 
-from kho_tri_thuc_sdk.engine import LoiNghiepVu
+from kho_tri_thuc_sdk.engine import LoiNghiepVu, NganEngine
 
 from .che_van_ban import Kho
-from .kho_qua_core import KhoQuaCore, bam_noi_dung
+from .kho_qua_core import KhoNhanDienQuaCore, KhoQuaCore, bam_noi_dung
 
 
 def _kiem_ket_qua(ket_qua, loai):
@@ -26,7 +26,17 @@ class KhoDinhDanh:
         self._goi_kho, self._quyen, self._kho_tam = goi_kho, quyen, kho_tam
         self._ngan = ngan
 
-    def mo_luot(self, viec, *, loai='che', ma_yeu_cau=None) -> KhoQuaCore:
+    def mo_kho_nhan_dien(self, viec, *, loai='che', ma_yeu_cau=None):
+        """R2/R3: viec.ngan thật, không dùng callback trả tên hay snapshot."""
+        return KhoNhanDienQuaCore(viec=viec, quyen=self._quyen, loai=loai,
+                                 ma_yeu_cau=ma_yeu_cau)
+
+    def mo_luot(self, viec, *, loai='che', ma_yeu_cau=None) -> KhoQuaCore | KhoNhanDienQuaCore:
+        if (isinstance(self._ngan, NganEngine)
+                or (self._ngan is None and self._goi_kho is None
+                    and isinstance(getattr(viec, 'ngan', None), NganEngine))):
+            # Chọn đường SDK trước mọi băm/snapshot của protocol cũ.
+            return self.mo_kho_nhan_dien(viec, loai=loai, ma_yeu_cau=ma_yeu_cau)
         bam = bam_noi_dung({'loai': loai, 'dau_vao': viec.dau_vao, 'tham_so': viec.tham_so})
         goi_kho, kho_tam = self._goi_kho, self._kho_tam
         if self._ngan is not None:
@@ -57,7 +67,7 @@ class KhoDinhDanh:
         return ket_qua
 
     def xu_ly_co_anh_xa(self, viec, ham):
-        """Map chỉ ở RAM/snapshot Core; không chép vào kết quả chốt ngăn.
+        """Đường RAM lịch sử cho tới R5; không dùng snapshot với ngăn SDK.
 
         PortNgan phục hồi cùng lựa chọn alias và tính lại map từ gốc bất
         biến; không cấp alias/đếm gặp lần nữa. Port cũ chỉ có kết quả đã

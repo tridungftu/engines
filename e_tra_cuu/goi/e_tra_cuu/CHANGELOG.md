@@ -1,3 +1,21 @@
+# TC-11 — 15/11/2026: công cụ thử DEMO ngoài runtime
+
+- Thêm công cụ ngoài gói và .cmd ASCII, chạy khô kiểm băm mặc định không
+  mạng/ghi bền; chỉ xuất một artifact DEMO khi Anh chọn workspace/--bao-cao.
+- Bộ chấm riêng từng model: bốn tỷ lệ tử/mẫu/chưa đo, bổ sung cắt đoạn/vị trí,
+  câu hỏi/hàm/xếp hạng và tiền/ngày; số runtime thiếu là null + lý do. Không
+  dùng ký tự/4 làm token runtime hoặc suy tải 20/150 người từ thời gian model.
+- Kiểm context đầy đủ khung trước gửi; không cắt/chuyển Cloud/batch; HTTP 202/
+  mất ACK/nguồn chưa trả giữ ChuaRo, không gửi lại mù. Báo cáo allowlist không
+  khóa/địa chỉ/đường máy/nội dung nguồn; kết quả ưu tiên RAM/Core.
+- Cửa thật khóa C-TC-06: chưa có hợp đồng public discovery/tokenizer/chuỗi/
+  kết quả đo. Không có adapter HTTP đo thật, không hỏi khóa hoặc gọi máy thật;
+  thiếu cửa từ chối đúng TC_CHUA_CO_MOI_TRUONG_THU. Đã kiểm bằng Core giả
+  (CoreGia)/adapter giả; phép đo thật CHỜ ANH TỰ CHẠY sau khi Core đủ cửa.
+- Không sửa runtime, manifest năng lực, SDK/Core hoặc engine khác. Chỉ đổi
+  CHANGELOG trong gói và cập nhật băm kiểm kê tương ứng. TC-Q06 không tự xóa;
+  TC-Q08/15 chưa có model/ngưỡng thật, không kích hoạt nhóm.
+
 # TC-10 — 15/11/2026: DEMO toàn tuyến và cổng đo độc lập
 
 - Giữ năm ví dụ nhận, thêm bảy ví dụ với snapshot/tệp con/băm thật, bao phủ

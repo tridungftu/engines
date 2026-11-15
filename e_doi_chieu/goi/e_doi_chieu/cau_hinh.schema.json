@@ -102,6 +102,38 @@
       "minimum": 1,
       "maximum": 2000,
       "default": 2000
+    },
+    "hoc_loi_ocr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "so_lan",
+        "phien_ban",
+        "nguon_do",
+        "ma_phe_duyet"
+      ],
+      "properties": {
+        "so_lan": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "phien_ban": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "nguon_do": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "ma_phe_duyet": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      },
+      "description": "Ngưỡng đề xuất sau đo và phê duyệt; không có mặc định, thiếu thì không học hoặc duyệt."
     }
   },
   "additionalProperties": false,

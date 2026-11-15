@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_doi_chieu",
   "ten": "Đối chiếu bản ký",
-  "phien_ban": "0.7.1",
+  "phien_ban": "0.9.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -378,6 +378,18 @@
         {
           "ma": "ma_yeu_cau",
           "kieu": "van_ban"
+        },
+        {
+          "ma": "ma_luot",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ma_diem",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "noi_dung",
+          "kieu": "van_ban"
         }
       ]
     },
@@ -394,6 +406,10 @@
           "ma": "bam_cap_tu",
           "kieu": "van_ban",
           "bat_buoc": true
+        },
+        {
+          "ma": "noi_dung",
+          "kieu": "van_ban"
         }
       ]
     },
@@ -416,6 +432,10 @@
           "ma": "phien_ban",
           "kieu": "van_ban",
           "bat_buoc": true
+        },
+        {
+          "ma": "noi_dung",
+          "kieu": "van_ban"
         }
       ]
     }
@@ -428,7 +448,7 @@
       "ma": "e_doi_chieu",
       "thu_muc": "sql",
       "tep_kiem_ke": "sql/kiem_ke.json",
-      "phien_ban_du_lieu": 1
+      "phien_ban_du_lieu": 3
     }
   }
 }

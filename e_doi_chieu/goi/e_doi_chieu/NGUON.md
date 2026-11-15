@@ -1,5 +1,37 @@
 # Nguồn của gói Đối chiếu
 
+## DC-11 — 15/11/2026
+
+- `loi_ocr.py`, `ui/loi_ocr.js`, SQL 003 viết mới theo phiếu DC-11;
+  dùng lại lõi DC-7/DC-10 tại chỗ, chỉ SDK 2.2.0/thư viện chuẩn. Không
+  thêm dependency, nguồn tải mạng, từ điển/font/model thật hoặc Cloud.
+- DC-11-CH thêm schema ngưỡng không mặc định và giữ ngưỡng đã duyệt trong
+  màn cấu hình cũ. Màn mới chỉ đọc, không API quản trị chưa phát hành.
+- Chỉ tái dùng fixture `DEMO-tu-dien-dc7.json` trong tests: Q14/giấy phép/
+  phê duyệt và ngưỡng đều giả để kiểm giao thức, chưa thay nguồn sạch
+  lead cần trình. Hai mẫu NGAN-0 giữ nguyên và so băm LF trong tests.
+- Băm các tệp mới/đổi và kiểm kê bytes thực được cập nhật ở bảng hiện
+  hành bên dưới và `sql/kiem_ke.json`. Chưa chạy migration trên CSDL thật.
+
+## DC-10 — 15/11/2026
+
+- Hai màn JS và `xac_nhan.py` viết mới theo phiếu DC-10, Q01–04 đã duyệt
+  chiều 15/11; `chay.py` chỉ thêm adapter nội bộ không decorator/API giả.
+  Dùng SDK 2.2.0 + thư viện chuẩn, không thêm dependency/mạng/Cloud.
+  UI dựng chữ bằng DOM/textContent, font kế thừa, bố cục hai cột chuyển
+  một cột ở màn hẹp. Node 24.18.0 chỉ kiểm UI giả không mạng.
+- `tham_chieu_ngan_0/ngan.py` và `cau_hinh.py` chép nguyên mẫu
+  `_chung/mau-ma/` theo yêu cầu lead, chỉ đối chiếu LF và kiểm RAM trong
+  phần DC-10-NGAN0, không import vào runtime SDK 2.2.0. Test so SHA-256
+  sau chuẩn hóa CRLF→LF; mẫu gốc không sửa. Bảng SHA hiện hành ở cuối.
+- `sql/002_xac_nhan.sql`: viết mới, chỉ ALTER thêm ba cột trong schema
+  `eng_e_doi_chieu`; không SQL lúc chạy. Gói 0.8.0 chưa phát hành, dữ
+  liệu phiên bản 2. Migration không thay cho ACL hoặc kiểm toán bền.
+- `KHAI-SDK-2.1.json` là bản khai màn/quyền **mới** đang đề nghị, không
+  khôi phục khai ngăn/cấu hình tạm của DC-S22. Các adapter C-DC-03/04
+  được mô tả riêng tại `../../docs/DC-10-CONG-CORE.md`, chưa có binding
+  thật. Đã kiểm bằng Core giả (CoreGia); ngăn RAM không chứng minh bền.
+
 ## DC-9 — 15/11/2026
 
 - `tong_hop.py`, `bao_cao.py` viết mới trong lát DC-9, `chay.py` mở rộng;
@@ -64,8 +96,8 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | Tệp hiện hành | SHA-256 LF |
 |---|---|
 | `.gitattributes` | `36f5046d7b9e6c15c3d77263f4918fa7997bebfbf79f3a4f3b954da607cd4eed` |
-| `cau_hinh.schema.json` | `15f77ad989363254ab67fffeb88b48eccbb8243fc58b91e5357f130c2fc70d98` |
-| `CHANGELOG.md` | `e49db82defb440710f4a367631510c924abb4cf04c0dab4b33a5aca42b216ee7` |
+| `cau_hinh.schema.json` | `e38e7414afacb2b1abc8fa1e01e28c130213686d79ea3f3d71d7873f5ab39b87` |
+| `CHANGELOG.md` | `941b919a5ee4fb18dd9079453c2ec4ca00da1998e35c3c4577e8034698b7ff54` |
 | `demo/DEMO-ban-chot.docx` | `e086e49c1dfad0cdfc702ab141a9de6123cbd123e4c7110df975b673e194bcaa` |
 | `demo/README.md` | `e65567d43ae6afeb303f977ddb3ea58ca18fe9dcb166b76fc731ad81d763d580` |
 | `e_doi_chieu/__init__.py` | `a427fe739dab3a98c108b79f40f7a53328d504300979b71ccc900892064948b3` |
@@ -73,13 +105,14 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | `e_doi_chieu/bao_cao.py` | `9cc4c1941d0512b8e97d1f7af845f029edcbe852c1e1b3fb3bbf20f33b38b965` |
 | `e_doi_chieu/can_chinh.py` | `39b084ae09adc8785051fbbb95238281b0f305e4a5370f5856c65263f0ada76e` |
 | `e_doi_chieu/cau_truc.py` | `ddde14383f97bf5c1fa1a2161aed7db8f3ea1e36004c16350a2db52018c2d333` |
-| `e_doi_chieu/chay.py` | `cc34ffb60e19102523151b5c629a9b926c78f76cb5318b55945c8b5cd61ebbd3` |
+| `e_doi_chieu/chay.py` | `13bd8314c7247bbc545de5d3566d26abad4271e7ba840314b1aa71bd7f899a4f` |
 | `e_doi_chieu/chuan_bi_ai.py` | `82b8f8d2363ee3746aed14e1cbf4c1c4a290c7d6b92cfcd46eac456aab7de8ae` |
 | `e_doi_chieu/chuan_hoa.py` | `a427053b5465450e838c274589d7d4b91fa86f69817414854a16cce2028bfe1b` |
 | `e_doi_chieu/doc_docx.py` | `7e63532c8ae2358ccc1b90a1bb65cb85e83c5c743fb3d8d9287fb2ed3cce3945` |
 | `e_doi_chieu/hau_kiem_ai.py` | `a9dab45b42db79b3779ceabd903602a7a63eb2493d9f344e12db3059a715e030` |
 | `e_doi_chieu/ho_so.py` | `13441efae45cca90d2cbc2c4dabd7f5f4c4e2e2240ce96f12cd25ced1531e0e0` |
 | `e_doi_chieu/lech_dau.py` | `6c82cf3d41622ca038a0ea9ab5df12edb2b93224a1e99b7c07a37a32e81ec26f` |
+| `e_doi_chieu/loi_ocr.py` | `0febad2a5274f63853827cfbf05596d7f280a28ea4124b62913788ee96b87e43` |
 | `e_doi_chieu/quy_tac.py` | `e937c98d97a31a9f6f8e8e79e68a0c76efdda5fb5c0880a19418e81e08138a76` |
 | `e_doi_chieu/so_chu.py` | `f6045c6494422bb842c638d90f378e8e95d66ad3d0996fff9d365814779f5038` |
 | `e_doi_chieu/sua_tay.py` | `29a63bdfa9306c748a6a6bc4808f85206dfc69e9f94d816c52c6a22d369528d0` |
@@ -87,15 +120,24 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | `e_doi_chieu/tong_hop.py` | `c619b98e82b4db5887ad06d0058877425d2132edcff1428c9533fc855f71cfd0` |
 | `e_doi_chieu/tu_dien.py` | `4ac5ec887ae9a732f2a69675ae69b9b28801a583b4310cb5986830e8ca874481` |
 | `e_doi_chieu/vi_tri.py` | `0efdfb41d3cc56e857ab74e49c8f8cbaa7f0d075267581f60ffb33232d148a97` |
-| `engine.json` | `8ec8c919f8cb32b9f1e66b2d903d4d017888527699835ae155e29877cc695dfc` |
+| `e_doi_chieu/xac_nhan.py` | `f56a2ce8328332c9411ebfd41a7847534fef415c55f7239cafeb14c76120613a` |
+| `engine.json` | `7a08e144ea442c148c38d37663005c0eba397b1f549a156e123fc5b09703d139` |
 | `ho_so_doi_chieu.schema.json` | `9114bf674c4d16189050eb3130453838b7bc1c2c22f6208a05e866df84adf776` |
-| `README.md` | `3ae4c0305d5284dad24d8320853f167aef8501a0641b0ef37b5cda747254d731` |
+| `KHAI-SDK-2.1.json` | `bc9806d3c4feb276f2a629d6ad63caaf57a2360de5225e9ce49555b802b735ca` |
+| `README.md` | `3f6b9d01f66269b04c00d7e9aab760173aa861c51075bf704929ba9592d77d18` |
 | `requirements.lock` | `68ddd023dd5f4610cea4f5aa63fbe91a9915c3b0fde10661edecb430e9f4bc4f` |
 | `sql/001_tao_ngan.sql` | `e71934770ec9664fa902782bd849a4a1d375e428602cff959691154ddb5f5f8e` |
+| `sql/002_xac_nhan.sql` | `276c8e0b24218e5396a27d6f2a2a678be5732b7e9e4890cfd5cf3bbb0eb0f540` |
+| `sql/003_hoc_loi_ocr.sql` | `20ed90ae25b46186083335537607afe2dc75e80e0cbd074432f247c3b7fe7efa` |
 | `tai_nguyen/font/LICENSE-APACHE-2.0.txt` | `0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594` |
-| `tai_nguyen/font/NOTICE.txt` | `99ad6f482ee36dc478166aeb2d2300928feae4393f5bf2f18ed44130a5ed095b` |
+| `tai_nguyen/font/NOTICE.txt` | `fcf0001da8c1ec45413c63edac12b85680d4ef0311559c15350a190dc810e92f` |
 | `tai_nguyen/font/Roboto-Regular.ttf` | `319cff6e7a31f0f2a41c475dca42890aa5d19fe16017e2290f8c1d4e14f76481` |
+| `tham_chieu_ngan_0/cau_hinh.py` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
+| `tham_chieu_ngan_0/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
 | `tra_loi_ai.schema.json` | `5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f` |
+| `ui/cau_hinh.js` | `a3afcf83fb4f97ecf8838113776446e170904251d2ad2788d087986304b0bdbc` |
+| `ui/ket_qua.js` | `1c46bacb03091f777e7c7930bb511e160c5e11a9492680d0a87a65f4450030be` |
+| `ui/loi_ocr.js` | `cab2e90b69e256d910039989e794d5584443b03d34a145bb060f471b3192dc7c` |
 | `van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
 | `yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
 <!-- DC-S22-SHA:CUOI -->

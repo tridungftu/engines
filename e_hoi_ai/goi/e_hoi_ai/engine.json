@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_hoi_ai",
   "ten": "Hỏi AI",
-  "phien_ban": "0.4.0",
+  "phien_ban": "0.5.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -102,6 +102,20 @@
       },
       "huy_duoc": true,
       "tham_so": []
+    },
+    {
+      "ma": "ai.hoi_mask_cuc_bo@1",
+      "ten": "Nhận diện thực thể bằng Local AI",
+      "nhan": [
+        "yeu_cau_ai"
+      ],
+      "tra": "tra_loi_ai",
+      "gioi_han": {
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 600
+      },
+      "huy_duoc": true,
+      "tham_so": []
     }
   ],
   "loai_du_lieu_rieng": [
@@ -164,24 +178,43 @@
           "tai_lieu": "DEMO — Hợp đồng DEMO-001 của Công ty DEMO Ánh Dương. Số tiền thanh toán là 1.000.000 VND. Ngày thanh toán là 30/10/2026.",
           "khuon_tra_loi": {
             "type": "object",
-            "required": ["so_tien", "ngay"],
+            "required": [
+              "so_tien",
+              "ngay"
+            ],
             "additionalProperties": false,
             "properties": {
               "so_tien": {
                 "type": "object",
-                "required": ["so", "tien_te"],
+                "required": [
+                  "so",
+                  "tien_te"
+                ],
                 "additionalProperties": false,
                 "properties": {
-                  "so": {"type": "integer", "minimum": 0},
-                  "tien_te": {"const": "VND"}
+                  "so": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "tien_te": {
+                    "const": "VND"
+                  }
                 }
               },
-              "ngay": {"type": "string", "enum": ["2026-10-30"]}
+              "ngay": {
+                "type": "string",
+                "enum": [
+                  "2026-10-30"
+                ]
+              }
             }
           },
           "bat_buoc_trich_dan": true,
           "model_uu_tien": null,
-          "chuyen_tiep": {"nhan": "DEMO", "ma_hop_dong": "DEMO-001"}
+          "chuyen_tiep": {
+            "nhan": "DEMO",
+            "ma_hop_dong": "DEMO-001"
+          }
         }
       },
       "tham_so": {}

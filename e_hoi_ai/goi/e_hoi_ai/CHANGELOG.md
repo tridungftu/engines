@@ -1,3 +1,11 @@
+## 0.5.0 — AI-9 — 15/11/2026 (PR: chờ lead mở)
+
+- Thêm `ai.hoi_mask_cuc_bo@1`, kiểm profile Local đã duyệt, băm prompt/khuôn/đoạn và span nguyên văn Unicode; giữ từng lần tên lặp, nhận rỗng đúng khuôn, không tạo thực thể giả.
+- Tái dùng bộ kiểm schema, chọn model/ngăn và provider trong gói; giữ nguyên `_kiem_tra_loi` hỏi–đáp cũ. Không import/gọi Mask hoặc engine khác, không thêm dependency hay lưu runtime xuống đĩa.
+- POST Local theo dõi giai đoạn gửi: connect lỗi trước gửi được thử lại; mất phản hồi/timeout sau gửi hoặc 202 truyền nguyên `ChuaRo`, không retry/fallback. Kiểm hoàn tất cả hai API cho mọi handler; giữ trần JSON/byte/độ sâu và bảo vệ mạng cũ.
+- AI-9 kiểm budget body/context/đầu ra; thiếu metadata context thì từ chối. Thêm fixture Local HTTP + CoreGia, kiểm hủy/mất lease, Cloud 0 lượt, và hồi quy hỏi–đáp/công cụ AI-7. Giữ ba DEMO manifest; bộ chạy test có thêm ca AI-9 với snapshot RAM thật.
+- Đã kiểm bằng Core giả (CoreGia); kết quả thật và giới hạn CLI ghi trong `e_hoi_ai/docs/VIEC.md`. Chưa đo model/Core thật, chưa đo mục tiêu 0 lọt hoặc bật Cloud. Lead commit/mở PR; không commit/push trong lát.
+
 ## AI-8 — 15/11/2026 (chờ lead mở PR)
 
 - Cấu hình Local/quy tắc model đọc từ ngăn; thiếu trả CHUA_CAU_HINH. Ngừng dùng cau_hinh_may.py, giữ nguyên tệp để chuyển LUU-TRU.

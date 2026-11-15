@@ -24,7 +24,13 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | AI-7 | Công cụ thử Local thật bằng DEMO | AI-14, AI-8 | Đang làm — 14/11/2026 | Đã kiểm bằng Core giả (CoreGia), Local giả và mock; chưa có AI-4 trên nhánh, tạm dùng ca manifest AI-1; Anh tự chạy máy thật. PR: **chờ lead mở** |
 
+| AI-9 | Nhận diện thực thể theo span chỉ Local, profile MASK-2c và transport theo trạng thái gửi | Sau AI-8; profile lead duyệt 15/11 | Xong phạm vi giả lập — 15/11/2026 | Đã kiểm bằng Core giả (CoreGia); 560 passed, 0 skipped; DEMO 3/3 cũ + 1/1 AI-9; SDK CLI độc lập 0/3 do thiếu cấu hình. Chưa đo model/Core thật. PR: **chờ lead mở** |
+
 ## Cần Core (chuyển lead Core qua Anh)
+
+- **AI-9 — 15/11/2026:** cần cửa chung chứng thực nguồn `ai.hoi_mask_cuc_bo@1`/Local của từng phản hồi gắn đúng người/module/tài liệu/pháp nhân, yêu cầu và snapshot; không tin `nha_cung_cap`/băm caller tự khai. Core giữ bytes JSON chuẩn toàn yêu cầu để Mask kiểm `bam_dau_vao`; băm snapshot/profile/bản che phải đối chiếu bytes thật có quyền. AI-9 chỉ tái tính được prompt/khuôn/đoạn và gốc khi một đoạn; không tự tạo chứng cứ thay Core.
+- **AI-9 — điều phối:** Core lập/ghim/lặp kế hoạch đoạn, overlap/đủ phủ, giữ mọi yêu cầu/phản hồi, ghép tập cuối và chứng thực phần thêm `tap_phan_hoi`; có deadline toàn chuỗi/hủy/mất lease/ChuaRo, không tự giao lại POST chưa rõ. Cần kho snapshot/tệp con với quyền mở xuyên bước và vòng đời tới khi hậu kiểm/chốt xong, cơ chế bền chống lặp/ACK qua SDK 2.1. Không viết route Core riêng hoặc coi CoreGia là nghiệm thu các quyền này.
+- **AI-9 — trước dùng thật:** lead xác nhận server chạy model tại chỗ và chặn egress Cloud; private IP/metadata local không chứng minh server không chuyển tiếp. Cần đo tokenizer/context/đầu ra trên model thật; tạm AI-9 chỉ gửi khi server khai context đang dùng, byte budget bảo thủ còn đủ 8192 token đầu ra. Thiếu trường context ở server → từ chối trước gửi, không coi là đã đo sức chứa. Chưa đo chất lượng/0 lọt; thuộc MASK-2c-4. Cửa Cloud sau này phải kiểm chứng cứ hậu kiểm Mask gắn băm bản cuối và chặn đường lớp 1 cũ; Cloud vẫn tắt cứng.
 
 - **AI-8 — 15/11/2026:** cần SDK 2.1 cấp `app.ngan`/`viec.ngan`, ngăn hệ thống cấu hình, schema/CAS và nạp màn module qua `KttCore.engine`. Khai dự kiến ở `goi/e_hoi_ai/KHAI-SDK-2.1.json`, không đổi manifest 2.0. Với SDK 2.0 chưa thể cấu hình/lưu bền qua Core thật; RAM khởi động lại sẽ rỗng.
 - **AI-8 — đối chiếu NGAN-0: đã đóng ngày 15/11/2026.** Đã nối ngăn chung NGAN-0 sau PR #34; hai tệp mẫu trong gói giữ nguyên, test so băm chuẩn LF đã bật. `cau_hinh` khóa `{}` chứa trực tiếp cấu hình; `tim` trả `TrangNgan`, lô trả `KetQuaLenh`; không sửa `_chung/**`. Phần bảng chữ ký và quyết định tạm trong bàn giao AI-8 ban đầu bên dưới chỉ còn giá trị lịch sử; xem bàn giao nối ngăn ở cuối tệp.
@@ -530,3 +536,56 @@ Thời gian thực tế phần nối: **15/11/2026 07:57–08:04 +07:00**, kho�
 Lệch khỏi phiếu / quyết định tạm đã dùng: cổng DEMO thay thế có sẵn, nạp cấu hình qua ngăn và bật Local giả theo phiếu AI-4/AI-8; không nạp DEMO vào đường chạy thật. Giữ nguyên test hợp đồng RAM hiện có, sửa theo API chung. Bản bàn giao ban đầu có hai skip và cổng tạm phía trên là lịch sử, được thay bởi kết quả này.
 
 Cần Core / Chờ Anh mới phát sinh: **không**. Vẫn chờ SDK 2.1 cấp ngăn bền/cấu hình và cửa màn quản trị như mục Cần Core. Chưa kiểm Linux thực tế, Core thật hoặc model thật; Cloud bản 1 **0 lượt**. Thư mục `.pytest-tmp` là dữ liệu kiểm DEMO, không thuộc gói và không đưa vào PR.
+
+## Bàn giao AI-9 — 15/11/2026
+
+**Kết luận: Đạt phạm vi AI-9 bằng bộ giả lập** — đã kiểm bằng Core giả (CoreGia) và Local HTTP giả, giữ nguyên chuẩn trích dẫn hỏi–đáp cũ. CLI SDK độc lập chưa đạt vì không được cấp cấu hình/ngăn/model. Chưa đo model thật, Core thật, Linux thực tế hoặc chất lượng nhận diện/0 lọt; Cloud vẫn tắt cứng.
+
+**PR:** chờ lead mở; nhánh `codex/e_hoi_ai-ai-9`. Tiêu đề đề nghị: `[e_hoi_ai] AI-9 — Nhận diện thực thể theo span chỉ Local`. Không commit/push.
+
+**Đã làm:**
+
+- Đúng **5 tệp mã**: `hoi_mask.py`, `chay.py`, `ai_cuc_bo.py`, `nha_cung_cap.py`, `engine.json`. Gói 0.5.0 thêm `ai.hoi_mask_cuc_bo@1`, nhận `yeu_cau_ai`, trả `tra_loi_ai`. Tái dùng helper đọc yêu cầu/schema/chọn model/provider/ngăn trong cùng gói; không sửa `hoi_yeu_cau.py` (kể cả `_kiem_tra_loi`), `khuon_json.py`, `chon_model.py`, `ngan.py`, `cau_hinh.py`, schema chung/SDK/Core/nguồn cũ; không import/gọi Mask hoặc engine khác, không dependency mới.
+- Profile kỹ thuật theo sổ loại chung §6, lead đã duyệt 15/11 trong lệnh giao. Kiểm local bắt buộc, phiên bản/mã, tham chiếu kỹ thuật, dạng băm, offset/đoạn/trần; tái tính băm prompt/khuôn/đoạn, và băm gốc khi một đoạn. Chuyển tiếp giữ nguyên byte JSON chuẩn hóa; không gửi chuyển tiếp/snapshot/mã/băm nội bộ qua prompt, schema annotation hoặc model ID. Không đọc tệp/ngăn riêng Mask hoặc tự tạo chứng cứ nguồn.
+- Giữ nguyên gốc Unicode (NFD/Cf/selector), model trả trực tiếp đối tượng khuôn span rồi engine đặt vào `du_lieu`. JSON nghiêm, object đóng, đủ required; Python kiểm int thật, khoảng và lát nguyên văn. Trích dẫn giữ từng lần tên lặp; nhãn/mức/offset không phải câu trích. Rỗng hợp lệ có trạng thái không thấy căn cứ/kiểm trích dẫn true và không tạo thực thể; không cấp cờ an toàn/quyền Cloud.
+- Transport POST dùng cùng socket IP/bind nguồn, cấm DNS/proxy/redirect, kiểm model/metadata mới; không retry hoặc fallback sau gửi. Connect lỗi chắc chắn trước gửi → lỗi Local có thể thử lại; timeout/mất phản hồi/thân HTTP thiếu hoặc 202 → truyền nguyên `ChuaRo` với mã tương quan độc lập. Lỗi dọn socket không ghi đè ChuaRo. Ollama phải `done=true,done_reason=stop`; OpenAI-compatible phải `finish_reason=stop`; kiểm JSON/trần byte/độ sâu và từ chối dấu cắt/sai nguồn cho cả ba handler.
+- AI-9 kiểm body đầu vào ≤64 KiB; dự trù byte UTF-8 + 256 + 8192 token đầu ra phải nằm trong context server khai đang dùng. Đầu ra 8192 token, tối đa 2.000.000 byte. Thiếu metadata context thì chặn trước POST; đây chưa là phép đo tokenizer/sức chứa thật. Cấu hình/model chỉ qua ngăn, đệm chỉ RAM; không tệp cấu hình/sổ/cache bền. Log AI-9 chỉ mã/phiên bản/số đếm/thời gian/trạng thái.
+
+**Kết quả kiểm thật:** Windows x64, Python 3.13.14, SDK 2.0.0 cài offline từ wheel repo (`--no-index --no-deps`), SHA-256 khớp `a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`. Venv trong worktree dùng `--system-site-packages` cho pytest 9.1.1 có sẵn; không tải mạng. Đặt `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1`; pytest thêm `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+0/3 ĐẠT; cả ba trả CHUA_CAU_HINH; mã thoát 1.
+CLI độc lập chưa được cấp ngăn/cấu hình hoặc model, không tự nạp DEMO vào runtime.
+
+.venv/Scripts/python -B -m pytest e_hoi_ai/tests -q
+560 passed in 157.20s (0:02:37)
+0 skipped; mã thoát 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/chay_demo_voi_local_gia.py
+[ĐẠT] Hỏi số tiền và ngày thanh toán DEMO
+[ĐẠT] Hỏi người bảo lãnh không có trong tài liệu DEMO
+[ĐẠT] Trích tiền và ngày theo khuôn DEMO
+[ĐẠT] Đã kiểm bằng Core giả (CoreGia); 3/3 DEMO, 3 lượt Local HTTP giả.
+[ĐẠT] AI-9 nhận diện tổ chức DEMO; CoreGia, 1 lượt Local HTTP giả.
+Mã thoát 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/chay_demo_voi_local_gia.py --sdk-thu
+3/3 [ĐẠT]; Engine e_hoi_ai 0.5.0: mọi ví dụ chạy thử DEMO đều đạt.
+Mã thoát 0; gọi thật kho_tri_thuc_sdk.thu.main với ngăn RAM/Local giả.
+
+git diff --check
+Không có lỗi; mã thoát 0.
+```
+
+Nền trước sửa: **370 passed in 48.75s**, không skip. Thêm **190 ca** trong hai tệp test AI-9/transport; toàn bộ hồi quy cũ giữ đạt, gồm công cụ AI-7 và UI/KttCore giả. Kiểm danh sách đúng/rỗng/tên lặp, NFD/Cf/emoji/code point, từng required/kiểu/offset/băm, trần 32/64 KiB và đoạn, prompt injection/metadata không lên wire, API Ollama/LM Studio/OpenAI-compatible, context thiếu/overflow/response cắt, timeout trước/sau POST/202/ChuaRo, proxy/DNS/redirect, metadata đổi trước gửi, hủy/mất lease/mất ACK. Bộ đếm Cloud **0 lượt** và hàng rào chỉ loopback có hiệu lực. Đối chiếu riêng xác nhận hai năng lực cũ, ba DEMO manifest và năm mô-đun tái dùng nêu trên giữ nguyên nội dung/ngữ nghĩa.
+
+**Thời gian thực tế:** bắt đầu **15/11/2026 12:12** theo lead; kết thúc **12:47:27 UTC+07 ngày 15/11/2026**, khoảng **0.59 giờ** thời gian đồng hồ (gồm đọc tài liệu, triển khai, kiểm và bàn giao). Ước tính trong phiếu: **6 giờ**, độ khó kho.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** không vượt 5 tệp mã. Chọn **0 lần hỏi lại AI-9**, trong giới hạn tối đa một lần được cho phép; handler hỏi–đáp cũ giữ quy tắc cũ. Giữ ba DEMO manifest vì công cụ AI-7 chấm riêng khuôn tiền/ngày; ca AI-9 nằm trong fixture/bộ chạy test ngoài gói với snapshot bytes/kích thước/băm thật ở RAM CoreGia. Cổng DEMO thay thế theo AI-4/AI-8; CLI độc lập mã 1 được giữ trung thực. Không sửa mẫu ngăn/cấu hình hoặc schema chung để làm xanh kiểm. Trường context của server chưa xác minh/đo trên máy thật; server không công bố context hiện dùng thì AI-9 từ chối.
+
+**Cần Core / Chờ Anh mới phát sinh:** đã bổ sung ba mục AI-9 ở phần Cần Core: chứng thực nguồn/yêu cầu/băm chuẩn, lặp/ghép đủ đoạn/deadline/ChuaRo, snapshot/tệp con có quyền và vòng đời/chống lặp qua SDK 2.1; cửa Cloud kiểm hậu kiểm cuối. Lead cần xác nhận model tại chỗ/egress bị chặn và đo context/model thật trước dùng thật. Không có câu hỏi quyết định nghiệp vụ mới cho Anh; chưa đo model/Core thật hoặc held-out, không tuyên bố đạt mục tiêu 0 lọt.

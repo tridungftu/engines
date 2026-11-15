@@ -7,13 +7,12 @@ Các kiểm tự động trong lát này **đã kiểm bằng Core giả (CoreGi
 
 ## 1. Chuẩn bị bản cài
 
-Lead giao Core có SDK **2.2.0**, cổng ngăn engine/cấu hình, tool
-`tools\cai_ngan_engine.py`, tài khoản Admin DEMO và cách khởi động lại Core.
+Lead giao Core có SDK **2.2.0**, cổng ngăn engine/cấu hình, tài khoản Admin DEMO và cách khởi động lại Core.
 Python chạy engine phải là môi trường Core chọn cho `{python}`; cài phụ thuộc
 vào đúng môi trường đó, không chỉ vào Python đang mở ở terminal.
 Đóng gói không bao gồm Core, PostgreSQL, Tesseract, ABBYY, model Local AI hay
 wheel phụ thuộc ngoài SDK. Lead chuẩn bị riêng kho wheel CPython 3.13 Windows
-x64 theo `requirements.lock`/`NGUON.md`; không cần mạng khi cài.
+x64 cho phụ thuộc OCR theo `requirements.lock`/`NGUON.md`; không cần mạng khi cài.
 
 | Engine / phiên bản tại mốc giao | Cấu hình riêng | Ngăn nghiệp vụ / SQL cần cài |
 |---|---|---|
@@ -83,68 +82,47 @@ Giải nén từng ZIP bằng Explorer → **Extract All / Giải nén tất c�
 thư mục engine ngoài mã Core. Chọn thư mục con có `engine.json` khi cài Core;
 giữ nguyên bytes và giữ thư mục này lâu dài vì Core chạy engine từ đây.
 
-## 3. Cài SDK và phụ thuộc của từng gói
+## 3. Kiểm SDK và cài phụ thuộc OCR
 
-Ví dụ tạo môi trường mới; nếu Core đã có môi trường thì dùng đúng Python đó
-thay `<python-core>`. Trước khi chạy engine đặt `PYTHONDONTWRITEBYTECODE=1`
-trong môi trường Core để tránh sinh bytecode trong gói.
+Dùng đúng Python Core chọn cho `{python}`. Hỏi AI, Trích xuất và Hóa đơn chỉ
+cần SDK 2.2.0 và các phụ thuộc của SDK đã có trong môi trường Python của Core.
+Kiểm tra phiên bản SDK phải in **2.2.0**:
 
 ```powershell
-python -m venv "<venv-core-DEMO>"
-& "<python-core>" -m pip install --no-index --no-deps "<bo-giao>\kho_tri_thuc_sdk-2.2.0-py3-none-any.whl"
-& "<python-core>" -c "import kho_tri_thuc_sdk; print(kho_tri_thuc_sdk.__version__)"
+& "<python-core>" -c "import kho_tri_thuc_sdk;print(kho_tri_thuc_sdk.__version__)"
 ```
 
-Lệnh cuối phải in **2.2.0**. Chạy riêng cho **mỗi** thư mục gói đã giải nén:
+OCR có phụ thuộc riêng được ghim hash; cài vào cùng Python Core từ kho wheel
+đã chuẩn bị, rồi kiểm tra phụ thuộc. Đặt `PYTHONDONTWRITEBYTECODE=1` trong
+môi trường Core trước khi chạy engine để tránh sinh bytecode trong gói.
 
 ```powershell
-& "<python-core>" -m pip install --require-hashes --no-deps --no-index --find-links "<kho-wheel-da-kiem>" --find-links "<bo-giao>" -r "<goi-e_hoa_don>\requirements.lock"
-& "<python-core>" -m pip install --require-hashes --no-deps --no-index --find-links "<kho-wheel-da-kiem>" --find-links "<bo-giao>" -r "<goi-e_hoi_ai>\requirements.lock"
 & "<python-core>" -m pip install --require-hashes --no-deps --no-index --find-links "<kho-wheel-da-kiem>" --find-links "<bo-giao>" -r "<goi-e_ocr>\requirements.lock"
-& "<python-core>" -m pip install --require-hashes --no-deps --no-index --find-links "<kho-wheel-da-kiem>" --find-links "<bo-giao>" -r "<goi-e_trich_xuat>\requirements.lock"
 & "<python-core>" -m pip check
 ```
 
-**Điểm chặn hiện hữu, chưa sửa trong lát này:** lock Hỏi AI chỉ ghim SDK,
-không có `--hash`; lock Trích xuất ghim 10 dependency nhưng không có hash.
-pip có thể bỏ qua mục đã cài, nhưng trên môi trường sạch không thể bảo đảm
-hai lệnh đó đạt `--require-hashes`. Lead cần giao lock bổ sung đã kiểm hash
-từng wheel cho nền tảng đích, hoặc lát engine bổ sung hash và tăng bản gói;
-không bỏ `--require-hashes`, không sửa ZIP đã ghim để chạy tiếp. Lock bổ sung
-nằm ngoài gói, dùng cùng lệnh trên với `-r "<lock-bo-sung-da-duyet>"`.
-Core cần đủ dependency SDK (`cryptography`, `jsonschema` và bắc cầu), dù lock
-Hỏi AI/Hóa đơn chỉ liệt kê SDK; `--no-deps` không tự cài chúng. `pip check`
-chưa đạt thì dừng trước Bật engine. Bộ giao này chỉ mang wheel SDK; chưa là
-bộ cài offline đầy đủ mọi dependency trên máy sạch.
+Nếu phiên bản SDK sai hoặc `pip check` chưa đạt thì dừng trước khi Bật engine.
 
-## 4. Cài ngăn và Bật engine
+## 4. Cài và Bật engine
 
-Chỉ chạy tool của **Core**, tại thư mục mã Core, cho **Hỏi AI và OCR**:
-
-```powershell
-& "<python-core>" -X utf8 tools\cai_ngan_engine.py --help
-& "<python-core>" -X utf8 tools\cai_ngan_engine.py --goi "<goi-e_hoi_ai>" --ket-noi "<tep-ket-noi-DEMO-lead-cap>" --ma "dong-goi-1-ai-demo"
-& "<python-core>" -X utf8 tools\cai_ngan_engine.py --goi "<goi-e_ocr>" --ket-noi "<tep-ket-noi-DEMO-lead-cap>" --ma "dong-goi-1-ocr-demo"
-```
-
-Căn cứ cú pháp: [HUONG-DAN-THU của SDK](../../docs/goi-gui-engine/sdk-2.2.0/engine-demo/e_demo_ngan/HUONG-DAN-THU.md).
-Đối chiếu `--help` bản lead bàn giao; tool mẫu chỉ nhận CSDL DEMO
-`kho_test_*` / `kho_core_demo_g2_*`. Không mở/in tệp kết nối, không chép thông
-tin đăng nhập vào ảnh. Không tự thực thi SQL bằng pgAdmin hay engine.
-Hóa đơn và Trích xuất **không có `sql/`**, bỏ bước cài ngăn nghiệp vụ.
+Theo CĐ-36, Core main `0ebd632` đã được lead bấm thử. Trước lần đầu cài engine
+có ngăn trên Core tổng, **lead** khóa cấu hình tiến trình cài
+`tien_trinh_cai.thu_muc_engine` bằng `.cmd` riêng do lead soạn và thực hiện.
 
 Trên trình duyệt, thực hiện tuần tự cho cả bốn gói:
 
 | Bước | Thao tác BẤM | Kết quả mong đợi | Ô chụp ảnh / kết quả thực tế |
 |---|---|---|---|
 | C1 | Đăng nhập Admin DEMO → Quản trị Core → Quản lý engine | Mở danh sách engine, đúng Core tập | ☐ Ảnh: …; đạt/chờ: … |
-| C2 | Bấm Thêm gói → chọn thư mục có `engine.json` → xác nhận thêm theo màn Core | Đúng tên/phiên bản và năng lực trong DANH-SACH-GOI.json; sai SHA/ngăn thì dừng | ☐ Ảnh: …; đạt/chờ: … |
-| C3 | Bấm engine vừa thêm → Bật | Core quản lý tiến trình; không báo thành công khi readiness lỗi | ☐ Ảnh: …; đạt/chờ: … |
-| C4 | Với AI/OCR/TX, bấm Cấu hình | Màn cấu hình riêng hiển thị; không có mục này thì ghi **Cần Core**, dừng ca phụ thuộc | ☐ Ảnh: …; đạt/chờ: … |
+| C2 | Bấm Xem trước gói → chọn **thư mục gói đã giải nén** có `engine.json` | Đúng tên, phiên bản và năng lực trong DANH-SACH-GOI.json | ☐ Ảnh: …; đạt/chờ: … |
+| C3 | Bấm Duyệt cài | Tiến trình cài C4 tự cài ngăn cho gói có `sql/` (Hỏi AI, OCR); màn hiện “Đang cài ngăn dữ liệu…” | ☐ Ảnh: …; đạt/chờ: … |
+| C4 | Tải lại màn sau khi cài, rồi bấm Bật | “Cấu hình: Bật, Vận hành: Sẵn sàng” | ☐ Ảnh: …; đạt/chờ: … |
+| C5 | Với AI/OCR/TX, bấm Cấu hình | Màn cấu hình riêng hiển thị; không có mục này thì ghi **Cần Core**, dừng ca phụ thuộc | ☐ Ảnh: …; đạt/chờ: … |
 
-Tên nút Thêm gói/Bật theo hướng dẫn Core. Các lối Cấu hình, chi tiết kết quả
-và tải tệp bên dưới là **yêu cầu nghiệm thu**; chỉ đánh đạt sau khi thấy trên
-bản Core thật. Không dựng URL riêng hoặc gọi API để thay thao tác BẤM.
+Phải tải lại màn để thấy nút Bật sau khi cài ngăn; đây là nợ Core đã biết.
+Các lối Cấu hình, chi tiết kết quả và tải tệp bên dưới là **yêu cầu nghiệm thu**;
+chỉ đánh đạt sau khi thấy trên bản Core thật. Không dựng URL riêng hoặc gọi API
+để thay thao tác BẤM.
 
 ## 5. Nhập cấu hình qua màn engine
 
@@ -234,7 +212,7 @@ phiếu OCR; tài liệu chung không nhận thay nghiệm thu ABBYY/model thậ
 | Tệp tham chiếu DEMO C-TX-06 | CLI chưa đăng ký tệp hậu kiểm nằm trong phong bì `tra_loi_ai`; giữ đủ 5 mẫu, ghi đúng trạng thái chưa đạt |
 | Kiểu `json` trong ngăn | SDK 2.2.0 chưa nhận; AI `api` và OCR `da_nhan`/`dang_giu`/`theo_ngay` dùng JSON text qua `van_ban` ≤64 KiB. Không tự đổi kiểu cột |
 | `giao_dien_quan_tri` | Schema manifest 2.2.0 chưa nhận khóa này. Lead Core cần nạp/review ba màn `ui/cau_hinh.js`, thống nhất `KttCore.engine(ma)`, quyền Admin và dạng trả cấu hình; OCR/TX dùng `gia_tri`, AI dùng `cau_hinh`. Không thấy màn thì ghi Cần Core, không tự thêm khóa manifest |
-| Lock thiếu hash Hỏi AI/Trích xuất và kho wheel máy sạch | Lead/engine giao lock đầy đủ đã xác minh; chưa đủ thì chưa nghiệm thu cài sạch bằng `--require-hashes` |
+| Phụ thuộc OCR | Lead chuẩn bị kho wheel đã kiểm hash theo lock OCR cho Python Core |
 | Tệp DEMO lồng trong `truong` của Hóa đơn | Chưa có DEMO XLSX độc lập trên màn chung, dùng quy trình DEMO Core chuẩn bị để kiểm HD5 |
 
 Các công cụ sau nằm **ngoài ZIP runtime**, lead giao riêng cùng đúng mốc mã

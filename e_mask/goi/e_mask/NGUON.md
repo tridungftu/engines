@@ -1,5 +1,47 @@
 # NGUỒN — gói e_mask, MASK-1…7, MASK-2b và sửa an toàn
 
+## MASK-B6 — 16/11/2026, Excel chỉ RAM
+
+**Quyền và nguồn gốc:** Anh/lead giao MASK-B6 cho phép tái dùng mã nội bộ B1/B3/B4, MASK-2b và R2…R6 trong chính gói Mask. Các mục tương ứng bên dưới ghi nguồn/giấy phép trước đó; không suy quyền phân phối ngoài tổ chức. Chuyển có sửa khung nội bộ B5 (`tep_word.py`) sang Excel để dùng cùng hợp đồng R4/R5; không gọi đường Word hoặc import engine khác. Không sửa nguồn cũ, Core, SDK, manifest hay dependency. Đóng băng 19 nguồn trước sửa tại `e_mask/docs/SHA-NGUON-MASK-B6-TRUOC.json`; cả 19 nguồn giữ nguyên bytes sau lát. `tep_excel.py` trước chưa tồn tại.
+
+| Nguồn trong gói Python | Symbol dùng lại / chép có sửa | Đích và khác biệt |
+|---|---|---|
+| `tep_word.py` (B5) | `_bao_ve`, `_kiem_buoc`, `_KhoWord`, `_LuotVung`, `_phep_alias`, `_kiem_vung`, `_gop_alias`, `_ghi`, `_luu_ram`, `_doc_ram`, `che_word`, `che_them_word`, `DauWordRAM` | Chuyển sang symbol Excel tương ứng trong `tep_excel.py`; giữ cleanup R4 và lỗi an toàn. Budget vị trí dùng chỉ số vùng; map shared có một nguồn, mọi nơi dùng phải khớp; patch một lần và cập nhật chung khi bổ sung Local. Thêm kiểm ô số/metadata số cần che thì chặn thay vì đổi kiểu. |
+| `doc_excel.py`, `xml_excel.py` | `doc_excel`, `ExcelDaDoc`, `VungExcel.kiem_thay_the`, map chuỗi/ô/rich run/attribute/byte | Gọi reader B3 nguyên trạng trước và sau patch; giữ UTF-16/entity/ST/NFD/Cf, mọi nơi dùng shared và unused; không ghép hai ô, không đổi tên sheet. |
+| `doc_tep.py`, `zip_an_toan.py`, `xml_an_toan.py`, `ghi_zip.py`, `va_xml.py` | Cổng B1/B3; `ghi_goi`, `bam`, `lap_kich_ban`, `_goc_vung` | ZIP/XML/trần/whitelist và writer B4 giữ nguyên. Script chỉ sửa vùng canonical của shared, đối chiếu lại chuỗi ở mọi ô, index/style/merge/epoch và lexical/bytes ô bất biến trên bytes ra thật. |
+| `che_van_ban.py`, `tra_cuu_dinh_danh.py` | `_kiem_dinh_danh`, `thu_thap_ung_vien`, `_kiem_con_sot`, `_kiem_tien_ngay`, `numeric_review`, `TraCuuDinhDanh`, `UngVien`, các trần và cửa chặn R3 | Detector riêng từng vùng; tìm chính xác từng ứng viên qua R2, cache/budget chung trong RAM, không liệt kê danh mục bản rõ. Mơ hồ alias chặn toàn lượt. Cửa chất lượng R3 và hai lớp chưa được mở. |
+| `chuan_bi_ai.py`, `anh_xa_ai.py`, `hau_kiem_ai.py` | `ket_qua_ram`, `_kiem_span`, `tao_anh_xa`, `kiem_anh_xa`, `alias_nguyen_van`, `_bien_thuc_the` | Kiểm map/tiền/ngày R5; giữ phép đối chiếu số nằm trọn ngày ISO của B5, vẫn chặn số/nghi vấn ngoài ngày. Primitive Local không chứng thực nguồn hoặc đủ đoạn và không đánh dấu đã kiểm Local. |
+| `kho_anh_xa_ram.py`, `quyen_yeu_cau.py`, `ho_so_ai.py`, `kho_dinh_danh.py`, `kho_ngan.py`, `mo_che_ram.py` | `_BuocRAM`, `_bo_tham_chieu`, `loi_ram`, `loi_kho`, `json_chuan`, `KhoDinhDanh.mo_kho_nhan_dien`, kho R2, `_don_ngoai_le` | Handle R4 kiểm mã Core/quyền/instance/TTL. Tệp/map/bytes/script/budget chỉ ở `tep_excel` trong RAM; không snapshot, ngăn map, tệp tạm, upload hoặc chuyển tiếp. Kết quả primitive chỉ băm/số đếm, luôn `CHO_LOCAL`. |
+
+| Tệp nguồn (từ gốc repo) | SHA-256 bytes trước = sau | SHA-256 LF trước = sau |
+|---|---|---|
+| `e_mask/goi/e_mask/e_mask/tep_word.py` | `cc46f3619c676ed5d7124387ee870e8a74f737baf55f07777a1b6b588e33eb0c` | `cc46f3619c676ed5d7124387ee870e8a74f737baf55f07777a1b6b588e33eb0c` |
+| `e_mask/goi/e_mask/e_mask/doc_excel.py` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` |
+| `e_mask/goi/e_mask/e_mask/xml_excel.py` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` |
+| `e_mask/goi/e_mask/e_mask/doc_tep.py` | `7169ad765f8566479e9b88f4907be2d37e70fbaded112f2ced6dd75e18567646` | `7169ad765f8566479e9b88f4907be2d37e70fbaded112f2ced6dd75e18567646` |
+| `e_mask/goi/e_mask/e_mask/zip_an_toan.py` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` |
+| `e_mask/goi/e_mask/e_mask/xml_an_toan.py` | `b44819c30f722ce833329a945e97b6d72540fc2c83eb7c4444599570032d21be` | `b44819c30f722ce833329a945e97b6d72540fc2c83eb7c4444599570032d21be` |
+| `e_mask/goi/e_mask/e_mask/ghi_zip.py` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` |
+| `e_mask/goi/e_mask/e_mask/va_xml.py` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` |
+| `e_mask/goi/e_mask/e_mask/che_van_ban.py` | `fb20d043b46cddea2080b50904f88533c0990b7cf21cc434be8089beb72ead81` | `fb20d043b46cddea2080b50904f88533c0990b7cf21cc434be8089beb72ead81` |
+| `e_mask/goi/e_mask/e_mask/tra_cuu_dinh_danh.py` | `11ec834e6a181c2dcdcb625677f6920e1996aeceead7c4fe465f617d403f7ddf` | `11ec834e6a181c2dcdcb625677f6920e1996aeceead7c4fe465f617d403f7ddf` |
+| `e_mask/goi/e_mask/e_mask/chuan_bi_ai.py` | `f09adcb15b45882572ce6355203c94b256cf913808b98f2e5c7b7d79d8d8f8d5` | `f09adcb15b45882572ce6355203c94b256cf913808b98f2e5c7b7d79d8d8f8d5` |
+| `e_mask/goi/e_mask/e_mask/anh_xa_ai.py` | `a507690ccb59886bfadc2723d49d5efe6ac2c99249dc3d5e029b8c4b64e4af82` | `a507690ccb59886bfadc2723d49d5efe6ac2c99249dc3d5e029b8c4b64e4af82` |
+| `e_mask/goi/e_mask/e_mask/kho_anh_xa_ram.py` | `9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6` | `9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6` |
+| `e_mask/goi/e_mask/e_mask/quyen_yeu_cau.py` | `ff44033652a45a7b70effb4e8f6cbb0217c50f85551a912a2657e779be2ba123` | `ff44033652a45a7b70effb4e8f6cbb0217c50f85551a912a2657e779be2ba123` |
+| `e_mask/goi/e_mask/e_mask/ho_so_ai.py` | `17b86042a1f38159af789c2de746bfe68b98f2ea38de08a6dbd35330c8322b17` | `17b86042a1f38159af789c2de746bfe68b98f2ea38de08a6dbd35330c8322b17` |
+| `e_mask/goi/e_mask/e_mask/kho_dinh_danh.py` | `fd8633450de5ae85484d78d74a8583b3efd5078f19a27221f14326975b16ecb9` | `fd8633450de5ae85484d78d74a8583b3efd5078f19a27221f14326975b16ecb9` |
+| `e_mask/goi/e_mask/e_mask/kho_ngan.py` | `83c6cce6a586ae2901f3e5a40161e917999d8eeb8951b501d580e3db6b262fde` | `83c6cce6a586ae2901f3e5a40161e917999d8eeb8951b501d580e3db6b262fde` |
+| `e_mask/goi/e_mask/e_mask/hau_kiem_ai.py` | `051f4eb324345cfe8a60b6146e0a26886ffe77348b877f28f2b75a19f10a4c46` | `051f4eb324345cfe8a60b6146e0a26886ffe77348b877f28f2b75a19f10a4c46` |
+| `e_mask/goi/e_mask/e_mask/mo_che_ram.py` | `3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799` | `3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799` |
+
+| Tệp đích mới | SHA-256 bytes sau | SHA-256 LF sau |
+|---|---|---|
+| `e_mask/goi/e_mask/e_mask/tep_excel.py` | `ef670c9775ec5ea97981d181324490433fc44ea3779edc473a1f78a8911a796c` | `ef670c9775ec5ea97981d181324490433fc44ea3779edc473a1f78a8911a796c` |
+
+**Giới hạn:** chưa có handler tệp/phát hành trong B6. B7/B9 phải kiểm hai lớp đủ mọi vùng và ngữ cảnh ô số/metadata, nguồn Local, quyền/lease/deadline và bàn giao thật; thiếu thì chặn. Primitive không nhận cờ caller để bỏ chặn. Writer/reader B1/B3/B4 hiện giữ bộ đếm bảo thủ 500.000 ký tự cả chiều đọc lại, sớm hơn trần ra 2.000.000; không tự nới profile. Trần ô 32.767 UTF-16 và trần ZIP/bytes ra vẫn kiểm riêng, không truncate. Format tiền/ngày thuộc whitelist giữ số và kiểu; số General hoặc metadata số mà detector yêu cầu che thì từ chối cả tệp. Sửa tệp đã phát hành/mở che thuộc B8; Core/Office/Local/Linux thật chưa kiểm. Đã kiểm bằng Core giả (CoreGia), chỉ DEMO, Cloud tắt.
+
+
 Ngày bắt đầu đối chiếu: 14/11/2026. Chỉ DEMO. Lõi nội bộ từ Mask v2; nguồn cũ giữ nguyên. Handler che/mở che hiện đã có nghiệp vụ qua ngăn; các mô tả stub/kho tệp dưới đây là lịch sử từng lát. Trạng thái và băm mới nhất của lượt sửa nằm tại mục Sửa MASK-2b theo kiểm độc lập ở cuối tài liệu. Đã kiểm bằng Core giả (CoreGia).
 
 ## MASK-B5 — 16/11/2026, Word chỉ RAM

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-B6 | Che Excel giữ format, shared/rich/inline/metadata, map chỉ RAM | Sau B3/B4 và R3…R6; MASK-P4; C-P4-01…05 | Xong mã/kiểm nội bộ / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Một runtime mới; B6 122/122. Full 2923 passed, 4 xfailed cũ, 190 subtests, 0 lỗi/skip; độc lập/diff mã 0, CLI 0/2 thiếu quyền. Nguồn 19/19, kiểm kê 55/55; PR: **chờ lead mở**. |
 | MASK-B5 | Che Word trong whitelist, patch byte giữ format, map chỉ RAM đúng chuỗi | Sau B2/B4 và R3…R6; MASK-P4; C-P4-01…05 | Xong phần mã nội bộ / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Chỉ thêm `tep_word.py` trong bốn runtime được giao; B5 91/91 sau khóa ghi RAM với timer/hủy. CLI chuẩn 0/2 thiếu quyền; kiểm độc lập đạt. Kết quả full cuối, Cần Core và giờ thực tế tại mục B5 cuối sổ; PR: **chờ lead mở**. |
 | MASK-R6 | Mở che văn bản/AI một lần từ map RAM bản cuối, nối R5/R4 và bàn giao đúng quyền | MASK-P4 §2/4/5; sau R3/R4/R5; C-P4-02/05 | Xong phần mã/kiểm R6 / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Đúng bốn runtime; R6 124/124, full 2646 passed, 1 failed kiểm kê ngoài closure, 4 xfailed cũ, 190 subtests, 0 skip. CLI 0/2 thiếu quyền; độc lập lỗi cùng kiểm kê; bản sao chỉ thay kiểm kê đạt; diff mã 0. Đã kiểm bằng Core giả (CoreGia); PR: **chờ lead mở**. Chi tiết/thời gian ở cuối sổ. |
 | MASK-R7 | Admin chỉ metadata, xem tại Core và duyệt CAS cùng ID | MASK-P4 §3–5; sau R2; C-P4-06 | Xong phần adapter/UI giả / Chờ Core — 15/11/2026; chưa đạt nghiệm thu chung | Đúng hai runtime; không bản rõ/lọc tên, không ghi ngăn từ UI hoặc sao/xóa bí mật. Cửa biên nhận/quyền đang chờ Core; đã kiểm bằng Core giả (CoreGia), chưa UI Core thật. PR: **chờ lead mở**; kết quả thật/thời gian và C-P4-06 ở mục R7 cuối sổ. |
@@ -920,3 +921,42 @@ Kiểm riêng B5 cuối **91 passed, 6,35 giây, mã 0**, gồm bốn ca TTL/h�
 **Lệch khỏi phiếu / quyết định tạm đã dùng:** thêm trần kỹ thuật **200.000 nút bảng dò** để ràng buộc RAM của biến thể alias; không đổi API hoặc nghiệp vụ. Để nguyên kỳ vọng test R6 cũ do ngoài danh sách tệp cho sửa, nên chưa đạt tiêu chí full xanh. Chỉ chuẩn hóa LF của fixture gold để đúng SHA đã khóa, không thay gold/nội dung/assertion. Không commit/push.
 
 **Cần Core / Chờ Anh mới phát sinh:** Core chốt hai đường **port ban_giao_cuoi + return handler** và các nợ **C-P4-02/05, C-MS22-01** nêu trên. Cần Anh/lead cho phép sửa duy nhất kỳ vọng **mo_day_du=True → False** trong test R6 cũ rồi chạy lại full suite; lý do là danh sách tệp R6b hiện chỉ cho thêm test mới. Không có câu chọn nghiệp vụ mới.
+
+
+## MASK-B6 — Excel chỉ RAM, 16/11/2026
+
+**Kết luận: Xong mã/kiểm nội bộ B6; chưa đạt nghiệm thu chung vì CLI thiếu quyền và còn cửa Core/tệp hai lớp thuộc B7/B9.** PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); chưa Core/Office/Local/Linux thật, Cloud tắt. Không commit/push. [Báo cáo theo AGENTS §6](BAO-CAO-MASK-B6.md), [lệnh/kết quả thật](KET-QUA-KIEM-MASK-B6.txt).
+
+- Chỉ thêm `goi/e_mask/e_mask/tep_excel.py` trong tối đa bốn runtime được giao. Chuyển có sửa khung B5, dùng nguyên reader B3/writer B4, detector và kho tìm chính xác R2/R3, map/kiểm R5 và handle R4. Không sửa nguồn cũ, Core, SDK, manifest, mã migration, lock hoặc thêm dependency; không gọi/import engine khác từ runtime.
+- Che mọi chuỗi shared/inline/rich text/metadata thuộc profile, mọi ô/hàng/cột ẩn; không ghép tên giữa hai ô độc lập. Shared có một nguồn, patch một lần, kiểm mọi nơi dùng và unused; primitive bổ sung Local cập nhật tất cả ô cùng index. Đọc lại bytes sau patch và so chuỗi/tọa độ/index/style/merge/epoch/lexical và bytes ô số. Giữ markup, kích thước và payload/record nén part bất biến qua B4. Tên sheet cần đổi, hidden/veryHidden sheet, formula/cache/definedNames/links/comments/chart/nhúng/part lạ chặn cả workbook.
+- Ô số General/metadata số có định danh cần che bị chặn; không đổi số thành chuỗi. Kiểu tiền/ngày với format whitelist, số 0 đầu, boolean/error và metadata ngày/số được giữ; không làm tròn hoặc chuyển float. Hai lớp Local còn phải kiểm ngữ cảnh của ô/metadata bất biến. Map Unicode/NFD/Cf/rich run/byte và alias nguyên văn chỉ RAM; mơ hồ alias chặn.
+- Handle R4 ràng buộc mã Core/scope/instance; TTL đề xuất 600 giây, nguyên 60–900, hạn tuyệt đối không trượt retry. Khóa ghi cùng timer/hủy; không tái tạo map sau dọn. Lỗi/hủy/kết thúc/hết hạn/tiêu thụ dọn RAM, không snapshot/ngăn map/tệp tạm/log/stderr/chuyển tiếp. Primitive chỉ trả băm/số đếm, luôn `CHO_LOCAL` và tập vùng kiểm Local rỗng; không upload hoặc có năng lực phát hành tệp trong B6.
+- Trần ZIP/bytes/nút/ô/sheet và 32.767 UTF-16 áp cả chiều ra; vượt từ chối, không cắt. Reader B1/B3/B4 còn bảo thủ 500.000 ký tự khi đọc lại, sớm hơn trần ra 2.000.000; giữ profile và ghi giới hạn, không nới trong closure này. Các biên production/RAM/Office/Local thuộc B10/Core.
+- Nguồn/symbol/quyền/SHA bytes và LF trước/sau ở NGUON và [bản chụp 19 nguồn](SHA-NGUON-MASK-B6-TRUOC.json); 19/19 nguồn giữ nguyên bytes. Kiểm kê gói tự sinh đủ 55 tệp, không thay manifest/mã migration. Gold R3 chỉ trả CRLF về nguyên blob Git LF có SHA đã khóa `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`; không đổi gold, assertion, ngưỡng hoặc thêm skip/xfail.
+- Kiểm nền B3/B4 trước triển khai: **569 passed, 26,84 giây, mã 0**. Bộ B6 cuối: **122 passed, 23,08 giây, mã 0**, không skip/xfail. Lượt đầu test mới lỗi encoding fixture và fixture tên sheet/khai báo số; đã sửa dữ liệu thử, không hạ cửa quyền/Local/quy tắc hoặc sửa test cũ.
+
+### Cần Core — MASK-B6
+
+- **C-P4-01:** Core cấp mã yêu cầu ổn định, xác minh ACL người/module/tài liệu/pháp nhân/DEMO và ghim cùng tiến trình/instance. Adapter CoreGia không chứng minh cửa thật, không dùng mã caller hoặc failover để phục hồi map.
+- **C-P4-02:** sự kiện toàn chuỗi khi Mask rảnh, đồng bộ deadline/lease/hủy/tiêu thụ/bàn giao/ACK; không mở lại sau tiêu thụ. Mất xác nhận dùng ChuaRo, mất RAM phải chạy mới cả chuỗi. B6 chỉ kiểm lifecycle/tiêu thụ R4, mở Excel thực tế thuộc B8.
+- **C-P4-03:** tìm chính xác bí mật/null+cờ, duy nhất/CAS/lô/tạo tên/chống lặp và quota chống dò đoán/không log truy vấn. Không giải mã danh mục; nợ chất lượng/chi phí R3 còn mở, tên mới chưa đủ bảo đảm tiếp tục chặn.
+- **C-P4-04:** B7/AI-9/Core điều phối Local đủ mọi vùng/đoạn và xác minh nguồn, gồm mọi nơi dùng shared, sheet name/metadata và ngữ cảnh ô số bất biến. Không hồ sơ map/gốc phục hồi; cờ local do caller không làm chứng cứ. B6 không có cổng phát hành và không tự đóng nợ hai lớp.
+- **C-P4-05:** quyền tải/trả đúng người/module; streaming/trần 1 MiB trước cấp phát SDK, 413, budget RAM/CPU/thời gian cả chuỗi; cách ly upload chưa phát hành và ACK. Không dump payload/traceback/map/gốc ra log/stderr/crash hoặc tệp tạm. Chưa Office/Local/Core thật; không có câu chọn nghiệp vụ mới chờ Anh.
+
+
+### MASK-B6 — kết quả chốt theo AGENTS §6
+
+| Lệnh / phép kiểm | Kết quả thật |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1; 0,97 giây**. Hai ví dụ thiếu nguồn ngữ cảnh/quyền Core (`MASK_NGU_CANH_CHUA_XAC_MINH`); giữ cửa chặn, không thay CLI bằng adapter có quyền. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q` | **2923 passed, 4 xfailed cũ, 190 subtests passed, 0 failed, 0 skipped; 441,10 giây; mã 0**. Bốn xfail strict “giới hạn quy tắc, nợ CAO” giữ nguyên. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0; 0,72 giây**, không tham chiếu cấm/tệp biên dịch. |
+| `git diff --check` | **Mã 0**, chỉ cảnh báo checkout CRLF ở VIEC/gold R3; không lỗi khoảng trắng. |
+| Bộ B6 / nền B3+B4 | **122 passed, 23,08 giây, mã 0** / **569 passed, 26,84 giây, mã 0**; không skip/xfail trong hai bộ này. |
+| Provenance / kiểm kê / UTF-8/AST/LF | **19/19 nguồn** giữ nguyên bytes, SHA đích khớp NGUON; **55/55 tệp** đủ bytes/SHA; ba Python mới/fixture **3/3 đạt**, gói **0 bytecode**. |
+
+**Thời gian thực tế:** **04:02:00–04:35:09 ngày 16/11/2026 (UTC+07), 0.55 giờ** tại mốc chốt kiểm/báo cáo; phiếu **6–10 giờ ƯỚC TÍNH**, độ khó `kho`.
+
+**Lệch khỏi phiếu / quyết định tạm:** không vượt phạm vi; chỉ một runtime trong tối đa bốn tệp. Thêm kiểm ô số/metadata số không thể patch thì chặn; không đổi số sang chuỗi. Giữ trần reader chiều đọc lại bảo thủ 500.000 như B3/B4/B5, chưa mở đủ trần ra 2.000.000. Chỉ đưa fixture gold R3 về nguyên LF có SHA đã khóa, không đổi nội dung/gold/test/ngưỡng. `.venv` dùng `--system-site-packages` để dùng pytest/jsonschema sẵn có, SDK 2.2.0 cài offline wheel đúng SHA; không thêm dependency. Bộ bọc log lần đầu chưa chạy lệnh con do Windows cần đường `python.exe`; đã sửa bộ bọc rồi chạy đủ bốn lệnh với chính Python của `.venv`, tham số không đổi.
+
+**Cần Core / Chờ Anh mới phát sinh:** kế thừa **C-P4-01…05** chi tiết ở trên và C-MS22-01 về CLI thiếu quyền; B7/B8/B9/B10 vẫn riêng, không nhận Local/Office/Core thật đạt. Không có câu chọn nghiệp vụ mới chờ Anh. Lead commit/mở PR, **PR: chờ lead mở**.

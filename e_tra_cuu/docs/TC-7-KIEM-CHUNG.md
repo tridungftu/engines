@@ -6,7 +6,9 @@ chứng nhận RLS, tìm lai, OCR/TX, ba tầng hoặc K5/cache thật đã ch�
 
 ## Phạm vi và nhãn
 
-Đúng bốn tệp runtime: `tra_loi.py`, `kiem_chung.py`, `bang_chung.py`, `chay.py`.
+TC-7 ban đầu có bốn tệp runtime: `tra_loi.py`, `kiem_chung.py`, `bang_chung.py`,
+`chay.py`. Vòng sửa theo kiểm độc lập của lead lúc 15:52 ngày 15/11/2026 chỉ
+sửa `kiem_chung.py`, `tra_loi.py`; giữ nguyên `bang_chung.py`, `chay.py`.
 `soan_tra_loi@1` nhận `ho_so_tra_cuu/da_nhan` hoặc `tra_loi_ai` Local khớp
 snapshot `cho_ai`; chỉ trả `ho_so_tra_cuu/da_soan` khi Core ACK upload.
 Tóm tắt khớp kết quả thực; không lưu ngăn/kho/cache thứ hai hay tệp cục bộ.
@@ -50,9 +52,10 @@ Mỗi bằng chứng có đúng các khóa:
 
 - `nguon` là descriptor TC-2 nguyên trạng; `thuc_the` nguyên `{loai,ma,gia_tri}`,
   không bỏ số 0 đầu/đổi hoa thường. Cụm thực thể phải có nguyên vẹn trong câu
-  hỏi và quote; nhãn trường `ten` phải có nguyên cụm trong quote (so chữ hoa
-  thường cho nhãn trường). Core chịu trách nhiệm cấp **quan hệ nghiệp vụ đã
-  xác thực**, không chỉ ghép một con số bất kỳ ở cùng tệp.
+  hỏi và quote. Thực thể và nhãn trường phải liên kết với **đúng vị trí giá
+  trị**, theo quy tắc đoạn bên dưới. Core chịu trách nhiệm cấp **quan hệ
+  nghiệp vụ đã xác thực**; engine vẫn kiểm liên kết trong quote, không tin
+  riêng profile hoặc sự xuất hiện của tên/nhãn ở đâu đó trong cùng câu.
 - `vi_tri_gia_tri=[a,z]` là offset Unicode tuyệt đối trong văn bản nguồn,
   `[bat_dau,ket_thuc)` là quote liên tục; lát ở vị trí giá trị phải khớp toàn
   bộ `hien_thi`, có ranh giới, không nhận `5` trong `5.000.000`.
@@ -64,10 +67,63 @@ Mỗi bằng chứng có đúng các khóa:
 - Hiệu lực xét boolean và ngày bắt đầu/kết thúc theo thời điểm Core; công
   bố/duyệt ở tương lai không thành dữ liệu tầng 1 hợp lệ. Mốc duyệt nullable
   chỉ cho nguồn chưa duyệt; tầng 1 thiếu mốc duyệt thì không đủ.
+- `tu_choi` ở mọi tầng: loại khỏi căn cứ và mâu thuẫn, lý do
+  `BANG_CHUNG_BI_TU_CHOI`, không có căn cứ/nhãn null. Cả ba tầng đều xét mốc
+  duyệt, độ tin cậy và ngưỡng đã đo/được duyệt. Tầng 1 chưa đủ thì từ chối;
+  tầng 2/3 có quan hệ đúng nhưng chờ duyệt, dưới ngưỡng hoặc thiếu ngưỡng chỉ
+  được Vàng/cần duyệt, giữ `CHUA_DUYET`, `DUOI_NGUONG_TIN_CAY`,
+  `THIEU_NGUONG_DA_DO` trong `ly_do` và câu Việt trong `canh_bao`. Những lý
+  do này không được miễn kiểm quan hệ/giá trị/nguồn hoặc phản hồi AI.
 - Profile/nguồn sai metadata hoặc băm trả `TC_SAI_NGUON`; Cloud trả
   `TC_CHI_LOCAL`; khuôn phản hồi AI sai trả `TC_AI_SAI_KHUON`. Quan hệ/trích
   dẫn/vị trí/giá trị không đạt trả `khong_thay_can_cu`, xóa toàn bộ khẳng định
   khỏi **câu trả lời**, không giữ lời bịa dưới nhãn Vàng.
+
+## Bổ sung sau kiểm độc lập KHÔNG ĐẠT — 15/11/2026
+
+1. **Thực thể gần nhất trước giá trị.** Chỉ xét đoạn cùng dòng/mệnh đề/ô:
+   LF/CRLF, ngắt trang, TAB, `|`, chấm câu ngoài số, `;`, `!`, `?`, và các
+   liên từ phân tách đã khai là ranh giới. Dấu phẩy cho phép nhiều trường
+   của cùng thực thể; thực thể khác xuất hiện trước giá trị sẽ chặn kế thừa.
+   Không dùng thực thể nằm sau giá trị. Cả mã dạng ghép và đầu mục thực thể
+   khác trong quote đều chặn, kể cả không thuộc tập thực thể của câu hỏi.
+   Tầng 2/3 còn giới hạn theo map khối/ô TC-3 đã kiểm, kể cả nguồn ghép ô chỉ
+   bằng dấu cách. Không kế thừa từ ô bên cạnh hoặc tự suy từ tiêu đề bảng.
+2. **Nhãn trường gần nhất trước giá trị.** Nhận nhãn Core cấp và bộ cụm từ
+   giới hạn trong `_NHAN_TRUONG`: ngày ký, hiệu lực, hạn trả, giải ngân,
+   ngày chung, giá trị/số tiền, lãi suất, số lượng, diện tích, khối lượng.
+   Nhãn cạnh tranh vẫn được xét dù câu hỏi chỉ yêu cầu một trường. Cụm dài
+   như `hạn trả ngày` thắng `ngày` nằm bên trong. Hai trường cùng nhãn ở
+   cùng vị trí là mơ hồ, không chọn theo thứ tự mảng. Từ nối chỉ cho nhóm
+   cố định (`là`, `bằng`, `ở mức` và dấu phân cách); nhãn/từ lạ giữa quan hệ
+   và giá trị không được suy diễn. Không lấy nhãn của giá trị trước cho thực
+   thể mới; nhãn xuất hiện sau giá trị không chứng minh được trường.
+3. **Duyệt/độ tin cậy mọi tầng.** Phân biệt lý do cần duyệt ở tầng 2/3 với
+   lý do chặn trả lời; bằng chứng bị từ chối, sai quan hệ, hết hiệu lực hoặc
+   AI không khớp luôn làm kết quả không có căn cứ. Ngưỡng so bằng Decimal;
+   điểm bằng ngưỡng vẫn đủ. Không có nhánh nâng bằng chứng chờ duyệt thành
+   Xanh hoặc tự duyệt K5.
+4. **Không bỏ đơn vị/quy mô.** Hậu tố `%`, `‰`, tiền tệ, nghìn/ngàn/triệu/
+   tỷ/tỉ/đồng, đơn vị đo (kể cả m²/m³), khoảng trắng Unicode và đơn vị trong
+   ngoặc được xét ngoài span giá trị. Số kiểu `so` chưa khai `don_vi` mà
+   ngay sau có từ cũng bị từ chối, kể cả đơn vị chưa nằm trong danh sách.
+   Chỉ giữ `triệu` mà bỏ `VND`, hoặc cắt quote ngay trước hậu tố, không đạt.
+   Quote của số/tiền phải có ngữ cảnh sau giá trị; dừng đúng cuối giá trị
+   chưa chứng minh đã lấy đủ cụm nên bị từ chối. Tầng 2/3 kiểm thêm trên
+   toàn văn thực. `so_chuan` nhận đơn vị khai rõ viết sát số hoặc cách một
+   dấu trắng nếu khớp nguồn từng ký tự; không quy đổi quy mô/tiền tệ.
+
+Vi phạm/mơ hồ ở (1), (2), (4) trả `QUAN_HE_GIA_TRI_KHONG_DAT`,
+`khong_thay_can_cu`, nhãn null, không giữ số trong câu trả lời. Đây là ngữ
+pháp hạn chế để từ chối khi chưa chứng minh được, chưa là bộ phân giải
+ngôn ngữ tự nhiên; nguồn ngoài ngữ pháp cần binding/cụm từ được review.
+
+Test hồi quy riêng: `tests/test_kiem_chung_tc_7.py`, tham số hóa tầng 1/2/3,
+hai dòng/hai thực thể trong một ô, đổi thứ tự thực thể/giá trị, ô liền nhau,
+ba ngày và nhãn chỉ một trường, trạng thái duyệt/ngưỡng, đơn vị bị bỏ và
+quote bị cắt. Có ca đúng giữ Xanh/Vàng, số trần thực sự không có đơn vị,
+đơn vị khai tường minh và điểm bằng ngưỡng. Số kiểm/thời gian vòng sửa tại
+`VIEC.md`; toàn bộ **đã kiểm bằng Core giả (CoreGia)**, 0 Cloud/model thật.
 
 ## Mẫu diễn đạt và giới hạn có chủ ý
 

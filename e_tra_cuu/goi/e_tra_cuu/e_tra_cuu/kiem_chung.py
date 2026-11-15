@@ -19,6 +19,36 @@ _KHOA_BC = {"nguon", "thuc_the", "truong", "kieu", "gia_tri", "don_vi", "quy_tac
             "cau", "bat_dau", "ket_thuc", "vi_tri_gia_tri", "vi_tri", "trang_thai_duyet", "con_hieu_luc",
             "do_tin_cay", "moc_cong_bo", "moc_duyet", "hieu_luc_tu", "hieu_luc_den"}
 
+# Nhãn cạnh tranh vẫn phải nhận ra khi Core chỉ hỏi một trường. Đây là ngữ
+# pháp giới hạn, không là bộ phân giải văn xuôi hoặc danh mục nghiệp vụ mới.
+_NHAN_TRUONG = {
+    "ngay_ky": ("ký ngày", "ngày ký", "ký kết ngày", "ngày ký kết"),
+    "ngay_hieu_luc": ("hiệu lực ngày", "ngày hiệu lực", "có hiệu lực từ", "hiệu lực từ"),
+    "han_tra": ("hạn trả ngày", "ngày hạn trả", "hạn trả", "ngày đến hạn", "đến hạn ngày", "đến hạn"),
+    "ngay_giai_ngan": ("giải ngân ngày", "ngày giải ngân"),
+    "ngay": ("ngày",),
+    "gia_tri": ("giá trị", "số tiền"),
+    "lai_suat": ("lãi suất",),
+    "so_luong": ("số lượng",),
+    "dien_tich": ("diện tích",),
+    "khoi_luong": ("khối lượng",),
+}
+_NGAT_DOAN = re.compile(r"[\r\n\f\t|;!?]|(?<!\d)\.|\.(?!\d)|\b(?:nhưng|còn|trong khi)\b", re.I)
+_MA_THUC_THE = re.compile(r"(?<![\w-])(?=[\w-]*[A-Za-z])[A-Za-z0-9]+(?:[-_][A-Za-z0-9]+)+(?![\w-])")
+_MO_THUC_THE = re.compile(r"\b(?:khoản vay|hợp đồng|dự án|công ty|đối tượng|tài sản)[ \t]+([^\s,;:|]+)", re.I)
+_DON_VI = re.compile(
+    r"[ \t\u00a0\u202f]*(?:[\[(][ \t\u00a0\u202f]*)?(?:[%‰°]|(?:phần trăm|phần nghìn|nghìn|ngàn|triệu|tỷ|tỉ|đồng|"
+    r"VND|USD|EUR|GBP|JPY|CNY|m[23²³]|km[23²³]?|cm[23²³]?|mm[23²³]?|mét|m|ha|"
+    r"tấn|tạ|yến|kg|mg|g|lít|lit|l)(?!\w))", re.I)
+
+# Tầng 2/3 giữ căn cứ trích được để duyệt, nhưng luôn Vàng và hiện lý do.
+# Các lý do này vẫn chặn đường tầng 1; không chứa lỗi quan hệ/giá trị.
+LY_DO_CAN_DUYET = {
+    "CHUA_DUYET": "Bằng chứng chưa được duyệt tại thời điểm hỏi; Anh cần kiểm tra và duyệt nguồn.",
+    "THIEU_NGUONG_DA_DO": "Chưa có ngưỡng tin cậy đã đo và được duyệt; Anh cần kiểm tra bằng chứng.",
+    "DUOI_NGUONG_TIN_CAY": "Độ tin cậy của bằng chứng thấp hơn ngưỡng đã duyệt; Anh cần kiểm tra lại.",
+}
+
 
 def _bang(a, b):
     return json_chuan(a) == json_chuan(b)
@@ -72,6 +102,12 @@ def hien_thi(b):
             return v
         return f"{d.day:02}/{d.month:02}/{d.year:04}" if q == "ngay_viet" else None
     if k == "so" and q == "so_chuan" and _decimal(v) is not None:
+        if dv is not None and (type(dv) is not str or not dv.strip()):
+            return None
+        # Hai cách viết đơn vị sát số/cách một dấu trắng, vẫn phải khớp nguồn
+        # nguyên cụm; không tự đổi tỷ lệ hay bỏ đơn vị khỏi giá trị hiển thị.
+        if dv is not None and b["hien_thi"] == str(v) + dv:
+            return str(v) + dv
         return str(v) + (" " + dv if dv is not None else "")
     if k == "van_ban" and q == "nguyen_van" and type(v) is str and v.strip() and dv is None:
         return v
@@ -91,16 +127,108 @@ def _ngay(v):
         loi("TC_SAI_NGUON")
 
 
-def _gia_tri_nguyen_cum(b, chu):
+def _gia_tri_nguyen_cum(b, chu, *, bat_dau=None):
     a, z = b["vi_tri_gia_tri"]
     if type(a) is not int or type(z) is not int or not b["bat_dau"] <= a < z <= b["ket_thuc"]:
         return False
-    x, y = a - b["bat_dau"], z - b["bat_dau"]
+    goc = b["bat_dau"] if bat_dau is None else bat_dau
+    x, y = a - goc, z - goc
     if chu[x:y] != b["hien_thi"]:
+        return False
+    if bat_dau is None and not chu[y:].strip() and b["kieu"] in ("so", "so_tien"):
+        # Quote dừng đúng ở số/đơn vị không chứng minh được đã lấy hết cụm.
+        # Đặc biệt tầng 1 không mở lại gốc để tìm đơn vị bị cắt khỏi quote.
+        return False
+    if (b["kieu"] == "so" and b["don_vi"] is None
+            and re.match(r"[ \t\u00a0\u202f]*[^\W\d_]", chu[y:])):
+        # Từ ngay sau số có thể là đơn vị ngoài danh sách đã biết (kWh,
+        # lượt...). Không suy nó là văn xuôi để cho phép số trần.
         return False
     # Không nhận '5' trong '15'/'5.000.000', mã 007 trong 0007, hoặc nửa ngày.
     cam = r"[\w.,/+%-]"
-    return not ((x and re.match(cam, chu[x - 1])) or re.match(r"[\w/+-]|[.,][0-9]", chu[y:]))
+    return not ((x and re.match(cam, chu[x - 1])) or re.match(r"[\w/+-]|[.,][0-9]", chu[y:])
+                or re.match(r"[ \t\u00a0\u202f]*/", chu[y:]) or _DON_VI.match(chu[y:]))
+
+
+def _cac_cum(chu, cum, *, flags=0):
+    return re.finditer(r"(?<![\w-])" + re.escape(cum) + r"(?![\w-])", chu, flags)
+
+
+def _khong_long(cac):
+    """Giữ cụm dài: 'hạn trả ngày' không bị nhãn 'ngày' bên trong thay thế."""
+    giu, dau, cuoi = [], -1, -1
+    for x in sorted(set(cac), key=lambda x: (x[0], -x[1], x[2])):
+        if x[1] > cuoi:
+            giu.append(x)
+            dau, cuoi = x[:2]
+        elif x[:2] == (dau, cuoi):
+            giu.append(x)  # Cùng vị trí nhưng khác chủ: giữ để từ chối mơ hồ.
+    return giu
+
+
+def _quan_he_gia_tri(b, f, thuc_the, fields, *, vung=None):
+    """Giá trị chỉ thuộc thực thể/nhãn gần nhất đứng trước trong cùng vùng.
+
+    Không kế thừa qua dòng/mệnh đề/ô; không dùng thực thể hoặc nhãn sau giá
+    trị. Mã/đầu mục thực thể lạ cũng chặn kế thừa, dù không có trong câu hỏi.
+    """
+    a, z = b["vi_tri_gia_tri"]
+    if sum(e["gia_tri"] == b["thuc_the"]["gia_tri"] for e in thuc_the) != 1:
+        return False
+    dau, cuoi = b["bat_dau"], b["ket_thuc"]
+    if vung is not None:
+        dau, cuoi = max(dau, vung[0]), min(cuoi, vung[1])
+    if not dau <= a < z <= cuoi:
+        return False
+    chu = b["cau"][dau - b["bat_dau"]:cuoi - b["bat_dau"]]
+    x = a - dau
+    ngat = list(_NGAT_DOAN.finditer(chu[:x]))
+    truoc = chu[ngat[-1].end() if ngat else 0:x]
+    cac = [(m.start(), m.end(), e["gia_tri"]) for e in thuc_the for m in _cac_cum(truoc, e["gia_tri"])]
+    cac += [(m.start(), m.end(), m.group()) for m in _MA_THUC_THE.finditer(truoc)]
+    cac += [(m.start(1), m.end(1), m.group(1)) for m in _MO_THUC_THE.finditer(truoc)]
+    cac = _khong_long(cac)
+    if not cac:
+        return False
+    e = max(cac, key=lambda x: (x[1], -x[0]))
+    if e[2] != b["thuc_the"]["gia_tri"]:
+        return False
+    nhan = [(m.start(), m.end(), ma) for ma, cac_ten in _NHAN_TRUONG.items()
+            for ten in cac_ten for m in _cac_cum(truoc, ten, flags=re.I)]
+    # Nhãn do Core cấp được ưu tiên khi chính cụm đó trùng một tên có sẵn.
+    # Hai trường Core cùng nhãn/vị trí vẫn mơ hồ, không lấy trường cuối mảng.
+    nhan_core = [(m.start(), m.end(), field["ma"]) for field in fields
+                 for m in _cac_cum(truoc, field["ten"], flags=re.I)]
+    vi_tri_core = {n[:2] for n in nhan_core}
+    nhan = [n for n in nhan if n[:2] not in vi_tri_core] + nhan_core
+    nhan = _khong_long(nhan)
+    if not nhan:
+        return False
+    n = max(nhan, key=lambda x: (x[1], -x[0]))
+    if {t[2] for t in nhan if t[:2] == n[:2]} != {f["ma"]}:
+        return False
+    # Từ khóa lạ giữa nhãn/thực thể và giá trị không được suy là từ nối.
+    if not re.fullmatch(r"[ \t:=(]*(?:(?:là|bằng|ở mức)[ \t:=(]*)?", truoc[max(n[1], e[1]):], re.I):
+        return False
+    # Cho 'Giá trị khoản vay A: ...'; không lấy nhãn ở giá trị trước của B
+    # cho A khi A không có nhãn riêng. Mơ hồ thì từ chối.
+    if n[1] <= e[0] and (re.search(r"[0-9,]", truoc[n[1]:e[0]])
+                         or any(n[1] <= t[0] < e[0] for t in cac)):
+        return False
+    return True
+
+
+def _vung_gia_tri(vung, b):
+    a, z = b["vi_tri_gia_tri"]
+    for r in vung:
+        if r["bat_dau"] <= a < z <= r["ket_thuc"]:
+            if r["bang"] is None:
+                return r["bat_dau"], r["ket_thuc"]
+            for hang in r["bang"]["nhom_hang"]:
+                for o in hang["o"]:
+                    if o["bat_dau"] <= a < z <= o["ket_thuc"]:
+                        return o["bat_dau"], o["ket_thuc"]
+    return a, a  # Thiếu map ô/khối liên tục không chứng minh được quan hệ.
 
 
 def _dieu(vb, a):
@@ -198,8 +326,7 @@ def kiem_bang_chung(s, doc, cap, viec):
                       (f["don_vi"] is None and b["kieu"] in ("so_tien", "so")))
         if (b["kieu"] != f["kieu"] or not don_vi_dat or hien_thi(b) != b["hien_thi"]
                 or not _gia_tri_nguyen_cum(b, b["cau"])
-                or not _co_cum(b["cau"], b["thuc_the"]["gia_tri"])
-                or not _co_cum(b["cau"], f["ten"], flags=re.I)):
+                or not _quan_he_gia_tri(b, f, d["thuc_the"], fields)):
             ly_do.append("QUAN_HE_GIA_TRI_KHONG_DAT")
             continue
         n = b["nguon"]
@@ -219,6 +346,11 @@ def kiem_bang_chung(s, doc, cap, viec):
                 continue
             if n["ma_nguon"] not in maps:
                 maps[n["ma_nguon"]] = lap_ban_do(vb, viec.kiem_huy)
+            if (not _gia_tri_nguyen_cum(b, vb["van_ban"], bat_dau=0)
+                    or not _quan_he_gia_tri(b, f, d["thuc_the"], fields,
+                                            vung=_vung_gia_tri(maps[n["ma_nguon"]], b))):
+                ly_do.append("QUAN_HE_GIA_TRI_KHONG_DAT")
+                continue
             vt, _ = dinh_vi(maps[n["ma_nguon"]], [{"nguon_bat_dau": b["bat_dau"],
                           "nguon_ket_thuc": b["ket_thuc"], "vai_tro": "noi_dung"}], viec.kiem_huy)
             if not _bang(b["vi_tri"], {**vt, "dieu": _dieu(vb["van_ban"], b["bat_dau"])}):
@@ -229,15 +361,16 @@ def kiem_bang_chung(s, doc, cap, viec):
         if het_hieu_luc:
             ly_do.append("HET_HIEU_LUC")
             continue  # Bản hết hiệu lực không là một phía mâu thuẫn tại thời điểm hỏi.
-        if d["tang"] == 1:
-            if b["trang_thai_duyet"] != "da_duyet" or b["moc_duyet"] is None:
-                ly_do.append("CHUA_DUYET")
-            elif datetime.fromisoformat(b["moc_duyet"]) > now:
-                ly_do.append("CHUA_DUYET")
-            if not da_do:
-                ly_do.append("THIEU_NGUONG_DA_DO")
-            elif Decimal(str(b["do_tin_cay"])) < Decimal(str(nguong["gia_tri"])):
-                ly_do.append("DUOI_NGUONG_TIN_CAY")
+        if b["trang_thai_duyet"] == "tu_choi":
+            ly_do.append("BANG_CHUNG_BI_TU_CHOI")
+            continue
+        if (b["trang_thai_duyet"] != "da_duyet" or b["moc_duyet"] is None
+                or datetime.fromisoformat(b["moc_duyet"]) > now):
+            ly_do.append("CHUA_DUYET")
+        if not da_do:
+            ly_do.append("THIEU_NGUONG_DA_DO")
+        elif Decimal(str(b["do_tin_cay"])) < Decimal(str(nguong["gia_tri"])):
+            ly_do.append("DUOI_NGUONG_TIN_CAY")
         bang.append(deepcopy(b))
     for e in d["thuc_the"]:
         for f in fields:

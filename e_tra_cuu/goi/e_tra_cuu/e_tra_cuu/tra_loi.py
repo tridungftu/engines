@@ -6,7 +6,7 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
 from .bang_chung import TOM_TAT, doc_ho_so
 from .cau_hoi import _THOI_DIEM
-from .kiem_chung import cau_tra_loi, co_mau_thuan, kiem_ai, kiem_bang_chung
+from .kiem_chung import LY_DO_CAN_DUYET, cau_tra_loi, co_mau_thuan, kiem_ai, kiem_bang_chung
 from .kiem_dau_vao import bam, json_chuan, loi
 
 
@@ -47,10 +47,11 @@ def _soan_tra_loi(viec, cua, phien_ban, kiem_cau_hinh):
         loi("TC_SAI_GIAI_DOAN")
     if a is not None and not kiem_ai(a, s, bang, profile, viec):
         ly_do.append("KHANG_DINH_AI_KHONG_DAT")
-    dat = bool(bang) and not ly_do
+    ly_do_chan = [ma for ma in ly_do if d["tang"] == 1 or ma not in LY_DO_CAN_DUYET]
+    dat = bool(bang) and not ly_do_chan
     mau_thuan = co_mau_thuan(bang)
     can_duyet = mau_thuan or (dat and (d["tang"] > 1 or d["co_van_ban_moi_cho_duyet"]))
-    canh_bao = []
+    canh_bao = [cau for ma, cau in LY_DO_CAN_DUYET.items() if ma in ly_do]
     if d["co_van_ban_moi_cho_duyet"]:
         canh_bao.append("Có văn bản mới chờ duyệt; Anh cần kiểm tra bản cập nhật.")
     if mau_thuan:

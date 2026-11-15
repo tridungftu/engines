@@ -11,8 +11,7 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
 GOI = Path(__file__).resolve().parents[1] / 'goi/e_mask'
 sys.path.insert(0, str(GOI))
-from e_mask import kho_tam
-from e_mask.kho_tam import KhoTam
+from ho_tro_luu_tru import kho_tam, KhoTam
 
 BAM = sha256(b'DEMO').hexdigest()
 TEN = 'Công ty DEMO Ánh Dương'
@@ -150,7 +149,7 @@ def test_duong_dan_dung_phieu(tmp_path, monkeypatch):
         assert exc.value.ma == 'MASK_KHO_TAM_LOI'
 
 
-@pytest.mark.parametrize('duong_dan', ['', 'du-lieu-demo-tuong-doi', str(GOI)])
+@pytest.mark.parametrize('duong_dan', ['', 'du-lieu-demo-tuong-doi', str(kho_tam._GOI)])
 def test_khong_ghi_trong_goi_hoac_duong_dan_sai(monkeypatch, duong_dan):
     monkeypatch.setenv('KTT_ENGINE_DU_LIEU', duong_dan)
     with pytest.raises(LoiNghiepVu) as exc:

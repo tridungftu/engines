@@ -1,6 +1,6 @@
-# NGUON — gói XML e_hoa_don HD-0
+# NGUON — gói XML/ZIP/XLSX e_hoa_don
 
-Nguồn nội bộ trong repo; không truy cập nguồn ngoài hoặc tự đặt giấy phép mới. Quyền/nguồn Node của bản cũ không được dùng làm căn cứ công bố ZIP/bảng kê/tải trong gói này. Runtime chỉ stdlib và SDK 2.0.0; không thêm dependency ngoài SDK.
+Nguồn nội bộ trong repo; không truy cập nguồn ngoài hoặc tự đặt giấy phép mới. HD-7 tham chiếu tĩnh nguồn Node theo quyền CD-096 A1 chỉ nội bộ, xem mục HD-7; không nạp Node/portal hoặc suy thành quyền phân phối bên ngoài. Runtime chỉ stdlib và SDK 2.0.0; không thêm dependency ngoài SDK. Các bảng HD-0…HD-6 giữ mốc lịch sử.
 
 | Nguồn tương đối từ gốc repo | Đích tương đối trong gói | Cách chuyển |
 |---|---|---|
@@ -127,3 +127,39 @@ Các bảng hash lịch sử giữ nguyên; bảng HD-6 bên dưới là bytes t
 | `demo/goi-hon-hop-DEMO.zip` | `91106609ac23affecdb2be9592f7a708a0b816700c5370eb234bbc913a5cedc8` | `91106609ac23affecdb2be9592f7a708a0b816700c5370eb234bbc913a5cedc8` |
 | `README.md` | `e672c541977e41c20e6c90b782f6a72deb124ec6f7ad85af16699a66b2df7665` | `e672c541977e41c20e6c90b782f6a72deb124ec6f7ad85af16699a66b2df7665` |
 | `CHANGELOG.md` | `45a2079d3a84af74fdbf1ae0cbf71203082a43d750b9cb303df879780ef633c1` | `91f695b387181154f9d4d8138e039119537975d01039566366bf1cbeab1da845` |
+
+
+## HD-7 — nguồn bảng kê, 15/11/2026
+
+Quyền **CD-096 A1**, theo `e_hoa_don/ma-nguon/NGUON.md`: phần mềm nội bộ, Anh xác nhận 06/11/2026, chỉ dùng nội bộ. Không tự đặt LICENSE mới; không suy thành quyền phân phối bên ngoài. Các nguồn dưới đây chỉ đọc tĩnh trong worktree, không chạy/require Node, không sửa nguồn tham chiếu và không chép vendor/dependency vào runtime.
+
+| Nguồn tương đối gốc repo | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `e_hoa_don/ma-nguon/bang_ke.cjs` | `9e88fa02e0d18ba816bb54a31eac6e79d1c3cc9f6c95d1d08b8ce232c4ea807f` | `99dea0ecf2b991bca7107d2b179078585359a936ac187856bb89563d3cbb9445` |
+| `e_hoa_don/ma-nguon/vendor/config.js` | `35c86b295812793e98dd0ed65b3b34f247b1b67cb318e0e2d7fded0f1a57c3df` | `48cb8cb1b0253cd4a5110f1628150053a0372a00b3503f359a01849281f90b02` |
+| `e_hoa_don/ma-nguon/vendor/build.js` | `6e7b23e937b40740817b94e629647f8080e089cf66f57cca9561ea9a0d9ab614` | `5664548e0f08936e6b15536dc4ec23bd55a04417d6c66ef439362415a16ab3d5` |
+| `e_hoa_don/ma-nguon/NGUON.md` | `f7f4d146d266de773c49d7ef5e47491df9b67a85ccd3a1a9cff2fae13e705007` | `7ea8d95ce00411cad015bd74afa0fae4d34ed7fc33a8aca5265b2ab6879f1c09` |
+
+`bang_ke.cjs`: đối chiếu thứ tự DAU/TONG và quy tắc giữ text/null; `vendor/config.js`: EXCEL_COLUMNS chính là thứ tự buildExcel dùng; `vendor/build.js`: đọc tĩnh để xác nhận cách chọn cột, width và header. `ma-nguon/NGUON.md`: bằng chứng quyền A1 và nguồn lịch sử. SHA thực ở trên đo trên bytes checkout (CRLF); cột LF chỉ đổi CRLF → LF, không chuẩn hóa Unicode. Không dùng hash lịch sử thay bytes hiện tại.
+
+Đối chiếu với phiếu §2.5: sheet `Hoa don` có đúng 17 cột theo thứ tự STT; Thứ tự entry; Tên entry; Băm tệp; Mẫu số; Ký hiệu; Số hóa đơn; Ngày lập; MST bán; MST mua; Tiền trước thuế; Tiền thuế; Tổng thanh toán; Mã tiền tệ; Cần kiểm tra; Cảnh báo; Trùng với thứ tự.
+
+- Cột chung giữ thứ tự tương đối nguồn: `_stt`, `khmshdon`, `khhdon`, `shdon`, `tdlap`, `nbmst`, `nmmst`, `tgtcthue`, `tgtthue`, `tgtttbso`, `dvtte`. DAU/TONG trong bang_ke.cjs xác định phép chiếu; nguồn buildExcel lấy thứ tự từ EXCEL_COLUMNS trong config.js.
+- Bỏ cột `nbten`, `nmten`, `nmcccd`, `tthai`: không có dữ liệu tương ứng trong strict allowlist; không tự bịa tên/CCCD/trạng thái thuế. Đổi nhãn tiền trước thuế để phản ánh TgTCThue gồm cả phần không chịu thuế.
+- Cột mới theo thiết kế: Thứ tự entry, Tên entry, Băm tệp trước mẫu số; Cần kiểm tra, Cảnh báo, Trùng với thứ tự sau currency. Không thay trạng thái đọc bằng dấu trùng.
+- Sheet mới `Kiem ke tep` gồm mọi entry, cả thư mục, lỗi, chưa hỗ trợ và trùng, theo ordinal nguồn; khối thông tin đầu giữ đếm/băm JSON và XML/ZIP/phiên bản/nguồn/da_doc_het và giới hạn ý nghĩa nghiệp vụ. Hai tên sheet cố định.
+- Khác nguồn cũ theo quyết định lead: Python stdlib OOXML, RAM; inline string và text `@` cho mọi ô, header có style/freeze, width cố định. Không Number/float/round/SUM, hyperlink hay macro. Tiền ngoài miền 18/6 lấy exact_text đã kiểm trong JSON kèm cảnh báo; currency thiếu/sai/mơ hồ thì tiền trống. Không parse XML lại, không đổi tổng nguồn.
+
+Ba runtime HD-7: `e_hoa_don/chay.py` đăng ký handler; `e_hoa_don/bang_ke.py` kiểm schema JSON nội bộ + binding/đếm/phiên bản/băm, tái dựng phần DTO để dùng lại chieu_truong, tạo bảng; `e_hoa_don/xlsx_toi_thieu.py` tự viết OOXML bằng zipfile, XML escape và ST_Xstring bảo toàn control/literal _xHHHH_. Không có dependency mới; SDK 2.0.0 + Python stdlib.
+
+Pytest có oracle cột/giá trị literal độc lập, đọc lại mọi XML và quan hệ OOXML bằng zipfile; test đối chiếu tĩnh nguồn ở trên. Đây là đã kiểm bằng Core giả (CoreGia); chưa kiểm Excel app/Core thật. Chạy thử SDK vẫn chỉ phủ 3 XML + 1 ZIP: SDK 2.0.0 chưa tạo fixture tệp JSON lồng trong truong, XLSX được kiểm bằng CoreGia.them_tep và kết quả bước đọc thật trong pytest, không ID giả và không sửa SDK. Cần Core bổ sung fixture/chuỗi Chạy thử chung.
+
+
+SHA triển khai HD-7 đo trên bytes thực tại bàn giao, không phải băm phát hành toàn gói:
+
+| Tệp trong gói | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---|---|
+| `e_hoa_don/chay.py` | `f12dc1afbb78b24888590080788fc9ea23d5bf6f3b781d9b1f098650c9896610` | `15b95ec911ea65dd63ce053a1aed6a495fe4b7edd11ded2602d412532abb815e` |
+| `e_hoa_don/bang_ke.py` | `93407052b3ff30d089903889548291ef0109e20184381c8d45df494b71a8c5dd` | `93407052b3ff30d089903889548291ef0109e20184381c8d45df494b71a8c5dd` |
+| `e_hoa_don/xlsx_toi_thieu.py` | `ad6a6c8e89d73e5e994c4f21066c7ee76640b261eaf253dc82a69cf1337fa46d` | `ad6a6c8e89d73e5e994c4f21066c7ee76640b261eaf253dc82a69cf1337fa46d` |
+| `engine.json` | `f269a40b342df76456e5a5cab8e726afefaec9bdf490594fb56c3e62499d9b44` | `726356b63682629eac6361afbd600461f6c1079d6d46bb38ccac3827c8ef6858` |

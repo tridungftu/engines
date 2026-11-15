@@ -13,8 +13,8 @@ from uuid import uuid4
 from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu
 
 from .abbyy import BackendABBYY, LoiABBYYChuaNhan, LoiABBYYTuChoi
-from .kho_tam import KhoTam
-from .luot_abbyy import DA_CHOT, DANG_DO, NhatKyLuot, khoa_nhat_ky
+from .ngan import NganXungDot
+from .luot_abbyy import DA_CHOT, DANG_DO, NhatKyLuot, tim_luot
 from .lop_chu import KetQuaLopChu, LoiLopChu, doc_lop_chu
 from .nhat_ky import cho_nguon, ghi_nguon, het_cho
 from . import tesseract
@@ -38,9 +38,89 @@ class SoHanMuc:
     hết hạn chỗ giữ còn dở: OCR-4 sẽ đối chiếu sau gián đoạn tiến trình.
     """
 
-    def __init__(self, kho=None, *, dong_ho=None):
-        self.kho = kho if kho is not None else KhoTam()
+    def __init__(self, ngan, *, dong_ho=None):
+        self.ngan = ngan
         self.dong_ho = dong_ho or time.time
+
+    def _doc(self):
+        # Đọc mốc CAS TRƯỚC các hàng; mọi thay đổi sổ đều tăng mốc này.
+        # Nhờ vậy cả hai việc nằm hai bên nửa đêm cũng không giữ vượt trần.
+        moc = self.ngan.doc("trang_thai_engine", {"ma": "han_muc"})
+        hang, tiep = {}, None
+        while True:
+            trang = self.ngan.tim("han_muc_ngay", loc={}, gioi_han=500, tiep=tiep)
+            for b in trang.danh_sach:
+                hang[b.gia_tri["ngay"]] = b
+            tiep = trang.tiep
+            if tiep is None:
+                break
+        so = {"da_nhan": {}, "dang_giu": {}}
+        for ngay, b in hang.items():
+            if (set(b.gia_tri) != {"ngay", "da_nhan", "dang_giu"}
+                    or type(b.gia_tri["dang_giu"]) is not dict
+                    or set(so["dang_giu"]) & set(b.gia_tri["dang_giu"])):
+                raise LoiNghiepVu("SO_HAN_MUC_CAN_KIEM_TRA", "Sổ hạn mức ABBYY cần được đối chiếu lại.")
+            so["da_nhan"][ngay] = b.gia_tri["da_nhan"]
+            so["dang_giu"].update(b.gia_tri["dang_giu"])
+        return (moc, hang), self._doc_so(so)
+
+    def _ghi(self, lo, anh, so):
+        moc, hang = anh
+        luc = int(self.dong_ho())
+        ngay_nay = datetime.fromtimestamp(luc, timezone.utc).date().isoformat()
+        # Dọn dần tối đa 50 ngày/lô, chừa chỗ cho lệnh lượt, sổ và CAS
+        # dưới trần 100 lệnh. Ngày biên còn trong cửa sổ không bị xóa.
+        don = set(sorted(ngay for ngay in hang
+                         if int(datetime.fromisoformat(ngay).replace(tzinfo=timezone.utc).timestamp())
+                         + 86400 <= luc - CUA_SO_GIAY)[:50])
+        dang_giu = {}
+        for ngay, b in hang.items():
+            giu = {ma: n for ma, n in b.gia_tri["dang_giu"].items() if ma in so["dang_giu"]}
+            if giu and ngay not in don:
+                dang_giu[ngay] = giu
+        da_co = {ma for giu in dang_giu.values() for ma in giu}
+        for ma, n in so["dang_giu"].items():
+            if ma not in da_co:
+                dang_giu.setdefault(ngay_nay, {})[ma] = n
+        for ngay in set(hang) | set(so["da_nhan"]) | set(dang_giu):
+            gia_tri = {"ngay": ngay, "da_nhan": so["da_nhan"].get(ngay, {}),
+                       "dang_giu": dang_giu.get(ngay, {})}
+            cu = hang.get(ngay)
+            if cu is not None:
+                if ngay in don:
+                    # Chỗ giữ còn dở đã chuyển sang ngày nay trong cùng lô;
+                    # chỉ xóa hàng ngày, không hoàn trang hoặc xóa lượt.
+                    lo.xoa("han_muc_ngay", {"ngay": ngay}, row_version=cu.row_version)
+                    continue
+                cu_hieu_luc = self._doc_so({"da_nhan": {ngay: cu.gia_tri["da_nhan"]},
+                                          "dang_giu": cu.gia_tri["dang_giu"]})
+                if (gia_tri["da_nhan"] == cu_hieu_luc["da_nhan"].get(ngay, {})
+                        and gia_tri["dang_giu"] == cu.gia_tri["dang_giu"]):
+                    continue
+            if not gia_tri["da_nhan"] and not gia_tri["dang_giu"]:
+                if cu is not None:
+                    lo.xoa("han_muc_ngay", {"ngay": ngay}, row_version=cu.row_version)
+            elif cu is None:
+                lo.them("han_muc_ngay", {"ngay": ngay}, gia_tri)
+            else:
+                lo.sua("han_muc_ngay", {"ngay": ngay}, gia_tri, row_version=cu.row_version)
+        if moc is None:
+            lo.them("trang_thai_engine", {"ma": "han_muc"}, {"lan": 1})
+        else:
+            lo.sua("trang_thai_engine", {"ma": "han_muc"}, {"lan": moc.gia_tri["lan"] + 1},
+                   row_version=moc.row_version)
+
+    def _cap_nhat(self, sua):
+        for _ in range(12):
+            anh, so = self._doc()
+            so = sua(so)
+            try:
+                with self.ngan.lo() as lo:
+                    self._ghi(lo, anh, so)
+                return
+            except NganXungDot:
+                continue
+        raise LoiNghiepVu("NGAN_XUNG_DOT", "Hạn mức vừa thay đổi. Hãy thử lại.", thu_lai_duoc=True)
 
     def _doc_so(self, cu):
         if cu is None:
@@ -75,7 +155,7 @@ class SoHanMuc:
         return sum(sum(giay.values()) for giay in so["da_nhan"].values())
 
     def da_dung(self):
-        return self._tong(self._doc_so(self.kho.doc(KHOA_HAN_MUC)))
+        return self._tong(self._doc()[1])
 
     def giu(self, so_trang, han_muc):
         if type(so_trang) is not int or not 1 <= so_trang <= 60 or type(han_muc) is not int or not 0 <= han_muc <= 5000:
@@ -89,7 +169,7 @@ class SoHanMuc:
             so["dang_giu"][ma] = so_trang
             return so
 
-        self.kho.cap_nhat(KHOA_HAN_MUC, sua)
+        self._cap_nhat(sua)
         return ma
 
     def ghi_nhan(self, ma):
@@ -105,7 +185,7 @@ class SoHanMuc:
             giay[khoa] = giay.get(khoa, 0) + so_trang
             return so
 
-        self.kho.cap_nhat(KHOA_HAN_MUC, sua)
+        self._cap_nhat(sua)
 
     def bo_giu(self, ma):
         def sua(cu):
@@ -113,7 +193,7 @@ class SoHanMuc:
             so["dang_giu"].pop(ma, None)
             return so
 
-        self.kho.cap_nhat(KHOA_HAN_MUC, sua)
+        self._cap_nhat(sua)
 
 
 @dataclass
@@ -123,21 +203,22 @@ class KetQuaChonNguon:
     ly_do_chuyen_nguon: str | None = None
 
 
-def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh):
+def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh, ngan):
     nguon = viec.tham_so.get("nguon", "tu_dong")
     bam = "sha256:" + sha256(raw).hexdigest()
     # Lựa chọn nguồn mới không được bỏ qua lượt ABBYY còn dở. Khi không
     # có lượt dở, chi_tesseract vẫn bỏ backend và sổ hạn mức ABBYY.
     cu = None
     if nguon == "chi_tesseract":
-        cu = KhoTam().doc(khoa_nhat_ky(viec.ngu_canh.get("phap_nhan_id"), bam))
+        ban_ghi = tim_luot(ngan, viec.ngu_canh.get("phap_nhan_id"), bam)
+        cu = None if ban_ghi is None else ban_ghi.gia_tri
     if nguon == "chi_tesseract" and (cu is None or (
             type(cu) is dict and isinstance(cu.get("trang_thai"), str) and cu["trang_thai"] in DA_CHOT)):
         ghi_nguon("tesseract")
         return KetQuaChonNguon(
             tesseract.doc_tesseract(raw, mime, cau_hinh.get("tesseract", {}), viec=viec), "tesseract"
         )
-    so = SoHanMuc()
+    so = SoHanMuc(ngan)
     nhat_ky = NhatKyLuot(so, viec.ngu_canh.get("phap_nhan_id"), bam, so_trang)
     luot = nhat_ky.doc()
     doc_lai = luot is not None and luot["trang_thai"] in DANG_DO
@@ -166,28 +247,21 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh):
     try:
         viec.kiem_huy()
         if not cau_hinh and nguon == "chi_abbyy" and not doc_lai:
-            raise LoiNghiepVu("CHUA_CAU_HINH", "Chưa cấu hình nguồn ABBYY. Hãy liên hệ quản trị viên.")
+            raise LoiNghiepVu("CHUA_CAU_HINH", "Engine chưa được cấu hình. Admin vào Quản lý engine › OCR › Cấu hình.")
         abbyy = cau_hinh.get("abbyy", {"bat": False})
         backend = BackendABBYY(abbyy, chi_doc=doc_lai)
         if not doc_lai:
             luot, moi = nhat_ky.giu(abbyy["han_muc_trang_30_ngay"])
             doc_lai = not moi
-        # Hai tiến trình có cùng dấu bền: bên không lấy được khóa chỉ báo
-        # ChuaRo; không được đọc/dọn PDF mà bên kia đang xử lý.
-        try:
-            ghi_nguon("abbyy")
-            with so.kho.khoa_luot(nhat_ky.ma), cho_nguon():
-                return backend.doc_pdf(
-                    raw, {"application/pdf": "pdf", "image/png": "png", "image/jpeg": "jpg"}[mime],
-                    viec=viec, khi_da_nhan=khi_da_nhan,
-                    khi_chua_ro=lambda: nhat_ky.cap_nhat("chua_ro"),
-                    ma_tuong_quan=nhat_ky.ma, doc_lai=doc_lai,
-                    xu_ly_ket_qua=doc_ket_qua, khi_ket_thuc=nhat_ky.cap_nhat,
-                )
-        except LoiNghiepVu as loi:
-            if loi.ma == "KHO_TAM_DANG_BAN":
-                raise ChuaRo(nhat_ky.ma) from None
-            raise
+        ghi_nguon("abbyy")
+        with nhat_ky.xu_ly(viec) as viec_nguon, cho_nguon():
+            return backend.doc_pdf(
+                raw, {"application/pdf": "pdf", "image/png": "png", "image/jpeg": "jpg"}[mime],
+                viec=viec_nguon, khi_da_nhan=khi_da_nhan,
+                khi_chua_ro=lambda: nhat_ky.cap_nhat("chua_ro"),
+                ma_tuong_quan=nhat_ky.ma, doc_lai=doc_lai,
+                xu_ly_ket_qua=doc_ket_qua, khi_ket_thuc=nhat_ky.cap_nhat,
+            )
     except LoiABBYYTuChoi:
         if nguon == "chi_abbyy":
             raise

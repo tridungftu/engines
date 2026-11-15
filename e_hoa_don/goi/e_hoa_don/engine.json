@@ -213,6 +213,78 @@
       },
       "huy_duoc": true,
       "tham_so": []
+    },
+    {
+      "ma": "hoa_don.bang_ke_xlsx@1",
+      "ten": "Lập bảng kê hóa đơn XLSX",
+      "nhan": [
+        "truong"
+      ],
+      "tra": "truong",
+      "truong_ra": [
+        {
+          "ma": "bang_ke",
+          "ten": "Bảng kê",
+          "kieu": "tep"
+        },
+        {
+          "ma": "chi_tiet_nguon",
+          "ten": "Chi tiết nguồn",
+          "kieu": "tep"
+        },
+        {
+          "ma": "so_hoa_don",
+          "ten": "Số hóa đơn",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_loi",
+          "ten": "Số lỗi",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_khong_ho_tro",
+          "ten": "Số tệp chưa hỗ trợ",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_trung_noi_dung",
+          "ten": "Số tệp trùng nội dung",
+          "kieu": "so"
+        },
+        {
+          "ma": "da_doc_het",
+          "ten": "Đã đọc hết",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "can_kiem_tra",
+          "ten": "Cần kiểm tra",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "canh_bao",
+          "ten": "Cảnh báo",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bam_dau_vao",
+          "ten": "Băm JSON đầu vào",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "ten": "Phiên bản engine",
+          "kieu": "van_ban"
+        }
+      ],
+      "gioi_han": {
+        "tep_toi_da_mib": 32,
+        "mime": [],
+        "thoi_han_giay": 600
+      },
+      "huy_duoc": true,
+      "tham_so": []
     }
   ],
   "loai_du_lieu_rieng": [],

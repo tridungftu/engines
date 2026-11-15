@@ -1,0 +1,306 @@
+{
+  "nhan": "DEMO — khảo sát, chưa chốt trần",
+  "thoi_diem_utc": "2026-11-15T02:10:06.566855+00:00",
+  "moi_truong": {
+    "python": "3.13.14",
+    "he_dieu_hanh": "Windows",
+    "ban_he_dieu_hanh": "11",
+    "build": "10.0.26200",
+    "kien_truc": "AMD64",
+    "sdk": "2.0.0",
+    "zlib": "1.3.1",
+    "cpu_logic": 12
+  },
+  "sha256_lf_nguon": {
+    "core.py": "287616e854e5c6a59be5a2531638dd5f68dda2df387b0ff778b770da4ff44075",
+    "types.py": "59acab78646831909af6da5d54b292c0ad35929fbbff8b526084853bbf02c562",
+    "excel.py": "b837f86a9accaea662357b485fb0d835a6deef4ba4e9f8ccffb0bb9a1243fdc7",
+    "excel_values.py": "6bbcb1c0e19923d13923ca935970199626aca668ec3f23d903ef3e512c22e901",
+    "docx_revisions.py": "1ea7764c75a8f9b32b8a1c17f23ddcf346b2161eb64a81166c69dfbded1ea2f4"
+  },
+  "so_do": [
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "docx",
+      "kich_thuoc_chu_fixture": 1000,
+      "kieu": "lap",
+      "giay_xu_ly": 0.004923,
+      "tracemalloc_dinh_byte": 364890,
+      "ram_dinh_tien_trinh_truoc_byte": 31432704,
+      "ram_dinh_tien_trinh_sau_byte": 31432704,
+      "ky_tu_vao": 7028,
+      "ky_tu_ra": 7014,
+      "vao": {
+        "byte_zip": 1807,
+        "byte_nen_thanh_vien": 1017,
+        "byte_giai_nen": 7939,
+        "so_phan": 7,
+        "phan_lon_nhat": 2257,
+        "ty_le_phan_lon_nhat": 11.173
+      },
+      "ra": {
+        "byte_zip": 1814,
+        "byte_nen_thanh_vien": 1024,
+        "byte_giai_nen": 7900,
+        "so_phan": 7,
+        "phan_lon_nhat": 2218,
+        "ty_le_phan_lon_nhat": 10.612
+      }
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "docx",
+      "kich_thuoc_chu_fixture": 100000,
+      "kieu": "lap",
+      "giay_xu_ly": 0.010481,
+      "tracemalloc_dinh_byte": 1160422,
+      "ram_dinh_tien_trinh_truoc_byte": 31870976,
+      "ram_dinh_tien_trinh_sau_byte": 31870976,
+      "ky_tu_vao": 700028,
+      "ky_tu_ra": 700014,
+      "vao": {
+        "byte_zip": 3956,
+        "byte_nen_thanh_vien": 3166,
+        "byte_giai_nen": 700939,
+        "so_phan": 7,
+        "phan_lon_nhat": 200257,
+        "ty_le_phan_lon_nhat": 242.736
+      },
+      "ra": {
+        "byte_zip": 3955,
+        "byte_nen_thanh_vien": 3165,
+        "byte_giai_nen": 700900,
+        "so_phan": 7,
+        "phan_lon_nhat": 200218,
+        "ty_le_phan_lon_nhat": 242.983
+      }
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "docx",
+      "kich_thuoc_chu_fixture": 500000,
+      "kieu": "lap",
+      "giay_xu_ly": 0.038269,
+      "tracemalloc_dinh_byte": 5014845,
+      "ram_dinh_tien_trinh_truoc_byte": 36995072,
+      "ram_dinh_tien_trinh_sau_byte": 36995072,
+      "ky_tu_vao": 3500028,
+      "ky_tu_ra": 3500014,
+      "vao": {
+        "byte_zip": 12091,
+        "byte_nen_thanh_vien": 11301,
+        "byte_giai_nen": 3500939,
+        "so_phan": 7,
+        "phan_lon_nhat": 1000257,
+        "ty_le_phan_lon_nhat": 317.542
+      },
+      "ra": {
+        "byte_zip": 12090,
+        "byte_nen_thanh_vien": 11300,
+        "byte_giai_nen": 3500900,
+        "so_phan": 7,
+        "phan_lon_nhat": 1000218,
+        "ty_le_phan_lon_nhat": 317.63
+      }
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "docx",
+      "kich_thuoc_chu_fixture": 500000,
+      "kieu": "da_dang",
+      "giay_xu_ly": 0.203801,
+      "tracemalloc_dinh_byte": 6654100,
+      "ram_dinh_tien_trinh_truoc_byte": 39723008,
+      "ram_dinh_tien_trinh_sau_byte": 40046592,
+      "ky_tu_vao": 3500028,
+      "ky_tu_ra": 3500014,
+      "vao": {
+        "byte_zip": 1779389,
+        "byte_nen_thanh_vien": 1778599,
+        "byte_giai_nen": 3516185,
+        "so_phan": 7,
+        "phan_lon_nhat": 1004613,
+        "ty_le_phan_lon_nhat": 1.978
+      },
+      "ra": {
+        "byte_zip": 1779376,
+        "byte_nen_thanh_vien": 1778586,
+        "byte_giai_nen": 3516146,
+        "so_phan": 7,
+        "phan_lon_nhat": 1004574,
+        "ty_le_phan_lon_nhat": 1.978
+      }
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "xlsx",
+      "kich_thuoc_chu_fixture": 1000,
+      "kieu": "lap",
+      "giay_xu_ly": 0.031175,
+      "tracemalloc_dinh_byte": 527522,
+      "ram_dinh_tien_trinh_truoc_byte": 31928320,
+      "ram_dinh_tien_trinh_sau_byte": 31928320,
+      "ky_tu_vao": 1033,
+      "ky_tu_ra": 949,
+      "vao": {
+        "byte_zip": 2223,
+        "byte_nen_thanh_vien": 1529,
+        "byte_giai_nen": 4460,
+        "so_phan": 6,
+        "phan_lon_nhat": 1401,
+        "ty_le_phan_lon_nhat": 4.899
+      },
+      "ra": {
+        "byte_zip": 2223,
+        "byte_nen_thanh_vien": 1529,
+        "byte_giai_nen": 4376,
+        "so_phan": 6,
+        "phan_lon_nhat": 1381,
+        "ty_le_phan_lon_nhat": 4.605
+      }
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "xlsx",
+      "kich_thuoc_chu_fixture": 100000,
+      "kieu": "lap",
+      "giay_xu_ly": 0.220701,
+      "tracemalloc_dinh_byte": 1670793,
+      "ram_dinh_tien_trinh_truoc_byte": 31887360,
+      "ram_dinh_tien_trinh_sau_byte": 33337344,
+      "ky_tu_vao": 100033,
+      "ky_tu_ra": 91761,
+      "vao": {
+        "byte_zip": 3729,
+        "byte_nen_thanh_vien": 3035,
+        "byte_giai_nen": 111762,
+        "so_phan": 6,
+        "phan_lon_nhat": 108703,
+        "ty_le_phan_lon_nhat": 60.66
+      },
+      "ra": {
+        "byte_zip": 3517,
+        "byte_nen_thanh_vien": 2823,
+        "byte_giai_nen": 103490,
+        "so_phan": 6,
+        "phan_lon_nhat": 100431,
+        "ty_le_phan_lon_nhat": 63.564
+      }
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "xlsx",
+      "kich_thuoc_chu_fixture": 500000,
+      "kieu": "lap",
+      "giay_xu_ly": 1.347464,
+      "tracemalloc_dinh_byte": 8002313,
+      "ram_dinh_tien_trinh_truoc_byte": 32948224,
+      "ram_dinh_tien_trinh_sau_byte": 41148416,
+      "ky_tu_vao": 500033,
+      "ky_tu_ra": 458697,
+      "vao": {
+        "byte_zip": 9423,
+        "byte_nen_thanh_vien": 8729,
+        "byte_giai_nen": 546162,
+        "so_phan": 6,
+        "phan_lon_nhat": 543103,
+        "ty_le_phan_lon_nhat": 72.549
+      },
+      "ra": {
+        "byte_zip": 7950,
+        "byte_nen_thanh_vien": 7256,
+        "byte_giai_nen": 504826,
+        "so_phan": 6,
+        "phan_lon_nhat": 501767,
+        "ty_le_phan_lon_nhat": 83.447
+      }
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "xlsx",
+      "kich_thuoc_chu_fixture": 500000,
+      "kieu": "da_dang",
+      "giay_xu_ly": 1.049567,
+      "tracemalloc_dinh_byte": 10272271,
+      "ram_dinh_tien_trinh_truoc_byte": 33443840,
+      "ram_dinh_tien_trinh_sau_byte": 44404736,
+      "ky_tu_vao": 500033,
+      "ky_tu_ra": 495729,
+      "vao": {
+        "byte_zip": 263000,
+        "byte_nen_thanh_vien": 262306,
+        "byte_giai_nen": 548340,
+        "so_phan": 6,
+        "phan_lon_nhat": 545281,
+        "ty_le_phan_lon_nhat": 3.304
+      },
+      "ra": {
+        "byte_zip": 263082,
+        "byte_nen_thanh_vien": 262388,
+        "byte_giai_nen": 544036,
+        "so_phan": 6,
+        "phan_lon_nhat": 540977,
+        "ty_le_phan_lon_nhat": 3.304
+      }
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "van_ban",
+      "kich_thuoc_chu_fixture": 1000,
+      "kieu": "lap",
+      "giay_xu_ly": 0.058153,
+      "tracemalloc_dinh_byte": 241168,
+      "ram_dinh_tien_trinh_truoc_byte": 35520512,
+      "ram_dinh_tien_trinh_sau_byte": 35520512,
+      "ky_tu_vao": 1000,
+      "ky_tu_ra": 1861,
+      "byte_utf8_vao": 1000,
+      "byte_utf8_ra": 1861,
+      "vao": null,
+      "ra": null
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "van_ban",
+      "kich_thuoc_chu_fixture": 100000,
+      "kieu": "lap",
+      "giay_xu_ly": 5.65185,
+      "tracemalloc_dinh_byte": 8241151,
+      "ram_dinh_tien_trinh_truoc_byte": 35061760,
+      "ram_dinh_tien_trinh_sau_byte": 62853120,
+      "ky_tu_vao": 100000,
+      "ky_tu_ra": 185404,
+      "byte_utf8_vao": 100000,
+      "byte_utf8_ra": 185404,
+      "vao": null,
+      "ra": null
+    },
+    {
+      "trang_thai": "DO_DUOC",
+      "loai": "van_ban",
+      "kich_thuoc_chu_fixture": 500000,
+      "kieu": "lap",
+      "giay_xu_ly": 41.689126,
+      "tracemalloc_dinh_byte": 39969276,
+      "ram_dinh_tien_trinh_truoc_byte": 35549184,
+      "ram_dinh_tien_trinh_sau_byte": 167227392,
+      "ky_tu_vao": 500000,
+      "ky_tu_ra": 927097,
+      "byte_utf8_vao": 500000,
+      "byte_utf8_ra": 927097,
+      "vao": null,
+      "ra": null
+    },
+    {
+      "loai": "van_ban",
+      "kich_thuoc_chu_fixture": 500000,
+      "kieu": "da_dang",
+      "trang_thai": "VUOT_NGAN_SACH_DO",
+      "timeout_giay": 60,
+      "giay_xu_ly": null,
+      "tracemalloc_dinh_byte": null,
+      "ram_dinh_tien_trinh_sau_byte": null,
+      "ky_tu_ra": null
+    }
+  ]
+}

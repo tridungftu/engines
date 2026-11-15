@@ -1,11 +1,12 @@
 """OCR-4 đã kiểm bằng Core giả (CoreGia), ABBYY giả; chỉ dữ liệu DEMO.
 
-Có tiến trình spawn chết thật sau công bố; không phụ thuộc fork/Windows API.
+OCR-8: mô phỏng gián đoạn bằng cùng ngăn RAM; cạnh tranh bằng hai luồng.
 """
 
 from hashlib import sha256
 import json
-import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
+import threading
 import os
 from pathlib import Path
 
@@ -16,8 +17,7 @@ from kho_tri_thuc_sdk.thu import CoreGia
 
 from demo.tao_pdf import DONG_DEMO, pdf_demo
 from e_ocr import abbyy, chay as cong
-from e_ocr.chon_nguon import KHOA_HAN_MUC, SoHanMuc
-from e_ocr.kho_tam import KhoTam
+from ngan_demo import SoHanMuc, ngan_demo, bo_cau_hinh, ghi_luot
 from e_ocr.luot_abbyy import NhatKyLuot
 from test_ocr_1 import ABBYYGia, DOC, GOI, VAN_BAN, hot_folder
 from test_ocr_2 import cau_hinh_abbyy, tess_gia
@@ -74,9 +74,9 @@ def test_ghi_luot_va_giu_trang_nguyen_tu_truoc_cong_bo(hot_folder, monkeypatch):
             nk = nhat_ky()
             luot = nk.doc()
             assert luot["trang_thai"] == "dang_gui" and not luot["da_nhan"]
-            assert luot["bam"] == "sha256:" + sha256(RAW).hexdigest()
+            assert luot["bam_noi_dung"] == "sha256:" + sha256(RAW).hexdigest()
             assert luot["so_trang"] == luot["lan_gui"] == 1
-            assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {luot["ma_tuong_quan"]: 1}
+            assert SoHanMuc()._doc()[1]["dang_giu"] == {luot["ma_tuong_quan"]: 1}
             assert Path(dich).stem == luot["ma_tuong_quan"] == nk._ma_luot(1)
             da_kiem.append(True)
         return thay(nguon, dich)
@@ -114,142 +114,73 @@ def test_app_moi_giao_lai_va_tra_muon_cung_ma_khong_gui_lai(hot_folder, tess_gia
     assert nhat_ky().doc()["trang_thai"] == "xong"
     assert nhat_ky().doc()["ma_tuong_quan"] == ma
     assert SoHanMuc().da_dung() == 1
-    assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {}
+    assert SoHanMuc()._doc()[1]["dang_giu"] == {}
     assert not list(ra.iterdir())
     if nang_luc == WORD:
         assert core.doc_tep(muon["ket_qua"]["tep"]["tep_id"]).startswith(b"PK")
     else:
         text = muon["ket_qua"].get("van_ban", muon["ket_qua"].get("van_ban_tai_lieu", {}).get("van_ban"))
         assert all(d in text for d in DONG_DEMO)
-    noi_dung_kho = (KhoTam().thu_muc / "kho.json").read_text(encoding="utf-8")
+    cac_luot = ngan_demo().tim("luot_abbyy", loc={"phap_nhan_id": "pn-demo"}).danh_sach
+    assert len(cac_luot) == 1
+    noi_dung_kho = json.dumps([b.gia_tri for b in cac_luot])
     assert "DEMO.pdf" not in noi_dung_kho and "VND" not in noi_dung_kho and "Công ty" not in noi_dung_kho
 
 
-def _chet(vao, kenh, truoc_gui=False):
-    # os._exit mô phỏng chết đột ngột: không finally, không ghi nhận đã nhận.
-    if truoc_gui:
-        abbyy.BackendABBYY.doc_pdf = lambda *a, **k: os._exit(23)
-    else:
-        thay = abbyy.os.replace
-
-        def cong_bo(nguon, dich):
-            thay(nguon, dich)
-            if Path(dich).parent == Path(vao):
-                kenh.send(Path(dich).stem)
-                os._exit(23)
-
-        abbyy.os.replace = cong_bo
-    chay_moi()
-
-
-def _gui_dong_thoi(bat_dau, kenh, doc_do=None):
-    if doc_do is not None:
-        doc_goc = NhatKyLuot.doc
-
-        def doc(nk):
-            luot = doc_goc(nk)
-            doc_do.wait(10)
-            return luot
-
-        NhatKyLuot.doc = doc
-    try:
-        assert bat_dau.wait(10)
-        _, kq = chay_moi()
-        kenh.send((kq["trang_thai"], kq["ma_tuong_quan"]))
-    finally:
-        kenh.close()
-
-
-def dung_cac_tien_trinh(cac_tt):
-    for tt in cac_tt:
-        tt.join(10)
-        if tt.is_alive():
-            tt.terminate()
-            tt.join(5)
-        assert not tt.is_alive()
-
-
-def test_chet_that_sau_cong_bo_khoi_dong_lai_chot_cho_giu(hot_folder, tess_gia):
+def test_gian_doan_sau_cong_bo_chot_cho_giu_cung_ngan(hot_folder, tess_gia):
     vao, ra, _ = hot_folder
-    ctx = multiprocessing.get_context("spawn")
-    cha, con = ctx.Pipe()
-    tt = ctx.Process(target=_chet, args=(str(vao), con))
+    luot, _ = nhat_ky().giu(5000)
+    ma = luot["ma_tuong_quan"]
+    # Trạng thái tương ứng crash sau công bố, trước callback ghi nhận.
     with ABBYYGia(vao, ra, b"", tra=False) as gia:
-        try:
-            tt.start()
-            con.close()
-            assert cha.poll(15), "Tiến trình DEMO chưa công bố tệp."
-            ma = cha.recv()
-            assert gia.da_nhan.wait(5)
-        finally:
-            dung_cac_tien_trinh([tt])
-            cha.close()
-        assert tt.exitcode == 23
+        (vao / f"{ma}.pdf").write_bytes(RAW)
+        assert gia.da_nhan.wait(5)
         assert nhat_ky().doc()["trang_thai"] == "dang_gui"
         assert SoHanMuc().da_dung() == 0
-        assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {ma: 1}
         core, kq = chay_moi(lan_thu=2)
         kiem_chua_ro(core, kq, ma)
-        # Không thấy tệp sau crash chưa đủ để biết chết trước/sau công bố.
         assert SoHanMuc().da_dung() == 0
         (ra / f"{ma}.pdf").write_bytes(PDF)
         _, kq = chay_moi(lan_thu=3)
     assert kq["trang_thai"] == "XONG", kq
     assert len(gia.cac_tep) == 1 and not tess_gia
     assert SoHanMuc().da_dung() == 1 and nhat_ky().doc()["trang_thai"] == "xong"
-    assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {}
+    assert SoHanMuc()._doc()[1]["dang_giu"] == {}
 
 
-def test_chet_truoc_cong_bo_khong_tu_hoan_khoi_dong_lai_co_bang_chung_thi_nha(hot_folder):
+def test_gian_doan_truoc_cong_bo_khong_tu_hoan(hot_folder):
     vao, ra, _ = hot_folder
-    ctx = multiprocessing.get_context("spawn")
-    cha, con = ctx.Pipe()
-    tt = ctx.Process(target=_chet, args=(str(vao), con, True))
-    try:
-        tt.start()
-        con.close()
-    finally:
-        dung_cac_tien_trinh([tt])
-        cha.close()
-    assert tt.exitcode == 23
-    luot = nhat_ky().doc()
+    luot, _ = nhat_ky().giu(5000)
     ma = luot["ma_tuong_quan"]
     core, kq = chay_moi(lan_thu=2)
     kiem_chua_ro(core, kq, ma)
-    assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {ma: 1}
+    assert SoHanMuc()._doc()[1]["dang_giu"] == {ma: 1}
     assert SoHanMuc().da_dung() == 0
     bien_nhan_loi(ra, ma)
     _, kq = chay_moi(lan_thu=3, nguon="chi_abbyy")
     assert kq["loi"]["ma"] == "ABBYY_TU_CHOI", kq
     assert nhat_ky().doc()["trang_thai"] == "tu_choi" and nhat_ky().doc()["da_hoan"]
-    assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {}
+    assert SoHanMuc()._doc()[1]["dang_giu"] == {}
     assert not list(vao.iterdir()) and not list(ra.iterdir())
 
 
-def test_hai_tien_trinh_gui_tep_trung_chi_mot_luot_abbyy(hot_folder):
+def test_hai_luong_gui_tep_trung_chi_mot_luot_abbyy(hot_folder, monkeypatch):
     vao, ra, _ = hot_folder
-    ctx = multiprocessing.get_context("spawn")
-    bat_dau = ctx.Event()
-    cac_tt, cac_kenh = [], []
-    with ABBYYGia(vao, ra, b"", tra=False) as gia:
-        try:
-            for _ in range(2):
-                cha, con = ctx.Pipe()
-                tt = ctx.Process(target=_gui_dong_thoi, args=(bat_dau, con))
-                tt.start()
-                con.close()
-                cac_tt.append(tt)
-                cac_kenh.append(cha)
-            bat_dau.set()
-            for kenh in cac_kenh:
-                assert kenh.poll(15), "Tiến trình DEMO chưa trả trạng thái."
-            kq = [kenh.recv() for kenh in cac_kenh]
-        finally:
-            dung_cac_tien_trinh(cac_tt)
-            for kenh in cac_kenh:
-                kenh.close()
-    assert all(tt.exitcode == 0 for tt in cac_tt)
-    assert kq[0] == kq[1] == ("CHUA_RO", nhat_ky().doc()["ma_tuong_quan"])
+    bat_dau = threading.Barrier(2)
+    doc_goc = NhatKyLuot.doc
+
+    def doc(nk):
+        kq = doc_goc(nk)
+        bat_dau.wait(5)
+        return kq
+
+    monkeypatch.setattr(NhatKyLuot, "doc", doc)
+    with ABBYYGia(vao, ra, b"", tra=False) as gia, ThreadPoolExecutor(max_workers=2) as nhom:
+        cac_lan = [nhom.submit(chay_moi) for _ in range(2)]
+        kq = [lan.result(timeout=10)[1] for lan in cac_lan]
+    monkeypatch.setattr(NhatKyLuot, "doc", doc_goc)
+    assert all(k["trang_thai"] == "CHUA_RO" for k in kq), kq
+    assert kq[0]["ma_tuong_quan"] == kq[1]["ma_tuong_quan"] == nhat_ky().doc()["ma_tuong_quan"]
     assert len(gia.cac_tep) == 1 and SoHanMuc().da_dung() == 1
 
 
@@ -284,7 +215,7 @@ def test_huy_hoac_loi_sau_abbyy_tra_pdf_phai_don_ke_ca_chua_doc(hot_folder, monk
     assert da_dung and not list(ra.iterdir())
     assert core.so_lan_ghi["ket_qua"] == 0
     assert nhat_ky().doc()["trang_thai"] == ("huy" if huy else "loi")
-    assert SoHanMuc().da_dung() == 1 and SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {}
+    assert SoHanMuc().da_dung() == 1 and SoHanMuc()._doc()[1]["dang_giu"] == {}
 
 
 def test_loi_chot_ben_giu_pdf_chua_ro_roi_khoi_dong_lai_chot_mot_lan(hot_folder, monkeypatch):
@@ -309,19 +240,24 @@ def test_loi_chot_ben_giu_pdf_chua_ro_roi_khoi_dong_lai_chot_mot_lan(hot_folder,
 
 
 def test_ghi_giu_loi_khong_co_luot_hoac_trang_mot_nua(hot_folder, monkeypatch):
+    from contextlib import contextmanager
+    from e_ocr.ngan import NganXungDot
     vao, _, _ = hot_folder
-    thay = os.replace
+    ngan = ngan_demo()
 
-    def hong(nguon, dich):
-        if Path(dich).name == "kho.json":
-            raise PermissionError("Lỗi ghi DEMO.")
-        return thay(nguon, dich)
+    lo_goc = ngan.lo
+
+    @contextmanager
+    def hong():
+        with lo_goc() as lo:
+            yield lo
+            raise NganXungDot()
 
     with monkeypatch.context() as tam:
-        tam.setattr(os, "replace", hong)
+        tam.setattr(ngan, "lo", hong)
         _, kq = chay_moi()
-    assert kq["loi"]["ma"] == "KHO_TAM_KHONG_TRUY_CAP", kq
-    assert nhat_ky().doc() is None and KhoTam().doc(KHOA_HAN_MUC) is None
+    assert kq["loi"]["ma"] == "NGAN_XUNG_DOT", kq
+    assert nhat_ky().doc() is None and SoHanMuc()._doc()[1] == {"da_nhan": {}, "dang_giu": {}}
     assert not list(vao.iterdir())
 
 
@@ -372,16 +308,16 @@ def test_luot_do_van_tra_cuu_khi_abbyy_tat_khong_du_phong(hot_folder, tess_gia, 
 
 def test_khong_tu_het_han_luot_do_va_ma_tat_dinh_theo_lan_gui(tmp_path):
     luc = [1800000000]
-    so = SoHanMuc(KhoTam(tmp_path / "so-DEMO"), dong_ho=lambda: luc[0])
+    so = SoHanMuc(ngan_demo(), dong_ho=lambda: luc[0])
     nk = nhat_ky(so=so)
     luot, moi = nk.giu(1)
     assert moi
     ma = luot["ma_tuong_quan"]
     luc[0] += 60 * 86400
-    nk2 = nhat_ky(so=SoHanMuc(KhoTam(so.kho.thu_muc), dong_ho=lambda: luc[0]))
+    nk2 = nhat_ky(so=SoHanMuc(so.ngan, dong_ho=lambda: luc[0]))
     lap, moi = nk2.giu(1)
     assert not moi and lap == luot
-    assert so.kho.doc(KHOA_HAN_MUC)["dang_giu"] == {ma: 1}
+    assert so._doc()[1]["dang_giu"] == {ma: 1}
     nk2.cap_nhat("tu_choi")
     tiep, moi = nk2.giu(1)
     assert moi and tiep["lan_gui"] == 2 and tiep["ma_tuong_quan"] != ma
@@ -393,7 +329,7 @@ def test_thieu_cau_hinh_khi_giao_lai_van_chua_ro_khong_chuyen(hot_folder, tess_g
     vao, ra, _ = hot_folder
     with ABBYYGia(vao, ra, b"", tra=False) as gia:
         _, dau = chay_moi()
-        monkeypatch.delenv("KTT_ENGINE_CAU_HINH")
+        bo_cau_hinh()
         core, lap = chay_moi(lan_thu=2, nguon=nguon)
     kiem_chua_ro(core, lap, dau["ma_tuong_quan"])
     assert not tess_gia and len(gia.cac_tep) == 1 and SoHanMuc().da_dung() == 1
@@ -430,7 +366,7 @@ def test_loi_ghi_nhan_giu_trang_va_pdf_cho_doi_chieu_lan_sau(hot_folder, monkeyp
             core, dau = chay_moi()
         kiem_chua_ro(core, dau)
         assert SoHanMuc().da_dung() == 0
-        assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {dau["ma_tuong_quan"]: 1}
+        assert SoHanMuc()._doc()[1]["dang_giu"] == {dau["ma_tuong_quan"]: 1}
         assert gia.da_nhan.wait(3)
         # ABBYY giả có thể vừa nhận nhưng chưa kịp ghi PDF khi lần đầu kết thúc.
         gia.luong.join(0.03)
@@ -485,7 +421,7 @@ def test_nhat_ky_hong_khong_tu_dat_lai_va_gui_trung(hot_folder, tess_gia, sua):
     nk = nhat_ky()
     luot, _ = nk.giu(5000)
     luot.update(sua)
-    nk.kho.ghi(nk.khoa, luot)
+    ghi_luot(nk, luot)
     _, kq = chay_moi()
     assert kq["loi"]["ma"] == "NHAT_KY_LUOT_CAN_KIEM_TRA", kq
     assert not tess_gia and not list(hot_folder[0].iterdir())
@@ -502,34 +438,26 @@ def test_luot_moi_sau_xong_tang_lan_gui_khong_trung_ma(hot_folder):
     assert ma_a != nhat_ky().doc()["ma_tuong_quan"] and SoHanMuc().da_dung() == 2
 
 
-def test_hai_tien_trinh_cung_lay_pdf_muon_khong_gianh_doc_don(hot_folder):
+def test_hai_luong_cung_lay_pdf_muon_khong_gianh_doc_don(hot_folder, monkeypatch):
     vao, ra, _ = hot_folder
     with ABBYYGia(vao, ra, b"", tra=False):
         _, dau = chay_moi()
     ma = dau["ma_tuong_quan"]
     (ra / f"{ma}.pdf").write_bytes(PDF)
-    ctx = multiprocessing.get_context("spawn")
-    bat_dau, doc_do = ctx.Event(), ctx.Barrier(2)
-    cac_tt, cac_kenh = [], []
-    try:
-        for _ in range(2):
-            cha, con = ctx.Pipe()
-            tt = ctx.Process(target=_gui_dong_thoi, args=(bat_dau, con, doc_do))
-            tt.start()
-            con.close()
-            cac_tt.append(tt)
-            cac_kenh.append(cha)
-        bat_dau.set()
-        for kenh in cac_kenh:
-            assert kenh.poll(15), "Tiến trình DEMO chưa trả trạng thái."
-        kq = [kenh.recv() for kenh in cac_kenh]
-    finally:
-        dung_cac_tien_trinh(cac_tt)
-        for kenh in cac_kenh:
-            kenh.close()
-    assert all(tt.exitcode == 0 for tt in cac_tt)
-    assert sorted(trang_thai for trang_thai, _ in kq) == ["CHUA_RO", "XONG"]
-    assert ("CHUA_RO", ma) in kq
+    bat_dau = threading.Barrier(2)
+    doc_goc = NhatKyLuot.doc
+
+    def doc(nk):
+        luot = doc_goc(nk)
+        bat_dau.wait(5)
+        return luot
+
+    with monkeypatch.context() as tam:
+        tam.setattr(NhatKyLuot, "doc", doc)
+        with ThreadPoolExecutor(max_workers=2) as nhom:
+            cac_lan = [nhom.submit(chay_moi) for _ in range(2)]
+            kq = [lan.result(timeout=10)[1] for lan in cac_lan]
+    assert sorted(k["trang_thai"] for k in kq) == ["CHUA_RO", "XONG"], kq
     assert nhat_ky().doc()["trang_thai"] == "xong" and nhat_ky().doc()["lan_gui"] == 1
     assert SoHanMuc().da_dung() == 1 and not list(ra.iterdir()) and not list(vao.iterdir())
 
@@ -553,8 +481,8 @@ def test_tu_choi_ro_rut_tep_vao_con_cho_truoc_khi_hoan(hot_folder, tess_gia, mon
     if not rut_duoc:
         kiem_chua_ro(core, lap, ma)
         assert tep_loi.exists() and tep_vao.exists()
-        assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {ma: 1}
+        assert SoHanMuc()._doc()[1]["dang_giu"] == {ma: 1}
         _, lap = chay_moi(lan_thu=3, nguon="chi_abbyy")
     assert lap["loi"]["ma"] == "ABBYY_TU_CHOI", lap
-    assert SoHanMuc().kho.doc(KHOA_HAN_MUC)["dang_giu"] == {}
+    assert SoHanMuc()._doc()[1]["dang_giu"] == {}
     assert SoHanMuc().da_dung() == 0 and not tep_loi.exists() and not tep_vao.exists() and not tess_gia

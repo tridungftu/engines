@@ -16,15 +16,16 @@ from re import fullmatch
 from typing import Protocol
 from uuid import uuid4
 
-from kho_tri_thuc_sdk.engine import ChuaRo, ViecDaHuy
+from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu, ViecDaHuy
 
 from .che_van_ban import _kiem_dinh_danh, chuan_bi_danh, chuan_hoa
-from .kho_tam import KhoTam
+from .cau_hinh import CauHinhKhongHopLe
+from .ngan import NganKhongHopLe, NganXungDot
 from .nguon.privacy.core import CATEGORIES
 from .quyen_yeu_cau import loi_kho, xac_minh
 
 
-# Họ tiền tố chỉ cho DEMO, chờ xác nhận không trùng mã Junsky thật.
+# Anh chốt 15/11/2026: MASKTAM cho tạm; mã Junsky không dùng họ này.
 TIEN_TO_TU_SINH = 'MASK'
 
 
@@ -92,6 +93,9 @@ def _kiem_snapshot(snap):
         if (not isinstance(bo_sung, dict)
                 or any(not _la_bi_danh(k) or not isinstance(v, str) or not v for k, v in bo_sung.items())):
             raise ValueError
+        tam_duoc_dung = snap.get('bi_danh_tam_duoc_dung', [])
+        if not isinstance(tam_duoc_dung, list) or any(not _la_bi_danh(b) for b in tam_duoc_dung):
+            raise ValueError
     except (KeyError, TypeError, ValueError):
         raise loi_kho() from None
 
@@ -105,17 +109,23 @@ class KhoQuaCore:
         self._ma, self._luot = self._ngu_canh.ma_yeu_cau, self._ngu_canh.ma_luot
         self._loai, self._goi_kho = loai, goi_kho
         self._quyen, self._viec = quyen, viec
-        self._kho_tam = kho_tam if kho_tam is not None else KhoTam()
+        if kho_tam is None:
+            raise loi_kho('MASK_KHO_CHUA_NOI')
+        self._kho_tam = kho_tam
         self._bam_dau_vao = bam_dau_vao
         self._bam_chot = None
         self._dau = self._ghi_dau(1)
         self._snapshot = deepcopy(self._goi('snapshot_luot'))
         _kiem_snapshot(self._snapshot)
         self.da_chot = self._snapshot['da_chot']
-        if self._dau['trang_thai'] == 4 and not self.da_chot:
+        if self._dau['trang_thai'] == 4 and not self.da_chot and not self._snapshot.get('da_phuc_hoi'):
             raise loi_kho('MASK_XUNG_DOT')
         self._danh_muc = deepcopy(self._snapshot['danh_muc'])
-        self._theo_cum = {chuan_hoa(m['gia_tri']): m for m in self._danh_muc}
+        self._tam_duoc_dung = {chuan_bi_danh(b) for b in self._snapshot.get('bi_danh_tam_duoc_dung', [])}
+        # Cụm chờ của yêu cầu khác vẫn dùng để phát hiện, nhưng không tái dùng
+        # bí danh của họ. Mỗi yêu cầu sinh bí danh tạm riêng cho cùng một cụm.
+        self._theo_cum = {chuan_hoa(m['gia_tri']): m for m in self._danh_muc
+                         if m['nguon'] == 'chinh_thuc' or chuan_bi_danh(m['bi_danh']) in self._tam_duoc_dung}
         self._dang_goi = self._da_chay = self._hop_le = self._can_hoi_lai = False
         self._nhat_ky = dict(cum=[], bi_danh_tam_moi=[], bi_danh_da_dung=[], dong_yeu_cau=False,
                             cum_da_tra=[], bi_danh_da_tra=[])
@@ -139,13 +149,23 @@ class KhoQuaCore:
             return self._goi_kho(thao_tac, ma_yeu_cau=self._ma,
                                  ma_luot=self._luot, loai=self._loai, **payload)
         except ChuaRo:
-            self._dau = self._ghi_dau(3)
+            try:
+                self._dau = self._ghi_dau(3)
+            except Exception:
+                # Nguồn đã nhận việc: lỗi ghi dấu không được làm mất CHUA_RO.
+                pass
             # Dùng mã từ khóa lượt đã băm, không chuyển câu/mã tùy ý của nguồn.
             raise ChuaRo('mask-' + self._dau['tuong_quan']) from None
         except ViecDaHuy:
             raise
+        except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
+            raise LoiNghiepVu(exc.ma, exc.thong_diep,
+                             thu_lai_duoc=exc.thu_lai_duoc) from None
         except Exception as exc:
             ma = getattr(exc, 'ma', None)
+        for lop in (NganKhongHopLe, CauHinhKhongHopLe):
+            if ma == lop.ma:
+                raise LoiNghiepVu(lop.ma, lop.thong_diep, thu_lai_duoc=lop.thu_lai_duoc) from None
         raise loi_kho(ma) from None
 
     def chot(self, ket_qua=None):
@@ -153,6 +173,8 @@ class KhoQuaCore:
             snap = self._goi('snapshot_luot')
             _kiem_snapshot(snap)
             self.da_chot = snap['da_chot']
+            if snap.get('da_phuc_hoi'):
+                self._snapshot = deepcopy(snap)
         if self.da_chot:
             # Đọc lại từ port có kiểm quyền; không lấy kết quả từ JSON/snapshot.
             kq = self._goi('chot_luot', phien_ban=None, nhat_ky=None, ket_qua=None)
@@ -162,8 +184,8 @@ class KhoQuaCore:
                 raise loi_kho()
             kq = deepcopy(ket_qua)
             kq.update(ma_yeu_cau=self._ma, ma_luot=self._luot)
-            if self._loai == 'che' and not kq.get('gui_duoc'):
-                nhat_ky['dong_yeu_cau'] = True
+            if self._loai == 'che' and kq.get('gui_duoc') is not True:
+                raise loi_kho()
             self._bam_chot = bam_noi_dung([nhat_ky, kq])
             self._dau = self._ghi_dau(2)
             self._can_hoi_lai = True
@@ -227,7 +249,7 @@ class KhoQuaCore:
         muc = self._theo_cum.get(chuan)
         if muc is None:
             da_co = self._snapshot.get('cum_cho_toan_vung', {}).get(bam)
-            if da_co is not None:
+            if da_co is not None and chuan_bi_danh(da_co['bi_danh']) in self._tam_duoc_dung:
                 muc = dict(gia_tri=gia_tri_chuan, nhom=da_co['nhom'],
                            bi_danh=da_co['bi_danh'], nguon=da_co['nguon'])
                 self._theo_cum[chuan] = muc
@@ -254,13 +276,15 @@ class KhoQuaCore:
             return cu, False
         if bi_danh not in self._nhat_ky['bi_danh_tam_moi']:
             raise loi_kho()
+        da_cho = (any(chuan_hoa(m['gia_tri']) == chuan for m in self._snapshot['danh_muc'])
+                  or sha256(chuan.encode('utf-8')).hexdigest() in self._snapshot.get('cum_cho_toan_vung', {}))
         muc = dict(gia_tri=gia_tri, nhom=nhom, bi_danh=bi_danh, nguon='tam', so_lan_gap=1)
         self._theo_cum[chuan] = muc
         self._danh_muc.append(muc)
         self._nhat_ky['cum'].append(dict(gia_tri=gia_tri, nhom=nhom,
                                        bi_danh=bi_danh, chi_gap_lai=False))
         self._da_gap.add(chuan)
-        return self.tra_bi_danh(chuan), True
+        return self.tra_bi_danh(chuan), not da_cho
 
     def ghi_nhan_gap_lai(self, ma_yeu_cau, cum_chuan, nhom):
         self._kiem(ma_yeu_cau)
@@ -275,7 +299,9 @@ class KhoQuaCore:
 
     def ghi_bi_danh_da_dung(self, ma_yeu_cau, bi_danh):
         self._kiem(ma_yeu_cau)
-        if any(not _la_bi_danh(b) for b in bi_danh):
+        chinh_thuc = {chuan_bi_danh(m['bi_danh']) for m in self._danh_muc if m['nguon'] == 'chinh_thuc'}
+        duoc_dung = chinh_thuc | self._tam_duoc_dung | {chuan_bi_danh(b) for b in self._nhat_ky['bi_danh_tam_moi']}
+        if any(not _la_bi_danh(b) or chuan_bi_danh(b) not in duoc_dung for b in bi_danh):
             raise loi_kho()
         self._nhat_ky['bi_danh_da_dung'] = sorted(set(self._nhat_ky['bi_danh_da_dung']) | set(bi_danh))
 
@@ -284,11 +310,16 @@ class KhoQuaCore:
         chuan = chuan_bi_danh(bi_danh_chuan)
         if chuan not in self._nhat_ky['bi_danh_da_tra']:
             self._nhat_ky['bi_danh_da_tra'].append(chuan)
+        gia_tri = None
         for muc in self._danh_muc:
-            if any(b and chuan_bi_danh(b) == chuan
-                   for b in (muc['bi_danh'], muc.get('bi_danh_tam'))):
-                return muc['gia_tri']
-        return self._snapshot.get('bi_danh_bo_sung', {}).get(chuan)
+            if (muc['nguon'] == 'chinh_thuc' and chuan_bi_danh(muc['bi_danh']) == chuan
+                    or chuan in self._tam_duoc_dung and any(b and chuan_bi_danh(b) == chuan
+                        for b in (muc['bi_danh'], muc.get('bi_danh_tam')))):
+                gia_tri = muc['gia_tri']
+                break
+        if gia_tri is None and chuan in self._tam_duoc_dung:
+            gia_tri = self._snapshot.get('bi_danh_bo_sung', {}).get(chuan)
+        return gia_tri
 
     def dong_yeu_cau(self, ma_yeu_cau):
         self._kiem(ma_yeu_cau)

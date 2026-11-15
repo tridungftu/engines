@@ -14,6 +14,7 @@ from typing import Protocol
 import unicodedata
 
 from .nguon.privacy import core, detectors, leftovers
+from .nguon.privacy.types import bo_ky_tu_vo_hinh, chuan_hoa_vi_tri
 from .tai_nguyen import ThieuTaiNguyen
 
 
@@ -192,7 +193,7 @@ class _BoDo(core.KnownText):
 
 def chuan_hoa(gia_tri: str) -> str:
     """Cùng quy tắc mask.chuan_hoa của migration 113, không bỏ dấu tiếng Việt."""
-    return _KHOANG_TRANG.sub(' ', unicodedata.normalize('NFC', gia_tri)).strip(' ').lower()
+    return _KHOANG_TRANG.sub(' ', unicodedata.normalize('NFC', bo_ky_tu_vo_hinh(gia_tri))).strip(' ').lower()
 
 
 def chuan_bi_danh(bi_danh: str) -> str:
@@ -204,7 +205,7 @@ def _kiem_van_ban(van_ban, *, cho_rong=False):
         raise LoiCheVanBan('Nội dung văn bản chưa hợp lệ.')
     if len(van_ban) > 500_000:
         raise LoiCheVanBan('Văn bản vượt giới hạn 500.000 ký tự.')
-    if not cho_rong and not van_ban.strip():
+    if not cho_rong and not bo_ky_tu_vo_hinh(van_ban).strip():
         raise LoiCheVanBan('Cần nhập nội dung văn bản.')
 
 
@@ -216,6 +217,8 @@ def _kiem_dinh_danh(danh_sach, *, tien_ngay=frozenset(), la_khai_bao=False):
         if not isinstance(muc, dict):
             raise LoiCheVanBan('Danh sách định danh chưa hợp lệ.')
         gia_tri, nhom = muc.get('gia_tri'), muc.get('nhom', 'KHAC')
+        if isinstance(gia_tri, str) and len(gia_tri) <= 300:
+            gia_tri = bo_ky_tu_vo_hinh(gia_tri)
         if (not isinstance(gia_tri, str) or not 2 <= len(gia_tri) <= 300
                 or not chuan_hoa(gia_tri) or '[' in gia_tri or ']' in gia_tri
                 or any(unicodedata.category(c).startswith('C') and not c.isspace() for c in gia_tri)
@@ -236,19 +239,9 @@ def _kiem_dinh_danh(danh_sach, *, tien_ngay=frozenset(), la_khai_bao=False):
 
 
 def _nfc_vi_tri(van_ban):
-    """Bản dò NFC kèm tọa độ gốc; không chuẩn hóa phần văn bản trả về."""
-    if unicodedata.is_normalized('NFC', van_ban):
-        return van_ban, _ViTriGiuNguyen()
-    phan, vi_tri = [], []
-    dau = 0
-    for cuoi in range(1, len(van_ban) + 1):
-        if cuoi < len(van_ban) and unicodedata.combining(van_ban[cuoi]):
-            continue
-        cum = unicodedata.normalize('NFC', van_ban[dau:cuoi])
-        phan.append(cum)
-        vi_tri.extend([(dau, cuoi)] * len(cum))
-        dau = cuoi
-    return ''.join(phan), vi_tri
+    """Bản dò đã bỏ Cf/selector và NFC, ánh xạ về đúng đoạn nguyên văn."""
+    chu, vi_tri = chuan_hoa_vi_tri(van_ban)
+    return chu, _ViTriGiuNguyen() if vi_tri is None else vi_tri
 
 
 def _an_bi_danh(van_ban):
@@ -277,6 +270,15 @@ def _phat_hien(van_ban):
         lambda: [(s, n) for n, s in detectors.traces(van_ban)],
         lambda: _cum_con_sot(van_ban),
     )
+    if any(c in van_ban for c in '\t\r\n\f\v'):
+        # Chỉ bản dò tên được làm phẳng, giữ nguyên số ký tự/toạ độ. Nhãn
+        # trường và kiểm tiền/ngày vẫn dùng ranh giới dòng của bản gốc.
+        chu_ten = re.sub(r'[\t\r\n\f\v]', ' ', van_ban)
+        cac_lop += (
+            lambda: [(s.source, 'CONG_TY') for s in core.company_spans(chu_ten)],
+            lambda: [(s, 'CA_NHAN') for s in core.person_names(chu_ten)],
+            lambda: _cum_con_sot(chu_ten),
+        )
     for lop in cac_lop:
         try:
             cum.extend(lop())
@@ -335,8 +337,8 @@ def _cac_tien_ngay(van_ban):
     # bên dưới đều không thể khớp. Quét một lượt trước các lớp ngữ cảnh.
     if not _DAU_TIEN_NGAY.search(van_ban):
         return []
-    if not unicodedata.is_normalized('NFC', van_ban):
-        nfc, toa_do = _nfc_vi_tri(van_ban)
+    nfc, toa_do = _nfc_vi_tri(van_ban)
+    if nfc != van_ban:
         return [(toa_do[a][0], toa_do[b - 1][1], loai,
                  van_ban[toa_do[a][0]:toa_do[b - 1][1]])
                 for a, b, loai, _ in _cac_tien_ngay(nfc)]
@@ -380,7 +382,8 @@ def _vung_tien_ngay(van_ban):
 
 def _kiem_tien_ngay(truoc, sau):
     def tap_gia_tri(chu):
-        return Counter((loai, gia_tri) for _, _, loai, gia_tri in _cac_tien_ngay(_an_bi_danh(chu)))
+        return Counter((loai, gia_tri) for _, _, loai, gia_tri in
+                       _cac_tien_ngay(_an_bi_danh(bo_ky_tu_vo_hinh(chu))))
     return tap_gia_tri(truoc) == tap_gia_tri(sau)
 
 
@@ -474,7 +477,7 @@ def _che(van_ban, da_biet, kho):
     for a, b, nhom in nhan:
         a, b = toa_do[a][0], toa_do[b - 1][1]
         if nhom == 'DIA_CHI' and da_phat_hien.hit(a, b):
-            ung_vien.append((a, b, van_ban[a:b], nhom))
+            ung_vien.append((a, b, bo_ky_tu_vo_hinh(van_ban[a:b]), nhom))
     da_chiem = core.Occupied()
     co_ngoac = '[' in van_ban or ']' in van_ban
     for m in _VUNG_BI_DANH.finditer(van_ban) if co_ngoac else ():
@@ -499,17 +502,20 @@ def _che(van_ban, da_biet, kho):
             raise ValueError('Bí danh chưa hợp lệ.')
         if muc['nguon'] == 'tam':
             kho.ghi_nhan_gap_lai(ma, chuan_hoa(gia_tri), muc['nhom'])
-        phan.extend([van_ban[cuoi:a], bi_danh])
-        so_sanh.extend([van_ban[cuoi:a], '\x00'])
+        doan = bo_ky_tu_vo_hinh(van_ban[cuoi:a])
+        phan.extend([doan, bi_danh])
+        so_sanh.extend([doan, '\x00'])
         cuoi = b
         da_dung[bi_danh] = {'bi_danh': bi_danh, 'nhom': muc['nhom'], 'nguon': muc['nguon']}
-    phan.append(van_ban[cuoi:])
-    so_sanh.append(van_ban[cuoi:])
+    duoi = bo_ky_tu_vo_hinh(van_ban[cuoi:])
+    phan.append(duoi)
+    so_sanh.append(duoi)
     da_che = ''.join(phan)
     # Không có ứng viên được phép che và không có bí danh: bản dò không đổi.
     # Dùng lại lần quét đã hoàn tất; các lớp hậu kiểm độc lập vẫn chạy đầy đủ.
     co_ung_vien_che = any(2 <= len(gia_tri) <= 300 for _, _, gia_tri, _ in ung_vien)
-    da_do = (nfc, toa_do, phat_hien, day_du, bo_do) if not co_ung_vien_che and not co_ngoac else None
+    da_do = ((nfc, toa_do, phat_hien, day_du, bo_do)
+             if not co_ung_vien_che and not co_ngoac and da_che == van_ban else None)
     con_sot, da_kiem_het = _kiem_con_sot(da_che, tat_ca, da_do=da_do)
     canh_bao = []
     if not day_du or not da_kiem_het:

@@ -1,4 +1,85 @@
-# Đối chiếu bản ký — SDK 2.0, DC-6/DC-8, phiên bản 0.6.0 chưa phát hành
+# Đối chiếu bản ký — SDK 2.0, DC-7/DC-8, phiên bản 0.7.0 chưa phát hành
+
+## Lệch dấu và trang OCR kém — DC-7
+
+Không thêm capability hoặc đổi loại/schema/API. `so_van_ban` giữ bản DC-5
+và thêm snapshot DC-7 thống kê trang; hậu kiểm AI giữ bản DC-6 trước khi
+Python DC-7 xét nhiễu. Mỗi bước có chỉ mục Ngan/CAS riêng, chống trùng và
+tham chiếu `ho_so_truoc_dc7` để đọc lại bản đầu vào. Không có từ điển mặc
+định trong gói; chưa cần tra từ ở bước so hoặc khi chỉ còn điểm cứng.
+
+Nguồn nhóm lệch dấu là edit script đã kiểm tái dựng. Tra cả token đầy đủ
+quanh vị trí sửa, chuẩn NFC/casefold, từ/âm tiết và chứng nhận cặp vô nghĩa
+cụ thể. Vắng mục trong từ điển hữu hạn luôn là **chưa biết**, giữ Cần xem
+kể cả AI/OCR đồng ý. Cả sáu cặp thuê/thuế, lãi/lại, phạt/phát, bán/bàn,
+không/khống, hạn/hàn được bảo vệ khỏi việc khai thành cặp vô nghĩa.
+
+Bộ quy tắc ghim có thể khai phần mở `lech_dau`:
+
+```json
+{"phien_ban": 1,
+ "tu_dien": {"tep": "<đối tượng tệp Core>", "bam": "<SHA-256 bytes>", "phien_ban": "<phiên bản bộ>"},
+ "nguong_ocr_kem": null}
+```
+
+Đây là minh họa, không phải fixture chạy được. Tệp từ điển JSON có
+`phien_ban=1`, `ma`, `phien_ban_bo`, `nguon`, `giay_phep`, `pham_vi`,
+`am_tiet_co_nghia`, `tu_co_nghia`, `cap_vo_nghia_co_can_cu` (mỗi cặp có
+`word`, `ocr`, `can_cu`). Ref/phien_ban phải khớp nội dung; mã/băm phải
+khớp cấu hình đã ghim trong ngăn. Không dùng cờ `da_duyet` của caller.
+Thiếu bộ/tệp/quyền khi cần tra → `DC_THIEU_TU_DIEN`; sai ghim/nguồn →
+`DC_SAI_NGUON`. **DC-Q14 chưa có nguồn thật**; fixture ở `tests/fixtures`
+chỉ DEMO, không được tự nạp vào việc thật hoặc coi là bộ tiếng Việt đủ.
+
+Từ OCR vô nghĩa phải có chứng nhận cụ thể trong bộ, bản Word có nghĩa
+và không thuộc vùng bảo vệ mới được Python xếp nhiễu. Cặp có nghĩa cần
+đề nghị `nhieu_ocr` Local đã qua hậu kiểm DC-6 **và** OCR lại đọc đúng
+toàn cụm Word, đúng điểm/băm bản ký/phiên bản/trang/hộp/offset/hệ tọa độ/
+băm ảnh. Hộp khối không khớp đúng cụm không đủ chứng minh OCR từ. Nhiều
+kết quả OCR phải cùng khớp, không chọn kết quả thuận lợi. Thiếu/rỗng/khác
+kết quả, thiếu phiên bản, mất tệp/quyền OCR lại hoặc AI chưa chắc đều
+giữ Cần xem. Ảnh cắt do nguồn cấp được kiểm quyền/byte/băm/pixel và giữ
+để xem; chưa có ảnh cắt thì giữ null cùng ảnh trang, không bịa hộp Word.
+Cờ nghi ngờ ABBYY chỉ là bằng chứng phụ. Điểm cứng và điểm AI đã nâng
+Nghiêm trọng không được hạ hoặc xóa.
+
+`doi_chieu_ocr_vung` trong **ngữ cảnh Core**, không phải phong bì caller,
+là adapter đề nghị C-DC-05. CoreGia giả lập manifest gồm phiên bản/mã
+cặp/băm và phiên bản bản ký, danh sách ref JSON + nguồn/phiên bản OCR,
+`nang_luc=ocr.trich_vung@1`, `ma_ket_qua` nguồn. Nội dung từng ref có
+định danh nguồn/điểm/vùng nói trên, `van_ban` và tùy chọn `anh_cat`.
+Core phải chứng thực bước tạo kết quả và quyền, điều phối OCR thứ hai;
+engine không gọi OCR/Tesseract/Hot Folder. **Chưa có contract SDK thật**:
+không có manifest Core thì cặp có nghĩa luôn giữ Cần xem, dù caller đưa
+tệp tự khai có nội dung đúng. Băm hoặc tên nguồn không tự tạo provenance.
+Hỏi AI-2 còn nợ C-DC-07 mô tả bên dưới; provider DEMO không khép nợ đó.
+
+Mẫu số là token trên nguyên văn OCR **từng trang**: tách bằng khoảng
+trắng, bỏ dấu câu ở hai mép, giữ dấu câu bên trong (1.000.000 là một
+token), token phải chứa chữ/số; không đếm trùng nút khối/dòng/từ. Tử số
+là số token OCR phân biệt giao các thao tác chỉ lệch dấu, gồm cả điểm
+cứng; nhiều edit trong cùng token chỉ tính một. Lưu cả phân số và tỷ lệ;
+0 từ → tỷ lệ null, chưa kiểm. Không lấy số điểm hoặc số từ Word làm mẫu số.
+
+Ngưỡng mặc định null, thiếu thì `so_trang_ocr_kem=null`, chưa kiểm và
+không kết luận trang tốt. Chỉ bộ ghim mới được cấp ngưỡng đã đo dạng
+`{ty_le: 0..1, phien_ban, nguon_do}`; các số trong test là DEMO, **không
+là ngưỡng vận hành DC-Q15**. Vượt nghiêm ngặt mới đánh dấu OCR kém,
+giữ ảnh trang, nhóm mã nhiễu và **riêng mọi mã Nghiêm trọng**. Mọi điểm,
+nguyên văn, edit script và nhật ký DC-5 vẫn giữ trong snapshot.
+
+`muc_san=can_xem` của ứng viên là mức tạm DC-5, được giữ nguyên để kiểm
+toán. Chỉ Python DC-7 có thể xếp ứng viên đó thành `muc=nhieu_ocr` sau
+kiểm trên; validator DC-5 không bị nới. Bước DC-9 cần dùng
+`lech_dau.kiem_bat_bien(out,goc,viec=...,doc=...)`, đọc `goc` độc lập từ
+`ho_so_truoc_dc7`/chỉ mục Ngan; validator tính lại bằng từ điển và manifest
+Core thay vì tin chứng nhận/boolean trong output. Chưa đủ nguồn kiểm lại
+thì không được công bố kết luận sạch. `da_kiem_du=false`, `ket_luan=null`
+và `de_nghi_chan=true` vẫn giữ tới DC-9.
+
+Đã kiểm bằng Core giả (CoreGia), chỉ DEMO, 0 Cloud; chưa kiểm Core thật,
+Linux, từ điển/OCR/model thật. Không cấu hình/sổ/đệm bền hoặc tệp tạm;
+chỉ Ngan và kho tệp Core. Kết quả và số đo tại `docs/VIEC.md` của engine.
 
 ## Chuẩn bị và hậu kiểm Local AI — DC-6
 

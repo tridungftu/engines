@@ -17,6 +17,7 @@ from kho_tri_thuc_sdk.engine import ChuaRo, Engine, LoiNghiepVu
 from test_dc3 import Mau, PN, MODULE, chay, hs, kiem_loi
 from test_dc4 import dat_cap, so
 from test_dc5 import bo_demo, dat_bo, qt
+from demo_lech_dau import dat_tu_dien
 
 cb = importlib.import_module("e_doi_chieu.chuan_bi_ai")
 hk = importlib.import_module("e_doi_chieu.hau_kiem_ai")
@@ -66,6 +67,7 @@ def mau(monkeypatch):
     m = Mau()
     monkeypatch.setattr(chay, "ngan", m.ngan)
     dat_bo(m, bo_demo())
+    dat_tu_dien(m)
     m.provider = DieuPhoiDEMO()
     yield m
     assert m.provider.cloud == 0
@@ -350,10 +352,11 @@ def test_mat_xac_nhan_va_giao_lai_khong_nop_trung(mau, buoc):
     r = chay_buoc(mau, buoc, pb, params)
     assert r["trang_thai"] == "XONG", r
     assert len([k for k in mau.core._idem if k[1:3] == ("ket_qua", r["id"])]) == 1
-    assert mau.core.so_tai == dem_tep + 1 and len(mau.cac_luot()) == dem_luot + 1
+    snapshots = 2 if buoc == "phan_loai_diem_lech" else 1  # DC-6 + hậu kiểm DC-7, từng bản chỉ tạo một lần.
+    assert mau.core.so_tai == dem_tep + snapshots and len(mau.cac_luot()) == dem_luot + snapshots
     lap = chay_buoc(mau, buoc, pb, params)
     assert lap["trang_thai"] == "XONG" and lap["ket_qua"] == r["ket_qua"]
-    assert mau.core.so_tai == dem_tep + 1 and len(mau.cac_luot()) == dem_luot + 1
+    assert mau.core.so_tai == dem_tep + snapshots and len(mau.cac_luot()) == dem_luot + snapshots
 
 
 @pytest.mark.parametrize("buoc,moc", [("chuan_bi_ai", 5), ("chuan_bi_ai", 80), ("phan_loai_diem_lech", 5), ("phan_loai_diem_lech", 85)])
@@ -475,7 +478,8 @@ def test_cas_xung_dot_thu_lai_khong_nhan_doi_luot(mau, monkeypatch, buoc):
     so_luot, so_tep = len(mau.cac_luot()), mau.core.so_tai
     r = chay_buoc(mau, buoc, pb, params)
     assert r["trang_thai"] == "XONG", r
-    assert len(mau.cac_luot()) == so_luot + 1 and mau.core.so_tai == so_tep + 1 and lan[0] >= 3
+    snapshots = 2 if buoc == "phan_loai_diem_lech" else 1
+    assert len(mau.cac_luot()) == so_luot + snapshots and mau.core.so_tai == so_tep + snapshots and lan[0] >= 3
 
 
 @pytest.mark.parametrize("value", [float("nan"), float("inf"), "\ud800"])

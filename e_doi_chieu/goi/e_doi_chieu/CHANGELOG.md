@@ -1,5 +1,34 @@
 # Thay đổi
 
+## DC-7 — 15/11/2026 · 0.7.0 chưa phát hành
+
+- Thêm `lech_dau.py`, `tu_dien.py`, nối `chay.py` sau so/hậu kiểm; không
+  đổi capability/API/schema hoặc hai mẫu NGAN-0. Từ điển chỉ fixture
+  DEMO ở tests, không có bộ mặc định trong gói; nguồn thật chờ DC-Q14.
+- Phân nhóm từ edit script đã tái dựng; tra token đầy đủ/từ/âm tiết có
+  phiên bản/băm/nguồn/giấy phép. Vắng mục giữ chưa biết/Cần xem; chỉ cặp
+  vô nghĩa có chứng nhận cụ thể và ngoài vùng bảo vệ mới được xét nhiễu.
+- Cặp có nghĩa cần Local AI đã kiểm trích dẫn và OCR lại đúng vùng cùng
+  ra Word. Sáu cặp đổi nghĩa không tự được bỏ qua; cờ ABBYY không thay
+  OCR lại. Manifest Core gắn đúng capability/kết quả nguồn, băm bản ký,
+  phiên bản/trang/vùng/điểm/ảnh/offset; caller không tự cấp provenance.
+  Thiếu/rỗng/khác OCR hoặc mất quyền kết quả giữ Cần xem, ảnh cắt nếu có.
+- Tỷ lệ trang dùng số token OCR phân biệt bị lệch dấu trên tổng token
+  trang; không đếm trùng edit/nút OCR, 0 token để null. Thiếu ngưỡng giữ
+  chưa kiểm; bộ DEMO chỉ mô phỏng ngưỡng đã đo, DC-Q15 vẫn mở. Trang OCR
+  kém giữ ảnh, nhóm nhiễu, riêng mọi điểm cứng và toàn bộ edit/điểm gốc.
+- Sàn/nhật ký DC-5 giữ nguyên; validator DC-7 tính lại từ nguồn tin cậy
+  trước khi cho Python phân loại ứng viên tạm thành nhiễu. Không hạ điểm
+  cứng hoặc mức AI đã nâng. DC-9 cần dùng validator DC-7 và tham chiếu
+  `ho_so_truoc_dc7`; không tin các boolean trong kết quả như chứng cứ.
+- Ngan/CAS/chống trùng; mỗi bước giữ cả snapshot tiền nhiệm và kết quả,
+  không lưu gì bền trên engine. Giữ hủy/ACK/giao lại và phục hồi snapshot
+  mất quyền từ nguồn còn quyền. Test DC-4/DC-6 cập nhật số snapshot theo
+  hai bước độc lập, không giảm kiểm chống trùng; 0 Cloud.
+- Đã kiểm bằng Core giả (CoreGia); kết quả ba lệnh, số đo và Cần Core
+  ghi tại VIEC. Chưa khép từ điển/contract OCR vùng/ngưỡng/model thật hoặc
+  nợ Hỏi AI C-DC-07. Không commit/push; PR: **chờ lead mở**.
+
 ## DC-6 — 15/11/2026 · 0.6.0 chưa phát hành
 
 - Thêm chuẩn bị `ho_so_doi_chieu → yeu_cau_ai` và hậu kiểm

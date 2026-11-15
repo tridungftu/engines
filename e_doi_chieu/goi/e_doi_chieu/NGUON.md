@@ -1,5 +1,45 @@
 # Nguồn của gói Đối chiếu
 
+## DC-7 — 15/11/2026 · 0.7.0 chưa phát hành
+
+Viết mới `lech_dau.py`, `tu_dien.py` theo DC-f/DAC-TA §4 và phiếu
+DC-7; `chay.py` nối sau so DC-5 và hậu kiểm DC-6. Chỉ ba tệp runtime,
+không đổi validator/lõi DC-5/DC-6, API hoặc schema chung. Dùng thư viện
+chuẩn/SDK 2.0.0 đã ghim, không thêm dependency hoặc mã engine khác.
+Nguồn từ điển thật có giấy phép **chưa được cấp DC-Q14**. Không tải mạng,
+model, từ điển hoặc bộ OCR. Pillow đang ghim từ DC-8 chỉ được helper test
+dùng tạo raster/crop DEMO; runtime DC-7 kiểm ảnh bằng hàm đã có.
+
+`tests/fixtures/DEMO-tu-dien-dc7.json` tự soạn: sáu cặp có nghĩa cùng
+một chứng nhận lỗi DEMO hơp→hợp. Không chứa tên/hồ sơ thật, không là từ
+điển tiếng Việt đầy đủ hoặc nguồn vận hành được duyệt. Không đóng gói
+fixture vào runtime. Test tải lên CoreGia, ghim bytes/phien_ban/nguon/
+giay_phep trong bộ và mã/băm trong cấu hình Ngan; không fallback tự nạp.
+Không có mục không đủ chứng minh vô nghĩa, kể cả AI/OCR cùng đồng ý.
+
+`tests/demo_lech_dau.py` và `tests/test_dc7.py` tái dùng bộ DEMO DC-3…6,
+CoreGia + adapter quyền/manifest OCR giả; tất cả tọa độ/kết quả/ảnh phục
+vụ kiểm giao thức. Không đo quality OCR/Local AI/scan thật. Adapter chỉ
+ở tests, không được nhập vào runtime. Ngưỡng trong bộ test có nhãn DEMO;
+DC-Q15 và contract OCR vùng C-DC-05 vẫn mở. Hai mẫu NGAN-0 và bốn schema
+nguồn/bản chép giữ nguyên, được test so băm LF trong bộ tổng.
+
+Đã kiểm bằng Core giả (CoreGia). Quét token 500.000 ký tự: chuỗi lặp
+tiếng Việt/tiền (80.000 token) **0,1363 giây**; một token dài **0,0911
+giây**. Test hủy giữa token dài và ngưỡng <2 giây đạt. Chỉ số đo riêng
+bộ quét trên máy này, không là tốc độ toàn tuyến hoặc quality OCR.
+
+SHA-256 UTF-8 sau CRLF→LF (bảng lát cũ phía dưới giữ làm lịch sử):
+
+| Tệp | SHA-256 LF |
+|---|---|
+| `e_doi_chieu/lech_dau.py` | `73fa13f993102c1f55666489b2b8c4cd890e58478882308ee2649e55107d4d3d` |
+| `e_doi_chieu/tu_dien.py` | `4ac5ec887ae9a732f2a69675ae69b9b28801a583b4310cb5986830e8ca874481` |
+| `e_doi_chieu/chay.py` | `2be74ff56cf10f4d3dcaa7bb656173ef0ef504a9fb80302b42b9697baa0a6d92` |
+| `engine.json` | `4242039b8140e88eadf448b00899336cefa38a08ceecc7a6121e14e500842a4c` |
+| Repo: `tests/fixtures/DEMO-tu-dien-dc7.json` | `099578cf973f00a5b4bb07d314717cbfc6a86424684dcd763e1a5cf57433ca26` |
+| Repo: `tests/test_dc7.py` | `c246e51809fbc9c9f148bad1c9d370a63aefdcc6443b4ca02ce943d72a3e4063` |
+
 ## DC-6 — 15/11/2026 · 0.6.0 chưa phát hành
 
 `chuan_bi_ai.py`, `hau_kiem_ai.py` viết mới theo phiếu DC-6, DAC-TA §5.2,

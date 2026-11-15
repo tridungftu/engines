@@ -1,0 +1,13 @@
+{
+  "phien_ban": 1,
+  "ma": "DEMO-tu-dien-dc7",
+  "phien_ban_bo": "DEMO-1",
+  "nguon": "Fixture DEMO tự soạn trong DC-7 ngày 15/11/2026; không phải từ điển tiếng Việt đầy đủ.",
+  "giay_phep": "Nội dung DEMO của dự án, chỉ dùng kiểm thử; nguồn thật chờ DC-Q14.",
+  "pham_vi": "DEMO",
+  "am_tiet_co_nghia": ["thuê", "thuế", "lãi", "lại", "phạt", "phát", "bán", "bàn", "không", "khống", "hạn", "hàn", "hợp", "đồng", "pháp", "kiểm", "cửa", "sổ"],
+  "tu_co_nghia": ["hợp đồng", "cửa sổ"],
+  "cap_vo_nghia_co_can_cu": [
+    {"word": "hợp", "ocr": "hơp", "can_cu": "DEMO: lỗi bỏ dấu nặng cố ý cài vào token hợp; bản vàng DEMO xác nhận hơp vô nghĩa trong mẫu này."}
+  ]
+}

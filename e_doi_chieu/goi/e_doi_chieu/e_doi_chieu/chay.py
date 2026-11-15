@@ -12,6 +12,7 @@ from .ho_so import nhan_cap as _nhan_cap
 from .quy_tac import so_van_ban as _so_van_ban
 from .chuan_bi_ai import chuan_bi_ai as _chuan_bi_ai, kiem_prompt
 from .hau_kiem_ai import phan_loai_diem_lech as _phan_loai_diem_lech
+from .lech_dau import xu_ly_ho_so as _kiem_lech_dau
 
 _GOI = Path(__file__).resolve().parent.parent
 app = Engine.tu_khai_bao(str(_GOI / "engine.json"))
@@ -76,8 +77,9 @@ def so_van_ban(viec):
     cau_hinh = can_cau_hinh(ngan_viec)
     thoi_han = next(n["gioi_han"]["thoi_han_giay"] for n in app.phieu["nang_luc"]
                    if n["ma"] == "doi_chieu.so_van_ban@1")
-    return _so_van_ban(viec, ngan_viec, cau_hinh,
-                       phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
+    pb = _so_van_ban(viec, ngan_viec, cau_hinh,
+                    phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"], thoi_han_viec_giay=thoi_han)
+    return _kiem_lech_dau(viec, ngan_viec, cau_hinh, pb)
 
 
 # DC-8 — khối đăng ký riêng; DC-5 bổ sung độc lập ở phía trên.
@@ -115,8 +117,10 @@ def chuan_bi_ai(viec):
 def phan_loai_diem_lech(viec):
     ngan_viec = getattr(viec, "ngan", None)
     ngan_doc = ngan if ngan_viec is None else ngan_viec
-    return _phan_loai_diem_lech(viec, ngan_doc, can_cau_hinh(ngan_doc),
-                              phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"])
+    cau_hinh = can_cau_hinh(ngan_doc)
+    pb = _phan_loai_diem_lech(viec, ngan_doc, cau_hinh,
+                            phien_ban_engine="e_doi_chieu " + app.phieu["phien_ban"])
+    return _kiem_lech_dau(viec, ngan_doc, cau_hinh, pb, hau_kiem=True)
 
 
 if __name__ == "__main__":

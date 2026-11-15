@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| DC-7 (phiếu mới) | Lệch dấu năm bước, từ điển ghim, bằng chứng OCR lại và tỷ lệ trang | DC-f; Q12/14/15 | Xong phạm vi CoreGia — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **881 passed, 0 skipped** (85 ca DC-7); kiểm độc lập ĐẠT, ba mã thoát 0. Chỉ DEMO, 0 Cloud. Nguồn từ điển thật DC-Q14, ngưỡng DC-Q15 và contract OCR vùng C-DC-05 vẫn thiếu. |
 | DC-6 (phiếu mới) | Chuẩn bị yêu cầu Local AI, ghim hồ sơ Core và hậu kiểm độc lập nguồn/trích dẫn/sàn Python | DC-h | Xong phạm vi CoreGia — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 796 passed, 0 skipped (88 ca DC-6); kiểm độc lập ĐẠT, ba mã thoát 0. Provider Cloud = 0. Tích hợp Hỏi AI còn C-DC-07, giữ Cần xem bảo thủ. |
 | DC-5 (phiếu mới) | Quy tắc cứng, bảo vệ số/định danh và kiểm tiền bằng số ↔ chữ trong bản ký | DC-g | Xong — 15/11/2026 | PR: **chờ lead mở**. Đã sửa ba điểm kiểm độc lập lead. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest 629 passed, 0 skipped (222 ca DC-5); kiểm độc lập ĐẠT; cả ba lệnh mã 0. Bộ quét tiền 400.000–500.000 ký tự <2 giây và hủy giữa chừng đạt. Thiếu nhận diện/phân tích giữ chưa đủ kiểm. |
 | DC-8 (phiếu mới) | Khảo sát và bản đầu vùng nghi sửa tay, ảnh cắt Core, so sánh phương pháp và đo DEMO | DC-j; Q04/07/08/13 | Xong phạm vi khảo sát/bản đầu — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **486 passed, 0 skipped** (79 ca DC-8); kiểm độc lập mã 0. Thuật toán thật 12 ca: TP=3/FP=0/FN=3, recall 50%; **chưa đạt vận hành**, giữ chặn/chưa kiểm đủ. Local vision chưa đo. |
@@ -25,6 +26,127 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Đề xuất loại `ho_so_doi_chieu` đã ghi **ĐỀ XUẤT DC-P, chờ Anh** ở cuối `_chung/docs/LOAI-DU-LIEU-RIENG.md` §5; chưa tạo schema/kích hoạt. Tái dùng nguyên ba loại `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`; không đổi `bang_trich_xuat`.
 - Quy tắc mới: không lưu gì bền trên máy engine; cấu hình/chỉ mục/danh mục/xác nhận qua `Ngan`, snapshot/ảnh/báo cáo qua kho tệp Core; màn trong `goi/e_doi_chieu/ui/`. Không dùng `cau_hinh_may`/`kho_tam` cũ.
 - Kiểm DC-P ngày 15/11/2026: regex theo yêu cầu đọc **14/14 khối** §4 (DC-0…DC-13, fence mở trơn); đủ §1…§5; tổng bảng **57 giờ ƯỚC TÍNH**; bảng chọn **17 mã duy nhất**; `git diff --check` mã thoát 0; phạm vi đúng **3 tệp Markdown**, không tạo `goi/`, `ma-nguon/`, `tests/`. Ba lệnh AGENTS.md §5 **không áp dụng cho lát chỉ tài liệu**, theo yêu cầu riêng DC-P; không ghi kết quả CoreGia hoặc test engine như đã chạy.
+
+## DC-7 — 15/11/2026
+
+**Kết luận: Đạt phạm vi DC-7 kiểm CoreGia; chưa nghiệm thu nguồn thật.
+PR: chờ lead mở.** Thời gian **17:02–17:34 ngày 15/11/2026 (UTC+7),
+khoảng 0,53 giờ**. Phiếu: **4 giờ ƯỚC TÍNH**.
+Đã kiểm bằng Core giả (CoreGia), NganBoNho/adapter quyền và OCR vùng
+DEMO; chưa kiểm Core thật/Linux/OCR/Local AI hoặc từ điển thật.
+
+- Đúng ba tệp runtime: mới `lech_dau.py`, `tu_dien.py`; nối `chay.py`
+  sau so DC-5 và hậu kiểm DC-6. Manifest chỉ tăng phiên bản `0.7.0`,
+  không đổi capability/API/schema, mẫu NGAN-0 hoặc lõi DC-5/DC-6/DC-8.
+  Không thêm dependency, sửa `ma-nguon/`, engine khác hay tài liệu cổng.
+- Nhóm chỉ lệch dấu từ edit script có kiểm tái dựng. Tra token trọn vẹn
+  quanh ký tự sửa, từ/âm tiết có nghĩa hoặc cặp vô nghĩa có chứng nhận
+  cụ thể, ghim đúng mã/phiên bản/băm/nguồn/giấy phép. Vắng mục trong bộ
+  hữu hạn là chưa biết, giữ Cần xem kể cả AI/OCR đồng ý. Thiếu bộ hoặc
+  quyền khi cần → `DC_THIEU_TU_DIEN`; sai nguồn → `DC_SAI_NGUON`.
+  **Nguồn thật DC-Q14 vẫn chưa có**, không có từ điển mặc định trong gói.
+- Cặp có nghĩa chỉ thành nhiễu khi Local AI đã hậu kiểm đủ và OCR lại
+  đọc đúng toàn cụm Word, khớp băm/phiên bản bản ký, mã điểm, trang, hộp,
+  offset, hệ tọa độ, băm ảnh và nguồn/phiên bản. Hộp khối lớn không đủ
+  chứng minh OCR từ. Manifest trong ngữ cảnh Core phải gắn capability
+  `ocr.trich_vung@1` và kết quả nguồn; tệp/cờ caller tự khai không đủ.
+  Nhiều nguồn cùng khớp mới chấp nhận; không chọn một kết quả thuận lợi.
+- Thiếu/rỗng/khác OCR, mất tệp/quyền OCR lại, thiếu phiên bản hoặc AI
+  chưa chắc giữ Cần xem. Cờ ABBYY chỉ phụ. Ảnh cắt nguồn cấp được kiểm
+  quyền/byte/băm/pixel và giữ nếu có; không có thì null cùng ảnh trang.
+  Engine không gọi OCR/Tesseract/Hot Folder/Local AI hoặc Cloud.
+- Giữ nguyên mọi điểm/edit/nguyên văn, `muc_san` và nhật ký DC-5. Chỉ
+  Python DC-7 có thể phân loại ứng viên tạm can_xem thành nhiễu, có
+  validator tính lại từ bộ/tệp/manifest tin cậy; không tin boolean trong
+  output. Vùng cứng và điểm AI đã nâng Nghiêm trọng không bị hạ. Lưu
+  `ho_so_truoc_dc7` để DC-9 đọc lại gốc độc lập và dùng validator DC-7.
+- Mẫu số: token OCR trên nguyên văn từng trang, tách khoảng trắng, bỏ
+  dấu câu hai mép, giữ dấu câu bên trong (1.000.000 là một token), phải
+  chứa chữ/số; không đếm trùng khối/dòng/từ. Tử số là token OCR phân biệt
+  giao edit chỉ lệch dấu, gồm điểm cứng; nhiều edit trong token tính một.
+  Lưu phân số và tỷ lệ; 0 từ → null/chưa kiểm. Thiếu ngưỡng không kết
+  luận trang tốt, `so_trang_ocr_kem=null`. Ngưỡng mô phỏng trong bộ test
+  chỉ DEMO; **DC-Q15 chưa có số đo/ngưỡng vận hành được duyệt**.
+- Khi vượt ngưỡng ghim, đánh dấu OCR kém/ảnh trang, nhóm mã nhiễu và
+  riêng toàn bộ mã Nghiêm trọng. Không xóa điểm khỏi snapshot. Chưa tổng
+  hợp DC-9: `da_kiem_du=false`, `ket_luan=null`, `de_nghi_chan=true`.
+- Ngan giữ/chốt/CAS từng bước; snapshot đầy đủ và tiền nhiệm chỉ ở
+  kho Core, không cấu hình/sổ/đệm bền/tệp tạm trên engine. SDK chỉ nộp
+  một kết quả; mất ACK/giao lại không tạo trùng từng bước. Snapshot cũ
+  hết quyền được dựng lại từ nguồn còn quyền, không trả ref đã hỏng.
+  Test DC-4/DC-6 cập nhật số snapshot do có bước DC-7 độc lập, giữ các
+  kiểm CAS/chống trùng/hủy và một lần nộp kết quả.
+- 85 ca DC-7: 24 tổ hợp sáu cặp có nghĩa/hai chiều/có-vắng OCR; hơp→hợp
+  có chứng nhận DEMO; từ lạ không trong bộ; bên ký/tiền chữ; AI đồng ý
+  nhưng OCR thiếu/sai/rỗng/khác nguồn/vùng/băm/phiên bản; OCR đồng ý
+  nhưng AI chưa chắc; cả hai đồng ý; caller tự khai/cờ ABBYY; hai OCR
+  mâu thuẫn; ảnh cắt; từ điển thiếu/sai/mất quyền; tỷ lệ từng trang,
+  nhiều edit một token/0 token/biên ngưỡng; trang kém vẫn giữ điểm cứng;
+  NFD/offset Unicode; chống trùng/ACK, hủy/giao lại, cấm mạng/ghi bền.
+
+### Kết quả kiểm DC-7
+
+Python **3.13.14**, `.venv` trong worktree dùng system-site-packages cho
+pytest **9.1.1**/Pillow **12.3.0** đã có; SDK **2.0.0** cài offline
+`--no-index --no-deps`. Engine chưa chuyển 2.2, giữ NGAN-0 nguyên bản
+theo lệnh lead; không tự làm lát chuyển SDK. Wheel SHA-256
+`a507af85f40bbdb5e0dc541a46a17c1779800d0da39176dcfa43d54759790892`
+khớp `SHA256SUMS.txt`. `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`.
+
+Kết quả cuối, **đã kiểm bằng Core giả (CoreGia)**:
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.7.0: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q
+881 passed in 122.67s (0:02:02)
+0 skipped; 85 ca DC-7; mã thoát 0.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập
+Mã thoát 0.
+```
+
+Quét riêng **500.000 ký tự**: chuỗi lặp tiếng Việt/tiền, **80.000 token,
+0,1363 giây**; một token dài, **0,0911 giây**. Test `<2 giây` và hủy
+giữa token dài đạt. Không suy thành tốc độ toàn tuyến/chất lượng OCR.
+Git diff --check mã 0; gói không có `__pycache__`/`.pyc`.
+
+Kiểm bàn giao: 6/6 băm nguồn hiện hành trong NGUON khớp LF; 2/2 bản
+chép NGAN-0 giữ nguyên LF. Vẫn ở `codex/e_doi_chieu-dc-7`; không
+commit/push, PR **chờ lead mở**.
+
+### Cần Core / lead — cập nhật DC-7
+
+- **C-DC-05 (còn thiếu):** contract OCR vùng SDK thật, nguồn/trang/hộp/
+  cờ nghi ngờ và ảnh cắt. Đề nghị manifest Core ràng buộc ref+băm tới
+  kết quả của `ocr.trich_vung@1`/bộ OCR thứ hai, có phiên bản nguồn và
+  đúng bản ký/phiên bản/điểm/vùng. Core phải chứng thực producer/quyền,
+  không chép trường caller thành ngữ cảnh tin cậy. Adapter ở tests chỉ
+  mô phỏng hợp đồng; runtime vắng nó giữ Cần xem cho cặp có nghĩa.
+- **C-DC-02:** Core điều phối OCR lại sau khi có mã điểm và chuyển kết
+  quả/provenance tin cậy sang hậu kiểm, kể cả khi phát lại cùng phản hồi
+  AI với bằng chứng mới. Cấp quyền tất cả tệp con/crop/snapshot xuyên
+  bước/ACK/pháp nhân/module. Lượt OCR đã nhận nhưng chưa trả thuộc tầng
+  OCR báo `ChuaRo`; DC-7 không tự gọi hoặc giả có kết quả nguồn.
+- **L-DC-01 / DC-Q14 (còn thiếu):** lead trình bản từ điển sạch có giấy
+  phép/phiên bản/băm/nguồn và chứng nhận cặp không đổi nghĩa. Fixture
+  DEMO không thay nguồn này, không chứng nhận vốn từ/ngữ nghĩa tiếng
+  Việt thật. Không phát sinh câu xin Anh duyệt lại.
+- **DC-Q15:** cần đo DC-13 rồi duyệt ngưỡng OCR kém. Giữ null ở cấu hình;
+  nhánh vượt ngưỡng chỉ kiểm bằng bộ DEMO ghim, không tự đặt mặc định.
+- **C-DC-07 / Hỏi AI** vẫn mở: metadata phân loại còn bị handler AI-2
+  coi là giá trị trích xuất. Các ca đồng ý AI/OCR của DC-7 dùng provider
+  DEMO, không tuyên bố khép tích hợp Hỏi AI/Local AI thật.
+- **DC-9:** dùng validator DC-7 với gốc đọc độc lập từ Core/chỉ mục Ngan
+  và nguồn OCR đã chứng thực. Validator DC-5 vẫn chặn mọi hạ sàn; không
+  nới nó để tin cờ `ai_dat`/`ocr_lai_dat` hoặc chứng nhận trong output.
+- Ngăn bền/cấu hình SDK 2.2, vòng đời tệp và chặn hiệu lực module còn
+  theo C-DC-01/02/04; không đóng các nợ này bằng CoreGia/RAM. Không có
+  Chờ Anh mới, không sửa Core/schema chung, không commit/push.
 
 ## DC-6 — 15/11/2026
 

@@ -157,7 +157,7 @@ def test_cap_giong_nhau_chua_ket_luan_sach(mau):
     assert s["kiem_tra"]["so_van_ban"] == "dat" and s["kiem_tra"]["quy_tac_cung"] == "chua_kiem"
     assert s["kiem_tra"]["trang"] == "chua_kiem"
     assert s["ket_luan"] is None and not s["da_kiem_du"] and s["de_nghi_chan"]
-    assert len(mau.cac_luot()) == 2
+    assert len(mau.cac_luot()) == 3  # Nhận cặp, so DC-5 và kiểm trang DC-7, mỗi bước một bản.
     row = [b.gia_tri for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"][0]
     assert len(hs.json_bytes(row)) < 65536 and "Công ty" not in hs.json_bytes(row).decode()
 
@@ -592,7 +592,7 @@ def test_cas_so_xung_dot_khong_tai_lai_tep(mau, monkeypatch, so_lan):
     else:
         kiem_loi(r, "NGAN_XUNG_DOT")
         assert any(b.gia_tri["trang_thai"] == "can_thu_lai" for b in mau.cac_luot())
-    assert mau.core.so_tai == count + 1
+    assert mau.core.so_tai == count + (2 if so_lan == 1 else 1)
 
 
 def test_cas_chu_cu_khong_chot_cleanup_de_chu_moi(mau, monkeypatch):
@@ -635,7 +635,7 @@ def test_hai_viec_so_dong_thoi_mot_luot_va_co_the_thu_lai(mau, monkeypatch):
     assert sorted(r["trang_thai"] for r in rs) == ["LOI", "XONG"]
     kiem_loi(next(r for r in rs if r["trang_thai"] == "LOI"), "DC_DANG_XU_LY")
     assert so(mau, pb)["ket_qua"] == next(r for r in rs if r["trang_thai"] == "XONG")["ket_qua"]
-    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 1
+    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 2  # DC-5 và DC-7 không tạo trùng từng bước.
 
 
 def test_cache_mat_tep_so_duoc_dung_lai(mau):
@@ -645,7 +645,7 @@ def test_cache_mat_tep_so_duoc_dung_lai(mau):
     new = so(mau, pb)
     snapshot_so(mau, new)
     assert new["ket_qua"]["ho_so_doi_chieu"]["ho_so"]["tep_id"] != r["ket_qua"]["ho_so_doi_chieu"]["ho_so"]["tep_id"]
-    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 1
+    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 2
 
 
 def test_cache_sai_bam_khong_tu_bo_qua(mau):
@@ -680,8 +680,8 @@ def test_mat_xac_nhan_tai_tep_ket_qua_khong_trung(mau):
     for tac in ("tep", "ket_qua", "ket_thuc"):
         mau.core.gay_mat_xac_nhan(tac)
     snapshot_so(mau, so(mau, pb))
-    assert mau.core.so_tai == 2
-    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 1
+    assert mau.core.so_tai == 3  # Hai snapshot bất biến DC-5/DC-7, một kết quả SDK.
+    assert len([b for b in mau.cac_luot() if b.gia_tri["trang_thai"] == "da_so"]) == 2
 
 
 def test_loi_la_khong_lo_noi_dung_ngoai_le(mau, monkeypatch, capsys):

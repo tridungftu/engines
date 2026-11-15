@@ -23,7 +23,7 @@ def _o(v):
 
 def cac_sheet(b):
     cot = ["Mã", "Tên", "Kiểu", "Giá trị", "Nguyên văn AI", "Đơn vị nguyên văn",
-           "Ghi chú", "Cần soát", "Lý do", "Kiểm tra logic", "Dấu kiểm legacy"]
+           "Ghi chú", "Cần soát", "Lý do", "Kiểm tra logic", "Dấu kiểm tạm E6", "Đã chuyển kiểu"]
     bang = [cot]
     dan = [["Mã", "Câu nguyên văn", "Bắt đầu Unicode", "Kết thúc Unicode",
             "Loại vị trí", "Nhãn", "Số trang", "Hộp OCR"]]
@@ -31,7 +31,7 @@ def cac_sheet(b):
         bang.append([r["ma"], r["ten"], r["kieu"], _o(r["gia_tri"]), _o(r["nguyen_van"]),
                      _o(r["don_vi_nguyen_van"]), _o(r["ghi_chu"]), _o(r["can_soat"]),
                      "\n".join(r["ly_do"]), "\n".join(r["kiem_tra_logic"]),
-                     _o(r.get("kiem_tra_legacy"))])
+                     _o(r.get("dau_kiem_tam_e6")), _o(r["kieu_da_chuyen"])])
         for q in r["dan_chung"]:
             v = q["vi_tri"]
             dan.append([r["ma"], q["cau"], q["bat_dau"], q["ket_thuc"], v["loai"],

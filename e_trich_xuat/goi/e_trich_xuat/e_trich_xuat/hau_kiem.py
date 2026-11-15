@@ -16,7 +16,7 @@ from .kiem_tra import kiem_o
 from .logic import kiem_tra_logic, kiem_quy_tac_bo
 from .tham_so import (BAM, MA, bam_bytes, chon_tham_so, doc_bo, doc_json,
                       json_bytes, kiem_hoi_them)
-from .tich_hop import build_prompt, kiem_ngan_sach, tao_khuon
+from .tich_hop import HO_SO_TOI_DA_BYTE, build_prompt, kiem_ngan_sach, tao_khuon
 
 
 DONG_TOI_DA = 200
@@ -116,7 +116,7 @@ def doc_ho_so(viec, ai):
              and kiem_tep(meta["ho_so_hau_kiem"], mime="application/json")
              and _bam(meta["bam_ho_so_hau_kiem"]))
         tep = meta["ho_so_hau_kiem"]
-        if tep["kich_thuoc"] > JSON_TOI_DA:
+        if tep["kich_thuoc"] > HO_SO_TOI_DA_BYTE:
             loi("VUOT_GIOI_HAN")
     except LOI_CAU_TRUC:
         loi("HO_SO_HAU_KIEM_KHONG_HOP_LE")
@@ -124,7 +124,7 @@ def doc_ho_so(viec, ai):
     # Không đổi lỗi quyền/mạng/lease thành không thấy căn cứ hoặc bảng rỗng.
     try:
         with viec.mo_tep(tep["tep_id"]) as f:
-            raw = f.read(JSON_TOI_DA + 1)
+            raw = f.read(HO_SO_TOI_DA_BYTE + 1)
     except LoiDuongTruyen as exc:
         if exc.http_status == 413:
             loi("VUOT_GIOI_HAN")
@@ -134,7 +134,7 @@ def doc_ho_so(viec, ai):
             loi("VUOT_GIOI_HAN")
         raise
     viec.kiem_huy()
-    if len(raw) > JSON_TOI_DA:
+    if len(raw) > HO_SO_TOI_DA_BYTE:
         loi("VUOT_GIOI_HAN")
     _can(len(raw) == tep["kich_thuoc"] and bam_bytes(raw) == meta["bam_ho_so_hau_kiem"])
     try:
@@ -157,7 +157,9 @@ def doc_ho_so(viec, ai):
         _can(hs["bam_van_ban"] == bam_bytes(tl["van_ban"].encode("utf-8")))
         _kiem_trang(tl)
         _can(_bang_json(hs["cau_truc"], build_structure(tl["van_ban"], viec.kiem_huy)))
-        req = hs["yeu_cau_ai"]
+        # Hồ sơ gọn bỏ bản chép toàn văn trong request. Bản TX-2 cũ có
+        # trường này vẫn được kiểm đúng giá trị, không ghi đè sai lệch.
+        req = {"tai_lieu": tl["van_ban"], **hs["yeu_cau_ai"]}
         _can(hs["ma_truong_can_trich"] == [p["ma"] for p in params]
              and _bang_json(req["khuon_tra_loi"], tao_khuon(params))
              and req["tai_lieu"] == tl["van_ban"]
@@ -241,7 +243,7 @@ def hau_kiem(viec, *, phien_ban_engine="e_trich_xuat 0.3.0"):
         ma = p["ma"]
         o = data.get(ma, trong)
         ck = kiem_o(o, hs["tai_lieu"], hs["cau_truc"], bo_sot=ma not in data and ai["du_lieu"] is not None)
-        bang.append({"ma": ma, "ten": p["ten"], "kieu": "van_ban",
+        bang.append({"ma": ma, "ten": p["ten"], "kieu": "van_ban", "kieu_da_chuyen": False,
                      **ck, "nguyen_van": o["gia_tri"], "don_vi_nguyen_van": o["don_vi"],
                      "ghi_chu": o["ghi_chu"], "phan_hoi_ai": deepcopy(data.get(ma)),
                      "can_soat": bool(ck["ly_do"]), "kiem_tra_logic": []})
@@ -260,7 +262,8 @@ def hau_kiem(viec, *, phien_ban_engine="e_trich_xuat 0.3.0"):
         r["can_soat"] = bool(r["ly_do"])
     bo = hs["bo_tham_so"]
     kq = {"loai": "bang_trich_xuat", "bang_trich_xuat": {
-        "phien_ban": 1, **{k: bo[k] for k in ("module", "loai_hop_dong", "phien_ban_bo")},
+        "phien_ban": 1, "don_vi_offset": "unicode",
+        **{k: bo[k] for k in ("module", "loai_hop_dong", "phien_ban_bo")},
         "bam_bo_tham_so": hs["bam_bo_tham_so"], "ma_bam_noi_dung": hs["ma_bam_noi_dung"],
         "bam_tep_goc": hs["bam_tep_goc"],
         "ma_prompt": ai["ma_prompt"], "phien_ban_prompt": ai["phien_ban_prompt"],
@@ -297,7 +300,9 @@ def _gia_tri_dung(v, kieu):
     if kieu == "so":
         return _so(v)
     if kieu == "so_tien":
-        return (isinstance(v, dict) and set(v) == {"so", "tien_te"} and _so(v["so"])
+        return (isinstance(v, dict) and set(v) == {"so", "tien_te"}
+                and (type(v["so"]) is int or isinstance(v["so"], str)
+                     and re.fullmatch(r"-?[0-9]+(?:\.[0-9]+)?", v["so"]) is not None)
                 and isinstance(v["tien_te"], str) and re.fullmatch(r"[A-Z]{3}", v["tien_te"]) is not None)
     if kieu == "co_khong":
         return type(v) is bool
@@ -328,10 +333,11 @@ def kiem_bang(phong_bi):
     try:
         _can(set(phong_bi) == {"loai", "bang_trich_xuat"} and phong_bi["loai"] == "bang_trich_xuat", ma)
         b = phong_bi["bang_trich_xuat"]
-        can = {"phien_ban", "module", "loai_hop_dong", "phien_ban_bo", "bam_bo_tham_so",
+        can = {"phien_ban", "don_vi_offset", "module", "loai_hop_dong", "phien_ban_bo", "bam_bo_tham_so",
                "ma_prompt", "phien_ban_prompt", "phien_ban_engine", "ma_truong_can_trich",
                "nguon", "ai", "bang", "tom_tat", "canh_bao"}
-        _can(can <= b.keys() and type(b["phien_ban"]) is int and b["phien_ban"] == 1, ma)
+        _can(can <= b.keys() and type(b["phien_ban"]) is int and b["phien_ban"] == 1
+             and b["don_vi_offset"] == "unicode", ma)
         _can(all(isinstance(b[k], str) and MA.fullmatch(b[k])
                  for k in ("module", "loai_hop_dong", "phien_ban_bo", "ma_prompt", "phien_ban_prompt"))
              and _chu(b["phien_ban_engine"]) and _bam(b["bam_bo_tham_so"])
@@ -349,6 +355,8 @@ def kiem_bang(phong_bi):
         for r in bang:
             _can(_chu(r["ma"]) and _chu(r["ten"]) and r["kieu"] in
                  ("van_ban", "so", "so_tien", "ngay", "co_khong", "tep")
+                 and type(r["kieu_da_chuyen"]) is bool
+                 and (r["kieu_da_chuyen"] or r["kieu"] == "van_ban")
                  and _gia_tri_dung(r["gia_tri"], r["kieu"])
                  and all(r[k] is None or isinstance(r[k], str)
                          for k in ("nguyen_van", "don_vi_nguyen_van", "ghi_chu"))

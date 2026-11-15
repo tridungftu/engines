@@ -4,6 +4,8 @@ Giữ Điều/Khoản; dùng khoảng Unicode trong toàn văn thay bản cắt/
 top-k. Vị trí OCR/DOCX gốc được giữ riêng nguyên vẹn trong hồ sơ hậu kiểm.
 """
 
+from io import BytesIO
+import json
 import re
 
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
@@ -13,6 +15,27 @@ from .tham_so import BAM, loi
 
 KHOAN = re.compile(r"^(\d+(?:\.\d+)+)\.?\s+(.*)$")
 DIEU = re.compile(r"^Điều\s+(\d+)\s*[.:]?\s*(.*)$", re.IGNORECASE)
+TAI_LIEU_TOI_DA_BYTE = 20 * 1024 * 1024
+TRANG_TOI_DA = 2_000
+TRANG_TOI_DA_BYTE = 8 * 1024 * 1024
+CANH_BAO_TOI_DA = 200
+CANH_BAO_TOI_DA_BYTE = 64 * 1024
+
+
+def json_bytes_co_tran(v, tran_byte):
+    """JSON canonical trong RAM; dừng trước khi ghép phong bì quá trần."""
+    encoder = json.JSONEncoder(ensure_ascii=False, sort_keys=True,
+                               separators=(",", ":"), allow_nan=False)
+    with BytesIO() as bo_nho:
+        for phan in encoder.iterencode(v):
+            con = tran_byte - bo_nho.tell()
+            if len(phan) > con:  # UTF-8 không thể ít byte hơn số ký tự.
+                loi("VUOT_GIOI_HAN")
+            raw = phan.encode("utf-8")
+            if len(raw) > con:
+                loi("VUOT_GIOI_HAN")
+            bo_nho.write(raw)
+        return bo_nho.getvalue()
 
 
 def doc_tai_lieu(dau_vao):
@@ -33,6 +56,14 @@ def doc_tai_lieu(dau_vao):
         raise LoiNghiepVu("DAU_VAO_KHONG_HOP_LE", "Văn bản tài liệu không đúng cấu trúc phiên bản 1.")
     if len(v["van_ban"]) > 500_000:
         loi("VUOT_GIOI_HAN")
+    if len(v["trang"]) > TRANG_TOI_DA or len(v["canh_bao"]) > CANH_BAO_TOI_DA:
+        loi("VUOT_GIOI_HAN")
+    try:
+        json_bytes_co_tran(v["trang"], TRANG_TOI_DA_BYTE)
+        json_bytes_co_tran(v["canh_bao"], CANH_BAO_TOI_DA_BYTE)
+        json_bytes_co_tran(v, TAI_LIEU_TOI_DA_BYTE)
+    except (ValueError, TypeError, RecursionError, OverflowError, UnicodeError):
+        raise LoiNghiepVu("DAU_VAO_KHONG_HOP_LE", "Văn bản tài liệu không đúng cấu trúc phiên bản 1.") from None
     return v
 
 

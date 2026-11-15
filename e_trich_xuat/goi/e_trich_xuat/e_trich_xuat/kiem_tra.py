@@ -6,6 +6,7 @@ kiem_tra.py — Python tự kiểm kết quả AI (bước 5) và so đáp án.
   - Điều/Khoản do PYTHON suy lại từ trích dẫn (không tin nhãn AI ghi).
   - Giá trị ≥ 8 ký tự có chữ và có nguyên văn trong HĐ → "OK (giá trị có nguyên văn trong HĐ)".
 """
+from bisect import bisect_right
 import re
 import unicodedata
 from decimal import Decimal, InvalidOperation
@@ -143,12 +144,25 @@ def trich_dan_dung(q, van_ban):
 
 
 def co_nguyen_van(gia_tri, dan_chung):
-    """Giá trị phải nguyên văn trong câu đã kiểm, không khớp 10 với 100."""
+    """Khớp trọn token/cụm; không cắt số qua dấu hoặc khoảng trắng nhóm số."""
     if not isinstance(gia_tri, str) or not gia_tri.strip():
         return False
-    dau = r"(?<!\w)" if gia_tri[0].isalnum() else ""
-    cuoi = r"(?!\w)" if gia_tri[-1].isalnum() else ""
-    return any(re.search(dau + re.escape(gia_tri) + cuoi, q["cau"]) for q in dan_chung)
+    gia_tri = gia_tri.strip()
+    mau = re.compile(r"(?<!\w)" + re.escape(gia_tri) + r"(?!\w)")
+    token = re.compile(
+        r"(?:[+-]?\d+(?:[.,/-]\d+)*(?:[ \u00a0\u202f]+\d+(?:[.,/-]\d+)*)*"
+        r"|\w+(?:[.,/-]\w+)*)%?")
+    for q in dan_chung:
+        cau = q["cau"].strip()
+        cac_token = [m.span() for m in token.finditer(cau)]
+        cac_dau = [a for a, _ in cac_token]
+        def cat_token(moc):
+            i = bisect_right(cac_dau, moc) - 1
+            return i >= 0 and cac_token[i][0] < moc < cac_token[i][1]
+        for m in mau.finditer(cau):
+            if not cat_token(m.start()) and not cat_token(m.end()):
+                return True
+    return False
 
 
 def dinh_vi(q, tai_lieu, cau_truc):
@@ -229,4 +243,4 @@ def kiem_o(item, tai_lieu, cau_truc, *, bo_sot=False):
                           norm(tai_lieu["van_ban"]))
     return {"gia_tri": None if ly_do else v, "ly_do": ly_do,
             "dan_chung": dan_chung_da_kiem(dung, tai_lieu, cau_truc),
-            "kiem_tra_legacy": legacy}
+            "dau_kiem_tam_e6": legacy}

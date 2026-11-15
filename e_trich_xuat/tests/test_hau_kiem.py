@@ -36,7 +36,8 @@ def loi(kq, ma):
 
 
 def bam_ai(ai, hs):
-    r = {**hs["yeu_cau_ai"], "chuyen_tiep": ai["chuyen_tiep"]}
+    r = {"tai_lieu": hs["tai_lieu"]["van_ban"], **hs["yeu_cau_ai"],
+         "chuyen_tiep": ai["chuyen_tiep"]}
     ai["bam_dau_vao"] = bam_bytes(json_bytes({"loai": "yeu_cau_ai", "yeu_cau_ai": r}))
 
 
@@ -59,7 +60,9 @@ def test_dung_du_o_thu_tu_tom_tat_bam_nguon_va_khong_dang_ky():
     assert b["tom_tat"] == {"so_tham_so": 2, "so_can_soat": 0, "co_can_cu": True}
     assert b["nguon"]["bam_dau_vao"] != b["nguon"]["bam_van_ban"]
     assert b["ai"]["nha_cung_cap"] == "local" and b["ai"]["model"] == "DEMO-model-gia"
-    assert all(r["kiem_tra_legacy"].startswith("OK") for r in b["bang"])
+    assert b["don_vi_offset"] == "unicode"
+    assert all(r["kieu_da_chuyen"] is False for r in b["bang"])
+    assert all(r["dau_kiem_tam_e6"].startswith("OK") and "kiem_tra_legacy" not in r for r in b["bang"])
     assert [n["ma"] for n in PHIEU["nang_luc"]] == ["trich.doc_docx@1", "trich.chuan_bi@1"]
     goc = Path(__file__).resolve().parents[2]
     assert not (goc / "_chung/contract/bang_trich_xuat.schema.json").exists()
@@ -104,7 +107,7 @@ def test_co_chung_false_khong_ha_o_dung_va_legacy_khong_thay_kiem_nghiem():
     kq, _ = chay_ai(doi)
     o = dat(kq)["bang"][1]
     assert o["gia_tri"] is None and o["can_soat"]
-    assert o["kiem_tra_legacy"] == "OK (giá trị có nguyên văn trong HĐ)"
+    assert o["dau_kiem_tam_e6"] == "OK (giá trị có nguyên văn trong HĐ)"
 
 
 def test_mot_cau_gia_trong_nhieu_cau_van_ha_o_va_giu_cau_dung():
@@ -348,6 +351,45 @@ def test_so_trong_gia_tri_khong_khop_mot_phan_so_lon():
     assert b["bang"][0]["gia_tri"] is None
 
 
+@pytest.mark.parametrize("cau, v, dung", [
+    ("5.000.000 đồng", "5", False),
+    ("Lãi 10,5% năm", "10", False),
+    ("Phạt 0,5% giá trị", "5%", False),
+    ("Giá 1.100 đồng", "100", False),
+    ("1.000.000 đồng", "1.000", False),
+    ("01/01/2025", "2025", False),
+    ("1.000", ".000", False),
+    ("1 100", " 100", False),
+    ("10-5", "-5", False),
+    ("5.000.000 đồng", "5.000.000", True),
+    ("Lãi 10,5% năm", "10,5%", True),
+    ("  100 đồng  ", " 100 ", True),
+    ("DEMO giá 1.000.000 VND.", "1.000.000 VND", True),
+    ("DEMO-001", "DEMO-001", True),
+    ("Giá 1000 VND", "100", False),
+    ("Giá 100 VND", "10", False),
+    ("Lãi 10% năm", "10", False),
+    ("Giá 1\u00a0100 đồng", "100", False),
+    ("Mã ABC100", "100", False),
+    ("100ABC", "100", False),
+    ("-5 đồng", "-5", True),
+    ("01/01/2025", "01/01/2025", True),
+    ("10,5 đồng; giá 10 đồng", "10", True),
+])
+def test_gia_tri_phai_tron_token_hoac_cum_nguyen_van(cau, v, dung):
+    dv = deepcopy(VD["dau_vao"])
+    dv["van_ban_tai_lieu"]["van_ban"] = cau
+    core, app, req = chuan_bi_demo(
+        ts=ts_demo(ma_truong_can_trich_json='["TT-01"]'), dau_vao=dv)
+    b = dat(core.chay_thu(app, "trich.hau_kiem@1", ai_demo(req, {"TT-01": o_ai(v, cau, cau)})))
+    o = b["bang"][0]
+    assert o["gia_tri"] == (v if dung else None)
+    assert o["can_soat"] is not dung
+    assert o["nguyen_van"] == v
+    if not dung:
+        assert "Giá trị không có nguyên văn" in o["ly_do"][0]
+
+
 @pytest.mark.parametrize("ds", [["TT-01"], ["TT-02", "TT-01"]])
 def test_hoi_co_muc_tieu_giu_thu_tu_khong_soat_ma_ngoai_pham_vi(ds):
     core, app, req = chuan_bi_demo(ts=ts_demo(ma_truong_can_trich_json=json.dumps(ds)))
@@ -360,6 +402,18 @@ def test_model_uu_tien_trong_tx2_da_chuan_hoa_null():
     core, app, req = chuan_bi_demo(ts=ts_demo(model_uu_tien="  "))
     assert req["yeu_cau_ai"]["model_uu_tien"] is None
     dat(core.chay_thu(app, "trich.hau_kiem@1", ai_demo(req)))
+
+
+def test_hau_kiem_doc_ho_so_gon_va_ho_so_tx2_cu():
+    core, app, req = chuan_bi_demo()
+    ai = ai_demo(req)
+    meta = ai["tra_loi_ai"]["chuyen_tiep"]["trich_xuat"]
+    hs = json.loads(core.doc_tep(meta["ho_so_hau_kiem"]["tep_id"]))
+    assert "tai_lieu" not in hs["yeu_cau_ai"]
+    gon = dat(core.chay_thu(app, "trich.hau_kiem@1", ai))
+    doi_ho_so(core, ai["tra_loi_ai"], lambda h: h["yeu_cau_ai"].update(tai_lieu=h["tai_lieu"]["van_ban"]))
+    cu = dat(core.chay_thu(app, "trich.hau_kiem@1", ai))
+    assert gon["bang"] == cu["bang"] and gon["tom_tat"] == cu["tom_tat"]
 
 
 @pytest.mark.parametrize("noi", ["\f", "\n"])

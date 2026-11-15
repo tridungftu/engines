@@ -49,7 +49,7 @@ Hai tệp mẫu ngăn trong gói không được sửa, kể cả để đổi x
 | Tệp | SHA-256 |
 |---|---|
 | `cau_hinh.schema.json` | `291d3ff81ffe0c12e31b1dd6e982b6339c3fa0992f6ec4797f33727ff06f1567` |
-| `CHANGELOG.md` | `472bde9bdcab3b6ed581eb37562d4855d6187a7a7d2cec2a4d3ccfc4db296c06` |
+| `CHANGELOG.md` | `d49491c142c3eb5ba634ccacaaa08a39d35c0089050360b6708a458f88b5b8d6` |
 | `contract/van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
 | `contract/yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
 | `demo/DEMO-hop-dong.docx` | `22030fe7fa1a65384e696b3fdfdd9506cca22fac7f268000d579d208cb8ec471` |
@@ -57,15 +57,15 @@ Hai tệp mẫu ngăn trong gói không được sửa, kể cả để đổi x
 | `demo/README.md` | `449c8c5fb6569800087c01ef38203c91054bd97d8ba7b66e96f90bd261c9151e` |
 | `e_trich_xuat/__init__.py` | `132fde790e8e65934171f4d441cfd174ede92d8944e80c8ccdb23d8c5093f126` |
 | `e_trich_xuat/cau_hinh.py` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
-| `e_trich_xuat/cau_truc.py` | `6c284258181c6316cc0185b406a4da8d3f6a3670d714f35fa6b53ec27db482af` |
+| `e_trich_xuat/cau_truc.py` | `1a44e428a8dc2e1e5a5d52524baaafa12e6dddc6e1dc026b17cc519470760459` |
 | `e_trich_xuat/chay.py` | `504616b003305f5e723d95eca6ec14f312feb78b617605b8d0f80ab1889df91f` |
 | `e_trich_xuat/docx.py` | `4290748070f8d5a8deee8a051c9ccdb384b1cb3ee8780e833d2781e5f84f1653` |
 | `e_trich_xuat/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
 | `e_trich_xuat/tham_so.py` | `2106cece109ca86272e94717abd6b6e6e0489e95c0ac49f33c0f71fa617cbc12` |
-| `e_trich_xuat/tich_hop.py` | `3ed084a6bdca69e75c91ae4cfae88cc4c69dd01fbb111498998d90e164a93570` |
+| `e_trich_xuat/tich_hop.py` | `26fa7299a3a2d992bfdeb44536031a367b06f1ad20b6575818332edbb2463d1a` |
 | `engine.json` | `c731456c391025ea23e6ab89641558b1f057de6033371fb174c03be618d7ba70` |
 | `KHAI-SDK-2.1.json` | `9dc34efb03293ab8f314d4b7610c60bff5dc231835cb733c4add06bbc4741619` |
-| `README.md` | `06cac28851c509fce61b0250518a6545edee1e6c61c565c758324dc05c3f4d3c` |
+| `README.md` | `d42ced193eee270ddb123ce309b05c1bb32d972be715d95327a228b4d5944664` |
 | `requirements.lock` | `f1c814f4fcea2aef4d55342db50054ea97943552ba0f5bdf72a19c892410b3b5` |
 | `ui/cau_hinh.js` | `c605cb20b135c646583da0628b8af801b768e8bde600e4eb29d048888f8615ba` |
 
@@ -78,12 +78,12 @@ Hai tệp mẫu ngăn trong gói không được sửa, kể cả để đổi x
 | `e_trich_xuat/tests/test_goi.py` | `bafadb4e86ccab437f461b30586c8d3ffecf87cd2ea29830385175e7020d6ebc` |
 | `e_trich_xuat/tests/test_ngan_cau_hinh.py` | `914ee271e2a811056be100236bbb0f45388b7d1d44c5803516c8d46969a520d4` |
 | `e_trich_xuat/tests/test_docx.py` | `66480e3a5d4db58ec568943ada632f918140bc5e1cc198d647e4a62e30d74f9c` |
-| `e_trich_xuat/tests/test_chuan_bi.py` | `a9109dc76957576e4ee9b1e45f0d0f3e300f41bee563ba4cf7d730ce506058f0` |
+| `e_trich_xuat/tests/test_chuan_bi.py` | `1766061b427e39d50023e7c82aa161f5c8ee7f7ec1523dfa73935eb9152351b1` |
 | `e_trich_xuat/tests/test_cong_sdk.py` | `18cbc6fa2bbb43a3c317b89a3d455a7df487347e5146fb44cf5630a86909fdda` |
 | `e_trich_xuat/tests/chay_demo_voi_ngan_gia.py` | `aac71fd49f8eb4050b1643cdc57b26e4cc4d43cc536667f64190c8507b09f503` |
 | `e_trich_xuat/tests/requirements.lock` | `736ea02ef855c421afcaa53a43f2005d5c59212f62cf0eea241de4090f40eaf3` |
 | `e_trich_xuat/docs/TX-1-PHAM-VI.md` | `ddf797115058e114d79cddb17547740416c27003c28b5b7396c7c15149e97850` |
-| `e_trich_xuat/docs/VIEC.md` | `db45e498f78ea6479f704fbcec48da5a2956f1210173a0c5850729a3dad2c63d` |
+| `e_trich_xuat/docs/VIEC.md` | `8de10e2daa6e960e4696cdd10d11f0170705b746d02742ed8b81d4a3b773a28d` |
 
 
 ## Nguồn và phạm vi TX-3 — chưa đăng ký runtime
@@ -112,6 +112,22 @@ Hai tệp mẫu ngăn trong gói không được sửa, kể cả để đổi x
 Chi tiết review tại `../../docs/TX-3-REVIEW.md`; bằng chứng/lệnh/giờ tại
 `../../docs/VIEC.md`. Không nhận E6/N1/Linux/Core thật.
 
+## Sửa theo kiểm độc lập TX-3 — 15/11/2026
+
+- Sửa `kiem_tra.py` để khớp trọn token/cụm và strip đối xứng; số có dấu
+  phân cách/khoảng trắng phân nhóm không bị tách. Dấu tạm E6 đổi tên
+  `dau_kiem_tam_e6`, không đổi cách chấm cũ.
+- `hau_kiem.py` chỉ nhận tiền int/chuỗi thập phân chính xác, thêm đơn vị
+  offset Unicode và cờ chưa chuyển kiểu; `xuat.py` giữ các trường này khi
+  xuất. Phản hồi AI chỉ kiểm toán, có thể lộ nội dung; module không hiển thị mặc định.
+- Nợ TX-2: `cau_truc.py` kiểm trần phần tử/byte trước sao chép;
+  `tich_hop.py` chặn hồ sơ quá 20 MiB và bỏ bản chép toàn văn trong request.
+  Hậu kiểm vẫn đọc hồ sơ TX-2 cũ và kiểm băm request đầy đủ.
+- Regression test token, tiền round trip, byte Unicode/trần RAM, hồ sơ cũ/gọn
+  và prompt injection; không thêm dependency hoặc sửa mẫu NGAN-0/Core/SDK.
+- `TX-3-REVIEW.md` giữ bổ sung **ĐỀ XUẤT TX-0, chờ Anh**, chưa sửa `_chung/**`
+  hoặc đăng ký năng lực/schema/runtime. Kết quả và thời gian ở `VIEC.md`.
+
 ## SHA-256 bổ sung TX-3
 
 | Tệp | SHA-256 |
@@ -121,12 +137,12 @@ Chi tiết review tại `../../docs/TX-3-REVIEW.md`; bằng chứng/lệnh/giờ
 | `e_trich_xuat/ma-nguon/vendor/review/xlsx_mini.py` | `a29ed16811637daa756fcb2640557ec817734d3d2ee617c30deca51d3799857b` |
 | `_chung/contract/tra_loi_ai.schema.json` | `5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f` |
 | `contract/tra_loi_ai.schema.json` | `5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f` |
-| `e_trich_xuat/hau_kiem.py` | `0266b6baf67139e6017777882c0acf5a13ac0a691fe246494a871b909308604a` |
-| `e_trich_xuat/kiem_tra.py` | `2aaece45e377e184640f6648de2ca800f4f25a4bc7d951b868c71f918a316daa` |
+| `e_trich_xuat/hau_kiem.py` | `4badcb8c769bf84bbda8a334f77b8faf1ee0c508f1de36f1ff49574776eb6be9` |
+| `e_trich_xuat/kiem_tra.py` | `17a988f374d591b7d1b9b6ef31c8b86faf6352c3a53025c6701ee4d4c767fcf9` |
 | `e_trich_xuat/logic.py` | `66f6befde686bc3d86cb234889a61af0655d4c92b7b1be09e86d177fcb152950` |
 | `e_trich_xuat/xlsx_mini.py` | `b139d90d6adb186d658ad00f7970f7647f351178a035459b0913cf4298edc5e3` |
-| `e_trich_xuat/xuat.py` | `88be1def75d909838e0431f9705d758d29f78c33d543116ef66bda5bbff6fe8a` |
+| `e_trich_xuat/xuat.py` | `a4cc1ff456b1235ff01ecd010f588eb89e04ce2dd6eefa7b6fc856e8dc0f431c` |
 | `e_trich_xuat/tests/mau_tx3.py` | `374a64d3e3de97b2ce1300fbc4e04f93731f861479eb86a7990037e3b6616410` |
-| `e_trich_xuat/tests/test_hau_kiem.py` | `52dcd98922ddb58be9306f06e4061791b434ccd4a9751d3e28f93be83f69a754` |
-| `e_trich_xuat/tests/test_xuat.py` | `15eb462802f5bc2b2224f397093f226beafb274943ca83d721ffa2917178f547` |
-| `e_trich_xuat/docs/TX-3-REVIEW.md` | `d8d090900a9be33a447e46d40bc0aea67600f43fad2f1807e8ae731b8d74a0b8` |
+| `e_trich_xuat/tests/test_hau_kiem.py` | `71e10bf31dc4b57547f7b247db88bd116554578f7fc73fd2b7e1e16e902f202d` |
+| `e_trich_xuat/tests/test_xuat.py` | `af063779480911dc493e20eab6ebcfab17f53db934923dd9202fb79fe71c1608` |
+| `e_trich_xuat/docs/TX-3-REVIEW.md` | `b43cfa0e35446ae5d1218637b63cc0fef074db5d20a1e78e21d0473e4961bbd0` |

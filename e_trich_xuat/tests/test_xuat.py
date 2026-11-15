@@ -59,9 +59,9 @@ def test_xuat_tai_lai_json_excel_du_thu_tu_unicode_va_nguyen_van():
     core, app, pb = bang_demo()
     b = pb["bang_trich_xuat"]
     # Bảng đề xuất có kiểu rõ, không suy kiểu từ Excel.
-    b["bang"][0].update(kieu="so_tien", gia_tri={"so": 10000000000000001, "tien_te": "VND"},
+    b["bang"][0].update(kieu="so_tien", kieu_da_chuyen=True, gia_tri={"so": 10000000000000001, "tien_te": "VND"},
                         nguyen_van="10.000.000.000.000.001 VND")
-    b["bang"][1].update(kieu="ngay", gia_tri="2026-10-30", nguyen_van="30/10/2026 😀 e\u0301")
+    b["bang"][1].update(kieu="ngay", kieu_da_chuyen=True, gia_tri="2026-10-30", nguyen_van="30/10/2026 😀 e\u0301")
     b["tom_tat"] = hk.tom_tat(b["bang"])
     truoc = deepcopy(pb)
     kq, _ = xuat_demo(pb, core, app)
@@ -76,6 +76,7 @@ def test_xuat_tai_lai_json_excel_du_thu_tu_unicode_va_nguyen_van():
     assert [r[0] for r in rows[1:]] == ["TT-01", "TT-02"]
     assert json.loads(rows[1][3]) == {"so": 10000000000000001, "tien_te": "VND"}
     assert rows[2][3] == "2026-10-30" and rows[2][4] == "30/10/2026 😀 e\u0301"
+    assert rows[1][-1] == rows[2][-1] == "true"
     assert doc_excel(xlsx, 2)[1][1] == b["bang"][0]["dan_chung"][0]["cau"]
     assert any(r[0] == "nguon.bam_dau_vao" for r in doc_excel(xlsx, 3))
     assert any(r[0] == "TT-01.gia_tri" for r in doc_excel(xlsx, 4))
@@ -139,6 +140,11 @@ def test_xuat_o_sat_tran_khong_tang_do_dai_do_json_va_vuot_khong_tai_tep():
     lambda b: b["bang"][1]["dan_chung"][0]["vi_tri"].update(so_trang=1),
     lambda b: b["nguon"].update(bam_dau_vao="DEMO"),
     lambda b: b.pop("ma_prompt"),
+    lambda b: b.pop("don_vi_offset"),
+    lambda b: b.update(don_vi_offset="utf16"),
+    lambda b: b["bang"][0].pop("kieu_da_chuyen"),
+    lambda b: b["bang"][0].update(kieu_da_chuyen=0),
+    lambda b: b["bang"][0].update(kieu="so", gia_tri=100, kieu_da_chuyen=False),
 ])
 def test_bang_sai_tu_choi_truoc_tai(doi):
     core, app, pb = bang_demo()
@@ -357,3 +363,28 @@ def test_xuat_tien_thieu_ma_tien_te_va_so_khong_huu_han():
         with pytest.raises(LoiNghiepVu) as exc:
             hk.kiem_bang(p)
         assert exc.value.ma == "KET_QUA_KHONG_HOP_LE"
+
+
+@pytest.mark.parametrize("so, dung", [
+    (1000000, True), (0, True), (-100, True), (10000000000000001, True),
+    ("1000000.50", True), ("-0.05", True), ("0", True),
+    (1000000.5, False), (1.0, False), (True, False),
+    ("1.000.000", False), ("1,5", False), ("1e6", False),
+    ("NaN", False), ("Infinity", False), (" 100", False), ("", False),
+])
+def test_so_tien_chi_nhan_int_hoac_chuoi_thap_phan_chinh_xac(so, dung):
+    core, app, pb = bang_demo()
+    pb["bang_trich_xuat"]["bang"][0].update(
+        kieu="so_tien", kieu_da_chuyen=True, gia_tri={"so": so, "tien_te": "VND"})
+    truoc = core.so_lan_ghi["tep"]
+    kq, _ = xuat_demo(pb, core, app)
+    if not dung:
+        loi(kq, "KET_QUA_KHONG_HOP_LE")
+        assert core.so_lan_ghi["tep"] == truoc
+    else:
+        assert kq["trang_thai"] == "XONG", kq
+        t = kq["ket_qua"]["truong"]
+        bang = json.loads(core.doc_tep(t["tep_json"]["tep_id"]))["bang_trich_xuat"]["bang"]
+        assert type(bang[0]["gia_tri"]["so"]) is type(so) and bang[0]["gia_tri"]["so"] == so
+        excel = doc_excel(core.doc_tep(t["tep_excel"]["tep_id"]))
+        assert json.loads(excel[1][3]) == {"so": so, "tien_te": "VND"}

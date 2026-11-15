@@ -200,8 +200,8 @@ def test_upload_that_bai_khong_xong(xml_demo, monkeypatch):
     assert core.so_lan_ghi["ket_qua"] == 0
 
 
-def test_manifest_chi_xml_va_demo_that():
-    assert len(app.phieu["nang_luc"]) == 1
+def test_manifest_xml_khong_doi_va_demo_that():
+    assert [n["ma"] for n in app.phieu["nang_luc"]] == ["hoa_don.doc_xml@2", "hoa_don.doc_zip@1"]
     nl = app.phieu["nang_luc"][0]
     assert nl["ma"] == "hoa_don.doc_xml@2" and nl["nhan"] == ["tep"] and nl["tra"] == "truong"
     assert nl["tham_so"] == app.phieu["loai_du_lieu_rieng"] == []

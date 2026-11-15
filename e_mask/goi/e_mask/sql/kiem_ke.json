@@ -1,0 +1,255 @@
+{
+  "phien_ban": "1.4.0",
+  "tep": [
+    {
+      "duong_dan": "cau_hinh.schema.json",
+      "bytes": 674,
+      "sha256": "3f83b2a7d36e06e4fb97120a07a383568004a3bf3d02f5f9fd715d033d3c39eb"
+    },
+    {
+      "duong_dan": "CHANGELOG.md",
+      "bytes": 26212,
+      "sha256": "2bae6d5e167e4227ec43b0e9e7491edab4aee3406530f440bf104893e5d7637a"
+    },
+    {
+      "duong_dan": "demo/README.md",
+      "bytes": 49,
+      "sha256": "f5209cdd2c0fc4f3d37b74a33a1301ef29a7720385b72eaf7644fb80b5c511e8"
+    },
+    {
+      "duong_dan": "e_mask/__init__.py",
+      "bytes": 38,
+      "sha256": "de8e804948588db66d2b68d8c572157db88277587841f0190f1fba28227bd2e2"
+    },
+    {
+      "duong_dan": "e_mask/anh_xa_ai.py",
+      "bytes": 8761,
+      "sha256": "0fd879bc4a5778acc54a8bf5bf5ac80360d77915143284475f15b6c1af5e0116"
+    },
+    {
+      "duong_dan": "e_mask/chay.py",
+      "bytes": 6494,
+      "sha256": "251b232f8b3747fa6be4a15f008759a262ccf13125c2d318096616facb6f8336"
+    },
+    {
+      "duong_dan": "e_mask/che_van_ban.py",
+      "bytes": 38377,
+      "sha256": "3e33f4b618e47c290d76b2c6ec4a42d38a7e26dbcd02b87a3672ab0b3dcbd65a"
+    },
+    {
+      "duong_dan": "e_mask/chuan_bi_ai.py",
+      "bytes": 20053,
+      "sha256": "3b60e411be21951443706c5cf3c146169886ebea008dfc9152162aa7dd24e806"
+    },
+    {
+      "duong_dan": "e_mask/doc_excel.py",
+      "bytes": 23889,
+      "sha256": "8c11b1b7aea26d827e878a604d40e5b9546944f8b24b17329893f6ad94c31ffb"
+    },
+    {
+      "duong_dan": "e_mask/doc_tep.py",
+      "bytes": 33434,
+      "sha256": "a51ec1ddb310638cef978b400bdd978b2d0763b96fb70110d576a8f1736f8882"
+    },
+    {
+      "duong_dan": "e_mask/doc_word.py",
+      "bytes": 13035,
+      "sha256": "91d32fd8f7a13ba5b5689dc4918766cf6d68a3a2435f6e570e9a1e17f4314833"
+    },
+    {
+      "duong_dan": "e_mask/duyet_dinh_danh.py",
+      "bytes": 5795,
+      "sha256": "1b16d886787b9c30024886c280e04359a603410e197edc6fc88ffc82c9fd5b35"
+    },
+    {
+      "duong_dan": "e_mask/ghi_zip.py",
+      "bytes": 7605,
+      "sha256": "c98b6d8ad273ca9d6946c0362446f292cf40e8b871b01a3d4aa5054a7f44a470"
+    },
+    {
+      "duong_dan": "e_mask/hau_kiem_ai.py",
+      "bytes": 20174,
+      "sha256": "0b7dc837ed28e64975b4df61008329ec5c0cebcff046e23792e5e9c0ef05f295"
+    },
+    {
+      "duong_dan": "e_mask/ho_so_ai.py",
+      "bytes": 12066,
+      "sha256": "fa57aa3ed95f24cccb1797e7917aedac4e227845bd5bf3b655e8f793de879e3e"
+    },
+    {
+      "duong_dan": "e_mask/kho_dinh_danh.py",
+      "bytes": 4469,
+      "sha256": "b2aa18021860a07d751b1d3ff27ca03034d6a6a9497ada51f8b44208a7e7dc04"
+    },
+    {
+      "duong_dan": "e_mask/kho_ngan.py",
+      "bytes": 15193,
+      "sha256": "df23feb7285d51bff61aaa1b2a50b515aed138650c0919cd101d1c58b7fd80ff"
+    },
+    {
+      "duong_dan": "e_mask/kho_qua_core.py",
+      "bytes": 15265,
+      "sha256": "3ab9f11e9c4aa69cec1a38cbceb922f2d45ca5ac81cb66aac84ce369661a94c3"
+    },
+    {
+      "duong_dan": "e_mask/khoi_tao_ngan.py",
+      "bytes": 1394,
+      "sha256": "51ba3abece4b93fcdaf6b7de1fb7707e1db67f50d518db88d37f3814b9321106"
+    },
+    {
+      "duong_dan": "e_mask/ngan.py",
+      "bytes": 16022,
+      "sha256": "07fc25e9873638bb3693e658ed3b4d6569e96211184505a26e4ddb4a374b55a3"
+    },
+    {
+      "duong_dan": "e_mask/nguon/privacy/__init__.py",
+      "bytes": 199,
+      "sha256": "bff7a8d02fd5f38b6876ea7930a2cdbcbbed9e85d2b3b6883005506a92f602c3"
+    },
+    {
+      "duong_dan": "e_mask/nguon/privacy/company_names.py",
+      "bytes": 9537,
+      "sha256": "b3c595c193b3711737846762112654e45d8448fd9b6922903154b1d3d302d958"
+    },
+    {
+      "duong_dan": "e_mask/nguon/privacy/core.py",
+      "bytes": 30685,
+      "sha256": "842a978dafacb1d9e92ebc235917cab15910c66140380f7a695b87fc94255f75"
+    },
+    {
+      "duong_dan": "e_mask/nguon/privacy/detectors.py",
+      "bytes": 37275,
+      "sha256": "af46757cdc72c4841ae49dbc3472423eed2aca6936db65074485fe868c471b8e"
+    },
+    {
+      "duong_dan": "e_mask/nguon/privacy/leftovers.py",
+      "bytes": 7964,
+      "sha256": "928277ea2ff26bd2815f423c18628ee9b74fb7aa80642dc7e67335deaeaab744"
+    },
+    {
+      "duong_dan": "e_mask/nguon/privacy/person_names.py",
+      "bytes": 1447,
+      "sha256": "68d77c172b618a309722350af8910cc7323d93f11c6347cbc152dbe4d70aed7a"
+    },
+    {
+      "duong_dan": "e_mask/nguon/privacy/types.py",
+      "bytes": 3406,
+      "sha256": "4a9c8ba7c5e75a10e4dd7aea371c40298742c85fbbd00a4e6dd1977c1a5105ef"
+    },
+    {
+      "duong_dan": "e_mask/phong_bi.py",
+      "bytes": 12878,
+      "sha256": "2a6a77992059becd31a810a07b862327b5ac1f20a2880f15baf8f93987ea4771"
+    },
+    {
+      "duong_dan": "e_mask/quyen_yeu_cau.py",
+      "bytes": 3176,
+      "sha256": "6bea1aa0f610ce53e852689a4def537cecf5f06e39d0ae3c47957ce59b39933e"
+    },
+    {
+      "duong_dan": "e_mask/schemas/tra_loi_ai.schema.json",
+      "bytes": 3956,
+      "sha256": "4c7491e5798f2774965acd49e6834634d26b3b032db8c6f0847fe06e2a0f33ee"
+    },
+    {
+      "duong_dan": "e_mask/schemas/van_ban_da_che.schema.json",
+      "bytes": 2923,
+      "sha256": "ad59a0e96a1e03d33674c25b92aa03a8da5bb5b93a629c2f391902161b3d6870"
+    },
+    {
+      "duong_dan": "e_mask/schemas/van_ban_tai_lieu.schema.json",
+      "bytes": 5429,
+      "sha256": "d73a80f276eef43536ee14810ef46a1df73d476a9b4f02cc4f3bd163f4d73902"
+    },
+    {
+      "duong_dan": "e_mask/tai_nguyen.py",
+      "bytes": 4339,
+      "sha256": "8e945f0cc6e6c8f31d23c07814b6013eb1e1e5c4f18010270a939ee61c387547"
+    },
+    {
+      "duong_dan": "e_mask/ten_nguoi.py",
+      "bytes": 14448,
+      "sha256": "bf7ec603c0b771dc88e6c3ccf3927158004cb0340663ec0d387563f61517f59f"
+    },
+    {
+      "duong_dan": "e_mask/tu_dien/common_acronyms.txt",
+      "bytes": 443,
+      "sha256": "920f0952f2584ece4c37d5419c073cd6f60cf151da3b38b1e68fdd6a2bb24f4e"
+    },
+    {
+      "duong_dan": "e_mask/tu_dien/leftover_allowlist.txt",
+      "bytes": 2634,
+      "sha256": "7074f53c296bd7be258610335adc270879eccb2db63fa412c7a9088b077aea4b"
+    },
+    {
+      "duong_dan": "e_mask/tu_dien/SHA256.json",
+      "bytes": 374,
+      "sha256": "11b5ed7af4bd88126f0c0c4b604062ba3e2bf9aa3fd9a5d09559ce1c0a774a39"
+    },
+    {
+      "duong_dan": "e_mask/tu_dien/vn_places.txt",
+      "bytes": 1125,
+      "sha256": "e991d899a1fa2265082e871715a653c9ca4fd7ed233a8d3951fb80b7a2d41847"
+    },
+    {
+      "duong_dan": "e_mask/tu_dien/vn_surnames.txt",
+      "bytes": 705,
+      "sha256": "b9fc76e5fa1ebb6abca7f4bc7c58d0dd9ecffc992e642a21958449080b2aaad1"
+    },
+    {
+      "duong_dan": "e_mask/va_xml.py",
+      "bytes": 17032,
+      "sha256": "6b826f350c567b04587bd4f6e227af136037a28400fabd38a131fb37e7b48f17"
+    },
+    {
+      "duong_dan": "e_mask/xml_an_toan.py",
+      "bytes": 5817,
+      "sha256": "d818e41862fc89495fc39951f97e3a3e45b39685e494623328ae80ff93c7d8ff"
+    },
+    {
+      "duong_dan": "e_mask/xml_excel.py",
+      "bytes": 29796,
+      "sha256": "59eb58383ddd4b73436b447bc9631fead1781989433ce463677f2332b71d9585"
+    },
+    {
+      "duong_dan": "e_mask/xml_word.py",
+      "bytes": 35466,
+      "sha256": "7ed9530676ae76f61b395ed84c1d0e133a0d3dac4e1effc0d80a966ec7418e63"
+    },
+    {
+      "duong_dan": "e_mask/zip_an_toan.py",
+      "bytes": 12879,
+      "sha256": "d55a1555fd3fb05aed323b3fd9146d26e773c19bfcd57ac32d836905b53880db"
+    },
+    {
+      "duong_dan": "engine.json",
+      "bytes": 6839,
+      "sha256": "fb40e6aa1a8fc2c19ddd739b7c2c9cd4b049f418d8332c0e1211fbc40728612c"
+    },
+    {
+      "duong_dan": "NGUON.md",
+      "bytes": 77580,
+      "sha256": "a16c17564d4072aea707bccd1677e6dd3bbbf2bce0fcd2f2ddefa24c21d96107"
+    },
+    {
+      "duong_dan": "README.md",
+      "bytes": 10411,
+      "sha256": "355ff06e66fede3dfd2c39d3217a8a25efbaf862f4fc08bec5081515d698d340"
+    },
+    {
+      "duong_dan": "requirements.lock",
+      "bytes": 90,
+      "sha256": "e8fd377c29fe8c756420904d20bec5a3240414a96d2a4fad58f93fd30247a2b4"
+    },
+    {
+      "duong_dan": "sql/001_tao_kho_bi_danh.sql",
+      "bytes": 3413,
+      "sha256": "b6a6f87025809fd914b44c9ddf90d643012d34a8c797012132af618b7f9b510c"
+    },
+    {
+      "duong_dan": "ui/duyet_dinh_danh.js",
+      "bytes": 7250,
+      "sha256": "17fda16364fbcea9505ac3e37ead1c89a9d8b4bf33f2d4952647849dbaa43f1b"
+    }
+  ]
+}

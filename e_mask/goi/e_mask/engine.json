@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_mask",
   "ten": "Che định danh",
-  "phien_ban": "1.3.0",
+  "phien_ban": "1.4.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -197,5 +197,47 @@
   "webhook": null,
   "cau_hinh": {
     "schema": "cau_hinh.schema.json"
+  },
+  "ngan_du_lieu": [
+    {
+      "bang": "dinh_danh",
+      "ten": "Tên chính thức và tên chờ duyệt",
+      "pham_vi": "engine",
+      "khoa": ["id_dinh_danh"],
+      "duy_nhat": [["id_dinh_danh"]],
+      "truong": [
+        {"ma": "id_dinh_danh", "ten": "Mã định danh", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "vung_du_lieu", "ten": "Vùng dữ liệu", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "gia_tri_goc", "ten": "Tên gốc", "kieu": "van_ban", "bi_mat": true, "bat_buoc": true},
+        {"ma": "gia_tri_chuan", "ten": "Tên chuẩn hóa", "kieu": "van_ban", "bi_mat": true, "bat_buoc": true},
+        {"ma": "phien_ban_chuan_hoa", "ten": "Phiên bản chuẩn hóa", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "nhom", "ten": "Nhóm định danh", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "trang_thai", "ten": "Trạng thái duyệt", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "so_gap", "ten": "Số lần gặp", "kieu": "so", "bat_buoc": true}
+      ]
+    },
+    {
+      "bang": "bi_danh",
+      "ten": "Bí danh chính thức và lịch sử",
+      "pham_vi": "engine",
+      "khoa": ["id_bi_danh"],
+      "duy_nhat": [["id_bi_danh"], ["vung_du_lieu", "bi_danh_chuan"]],
+      "truong": [
+        {"ma": "id_bi_danh", "ten": "Mã bí danh", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "id_dinh_danh", "ten": "Mã định danh", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "vung_du_lieu", "ten": "Vùng dữ liệu", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "bi_danh", "ten": "Bí danh", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "bi_danh_chuan", "ten": "Bí danh chuẩn hóa", "kieu": "van_ban", "bat_buoc": true},
+        {"ma": "trang_thai", "ten": "Trạng thái bí danh", "kieu": "van_ban", "bat_buoc": true}
+      ]
+    }
+  ],
+  "du_lieu": {
+    "goi_migration": {
+      "ma": "e_mask",
+      "thu_muc": "sql",
+      "tep_kiem_ke": "sql/kiem_ke.json",
+      "phien_ban_du_lieu": 1
+    }
   }
 }

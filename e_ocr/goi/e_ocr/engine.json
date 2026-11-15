@@ -3,11 +3,11 @@
   "loai": "engine",
   "ma": "e_ocr",
   "ten": "Nhận dạng văn bản",
-  "phien_ban": "1.0.8",
+  "phien_ban": "1.0.9",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
-    "sdk": ">=2.0.0 <3.0.0"
+    "sdk": ">=2.2.0 <3.0.0"
   },
   "che_do_chay": "cuc_bo",
   "diem_vao": {
@@ -221,5 +221,165 @@
     }
   ],
   "bi_mat": [],
-  "webhook": null
+  "webhook": null,
+  "ngan_du_lieu": [
+    {
+      "bang": "han_muc_ngay",
+      "ten": "Hạn mức ABBYY theo ngày",
+      "pham_vi": "engine",
+      "khoa": [
+        "ngay"
+      ],
+      "giu_toi_da_ngay": 45,
+      "truong": [
+        {
+          "ma": "ngay",
+          "kieu": "ngay",
+          "bat_buoc": true
+        },
+        {
+          "ma": "da_nhan",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        }
+      ],
+      "duy_nhat": [
+        [
+          "ngay"
+        ]
+      ]
+    },
+    {
+      "bang": "luot_abbyy",
+      "ten": "Lượt gửi ABBYY",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "ma_tuong_quan"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "bam_noi_dung"
+        ],
+        [
+          "phap_nhan_id",
+          "ma_tuong_quan"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "ma_tuong_quan",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "bam_noi_dung",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "so_trang",
+          "kieu": "so",
+          "bat_buoc": true
+        },
+        {
+          "ma": "lan_gui",
+          "kieu": "so",
+          "bat_buoc": true
+        },
+        {
+          "ma": "trang_thai",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "da_nhan",
+          "kieu": "co_khong",
+          "bat_buoc": true
+        },
+        {
+          "ma": "da_hoan",
+          "kieu": "co_khong",
+          "bat_buoc": true
+        },
+        {
+          "ma": "luc_giu",
+          "kieu": "so",
+          "bat_buoc": true
+        },
+        {
+          "ma": "luc_nhan",
+          "kieu": "so"
+        },
+        {
+          "ma": "chu_xu_ly",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "han_xu_ly",
+          "kieu": "so",
+          "bat_buoc": true
+        }
+      ]
+    },
+    {
+      "bang": "trang_thai_engine",
+      "ten": "Trạng thái ABBYY và mốc CAS hạn mức",
+      "pham_vi": "engine",
+      "khoa": [
+        "ma"
+      ],
+      "truong": [
+        {
+          "ma": "ma",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "abbyy_bat",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "ly_do",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "luc_kiem",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "lan",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_luot",
+          "kieu": "so"
+        },
+        {
+          "ma": "theo_ngay",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "dang_giu",
+          "kieu": "van_ban"
+        }
+      ],
+      "duy_nhat": [
+        [
+          "ma"
+        ]
+      ]
+    }
+  ],
+  "cau_hinh": {
+    "schema": "cau_hinh.schema.json"
+  },
+  "du_lieu": {
+    "goi_migration": {
+      "ma": "e_ocr",
+      "thu_muc": "sql",
+      "tep_kiem_ke": "sql/kiem_ke.json",
+      "phien_ban_du_lieu": 1
+    }
+  }
 }

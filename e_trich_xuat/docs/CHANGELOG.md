@@ -1,5 +1,20 @@
 # CHANGELOG tài liệu và công cụ kiểm
 
+## 0.5.0 — 15/11/2026, TX-7; PR: chờ lead mở
+
+- Chuyển SDK 2.2.0, khai schema cấu hình trong manifest; bỏ bảng cấu hình
+  và các cổng tạm khỏi đường chạy, lưu nguyên bản ở `LUU-TRU/TX-7`.
+- Đọc `viec.cau_hinh` đã kiểm/default. SDK chưa cấp phiên bản công khai
+  trên việc: hồ sơ mới dùng phiên bản null + SHA-256 bản chụp; hậu kiểm
+  kiểm băm, vẫn nhận hồ sơ cũ có phiên bản dương. Ghi C-TX-07.
+- Không có bảng ngăn TX sau bỏ cấu hình; không cần SQL/migration/kiểm kê SQL.
+- Giữ hành vi và các ca kiểm cũ, chuyển môi trường sang CoreGia 2.2.0;
+  bỏ test so SHA mẫu ngăn, bỏ cổng DEMO thay thế. Ghim đủ phụ thuộc SDK.
+- CLI chuẩn 4/5 ĐẠT, exit 1: C-TX-06 vẫn thiếu nạp tệp phụ cho DEMO hậu kiểm.
+  C-TX-04 phần ngăn/cấu hình đã có; C-TX-05 hook lỗi, C-TX-08 nạp màn còn mở.
+  **đã kiểm bằng Core giả (CoreGia)**, chưa đạt nghiệm thu TX-7.
+
+
 ## 15/11/2026 — TX-4b, PR: chờ lead mở
 
 - E6 giữ so bytes bộ E1/tham số/văn bản; chấm giá trị từng mã sau hậu kiểm

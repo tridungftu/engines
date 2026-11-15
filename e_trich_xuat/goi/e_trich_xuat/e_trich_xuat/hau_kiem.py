@@ -178,8 +178,10 @@ def doc_ho_so(viec, ai):
             model = None
         _can(req["model_uu_tien"] == model)
         cfg = hs["cau_hinh_da_ghim"]
-        _can(isinstance(cfg, dict) and type(cfg["phien_ban_cau_hinh"]) is int
-             and cfg["phien_ban_cau_hinh"] > 0
+        _can(isinstance(cfg, dict) and (
+             (type(cfg["phien_ban_cau_hinh"]) is int and cfg["phien_ban_cau_hinh"] > 0)
+             or (cfg["phien_ban_cau_hinh"] is None
+                 and cfg["bam_cau_hinh"] == bam_bytes(json_bytes(cfg["gia_tri"]))))
              and type(cfg["gia_tri"]["ngan_sach_token_vao_toi_da"]) is int
              and 1024 <= cfg["gia_tri"]["ngan_sach_token_vao_toi_da"] <= 100000)
         _can(_bang_json(hs["sang_loc_ngan_sach"], kiem_ngan_sach(

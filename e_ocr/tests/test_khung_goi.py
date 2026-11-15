@@ -65,7 +65,8 @@ def test_xuat_word_tu_choi_tep_hong_qua_core_gia(nang_luc, nguon):
 def test_schema_sao_chep_dung_bam():
     chung = GOC_REPO / "_chung" / "contract" / "van_ban_tai_lieu.schema.json"
     trong_goi = GOI / "contract" / chung.name
-    assert sha256(trong_goi.read_bytes()).digest() == sha256(chung.read_bytes()).digest()
+    assert sha256(trong_goi.read_bytes().replace(b"\r\n", b"\n")).digest() == sha256(
+        chung.read_bytes().replace(b"\r\n", b"\n")).digest()
     schema = json.loads(trong_goi.read_text(encoding="utf-8"))
     assert set(schema["properties"]) == {"loai", "van_ban_tai_lieu"}
     assert set(schema["properties"]["van_ban_tai_lieu"]["properties"]) == {

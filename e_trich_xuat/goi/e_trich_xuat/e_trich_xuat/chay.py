@@ -1,61 +1,37 @@
-"""Đăng ký năng lực thật bằng SDK 2.0; cấu hình chỉ qua ngăn."""
+"""Đăng ký năng lực bằng SDK 2.2.0; cấu hình là bản chụp của việc."""
 
 from copy import deepcopy
 from inspect import signature
-import json
 from pathlib import Path
-from types import SimpleNamespace
 
 import kho_tri_thuc_sdk
 from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
 
-from .cau_hinh import CauHinhKhongHopLe, doc_cau_hinh
-from .ngan import NganBoNho, NganKhongHopLe, NganXungDot, chon_ngan
+from .tham_so import bam_bytes, json_bytes
 
 
 GOC_GOI = Path(__file__).resolve().parents[1]
-SCHEMA_CAU_HINH = json.loads((GOC_GOI / "cau_hinh.schema.json").read_text(encoding="utf-8"))
-KHAI_BAO_NGAN = json.loads((GOC_GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))["ngan_du_lieu"]
 CAU_CHUA_CAU_HINH = (
     "Engine chưa được cấu hình. Admin vào Quản lý engine › "
     "Trích thông tin hợp đồng › Cấu hình."
 )
 
 
-class _BanChup:
-    def __init__(self, ban_ghi):
-        self._ban_ghi = ban_ghi
+def ghim_cau_hinh(viec):
+    """SDK kiểm schema/điền mặc định; không đọc lại cấu hình hiện hành.
 
-    def doc(self, bang, khoa):
-        return self._ban_ghi
-
-
-def ghim_cau_hinh(viec, app):
-    """Seam TX-2: đọc đúng một bản, ưu tiên snapshot của SDK 2.1 nếu có.
-
-    SDK lo engine.cau_hinh_doi; mỗi việc tiếp tục giữ bản chụp cũ.
-    Không tự tạo bản ghi khi thiếu và không lưu giá trị vào tài nguyên gói.
+    SDK 2.2.0 chưa công bố phiên bản trên Viec. Ghi null và băm bản chụp,
+    không lấy phiên bản nội bộ của app vì có thể đã đổi bởi việc khác.
     """
-    try:
-        if hasattr(viec, "cau_hinh") and hasattr(viec, "phien_ban_cau_hinh"):
-            v, phien_ban = viec.cau_hinh, viec.phien_ban_cau_hinh
-            ban_ghi = (SimpleNamespace(gia_tri=deepcopy(v), row_version=phien_ban)
-                       if v is not None and phien_ban is not None else None)
-        else:
-            ngan = getattr(viec, "ngan", None)
-            if ngan is None:
-                ngan = chon_ngan(app)
-            ban_ghi = ngan.doc("cau_hinh", {})
-        gia_tri = doc_cau_hinh(_BanChup(ban_ghi), SCHEMA_CAU_HINH)
-    except (NganXungDot, NganKhongHopLe, CauHinhKhongHopLe) as exc:
-        raise LoiNghiepVu(exc.ma, exc.thong_diep, thu_lai_duoc=exc.thu_lai_duoc) from None
-    if gia_tri is None:
+    gia_tri = deepcopy(viec.cau_hinh)
+    if not isinstance(gia_tri, dict) or "ngan_sach_token_vao_toi_da" not in gia_tri:
         raise LoiNghiepVu("CHUA_CAU_HINH", CAU_CHUA_CAU_HINH)
-    return {"gia_tri": gia_tri, "phien_ban_cau_hinh": ban_ghi.row_version}
+    return {"gia_tri": gia_tri, "phien_ban_cau_hinh": None,
+            "bam_cau_hinh": bam_bytes(json_bytes(gia_tri))}
 
 
 class EngineTrichXuat(Engine):
-    """Bọc hẹp lỗi kiểm đầu vào SDK 2.0, giữ nguyên vòng việc/lease/ACK.
+    """Bọc hẹp lỗi kiểm đầu vào SDK 2.2, giữ nguyên vòng việc/lease/ACK.
 
     SDK chặn MIME/kích thước trước handler. Chỉ dịch lỗi khi kết thúc;
     không nới khai báo hoặc sửa SDK. Cần Core C-TX-05 để có hook công khai.
@@ -67,6 +43,8 @@ class EngineTrichXuat(Engine):
             elif loi.ma == "VUOT_GIOI_HAN":
                 loi = LoiNghiepVu("VUOT_GIOI_HAN",
                                   "Tài liệu vượt giới hạn xử lý; hãy chia tài liệu trước khi gửi.")
+        elif loi is not None and viec.nang_luc == "trich.chuan_bi@1" and loi.ma == "VUOT_GIOI_HAN":
+            loi = LoiNghiepVu("VUOT_GIOI_HAN", "Yêu cầu vượt giới hạn xử lý.")
         return super()._ket_thuc(dt, viec, cfg, trang_thai,
                                 loi=loi, ma_tuong_quan=ma_tuong_quan)
 
@@ -80,7 +58,7 @@ class EngineTrichXuat(Engine):
 def _kiem_sdk():
     """Hai hook nội bộ chỉ được kiểm với đúng SDK này; đổi SDK thì dừng kín."""
     try:
-        dung = (kho_tri_thuc_sdk.__version__ == "2.0.0"
+        dung = (kho_tri_thuc_sdk.__version__ == "2.2.0"
                 and str(signature(Engine._ghi)) == "(self, cau)"
                 and str(signature(Engine._ket_thuc)) == (
                     "(self, dt, viec, cfg, trang_thai, *, loi=None, ma_tuong_quan=None)"))
@@ -93,9 +71,6 @@ def _kiem_sdk():
 def tao_app():
     _kiem_sdk()
     app = EngineTrichXuat.tu_khai_bao(GOC_GOI / "engine.json")
-    if getattr(app, "ngan", None) is None:
-        app.ngan = NganBoNho(KHAI_BAO_NGAN)
-    chon_ngan(app)
 
     @app.nang_luc("trich.doc_docx@1")
     def doc_word(viec):
@@ -106,7 +81,7 @@ def tao_app():
     def chuan_bi_ai(viec):
         from .tich_hop import chuan_bi
         viec.kiem_huy()
-        cau_hinh = ghim_cau_hinh(viec, app)
+        cau_hinh = ghim_cau_hinh(viec)
         return chuan_bi(viec, cau_hinh, phien_ban_engine=f"{app.ma} {app.phien_ban}")
 
     @app.nang_luc("trich.hau_kiem@1")

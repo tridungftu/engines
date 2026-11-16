@@ -67,10 +67,16 @@ def _bao_ve(ham):
     @wraps(ham)
     def goi(*a, **kw):
         buoc, da_so_huu = kw.get('buoc'), False
+        luot = None
         try:
             _kiem_buoc(buoc)
             da_so_huu = True
-            return ham(*a, **kw)
+            # Phạm vi gom chỉ trong primitive Excel; không đổi handle R4
+            # dùng chung hoặc giữ quyền đã xác minh qua lượt sau.
+            luot = kw['buoc'] = _BuocExcel(buoc)
+            ket = ham(*a, **kw)
+            buoc.kiem()  # Không trả kết quả tính bằng scope đã bị thu hồi.
+            return ket
         except BaseException as exc:
             if da_so_huu:
                 with buoc._kho._khoa:
@@ -104,10 +110,53 @@ def _bao_ve(ham):
                 loi = (KeyboardInterrupt() if isinstance(exc, KeyboardInterrupt)
                        else SystemExit(1) if isinstance(exc, SystemExit) else _loi())
             _don_ngoai_le(exc)
+        finally:
+            if luot is not None:
+                luot.doc_excel_cache.clear()
+                luot.goc = None
         # Không để args chứa bytes hoặc handle trong frame lỗi của B6.
         a = kw = buoc = ma = None
         raise loi from None
     return goi
+
+
+class _BuocExcel:
+    """Checkpoint cục bộ mỗi 64 callback/10 ms, Core mỗi khối/50 ms.
+
+    Hủy/TTL/timer/lease từ lifecycle R4 kiểm tại checkpoint cục bộ.
+    Scope Core kiểm lại tối đa 4096 callback hoặc 50 ms, cùng các ranh
+    giới đọc kho và bàn giao. Không nới hạn hoặc cache quyền qua lượt.
+    """
+    def __init__(self, buoc):
+        self.goc = buoc
+        self.doc_excel_cache = {}
+        self._lan, self._luc = 0, monotonic()
+        self._cuc_bo = self._luc
+
+    def __getattr__(self, ten):
+        return getattr(self.goc, ten)
+
+    def kiem(self):
+        self._lan += 1
+        luc = monotonic()
+        if self._lan >= 4096 or luc - self._luc >= .05:
+            self.xac_minh()
+        elif self._lan % 64 == 0 or luc - self._cuc_bo >= .01:
+            b = self.goc
+            b._viec.kiem_huy()
+            with b._kho._khoa:
+                b._kho._kiem_buoc(b)
+            self._cuc_bo = luc
+
+    def xac_minh(self):
+        self.goc.kiem()
+        self._lan, self._luc = 0, monotonic()
+        self._cuc_bo = self._luc
+
+    @property
+    def du_lieu(self):
+        self.kiem()
+        return self.goc._ban_ghi.du_lieu
 
 
 @dataclass(frozen=True, slots=True)
@@ -272,11 +321,15 @@ def _kiem_so_bat_bien(tai_lieu, buoc):
     báo số làm định danh đã bị lớp kiểm đầu vào từ chối. B7 kiểm Local đúng
     ngữ cảnh cho cả các ô/thuộc tính bất biến này, không tự chứng nhận.
     """
+    da_kiem = set()
     def kiem(chu):
         buoc.kiem()
+        if chu in da_kiem:
+            return
         con_sot, day_du = che._kiem_con_sot(chu, [])
         if con_sot or not day_du:
             raise _loi('MASK_TEP_CHUA_HO_TRO')
+        da_kiem.add(chu)
 
     da_tim = set()
     def kiem_da_khai(*gia_tri):
@@ -328,11 +381,7 @@ def _kiem_so_bat_bien(tai_lieu, buoc):
                 continue
             if la_nguyen and len(nguyen) >= 9:
                 raise _loi('MASK_TEP_CHUA_HO_TRO')
-            con_sot, day_du = che._kiem_con_sot(o.gia_tri, [])
-            if not day_du:
-                raise _loi('MASK_TEP_CHUA_HO_TRO')
-            if con_sot:
-                raise _loi('MASK_TEP_CHUA_HO_TRO')
+            kiem(o.gia_tri)
             kiem(chuan)
     # Thuộc tính có kiểu số không nằm trong các vùng chuỗi có thể patch.
     root = tai_lieu.goi.goi.cay.get('docProps/custom.xml')
@@ -348,11 +397,12 @@ def _kiem_so_bat_bien(tai_lieu, buoc):
 
 
 def _gop_alias(cac_map, buoc):
-    ket, da_gap = {}, {}
+    ket, da_gap, da_kiem = {}, {}, set()
     for m in cac_map:
         buoc.kiem()
-        if m is None:
+        if m is None or id(m) in da_kiem:
             continue
+        da_kiem.add(id(m))
         for alias, goc in m.alias_nguyen_van().items():
             khoa = che.chuan_bi_danh(alias)
             if khoa in da_gap and da_gap[khoa] != (alias, goc):
@@ -427,6 +477,9 @@ def _luu_ram(buoc, s, *, ban_cu=None):
     Không lấy du_lieu rồi ghi sau checkpoint: timer có thể vừa clear
     dictionary đó và việc ghi sẽ dựng lại map trong bản ghi đã kết thúc.
     """
+    if isinstance(buoc, _BuocExcel):
+        buoc.xac_minh()
+        buoc = buoc.goc
     with buoc._kho._khoa:
         buoc._kho._kiem_buoc(buoc)
         du = buoc._ban_ghi.du_lieu
@@ -501,6 +554,7 @@ def che_excel(du_lieu, *, buoc, dinh_danh=()):
     ngan_sach = dict(da_tim={}, vi_tri=set(), ky_tu_do=0)
     kho = _KhoExcel(buoc, ngan_sach)
     cac_map = []
+    da_kiem = {}
     try:
         for i, vung in enumerate(tai_lieu.vung):
             buoc.kiem()
@@ -514,15 +568,31 @@ def che_excel(du_lieu, *, buoc, dinh_danh=()):
             if not goc:
                 cac_map.append(None)
                 continue
+            if goc in da_kiem:
+                m, chi_phi, vi_tri = da_kiem[goc]
+                # Không giảm budget vì cache: từng vị trí vẫn thuộc ô
+                # riêng; thứ tự cấp/ghim alias không thay đổi.
+                ngan_sach['ky_tu_do'] += chi_phi
+                ngan_sach['vi_tri'].update((i, a, b) for a, b in vi_tri)
+                if (ngan_sach['ky_tu_do'] > TRAN_KY_TU_DO
+                        or len(ngan_sach['vi_tri']) > TRAN_VI_TRI):
+                    raise loi_ung_vien('MASK_UNG_VIEN_QUA_TRAN')
+                vung.kiem_thay_the(m.da_che)
+                cac_map.append(m)
+                continue
+            chi_phi = ngan_sach['ky_tu_do']
+            vi_tri = ()
             if bo_ky_tu_vo_hinh(goc).strip():
                 luot = _LuotVung(i, vung, kho)
                 try:
                     phep = che.thu_thap_ung_vien(goc, da_biet, luot).phep_thay
+                    vi_tri = tuple(luot.luot._vi_tri)
                 finally:
                     luot.dong()
             m = _kiem_vung(goc, phep, buoc)
             vung.kiem_thay_the(m.da_che)
             cac_map.append(m)
+            da_kiem[goc] = (m, ngan_sach['ky_tu_do'] - chi_phi, vi_tri)
         aliases = _gop_alias(cac_map, buoc)
         raw, sau, kich_ban = _ghi(tai_lieu, cac_map, buoc)
         s = dict(phien_ban=1, giai_doan='CHO_LOCAL', goc=du_lieu, da_che=raw,
@@ -533,6 +603,7 @@ def che_excel(du_lieu, *, buoc, dinh_danh=()):
         buoc.kiem()
         return _luu_ram(buoc, s)
     finally:
+        da_kiem.clear()
         cac_map.clear()
         kho = None
 

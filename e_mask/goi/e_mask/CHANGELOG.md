@@ -1,3 +1,17 @@
+## Chưa phát hành — 16/11/2026, MASK-B6c lượt 2
+
+- Sửa sao cache reader Excel: `ban_ghi` giữ nguyên `PhanZip` header-only thay vì thay bằng part đã giải nén. Bản đọc trong primitive và bản đọc mới ngoài primitive của B7 khớp nhau; giữ toàn bộ kiểm writer/B1/B3/B4.
+- Cache vẫn riêng từng primitive, tối đa hai bản theo bytes; dọn cùng handle trong finally. Giữ tăng tốc/gom quyền, không sửa tệp B7/B8 hoặc engine.json (1.5.0).
+- Regression đối chiếu cache với reader mới, chặn CRC giả, cô lập header và dọn cache giữa chuẩn bị/hậu kiểm cho cả hai dạng trả. Đã kiểm bằng Core giả (CoreGia); số đo/kiểm cuối tại VIEC.md. PR: chờ lead mở.
+
+## Chưa phát hành — 16/11/2026, MASK-B6c
+
+- Gom xác minh quyền trong primitive Excel: checkpoint cục bộ mỗi 64 callback hoặc 10 ms; xác minh đầy đủ Core mỗi 4.096 callback hoặc 50 ms, trước chốt RAM và trả kết quả. Các truy cập kho vẫn xác minh trước/sau; không giữ cache quyền xuyên lượt.
+- Cache kết quả che theo chuỗi nguyên byte trong lượt, vẫn cộng đủ budget ký tự/vị trí từng ô và giữ phát hiện alias mơ hồ. Cache kiểm số không đổi format/lexical hoặc chính sách B6b.
+- Worksheet UTF-8 đơn giản lập map byte bằng Expat sau gate B1/B3; đối chiếu tag/attribute/leaf với cây độc lập. UTF-16, entity, CR/LF/tab, CDATA hoặc encoding khác giữ nguyên map lexical B3; không đổi XML nền. Bỏ giải ST khi chuỗi không có `_x`, gộp kiểm alias cho cùng map bất biến.
+- Reader tái dùng tối đa hai kết quả kiểm theo toàn bytes trong cùng primitive; mỗi lần trả cây/map/ZIP độc lập, không dùng đối tượng caller đã sửa. Dọn cache và handle trong finally, không lưu ra ngoài RAM.
+- Không đổi engine.json/API v1, reader XML nền, Core hoặc e_hoi_ai; không thêm dependency. Đã kiểm bằng Core giả (CoreGia); kết quả và giới hạn hiệu năng tại VIEC.md. PR: chờ lead mở.
+
 ## Chưa phát hành — 16/11/2026, MASK-B8 nội bộ, gói 1.5.0
 
 - Mở DOCX/XLSX từ map RAM đúng chuỗi/instance đã qua B7. Bản che giữ nguyên SHA trả chính bytes gốc còn RAM sau kiểm băm, quyền và trần; bản AI sửa được kiểm lại toàn gói rồi patch trên chính bytes hiện gửi. Không tải gốc hoặc map từ Core/ngăn/tệp, không tra ngược kho.

@@ -5,13 +5,14 @@ snapshot/nhật ký cũ. R3/R4/R5 thay các consumer này trước khi phát hà
 """
 from __future__ import annotations
 
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 from copy import deepcopy
 from hashlib import sha256
 import json
 from re import fullmatch
 from typing import Protocol
 from uuid import uuid4
+from threading import get_ident
 
 from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu, ViecDaHuy
 
@@ -86,6 +87,214 @@ class KhoNhanDienQuaCore:
         self._kiem()
         can_bao_dam_core()
         yield self
+
+
+class CongHauKiemTepSDK:
+    """B9: chốt metadata qua viec.ngan, một lô thật, không map/kết quả.
+
+    C-P4-03: port tin cậy chot_metadata(..., ghi=...) giữ quyền và dấu
+    chống lặp của Core, gọi ghi() đồng bộ đúng một lần rồi xác nhận.
+    Callback chỉ có lô metadata; không trả tên, không cấp quyền từ payload.
+    Thiếu binding này thì từ chối, không fallback protocol RAM lịch sử.
+    """
+    def __init__(self, *, cong, quyen, ram):
+        self._cong, self._quyen, self._ram = cong, quyen, ram
+        self._giao = ExitStack()
+        self._nhan = self._bg = self._viec = self._ctx = self._chung_cu = None
+        self._da_gui = False
+
+    def __enter__(self):
+        return self
+
+    def _don(self):
+        with self._ram._khoa:
+            if self._bg is not None and self._ram._ban_ghi is self._bg:
+                self._ram._don(self._bg)
+
+    def __exit__(self, lop, exc, tb):
+        try:
+            self._giao.__exit__(lop, exc, tb)
+            # Không cho context Core nuốt lỗi/hủy của handler/R4.
+            if lop is not None:
+                self._don()
+                return False
+            if not self._da_gui or self._bg is None:
+                can_bao_dam_core()
+            self._viec.kiem_huy()
+            from .kho_anh_xa_ram import _bam, _chu
+            from .quyen_yeu_cau import xac_minh_ram
+            ctx = xac_minh(self._quyen, self._viec, loai='che',
+                           ma_yeu_cau=self._ctx.ma_yeu_cau, thao_tac='tep_ai')
+            cuoi = xac_minh_ram(self._quyen, self._viec, phien_ram=self._ram._phien_ram,
+                                loai='che', ma_yeu_cau=self._ctx.ma_yeu_cau)
+            with self._ram._khoa:
+                if (ctx != self._ctx or self._ram._ban_ghi is not self._bg
+                        or _chu(cuoi) != _chu(self._bg.ctx)
+                        or self._viec.ngu_canh.get('phap_nhan_id') != cuoi.phap_nhan_id
+                        or _bam(self._viec, 'che') != self._bg.bam_buoc.get(('che', ctx.ma_luot))
+                        or self._ram._dong_ho() >= self._bg.han
+                        or (cuoi.han_monotonic is not None and self._ram._dong_ho() >= cuoi.han_monotonic)
+                        or self._bg.trang_thai != 'CHO_AI'
+                        or self._bg.du_lieu.get('giai_doan_ai') != 'DA_HAU_KIEM'):
+                    raise loi_kho('MASK_MA_YEU_CAU')
+                if cuoi.han_monotonic is not None and cuoi.han_monotonic < self._bg.han:
+                    self._bg.han = cuoi.han_monotonic
+                    self._ram._dat_hen(self._bg)
+        except BaseException as err:
+            self._don()
+            from kho_tri_thuc_sdk.engine import LoiDuongTruyen
+            if self._da_gui and isinstance(err, (LoiDuongTruyen, TimeoutError, ConnectionError)):
+                raise ChuaRo('mask-giao-tep-' + sha256(self._chung_cu).hexdigest()) from None
+            raise
+        finally:
+            self._giao.close()
+            self._nhan = self._bg = self._viec = self._ctx = self._chung_cu = None
+        return False
+
+    def __getattr__(self, ten):
+        return getattr(self._cong, ten)
+
+    def _kiem(self, viec, ctx):
+        with self._ram._khoa:
+            bg = self._ram._ban_ghi
+            buoc = None if bg is None else bg.so_huu
+            if buoc is None or buoc._viec.id != viec.id or buoc._ctx.quyen != ctx:
+                raise loi_kho('MASK_MA_YEU_CAU')
+        buoc.kiem()
+        if xac_minh(self._quyen, viec, loai='che', ma_yeu_cau=ctx.ma_yeu_cau,
+                    thao_tac='tep_ai') != ctx:
+            raise loi_kho('MASK_MA_YEU_CAU')
+
+    def _cach_ly(self, viec, ctx, chung_cu):
+        self._kiem(viec, ctx)
+        ham = getattr(self._cong, 'ban_giao_tep_cuoi', None)
+        if not callable(ham) or self._nhan is not None:
+            can_bao_dam_core()
+        with self._ram._khoa:
+            self._bg = self._ram._ban_ghi
+            han = self._bg.han
+        self._viec, self._ctx, self._chung_cu = viec, ctx, chung_cu
+        self._nhan = self._giao.enter_context(ham(viec, ctx,
+            chung_cu=chung_cu, han_monotonic=han))
+        if not callable(self._nhan):
+            can_bao_dam_core()
+        self._kiem(viec, ctx)
+
+    def ban_giao(self, viec, ctx, *, chung_cu, ket_qua):
+        from .phong_bi import kiem_tham_chieu_tep
+        self._kiem(viec, ctx)
+        if self._nhan is None or chung_cu != self._chung_cu or self._da_gui:
+            can_bao_dam_core()
+        v = json.loads(ket_qua.decode('utf-8'))
+        if v['loai'] == 'truong':
+            kiem_tham_chieu_tep(v['truong']['tep_da_che'])
+        v = None
+        self._da_gui = True
+        if self._nhan(ket_qua) is not True:
+            raise ChuaRo('mask-giao-tep-' + sha256(chung_cu).hexdigest())
+        self._kiem(viec, ctx)
+        return True
+
+    def chot_metadata(self, viec, ctx, *, chung_cu, metadata):
+        from kho_tri_thuc_sdk.engine import NganXungDot as XungDotSDK
+        from .khoi_tao_ngan import ngan_cua_viec
+        from .phong_bi import _cap
+
+        self._kiem(viec, ctx)
+        ham = getattr(self._cong, 'chot_metadata', None)
+        if not callable(ham):
+            can_bao_dam_core()
+        ngan = ngan_cua_viec(viec)
+        ds = lenh = None
+        dang, da_goi, da_ghi = True, False, False
+        luong = get_ident()
+        tuong_quan = 'mask-chot-tep-' + sha256(chung_cu + metadata).hexdigest()
+
+        def ghi():
+            nonlocal da_goi, da_ghi
+            if not dang or da_goi or get_ident() != luong:
+                raise loi_kho('MASK_XUNG_DOT')
+            da_goi = True
+            self._kiem(viec, ctx)
+            kho = KhoNhanDienQuaCore(viec=viec, quyen=self._quyen,
+                                     ma_yeu_cau=ctx.ma_yeu_cau)
+            for m in ds:
+                cu = kho.doc(m['id_dinh_danh'])
+                if (cu is None or cu['trang_thai'] != 'CHINH_THUC'
+                        or any(cu[k] != m[k] for k in m)):
+                    raise loi_kho('MASK_XUNG_DOT')
+                lenh.append((m['id_dinh_danh'], m['row_version'], cu['so_gap'] + 1))
+            self._kiem(viec, ctx)
+            # Không chia thành nhiều lô, không ghi bí mật/null/cờ từ doc().
+            try:
+                if lenh:
+                    with ngan.lo() as lo:
+                        for ma, phien, so in lenh:
+                            self._kiem(viec, ctx)
+                            lo.sua('dinh_danh', {'id_dinh_danh': ma},
+                                   {'so_gap': so}, row_version=phien)
+                        self._kiem(viec, ctx)
+            except XungDotSDK:
+                raise loi_kho('MASK_XUNG_DOT') from None
+            except (ChuaRo, ViecDaHuy):
+                raise
+            except LoiNghiepVu as exc:
+                if exc.ma in {'NGAN_DU_LIEU_SAI', 'NGAN_KHONG_THAY', 'NGAN_CAN_VIEC',
+                              'NGAN_LO_QUA_LON', 'NGAN_KHONG_XOA', 'KHOA_CHONG_TRUNG_KHAC_NOI_DUNG'} and not exc.thu_lai_duoc:
+                    raise loi_kho() from None
+                raise ChuaRo(tuong_quan) from None
+            except Exception:
+                raise ChuaRo(tuong_quan) from None
+            da_ghi = True
+            self._kiem(viec, ctx)
+            return True
+
+        try:
+            if (type(metadata) is not bytes or len(metadata) > 262144
+                    or type(chung_cu) is not bytes or len(chung_cu) > 262144):
+                raise loi_kho()
+            def cam(_):
+                raise ValueError
+            ds = json.loads(metadata.decode('utf-8'), object_pairs_hook=_cap, parse_constant=cam)
+            if type(ds) is not list:
+                raise loi_kho()
+            if len(ds) > 100:
+                raise LoiNghiepVu('MASK_QUA_GIOI_HAN', 'Mỗi lô chỉ nhận tối đa 100 thay đổi.')
+            ids, aliases = set(), set()
+            for m in ds:
+                if (type(m) is not dict or set(m) != {'id_dinh_danh', 'id_bi_danh', 'bi_danh', 'nhom', 'row_version'}
+                        or any(type(m[k]) is not str or fullmatch(r'[0-9a-f]{32}|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}', m[k]) is None
+                               for k in ('id_dinh_danh', 'id_bi_danh'))
+                        or not _la_bi_danh(m['bi_danh']) or m['nhom'] not in CATEGORIES
+                        or type(m['row_version']) is not int or m['row_version'] < 1
+                        or m['id_dinh_danh'] in ids or chuan_bi_danh(m['bi_danh']) in aliases):
+                    raise loi_kho()
+                ids.add(m['id_dinh_danh'])
+                aliases.add(chuan_bi_danh(m['bi_danh']))
+            lenh = []
+            # Cách ly cả upload chưa phát hành TRƯỚC lô và tai_tep_ra B7.
+            self._cach_ly(viec, ctx, chung_cu)
+            try:
+                ok = ham(viec, ctx, chung_cu=chung_cu, metadata=metadata, ghi=ghi)
+            except (ChuaRo, ViecDaHuy):
+                raise
+            except Exception:
+                if da_ghi:
+                    raise ChuaRo(tuong_quan) from None
+                raise
+            if ok is not True or not da_goi or not da_ghi:
+                if da_ghi:
+                    raise ChuaRo(tuong_quan)
+                can_bao_dam_core()
+            self._kiem(viec, ctx)
+            return True
+        finally:
+            dang = False
+            if type(ds) is list:
+                ds.clear()
+            if type(lenh) is list:
+                lenh.clear()
+            ghi = ham = ds = lenh = metadata = chung_cu = None
 
 
 class PortKho(Protocol):

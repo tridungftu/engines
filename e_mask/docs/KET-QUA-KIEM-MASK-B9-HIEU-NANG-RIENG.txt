@@ -1,0 +1,9 @@
+MASK-B9 — kiểm lại riêng lỗi hiệu năng, chỉ DEMO.
+
+Lệnh: .venv/Scripts/python -B -m pytest e_mask/tests/test_che_van_ban.py::CheVanBanDemoTests::test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu -q --tb=short
+Kết quả thật: 1 failed, 1 passed, 2 subtests passed in 17.91s
+Mã thoát: 1
+Ca lỗi: SUBFAILED(mau='1 ') CheVanBanDemoTests.test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+Chuỗi 500.000 ký tự: thời gian xử lý 5.230840899981558 giây; ngưỡng 5 giây.
+Mã che và test giữ nguyên; không nới ngưỡng hoặc chạy lại đến khi xanh.
+Đã lược stack/đường máy; giữ số liệu và trạng thái thật. Không suy nguyên nhân từ phép đo này.

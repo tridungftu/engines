@@ -1,5 +1,18 @@
 # NGUỒN — gói e_mask, MASK-1…7, MASK-2b và sửa an toàn
 
+## MASK-B9 — 16/11/2026, nối SDK và bàn giao tệp trong cùng chu kỳ
+
+**Nguồn/quyền:** tiếp tục mã nội bộ Mask đã được Anh/lead giao, giữ quyền sử dụng nội bộ đã ghi bên dưới. Không lấy nguồn ngoài hoặc thêm dependency; không sửa nguồn tham chiếu, Core/SDK, nguồn cũ hoặc engine khác. Tái dùng các primitive B8/R4/R6 và thiết kế lô SDK R2 bằng import nội bộ hoặc chép có sửa orchestration. SHA-256 bytes và LF của bốn nguồn sau giống nhau ở checkout này và giữ nguyên so với HEAD:
+
+| Nguồn trong gói Python / symbol | SHA-256 bytes = LF | Tái dùng / khác biệt B9 |
+|---|---|---|
+| `ho_so_tep.py`: `MoTepRAM.mo`, `bao_ve`, `MIME` | `80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa` | Bố trí handle RAM và context bàn giao → `MoTepSDK` ở `kho_dinh_danh.py`; thêm parse mẫu 7 dưới handle, upload SDK trong cách ly, bộ T và kiểm lại lifecycle sau tiêu thụ. Không sửa B8. |
+| `kho_ngan.py`: `KhoNganBiMat._sua_lo`, `_ket_qua` | `83c6cce6a586ae2901f3e5a40161e917999d8eeb8951b501d580e3db6b262fde` | Tái dùng nguyên tắc CAS/lô và metadata null+cờ → `CongHauKiemTepSDK` ở `kho_qua_core.py`; chỉ sửa `so_gap` theo ID trong một lô ≤100. Không ghi tên/map hoặc dùng kho lịch sử. |
+| `mo_tep_word.py`: `mo_word` | `3bced79c8a887e167a9dae39133e9675f2e847893de35355be3d435f544d48cb` | Gọi primitive B8 nguyên trạng, không chép reader/writer hoặc mở rộng whitelist. |
+| `mo_tep_excel.py`: `mo_excel` | `d75afb2eee7886ed9f6ab55cee021257233ba216f465bf741c3452b3ddd87c7f` | Gọi primitive B8 nguyên trạng, giữ kiểm ô số/tiền/ngày và phần mới của AI. |
+
+`phong_bi.py` bổ sung parser/bọc đọc mẫu 5/7; `chay.py` nối ba bước B7 và năng lực mở tệp; `engine.json` chỉ tăng gói 1.6.0 và thêm bộ T. Bảy định nghĩa năng lực cũ và schema chung giữ nguyên. Băm đích sau sửa và đối chiếu nguồn nằm ở `docs/SHA-NGUON-MASK-B9.json` ngoài gói; kiểm kê đề nghị cũng ở ngoài gói, chờ lead áp dụng. Các port Core còn thiếu được ghi C-P4-01…05, không xem adapter DEMO là binding vận hành. Chỉ DEMO, Cloud tắt, đã kiểm bằng Core giả (CoreGia), chưa Core/Office/Local thật.
+
 ## MASK-B8 — 16/11/2026, mở tệp một lần từ RAM
 
 **Nguồn/quyền:** Anh/lead cho phép tiếp tục và chép có sửa mã nội bộ B1…B7/R4/R6 của chính gói Mask. Giữ quyền sử dụng nội bộ từ các mục nguồn bên dưới, không suy quyền phân phối ngoài tổ chức. Không chép nguồn ngoài, không sửa nguồn cũ/Core/SDK/engine khác, không thêm dependency. SDK 2.2.0 cài offline từ wheel repo, SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp phát hành.

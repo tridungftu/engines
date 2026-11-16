@@ -1,0 +1,7 @@
+warning: in the working copy of 'e_mask/tests/demo_mask_r3.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_0.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_7.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_b1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_b5.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/test_mask_b6.py', LF will be replaced by CRLF the next time Git touches it
+Mã thoát: 0

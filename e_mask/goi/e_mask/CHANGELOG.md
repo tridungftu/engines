@@ -1,3 +1,11 @@
+## Chưa phát hành — 16/11/2026, MASK-B9, gói 1.6.0
+
+- Đăng ký `mask.mo_che_tep@1`: tệp JSON UTF-8 mẫu 7 → bộ T tĩnh. Giữ nguyên định nghĩa bảy năng lực đã công bố, API v1 và schema chung; ba bước tệp Local của B7 vẫn có loại trả cố định. Không có đường che tệp bỏ Local.
+- Mẫu 5/7 kiểm khóa trùng, NaN/Infinity, UTF-8, cây JSON, khóa/kiểu/độ dài và trần 1 MiB cho cả JSON và từng tham chiếu con; chỉ `viec.mo_tep`, không path/URL hoặc danh tính tự khai. Tham chiếu con phải được Core cấp quyền riêng. PDF/scan ngoài profile B tiếp tục bị từ chối; OCR do Core điều phối, Cloud tắt.
+- Mở tệp dùng primitive B8 dưới handle RAM R4, hoàn tất và kiểm lại trong RAM trước `viec.tai_tep_ra`, tên cố định `mask-da-mo-che.docx/xlsx`. Cách ly upload trước byte đầu, bàn giao bộ T sau tiêu thụ RAM và kiểm lại quyền/lifecycle/deadline/instance. Alias thiếu/lạ/hỏng/mơ hồ hoặc mất RAM/TTL chặn toàn tệp; không cache map/kết quả mở để retry. `dong_viec=false` vẫn dọn và báo chuyển quy trình dùng một lần.
+- B7 chốt metadata bằng một lô `viec.ngan` tối đa 100 lệnh CAS, chỉ sửa số gặp trên ID/phiên bản/alias đã kiểm, không chép bí mật/null/cờ hoặc map. Core giữ quyền và dấu chống lặp, callback ghi đồng bộ đúng một lần; thiếu binding thì fail-closed. Cửa bàn giao giữ upload/bản che chưa phát hành đến sau khi handler nhường quyền RAM, dọn khi lỗi ở cả biên ngoài handle.
+- Mất ACK sau tiếp nhận báo ChuaRo; Core giao lại kết quả đã tiếp nhận đúng quyền, không gọi mở lại sau tiêu thụ. Các protocol C-P4-01…05 chưa có binding SDK 2.2.0, không được coi là API đã phát hành. Đã kiểm bằng Core giả (CoreGia) và HTTP giả; chưa Core/Office/Local/Linux thật. Chỉ DEMO, không dependency/engine-to-engine/commit/push; PR: chờ lead mở. Kiểm kê nằm ngoài năm tệp mã được giao, sinh đề nghị ngoài gói cho lead; kết quả thật tại VIEC/báo cáo B9.
+
 ## Chưa phát hành — 16/11/2026, MASK-B6c lượt 2
 
 - Sửa sao cache reader Excel: `ban_ghi` giữ nguyên `PhanZip` header-only thay vì thay bằng part đã giải nén. Bản đọc trong primitive và bản đọc mới ngoài primitive của B7 khớp nhau; giữ toàn bộ kiểm writer/B1/B3/B4.

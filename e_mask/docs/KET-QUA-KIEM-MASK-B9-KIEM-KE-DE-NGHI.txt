@@ -1,0 +1,6 @@
+{
+  "so_tep": 60,
+  "kiem_bytes_sha": true,
+  "kiem_doc_lap_chi_thay_kiem_ke_trong_ram": [],
+  "khong_sua_kiem_ke_goi": true
+}

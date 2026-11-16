@@ -30,7 +30,8 @@ def _loi_cong(ham):
 
 
 def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None, cong_hau_kiem_ai=None,
-            cong_mo_che=None, cong_chuan_bi_tep=None, cong_hau_kiem_tep=None):
+            cong_mo_che=None, cong_chuan_bi_tep=None, cong_hau_kiem_tep=None,
+            cong_mo_tep=None):
     """Chỉ bên tích hợp truyền port; dữ liệu việc không thể cấp quyền này."""
     ung_dung = Engine.tu_khai_bao(str(Path(__file__).resolve().parents[1] / 'engine.json'))
     # ngan chỉ giữ tương thích chữ ký, không dựng kho ánh xạ/ngăn dự phòng.
@@ -50,15 +51,23 @@ def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None, cong_hau_kiem_ai=No
     @bao_ve
     def chuan_bi_tep(viec):
         from .chuan_bi_tep import ChuanBiTep
-        return ChuanBiTep(ram=ung_dung.kho_anh_xa_ram, quyen=quyen,
-            cong=cong_chuan_bi_tep,
-            phien_ban_engine='e_mask ' + ung_dung.phieu['phien_ban']).chuan_bi(viec)
+        with phong_bi.viec_chuan_bi_tep(viec) as tep:
+            return ChuanBiTep(ram=ung_dung.kho_anh_xa_ram, quyen=quyen,
+                cong=cong_chuan_bi_tep,
+                phien_ban_engine='e_mask ' + ung_dung.phieu['phien_ban']).chuan_bi(tep)
 
     def hau_kiem_tep(viec, nang_luc):
         from .hau_kiem_tep import HauKiemTep
-        return HauKiemTep(ram=ung_dung.kho_anh_xa_ram, quyen=quyen,
-            cong=cong_hau_kiem_tep,
-            phien_ban_engine='e_mask ' + ung_dung.phieu['phien_ban']).hau_kiem(viec, nang_luc=nang_luc)
+        from .ho_so_tep import bao_ve as bao_ve_loi_tep
+        from .kho_qua_core import CongHauKiemTepSDK
+
+        @bao_ve_loi_tep
+        def xu_ly():
+            with CongHauKiemTepSDK(cong=cong_hau_kiem_tep, quyen=quyen,
+                                   ram=ung_dung.kho_anh_xa_ram) as cong:
+                return HauKiemTep(ram=ung_dung.kho_anh_xa_ram, quyen=quyen,
+                    cong=cong, phien_ban_engine='e_mask ' + ung_dung.phieu['phien_ban']).hau_kiem(viec, nang_luc=nang_luc)
+        return xu_ly()
 
     @ung_dung.nang_luc('mask.hau_kiem_tep_van_ban@1')
     @bao_ve
@@ -69,6 +78,13 @@ def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None, cong_hau_kiem_ai=No
     @bao_ve
     def hau_kiem_tep_giu_dinh_dang(viec):
         return hau_kiem_tep(viec, 'mask.hau_kiem_tep_giu_dinh_dang@1')
+
+    @ung_dung.nang_luc('mask.mo_che_tep@1')
+    @bao_ve
+    def mo_tep(viec):
+        from .kho_dinh_danh import MoTepSDK
+        return MoTepSDK(ram=ung_dung.kho_anh_xa_ram, quyen=quyen,
+                        cong=cong_mo_tep).mo(viec)
 
     @ung_dung.nang_luc('mask.hau_kiem_ai_cuc_bo@1')
     @bao_ve

@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_mask",
   "ten": "Che định danh",
-  "phien_ban": "1.5.0",
+  "phien_ban": "1.6.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -19,6 +19,28 @@
     "thu_muc": "."
   },
   "nang_luc": [
+    {
+      "ma": "mask.mo_che_tep@1",
+      "ten": "Mở che tệp trong cùng chu kỳ",
+      "nhan": ["tep"],
+      "tra": "truong",
+      "gioi_han": {
+        "tep_toi_da_mib": 1,
+        "mime": ["application/json"],
+        "thoi_han_giay": 300
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {"ma": "dong_viec", "ten": "Đóng việc sau khi mở", "kieu": "co_khong", "mac_dinh": false}
+      ],
+      "truong_ra": [
+        {"ma": "tep_da_mo_che", "ten": "Tệp đã mở che", "kieu": "tep"},
+        {"ma": "so_cho_mo", "ten": "Số chỗ mở", "kieu": "so"},
+        {"ma": "bi_danh_khong_ro_json", "ten": "Bí danh chưa mở JSON", "kieu": "van_ban"},
+        {"ma": "mo_day_du", "ten": "Mở đầy đủ", "kieu": "co_khong"},
+        {"ma": "trang_thai_ma_yeu_cau", "ten": "Trạng thái yêu cầu", "kieu": "van_ban"}
+      ]
+    },
     {
       "ma": "mask.chuan_bi_tep_ai_cuc_bo@1",
       "ten": "Chuẩn bị tệp cho AI cục bộ",

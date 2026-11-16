@@ -1,0 +1,4 @@
+[LỖI] Che văn bản DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+[LỖI] Mở che DEMO: "Chưa xác minh được phiên và quyền xử lý yêu cầu."
+Engine e_mask 1.6.0: có ví dụ chạy thử DEMO chưa đạt.
+Mã thoát: 1

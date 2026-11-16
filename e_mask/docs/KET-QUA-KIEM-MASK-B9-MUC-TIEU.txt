@@ -1,0 +1,16 @@
+MASK-B9 — đã kiểm bằng Core giả (CoreGia), chỉ DEMO; chưa Core/Office/Local thật.
+
+Lệnh: .venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b9_ngan.py e_mask/tests/test_mask_b9.py -q --tb=short --maxfail=6
+Kết quả thật: 131 passed in 31.47s
+Mã thoát: 0
+Không skip/xfail.
+
+Gồm HTTP qua MayChuGia; quyền tệp con, mẫu JSON 5/7, mã caller và scope/instance/restart/lifecycle/TTL; giữ nội dung AI sửa, tiền/ngày; ACK/partial upload; một lô SDK 0/1/100, chặn 101, CAS không ghi dở, callback không ghi/gọi hai lần; spy không tệp tạm/log/stderr chứa gốc/map.
+
+Hồi quy B7 ở lượt sau nối lô SDK/cách ly:
+Lệnh: .venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b7.py -q --tb=short
+Kết quả thật: 142 passed in 36.47s
+Mã thoát: 0
+Full suite sau các bổ sung cuối là kết quả chốt, báo riêng.
+
+Cloud tắt. Không dùng số kiểm giả làm chứng nhận model/Office/Core thật.

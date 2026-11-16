@@ -217,7 +217,7 @@ def test_local_bo_sung_shared_tat_ca_o_chi_trong_ram_chua_phat_hanh():
         buoc.cho_ai()
     assert {ma for ma in b.app._ham if 'tep' in ma} == {
         'mask.chuan_bi_tep_ai_cuc_bo@1', 'mask.hau_kiem_tep_van_ban@1',
-        'mask.hau_kiem_tep_giu_dinh_dang@1'}
+        'mask.hau_kiem_tep_giu_dinh_dang@1', 'mask.mo_che_tep@1'}
 
 
 @pytest.mark.parametrize('dang', ['khong_co_alias', 'nguon', 'offset', 'nhom', 'tien_ngay', 'overlap'])

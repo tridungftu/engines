@@ -1,0 +1,66 @@
+[
+  {
+    "tep": "e_mask/goi/e_mask/e_mask/ho_so_tep.py",
+    "sha256_truoc_bytes": "80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa",
+    "sha256_truoc_lf": "80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa",
+    "sha256_sau_bytes": "80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa",
+    "sha256_sau_lf": "80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa",
+    "giu_nguyen_noi_dung": true
+  },
+  {
+    "tep": "e_mask/goi/e_mask/e_mask/kho_ngan.py",
+    "sha256_truoc_bytes": "83c6cce6a586ae2901f3e5a40161e917999d8eeb8951b501d580e3db6b262fde",
+    "sha256_truoc_lf": "83c6cce6a586ae2901f3e5a40161e917999d8eeb8951b501d580e3db6b262fde",
+    "sha256_sau_bytes": "83c6cce6a586ae2901f3e5a40161e917999d8eeb8951b501d580e3db6b262fde",
+    "sha256_sau_lf": "83c6cce6a586ae2901f3e5a40161e917999d8eeb8951b501d580e3db6b262fde",
+    "giu_nguyen_noi_dung": true
+  },
+  {
+    "tep": "e_mask/goi/e_mask/e_mask/mo_tep_word.py",
+    "sha256_truoc_bytes": "3bced79c8a887e167a9dae39133e9675f2e847893de35355be3d435f544d48cb",
+    "sha256_truoc_lf": "3bced79c8a887e167a9dae39133e9675f2e847893de35355be3d435f544d48cb",
+    "sha256_sau_bytes": "3bced79c8a887e167a9dae39133e9675f2e847893de35355be3d435f544d48cb",
+    "sha256_sau_lf": "3bced79c8a887e167a9dae39133e9675f2e847893de35355be3d435f544d48cb",
+    "giu_nguyen_noi_dung": true
+  },
+  {
+    "tep": "e_mask/goi/e_mask/e_mask/mo_tep_excel.py",
+    "sha256_truoc_bytes": "d75afb2eee7886ed9f6ab55cee021257233ba216f465bf741c3452b3ddd87c7f",
+    "sha256_truoc_lf": "d75afb2eee7886ed9f6ab55cee021257233ba216f465bf741c3452b3ddd87c7f",
+    "sha256_sau_bytes": "d75afb2eee7886ed9f6ab55cee021257233ba216f465bf741c3452b3ddd87c7f",
+    "sha256_sau_lf": "d75afb2eee7886ed9f6ab55cee021257233ba216f465bf741c3452b3ddd87c7f",
+    "giu_nguyen_noi_dung": true
+  },
+  {
+    "tep": "e_mask/goi/e_mask/e_mask/phong_bi.py",
+    "sha256_truoc_bytes": "83ccbdaba8d10a68b247068a9ce7fa72d6962e415ce46595538697b302541625",
+    "sha256_truoc_lf": "83ccbdaba8d10a68b247068a9ce7fa72d6962e415ce46595538697b302541625",
+    "sha256_sau_bytes": "d9793b13a40e9902a125efd3cbac3b98c72d54c70ce8278672d720f2a3993902",
+    "sha256_sau_lf": "d9793b13a40e9902a125efd3cbac3b98c72d54c70ce8278672d720f2a3993902",
+    "giu_nguyen_noi_dung": false
+  },
+  {
+    "tep": "e_mask/goi/e_mask/e_mask/chay.py",
+    "sha256_truoc_bytes": "31da2de1d8a640b9fd4ab43bac4cdfeddd0dc76c824736168c257ff457dabfe3",
+    "sha256_truoc_lf": "31da2de1d8a640b9fd4ab43bac4cdfeddd0dc76c824736168c257ff457dabfe3",
+    "sha256_sau_bytes": "f5fdfc70ce7dae23893a09e6c9871515be211e3e354cb30d586ce04b9f476cf7",
+    "sha256_sau_lf": "f5fdfc70ce7dae23893a09e6c9871515be211e3e354cb30d586ce04b9f476cf7",
+    "giu_nguyen_noi_dung": false
+  },
+  {
+    "tep": "e_mask/goi/e_mask/e_mask/kho_dinh_danh.py",
+    "sha256_truoc_bytes": "fd8633450de5ae85484d78d74a8583b3efd5078f19a27221f14326975b16ecb9",
+    "sha256_truoc_lf": "fd8633450de5ae85484d78d74a8583b3efd5078f19a27221f14326975b16ecb9",
+    "sha256_sau_bytes": "a2190eb979714282022146df514d9c4585030755f6ec4a778d0e43af728c7921",
+    "sha256_sau_lf": "a2190eb979714282022146df514d9c4585030755f6ec4a778d0e43af728c7921",
+    "giu_nguyen_noi_dung": false
+  },
+  {
+    "tep": "e_mask/goi/e_mask/e_mask/kho_qua_core.py",
+    "sha256_truoc_bytes": "1b7f9023d4e73b5ac45df98988ef2bea4085db1532c2a7361e9d0f799159129d",
+    "sha256_truoc_lf": "1b7f9023d4e73b5ac45df98988ef2bea4085db1532c2a7361e9d0f799159129d",
+    "sha256_sau_bytes": "c3e08b11d81d0557aa06eee5fa50383cd7bf2c9b0def9b98f7fe936fa9167ed3",
+    "sha256_sau_lf": "c3e08b11d81d0557aa06eee5fa50383cd7bf2c9b0def9b98f7fe936fa9167ed3",
+    "giu_nguyen_noi_dung": false
+  }
+]

@@ -6,6 +6,14 @@
 - Reader tái dùng tối đa hai kết quả kiểm theo toàn bytes trong cùng primitive; mỗi lần trả cây/map/ZIP độc lập, không dùng đối tượng caller đã sửa. Dọn cache và handle trong finally, không lưu ra ngoài RAM.
 - Không đổi engine.json/API v1, reader XML nền, Core hoặc e_hoi_ai; không thêm dependency. Đã kiểm bằng Core giả (CoreGia); kết quả và giới hạn hiệu năng tại VIEC.md. PR: chờ lead mở.
 
+## Chưa phát hành — 16/11/2026, MASK-B7, gói 1.5.0
+
+- Nối B5/B6 với R4/R5 qua ba năng lực cố định: chuẩn bị tệp → yêu cầu Local, hậu kiểm → văn bản đã che hoặc bộ C giữ định dạng. Không có năng lực che tệp bỏ qua Local; dạng trả/năng lực cuối do port Core tin cậy chọn, ghim trong RAM.
+- `ho_so_tep.py` chỉ bọc quyền sở hữu RAM R4. Bytes gốc/bản che, map Unicode/run/attribute/byte/patch, băng Local, kế hoạch, phiên bản, cấu hình và phản hồi chỉ trong RAM cùng chuỗi/instance. Không hồ sơ Core/ngăn/tệp tạm/khôi phục. Giữ TTL tuyệt đối và timer R4; nhường handler khi chờ. Chỉ ChuaRo còn chờ Local được giữ map tới hạn; lỗi kết thúc hoặc mất ACK khi chốt/bàn giao dọn map.
+- Dùng profile/khuôn/offset/budget R5 hiện hành, quét mọi vùng B2/B3 và thêm ngữ cảnh hàng cho ô bất biến Excel, scalar metadata Word/Excel. Span đi qua vùng/ô độc lập hoặc cần sửa vùng bất biến bị chặn. Local chỉ thêm che sau lớp 1 đạt; kiểm nguồn, đủ đoạn, overlap, Unicode, trích dẫn, nghi vấn và hoàn tất trước patch.
+- Đọc lại bytes cuối qua B5/B6, đối chiếu map/tiền/ngày/ô số/format/trần, giới hạn báo cáo và lô metadata trước chốt. Chỉ upload bản che có tên kỹ thuật cố định; bộ C không phải đầu vào Cloud. Bản văn bản cuối dùng map RAM cho R6; mở tệp B8 và phát hành Core thật B9 còn riêng.
+- Các port quyền/ghim/lifecycle/Local/chốt metadata/ACK vẫn là đề nghị C-P4-01…05, thiếu thì runtime từ chối. Adapter chỉ ngoài gói, đã kiểm bằng Core giả (CoreGia); chưa Core/Office/Local/Linux thật. Không nhận là “0 lọt”, Cloud tắt; PR: chờ lead mở. Kết quả và giờ thực tế ở VIEC.md/báo cáo B7.
+
 ## Ch?a ph?t h?nh ? 16/11/2026, MASK-B6b l??t 2
 
 - Theo quy?t ??nh lead 16/11: formatCode th?c t? thu?c TI?N/K? TO?N gi? nguy?n s? c? ph?n th?p ph?n kh?c 0 ho?c s? nguy?n t?i ?a 12 ch? s?, kh?ng t?nh d?u; gi? nguy?n bytes/format. S? nguy?n t? 13 ch? s? qua c?ng c?a d?/ch?n nh? General. `.00`, exponent v? s? ?m ???c x?t theo gi? tr? Decimal.

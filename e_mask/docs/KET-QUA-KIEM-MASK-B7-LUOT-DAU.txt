@@ -1,0 +1,39 @@
+Lượt chẩn đoán đầu, không dùng làm kết quả kiểm nền độc lập.
+Lệnh: .venv/Scripts/python -B -m pytest e_mask/tests -q
+Mã thoát: 1.
+Manifest/runtime đã thay đổi trong lúc lượt này đang chạy. Fixture lịch sử
+chỉ có bốn handler gặp ba khai báo B7 mới; kiểm kê gặp tệp B7 đang thêm.
+Gold R3 checkout CRLF không khớp SHA bytes LF đã khóa. Sau đó đã khôi phục
+đúng bytes HEAD, không đổi nội dung gold; fixture giữ đúng phạm vi văn bản.
+Chỉ giữ tên ca và số thật dưới đây; bỏ stack/namespace/bytes fixture và
+đường máy khỏi log bàn giao. Kết quả chốt ở KET-QUA-KIEM-MASK-B7-PYTEST.txt.
+
+FAILED e_mask/tests/test_mask_r1.py::test_kiem_ke_day_du_bytes_va_sha_tung_tep
+FAILED e_mask/tests/test_mask_r3.py::test_gold_demo_da_dong_bang - AssertionE...
+FAILED e_mask/tests/test_sua_an_toan.py::test_mst_stk_co_zero_width_giua_chu_so[\u2063-MST-0312345678]
+FAILED e_mask/tests/test_sua_an_toan.py::test_mst_stk_co_zero_width_giua_chu_so[\u2063-STK-0012345678901]
+FAILED e_mask/tests/test_sua_an_toan.py::test_mst_stk_co_zero_width_giua_chu_so[\ufe0f-MST-0312345678]
+FAILED e_mask/tests/test_sua_an_toan.py::test_mst_stk_co_zero_width_giua_chu_so[\ufe0f-STK-0012345678901]
+FAILED e_mask/tests/test_sua_an_toan.py::test_mst_stk_co_zero_width_giua_chu_so[\U000e0100-MST-0312345678]
+FAILED e_mask/tests/test_sua_an_toan.py::test_mst_stk_co_zero_width_giua_chu_so[\U000e0100-STK-0012345678901]
+FAILED e_mask/tests/test_sua_an_toan.py::test_alias_tam_cua_b_la_alias_la_o_a_khong_them_tham_chieu[MASKTAM]
+FAILED e_mask/tests/test_sua_an_toan.py::test_alias_tam_cua_b_la_alias_la_o_a_khong_them_tham_chieu[MASKCN]
+FAILED e_mask/tests/test_sua_an_toan.py::test_ghi_alias_tam_ngoai_yeu_cau_bi_tu_choi
+FAILED e_mask/tests/test_sua_an_toan.py::test_sau_duyet_ma_tam_van_chi_mo_cho_yeu_cau_goc
+FAILED e_mask/tests/test_sua_an_toan.py::test_chinh_thuc_mo_duoc_trong_cung_phap_nhan_ke_ca_chua_dung
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[runtime-mask.che_van_ban@1-doc]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[runtime-mask.che_van_ban@1-tim]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[runtime-mask.che_van_ban@1-lo]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[runtime-mask.mo_che_van_ban@1-doc]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[runtime-mask.mo_che_van_ban@1-tim]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[runtime-mask.mo_che_van_ban@1-lo]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[nghiep_vu-mask.che_van_ban@1-doc]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[nghiep_vu-mask.che_van_ban@1-tim]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[nghiep_vu-mask.che_van_ban@1-lo]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[nghiep_vu-mask.mo_che_van_ban@1-doc]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[nghiep_vu-mask.mo_che_van_ban@1-tim]
+FAILED e_mask/tests/test_sua_an_toan.py::test_loi_la_tu_ngan_khong_lo_ra_stdout_stderr[nghiep_vu-mask.mo_che_van_ban@1-lo]
+FAILED e_mask/tests/test_sua_an_toan.py::test_che_mo_duyet_va_loi_duyet_khong_in_ten
+FAILED e_mask/tests/test_sua_an_toan.py::test_khong_anh_xa_duoc_chan_truoc_phat_hanh
+FAILED e_mask/tests/test_sua_an_toan.py::test_cf_ngoai_dinh_danh_va_trong_tien_ngay_duoc_bo
+28 failed, 3075 passed, 4 xfailed, 190 subtests passed in 465.13s (0:07:45)

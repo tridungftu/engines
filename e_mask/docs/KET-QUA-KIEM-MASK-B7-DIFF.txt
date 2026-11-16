@@ -1,0 +1,3 @@
+Lệnh: git diff --check
+Mã thoát: 0.
+Git cảnh báo EOL LF/CRLF ở VIEC.md và gold R3 trong checkout Windows về sau; không có lỗi khoảng trắng.

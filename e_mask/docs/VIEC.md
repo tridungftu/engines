@@ -5,6 +5,9 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
 | MASK-B6c | Hiệu năng che Excel nhiều hàng, gom quyền và cache RAM trong lượt | Phiếu lead 16/11/2026; sau B6/B6b | Xong mã/kiểm — 16/11/2026; mốc 3 giây chưa đạt ổn định | 2.000 hàng: 2,5479–5,6756 giây, median ba lượt cuối 5,6482; gần 1 MiB: 4,8568–11,8848 giây. 61 test mới; báo cáo §6 cuối sổ. PR: **chờ lead mở**. |
+
+| MASK-B7 | Hai lớp Local cho tệp Word/Excel, hồ sơ chỉ RAM, ba năng lực cố định | Sau B5/B6, R4/R5; MASK-P4; C-P4-01…05 | Xong phần mã/kiểm CoreGia / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Đúng năm tệp mã/phiếu; B7 142/142. Full 3244 passed, 1 failed kiểm kê ngoài closure, 4 xfailed cũ, 190 subtests, 0 skipped. CLI 0/2 thiếu quyền; độc lập mã 1 cùng kiểm kê; đề nghị 58/58 đối chiếu đạt; diff mã 0. PR: **chờ lead mở**; kết quả/giờ thật tại mục B7 cuối sổ. |
+
 | MASK-B6b | Chặn ô số định danh giả tiền/ngày, xét format và giá trị thực | Phiếu lead 16/11/2026; sau B6 | Chờ Anh — 16/11/2026; xong mã, chưa đạt full xanh | 216 regression mới đạt; full 3318 passed, 1 failed ở test B6 cũ trái yêu cầu mới, 4 xfailed cũ, 190 subtests. Độc lập/diff mã 0, kiểm kê 55/55; CLI 0/2 thiếu quyền cũ. Đã đề nghị sửa đúng một test ngoài closure, chờ trả lời. PR: **chờ lead mở**. |
 | MASK-B6 | Che Excel giữ format, shared/rich/inline/metadata, map chỉ RAM | Sau B3/B4 và R3…R6; MASK-P4; C-P4-01…05 | Xong mã/kiểm nội bộ / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Một runtime mới; B6 122/122. Full 2923 passed, 4 xfailed cũ, 190 subtests, 0 lỗi/skip; độc lập/diff mã 0, CLI 0/2 thiếu quyền. Nguồn 19/19, kiểm kê 55/55; PR: **chờ lead mở**. |
 
@@ -44,6 +47,15 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | MASK-2c-2 | Chuẩn bị yêu cầu Local, khuôn/profile/budget và kế hoạch đoạn | MASK-2c-1; profile kỹ thuật lead đã duyệt 15/11 | Xong phạm vi CoreGia — 15/11/2026; chờ Core/model thật | Đúng năm tệp mã, bản 1.1.0; 972 passed, 4 xfailed giữ nguyên, 190 subtests, 0 skipped; DEMO có quyền 2/2, CLI chuẩn 0/2 thiếu quyền. [Báo cáo](BAO-CAO-MASK-2c-2.md); PR: **chờ lead mở** |
 
 Các số “lát 1…8/J8b” ở các dòng lịch sử là mã kế hoạch cũ; kế hoạch giao SDK 2.0 dùng `MASK-0…MASK-13` trong phiếu mới. Hoàn tất MASK-P không có nghĩa đã code, kiểm bằng CoreGia hoặc nối Core thật. MASK-P ước tính 1 giờ; tổng giờ 52–62 là dự toán triển khai sau, cập nhật lại sau khảo sát tệp MASK-7.
+
+## Cần Core / lead — MASK-B7, 16/11/2026
+
+- **C-P4-01/02/04:** binding mã Core cấp/quyền/instance/phiên RAM xuyên bước, đủ đoạn Local và chứng cứ nguồn AI-9; sự kiện hủy/lỗi/lease/deadline/kết thúc khi Mask rảnh. Không snapshot/map/gốc để cứu RAM. Thiếu port thì runtime từ chối; adapter chỉ ngoài gói, đã kiểm bằng Core giả (CoreGia).
+- **C-P4-03:** chốt metadata ID/alias/phiên bản trong lô ≤100 và dấu chống lặp/ACK; null+cờ/tìm chính xác/duy nhất bí mật/quota dò. Tên mới vẫn chặn theo R2/R3, chưa có bằng chứng chất lượng/chi phí thật. Port `chot_metadata` B7 mới là protocol đề nghị, không coi bảo đảm giả của CoreGia là API đã có.
+- **C-P4-05:** quyền tham chiếu tệp con, streaming/trần/413 và budget toàn chuỗi; cách ly bản che upload và return handler tới sau chốt SDK còn quyền/hạn. Mất ACK không gọi hậu kiểm/mở lại sau map đã dọn. Không dump payload/map/gốc/traceback/crash/tệp tạm. Chưa Core/Office/Local/Linux thật; Cloud tắt.
+- **C-MS22-01:** CLI SDK chuẩn vẫn 0/2 thiếu nguồn quyền; không đổi DEMO hoặc bỏ gate để làm xanh.
+- **Cần lead:** [kiểm kê đề nghị 58 tệp](KIEM-KE-MASK-B7-DE-NGHI.json) thay kiểm kê gói ngoài đúng năm tệp được giao; chưa áp dụng thì lệnh độc lập/test kiểm kê chuẩn vẫn lỗi. Gold R3 đã khôi phục đúng bytes LF của HEAD (SHA đã khóa), không sửa nội dung; cần giữ EOL này ở checkout Windows về sau.
+- [Báo cáo B7](BAO-CAO-MASK-B7.md) nêu rõ phạm vi băng Local, trần bảo thủ và phần B8/B9/B10 còn riêng. PR: **chờ lead mở**; không có câu nghiệp vụ mới chờ Anh, không commit/push.
 
 ## MASK-R3 — kết thúc khảo sát ứng viên, 15/11/2026
 
@@ -1005,6 +1017,34 @@ Lượt full trước chốt bảo vệ nhãn R5 ở xa: **2976 passed, 1 failed
 Không phát sinh cổng Core/SDK hoặc câu nghiệp vụ mới. Kế thừa **C-MS22-01** (quyền/ngữ cảnh CLI DEMO) và các cửa P4/B5 về ghim chuỗi, vòng đời RAM, nguồn Local và bàn giao; B5b không chứng nhận các cửa này.
 
 **Chờ Anh/lead về phạm vi test cũ:** `test_mask_2b.py::test_do_lap_lai_co_nguon_khong_bia_mau` bắt buộc `vi_tri_chan_nham == [15]`, tức câu ngày thật ISO “Đáo hạn khoản vay vào ngày 2026-10-30.” phải bị chặn nhầm. B5b giữ đúng ngày thật làm kết quả thành `[]`. Đã trình thay đúng một assertion `[15] → []`, không skip/xfail/đổi ngưỡng bảo mật; chưa sửa vì tệp nằm ngoài danh sách cho phép của phiếu. Đo lại riêng đã xác minh failure này, không phải lỗi giữ tiền/ngày hoặc lọt định danh.
+
+
+## MASK-B7 — báo cáo chốt theo AGENTS.md §6, 16/11/2026
+
+**Kết luận: Chưa đạt nghiệm thu chung — xong mã và kiểm CoreGia B7; CLI còn thiếu quyền Core và gói chờ lead áp dụng kiểm kê ngoài năm tệp được giao.** PR: **chờ lead mở**.
+
+**Đã làm:** đúng năm tệp mã/phiếu, gói 1.5.0; nối B5/B6 với kho RAM R4, kế hoạch/khuôn/budget/span R5 và ba năng lực cố định. Gốc/bytes/map/patch/kế hoạch/phản hồi chỉ RAM đúng chuỗi/instance, không snapshot/ngăn/tệp tạm/log/chuyen_tiep; nhường handler lúc chờ Local, giữ TTL tuyệt đối, dọn khi lỗi/hủy/TTL/kết thúc. Hậu kiểm đủ nguồn Local/đoạn/overlap/Unicode, chỉ thêm che sau lớp 1 đạt, đọc lại bytes cuối/tiền/ngày/trần trước metadata/upload/bàn giao. ChuaRo chờ Local chỉ giữ map tới hạn; mất ACK chốt/upload/bàn giao cuối dọn map, không chốt lại. Chi tiết: [báo cáo B7](BAO-CAO-MASK-B7.md).
+
+Đã kiểm bằng Core giả (CoreGia), gồm adapter Local giả và ngữ nghĩa ngăn SDK thật trong CoreGia; **chưa Core/Office/Local/Linux thật**. Không nhận “0 lọt” hoặc model thật. Cloud tắt, không engine-to-engine trong gói.
+
+| Lệnh / phép kiểm | Kết quả thật cuối |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1** — hai DEMO văn bản hiện hành thiếu nguồn quyền tin cậy, không bỏ gate. [Log](KET-QUA-KIEM-MASK-B7-SDK.txt) |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q` | **3244 passed, 1 failed, 4 xfailed cũ, 190 subtests passed; 0 skipped, 461,51 giây, mã 1**. Lỗi duy nhất `test_mask_r1.py::test_kiem_ke_day_du_bytes_va_sha_tung_tep`: kiểm kê cũ 1.4.0 chưa khớp gói 1.5.0 và bytes mới. [Log](KET-QUA-KIEM-MASK-B7-PYTEST.txt) |
+| B7 và bốn assertion đăng ký năng lực cập nhật | **146 passed, 20,75 giây, mã 0**; trong đó **142 ca B7**, không skip/xfail. Nguồn giả/thiếu đoạn/offset/replay/input đổi/quyền/instance/restart/TTL/hủy/ChuaRo/ACK/retry/budget/Unicode/rich run/scalar và spy không lưu gốc/map. [Log](KET-QUA-KIEM-MASK-B7-MUC-TIEU.txt) |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **Mã 1** do cùng kiểm kê; không báo đạt thay cho lệnh chuẩn. [Log](KET-QUA-KIEM-MASK-B7-DOC-LAP.txt) |
+| Kiểm kê đề nghị ngoài gói | **58/58 tệp** đúng bytes/SHA; khi chỉ thay nội dung kiểm kê bằng bản đề nghị trong RAM, cùng bộ kiểm độc lập **ĐẠT, mã 0**. Không sửa kiểm kê thật. [Bản đề nghị](KIEM-KE-MASK-B7-DE-NGHI.json), [đối chiếu](KET-QUA-KIEM-MASK-B7-KIEM-KE-DE-NGHI.txt) |
+| `git diff --check` | **Mã 0**, không lỗi khoảng trắng; chỉ cảnh báo Git EOL của gold R3. [Log](KET-QUA-KIEM-MASK-B7-DIFF.txt) |
+
+Bốn xfailed strict MASK-2b giữ nguyên lý do giới hạn quy tắc/nợ chất lượng tên viết thường. Không thêm skip/xfail hoặc nới tiêu chí tiền/ngày/span/nguồn. Cập nhật kỳ vọng đăng ký từ bốn năng lực văn bản sang bảy năng lực (chỉ ba bước Local của B7); fixture văn bản lịch sử giữ bốn handler, không thay handler B7 thật. Lượt đầu chẩn đoán và lượt trước sửa assertion được giữ riêng, không gọi là baseline độc lập; lượt trung gian dừng để chạy trên mã chốt. Các log đã chuyển UTF-8 và lược stack/fixture/đường máy ở lượt chẩn đoán, giữ số/ca lỗi thật.
+
+**Môi trường:** `.venv` trong worktree, Python 3.13.14 Windows AMD64, `--system-site-packages` dùng công cụ kiểm có sẵn; SDK 2.2.0 cài offline `--no-index --no-deps`. Wheel SHA-256 **0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984** khớp SHA256SUMS. Không thêm dependency/đổi lock. Gold R3 khôi phục đúng bytes HEAD LF, SHA **b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181**, không đổi dữ liệu vàng.
+
+**Thời gian thực tế:** **05:06:00–05:57:44 ngày 16/11/2026 (UTC+07), 0,86 giờ**; phiếu **8–10 giờ ƯỚC TÍNH**, độ khó `kho`. Các lệnh kiểm đã chốt lúc 05:56:03; thời gian còn lại để chốt tài liệu/đối chiếu. Bao gồm đọc tài liệu, dựng venv, code, kiểm/sửa fixture và chờ các lượt kiểm; không tính thành công model/Office/Core thật.
+
+**Lệch khỏi phiếu / quyết định tạm:** không vượt năm tệp mã/phiếu; không làm lại R5/B8/B9. Kiểm kê ngoài closure chỉ sinh đề nghị ngoài gói cho lead, vì vậy chưa đạt điều kiện đóng gói chung. Port quyền/Local/chốt metadata/bàn giao là protocol đề nghị C-P4, không API SDK/Core đã có. Băng Local tính cả ngữ cảnh lặp, reader đầu ra vẫn trần bảo thủ của B5/B6; chưa dùng làm benchmark/SLA hoặc tự nới TTL/trần.
+
+**Cần Core / Chờ Anh mới phát sinh:** C-P4-01/02/03/04/05 và C-MS22-01 ở mục Cần Core B7 đầu sổ; lead áp dụng kiểm kê 58 tệp, giữ EOL gold, commit/mở PR. Không có câu nghiệp vụ mới chờ Anh chọn lại. Không commit/push, không sửa Core/SDK/nguồn cũ, Cloud tắt.
 
 ## MASK-B6b — 16/11/2026, ô số Excel giả tiền/ngày
 

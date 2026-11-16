@@ -1,0 +1,5 @@
+git diff --check
+warning: in the working copy of 'e_mask/goi/e_mask/NGUON.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'e_mask/tests/demo_mask_r3.json', LF will be replaced by CRLF the next time Git touches it
+
+Mã thoát: 0

@@ -1,3 +1,9 @@
+## Chưa phát hành — 16/11/2026, MASK-B6c lượt 2
+
+- Sửa sao cache reader Excel: `ban_ghi` giữ nguyên `PhanZip` header-only thay vì thay bằng part đã giải nén. Bản đọc trong primitive và bản đọc mới ngoài primitive của B7 khớp nhau; giữ toàn bộ kiểm writer/B1/B3/B4.
+- Cache vẫn riêng từng primitive, tối đa hai bản theo bytes; dọn cùng handle trong finally. Giữ tăng tốc/gom quyền, không sửa tệp B7/B8 hoặc engine.json (1.5.0).
+- Regression đối chiếu cache với reader mới, chặn CRC giả, cô lập header và dọn cache giữa chuẩn bị/hậu kiểm cho cả hai dạng trả. Đã kiểm bằng Core giả (CoreGia); số đo/kiểm cuối tại VIEC.md. PR: chờ lead mở.
+
 ## Chưa phát hành — 16/11/2026, MASK-B6c
 
 - Gom xác minh quyền trong primitive Excel: checkpoint cục bộ mỗi 64 callback hoặc 10 ms; xác minh đầy đủ Core mỗi 4.096 callback hoặc 50 ms, trước chốt RAM và trả kết quả. Các truy cập kho vẫn xác minh trước/sau; không giữ cache quyền xuyên lượt.

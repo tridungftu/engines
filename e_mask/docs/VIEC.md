@@ -4,7 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
-| MASK-B6c | Hiệu năng che Excel nhiều hàng, gom quyền và cache RAM trong lượt | Phiếu lead 16/11/2026; sau B6/B6b | Xong mã/kiểm — 16/11/2026; mốc 3 giây chưa đạt ổn định | 2.000 hàng: 2,5479–5,6756 giây, median ba lượt cuối 5,6482; gần 1 MiB: 4,8568–11,8848 giây. 61 test mới; báo cáo §6 cuối sổ. PR: **chờ lead mở**. |
+| MASK-B6c | Lượt 2: sửa tăng tốc Excel không tương thích hậu kiểm B7 | Phiếu lead 16/11/2026; sau gộp B7 | Xong phạm vi mã/kiểm CoreGia — 16/11/2026; CLI chờ Core cũ | Full **3727 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed/skip; độc lập mã 0; kiểm kê 58/58, phiên bản 1.5.0. Median 2.000 hàng 5,7872 giây; gần 1 MiB 11,5764 giây. Chỉ sửa doc_excel.py, không sửa B7/B8. PR: **chờ lead mở**; báo cáo lượt 2 cuối sổ. |
 
 | MASK-B7 | Hai lớp Local cho tệp Word/Excel, hồ sơ chỉ RAM, ba năng lực cố định | Sau B5/B6, R4/R5; MASK-P4; C-P4-01…05 | Xong phần mã/kiểm CoreGia / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Đúng năm tệp mã/phiếu; B7 142/142. Full 3244 passed, 1 failed kiểm kê ngoài closure, 4 xfailed cũ, 190 subtests, 0 skipped. CLI 0/2 thiếu quyền; độc lập mã 1 cùng kiểm kê; đề nghị 58/58 đối chiếu đạt; diff mã 0. PR: **chờ lead mở**; kết quả/giờ thật tại mục B7 cuối sổ. |
 
@@ -1195,3 +1195,52 @@ Lịch sử kiểm: trước tối ưu mapper, full **3545 passed, 4 xfailed, 19
 **Lệch khỏi phiếu / quyết định tạm:** chưa đạt ổn định mốc 3 giây; không đổi nghiệp vụ/phạm vi tệp; dùng `doc_excel.py` vì profiler xác nhận điểm nóng. Mẫu gần 1 MiB là ZIP STORED trong profile, không thay bằng chứng 40.000 hàng nén; trường hợp đó từ chối theo trần sẵn có. Giữ mọi gate/engine.json/API v1, không thêm dependency; SDK 2.2.0 offline SHA khớp, `.venv` dùng thư viện test hệ thống đã có. Tối ưu mapper chỉ trong reader được phép sửa, `xml_excel.py` giữ nguyên.
 
 **Cần Core / Chờ Anh mới phát sinh:** không cổng mới; C-MS22-01/C-P4-01…05 giữ nguyên. Chưa có B7 trong worktree để kiểm tích hợp, cần lead gộp và tái kiểm; không nhận B7 đã xanh. Không có câu hỏi nghiệp vụ mới.
+
+
+## MASK-B6c lượt 2 — sửa tích hợp B7 sau gộp (16/11/2026)
+
+**Nguyên nhân đã tái hiện:** chuẩn bị XLSX `XONG`, hậu kiểm `LOI`, mã thật `MASK_TEP_CHUA_HO_TRO`. Trace: `hau_kiem_tep._kiem_cuoi` → `tep_excel._ghi` → `ghi_zip.ghi_goi` → `va_xml.doc_lai_nguon` (so `ban_ghi`, dòng 72). `_sao_ban_doc` lấy `zip.phan` đã giải nén thay cho `ban_ghi.phan` header-only. Trong primitive hai bản cache giống nhau nên lọt kiểm nội bộ; khi B7 đọc lại ngoài cache, cùng bytes nhưng DTO khác `du_lieu` và bị chặn đúng gate.
+
+**Sửa:** chỉ `doc_excel.py`, sao riêng `replace(b.phan)` giữ nguyên giá trị header-only và vỏ độc lập; không thay so sánh/gate writer hoặc gom quyền. Cache vẫn tối đa hai bản trong một primitive của `_BuocExcel`, dọn trong finally; chuẩn bị/hậu kiểm có wrapper/scope riêng. Không sửa runtime B7, B8, engine.json, Core/SDK, không thêm dependency, không commit/push. Đã kiểm bằng Core giả (CoreGia), chưa Core/Office/Local/Linux thật.
+
+**Regression:** thêm 7 ca tại test_mask_b6c.py: cache ↔ đọc mới qua writer cho tệp đơn giản/mọi vùng; CRC header giả vẫn bị chặn cả cache/bản đọc mới; header-copy độc lập; hai dạng trả B7 dùng primitive mới, cache/handle cũ đã dọn và metadata chốt một lần. Các test scope/hủy/TTL/lease/budget cũ giữ nguyên; không thêm skip/xfail.
+
+### Số đo thật — cùng harness B6c, dữ liệu DEMO trong RAM
+
+| Mẫu | Bytes vào | Ba lượt tuần tự (giây) | Median (giây) | Xác minh Core tương ứng |
+|---|---:|---|---:|---|
+| 2.000 hàng × 5 cột, DEFLATE | 35.196 | 5,7872 / 5,6273 / 7,0294 | **5,7872** | 208 / 197 / 215 |
+| 3.550 hàng × 5 cột, ZIP STORED gần 1 MiB | 1.039.053 (0,9909 MiB) | 10,4217 / 15,8028 / 11,5764 | **11,5764** | 341 / 414 / 362 |
+
+Hai lượt thăm dò trước chuỗi ba lần: 2.000 hàng 5,3625 giây/210 xác minh; gần 1 MiB 11,6585 giây/386 xác minh. Không loại lượt chậm hoặc khẳng định nguyên nhân biến động tải máy. Băm đầu ra mọi lượt 2.000 hàng `sha256:d193403a7f5eec502ee0e08ce49314ec1216fa8af2534bd11f68399974a0a75e`; gần 1 MiB `sha256:3fc886ffba2b967f4af4b7fc61910b0606a434943605319540fb5359aa15d319`, trùng số đo B6c lượt 1. Số phép thay tương ứng 2.000/3.550. Giữ tăng tốc/gom quyền, **không nhận đạt ổn định mục tiêu 3 giây lịch sử**. Không nâng trần hoặc thay thời hạn.
+
+Lệnh đo: `.venv/Scripts/python -B e_mask/tests/test_mask_b6c.py 2000` và `3550 --khong-nen`. Mẫu ZIP STORED gần 1 MiB không là bằng chứng hỗ trợ 40.000 hàng nén. Số liệu lưu ở `KET-QUA-DO-MASK-B6C-LUOT-2.json`.
+
+### Cần Core — lượt 2
+
+Không phát sinh cửa Core/SDK hoặc câu hỏi nghiệp vụ mới. Kế thừa C-MS22-01: CLI hai DEMO thiếu phiên/quyền tin cậy; đã chạy lại, **0/2 ĐẠT, mã 1**. C-P4-01…05 vẫn cần Core thật về quyền/vòng đời/Local/chốt/ACK; không hạ gate để làm xanh CLI.
+
+### Báo cáo §6 — MASK-B6c lượt 2
+
+**Kết luận: Đạt phạm vi MASK-B6c lượt 2** — B7 XLSX xanh, giữ tăng tốc/cache riêng lượt. CLI chuẩn vẫn vướng quyền Core cũ, không nhận đã nối Core thật.
+
+**Đã làm:** sửa `_sao_ban_doc` trong đúng một runtime `doc_excel.py`; sao header-only độc lập để bản cache và reader mới có cùng giá trị. Thêm 7 regression; cập nhật VIEC/CHANGELOG/NGUON và kiểm kê. Không sửa tệp B7/B8, `tep_excel.py`, engine.json hoặc Core/SDK. Đã kiểm bằng Core giả (CoreGia). PR: **chờ lead mở**; không commit/push.
+
+**Kết quả kiểm thật trên trạng thái cuối:**
+
+| Lệnh / phép kiểm | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**: che/mở DEMO đều thiếu phiên/quyền tin cậy; C-MS22-01 cũ. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **3727 passed, 4 xfailed cũ, 190 subtests passed, 0 failed, 0 skipped; 888,56 giây (0:14:48); mã 0**. Log: `KET-QUA-KIEM-MASK-B6C-LUOT-2-PYTEST-CUOI.txt`. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**, sau sửa UTF-8 và tính kiểm kê cuối. |
+| Test nguồn từng lỗi + toàn bộ B6c | **69 passed, 3,50 giây, mã 0**. Full cuối bao gồm đủ 142 ca B7 và 68 ca B6c. |
+| `sql/kiem_ke.json` | **58/58** đường dẫn/bytes thật/SHA-256 khớp, không normalize LF; `phien_ban=1.5.0` bằng engine.json; full cuối kiểm kê đạt. |
+| `git diff --check` | **Mã 0**; cảnh báo checkout LF→CRLF của VIEC/test không phải lỗi whitespace. |
+
+**Thời gian thực tế:** **09:59:00–10:36:20 ngày 16/11/2026 (UTC+07), 0.62 giờ**, gồm đo và hai lượt full. Phiếu **1–2 giờ ƯỚC TÍNH**, độ khó vừa; bắt đầu theo lead.
+
+**Lệch khỏi phiếu / quyết định tạm:** không mở rộng phạm vi; nguyên nhân nằm ở phép sao reader nên chỉ sửa `doc_excel.py`, không cần đổi `tep_excel.py`. Median 2.000 × 5 **5,7872 giây**, gần 1 MiB **11,5764 giây**; băm đầu ra không đổi so B6c lượt 1. Chưa đạt ổn định mốc 3 giây lịch sử, không tăng timeout/trần. Lỗi encoding tài liệu trong full đầu đã sửa UTF-8; không hạ assertion, giữ log và chạy lại full xanh.
+
+**Cần Core / Chờ Anh mới phát sinh:** không phát sinh. Kế thừa C-MS22-01 và C-P4-01…05; CLI chuẩn chưa có quyền/ngữ cảnh tin cậy, giữ gate. Chưa Core/Office/Local/Linux thật.
+
+Lịch sử kiểm lượt 2: B6c+B7 **207 passed, 30,23 giây** trước ba ca bổ sung cuối. Full đầu **3726 passed, 1 failed, 4 xfailed cũ, 190 subtests passed, 843,06 giây, mã 1**; failure duy nhất `test_nguon_b1_utf8_va_sha_ban_chuyen_sau_sua`: đoạn tài liệu mới bị PowerShell đổi tiếng Việt thành dấu hỏi. Đã ghi lại UTF-8 và tính kiểm kê lại, không sửa test hoặc runtime sau full này. Log full đầu giữ tại `KET-QUA-KIEM-MASK-B6C-LUOT-2-PYTEST.txt`.

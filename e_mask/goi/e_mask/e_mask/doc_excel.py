@@ -630,7 +630,6 @@ def _sao_ban_doc(doc, kiem_huy):
 
     g = doc.goi.goi
     parts = sao(g.zip.phan, lambda p: replace(p))
-    theo_ten = {p.ten: p for p in parts}
     cay = {}
     for ten, root in g.cay.items():
         kiem_huy()
@@ -640,7 +639,9 @@ def _sao_ban_doc(doc, kiem_huy):
         quan_he=MappingProxyType({k: MappingProxyType(dict(qs))
                                  for k, qs in g.quan_he.items()}),
         thong_ke=MappingProxyType(dict(g.thong_ke))),
-        ban_ghi=sao(doc.goi.ban_ghi, lambda b: replace(b, phan=theo_ten[b.phan.ten])))
+        # ban_ghi giữ PhanZip header-only, khác zip.phan đã giải nén.
+        # Sao đúng giá trị nguồn để đọc ngoài cache ở B7 vẫn đối chiếu được.
+        ban_ghi=sao(doc.goi.ban_ghi, lambda b: replace(b, phan=replace(b.phan))))
     def sao_vung(v):
         manh = tuple(ManhExcel(m.phan, m.so_nut, m.so_run, m.thuoc_tinh,
                               m.bat_dau, m.ket_thuc, m.byte, m.neo) for m in v.manh)

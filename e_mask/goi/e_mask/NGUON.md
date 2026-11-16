@@ -662,3 +662,16 @@ Cache reader khóa theo toàn bytes, tối đa hai bản riêng trong primitive;
 |---|---|---|
 | `e_mask/tep_excel.py` — `_bao_ve, _BuocExcel, _kiem_so_bat_bien, _gop_alias, _luu_ram, che_excel` | `b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972` | `9eee85619ed5e03edc6e1873c8b65e1a289138a6c7ca376fc1fbfaef3e4e7c3c` |
 | `e_mask/doc_excel.py` — `_map_excel, _DocExcel.map/vung_moi, _sao_ban_doc, doc_excel, _doc_excel` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` | `230fa8bacd6152c98baa48d0aa8e39e5e8c0b2c5d076d2b655ebaf3e3cb71e42` |
+
+
+## MASK-B6c lượt 2 — 16/11/2026, tương thích B7
+
+Chỉ sửa `_sao_ban_doc` trong `e_mask/doc_excel.py` nội bộ đã được phép tái dùng. Không chép nguồn ngoài/thêm dependency, không sửa B7/B8/Core/SDK/engine.json. SDK 2.2.0 đã có trong venv, wheel repo khớp SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`.
+
+Nguyên nhân: `ban_ghi.phan` nguồn là header-only (du_lieu rỗng), còn `zip.phan` có bytes giải nén. Bản sao cache trước đây tráo hai giá trị này, khiến `va_xml.doc_lai_nguon` từ chối khi B7 đọc lại ngoài cache với mã `MASK_TEP_CHUA_HO_TRO`. Sao riêng `replace(b.phan)` giữ đúng giá trị và cô lập vỏ dataclass, không đổi gate so sánh. Cache chỉ tồn tại trong primitive của `_BuocExcel`, dọn trong finally; B7 dùng primitive mới sau đổi quyền sở hữu/scope, không tái dùng cache trước.
+
+| Tệp / symbol | SHA-256 bytes trước (blob HEAD) | SHA-256 LF trước | SHA-256 bytes sau | SHA-256 LF sau |
+|---|---|---|---|---|
+| `e_mask/doc_excel.py` / `_sao_ban_doc` | `230fa8bacd6152c98baa48d0aa8e39e5e8c0b2c5d076d2b655ebaf3e3cb71e42` | `230fa8bacd6152c98baa48d0aa8e39e5e8c0b2c5d076d2b655ebaf3e3cb71e42` | `4f246d0979791dfaf055bf84acd5b16d820845a2e83c295dca14b280961e9c26` | `4f246d0979791dfaf055bf84acd5b16d820845a2e83c295dca14b280961e9c26` |
+
+Đã kiểm bằng Core giả (CoreGia); chưa Core/Office/Local/Linux thật. Cache header-only và bản đọc mới có cùng giá trị, writer vẫn chặn header giả; cache/handle dọn giữa chuẩn bị và hậu kiểm. Không có nơi lưu map mới. Kiểm kê tính bytes thật (không normalize LF), phiên bản bằng manifest 1.5.0. Kết quả và số đo thật tại VIEC.md.

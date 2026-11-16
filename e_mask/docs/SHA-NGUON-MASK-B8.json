@@ -1,0 +1,118 @@
+{
+  "ghi_chu": "Nguồn HEAD trước MASK-B8 và checkout; không có dữ liệu nghiệp vụ. ho_so_tep.py là đích sửa, các nguồn khác giữ nguyên.",
+  "nguon": [
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/ho_so_tep.py",
+      "sha256_blob_HEAD": "e09533a55d77c090c41d2bc15761a8ecb3fb0464fd26e5405e2818ccb10eb3c7",
+      "sha256_blob_LF": "e09533a55d77c090c41d2bc15761a8ecb3fb0464fd26e5405e2818ccb10eb3c7",
+      "sha256_checkout": "80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa",
+      "sha256_checkout_LF": "80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa",
+      "nguon_khong_doi": false
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/mo_che_ram.py",
+      "sha256_blob_HEAD": "3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799",
+      "sha256_blob_LF": "3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799",
+      "sha256_checkout": "3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799",
+      "sha256_checkout_LF": "3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/kho_anh_xa_ram.py",
+      "sha256_blob_HEAD": "9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6",
+      "sha256_blob_LF": "9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6",
+      "sha256_checkout": "9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6",
+      "sha256_checkout_LF": "9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/quyen_yeu_cau.py",
+      "sha256_blob_HEAD": "ff44033652a45a7b70effb4e8f6cbb0217c50f85551a912a2657e779be2ba123",
+      "sha256_blob_LF": "ff44033652a45a7b70effb4e8f6cbb0217c50f85551a912a2657e779be2ba123",
+      "sha256_checkout": "ff44033652a45a7b70effb4e8f6cbb0217c50f85551a912a2657e779be2ba123",
+      "sha256_checkout_LF": "ff44033652a45a7b70effb4e8f6cbb0217c50f85551a912a2657e779be2ba123",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/tep_word.py",
+      "sha256_blob_HEAD": "8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8",
+      "sha256_blob_LF": "8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8",
+      "sha256_checkout": "8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8",
+      "sha256_checkout_LF": "8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/tep_excel.py",
+      "sha256_blob_HEAD": "b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972",
+      "sha256_blob_LF": "b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972",
+      "sha256_checkout": "b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972",
+      "sha256_checkout_LF": "b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/doc_word.py",
+      "sha256_blob_HEAD": "ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77",
+      "sha256_blob_LF": "ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77",
+      "sha256_checkout": "ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77",
+      "sha256_checkout_LF": "ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/doc_excel.py",
+      "sha256_blob_HEAD": "09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382",
+      "sha256_blob_LF": "09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382",
+      "sha256_checkout": "09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382",
+      "sha256_checkout_LF": "09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/va_xml.py",
+      "sha256_blob_HEAD": "b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15",
+      "sha256_blob_LF": "b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15",
+      "sha256_checkout": "b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15",
+      "sha256_checkout_LF": "b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/ghi_zip.py",
+      "sha256_blob_HEAD": "f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c",
+      "sha256_blob_LF": "f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c",
+      "sha256_checkout": "f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c",
+      "sha256_checkout_LF": "f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/xml_word.py",
+      "sha256_blob_HEAD": "b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08",
+      "sha256_blob_LF": "b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08",
+      "sha256_checkout": "b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08",
+      "sha256_checkout_LF": "b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/xml_excel.py",
+      "sha256_blob_HEAD": "1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5",
+      "sha256_blob_LF": "1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5",
+      "sha256_checkout": "1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5",
+      "sha256_checkout_LF": "1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/zip_an_toan.py",
+      "sha256_blob_HEAD": "7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e",
+      "sha256_blob_LF": "7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e",
+      "sha256_checkout": "7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e",
+      "sha256_checkout_LF": "7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e",
+      "nguon_khong_doi": true
+    },
+    {
+      "tep": "e_mask/goi/e_mask/e_mask/che_van_ban.py",
+      "sha256_blob_HEAD": "206140bfe74302bcf560ba8020bf47835115284bab1d43dc2b14bb233fc32a83",
+      "sha256_blob_LF": "206140bfe74302bcf560ba8020bf47835115284bab1d43dc2b14bb233fc32a83",
+      "sha256_checkout": "206140bfe74302bcf560ba8020bf47835115284bab1d43dc2b14bb233fc32a83",
+      "sha256_checkout_LF": "206140bfe74302bcf560ba8020bf47835115284bab1d43dc2b14bb233fc32a83",
+      "nguon_khong_doi": true
+    }
+  ],
+  "moc_git": "3394ae267bdac16c622c105188540506d8e094ec"
+}

@@ -1,0 +1,3 @@
+[ĐẠT] Kiểm kê đề nghị 60/60 tệp đúng bytes/SHA.
+[ĐẠT] Cùng bộ kiểm độc lập khi chỉ thay nội dung kiểm kê bằng đề nghị trong RAM.
+Kiểm kê thật chưa sửa; kết quả bổ sung này không thay mã thoát 1 của lệnh chuẩn.

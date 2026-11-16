@@ -1,5 +1,47 @@
 # NGUỒN — gói e_mask, MASK-1…7, MASK-2b và sửa an toàn
 
+## MASK-B8 — 16/11/2026, mở tệp một lần từ RAM
+
+**Nguồn/quyền:** Anh/lead cho phép tiếp tục và chép có sửa mã nội bộ B1…B7/R4/R6 của chính gói Mask. Giữ quyền sử dụng nội bộ từ các mục nguồn bên dưới, không suy quyền phân phối ngoài tổ chức. Không chép nguồn ngoài, không sửa nguồn cũ/Core/SDK/engine khác, không thêm dependency. SDK 2.2.0 cài offline từ wheel repo, SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp phát hành.
+
+| Nguồn trong gói Python | Symbol tái dùng/chép có sửa → đích |
+|---|---|
+| `mo_che_ram.py`, `che_van_ban.py` | `kiem_map_ram`, `_VUNG`, `_DoManhBiDanh`, `chuan_bi_danh`, `_BI_DANH`, `_kiem_tien_ngay`; chuyển vòng mở chuỗi thành script vị trí `_MoAliasTep` trong `mo_tep_word.py`. Không dùng detector sau mở, không tra kho. Giữ bảng dò có trần và checkpoint. |
+| `ho_so_tep.py` (HEAD B7), `kho_anh_xa_ram.py`, `quyen_yeu_cau.py` | `bao_ve`, `loi`, `KhoAnhXaRAM.buoc`, `_BuocRAM`, `_bam`, `_bo_tham_chieu`, `xac_minh`; thêm `MoTepRAM`/`TepDaMoRAM`. Bàn giao theo mô hình `MoCheRAM.mo` R6, context Core thoát sau chốt RAM; lỗi ACK không cache. |
+| `tep_word.py`, `tep_excel.py` | Tái dùng thiết kế map/state B5/B6 và cleanup trong `_bao_ve` → `_doc_map`/`_bao_ve_mo`; chỉ nhận state B7 đã hậu kiểm đủ vùng. Không gọi đường che để mở tên. |
+| `doc_word.py`, `doc_excel.py`, `xml_word.py`, `xml_excel.py`, `zip_an_toan.py` | Reader/gate/map nguyên trạng, ghép run cùng đơn vị logic, ST_Xstring, băm/trần/whitelist và từ chối phần lạ. Không nới profile hoặc đổi tên sheet. |
+| `va_xml.py`, `ghi_zip.py` | `lap_kich_ban`, `ghi_goi`, `_goc_vung`, `chu_vung`, `bam`; patch theo byte trên chính tệp AI, shared chỉ patch một nguồn, đọc lại cả gói/ô số/bố cục đã nhận. Không serialize XML hoặc nén lại thành viên bất biến. |
+
+Chỉ ba runtime đổi/thêm: `ho_so_tep.py`, `mo_tep_word.py`, `mo_tep_excel.py`. Word chứa primitive chung `_mo_tep`, Excel chỉ chọn reader của định dạng; không gọi/import engine khác. Phần mới giữ map, gốc và buffers trong handle RAM; không tệp tạm, hồ sơ Core, log, ngăn hoặc chuyển tiếp để phục hồi. Cả alias chính thức/tạm chỉ được mở nếu thuộc map bản cuối của đúng yêu cầu. Với tệp AI sửa, alias đã phát hành bị mất hoàn toàn cũng bị chặn; không đoán nội dung bị xóa. Map rỗng hợp lệ vẫn được khứ hồi.
+
+`kiem_tep_mo` và `ban_giao_cuoi` là protocol tích hợp C-P4-05, **chưa phải API SDK**. Port xác minh quyền tệp/budget và cách ly bytes kết quả, chỉ phát hành sau RAM đã tiêu thụ và còn quyền/hạn. Descriptor budget chỉ số byte/trần, không phải đo OS peak hoặc xác nhận budget production. Reader vẫn trần bảo thủ 500.000 ký tự cả chiều đọc lại; không cam kết đạt đủ trần ra 2 triệu/8 MiB. B9 còn phải nối mẫu 7/bộ T, ACL tham chiếu con, upload và chốt SDK. Đã kiểm bằng Core giả (CoreGia); chưa Office/Local/Core/Linux thật, Cloud tắt.
+
+Băm nguồn dưới dùng blob Git HEAD trước B8 (bytes gốc và LF giống nhau), kèm bytes checkout và LF thực tại lúc chốt; hiện vật ngoài gói `e_mask/docs/SHA-NGUON-MASK-B8.json` ghi đủ mốc Git và đối chiếu. `ho_so_tep.py` là đích sửa, 13 nguồn còn lại giữ nguyên nội dung LF. Không thay các băm lịch sử của các lát trước.
+
+| Nguồn | SHA-256 blob HEAD (bytes = LF) | SHA-256 checkout bytes | SHA-256 checkout LF |
+|---|---|---|---|
+| `ho_so_tep.py` | `e09533a55d77c090c41d2bc15761a8ecb3fb0464fd26e5405e2818ccb10eb3c7` | `80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa` | `80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa` |
+| `mo_che_ram.py` | `3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799` | `3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799` | `3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799` |
+| `kho_anh_xa_ram.py` | `9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6` | `9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6` | `9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6` |
+| `quyen_yeu_cau.py` | `ff44033652a45a7b70effb4e8f6cbb0217c50f85551a912a2657e779be2ba123` | `ff44033652a45a7b70effb4e8f6cbb0217c50f85551a912a2657e779be2ba123` | `ff44033652a45a7b70effb4e8f6cbb0217c50f85551a912a2657e779be2ba123` |
+| `tep_word.py` | `8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8` | `8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8` | `8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8` |
+| `tep_excel.py` | `b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972` | `b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972` | `b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972` |
+| `doc_word.py` | `ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77` | `ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77` | `ca1dc23fcd0422a2b56458de1fe9872567ededcbdcc3344fb229e3c977be7c77` |
+| `doc_excel.py` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` |
+| `va_xml.py` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` | `b683b4d154919f37cc9708f7ee77b9a75731a32398a6570626d65e7fa373eb15` |
+| `ghi_zip.py` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` | `f5dcebe3fe3eb81690929c18426fca20b947b977608584c57535b7bad6a5199c` |
+| `xml_word.py` | `b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08` | `b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08` | `b98963305b11a5ac216552ec091d7dbd3323c179e21b13db4e55adfba3116d08` |
+| `xml_excel.py` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` | `1105d3622ef84cee5a90c127987ca00d2683312998d68057cd67e80cf9b220b5` |
+| `zip_an_toan.py` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` | `7d1b6b180f1a862dcff60d3c4ac6c526e132d93fa65f50394bb0f48f5898ba9e` |
+| `che_van_ban.py` | `206140bfe74302bcf560ba8020bf47835115284bab1d43dc2b14bb233fc32a83` | `206140bfe74302bcf560ba8020bf47835115284bab1d43dc2b14bb233fc32a83` | `206140bfe74302bcf560ba8020bf47835115284bab1d43dc2b14bb233fc32a83` |
+
+| Đích mới | SHA-256 sau (bytes = LF) |
+|---|---|
+| `e_mask/mo_tep_word.py` | `3bced79c8a887e167a9dae39133e9675f2e847893de35355be3d435f544d48cb` |
+| `e_mask/mo_tep_excel.py` | `d75afb2eee7886ed9f6ab55cee021257233ba216f465bf741c3452b3ddd87c7f` |
+
+Kiểm kê gói nằm ngoài danh sách năm tệp runtime được giao: sinh bản đề nghị ngoài gói cho lead, không sửa kiểm kê thật. Kết quả lệnh chuẩn (kể cả lỗi nền) và thời gian thực tế tại VIEC/báo cáo B8.
+
 ## MASK-B6b l??t 2 ? 16/11/2026, quy?t ??nh lead v? ? ti?n
 
 **Ngu?n/quy?n:** ti?p t?c ??ng runtime n?i b? `e_mask/tep_excel.py` c?a l??t 1 theo l?nh lead 16/11; kh?ng ch?p ngu?n ngo?i/th?m dependency. Symbol s?a: `_kiem_so_bat_bien`, h?m l?ng `kiem_da_khai`; d?ng l?i `PHIEN_BAN_CHUAN_HOA` n?i b? v? `viec.ngan.tim` SDK 2.2.0. Format th?c t? TI?N/K? TO?N gi? s? c? ph?n l? kh?c 0 ho?c s? nguy?n ?12 ch? s?; ?13 ch? s? d?ng c?ng gate General. Kh?ng s?a reader, API v1, Core ho?c c?c t?p B7.

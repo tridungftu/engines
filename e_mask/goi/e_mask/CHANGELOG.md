@@ -1,3 +1,10 @@
+## Chưa phát hành — 16/11/2026, MASK-B8 nội bộ, gói 1.5.0
+
+- Mở DOCX/XLSX từ map RAM đúng chuỗi/instance đã qua B7. Bản che giữ nguyên SHA trả chính bytes gốc còn RAM sau kiểm băm, quyền và trần; bản AI sửa được kiểm lại toàn gói rồi patch trên chính bytes hiện gửi. Không tải gốc hoặc map từ Core/ngăn/tệp, không tra ngược kho.
+- Dùng reader/patch/writer B1…B6 và bộ dò R6: nhận case/space, Word run và Excel rich runs cùng ô khi alias duy nhất. Giữ phần AI thêm/sửa, format, metadata hỗ trợ, local record/payload bất biến, shared index và lexical/kiểu/format ô số. Không đổi tên sheet mù hoặc dò/che lại tên vừa mở. Alias lạ/hỏng/thiếu/mơ hồ hay vùng lạ/trần chặn toàn tệp; không bản mở dở.
+- `MoTepRAM` sở hữu mở một lần R4, kiểm quyền và budget qua port đề nghị, bàn giao bytes cuối cách ly tới sau tiêu thụ RAM. Thành công/lỗi/hủy/TTL/mất ACK đều dọn, `dong_viec=false` không giữ map và không cache bản rõ để retry. Cửa `kiem_tep_mo`/`ban_giao_cuoi` chưa có binding SDK; C-P4-01/02/05 vẫn mở. B9 mới nối mẫu 7 và bộ T; không đăng ký năng lực hoặc đổi manifest trong B8.
+- Chỉ ba runtime trong năm tệp cho phép; `xml_word.py`/`xml_excel.py` giữ nguyên. Nguồn/symbol/quyền/SHA tại NGUON và hiện vật SHA B8 ngoài gói. Đã kiểm bằng Core giả (CoreGia), AI sửa tệp giả lập; chưa Core/Office/Local/Linux thật, Cloud tắt. Kết quả thật và thời gian tại VIEC/báo cáo B8; PR: chờ lead mở.
+
 ## Chưa phát hành — 16/11/2026, MASK-B7, gói 1.5.0
 
 - Nối B5/B6 với R4/R5 qua ba năng lực cố định: chuẩn bị tệp → yêu cầu Local, hậu kiểm → văn bản đã che hoặc bộ C giữ định dạng. Không có năng lực che tệp bỏ qua Local; dạng trả/năng lực cuối do port Core tin cậy chọn, ghim trong RAM.

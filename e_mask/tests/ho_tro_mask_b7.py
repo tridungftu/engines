@@ -1,5 +1,6 @@
 """C-P4-04/05 giả ngoài gói, chỉ DEMO, không gọi Hỏi AI/model/Cloud."""
 from copy import deepcopy
+from contextlib import contextmanager
 import json
 from types import SimpleNamespace
 
@@ -41,7 +42,7 @@ class CongTepCoreGia(CongRAMCoreGia):
         self.moc('kiem_nguon_tep', v)
         return self.tep_hop_le and bam_bytes(self.core.doc_tep(self.ref_nguon['tep_id'])) == kw['bam_tep']
 
-    def chot_metadata(self, v, ctx, *, chung_cu, metadata):
+    def chot_metadata(self, v, ctx, *, chung_cu, metadata, ghi):
         self.cac_cua.append(('chot_metadata', dict(chung_cu=chung_cu, metadata=metadata)))
         self.moc('truoc_chot', v)
         dau = (chung_cu, metadata)
@@ -49,19 +50,36 @@ class CongTepCoreGia(CongRAMCoreGia):
             return self.chot[ctx.ma_yeu_cau] == dau
         ds = json.loads(metadata)
         assert len(ds) <= 100
-        # Chỉ fake cấp bảo đảm dấu chống lặp C-P4-03; mutation vẫn đi qua
-        # ngăn SDK CoreGia/CAS/lô nguyên tử, không chép tên hoặc map.
-        with v.ngan.lo() as lo:
-            for m in ds:
-                dong = v.ngan.doc('dinh_danh', {'id_dinh_danh': m['id_dinh_danh']})
-                assert dong.gia_tri['gia_tri_goc'] is None and dong.gia_tri['gia_tri_goc_da_ma_hoa'] is True
-                assert dong.gia_tri['gia_tri_chuan'] is None and dong.gia_tri['gia_tri_chuan_da_ma_hoa'] is True
-                lo.sua('dinh_danh', {'id_dinh_danh': m['id_dinh_danh']},
-                       {'so_gap': int(dong.gia_tri['so_gap']) + 1}, row_version=m['row_version'])
+        # B9: Core giả chỉ giữ quyền/dấu chống lặp; chính runtime gửi một
+        # lô qua viec.ngan thật của SDK. Adapter không tự sửa kho thay engine.
+        assert ghi() is True
         self.chot[ctx.ma_yeu_cau] = dau
         self.dem_chot += 1
         self.moc('chot_metadata', v)
         return True
+
+    @contextmanager
+    def ban_giao_tep_cuoi(self, v, ctx, *, chung_cu, han_monotonic):
+        self.moc('vao_cach_ly', v)
+        pending = None
+        def kiem():
+            self.q.xac_minh(v, loai='che', ma_yeu_cau=ctx.ma_yeu_cau, thao_tac='tep_ai')
+            v.kiem_huy()
+            if self.dh() >= han_monotonic:
+                raise LoiNghiepVu('MASK_ANH_XA_KHONG_CON', 'Hết hạn DEMO.')
+        def nhan(raw):
+            nonlocal pending
+            kiem()
+            pending = raw
+            return self.ban_giao(v, ctx, chung_cu=chung_cu, ket_qua=raw)
+        kiem()
+        try:
+            yield nhan
+            self.moc('ra_cach_ly', v)
+            kiem()
+            assert pending is not None
+        finally:
+            pending = None
 
     def ban_giao(self, v, ctx, **kw):
         if 'yeu_cau' in kw:
@@ -94,7 +112,7 @@ def bo(loai='docx', *, dang='van_ban', raw=None, seeds=((TEN, 'CONG_TY', ALIAS),
     app = tao_app(quyen=q, cong_chuan_bi_tep=cong, cong_hau_kiem_tep=cong)
     app.kho_anh_xa_ram = ram = KhoAnhXaRAM(quyen=q, dong_ho=dh, hen_gio=dh.hen_gio)
     c = CoreTepGia(app)
-    cong.core = c
+    cong.core, cong.q, cong.dh, cong.ram = c, q, dh, ram
     c.dat_cau_hinh('e_mask', {'thoi_han_anh_xa_giay': ttl})
     raw = (word() if loai == 'docx' else excel()) if raw is None else raw
     ref = c.them_tep('DEMO.' + loai, raw, MIME[loai])

@@ -1,6 +1,8 @@
 """Phong bì văn bản: kiểm ngữ nghĩa trước xử lý, không tin cờ an toàn caller."""
 from copy import deepcopy
+from contextlib import contextmanager
 from hashlib import sha256
+from io import BytesIO
 import json
 import math
 import re
@@ -340,3 +342,177 @@ def doc_hau_kiem_ai(dau):
     if ai['nha_cung_cap'] != 'local':
         raise loi()
     return ai
+
+
+# B9: mẫu 5/7 chỉ tham chiếu kho tệp Core; không đọc theo tên/path caller.
+TRAN_TEP_B = 1048576
+MIME_TEP_B = {
+    'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+}
+
+
+def kiem_tham_chieu_tep(ref, *, json_duoc=False):
+    if (type(ref) is not dict or set(ref) != {'tep_id', 'ten', 'mime', 'kich_thuoc'}
+            or type(ref['tep_id']) is not str
+            or re.fullmatch(r'[A-Za-z0-9_.:-]{1,200}', ref['tep_id']) is None
+            or re.match(r'^[A-Za-z]:', ref['tep_id']) or ref['tep_id'] in {'.', '..'}
+            or type(ref['ten']) is not str or not 1 <= len(ref['ten']) <= 200
+            or any(c in ref['ten'] for c in '/\\:')
+            or any(ord(c) < 32 or la_ky_tu_vo_hinh(c) for c in ref['ten'])
+            or type(ref['kich_thuoc']) is not int or ref['kich_thuoc'] <= 0):
+        raise loi()
+    if ref['kich_thuoc'] > TRAN_TEP_B:
+        raise loi('MASK_QUA_GIOI_HAN')
+    if json_duoc and ref['mime'] == 'application/json':
+        return 'json'
+    loai = next((k for k, m in MIME_TEP_B.items() if ref['mime'] == m), None)
+    if loai is None or not ref['ten'].lower().endswith('.' + loai):
+        raise LoiNghiepVu('MASK_TEP_CHUA_HO_TRO', 'Tệp có nội dung chưa được hỗ trợ xử lý đầy đủ.')
+    return loai
+
+
+def doc_tham_chieu_tep(viec, ref, *, json_duoc=False):
+    kiem_tham_chieu_tep(ref, json_duoc=json_duoc)
+    cac = []
+    try:
+        viec.kiem_huy()
+        with viec.mo_tep(ref['tep_id']) as f:
+            tong = 0
+            while True:
+                viec.kiem_huy()
+                raw = f.read(min(65536, TRAN_TEP_B + 1 - tong))
+                if type(raw) is not bytes:
+                    raise loi()
+                if not raw:
+                    break
+                tong += len(raw)
+                if tong > TRAN_TEP_B:
+                    raise loi('MASK_QUA_GIOI_HAN')
+                cac.append(raw)
+        viec.kiem_huy()
+        if tong != ref['kich_thuoc']:
+            raise loi()
+        return b''.join(cac)
+    finally:
+        cac.clear()
+        raw = None
+
+
+def json_tep_b(raw):
+    """UTF-8 nghiêm ngặt, khóa trùng/NaN/cây quá sâu đều từ chối."""
+    v = None
+    try:
+        if type(raw) is not bytes or len(raw) > TRAN_TEP_B:
+            raise loi('MASK_QUA_GIOI_HAN')
+        def cam(_):
+            raise ValueError
+        v = json.loads(raw.decode('utf-8'), object_pairs_hook=_cap, parse_constant=cam)
+        cho, so = [(v, 0)], 0
+        while cho:
+            muc, sau = cho.pop()
+            so += 1
+            if sau > 64 or so > 100000:
+                raise loi('MASK_QUA_GIOI_HAN')
+            if type(muc) is dict:
+                cho.extend((x, sau + 1) for x in muc.values())
+            elif type(muc) is list:
+                cho.extend((x, sau + 1) for x in muc)
+            elif type(muc) is float and not math.isfinite(muc):
+                raise ValueError
+        json_chu(v).encode('utf-8')
+        if type(v) is not dict:
+            raise ValueError
+        return v
+    except (ValueError, TypeError, UnicodeError, RecursionError):
+        raise loi() from None
+    finally:
+        raw = v = muc = cho = None
+
+
+def doc_mo_tep(viec, *, ma_tin_cay):
+    """Mẫu 7; mã JSON chỉ đối chiếu mã Core, không chọn map/quyền."""
+    raw = muc = None
+    try:
+        dau = viec.dau_vao
+        if (type(dau) is not dict or set(dau) != {'loai', 'tep'} or dau['loai'] != 'tep'
+                or type(dau['tep']) is not dict or dau['tep'].get('mime') != 'application/json'):
+            raise loi()
+        raw = doc_tham_chieu_tep(viec, dau['tep'], json_duoc=True)
+        muc = json_tep_b(raw)
+        if not {'ma_yeu_cau', 'tep'} <= set(muc) <= {'ma_yeu_cau', 'tep', 'dong_viec'}:
+            raise loi()
+        if type(muc['ma_yeu_cau']) is not str or muc['ma_yeu_cau'] != ma_tin_cay:
+            raise loi('MASK_MA_YEU_CAU')
+        dong = muc.get('dong_viec', viec.tham_so.get('dong_viec', False))
+        if type(dong) is not bool:
+            raise loi()
+        ref = muc['tep']
+        loai = kiem_tham_chieu_tep(ref)
+        if ref['tep_id'] == dau['tep']['tep_id']:
+            raise loi()
+        return doc_tham_chieu_tep(viec, ref), loai, dong, deepcopy(ref)
+    finally:
+        raw = muc = None
+
+
+@contextmanager
+def viec_chuan_bi_tep(viec):
+    """Bọc reader B7: cùng trần/JSON/ACL tham chiếu con như mẫu 7.
+
+    Chỉ giữ metadata trong một handler; gốc/map vẫn thuộc kho RAM R4.
+    mo_tep thật của SDK/Core quyết quyền từng tệp, không tự mở quyền con.
+    """
+    class ViecTep:
+        def __init__(self):
+            self.con = None
+
+        def __getattr__(self, ten):
+            return getattr(viec, ten)
+
+        @contextmanager
+        def mo_tep(self, tep_id):
+            raw = muc = None
+            f = None
+            try:
+                ref = viec.dau_vao['tep']
+                la_chinh = tep_id == ref['tep_id']
+                if not la_chinh:
+                    ref = self.con
+                    if type(ref) is not dict or ref['tep_id'] != tep_id:
+                        raise loi()
+                loai = kiem_tham_chieu_tep(ref, json_duoc=la_chinh)
+                raw = doc_tham_chieu_tep(viec, ref, json_duoc=la_chinh)
+                if loai == 'json':
+                    muc = json_tep_b(raw)
+                    if not {'tep'} <= set(muc) <= {'tep', 'dinh_danh_da_biet'}:
+                        raise loi()
+                    kiem_tham_chieu_tep(muc['tep'])
+                    if muc['tep']['tep_id'] == ref['tep_id']:
+                        raise loi()
+                    ds = muc.get('dinh_danh_da_biet', [])
+                    if type(ds) is not list:
+                        raise loi()
+                    if len(ds) > 500:
+                        raise loi('MASK_QUA_GIOI_HAN')
+                    for t in ds:
+                        if type(t) is not dict or set(t) != {'gia_tri', 'nhom'}:
+                            raise loi()
+                        if any(type(t[k]) is str and len(t[k]) > n for k, n in [('gia_tri', 300), ('nhom', 20)]):
+                            raise loi('MASK_QUA_GIOI_HAN')
+                    _kiem_dinh_danh(ds, la_khai_bao=True)
+                    self.con = deepcopy(muc['tep'])
+                f = BytesIO(raw)
+                yield f
+            finally:
+                if f is not None:
+                    f.close()
+                raw = muc = ds = t = None
+
+    proxy = ViecTep()
+    try:
+        yield proxy
+    finally:
+        proxy.con = None
+        # Ngắt closure của lớp/việc ở cả nhánh lỗi SDK giữ ngoại lệ.
+        viec = proxy = ViecTep = None

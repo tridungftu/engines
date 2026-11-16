@@ -698,7 +698,8 @@ def test_manifest_va_handler_chua_khai_nang_luc_tep():
     assert tep == {
         'mask.chuan_bi_tep_ai_cuc_bo@1': (['tep'], 'yeu_cau_ai'),
         'mask.hau_kiem_tep_van_ban@1': (['tra_loi_ai'], 'van_ban_da_che'),
-        'mask.hau_kiem_tep_giu_dinh_dang@1': (['tra_loi_ai'], 'truong')}
+        'mask.hau_kiem_tep_giu_dinh_dang@1': (['tra_loi_ai'], 'truong'),
+        'mask.mo_che_tep@1': (['tep'], 'truong')}
     for ten in ('chay.py', 'phong_bi.py'):
         raw = (goc / 'e_mask' / ten).read_text(encoding='utf-8')
         assert 'zip_an_toan' not in raw and 'xml_an_toan' not in raw and 'from .doc_tep' not in raw

@@ -251,7 +251,7 @@ def test_lop_quy_tac_reader_va_caller_flag_khong_chung_minh_local():
     # B7 chỉ thêm chuỗi có Local, không thêm đường phát hành từ lớp 1.
     assert {ma for ma in b.app._ham if 'tep' in ma} == {
         'mask.chuan_bi_tep_ai_cuc_bo@1', 'mask.hau_kiem_tep_van_ban@1',
-        'mask.hau_kiem_tep_giu_dinh_dang@1'}
+        'mask.hau_kiem_tep_giu_dinh_dang@1', 'mask.mo_che_tep@1'}
 
 
 @pytest.mark.parametrize('dang', ['restart', 'instance'])

@@ -1,0 +1,15 @@
+MASK-B9 — full suite thật, chỉ DEMO, đã kiểm bằng Core giả (CoreGia).
+
+Lệnh: .venv/Scripts/python -B -m pytest e_mask/tests -q
+Kết quả thật: 2 failed, 3996 passed, 4 xfailed, 189 subtests passed in 915.85s (0:15:15)
+Mã thoát: 1
+0 skipped. Không thêm skip/xfail hoặc nới ngưỡng/gold.
+
+1. SUBFAILED(mau='1 ') e_mask/tests/test_che_van_ban.py::CheVanBanDemoTests::test_hieu_nang_ba_chuoi_benh_ly_500_nghin_ky_tu
+   Thời gian 5.067810300010024 giây, ngưỡng xử lý 5 giây; subprocess hoàn tất trong hạn 12 giây. Mã che và test hiệu năng này giữ nguyên. Chưa suy nguyên nhân chỉ từ một lượt đo; kiểm lại riêng được ghi ở tệp HIEU-NANG-RIENG, không thay kết quả full này.
+2. FAILED e_mask/tests/test_mask_r1.py::test_kiem_ke_day_du_bytes_va_sha_tung_tep
+   Kiểm kê thật còn phiên bản 1.5.0/bytes cũ, gói hiện 1.6.0. Kiểm kê nằm ngoài năm tệp mã/phiếu được giao; không sửa. Đã sinh đề nghị 60/60 ngoài gói và kiểm bằng cùng checker trong RAM.
+
+Giữ bốn xfailed strict MASK-2b cũ, lý do giới hạn quy tắc/nợ chất lượng. Các ca B7/B8/B9 trong full không failed. Không ghi stack, nội dung tài liệu hoặc đường máy vào hiện vật này; giữ tên ca, số liệu và trạng thái thật.
+
+Cloud tắt; chưa Core/Office/Local/Linux thật. PR: chờ lead mở. Không commit/push.

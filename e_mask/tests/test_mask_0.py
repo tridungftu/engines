@@ -21,7 +21,7 @@ def test_phieu():
         'mask.che_van_ban@1', 'mask.mo_che_van_ban@1',
         'mask.chuan_bi_ai_cuc_bo@1', 'mask.hau_kiem_ai_cuc_bo@1',
         'mask.chuan_bi_tep_ai_cuc_bo@1', 'mask.hau_kiem_tep_van_ban@1',
-        'mask.hau_kiem_tep_giu_dinh_dang@1'}
+        'mask.hau_kiem_tep_giu_dinh_dang@1', 'mask.mo_che_tep@1'}
 
 def test_mac_dinh_thieu_port_tin_cay_core_gia(module):
     for vd in module.app.phieu["chay_thu_demo"]:

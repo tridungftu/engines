@@ -212,19 +212,20 @@ class MoTepSDK:
                     kiem()
                     viec.tien_do(100, 'Đã kiểm tra đầy đủ tệp mở che.')
                     kiem()
+                # R4 đã tiêu thụ RAM nhưng Core còn cách ly. Mọi kiểm cuối
+                # phải ném lỗi TRƯỚC __exit__ bàn giao để Core hủy kết quả.
+                viec.kiem_huy()
+                cuoi = xac_minh_ram(self.quyen, viec, phien_ram=self.ram._phien_ram,
+                                    loai='mo_che', ma_yeu_cau=ctx.ma_yeu_cau)
+                if (xac_minh(self.quyen, viec, loai='mo_che', ma_yeu_cau=ctx.ma_yeu_cau,
+                             thao_tac='ram') != ctx or self.ram._dong_ho() >= han
+                        or _chu(cuoi) != _chu(bg.ctx) or _chu(cuoi) in self.ram._da_ket_thuc
+                        or (cuoi.han_monotonic is not None and self.ram._dong_ho() >= cuoi.han_monotonic)
+                        or viec.ngu_canh.get('phap_nhan_id') != cuoi.phap_nhan_id
+                        or bg.du_lieu or _bam(viec, 'mo_che') != dau):
+                    raise loi('MASK_MO_CHE_CHUA_CO_CUA_CORE')
                 xong = True
-            if not xong:  # Context Core không được nuốt lỗi trong buoc().
-                raise loi('MASK_MO_CHE_CHUA_CO_CUA_CORE')
-            # Chốt lần cuối sau __exit__ Core, không đọc/khôi phục lại map.
-            viec.kiem_huy()
-            cuoi = xac_minh_ram(self.quyen, viec, phien_ram=self.ram._phien_ram,
-                                loai='mo_che', ma_yeu_cau=ctx.ma_yeu_cau)
-            if (xac_minh(self.quyen, viec, loai='mo_che', ma_yeu_cau=ctx.ma_yeu_cau,
-                         thao_tac='ram') != ctx or self.ram._dong_ho() >= han
-                    or _chu(cuoi) != _chu(bg.ctx) or _chu(cuoi) in self.ram._da_ket_thuc
-                    or (cuoi.han_monotonic is not None and self.ram._dong_ho() >= cuoi.han_monotonic)
-                    or viec.ngu_canh.get('phap_nhan_id') != cuoi.phap_nhan_id
-                    or bg.du_lieu or _bam(viec, 'mo_che') != dau):
+            if not xong:  # Context Core không được nuốt lỗi kiểm cuối/R4.
                 raise loi('MASK_MO_CHE_CHUA_CO_CUA_CORE')
             return ket_qua
         except (LoiDuongTruyen, TimeoutError, ConnectionError):

@@ -15,7 +15,7 @@ import zipfile
 SDK = "2.2.0"
 WHEEL = f"kho_tri_thuc_sdk-{SDK}-py3-none-any.whl"
 THU_MUC_SDK = f"docs/goi-gui-engine/sdk-{SDK}"
-CAC_ENGINE = ("e_hoa_don", "e_hoi_ai", "e_ocr", "e_trich_xuat", "e_doi_chieu", "e_tra_cuu")
+CAC_ENGINE = ("e_hoa_don", "e_hoi_ai", "e_ocr", "e_trich_xuat", "e_doi_chieu", "e_tra_cuu", "e_mask")
 TEP_GOC = {"engine.json", "README.md", "CHANGELOG.md", "NGUON.md",
            "requirements.lock", "cau_hinh.schema.json", ".gitattributes"}
 TEN_CAM = {".venv", "__pycache__", ".pytest-tmp", ".pytest_cache", "luu-tru"}
@@ -81,6 +81,8 @@ def kiem_ten(ten, ma):
     duoi = p.suffix.lower()
     if len(p.parts) > 1 and (
         (p.parts[0] == ma and (duoi == ".py" or p.name == "LICENSE"))
+        or (len(p.parts) == 3 and p.parts[0] == ma and p.parts[1] == "schemas" and p.name.endswith(".schema.json"))
+        or (len(p.parts) == 3 and p.parts[0] == ma and p.parts[1] == "tu_dien" and duoi in {".txt", ".json"})
         or (p.parts[0] == "contract" and duoi == ".json")
         or (p.parts[0] == "demo" and duoi in
             {".txt", ".json", ".xml", ".pdf", ".png", ".jpg", ".jpeg", ".docx", ".xlsx", ".zip", ".md"})

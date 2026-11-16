@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-B9b | Kiểm cuối trước khi Core phát hành mở che/hậu kiểm tệp | Phiếu lead 16/11/2026; sau B9; MASK-P4 | Xong mã/kiểm B9b / Chờ Core — 16/11/2026 | Full **4109 passed, 4 xfailed cũ, 190 subtests passed, 0 failed/skip**, mã 0; 44 regression B9b đạt. Kiểm kê 60/60 LF, phiên bản 1.6.0; độc lập/diff mã 0; CLI 0/2 thiếu quyền C-MS22-01 cũ. Đã kiểm bằng Core giả (CoreGia); PR: **chờ lead mở**, không commit/push. |
 | MASK-B9 | SDK mẫu 5/7, bộ C/T, chốt metadata và bàn giao cách ly theo vòng đời RAM | Sau B7/B8, R1…R7; MASK-P4; C-P4-01…05 | Xong mã/kiểm B9 / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Đúng năm tệp mã/phiếu, gói 1.6.0; B9 **131/131**. Full **3996 passed, 2 failed hiệu năng/kiểm kê, 4 xfailed cũ, 189 subtests, 0 skipped**; CLI 0/2 thiếu quyền; độc lập mã 1; đề nghị **60/60** qua cùng checker trong RAM; diff mã 0. Đã kiểm bằng Core giả (CoreGia) + HTTP giả, chưa Core/Office/Local thật. [Báo cáo](BAO-CAO-MASK-B9.md); PR: **chờ lead mở**. |
 
 | MASK-B6c | Lượt 2: sửa tăng tốc Excel không tương thích hậu kiểm B7 | Phiếu lead 16/11/2026; sau gộp B7 | Xong phạm vi mã/kiểm CoreGia — 16/11/2026; CLI chờ Core cũ | Full **3727 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed/skip; độc lập mã 0; kiểm kê 58/58, phiên bản 1.5.0. Median 2.000 hàng 5,7872 giây; gần 1 MiB 11,5764 giây. Chỉ sửa doc_excel.py, không sửa B7/B8. PR: **chờ lead mở**; báo cáo lượt 2 cuối sổ. |
@@ -1295,3 +1296,44 @@ Không phát sinh cửa Core/SDK hoặc câu hỏi nghiệp vụ mới. Kế th�
 **Cần Core / Chờ Anh mới phát sinh:** không phát sinh. Kế thừa C-MS22-01 và C-P4-01…05; CLI chuẩn chưa có quyền/ngữ cảnh tin cậy, giữ gate. Chưa Core/Office/Local/Linux thật.
 
 Lịch sử kiểm lượt 2: B6c+B7 **207 passed, 30,23 giây** trước ba ca bổ sung cuối. Full đầu **3726 passed, 1 failed, 4 xfailed cũ, 190 subtests passed, 843,06 giây, mã 1**; failure duy nhất `test_nguon_b1_utf8_va_sha_ban_chuyen_sau_sua`: đoạn tài liệu mới bị PowerShell đổi tiếng Việt thành dấu hỏi. Đã ghi lại UTF-8 và tính kiểm kê lại, không sửa test hoặc runtime sau full này. Log full đầu giữ tại `KET-QUA-KIEM-MASK-B6C-LUOT-2-PYTEST.txt`.
+
+## MASK-B9b — 16/11/2026, kiểm cuối trước phát hành
+
+**Trạng thái:** xong phạm vi mã/kiểm B9b; full pytest xanh, độc lập/kiểm kê đạt. CLI chuẩn còn nợ quyền Core cũ. PR: **chờ lead mở**. Hai runtime, adapter Core giả hậu kiểm, test B9b và tài liệu/kiểm kê đúng phạm vi; không commit/push, không sửa Core/e_hoi_ai hoặc `cong-cu/**` của B10.
+
+- `MoTepSDK._mo`: sau khi R4 tiêu thụ RAM, kiểm hủy, xac_minh/xac_minh_ram, TTL/deadline, dấu kết thúc, pháp nhân, dữ liệu đã dọn và băm đầu vào khi ExitStack bàn giao vẫn còn mở. Kiểm hỏng đưa ngoại lệ vào cửa Core; chỉ kiểm đạt mới thoát thành công. Không mở lại handle/map hoặc phát hành hai lần.
+- `CongHauKiemTepSDK.__exit__`: giữ `_giao` mở qua `_kiem_cuoi` sau khi R4 nhường handle, chuyển cả ngoại lệ handler và kiểm cuối vào cửa cách ly. Không gọi close theo đường thành công sau lỗi kiểm; dọn RAM khi lỗi hoặc ChuaRo. Cờ hoàn tất vẫn chặn context Core nuốt lỗi.
+- `tests/ho_tro_mask_b7.py`: nhan chỉ cách ly kết quả; commit khi thân context và kiểm cuối thành công; ngoại lệ bỏ kết quả chờ. Không sửa đường chốt metadata hoặc thao tác ngăn.
+- **44 regression B9b**: docx/xlsx, mở che và hậu kiểm; chèn ngay sau R4, trước kiểm cuối/thoát cửa: TTL +601 (không chạy timer để kiểm trực tiếp hạn), HUY, sai pháp nhân, xac_minh đổi lượt, xac_minh_ram đổi instance, deadline Core và đầu vào đổi; thêm dữ liệu còn sót sau tiêu thụ, ChuaRo kết thúc, hợp đồng nhan/hủy và ca bình thường commit đúng một lần. Hậu kiểm thành công kiểm cả dạng tệp/văn bản. Quan sát ngoại lệ thực đi vào context và tập kết quả đã phát hành, không chỉ trạng thái LOI/ket_qua None.
+- Đối chứng nạp hai runtime HEAD trước sửa vào RAM, giữ regression/adapter mới: **28 failed, 16 deselected, 9,03 giây, mã 1**. Các ca bắt được cửa bàn giao bị thoát thành công trước kiểm cuối; không sửa tệp runtime trên đĩa khi đối chứng. Runtime mới: **44 passed, 6,98 giây, mã 0**. Hồi quy B7/B9/B9b trước bốn ca ChuaRo cuối: **305 passed, 41,70 giây, mã 0**.
+
+### Cần Core — MASK-B9b
+
+- **Điểm NHẸ, chấp nhận theo phiếu:** `chot_metadata` tăng `so_gap` trước `tai_tep_ra`; nếu upload lỗi thì bộ đếm đã tăng nhưng không có kết quả phát hành. Không rollback hoặc chốt lại metadata trong B9b. Kế thừa **C-P4-03 chống lặp xuyên chuỗi**; Core cần dấu bền để retry/chạy lại không đếm thêm sai.
+- **C-P4-05:** kiểm cuối của engine nằm trước __exit__ cửa bàn giao. Core vẫn phải giữ cách ly/kiểm quyền, lease, TTL, lifecycle qua chính thao tác commit và hủy khi context thoát vì ngoại lệ. Mốc `da_nhan` của Core giả mở nằm sau ghi nhận kết quả: B9b kiểm biên trước thoát, không gọi kiểm nghiệp vụ sau khi Core đã commit. Binding thật còn chờ Core, không tự đổi API v1/SDK.
+- Kế thừa **C-MS22-01**: CLI chuẩn thiếu nguồn phiên/quyền tin cậy, **0/2 ĐẠT, mã 1**. Giữ gate, manifest và DEMO; không dùng adapter để nhận CLI đã đạt. Các cửa C-P4-01/02/03/04/05 giữ nguyên, không phát sinh cổng hoặc câu nghiệp vụ mới chờ Anh.
+
+Đã kiểm bằng Core giả (CoreGia); chưa Core/Office/Local/Linux thật. SDK 2.2.0 cài offline bằng wheel repo có SHA-256 khớp; venv trong worktree dùng công cụ test hệ thống. Lượt gọi CLI/độc lập đầu gặp stdout cp1252 không in được tiếng Việt; chạy lại với PYTHONUTF8=1, không sửa checker/SDK. Độc lập đạt mã 0; CLI trả đúng hai lỗi quyền và mã 1.
+
+### Báo cáo §6 — MASK-B9b
+
+**Kết luận: Đạt phạm vi MASK-B9b** — kiểm cuối chạy trước phát hành, full pytest xanh với đúng bốn xfailed cũ; CLI chuẩn còn nợ quyền C-MS22-01, chưa nhận nghiệm thu Core thật.
+
+**Đã làm:** chuyển kiểm cuối trong hai runtime vào cửa cách ly trước __exit__; sửa Core giả hậu kiểm commit khi thoát thành công và hủy khi có ngoại lệ; thêm 44 regression, cập nhật CHANGELOG/NGUON/kiểm kê. Không đổi engine.json/API v1, ChuaRo là kết thúc, RAM dùng một lần, không phát hành hai lần. Đã kiểm bằng Core giả (CoreGia). PR: **chờ lead mở**, không commit/push.
+
+**Kết quả kiểm thật:**
+
+| Lệnh / phép kiểm | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**: cả hai DEMO thiếu phiên/quyền tin cậy; C-MS22-01 cũ. Chạy PYTHONUTF8=1 để xuất tiếng Việt. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **4109 passed, 4 xfailed cũ, 190 subtests passed; 0 failed, 0 skipped; 614,38 giây (0:10:14); mã 0**. Không thêm skip/xfail hoặc thay ngưỡng/gold. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**, đã chạy lại sau chốt tài liệu/kiểm kê. |
+| B9b mục tiêu | **44 passed, 6,98 giây, mã 0**; full cuối bao gồm cả 44 ca. |
+| Kiểm kê độc lập | **60/60** đường dẫn/bytes thật LF/SHA-256 khớp; `phien_ban=1.6.0` bằng engine.json; AST hai runtime và SHA sau sửa trong NGUON khớp. Không có byte CRLF trong tệp gói. |
+| `git diff --check` | **Mã 0**, chỉ cảnh báo Git về checkout LF/CRLF, không lỗi whitespace. |
+
+**Thời gian thực tế:** **12:04:00–12:24:15 ngày 16/11/2026 (UTC+07), 0,34 giờ**, tại mốc chốt báo cáo, bắt đầu theo lead. Phiếu **2–3 giờ ƯỚC TÍNH**, độ khó vừa; gồm đọc, môi trường, sửa mã/test, đối chứng và full.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** không mở rộng mã/phạm vi chức năng, không dependency mới. Fixture `demo_mask_r3.json` chỉ trả checkout CRLF về đúng blob Git LF có SHA khóa `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`; không diff nội dung, không sửa gold/assertion. Hai tài liệu gói chỉ sửa khoảng trắng cuối và tính lại kiểm kê trong lúc full đang ở nhóm 2c, trước các ca nguồn/kiểm kê; runtime không đổi sau lượt mục tiêu. Đoạn VIEC mới từng bị pipeline PowerShell đổi dấu tiếng Việt đã ghi lại UTF-8 và kiểm không có dấu hỏi thay thế. Không sửa hoặc nhận đã kiểm công cụ B10.
+
+**Cần Core / Chờ Anh mới phát sinh:** không cổng hoặc câu hỏi nghiệp vụ mới; kế thừa C-P4-01…05 và C-MS22-01. **Điểm NHẸ được chấp nhận:** chot_metadata tăng so_gap trước tai_tep_ra; upload lỗi có thể đã tăng đếm nhưng chưa phát hành; **C-P4-03 chống lặp xuyên chuỗi** vẫn cần Core. C-P4-05 cần kiểm/cách ly nguyên tử qua commit thật, hủy khi context thoát bằng ngoại lệ, giữ ngữ nghĩa ACK/ChuaRo. Chưa Core/Office/Local/Linux thật.

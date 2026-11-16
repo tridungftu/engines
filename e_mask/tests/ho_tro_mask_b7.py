@@ -70,14 +70,17 @@ class CongTepCoreGia(CongRAMCoreGia):
         def nhan(raw):
             nonlocal pending
             kiem()
+            assert pending is None
             pending = raw
-            return self.ban_giao(v, ctx, chung_cu=chung_cu, ket_qua=raw)
+            self.moc('nhan_cach_ly', v)
+            return True
         kiem()
         try:
             yield nhan
             self.moc('ra_cach_ly', v)
             kiem()
             assert pending is not None
+            assert self.ban_giao(v, ctx, chung_cu=chung_cu, ket_qua=pending) is True
         finally:
             pending = None
 

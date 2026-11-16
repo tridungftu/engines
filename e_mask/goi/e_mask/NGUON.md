@@ -730,3 +730,14 @@ Nguyên nhân: `ban_ghi.phan` nguồn là header-only (du_lieu rỗng), còn `zi
 | `e_mask/doc_excel.py` / `_sao_ban_doc` | `230fa8bacd6152c98baa48d0aa8e39e5e8c0b2c5d076d2b655ebaf3e3cb71e42` | `230fa8bacd6152c98baa48d0aa8e39e5e8c0b2c5d076d2b655ebaf3e3cb71e42` | `4f246d0979791dfaf055bf84acd5b16d820845a2e83c295dca14b280961e9c26` | `4f246d0979791dfaf055bf84acd5b16d820845a2e83c295dca14b280961e9c26` |
 
 Đã kiểm bằng Core giả (CoreGia); chưa Core/Office/Local/Linux thật. Cache header-only và bản đọc mới có cùng giá trị, writer vẫn chặn header giả; cache/handle dọn giữa chuẩn bị và hậu kiểm. Không có nơi lưu map mới. Kiểm kê tính bytes thật (không normalize LF), phiên bản bằng manifest 1.5.0. Kết quả và số đo thật tại VIEC.md.
+
+## MASK-B9b — kiểm cuối trước phát hành, 16/11/2026
+
+Chỉ sửa hai runtime nội bộ đã được phép tái dùng, không chép nguồn ngoài hoặc thêm dependency. `MoTepSDK._mo` kiểm sau tiêu thụ RAM nhưng trước ExitStack bàn giao; `CongHauKiemTepSDK.__exit__/_kiem_cuoi` giữ cửa cách ly qua xác minh cuối sau khi R4 nhường handle. Ngoại lệ đi vào cửa Core để hủy, không dùng close thoát thành công sau lỗi kiểm. API v1/engine.json giữ nguyên; ChuaRo tại chốt/bàn giao vẫn kết thúc, không lưu hoặc phục hồi map.
+
+| Tệp / symbol | SHA-256 LF trước (HEAD) | SHA-256 LF sau |
+|---|---|---|
+| `e_mask/kho_dinh_danh.py` / `MoTepSDK._mo` | `a2190eb979714282022146df514d9c4585030755f6ec4a778d0e43af728c7921` | `11ab939a6c3feb5a59b80c332731c13ad609a36bf7e1de42ccc54e5688dfe0ae` |
+| `e_mask/kho_qua_core.py` / `CongHauKiemTepSDK.__exit__, _kiem_cuoi` | `c3e08b11d81d0557aa06eee5fa50383cd7bf2c9b0def9b98f7fe936fa9167ed3` | `fc6501e0c1d33b30ea3866e092d8d332269187cc758fa5242528791f075a14b2` |
+
+Adapter `tests/ho_tro_mask_b7.py` ngoài gói sửa đúng hợp đồng cách ly/commit/hủy. `tests/test_mask_b9b.py` chỉ DEMO; chèn sau R4, trước kiểm cuối và thoát cửa, không thay gate. SDK 2.2.0 cài offline từ wheel repo, SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp phát hành. Kiểm kê bytes/SHA trên byte LF mọi tệp gói trừ chính kiểm kê, phiên bản theo manifest 1.6.0. Đã kiểm bằng Core giả (CoreGia), chưa Core/Office/Local/Linux thật. Không sửa Core/e_hoi_ai hoặc công cụ B10.

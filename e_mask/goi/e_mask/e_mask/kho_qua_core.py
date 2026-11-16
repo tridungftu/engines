@@ -112,34 +112,21 @@ class CongHauKiemTepSDK:
                 self._ram._don(self._bg)
 
     def __exit__(self, lop, exc, tb):
+        da_kiem = False
         try:
-            self._giao.__exit__(lop, exc, tb)
-            # Không cho context Core nuốt lỗi/hủy của handler/R4.
+            # Giữ cửa cách ly mở qua kiểm cuối sau khi R4 nhường handle.
+            # Ngoại lệ handler hoặc kiểm cuối đều đi vào __exit__ của Core.
+            with self._giao:
+                if lop is not None:
+                    raise exc.with_traceback(tb)
+                self._kiem_cuoi()
+                da_kiem = True
+            # Không cho context Core nuốt lỗi/hủy của handler/R4/kiểm cuối.
             if lop is not None:
                 self._don()
                 return False
-            if not self._da_gui or self._bg is None:
+            if not da_kiem:
                 can_bao_dam_core()
-            self._viec.kiem_huy()
-            from .kho_anh_xa_ram import _bam, _chu
-            from .quyen_yeu_cau import xac_minh_ram
-            ctx = xac_minh(self._quyen, self._viec, loai='che',
-                           ma_yeu_cau=self._ctx.ma_yeu_cau, thao_tac='tep_ai')
-            cuoi = xac_minh_ram(self._quyen, self._viec, phien_ram=self._ram._phien_ram,
-                                loai='che', ma_yeu_cau=self._ctx.ma_yeu_cau)
-            with self._ram._khoa:
-                if (ctx != self._ctx or self._ram._ban_ghi is not self._bg
-                        or _chu(cuoi) != _chu(self._bg.ctx)
-                        or self._viec.ngu_canh.get('phap_nhan_id') != cuoi.phap_nhan_id
-                        or _bam(self._viec, 'che') != self._bg.bam_buoc.get(('che', ctx.ma_luot))
-                        or self._ram._dong_ho() >= self._bg.han
-                        or (cuoi.han_monotonic is not None and self._ram._dong_ho() >= cuoi.han_monotonic)
-                        or self._bg.trang_thai != 'CHO_AI'
-                        or self._bg.du_lieu.get('giai_doan_ai') != 'DA_HAU_KIEM'):
-                    raise loi_kho('MASK_MA_YEU_CAU')
-                if cuoi.han_monotonic is not None and cuoi.han_monotonic < self._bg.han:
-                    self._bg.han = cuoi.han_monotonic
-                    self._ram._dat_hen(self._bg)
         except BaseException as err:
             self._don()
             from kho_tri_thuc_sdk.engine import LoiDuongTruyen
@@ -147,9 +134,32 @@ class CongHauKiemTepSDK:
                 raise ChuaRo('mask-giao-tep-' + sha256(self._chung_cu).hexdigest()) from None
             raise
         finally:
-            self._giao.close()
             self._nhan = self._bg = self._viec = self._ctx = self._chung_cu = None
         return False
+
+    def _kiem_cuoi(self):
+        if not self._da_gui or self._bg is None:
+            can_bao_dam_core()
+        self._viec.kiem_huy()
+        from .kho_anh_xa_ram import _bam, _chu
+        from .quyen_yeu_cau import xac_minh_ram
+        ctx = xac_minh(self._quyen, self._viec, loai='che',
+                       ma_yeu_cau=self._ctx.ma_yeu_cau, thao_tac='tep_ai')
+        cuoi = xac_minh_ram(self._quyen, self._viec, phien_ram=self._ram._phien_ram,
+                            loai='che', ma_yeu_cau=self._ctx.ma_yeu_cau)
+        with self._ram._khoa:
+            if (ctx != self._ctx or self._ram._ban_ghi is not self._bg
+                    or _chu(cuoi) != _chu(self._bg.ctx)
+                    or self._viec.ngu_canh.get('phap_nhan_id') != cuoi.phap_nhan_id
+                    or _bam(self._viec, 'che') != self._bg.bam_buoc.get(('che', ctx.ma_luot))
+                    or self._ram._dong_ho() >= self._bg.han
+                    or (cuoi.han_monotonic is not None and self._ram._dong_ho() >= cuoi.han_monotonic)
+                    or self._bg.trang_thai != 'CHO_AI'
+                    or self._bg.du_lieu.get('giai_doan_ai') != 'DA_HAU_KIEM'):
+                raise loi_kho('MASK_MA_YEU_CAU')
+            if cuoi.han_monotonic is not None and cuoi.han_monotonic < self._bg.han:
+                self._bg.han = cuoi.han_monotonic
+                self._ram._dat_hen(self._bg)
 
     def __getattr__(self, ten):
         return getattr(self._cong, ten)

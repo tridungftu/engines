@@ -291,3 +291,9 @@ Văn bản đã kiểm bằng Core giả (CoreGia); helper tệp cũ chỉ kiể
 
 - Dò ranh giới tên khi Cf thay dấu cách giữa các âm tiết, giữ ánh xạ về nguyên văn và không mở rộng danh sách từ.
 - Ghi nhận held-out lead: lọt 4/45, báo nhầm 15/75 (20%); nợ CAO vẫn mở, Cloud tắt cứng. Đã kiểm bằng Core giả (CoreGia).
+
+## Chưa phát hành — 16/11/2026, MASK-B9b, gói 1.6.0
+
+- Chuyển toàn bộ kiểm cuối của mở che và hậu kiểm tệp vào trước khi thoát cửa bàn giao Core. Hạn/TTL, hủy, quyền, pháp nhân, băm đầu vào và trạng thái RAM không hợp lệ làm cửa thoát bằng ngoại lệ để hủy kết quả cách ly; không phát hành rồi mới báo lỗi.
+- Mở che vẫn tiêu thụ RAM một lần trước bàn giao; hậu kiểm kiểm trạng thái sau khi R4 nhường handle. ChuaRo vẫn kết thúc và dọn RAM tại chốt/bàn giao, không cache bản rõ hoặc mở lại map.
+- Core giả hậu kiểm chỉ cách ly trong nhan, commit khi context thoát thành công và bỏ kết quả chờ khi có ngoại lệ. Regression docx/xlsx kiểm không phát hành khi kiểm cuối lỗi và phát hành đúng một lần khi thành công. Đã kiểm bằng Core giả (CoreGia); kết quả thật tại VIEC.md, PR: chờ lead mở.

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-B6c | Hiệu năng che Excel nhiều hàng, gom quyền và cache RAM trong lượt | Phiếu lead 16/11/2026; sau B6/B6b | Xong mã/kiểm — 16/11/2026; mốc 3 giây chưa đạt ổn định | 2.000 hàng: 2,5479–5,6756 giây, median ba lượt cuối 5,6482; gần 1 MiB: 4,8568–11,8848 giây. 61 test mới; báo cáo §6 cuối sổ. PR: **chờ lead mở**. |
 | MASK-B6b | Chặn ô số định danh giả tiền/ngày, xét format và giá trị thực | Phiếu lead 16/11/2026; sau B6 | Chờ Anh — 16/11/2026; xong mã, chưa đạt full xanh | 216 regression mới đạt; full 3318 passed, 1 failed ở test B6 cũ trái yêu cầu mới, 4 xfailed cũ, 190 subtests. Độc lập/diff mã 0, kiểm kê 55/55; CLI 0/2 thiếu quyền cũ. Đã đề nghị sửa đúng một test ngoài closure, chờ trả lời. PR: **chờ lead mở**. |
 | MASK-B6 | Che Excel giữ format, shared/rich/inline/metadata, map chỉ RAM | Sau B3/B4 và R3…R6; MASK-P4; C-P4-01…05 | Xong mã/kiểm nội bộ / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Một runtime mới; B6 122/122. Full 2923 passed, 4 xfailed cũ, 190 subtests, 0 lỗi/skip; độc lập/diff mã 0, CLI 0/2 thiếu quyền. Nguồn 19/19, kiểm kê 55/55; PR: **chờ lead mở**. |
 
@@ -1087,3 +1088,70 @@ Kh?ng ph?t sinh c?ng Core/SDK m?i. K? th?a **C-MS22-01**: CLI DEMO chu?n thi?u q
 **L?ch kh?i phi?u / quy?t ??nh t?m ?? d?ng:** kh?ng c? l?ch nghi?p v?; ?p ??ng quy?t ??nh lead l??t 2 thay ?i?m 2 l??t 1. Kh?ng c?n s?a `test_mask_b6.py` v? k? v?ng nguy?n tr?ng ?? ph? h?p. B? sung ki?m kh?p ch?nh x?c ng?n b? m?t cho c?c ? ???c mi?n detector ?? b?o ??m khai b?o ??nh danh th?ng format; gi? gi?i h?n exponent k? thu?t l??t 1 v? t? ch?i v??t budget, kh?ng c?t ng?m. Kh?ng s?a Core/SDK/reader/API v1, th?m dependency, commit ho?c push.
 
 **C?n Core / Ch? Anh m?i ph?t sinh:** kh?ng c?ng Core/SDK m?i; k? th?a C-MS22-01 v? C-P4-01?05. Quy?t ??nh lead 16/11: ? ti?n ?12 ch? s? nguy?n gi? nguy?n; r?i ro c?n l?i: s? ??nh danh ?12 ch? s? c? ? ??nh d?ng ti?n s? kh?ng b? d? ? ch? Anh x?c nh?n. Tr??ng h?p ?? khai trong ds/ng?n b? m?t v?n ch?n. PR: **ch? lead m?**.
+
+## MASK-B6c — 16/11/2026, hiệu năng che Excel nhiều hàng
+
+**Kết luận hiệu năng: Chưa đạt ổn định mốc 2.000 hàng × 5 cột ≤3 giây.** Hai lượt từng đạt 2,5479 và 2,6978 giây, nhưng các lượt cuối 3,2709 / 5,6482 / 5,6756 giây, median **5,6482 giây**; không dùng riêng số tốt nhất để nhận đạt. Mục tiêu gần 1 MiB ≤60 giây đạt: **4,8568–11,8848 giây**. Chỉ sửa hai runtime `tep_excel.py`, `doc_excel.py`; thêm `test_mask_b6c.py`. PR: **chờ lead mở**. Không commit/push. Đã kiểm bằng Core giả (CoreGia); không phải Core/Local/Office/Linux thật. Nghiệm thu chung qua CLI vẫn có nợ quyền C-MS22-01 cũ.
+
+### Phương pháp và số đo thật
+
+- Profiler `cProfile` trước sửa, DEMO 200 hàng × 5 cột: **50,2794 giây**, **154.407** lần `quyen.xac_minh`, 38.279.921 function calls. `_BuocRAM.kiem`: **22,929 giây cumulative**; `ten_nguoi.tim`: **18,343 giây**; bốn lần reader `doc_excel`: **21,926 giây**. Thời gian cumulative lồng nhau, không cộng lại. Đây là phép đo có overhead profiler, không so trực tiếp với số không profiler của lead.
+- Profiler trên mã cuối, cùng 200 hàng: **0,6827 giây**, **34** xác minh, **1.126.738** calls; reader cumulative **0,470 giây**, mapper worksheet **0,183 giây**, clone bản đọc **0,049 giây**; detector tên còn 11 lượt thay vì 2.002 lượt baseline. Tải máy từng lượt khác nhau; chỉ dùng profile để xác định điểm nóng và số lời gọi, không suy SLA từ tỷ lệ thời gian profiler.
+- Đo không profiler tuần tự trên cùng máy. Generator `nhieu_hang` ở test B6c: A = tên công ty DEMO cần che, B = văn bản thường, C = số General `123`, D = tiền dạng text `1.000.000 VND`, E = ngày dạng text `2026-10-30`. Bốn cột text là inlineStr, một phép thay mỗi hàng. Sinh tệp/seed CoreGia ngoài khoảng đo; khoảng đo gồm nhận bước R4, che, writer, kiểm bytes ra, kết thúc/dọn RAM; không có RPC mạng/Office/Local thật.
+
+| Mẫu DEMO | Bytes / cách ZIP | Giây thực tế | Xác minh quyền | Kết quả |
+|---|---:|---:|---:|---|
+| 200 hàng × 5 cột, cả hai runtime HEAD trước B6c | 5.057 / DEFLATE | **4,6024** | **154.407** | 200 phép thay |
+| Cùng 200 hàng, mã cuối | 5.057 / DEFLATE | **0,2433** | **32** | 200 phép thay; SHA bytes ra bằng baseline |
+| 2.000 hàng × 5 cột, mã cuối | 35.196 / DEFLATE | **2,5479** | **182** | 2.000 phép thay; **đạt ≤3 giây** |
+| 3.550 hàng × 5 cột, gần 1 MiB | **1.039.053 = 0,991 MiB / ZIP STORED** | **4,8568** | **318** | 3.550 phép thay; **đạt ≤60 giây** |
+| 40.000 hàng × 5 cột | 673.645 / DEFLATE | **0,0028** | **4** | Từ chối `MASK_QUA_GIOI_HAN`, không trả bản che |
+
+**Các lượt tái đo sau full cuối (cùng mã/băm/dữ liệu):** 2.000 hàng lần đầu **4,0603 giây, 194 xác minh**; ba lượt kế tiếp **3,2709 / 5,6482 / 5,6756 giây**, tương ứng **190 / 199 / 199 xác minh**, median **5,6482 giây**. Mẫu 0,991 MiB tái đo **11,8848 giây, 365 xác minh**. Không có thay đổi runtime giữa các lượt. **Nguyên nhân biến động chưa được xác minh**; không quy chắc cho tải máy hoặc dùng giả định để loại các lượt chậm. Giữ toàn bộ số đo, không tăng timeout để nhận đạt mốc 3 giây.
+
+Mã cuối đã có thêm lượt đo độc lập 2.000 hàng **2,6978 giây, 184 xác minh**, cùng băm đầu ra. Không đổi thời hạn/lease để lấy số đạt. Băm bytes ra 200 hàng trước/sau đều `sha256:aa3a43f59ff9d39e427faeba9a91742b9204bb1a524202228133187cbbdb406f`; 2.000 hàng `sha256:d193403a7f5eec502ee0e08ce49314ec1216fa8af2534bd11f68399974a0a75e`; 3.550 hàng `sha256:3fc886ffba2b967f4af4b7fc61910b0606a434943605319540fb5359aa15d319`. Với cùng 200 hàng đo tuần tự cuối: thời gian giảm **18,92 lần**, số xác minh giảm **99,979%**.
+
+Các lượt phát triển 2.000 hàng ghi nhận 37,7067 → 18,5781 → 12,5941 → 5,5621 → 3,5097 giây khi lần lượt thêm tối ưu và tải máy thay đổi; chúng không phải kết quả mã cuối. Hai lượt thử baseline 2.000 hàng bị SDK hủy theo lease của fixture trực tiếp, kể cả lần thử vòng gia hạn. **Không có baseline 2.000 hàng hoàn tất trên workload B6c**, không suy từ 200 hàng; số lead 41,5 giây là tham khảo workload khác. Harness hiện dùng vòng gia hạn SDK cho primitive gọi trực tiếp; không tắt gate lease. Tùy chọn `--truoc` nạp cả hai runtime HEAD trong RAM, giữ identity DTO và khôi phục alias reader sau đo, không ghi tệp nguồn cũ.
+
+**Giới hạn:** ZIP STORED gần 1 MiB không đại diện cho 40.000 hàng nén. Profile hiện giữ 1 MiB container, 2 MiB/part, 8 MiB giải nén, 20.000 ô, 100.000 nút XML và 500.000 ký tự. Mẫu 40.000 × 5 vượt nhiều giới hạn và bị từ chối tại gate ZIP. Không tuyên bố hỗ trợ khối lượng đó. Mục tiêu gần 1 MiB đã đạt, **không cần đề nghị tăng trần thời hạn xlsx**; giữ nguyên `engine.json`, gồm mốc 300 giây. Worksheet UTF-16/entity/CR/LF/tab/encoding khác giữ mapper cũ để bảo toàn kết quả; không khẳng định mọi hình dạng XLSX đạt cùng tốc độ.
+
+Lệnh tái đo: `.venv/Scripts/python -B e_mask/tests/test_mask_b6c.py 2000`; `3550 --khong-nen` cho gần 1 MiB; `200 --profile` cho profiler; `200 --truoc` cho baseline hai runtime; `40000 --vuot-tran` cho gate từ chối. Chỉ sinh dữ liệu DEMO trong RAM.
+
+### Thay đổi và giữ nguyên kết quả
+
+- `_BuocExcel` bọc handle R4 trong primitive, không monkeypatch handle/port dùng chung. Checkpoint cục bộ mỗi 64 callback hoặc 10 ms; xác minh đầy đủ Core mỗi 4.096 callback hoặc 50 ms. Khoảng thời gian tính khi vòng xử lý chạy, không phải SLA của RPC/parser đang chặn. Kiểm đầy đủ trước ghi RAM và trước trả; truy cập kho giữ xác minh trước/sau R2. Scope/deadline mới không kéo dài TTL; hủy/lifecycle/timer dọn R4 như cũ.
+- Cache map theo **chuỗi Unicode chính xác**, không gộp NFC/NFD/Cf/hoa-thường. Cache hit vẫn cộng đủ budget ký tự/vị trí từng ô; alias mơ hồ vẫn từ chối. Cache số chỉ giữ kiểm thành công trong lượt; không đổi B6b, format/lexical hoặc trần. Cùng map bất biến chỉ kiểm/gộp alias một lần; map khác nhau vẫn kiểm xung đột nguyên văn.
+- Profiler chứng minh reader là điểm nóng nên dùng `doc_excel.py` đúng phạm vi cho phép. `_map_excel` dùng byte index của Expat chỉ trên worksheet UTF-8 đơn giản **sau** gate B1/B3; mỗi tag/attribute/leaf đối chiếu cây độc lập B1. Không thay parser/gate nghiệp vụ, không serialize XML để đoán offset. UTF-16/entity/CR/LF/tab/CDATA/encoding khác đi nguyên `xml_excel.map_xml`. ST không chứa `_x` giữ nguyên ChuXML đã được parser kiểm.
+- Cache reader tối đa hai bản theo **toàn bytes**, không chỉ băm; trả cây XML, dataclass/map/ZIP độc lập để sửa đối tượng caller không làm bẩn bản chuẩn hoặc né `doc_lai_nguon`. Ngoài callback cache riêng của primitive, reader vẫn kiểm đầy đủ. Cache/handle dọn trong `finally`, không qua lượt/retry hoặc ra ngăn/tệp/log.
+- **61 test B6c**: 28 ca checkpoint/cache/budget/Unicode mơ hồ/scope/quyền/deadline/hủy/TTL/mất lease/bản đọc độc lập/dọn RAM/số RPC; thêm 32 ca so **toàn bộ map** nhanh với map lexical cũ trên rich runs, Unicode NFC/NFD/Cf/emoji, entity/ST, UTF-8/BOM/UTF-16/UTF-16BE và fallback newline; thêm một ca khai báo encoding ngoài UTF-8 sau hơn 200 byte vẫn bắt buộc đi map cũ. B6/B6b giữ nguyên test, không thêm skip/xfail.
+- Held-out MASK-2c giữ SHA nội dung `sha256:b720fb2d9a330110ed5c4d5fd777b9728887f863651a2b0c46dc395dc45c95ad`; không sửa gold/detector văn bản. Fixture R3 checkout CRLF chỉ trả về nguyên blob Git LF, SHA `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`, không đổi nội dung/assertion; không có diff nội dung Git.
+- Worktree giao **chưa có** `ho_so_tep.py` hoặc `test_mask_b7.py`; VIEC chỉ có phiếu/phụ thuộc B7, không có báo cáo B7 hoàn tất để đối chiếu. Không tạo/sửa B7/B8; lead cần chạy lại tích hợp B7 sau gộp. Không sửa Core/e_hoi_ai/API v1/manifest hoặc nguồn cũ.
+
+### Cần Core — MASK-B6c
+
+Không phát sinh cổng Core/SDK mới. Kế thừa **C-MS22-01**: CLI chuẩn thiếu quyền/ngữ cảnh tin cậy, 0/2 ĐẠT; giữ gate/manifest/DEMO. Các cửa **C-P4-01…05** về ghim, vòng đời/lease, ngăn bí mật, nguồn Local và bàn giao giữ nguyên. Số đo CoreGia không gồm độ trễ RPC thật; cần đo tích hợp khi có cửa Core. Không có câu hỏi nghiệp vụ mới.
+
+### Báo cáo §6 — MASK-B6c
+
+**Kết luận: Chưa đạt ổn định mục tiêu 3 giây** — full suite xanh và mốc gần 1 MiB đạt, nhưng median ba lượt 2.000 hàng cuối còn 5,6482 giây. CLI chuẩn vẫn thiếu quyền Core cũ; không nhận đã nối Core thật.
+
+**Đã làm:** hai runtime đúng phạm vi, gom quyền/checkpoint, cache RAM lượt và reader độc lập, map worksheet UTF-8 đơn giản bằng Expat sau gate; 61 test mới; CHANGELOG/NGUON/kiểm kê 55/55, `phien_ban=1.4.0` bằng manifest. Đã kiểm bằng Core giả (CoreGia), không commit/push; PR: **chờ lead mở**.
+
+**Kết quả kiểm thật:**
+
+| Lệnh / phép kiểm | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**. Hai DEMO thiếu phiên/quyền tin cậy; C-MS22-01 cũ, giữ gate/manifest. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **3578 passed, 4 xfailed cũ, 190 subtests passed, 0 failed, 0 skipped; 3990,42 giây (1:06:30); mã 0**. Không thêm skip/xfail. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**, đã chạy lại sau sửa metadata nguồn/kiểm kê cuối. |
+| Focused B6c trên mã cuối | **61 passed, 2,06 giây, mã 0**. |
+| Kiểm kê sau sửa bảng SHA nguồn | **55/55** bytes LF/SHA/đường dẫn khớp; `phien_ban=1.4.0` bằng manifest; ca `test_kiem_ke_day_du_bytes_va_sha_tung_tep` chạy lại **1 passed, 0,14 giây, mã 0**. Chỉ sửa tài liệu/kiểm kê sau full, runtime giữ nguyên. |
+| `git diff --check` | **Mã 0**; cảnh báo checkout LF→CRLF ở VIEC/fixture R3, không đổi gold. |
+
+Lịch sử kiểm: trước tối ưu mapper, full **3545 passed, 4 xfailed, 190 subtests**, 376,84 giây. Lượt sau mapper bị **1 failed (kiểm kê), 3576 passed, 4 xfailed, 190 subtests**, 309,67 giây vì cập nhật chốt encoding/kiểm kê khi suite đang chạy; đã đồng bộ rồi giữ nguyên mã và chạy lại full đạt **3578 passed** nêu trên. Không dùng focused thay full, không che mã thoát CLI. Thời gian full cuối ghi đúng 3990,42 giây, không thay bằng thời gian lượt nhanh trước.
+
+**Thời gian thực tế:** **07:20:00–09:12:21 ngày 16/11/2026 (UTC+07), 1.87 giờ** tại mốc chốt kiểm/báo cáo; bắt đầu theo lead. Phiếu **2–3 giờ ƯỚC TÍNH**, độ khó vừa.
+
+**Lệch khỏi phiếu / quyết định tạm:** chưa đạt ổn định mốc 3 giây; không đổi nghiệp vụ/phạm vi tệp; dùng `doc_excel.py` vì profiler xác nhận điểm nóng. Mẫu gần 1 MiB là ZIP STORED trong profile, không thay bằng chứng 40.000 hàng nén; trường hợp đó từ chối theo trần sẵn có. Giữ mọi gate/engine.json/API v1, không thêm dependency; SDK 2.2.0 offline SHA khớp, `.venv` dùng thư viện test hệ thống đã có. Tối ưu mapper chỉ trong reader được phép sửa, `xml_excel.py` giữ nguyên.
+
+**Cần Core / Chờ Anh mới phát sinh:** không cổng mới; C-MS22-01/C-P4-01…05 giữ nguyên. Chưa có B7 trong worktree để kiểm tích hợp, cần lead gộp và tái kiểm; không nhận B7 đã xanh. Không có câu hỏi nghiệp vụ mới.

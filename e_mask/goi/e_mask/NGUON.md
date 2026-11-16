@@ -651,3 +651,14 @@ Chốt giới hạn thử nghiệm 1.000 alias, 10.000 chuỗi kể cả khóa v
 | `e_mask/che_van_ban.py` | `fb20d043b46cddea2080b50904f88533c0990b7cf21cc434be8089beb72ead81` |
 | `e_mask/kho_anh_xa_ram.py` | `9aec91add2c4ef86d287947fee53bf89eddbb226d7d0b4c68a1c9a0988192ae6` |
 | `e_mask/phong_bi.py` | `83ccbdaba8d10a68b247068a9ce7fa72d6962e415ce46595538697b302541625` |
+
+## MASK-B6c — hiệu năng Excel, 16/11/2026
+
+Sửa tiếp hai runtime nội bộ đã được phép tái dùng; không chép mã ngoài hoặc thêm dependency. Profiler xác nhận đường quyền R4 theo callback, detector tên/kiểm số lặp và reader/map ZIP/XML là điểm nóng. Giữ detector/R2/R3/R4 và gate B1/B3/B4, không sửa nguồn cũ/Core/e_hoi_ai hoặc tệp B8. `_map_excel` tự viết bằng Expat thư viện chuẩn, chỉ lập map byte trên worksheet UTF-8 đơn giản đã qua gate; tag/attribute/leaf đối chiếu cây B1 độc lập, số nút và offset nguyên như map B3. UTF-16/entity/CR/LF/tab/CDATA/encoding khác đi nguyên `xml_excel.map_xml`; 32 oracle test so toàn map cho Unicode/rich run/encoding/fallback. Không nới profile/parser an toàn.
+
+Cache reader khóa theo toàn bytes, tối đa hai bản riêng trong primitive; bản trả độc lập cây/map/ZIP, dọn trong finally. ST không có `_x` giữ nguyên ChuXML đã được parser kiểm; map alias bất biến dùng lại theo identity, không gộp nguyên văn khác nhau. SDK 2.2.0 cài offline từ wheel repo, SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp bản phát hành. Không có nguồn/dependency mạng mới.
+
+| Tệp / symbol sửa | SHA-256 LF trước (HEAD) | SHA-256 LF sau |
+|---|---|---|
+| `e_mask/tep_excel.py` — `_bao_ve, _BuocExcel, _kiem_so_bat_bien, _gop_alias, _luu_ram, che_excel` | `b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972` | `9eee85619ed5e03edc6e1873c8b65e1a289138a6c7ca376fc1fbfaef3e4e7c3c` |
+| `e_mask/doc_excel.py` — `_map_excel, _DocExcel.map/vung_moi, _sao_ban_doc, doc_excel, _doc_excel` | `09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382` | `230fa8bacd6152c98baa48d0aa8e39e5e8c0b2c5d076d2b655ebaf3e3cb71e42` |

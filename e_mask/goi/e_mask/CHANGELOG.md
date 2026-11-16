@@ -1,3 +1,11 @@
+## Chưa phát hành — 16/11/2026, MASK-B6c
+
+- Gom xác minh quyền trong primitive Excel: checkpoint cục bộ mỗi 64 callback hoặc 10 ms; xác minh đầy đủ Core mỗi 4.096 callback hoặc 50 ms, trước chốt RAM và trả kết quả. Các truy cập kho vẫn xác minh trước/sau; không giữ cache quyền xuyên lượt.
+- Cache kết quả che theo chuỗi nguyên byte trong lượt, vẫn cộng đủ budget ký tự/vị trí từng ô và giữ phát hiện alias mơ hồ. Cache kiểm số không đổi format/lexical hoặc chính sách B6b.
+- Worksheet UTF-8 đơn giản lập map byte bằng Expat sau gate B1/B3; đối chiếu tag/attribute/leaf với cây độc lập. UTF-16, entity, CR/LF/tab, CDATA hoặc encoding khác giữ nguyên map lexical B3; không đổi XML nền. Bỏ giải ST khi chuỗi không có `_x`, gộp kiểm alias cho cùng map bất biến.
+- Reader tái dùng tối đa hai kết quả kiểm theo toàn bytes trong cùng primitive; mỗi lần trả cây/map/ZIP độc lập, không dùng đối tượng caller đã sửa. Dọn cache và handle trong finally, không lưu ra ngoài RAM.
+- Không đổi engine.json/API v1, reader XML nền, Core hoặc e_hoi_ai; không thêm dependency. Đã kiểm bằng Core giả (CoreGia); kết quả và giới hạn hiệu năng tại VIEC.md. PR: chờ lead mở.
+
 ## Ch?a ph?t h?nh ? 16/11/2026, MASK-B6b l??t 2
 
 - Theo quy?t ??nh lead 16/11: formatCode th?c t? thu?c TI?N/K? TO?N gi? nguy?n s? c? ph?n th?p ph?n kh?c 0 ho?c s? nguy?n t?i ?a 12 ch? s?, kh?ng t?nh d?u; gi? nguy?n bytes/format. S? nguy?n t? 13 ch? s? qua c?ng c?a d?/ch?n nh? General. `.00`, exponent v? s? ?m ???c x?t theo gi? tr? Decimal.

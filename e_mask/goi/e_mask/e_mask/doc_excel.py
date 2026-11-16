@@ -5,11 +5,13 @@ cảm chỉ dùng trong việc cho MASK-2b/MASK-2c và writer B4/B6 về sau.
 """
 
 from bisect import bisect_left
-from dataclasses import dataclass, field
+from copy import deepcopy
+from dataclasses import dataclass, field, replace
 from hashlib import sha256
 import re
 from types import MappingProxyType
 import unicodedata
+from xml.parsers import expat
 
 from .doc_tep import doc_goi_excel
 from .xml_an_toan import (
@@ -17,12 +19,106 @@ from .xml_an_toan import (
     KY_TU_VAO_TOI_DA,
 )
 from .xml_excel import (
-    RID, ChuXML, _kiem, _cs, _mot_trong, _mau, BOOL, UINT,
+    RID, ChuXML, NutXML, _kiem, _cs, _mot_trong, _mau, BOOL, UINT, _PREFIX,
     giai_st, map_xml, kiem_excel, kiem_theme, so_nguyen, so_thuc, ngay,
 )
 from .zip_an_toan import _sai, _vuot
 
 S = '{' + S_NS + '}'
+
+_THE_BYTE = re.compile(rb'''<(?:[^<>"']+|"[^"]*"|'[^']*')*>''')
+_THUOC_TINH_BYTE = re.compile(rb'''([^\s=<>/'"]+)\s*=\s*(['"])(.*?)\2''', re.DOTALL)
+
+
+def _map_excel(raw, root, kiem_huy):
+    """Map nhanh UTF-8 đơn giản bằng byte index Expat, sau kiểm B1/B3.
+
+    Không thay gate/parser nghiệp vụ. UTF-16/entity/CR/CDATA/whitespace
+    chuẩn hóa hoặc encoding khác vẫn dùng nguyên map lexical B3. Mọi
+    tag/attribute/leaf đối chiếu cây độc lập B1, không suy offset bằng
+    độ dài chuỗi Unicode hay serialize lại XML.
+    """
+    khong_bom = raw[3:] if raw.startswith(b'\xef\xbb\xbf') else raw
+    khai = (re.search(rb'''encoding\s*=\s*['"]([^'"]+)['"]''',
+                      khong_bom[:khong_bom.find(b'?>') + 2])
+            if khong_bom.startswith(b'<?xml') else None)
+    if (any(x in raw for x in (b'\0', b'&', b'\r', b'\n', b'\t', b'<![CDATA['))
+            or khai is not None and khai[1].lower() != b'utf-8'):
+        return map_xml(raw, root, kiem_huy)
+    p = expat.ParserCreate(namespace_separator='}')
+    nodes, stack, ket, da_do = iter(root.iter()), [], {}, {}
+
+    def chu_byte(chu, dau):
+        # Offset tương đối của chuỗi lặp chỉ tính một lần trong part.
+        if chu not in da_do:
+            ds, pos = [], 0
+            for i, c in enumerate(chu):
+                if i % 4096 == 0:
+                    kiem_huy()
+                cuoi = pos + len(c.encode('utf-8'))
+                ds.append((pos, cuoi))
+                pos = cuoi
+            da_do[chu] = tuple(ds)
+        return ChuXML(chu, tuple((dau + a, dau + b) for a, b in da_do[chu]), dau)
+
+    def mo(ten, attrs):
+        kiem_huy()
+        e = next(nodes, None)
+        if e is None or e.tag != ('{' + ten if '}' in ten else ten):
+            _sai()
+        dau = p.CurrentByteIndex
+        m = _THE_BYTE.match(raw, dau)
+        if m is None:
+            _sai()
+        thuoc = {}
+        for a in _THUOC_TINH_BYTE.finditer(raw, dau + 1, m.end() - 1):
+            name = a[1].decode('utf-8')
+            if name == 'xmlns' or name.startswith('xmlns:'):
+                continue
+            if ':' in name:
+                prefix, local = name.split(':')
+                if prefix not in _PREFIX:
+                    _sai()
+                name = '{' + _PREFIX[prefix] + '}' + local
+            x = chu_byte(a[3].decode('utf-8'), a.start(3))
+            if e.get(name) != x.chu:
+                _sai()
+            thuoc[name] = x
+        if set(thuoc) != set(e.attrib):
+            _sai()
+        tu_dong = raw[dau:m.end() - 1].rstrip().endswith(b'/')
+        stack.append((e, len(ket) + len(stack), dau, m.end(), tu_dong, thuoc, []))
+
+    def chu(text):
+        if stack:
+            dau = p.CurrentByteIndex
+            if raw[dau:dau + len(text.encode('utf-8'))] != text.encode('utf-8'):
+                _sai()
+            stack[-1][-1].append(chu_byte(text, dau))
+
+    def dong(ten):
+        kiem_huy()
+        e, so, dau, het, tu_dong, thuoc, xs = stack.pop()
+        cuoi = het if tu_dong else raw.find(b'>', p.CurrentByteIndex) + 1
+        text = ChuXML(''.join(x.chu for x in xs),
+                      tuple(b for x in xs for b in x.byte), None if tu_dong else het)
+        if cuoi <= dau or not len(e) and text.chu != (e.text or ''):
+            _sai()
+        ket[e] = NutXML(so, dau, cuoi, text, MappingProxyType(thuoc))
+
+    p.StartElementHandler, p.CharacterDataHandler, p.EndElementHandler = mo, chu, dong
+    try:
+        for dau in range(0, len(raw), 65536):
+            kiem_huy()
+            p.Parse(raw[dau:dau + 65536], False)
+        p.Parse(b'', True)
+        if stack or next(nodes, None) is not None:
+            _sai()
+        return MappingProxyType(ket)
+    finally:
+        p.StartElementHandler = p.CharacterDataHandler = p.EndElementHandler = None
+        stack.clear()
+        da_do.clear()
 
 
 @dataclass(frozen=True, repr=False)
@@ -220,7 +316,8 @@ class _DocExcel:
 
     def map(self, phan):
         if phan not in self.maps:
-            self.maps[phan] = map_xml(self.raw[phan], self.goi.goi.cay[phan], self.kiem_huy)
+            ham = _map_excel if phan.startswith('xl/worksheets/') else map_xml
+            self.maps[phan] = ham(self.raw[phan], self.goi.goi.cay[phan], self.kiem_huy)
         return self.maps[phan]
 
     def vung_moi(self, ma, phan, nodes, *, so_sheet=None, o=None, chi_so=None, attr=None,
@@ -232,7 +329,7 @@ class _DocExcel:
             self.kiem_huy()
             n = mapping[e]
             x = n.thuoc_tinh[attr] if attr else n.text
-            if st:
+            if st and '_x' in x.chu:
                 x = giai_st(x, self.kiem_huy)
             chu.append(x.chu)
             manh.append(ManhExcel(phan, n.so, i if run else None, attr,
@@ -516,7 +613,70 @@ class _DocExcel:
                         _sai()
 
 
+def _sao_ban_doc(doc, kiem_huy):
+    """Bản đọc độc lập: không đưa cây/map trong cache cho writer sửa.
+
+    Chỉ bytes/chuỗi/tuple nguyên thủy bất biến được dùng chung. Kể cả các
+    dataclass frozen và mappingproxy đều có vỏ mới; cây XML deep-copy.
+    Cache thuộc callback của đúng primitive Excel, dọn trong finally.
+    """
+    def sao(cac, ham):
+        ket = []
+        for i, v in enumerate(cac):
+            if i % 64 == 0:
+                kiem_huy()
+            ket.append(ham(v))
+        return tuple(ket)
+
+    g = doc.goi.goi
+    parts = sao(g.zip.phan, lambda p: replace(p))
+    theo_ten = {p.ten: p for p in parts}
+    cay = {}
+    for ten, root in g.cay.items():
+        kiem_huy()
+        cay[ten] = deepcopy(root)
+    goi = replace(doc.goi, goi=replace(g,
+        zip=replace(g.zip, phan=parts), cay=MappingProxyType(cay),
+        quan_he=MappingProxyType({k: MappingProxyType(dict(qs))
+                                 for k, qs in g.quan_he.items()}),
+        thong_ke=MappingProxyType(dict(g.thong_ke))),
+        ban_ghi=sao(doc.goi.ban_ghi, lambda b: replace(b, phan=theo_ten[b.phan.ten])))
+    def sao_vung(v):
+        manh = tuple(ManhExcel(m.phan, m.so_nut, m.so_run, m.thuoc_tinh,
+                              m.bat_dau, m.ket_thuc, m.byte, m.neo) for m in v.manh)
+        return VungExcel(v.ma, v.so_sheet, v.o, v.chi_so_chu, v.chu, manh, v.duoc_sua, v.bam_chu)
+
+    def sao_o(o):
+        return OExcel(o.so_sheet, o.dia_chi, o.kieu, o.gia_tri, o.style, o.style_goc,
+                      o.style_hang, o.style_cot, o.style_hieu_luc, o.chi_so_chu,
+                      o.vung, o.hang_an, o.cot_an, o.byte_bat_dau, o.byte_ket_thuc, o.xml_goc)
+
+    return replace(doc, goi=goi, vung=sao(doc.vung, sao_vung), o=sao(doc.o, sao_o),
+        styles=tuple(MappingProxyType(dict(s)) for s in doc.styles))
+
+
 def doc_excel(du_lieu, *, kiem_huy):
+    """Đọc bytes thật, tái dùng tối đa hai bản kiểm trong cùng primitive.
+
+    Khóa là toàn bytes, không phải băm/map caller. Mỗi lần trả bản độc
+    lập để doc_lai_nguon vẫn bắt mọi sửa cây/map/CRC/offset. Ngoài lượt
+    có callback cung cấp cache riêng thì luôn chạy reader đầy đủ.
+    """
+    kiem_huy()
+    cache = getattr(getattr(kiem_huy, '__self__', None), 'doc_excel_cache', None)
+    if type(cache) is not dict:
+        return _doc_excel(du_lieu, kiem_huy=kiem_huy)
+    if du_lieu not in cache:
+        doc = _doc_excel(du_lieu, kiem_huy=kiem_huy)
+        if len(cache) >= 2:
+            cache.clear()
+        cache[du_lieu] = doc
+    doc = _sao_ban_doc(cache[du_lieu], kiem_huy)
+    kiem_huy()
+    return doc
+
+
+def _doc_excel(du_lieu, *, kiem_huy):
     """Bytes → mọi đơn vị logic/map và raw ô; chỉ trả sau khi cả gói đạt.
 
     Không có preview/cắt dữ liệu, cờ đạt hai lớp, đường mạng hoặc file máy.

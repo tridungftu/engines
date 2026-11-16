@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-B10 | Công cụ nghiệm thu DEMO tệp, biên và vòng đời RAM P4 | Sau B1…B9/R1…R7, MASK-2c/AI-9; phiếu B10 6–8 giờ ƯỚC TÍNH, kho | Xong công cụ/kiểm giả / Chờ lead, Core và Anh — 16/11/2026; chưa đạt nghiệm thu chung | Đúng ba tệp ngoài gói + cập nhật sổ này; 31 tệp ứng viên (12 hỗ trợ, 19 phải chặn), không runtime/dependency/Cloud. 12/12 chặn sai, 19/19 chặn đúng, phát hành 0; không kết luận 0 lọt. Đối chứng cơ học 26/26; chi tiết kiểm/giờ/Cần Core ở mục B10 cuối sổ. PR: **chờ lead mở**. |
 | MASK-B9 | SDK mẫu 5/7, bộ C/T, chốt metadata và bàn giao cách ly theo vòng đời RAM | Sau B7/B8, R1…R7; MASK-P4; C-P4-01…05 | Xong mã/kiểm B9 / Chờ Core — 16/11/2026; chưa đạt nghiệm thu chung | Đúng năm tệp mã/phiếu, gói 1.6.0; B9 **131/131**. Full **3996 passed, 2 failed hiệu năng/kiểm kê, 4 xfailed cũ, 189 subtests, 0 skipped**; CLI 0/2 thiếu quyền; độc lập mã 1; đề nghị **60/60** qua cùng checker trong RAM; diff mã 0. Đã kiểm bằng Core giả (CoreGia) + HTTP giả, chưa Core/Office/Local thật. [Báo cáo](BAO-CAO-MASK-B9.md); PR: **chờ lead mở**. |
 
 | MASK-B6c | Lượt 2: sửa tăng tốc Excel không tương thích hậu kiểm B7 | Phiếu lead 16/11/2026; sau gộp B7 | Xong phạm vi mã/kiểm CoreGia — 16/11/2026; CLI chờ Core cũ | Full **3727 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed/skip; độc lập mã 0; kiểm kê 58/58, phiên bản 1.5.0. Median 2.000 hàng 5,7872 giây; gần 1 MiB 11,5764 giây. Chỉ sửa doc_excel.py, không sửa B7/B8. PR: **chờ lead mở**; báo cáo lượt 2 cuối sổ. |
@@ -1295,3 +1296,73 @@ Không phát sinh cửa Core/SDK hoặc câu hỏi nghiệp vụ mới. Kế th�
 **Cần Core / Chờ Anh mới phát sinh:** không phát sinh. Kế thừa C-MS22-01 và C-P4-01…05; CLI chuẩn chưa có quyền/ngữ cảnh tin cậy, giữ gate. Chưa Core/Office/Local/Linux thật.
 
 Lịch sử kiểm lượt 2: B6c+B7 **207 passed, 30,23 giây** trước ba ca bổ sung cuối. Full đầu **3726 passed, 1 failed, 4 xfailed cũ, 190 subtests passed, 843,06 giây, mã 1**; failure duy nhất `test_nguon_b1_utf8_va_sha_ban_chuyen_sau_sua`: đoạn tài liệu mới bị PowerShell đổi tiếng Việt thành dấu hỏi. Đã ghi lại UTF-8 và tính kiểm kê lại, không sửa test hoặc runtime sau full này. Log full đầu giữ tại `KET-QUA-KIEM-MASK-B6C-LUOT-2-PYTEST.txt`.
+
+## MASK-B10 — công cụ đo tệp và vòng đời RAM, 16/11/2026
+
+**Kết luận: Chưa đạt nghiệm thu chung** — công cụ chạy khô/đối chứng đạt, nhưng bộ ứng viên bị chặn toàn bộ, gold chưa được lead xác nhận độc lập, Local/Office/Core thật chưa kiểm. PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); không commit/push.
+
+**Phạm vi:** đúng ba tệp được giao: [công cụ Python](../cong-cu/thu_mask_tep_that.py), [CMD ASCII](../cong-cu/THU-MASK-TEP-THAT.cmd), [gold/recipe ứng viên](../cong-cu/demo/mask_tep_held_out.json), cùng cập nhật VIEC theo lệnh lead. Không sửa gói chạy, kiểm kê, CHANGELOG, Core/SDK, nguồn cũ, engine khác hoặc dependency. Gói giữ 1.6.0; không có bản khai/ngăn/map mới. Cloud tắt, không import/gọi Hỏi AI hoặc engine khác.
+
+### Bộ ứng viên và kết quả chất lượng
+
+- Seed mới **1611261007**, chỉ dữ liệu giả DEMO tự soạn; không dùng lại fixture development/MASK-7/2b/2c. DOCX **14** (6 hỗ trợ + 8 phải chặn), XLSX **17** (6 hỗ trợ + 11 phải chặn); **31 SHA tệp phân biệt**, 31 định danh cơ sở, **129 gold span / 225 vùng**, trong đó nhóm hỗ trợ **53 span / 12 tệp**. Fixture sinh deterministic trong RAM; có gold vùng/offset code point/định danh/format/tiền-ngày và SHA riêng từng gold/tệp. NFD/Cf, run/rich text, properties, chữ/ô/hàng/cột ẩn, merge, notes và alias dài được phủ. Blockers có comments/revisions/sheet ẩn/formula-cache/chart/links/nhúng/macro/part lạ/ZIP traversal và symlink.
+- **Chưa có người soạn/duyệt gold độc lập và chưa có lead đóng băng trước chạy**: luôn gọi **bộ ứng viên**, không nhận đã nghiệm thu held-out. Không đổi detector, prompt, gold nghiệp vụ hoặc trần dựa trên kết quả. Trong lúc dựng công cụ đã sửa prefix namespace fixture thành `pr` theo whitelist, rồi tính lại SHA fixture trước lượt đo chốt; gold vùng/nhãn nghiệp vụ giữ nguyên. Đối chứng development riêng được dựng sau khi thấy chặn nhầm, tuyệt đối không gộp vào mẫu số chất lượng. Lead cần xem/đóng băng công cụ và gold; sau khi dùng để chỉnh matcher/prompt phải soạn held-out khác.
+- SHA-256 **bytes JSON**: `a3712d104bd9e116776a7ae56cad615c617a2455de51ba6c6aa04bf2e0d4231c`; SHA JSON canonical bỏ trường băm: `ca771d96fae7734e0c3bed31a90cc8fa30e6a6d22913cc9b56c4d1a404bd80ae`. Công cụ từ chối gold/SHA fixture không khớp; không tự cập nhật khi chạy. `--xac-nhan-gold` và `--xac-nhan-cong-cu` phải khớp cả hai SHA hiện tại; chúng không tự xác nhận người soạn độc lập hay quyền bật Cloud.
+
+| Chỉ số trên bộ ứng viên, cùng lượt chốt | Tử / mẫu hoặc số thật |
+|---|---:|
+| Phát hành che, đủ hai lớp | **0/31**; nhóm hỗ trợ **0/12** |
+| Chặn đúng tệp phải chặn | **19/19**; đều `MASK_TEP_CHUA_HO_TRO` |
+| Chặn sai nhóm hỗ trợ / báo nhầm cấp tệp | **12/12 = 100%**, `MASK_DINH_DANH_CHUA_DAT` |
+| Không hỗ trợ | **19/31**, là tập con của chặn đúng, không cộng lần hai |
+| Lỗi kỹ thuật / ChuaRo / hủy / lỗi công cụ | **0/31** từng loại ở lượt bộ ứng viên |
+| Lọt trên số thực sự phát hành | **0/0 tệp, 0/0 span — KHÔNG ĐỦ MẪU SỐ**, không nhận đạt 0 lọt |
+| Mở che, RAM bytes+map sau phát hành, đợi Local thật | **CHƯA ĐO** trên bộ ứng viên vì bị chặn trước Local |
+
+Vùng thường V02 và các giá trị DEMO trong metadata/tên sheet là điểm cần khảo sát riêng; trace ngoài gói đã xác định lớp 1 chặn văn bản thường, không phải lỗi quyền hoặc model. Không bỏ ca này, đổi gold thành “phải chặn”, đưa câu thường vào danh mục bí mật hoặc sửa runtime trong B10 để làm xanh. Không tính chặn hết là detector đạt.
+
+### Đối chứng cơ học, biên và lifecycle
+
+- **26/26** lượt đối chứng development trên **12 mã tệp cơ sở**: 12 khứ hồi chưa sửa, 8 lượt thêm/sửa format/alias mềm/tách run, 6 lượt alias hỏng/lạ/chính thức chưa dùng trong yêu cầu. **20 mở đủ**, giữ phần AI thêm, tiền/ngày và cấu trúc format; **6 lỗi mở đúng**, không có tệp mở thiếu. 109 span/187 vùng ở các lượt này là lặp kiểm kỹ thuật, không phải 109 định danh độc lập. SHA toàn tệp chỉ so nhánh chưa sửa khi gốc còn RAM. Nhánh AI-sửa so trên chính tệp sửa: cấu trúc/thuộc tính XML, giá trị gold, phần mới và payload nén của part bất biến. Không dùng reader/map/detector runtime làm gold oracle.
+- **103 mục kiểm: 101 đạt, 2 CHƯA ĐO, 0 không đạt**. Trong đó **32/32** phép biên/+1 gate thật: container vào, bộ đếm writer ra, giải nén từng phần/tổng, số phần, ratio chính xác 200:1 và +1 byte giải nén (EOF/CRC thật), depth/node/sheet/cell/char XML, ký tự ra/byte ra, báo cáo/chuyển tiếp/khuôn JSON. **17/17** biến thể ZIP/XML tấn công bổ sung: tên tuyệt đối/drive/UNC/backslash, trùng casefold, encrypted/method/CRC/size/offset/trailing, DTD/PI/XML comment cho cả Word/Excel. Fixture backslash giữ tên thô, tránh `ZipInfo` trên Windows tự biến thành đường hợp lệ.
+- Lifecycle kiểm mốc trước biên, đúng biên và vượt TTL **60/600/900**, deadline Core sớm hơn, snapshot cấu hình không trượt hạn/retry, cấu hình 59/901/bool/float bị từ chối, timer khi rảnh (gồm callback `Timer` thread thật trên clock giả), restart, worker khác, hai Python process sạch không nhận map qua argv/IPC/env, chuỗi thứ hai không đẩy map cũ, double-open đồng thời/replay, đổi input retry, sai module/người/tài liệu/DEMO/mã caller. Một việc đồng thời không được coi là bằng chứng affinity.
+- Chuỗi CoreGia còn kiểm Local/provider sai, span sai, thiếu phản hồi, **nhiều đoạn đủ/thiếu**, hủy/lỗi/mất quyền/lease ở AI, ChuaRo chỉ giữ RAM trong hạn, mất ACK sau chốt metadata và trước/sau tiếp nhận mở, TTL đua bàn giao, ACL tệp con, cùng alias chính thức qua hai chuỗi nhưng map cũ đã dọn, Admin duyệt metadata cùng ID giữa chuỗi không đổi map đã ghim. Biên nhận/quyền Admin là giả ngoài gói; không chứng nhận cửa Core thật.
+- Spy từ chối engine ghi tệp/socket; kiểm stdout/stderr/log, chuyển tiếp, lệnh ngăn (ngoại lệ duy nhất seed vào cột `bi_mat`), ảnh `NganEngine` thật trả null+cờ, cách ly upload, cấm đọc gốc Core khi mở và dọn map/bytes sau mọi kết thúc. Debug `CoreGia.xem_ngan` cố ý giữ seed bí mật ở phía Core giả; không dùng cửa debug đó làm ảnh mà engine được đọc. **0 lượt mạng, 0 engine ghi tệp, 0 Cloud, 0 gọi/import engine khác**. Python chỉ bỏ tham chiếu, không hứa xóa vật lý mọi bản sao RAM.
+
+**Giới hạn số đo:** matrix trên là gate thật **cô lập**, không phải full B + Local ở tất cả các biên. Reader/writer vẫn có cap 500.000 ký tự khi đọc lại; không tự nâng để đạt 2 triệu. Gate 8 MiB byte ra đã đo riêng; không thể chạm độc lập 8.388.608 byte khi đồng thời ≤2.000.000 Unicode scalar (tối đa 8.000.000 UTF-8 byte). Hai mục **CHƯA ĐO** là biên byte ra độc lập toàn chuỗi và budget máy đích/concurrency. Full chuỗi Local thật, tokenizer/context thật, deadline/413/streaming thật, OS máy đích đều chưa đo; không nới TTL/trần hoặc chốt SLA.
+
+Số đo lượt `--tu-kiem` chốt, có overhead tracemalloc, 26 lượt đối chứng: toàn chuỗi **1,5402–3,9312 giây**; Python peak **696.291–4.920.160 byte**; OS high-water mark cả PID **87.072.768 byte** (gồm import/các phép biên trước đó, không RAM riêng engine); bytes gốc+che **5.060–7.419**; đồ thị Python bytes+map có khử trùng bằng getsizeof **108.026–156.693 byte**. P50/P95 giây: chuẩn bị **0,6224/1,0555**; Local giả **0,0074/0,0091**; hậu kiểm **1,0518/1,5111**; mở **0,4703/1,0888**. **Đợi AI thật CHƯA ĐO**. Từng bước/ca/đỉnh có trong `--chi-tiet`; không lấy high-water mark PID hoặc số oracle giả làm budget vận hành.
+
+### Cách Anh dùng và phần Chờ Anh
+
+- Mặc định CMD chạy khô, không mạng/Office/COM/macro/đổi cấu hình Windows. `--tu-kiem` chạy các kiểm cơ học; `--bien` chỉ chạy gate biên. Mã **0** của hai chế độ này không chứng nhận chất lượng hoặc nối thật. Chạy bộ ứng viên thường trả **2** để ghi còn chờ/nghiệm thu chưa đạt. `--chi-tiet` in báo cáo đầy đủ; `--bao-cao` chỉ tạo JSON mới khi Anh chỉ định, không ghi đè. Báo cáo chỉ số/băm/phiên bản/mã vùng, không nội dung, URL/path thật, khóa hoặc mã yêu cầu.
+- Chỉ **Anh** tự chọn `--that --thu-muc-demo "thư mục mới"`; Codex không chạy `--that`. Đây vẫn là **Local giả/CoreGia**, không có cấu hình hoặc transport Local thật trong B10. Bộ ứng viên hiện bị chặn; để kiểm Office cơ học dùng thêm `--doi-chung --ca D01` hoặc `X01`, không thay kết quả held-out.
+- Khi Anh chọn thật: công cụ giữ clock monotonic/TTL thật và chu kỳ RAM trong lúc chờ thao tác tay; xuất đúng hiện vật DEMO nguồn tự dựng/đã che/đã mở vào thư mục chỉ định, không map/hồ sơ/cache engine. Anh mở/lưu/đóng/mở lại Office, kiểm font/run/bảng/merge/notes/ẩn hàng-cột/style/tiền-ngày/properties/repair warning. Tệp đã che được Office lưu lại đổi bytes đi nhánh AI-sửa ngay trong chu kỳ; không lấy bytes gốc thay thế. Mất RAM/hết TTL thì phải chạy lại, không tự gia hạn. **Word/Excel/Local/Core thật và Linux: Chờ Anh/Chờ Core, chưa kiểm.**
+
+### Kết quả kiểm bắt buộc và báo cáo AGENTS.md §6
+
+Môi trường: `.venv` trong worktree, Python **3.13.14**, SDK **2.2.0** cài offline `--no-index --no-deps` từ wheel repo; SHA **0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984** khớp `SHA256SUMS.txt`. Venv dùng công cụ test hệ thống đã ghim, không thêm dependency/đổi lock. Các lệnh dùng `-B`, UTF-8, không bytecode gói.
+
+| Lệnh | Kết quả thật |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**; cả hai thiếu nguồn phiên/quyền tin cậy, nợ **C-MS22-01**, không nới gate. |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q` | **4064 passed, 1 failed, 4 xfailed cũ, 190 subtests passed, 0 skipped; 628,52 giây, mã 1**. Failure `test_mask_r3.py::test_gold_demo_da_dong_bang`; xfail strict cũ “giới hạn quy tắc, nợ CAO” giữ nguyên. |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**; không tham chiếu cấm/bytecode/symlink trong gói. |
+| Công cụ `--tu-kiem` | **101/101 kiểm đo được đạt; 2 CHƯA ĐO**, **26/26** đối chứng tệp đạt, **mã 0**; đã kiểm bằng Core giả (CoreGia). |
+| CMD ASCII, quote, chạy khô và `git diff --check` | CMD **512 byte ASCII**, quote tĩnh đạt; gọi `--bien` từ working directory có khoảng trắng **32/32 gate đạt + 2 CHƯA ĐO, mã 0**, không mạng/Office. `git diff --check` **mã 0**; ba tệp mới còn được kiểm UTF-8/AST/whitespace riêng. |
+
+Failure SHA R3 là **nền checkout CRLF**: bytes worktree có SHA `fe48dee8340aeb721fe62943c22b9bed0359cc51acfadd06ce24c8c847c3819a`, HEAD LF có SHA chuẩn `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`; so trong RAM xác nhận chỉ khác CRLF/LF. **Không sửa gold R3, test hoặc cấu hình Git** vì ngoài phạm vi B10; lead xử lý checkout riêng. `git diff -- e_mask/goi` rỗng; full đã chạy trên cùng bytes gói bàn giao, không lấy đối chứng thay CLI/full chuẩn.
+
+Kiểm CLI bộ ứng viên cuối qua process con: **mã 2**, stderr rỗng; đúng 31 ca/12 chặn sai/19 chặn đúng, không có nội dung gold, URL, path worktree hoặc trường mã yêu cầu trong báo cáo. SHA-256 công cụ Python bàn giao: **09121370fc916950dbe10b81e1c9351a23f566272d62ecdf8cd92c3bb2c8704f**; CMD: **65592deac17f196aaf0594d1b7178757cd6c8ae43417d9c65c97af1f1851d956**. Không tạo tệp báo cáo/hiện vật khi Codex chạy khô; chỉ stdout số đo. Chưa chạy launcher từ đường dẫn chứa khoảng trắng trong chính tên thư mục nguồn; đã kiểm quote tĩnh và working directory chứa khoảng trắng, không giả đã kiểm mọi bố trí máy Anh.
+
+**Lệch khỏi phiếu / quyết định tạm:** không đổi phạm vi mã, gói hay quyết định P4. Chỉ bộ ứng viên, chưa gold độc lập/đóng băng; oracle Local/tokenizer và adapter quyền/affinity/lifecycle/Admin đều giả. Không triển khai Local/Core/Office thật, không nhận full chuỗi ở mọi trần. Không sửa lỗi nghiệp vụ phát hiện trong B10; lập lát tiếp bên dưới. CHANGELOG không đổi vì gói không đổi. Không commit/push; PR chờ lead mở.
+
+### Cần Core / Cần lead — MASK-B10
+
+- **C-P4-01/02:** mã Core cấp/ACL xuyên bước, affinity cùng tiến trình/phiên RAM, chặn/đợi chuỗi thứ hai, thông báo hủy/lỗi/lease/deadline/kết thúc lúc Mask rảnh, bàn giao/tiêu thụ và ACK không tái gọi mở. Concurrency=1 không đóng được nợ affinity.
+- **C-P4-03/04/06:** xác nhận chuẩn hóa/tìm chính xác/duy nhất/CAS/quota bí mật, điều phối Local đủ đoạn/nguồn/budget không snapshot map, biên nhận xem/duyệt tại Core. Không giải mã, không UI engine nhận tên gốc. Chờ lead chốt lại chất lượng sau bỏ matcher rõ; **nợ CAO giữ mở**, Cloud tiếp tục tắt.
+- **C-P4-05 / C-MS22-01:** quyền tệp con/kết quả, trần streaming input/output và ánh xạ **413**, budget job/RAM/CPU/thời gian/concurrency máy đích, cách ly upload và giao lại kết quả cuối đã tiếp nhận đúng quyền. SDK CLI vẫn chưa có quyền/ngữ cảnh; CoreGia không thay bằng chứng vận hành.
+- **Đề nghị lát mới MASK-B11 (Chờ lead giao):** khảo sát/sửa chặn nhầm vùng thường và metadata/tên sheet DEMO của lớp 1 B5/B6, giữ hậu kiểm số/tiền-ngày và nguồn Local; đo bằng development riêng, sau đó lead đóng băng held-out mới. B10 không sửa runtime, không xin đổi nhãn gold để đóng nợ. Lead còn xử lý EOL gold R3 trong checkout riêng trước khi nhận full xanh.
+- **Chờ Anh:** mở/lưu/mở lại Word/Excel DEMO thủ công và xác nhận từng mục, đo Local thực cùng cấu hình/model/tokenizer/egress được lead kiểm. Không nhận Local IP là bằng chứng không chuyển tiếp Cloud; B10 không cài/cấu hình server, không mở Cloud. **Chờ lead mở PR và đóng băng độc lập**, không có câu nghiệp vụ mới cần Anh chọn lại.
+
+**Thời gian thực tế:** **12:04:00–12:59:29 ngày 16/11/2026 (UTC+07), 0.92 giờ** tại mốc chốt công cụ, kiểm và báo cáo; phiếu **6–8 giờ ƯỚC TÍNH**, độ khó `kho`. Không bao gồm Anh chạy Office/Local thật hoặc lead/Core xử lý các nợ đang mở.

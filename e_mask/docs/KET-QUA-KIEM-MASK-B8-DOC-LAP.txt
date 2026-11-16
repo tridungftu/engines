@@ -1,0 +1,4 @@
+.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py
+[LỖI] Không kiểm được một mục trong gói.
+
+Mã thoát: 1

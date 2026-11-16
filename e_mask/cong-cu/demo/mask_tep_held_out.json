@@ -1,0 +1,4107 @@
+{
+  "phien_ban": 1,
+  "bo": "MASK-B10-UNG-VIEN-1611261007",
+  "chi_demo": true,
+  "cloud": false,
+  "seed": 1611261007,
+  "trang_thai": "BỘ ỨNG VIÊN — Chờ lead đóng băng độc lập trước nghiệm thu",
+  "provenance": {
+    "ngay": "2026-11-16",
+    "nguoi_soan": "Codex; chưa có người soạn/duyệt gold độc lập",
+    "nguon": "Tự soạn DEMO từ recipe B10 mới; không dùng development/MASK-7/MASK-2b/MASK-2c hoặc dữ liệu thật.",
+    "doc_lap_da_xac_nhan": false,
+    "lead_dong_bang": null,
+    "sha_tep": "Bytes ZIP deterministic theo phiên bản Python/zlib; khác môi trường phải lập lại bộ ứng viên, không tự sửa SHA.",
+    "khong_chinh_sau_do": true
+  },
+  "ca": [
+    {
+      "ma": "D01",
+      "loai": "docx",
+      "seed": 1611261007,
+      "ky_vong": "ho_tro",
+      "bien_the": "run",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Lam Châu Tinh",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D01]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D01",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D01]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Lam Châu Tinh; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                26,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Lam Châu Tinh",
+            "span": [
+              [
+                0,
+                26,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Lam Châu Tinh",
+            "span": [
+              [
+                0,
+                26,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Lam Châu Tinh",
+            "span": [
+              [
+                0,
+                26,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:0d62b2529e1efeb6e86c2298ff2650ba1e7457b5132259351bed248e943270b6",
+      "sha256_tep": "sha256:f8b610b067eea5dc6052846c381ca67ae3f6e601b97eb3b32e549938b848e9aa"
+    },
+    {
+      "ma": "D02",
+      "loai": "docx",
+      "seed": 1611261008,
+      "ky_vong": "ho_tro",
+      "bien_the": "nfd",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Vân Nhuệ Trăng",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D02]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D02",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D02]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Vân Nhuệ Trăng; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                32,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Vân Nhuệ Trăng",
+            "span": [
+              [
+                0,
+                32,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Vân Nhuệ Trăng",
+            "span": [
+              [
+                0,
+                32,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Vân Nhuệ Trăng",
+            "span": [
+              [
+                0,
+                32,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:ff7602987ba872706bd9ded3f88d72f7ec98b3d7ed0202f23138c156ebfb3b22",
+      "sha256_tep": "sha256:5463a08b3990afe15709fbe3df2faa2fc1ae562ec39ac85e6343d26e1c1aceba"
+    },
+    {
+      "ma": "D03",
+      "loai": "docx",
+      "seed": 1611261009,
+      "ky_vong": "ho_tro",
+      "bien_the": "cf",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Hải​ Đăng Sương",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D03]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D03",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D03]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Hải​ Đăng Sương; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                28,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Hải​ Đăng Sương",
+            "span": [
+              [
+                0,
+                28,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Hải​ Đăng Sương",
+            "span": [
+              [
+                0,
+                28,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Hải​ Đăng Sương",
+            "span": [
+              [
+                0,
+                28,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:f8c45f833f16bb2d1f25550e83e6814e8b0b2eedda818149cc9982c1d7f8b210",
+      "sha256_tep": "sha256:22a6f6def97a027aa8d6405a3605234ed9b0159e43663120d988c3b357568779"
+    },
+    {
+      "ma": "D04",
+      "loai": "docx",
+      "seed": 1611261010,
+      "ky_vong": "ho_tro",
+      "bien_the": "story",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Mộc Lưu Ngân",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D04]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D04",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D04]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Mộc Lưu Ngân; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "word/header1.xml",
+            "chu": "Công ty DEMO Mộc Lưu Ngân",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./w:p"
+          },
+          {
+            "ma": "V04",
+            "phan": "word/footer1.xml",
+            "chu": "Công ty DEMO Mộc Lưu Ngân",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./w:p"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Mộc Lưu Ngân",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Mộc Lưu Ngân",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Mộc Lưu Ngân",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:516b1a4691b6deac4548451de041923d56494dd8a792f8de38fb35fce5666d56",
+      "sha256_tep": "sha256:2ce4a9649b1fad6016474c798d75dc0bdf5b369814cb7b3eedcceb10db02ffcd"
+    },
+    {
+      "ma": "D05",
+      "loai": "docx",
+      "seed": 1611261011,
+      "ky_vong": "ho_tro",
+      "bien_the": "bang_notes",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Diệp Thảo Nham",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D05]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D05",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D05]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Diệp Thảo Nham; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                27,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Diệp Thảo Nham",
+            "span": [
+              [
+                0,
+                27,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": ".//w:tc/w:p"
+          },
+          {
+            "ma": "V04",
+            "phan": "word/footnotes.xml",
+            "chu": "Công ty DEMO Diệp Thảo Nham",
+            "span": [
+              [
+                0,
+                27,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": ".//w:p"
+          },
+          {
+            "ma": "V05",
+            "phan": "word/endnotes.xml",
+            "chu": "Công ty DEMO Diệp Thảo Nham",
+            "span": [
+              [
+                0,
+                27,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": ".//w:p"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Diệp Thảo Nham",
+            "span": [
+              [
+                0,
+                27,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Diệp Thảo Nham",
+            "span": [
+              [
+                0,
+                27,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Diệp Thảo Nham",
+            "span": [
+              [
+                0,
+                27,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V09",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": "gridSpan=2",
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:f0addfc4844b00489a94405bdad3fdb49e58e706435fbea85c1690f482433a14",
+      "sha256_tep": "sha256:c1602c3c689208c40028c98431b44fe5aa8a313ad83bef62e6ed19213a320539"
+    },
+    {
+      "ma": "D06",
+      "loai": "docx",
+      "seed": 1611261012,
+      "ky_vong": "ho_tro",
+      "bien_the": "alias_dai",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Trầm Sơ Miên",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D06-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D06",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D06]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Trầm Sơ Miên; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Trầm Sơ Miên",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Trầm Sơ Miên",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Trầm Sơ Miên",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:4c25e5d7748bbb0a375849b753dd1e4154a35a1884cc726801f4117678fefc5a",
+      "sha256_tep": "sha256:aea13186cc96b6d25d7de956f43683adb59a9cfcda6fc5e89187db02a902d4b9"
+    },
+    {
+      "ma": "D07",
+      "loai": "docx",
+      "seed": 1611261013,
+      "ky_vong": "chan",
+      "bien_the": "run",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân D07",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D07]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D07",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D07]]"
+        }
+      ],
+      "chan": "comments",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Bạch Vân D07; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân D07",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân D07",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân D07",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:d1a83d45c43c4b3562925205a34800880eaa97a696d74a5e84a62d6a52106af8",
+      "sha256_tep": "sha256:b7c87fa55e6dc5c2cd68d795784350e38bc3384c1d8bafb1a728af85326e528c"
+    },
+    {
+      "ma": "D08",
+      "loai": "docx",
+      "seed": 1611261014,
+      "ky_vong": "chan",
+      "bien_the": "run",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân D08",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D08]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D08",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D08]]"
+        }
+      ],
+      "chan": "revisions",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Bạch Vân D08; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân D08",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân D08",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân D08",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:2a70131e6f253c0143b9b3c6d962e94d718f4645e997355bc9b5bdd6eb63d5ca",
+      "sha256_tep": "sha256:9560cfcffb32ab9603dc40f040d0a98df0197958abebf537b0f8ecaac5a44410"
+    },
+    {
+      "ma": "D09",
+      "loai": "docx",
+      "seed": 1611261015,
+      "ky_vong": "chan",
+      "bien_the": "run",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân D09",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D09]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D09",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D09]]"
+        }
+      ],
+      "chan": "links",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Bạch Vân D09; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân D09",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân D09",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân D09",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:e0ad756dc5c2f26f9a837a4da62dbb181b03054e277f961cc4fec63a4e7e950e",
+      "sha256_tep": "sha256:ca6347158b4dd7dce9cae532eec687e7d42fbedbfe757913d3c281ec98485804"
+    },
+    {
+      "ma": "D10",
+      "loai": "docx",
+      "seed": 1611261016,
+      "ky_vong": "chan",
+      "bien_the": "run",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân D10",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D10]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D10",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D10]]"
+        }
+      ],
+      "chan": "nhung",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Bạch Vân D10; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân D10",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân D10",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân D10",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:bf8b84f19e9db909aeb22a5325b20b665f9b5f2d5e2abcf619989f3ba1e1ba24",
+      "sha256_tep": "sha256:fe1296660841789da5b9ef4ab1e6458f29b6ef9c6aa1d4ee103c3576ba43c927"
+    },
+    {
+      "ma": "D11",
+      "loai": "docx",
+      "seed": 1611261017,
+      "ky_vong": "chan",
+      "bien_the": "run",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân D11",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D11]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D11",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D11]]"
+        }
+      ],
+      "chan": "macro",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Bạch Vân D11; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân D11",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân D11",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân D11",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:bdc5cc574960206c24ee9c95976fab1c06b634185fe3efa987bf5609c28f4b02",
+      "sha256_tep": "sha256:7fdd84b2e482c67efe215d0d46a055cd54717444bdb14c88abf96238b8fecc94"
+    },
+    {
+      "ma": "D12",
+      "loai": "docx",
+      "seed": 1611261018,
+      "ky_vong": "chan",
+      "bien_the": "run",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân D12",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D12]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D12",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D12]]"
+        }
+      ],
+      "chan": "part_la",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Bạch Vân D12; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân D12",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân D12",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân D12",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:ace36f3dd1bdd8f78f2c86ce09cb291139dda0bd4292190ab89233cdb9eca0e3",
+      "sha256_tep": "sha256:536a7fb898ed9b9932df4b06b18309111bbcecbc194d8ccd77baa01d0bad21c2"
+    },
+    {
+      "ma": "D13",
+      "loai": "docx",
+      "seed": 1611261019,
+      "ky_vong": "chan",
+      "bien_the": "run",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân D13",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D13]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D13",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D13]]"
+        }
+      ],
+      "chan": "zip_traversal",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Bạch Vân D13; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân D13",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân D13",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân D13",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:31034e174f49dbeae6cf31dc472ad7494f95e44b4e14acf38c165a37d506f90d",
+      "sha256_tep": "sha256:1adb8d63a0ea3d13fa793608560c2e6d0c4072ae8f058f541194c48e8461430a"
+    },
+    {
+      "ma": "D14",
+      "loai": "docx",
+      "seed": 1611261020,
+      "ky_vong": "chan",
+      "bien_the": "run",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân D14",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-D14]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi D14",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-D14]]"
+        }
+      ],
+      "chan": "zip_symlink",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "word/document.xml",
+            "chu": "Công ty DEMO Bạch Vân D14; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "xpath": ".//w:body/w:p[1]"
+          },
+          {
+            "ma": "V02",
+            "phan": "word/document.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "xpath": ".//w:body/w:p[2]"
+          },
+          {
+            "ma": "V03",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân D14",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V04",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân D14",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân D14",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:11dcf158131ccd0b180e8a7ec1b6a0da0138842a38421a1ab778b43a251a2152",
+      "sha256_tep": "sha256:bbb31dfe726190109863ae07fbb0cd4835884159eab1052e611493b0bda0d662"
+    },
+    {
+      "ma": "X01",
+      "loai": "xlsx",
+      "seed": 1611261107,
+      "ky_vong": "ho_tro",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Nguyệt Sa Phong",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X01]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X01",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X01]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Nguyệt Sa Phong; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                28,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Nguyệt Sa Phong",
+            "span": [
+              [
+                0,
+                28,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Nguyệt Sa Phong",
+            "span": [
+              [
+                0,
+                28,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Nguyệt Sa Phong",
+            "span": [
+              [
+                0,
+                28,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:b41a21743a8e0befadaa8d5021d7bc4ef0111aac4a5d3406840c2ed16562907f",
+      "sha256_tep": "sha256:ca0d1d472432bcf2669b332e1f8fb87c66459926792c9de6d66ddf92fc58ffcf"
+    },
+    {
+      "ma": "X02",
+      "loai": "xlsx",
+      "seed": 1611261108,
+      "ky_vong": "ho_tro",
+      "bien_the": "rich",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Hạc Diệp Trà",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X02]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X02",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X02]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Hạc Diệp Trà; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Hạc Diệp Trà",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Hạc Diệp Trà",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Hạc Diệp Trà",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:e236f2346e98746bf3570a16a9c1a99b1cf37f0fec735be195f1659147137e1d",
+      "sha256_tep": "sha256:932c9ecc7fabd2eb2700cc4e7697465eea35eb6ab1e4d8cd848d6d06cba1163d"
+    },
+    {
+      "ma": "X03",
+      "loai": "xlsx",
+      "seed": 1611261109,
+      "ky_vong": "ho_tro",
+      "bien_the": "unicode",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Uyển Hồ San",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X03]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X03",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X03]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Uyển Hồ San; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                29,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Uyển Hồ San",
+            "span": [
+              [
+                0,
+                29,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Uyển Hồ San",
+            "span": [
+              [
+                0,
+                29,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Uyển Hồ San",
+            "span": [
+              [
+                0,
+                29,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:10ae9d3e270b32cb8c9eb737cd2574403f863b13b327c274d00710b06a107c8a",
+      "sha256_tep": "sha256:16274c281aa4d81022a00eac3582ca2710d9833b36d22d526af80c128590f425"
+    },
+    {
+      "ma": "X04",
+      "loai": "xlsx",
+      "seed": 1611261110,
+      "ky_vong": "ho_tro",
+      "bien_the": "an",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Vũ Nham Hoa",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X04]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X04",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X04]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Vũ Nham Hoa; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Vũ Nham Hoa",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Vũ Nham Hoa",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Vũ Nham Hoa",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": true,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:3fd59f12e134f21425848326e9b7a702da4d0c202060b8ec391d18f51a071bdc",
+      "sha256_tep": "sha256:a733454a4c45c6b5036225f1dcd14632c7f0efb030955c7b59d5e0830423a15a"
+    },
+    {
+      "ma": "X05",
+      "loai": "xlsx",
+      "seed": 1611261111,
+      "ky_vong": "ho_tro",
+      "bien_the": "merge",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Tùng Lộ Sơn",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X05]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X05",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X05]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Tùng Lộ Sơn; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Tùng Lộ Sơn",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Tùng Lộ Sơn",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Tùng Lộ Sơn",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": "A1:B1",
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:6c5095ef1af20da6666bf98346292356dbd57a89dd98c24f0415fbee72e9f6f0",
+      "sha256_tep": "sha256:4e1b85e1b1ffd00eaa4f748e05f0d13b690c2411ddcf3824eafa5421da9b3386"
+    },
+    {
+      "ma": "X06",
+      "loai": "xlsx",
+      "seed": 1611261112,
+      "ky_vong": "ho_tro",
+      "bien_the": "alias_dai",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Lam Phố Khê",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X06-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X06",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X06]]"
+        }
+      ],
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Lam Phố Khê; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Lam Phố Khê",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Lam Phố Khê",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Lam Phố Khê",
+            "span": [
+              [
+                0,
+                24,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:9c6256f499fe0504a1bc2103424c5a5ec28d79136ff53790c9d973304d8cd5b3",
+      "sha256_tep": "sha256:4e9a2f410bf75f92b7b609abe910ae50819b64b1ae03bffbbfbd1d5029ce18ce"
+    },
+    {
+      "ma": "X07",
+      "loai": "xlsx",
+      "seed": 1611261113,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X07",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X07]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X07",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X07]]"
+        }
+      ],
+      "chan": "comments",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X07; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X07",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X07",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X07",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:14f727aa45072ba2b3c8327aa0b61c4c6ca604d2350b39a9ecc83dab7631cc18",
+      "sha256_tep": "sha256:e3cbf643dd564f13a36f372dad2d1d6a216493c6d63b2afaa2d7e1a94a56345b"
+    },
+    {
+      "ma": "X08",
+      "loai": "xlsx",
+      "seed": 1611261114,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X08",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X08]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X08",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X08]]"
+        }
+      ],
+      "chan": "sheet_an",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X08; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X08",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X08",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X08",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:f13b98a40bd797c4e3fd1340454ac3ee61bd8b8d0f2fce5ed33b78fc6d7491d6",
+      "sha256_tep": "sha256:95ae54e84a7bae362d1130f11874e905377997ee1a6ebbef6391b9b5749924aa"
+    },
+    {
+      "ma": "X09",
+      "loai": "xlsx",
+      "seed": 1611261115,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X09",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X09]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X09",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X09]]"
+        }
+      ],
+      "chan": "formula",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X09; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X09",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X09",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X09",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:e6cde2970e177f8dc46e2475beba31152be6c4b6b1ec59e34a1e728531a978bd",
+      "sha256_tep": "sha256:e0a40fc955d72fda5c6175496f7dc0067b6f1ed41464e7e101f14cc4b0d7129c"
+    },
+    {
+      "ma": "X10",
+      "loai": "xlsx",
+      "seed": 1611261116,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X10",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X10]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X10",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X10]]"
+        }
+      ],
+      "chan": "cache",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X10; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X10",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X10",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X10",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:fa46ae5ed81d10ff4433bef3c323796fdaa2b133860bed035289dc9a3bb9a126",
+      "sha256_tep": "sha256:b551b8cb42674b6601c31087edb3ecd78870f94e24d969269793cb2d0822b42f"
+    },
+    {
+      "ma": "X11",
+      "loai": "xlsx",
+      "seed": 1611261117,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X11",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X11]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X11",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X11]]"
+        }
+      ],
+      "chan": "chart",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X11; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X11",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X11",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X11",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:c1feda0b89b856c049ef35a8ce58c13a890463b86995670e22f64f27bd3baa08",
+      "sha256_tep": "sha256:b5f5c62f2d8d30ad28623ba6a93bc061d8e90adc2705f56c433bd650719b36a5"
+    },
+    {
+      "ma": "X12",
+      "loai": "xlsx",
+      "seed": 1611261118,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X12",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X12]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X12",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X12]]"
+        }
+      ],
+      "chan": "links",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X12; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X12",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X12",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X12",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:31c359a355047070458b5be855fa319f639311475b746d1b55ed83eec2f178b5",
+      "sha256_tep": "sha256:4c2013ecc914c7fe360581c5e7c1c2447b3ad4cf75e9080e9c1e18f48e214dc4"
+    },
+    {
+      "ma": "X13",
+      "loai": "xlsx",
+      "seed": 1611261119,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X13",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X13]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X13",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X13]]"
+        }
+      ],
+      "chan": "nhung",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X13; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X13",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X13",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X13",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:df186f968c6225bf2b99c7b41d3daedfb0ad51c9cbd25b6d935b5405f0480daa",
+      "sha256_tep": "sha256:16e5c4174aae12de564ca40cde8e233e37d26565868d9643b8882d4a9f663914"
+    },
+    {
+      "ma": "X14",
+      "loai": "xlsx",
+      "seed": 1611261120,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X14",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X14]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X14",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X14]]"
+        }
+      ],
+      "chan": "macro",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X14; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X14",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X14",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X14",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:8a44ee1c3e9c9f06b3fcf6257f4f74b7cb602c69d12f4f357ce6b5c51a4448ac",
+      "sha256_tep": "sha256:4b1ffd12f3dcc3d15bae8d406c1902a262980d38cb531f3046c3bf90dda149e5"
+    },
+    {
+      "ma": "X15",
+      "loai": "xlsx",
+      "seed": 1611261121,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X15",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X15]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X15",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X15]]"
+        }
+      ],
+      "chan": "part_la",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X15; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X15",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X15",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X15",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:13be0946deee6a7f612f22b293b45a81eaf830f58fac24fb64cb3ce3f1f33eb4",
+      "sha256_tep": "sha256:299485a2b3a20785316672b457875e722ce9621fdd309eebeb1e0f12e826717b"
+    },
+    {
+      "ma": "X16",
+      "loai": "xlsx",
+      "seed": 1611261122,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X16",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X16]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X16",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X16]]"
+        }
+      ],
+      "chan": "zip_traversal",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X16; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X16",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X16",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X16",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:fdaf386601a349763adbf5d4bba9eaeafd4017b71cf4a56e0b24d92ce13969b2",
+      "sha256_tep": "sha256:fa631020bf305962033f5d7afce1743b94887b3d872fcad56e36fad9f24541de"
+    },
+    {
+      "ma": "X17",
+      "loai": "xlsx",
+      "seed": 1611261123,
+      "ky_vong": "chan",
+      "bien_the": "inline",
+      "dinh_danh": [
+        {
+          "chu": "Công ty DEMO Bạch Vân X17",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-X17]]"
+        }
+      ],
+      "kho_ngoai_yeu_cau": [
+        {
+          "chu": "Công ty DEMO Ngoại Chuỗi X17",
+          "nhom": "CONG_TY",
+          "loai_ai": "to_chuc",
+          "alias": "[[KH-DEMO-B10-NGOAI-X17]]"
+        }
+      ],
+      "chan": "zip_symlink",
+      "gold": {
+        "vung": [
+          {
+            "ma": "V01",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "Công ty DEMO Bạch Vân X17; 1.246.800 VND; 2026-10-29.",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [
+              "1.246.800 VND",
+              "2026-10-29"
+            ],
+            "o": "A1"
+          },
+          {
+            "ma": "V02",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "DEMO số sổ cái 73; tổng thu đã kiểm tra.",
+            "span": [],
+            "bat_bien": [],
+            "o": "A2"
+          },
+          {
+            "ma": "V03",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "1246800",
+            "span": [],
+            "bat_bien": [
+              "1246800"
+            ],
+            "o": "C1"
+          },
+          {
+            "ma": "V04",
+            "phan": "xl/worksheets/sheet1.xml",
+            "chu": "46324",
+            "span": [],
+            "bat_bien": [
+              "46324"
+            ],
+            "o": "D1"
+          },
+          {
+            "ma": "V05",
+            "phan": "docProps/core.xml",
+            "chu": "Công ty DEMO Bạch Vân X17",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./dc:creator"
+          },
+          {
+            "ma": "V06",
+            "phan": "docProps/app.xml",
+            "chu": "Công ty DEMO Bạch Vân X17",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./ep:Company"
+          },
+          {
+            "ma": "V07",
+            "phan": "docProps/custom.xml",
+            "chu": "Công ty DEMO Bạch Vân X17",
+            "span": [
+              [
+                0,
+                25,
+                0
+              ]
+            ],
+            "bat_bien": [],
+            "xpath": "./cust:property/vt:lpwstr"
+          },
+          {
+            "ma": "V08",
+            "phan": "docProps/core.xml",
+            "chu": "2026-10-29T00:00:00Z",
+            "span": [],
+            "bat_bien": [
+              "2026-10-29T00:00:00Z"
+            ],
+            "xpath": "./dcterms:created"
+          }
+        ],
+        "format": {
+          "font": "Calibri",
+          "run": "Giữ cấu trúc/thuộc tính mọi node, font/b/i/vanish, bảng và style; payload nén part không sửa giữ nguyên.",
+          "merge": null,
+          "an_hang_cot": false,
+          "tien": {
+            "so": 1246800,
+            "tien_te": "VND"
+          },
+          "ngay": "2026-10-29"
+        },
+        "nguon": "Gold tự soạn B10 trước gọi handler, không lấy map/detector/runtime."
+      },
+      "sha256_gold": "sha256:dd3aadbbe6cbd9fe6ecb6072deaa987bbf8aae03ebcf98463e7fea15708f6cd6",
+      "sha256_tep": "sha256:4533454c5e27fde22cee84916bcf6814441156261dbf58b3e954d272cf9d5813"
+    }
+  ],
+  "sha256_noi_dung": "sha256:ca771d96fae7734e0c3bed31a90cc8fa30e6a6d22913cc9b56c4d1a404bd80ae"
+}

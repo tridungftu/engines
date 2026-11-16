@@ -17,7 +17,11 @@ def module(monkeypatch):
 def test_phieu():
     app = Engine.tu_khai_bao(str(GOI / "engine.json"))
     assert app.ma == "e_mask"
-    assert len(app.phieu["nang_luc"]) == 4
+    assert {n['ma'] for n in app.phieu['nang_luc']} == {
+        'mask.che_van_ban@1', 'mask.mo_che_van_ban@1',
+        'mask.chuan_bi_ai_cuc_bo@1', 'mask.hau_kiem_ai_cuc_bo@1',
+        'mask.chuan_bi_tep_ai_cuc_bo@1', 'mask.hau_kiem_tep_van_ban@1',
+        'mask.hau_kiem_tep_giu_dinh_dang@1'}
 
 def test_mac_dinh_thieu_port_tin_cay_core_gia(module):
     for vd in module.app.phieu["chay_thu_demo"]:

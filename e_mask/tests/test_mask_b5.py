@@ -248,7 +248,10 @@ def test_lop_quy_tac_reader_va_caller_flag_khong_chung_minh_local():
         with b.ram.buoc(b.v) as buoc:
             kiem_map_ram(buoc)  # R6 không nhận tệp CHO_LOCAL làm map đã hậu kiểm.
     assert b.ram._ban_ghi is None
-    assert not any('tep' in ma for ma in b.app._ham)
+    # B7 chỉ thêm chuỗi có Local, không thêm đường phát hành từ lớp 1.
+    assert {ma for ma in b.app._ham if 'tep' in ma} == {
+        'mask.chuan_bi_tep_ai_cuc_bo@1', 'mask.hau_kiem_tep_van_ban@1',
+        'mask.hau_kiem_tep_giu_dinh_dang@1'}
 
 
 @pytest.mark.parametrize('dang', ['restart', 'instance'])

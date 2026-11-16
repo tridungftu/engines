@@ -30,7 +30,7 @@ def _loi_cong(ham):
 
 
 def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None, cong_hau_kiem_ai=None,
-            cong_mo_che=None):
+            cong_mo_che=None, cong_chuan_bi_tep=None, cong_hau_kiem_tep=None):
     """Chỉ bên tích hợp truyền port; dữ liệu việc không thể cấp quyền này."""
     ung_dung = Engine.tu_khai_bao(str(Path(__file__).resolve().parents[1] / 'engine.json'))
     # ngan chỉ giữ tương thích chữ ký, không dựng kho ánh xạ/ngăn dự phòng.
@@ -45,6 +45,30 @@ def tao_app(*, ngan=None, quyen=None, cong_chuan_bi_ai=None, cong_hau_kiem_ai=No
             ung_dung.kho_anh_xa_ram.kiem_san_sang()
             return ham(viec)
         return _loi_cong(goi)
+
+    @ung_dung.nang_luc('mask.chuan_bi_tep_ai_cuc_bo@1')
+    @bao_ve
+    def chuan_bi_tep(viec):
+        from .chuan_bi_tep import ChuanBiTep
+        return ChuanBiTep(ram=ung_dung.kho_anh_xa_ram, quyen=quyen,
+            cong=cong_chuan_bi_tep,
+            phien_ban_engine='e_mask ' + ung_dung.phieu['phien_ban']).chuan_bi(viec)
+
+    def hau_kiem_tep(viec, nang_luc):
+        from .hau_kiem_tep import HauKiemTep
+        return HauKiemTep(ram=ung_dung.kho_anh_xa_ram, quyen=quyen,
+            cong=cong_hau_kiem_tep,
+            phien_ban_engine='e_mask ' + ung_dung.phieu['phien_ban']).hau_kiem(viec, nang_luc=nang_luc)
+
+    @ung_dung.nang_luc('mask.hau_kiem_tep_van_ban@1')
+    @bao_ve
+    def hau_kiem_tep_van_ban(viec):
+        return hau_kiem_tep(viec, 'mask.hau_kiem_tep_van_ban@1')
+
+    @ung_dung.nang_luc('mask.hau_kiem_tep_giu_dinh_dang@1')
+    @bao_ve
+    def hau_kiem_tep_giu_dinh_dang(viec):
+        return hau_kiem_tep(viec, 'mask.hau_kiem_tep_giu_dinh_dang@1')
 
     @ung_dung.nang_luc('mask.hau_kiem_ai_cuc_bo@1')
     @bao_ve

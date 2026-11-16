@@ -1,5 +1,16 @@
 # NGUỒN — gói e_mask, MASK-1…7, MASK-2b và sửa an toàn
 
+## MASK-B11 lượt 4 — 17/11/2026, danh sách đóng nhãn kế toán sau marker
+
+Tiếp tục nguồn nội bộ của lượt 3 theo đúng danh sách 21 cụm lead giao ngày 17/11; không nguồn ngoài hoặc dependency mới. Chỉ sửa runtime `e_mask/tep_word.py`: hằng số có chú thích `NHAN_KE_TOAN_SAU_MARKER`, regex ranh giới từ `_NHAN_KE_TOAN_SAU_MARKER`, hàm `_duoi_marker_hop_le` và chỗ gọi trong `_canh_bao_chu_chua_dat`. Dùng `unicodedata.normalize` thư viện chuẩn để NFC, gọn khoảng trắng trên bản sao kiểm đuôi; không đổi bytes/offset nguồn. Khớp nhãn và tiền/ngày từ `_cac_tien_ngay` hiện có trên cùng chuỗi rồi xét hợp các khoảng: giữ ngày viết bằng chữ, không tạo ranh giới giả bằng cách xóa span. Không chuyển chữ thường hoặc bỏ dấu; mọi chữ ngoài danh sách còn chặn. Nhánh `_duoi_tong_hop_hop_le` và `_TONG_HOP` giữ nguyên lượt 3.
+
+Excel và hậu kiểm cuối dùng lại bộ lọc chung, không sửa thêm `tep_excel.py`/`hau_kiem_tep.py`. Giữ detector, nhãn định danh, kiểm số/tiền/ngày, Local, map chỉ RAM, trần, API v1 và manifest 1.6.0. Giữ toàn bộ 156 regression lượt 3; 255 ca mới trong `tests/test_mask_b11_nhan_ke_toan.py` chỉ dùng DEMO lead giao và các biến thể development, không nhập công cụ/recipe B10. B10/held-out/gold/MASK-2c/fixture R3 giữ nguyên bytes. Kiểm kê LF sinh từ bytes thật, phiên bản bằng engine.json. Đã kiểm bằng Core giả (CoreGia), Local giả; chưa Core/Office/Local/Linux thật; Cloud tắt, PR: chờ lead mở. Kết quả thật và giới hạn mẫu đo tại VIEC.md.
+
+| Tệp | Mốc | Bytes | SHA-256 bytes = SHA-256 LF |
+|---|---|---:|---|
+| `e_mask/tep_word.py` | trước lượt 4 (lượt 3) | 20684 | `7ecfef3d145d9d4fe1eea76ca2db4056832c6ed300b3c030d3009e4cc6e901ab` |
+| `e_mask/tep_word.py` | sau lượt 4 | 22227 | `0772b09c56eaea87c164ff723a52193c5e226451074d23d46b29136895d4f114` |
+
 ## MASK-B9 — 16/11/2026, nối SDK và bàn giao tệp trong cùng chu kỳ
 
 **Nguồn/quyền:** tiếp tục mã nội bộ Mask đã được Anh/lead giao, giữ quyền sử dụng nội bộ đã ghi bên dưới. Không lấy nguồn ngoài hoặc thêm dependency; không sửa nguồn tham chiếu, Core/SDK, nguồn cũ hoặc engine khác. Tái dùng các primitive B8/R4/R6 và thiết kế lô SDK R2 bằng import nội bộ hoặc chép có sửa orchestration. SHA-256 bytes và LF của bốn nguồn sau giống nhau ở checkout này và giữ nguyên so với HEAD:
@@ -741,3 +752,40 @@ Chỉ sửa hai runtime nội bộ đã được phép tái dùng, không chép 
 | `e_mask/kho_qua_core.py` / `CongHauKiemTepSDK.__exit__, _kiem_cuoi` | `c3e08b11d81d0557aa06eee5fa50383cd7bf2c9b0def9b98f7fe936fa9167ed3` | `fc6501e0c1d33b30ea3866e092d8d332269187cc758fa5242528791f075a14b2` |
 
 Adapter `tests/ho_tro_mask_b7.py` ngoài gói sửa đúng hợp đồng cách ly/commit/hủy. `tests/test_mask_b9b.py` chỉ DEMO; chèn sau R4, trước kiểm cuối và thoát cửa, không thay gate. SDK 2.2.0 cài offline từ wheel repo, SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp phát hành. Kiểm kê bytes/SHA trên byte LF mọi tệp gói trừ chính kiểm kê, phiên bản theo manifest 1.6.0. Đã kiểm bằng Core giả (CoreGia), chưa Core/Office/Local/Linux thật. Không sửa Core/e_hoi_ai hoặc công cụ B10.
+
+
+## MASK-B11 lượt 1 — 16/11/2026, giảm chặn nhầm trong lớp 1 (lịch sử)
+
+Viết tiếp hai runtime nội bộ `tep_word.py`, `tep_excel.py`; các symbol mới `_MARKER_KY_THUAT`, `_TONG_HOP`, `_canh_bao_chu_chua_dat` và chốt `leaked_known` được tự viết bằng thư viện chuẩn `re`, `bisect`, dùng nguyên detector/kiểm số/tiền-ngày nội bộ. Không chép nguồn ngoài/thêm dependency, không sửa mã nguồn cũ/Core/SDK/e_hoi_ai/API v1. Quyền nguồn nội bộ giữ nguyên các mục trước. Manifest giữ 1.6.0; map/bytes không ra khỏi RAM. Bộ development mới chỉ dùng DEMO tự dựng, không nhập công cụ/recipe held-out B10. Chưa đạt phát hành toàn chuỗi vì biểu thức hậu kiểm B7 ngoài closure đang chờ duyệt; không coi kết quả lớp 1 là chứng cứ Local.
+
+SHA trước lấy từ HEAD ban đầu của worktree, SHA sau từ bytes gói; LF là chuẩn hóa CRLF thành LF, không đổi các bộ gold. Không ghi băm hay nội dung của định danh vào bảng nguồn này.
+
+| Tệp | Mốc | Bytes | SHA-256 bytes | SHA-256 LF |
+|---|---|---:|---|---|
+| `tep_word.py` | trước | 17635 | `8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8` | `8d6be7b0b3fed771338ce0875b2f34cccfb6d1b00d2dce481f23d5c2014a9ce8` |
+| `tep_word.py` | sau | 19977 | `b9ff69d747c277d1a3cc5f6b49e20db3635f781a6c48bdf5357e5cf90764898a` | `b9ff69d747c277d1a3cc5f6b49e20db3635f781a6c48bdf5357e5cf90764898a` |
+| `tep_excel.py` | trước | 28020 | `9eee85619ed5e03edc6e1873c8b65e1a289138a6c7ca376fc1fbfaef3e4e7c3c` | `9eee85619ed5e03edc6e1873c8b65e1a289138a6c7ca376fc1fbfaef3e4e7c3c` |
+| `tep_excel.py` | sau | 28145 | `069b83acd72c9e807290eefc6364b7335d480c436265f86a7f7dc12c20521982` | `069b83acd72c9e807290eefc6364b7335d480c436265f86a7f7dc12c20521982` |
+
+## MASK-B11 lượt 2 — 16/11/2026, biểu thức hậu kiểm được lead duyệt
+
+Áp đúng `.venv/b11-hau-kiem-de-nghi.patch` của lượt 1 vào duy nhất biểu thức trong `hau_kiem_tep.py::_kiem_cuoi`. Dùng bộ lọc `_canh_bao_chu_chua_dat` nội bộ đã có của Word/Excel; không thêm biểu thức nhận diện hoặc nới bộ lọc. Giữ `du`, kiểm nhãn/số/ngày, Local, metadata và vòng đời RAM. Hai runtime lớp 1 giữ nguyên bytes lượt 1. Không chép nguồn ngoài, không thêm dependency, API v1/manifest 1.6.0 không đổi. SDK 2.2.0 trong venv, wheel repo khớp SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`.
+
+| Tệp / symbol | Mốc | Bytes | SHA-256 bytes = SHA-256 LF |
+|---|---|---:|---|
+| `e_mask/hau_kiem_tep.py::_kiem_cuoi` | trước (HEAD, LF) | 13350 | `57d3ad2495486da0cac22c2523207a958c8269c7ae3784eeb9f06720c2483ab2` |
+| `e_mask/hau_kiem_tep.py::_kiem_cuoi` | sau (diff đã duyệt, LF) | 13402 | `497d592d4bd593b33ba8c177f67617f43d613bbdc536c0333b0d0a0c64044ac9` |
+
+Fixture ngoài gói `tests/demo_mask_r3.json` được khôi phục từ bytes blob Git, SHA-256 `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`; chỉ EOL, nội dung không đổi. Test hậu kiểm mới cô lập writer/lần kiểm map trước cửa để detector thật chạy trên ca độc hại; không thay detector hoặc bộ lọc. Test phát hành hai lớp và các bộ B5/B6/B6b/B8 vẫn chạy nguyên runtime qua CoreGia. Không đổi held-out/gold/công cụ B10, MASK-2c, Core hoặc e_hoi_ai. Kiểm kê dùng bytes thật mọi tệp gói trừ chính nó, LF, phiên bản lấy từ engine.json. Kết quả thật ghi VIEC.md; đã kiểm bằng Core giả (CoreGia), chưa Core/Office/Local/Linux thật, Cloud tắt.
+
+
+## MASK-B11 lượt 3 — 16/11/2026, bịt hai ngoại lệ lọt bản rõ
+
+Chỉ sửa `tep_word.py::_MARKER_KY_THUAT`, `_TONG_HOP`, `_canh_bao_chu_chua_dat` và thêm `_duoi_tong_hop_hop_le`. Regex lấy đủ đuôi đến hết đơn vị (biên CR/LF, chấm phẩy hoặc | như trước); marker chỉ miễn khi không có chữ cái khác. Đuôi tổng hợp chỉ cho chữ nằm trọn trong tiền/ngày đã được `che_van_ban._cac_tien_ngay` hiện có nhận diện; chữ tự do khác giữ nguyên cảnh báo. Không thêm tên, mã tệp hoặc câu từ held-out vào runtime; không nới ngoại lệ khác. Excel/hậu kiểm B7 dùng chung hàm nên không cần sửa `tep_excel.py` hoặc `hau_kiem_tep.py` ở lượt này.
+
+Tự viết tiếp nguồn nội bộ, chỉ thư viện chuẩn, không nguồn ngoài/dependency. API v1, SDK 2.2.0, manifest 1.6.0, nguồn/quyền, detector chung, nhãn, kiểm số/tiền/ngày và vòng đời RAM giữ nguyên. Test development dùng các chuỗi phản ví dụ DEMO lead giao, không sửa gold/held-out hoặc fixture R3 đã khôi phục LF. Đã kiểm bằng Core giả (CoreGia), Local giả; chưa Core/Office/Local/Linux thật. PR: chờ lead mở.
+
+| Tệp | Mốc | Bytes | SHA-256 bytes = SHA-256 LF |
+|---|---|---:|---|
+| `e_mask/tep_word.py` | trước lượt 3 (lượt 2) | 19977 | `b9ff69d747c277d1a3cc5f6b49e20db3635f781a6c48bdf5357e5cf90764898a` |
+| `e_mask/tep_word.py` | sau lượt 3 | 20684 | `7ecfef3d145d9d4fe1eea76ca2db4056832c6ed300b3c030d3009e4cc6e901ab` |

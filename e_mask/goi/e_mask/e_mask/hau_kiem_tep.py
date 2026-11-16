@@ -70,7 +70,8 @@ def _kiem_cuoi(s, *, kiem, buoc):
         con, du = che._kiem_con_sot(chu, [(g, 'KHAC', True) for g in m.alias_nguyen_van().values()])
         ngay = sorted((a, b) for a, b, loai, _ in che._cac_tien_ngay(chu) if loai == 'ngay')
         if not du or any(not che._duoc_mien_ngay(chu, x['vi_tri']['bat_dau'],
-                x['vi_tri']['ket_thuc'], x['nhom'], ngay) for x in con):
+                x['vi_tri']['ket_thuc'], x['nhom'], ngay)
+                for x in module._canh_bao_chu_chua_dat(chu, con)):
             raise loi('MASK_DINH_DANH_CHUA_DAT')
     return sau
 

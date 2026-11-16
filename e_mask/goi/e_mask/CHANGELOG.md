@@ -1,3 +1,24 @@
+## 1.6.1 — 17/11/2026 (MASK-B11: giảm chặn nhầm tệp Word/Excel; bản trước 1.6.0 đã phát hành 16/11)
+
+### MASK-B11 lượt 4
+
+- Theo quyết định lead 17/11, đuôi DEMO/TEST/SAMPLE/DRAFT chỉ thêm đúng 21 nhãn trường kế toán trong hằng số `NHAN_KE_TOAN_SAU_MARKER`. Khớp nguyên cụm theo ranh giới từ sau NFC và gọn khoảng trắng; phân biệt hoa/thường và dấu. Giữ số, tiền/ngày qua bộ kiểm chung và dấu; chữ khác giữ chặn.
+- Chỉ sửa runtime dùng chung `tep_word.py`; Word, Excel và hậu kiểm B7 dùng cùng bộ lọc. Không áp danh sách cho nhánh Tổng thu/chi, không đổi detector, nhãn định danh, kiểm số/tiền/ngày, Local, vòng đời RAM, API v1, manifest 1.6.0 hoặc dependency.
+- Giữ nguyên 156 regression lượt 3 và thêm kiểm danh sách đóng, tiền tố/hậu tố, NFD/khoảng trắng, phát hành hai lớp DOCX/XLSX, docProps/tên sheet hợp lệ và quét mọi ZIP part/text/attribute tìm bản rõ. Chạy lại B10 trên held-out/gold nguyên trạng, sinh lại kiểm kê LF theo manifest; số thật tại VIEC.md. Đã kiểm bằng Core giả (CoreGia), Local giả; PR: chờ lead mở.
+
+## Chưa phát hành — 16/11/2026, MASK-B11 lượt 3
+
+- Bịt hai ngoại lệ lọt bản rõ: marker DEMO/TEST/SAMPLE/DRAFT chỉ được miễn khi đến hết đơn vị không còn chữ cái; cụm tổng hợp chỉ được miễn khi đuôi gồm số, tiền/ngày được bộ kiểm chung nhận diện và dấu câu/khoảng trắng. Dấu gạch, ngoặc, chấm và & không kết thúc việc kiểm đuôi.
+- Sửa duy nhất runtime `tep_word.py`; Excel và cửa cuối B7 dùng chung bộ lọc nên cùng được siết. Giữ nguyên detector, nhãn, kiểm số/tiền/ngày, Local, vòng đời RAM và trần. Không đổi held-out/gold, manifest 1.6.0 hoặc dependency.
+- Thêm toàn bộ phản ví dụ lead vào kiểm hai lớp DOCX/XLSX (nội dung, tiêu đề docProps, tên sheet hợp lệ), quét mọi ZIP part/attribute/text nếu có bản phát hành; kiểm riêng cửa cuối bằng detector thật và đối chứng cú pháp đóng hợp lệ. Kết quả thật tại VIEC.md; đã kiểm bằng Core giả (CoreGia), Local giả. PR: chờ lead mở.
+
+## Chưa phát hành — 16/11/2026, MASK-B11 (lượt 2, áp hậu kiểm đã duyệt)
+
+- Lớp 1 Word/Excel phân biệt cảnh báo chữ trên cú pháp đóng: marker kỹ thuật ở đầu trường và nhãn tổng hợp tài chính đi liền vị ngữ nghiệp vụ. Chỉ miễn khoảng đã chứng minh, không miễn cả vùng; nhãn định danh/danh xưng và định danh đã biết còn sót vẫn chặn. Giữ kiểm đủ, numeric_review, tiền/ngày B5b/B6b, XML/ZIP whitelist, trần và map chỉ RAM.
+- Dùng chung bộ lọc trong tep_word/tep_excel, quét cú pháp một lần và tra khoảng bằng bisect. Không đổi detector văn bản chung, API v1, manifest 1.6.0, nguồn Local, kho/ngăn hoặc dependency.
+- Theo lead duyệt 16/11, áp nguyên diff đề nghị vào `_kiem_cuoi` của `hau_kiem_tep.py`: dùng cùng `_canh_bao_chu_chua_dat`, giữ `du`, kiểm nhãn/số/ngày và nguồn Local. Không mở rộng bộ lọc lớp 1. Khôi phục riêng EOL fixture R3 về blob Git LF, không đổi nội dung/gold.
+- Development DEMO tách khỏi B10, gồm phát hành/khứ hồi, ca đối kháng và kiểm trực tiếp cửa cuối bằng detector thật: tên công ty ngoài marker, tên người có nhãn/danh xưng/viết hoa, số định danh và thiếu quét đủ vẫn chặn. Chạy lại toàn bộ regression B5/B6/B6b/B8 và B10 trên nguyên held-out. Kết quả thật và giới hạn CLI quyền cũ tại VIEC.md. Đã kiểm bằng Core giả (CoreGia); chưa Core/Office/Local/Linux thật, Cloud tắt; PR chờ lead mở.
+
 ## Chưa phát hành — 16/11/2026, MASK-B9, gói 1.6.0
 
 - Đăng ký `mask.mo_che_tep@1`: tệp JSON UTF-8 mẫu 7 → bộ T tĩnh. Giữ nguyên định nghĩa bảy năng lực đã công bố, API v1 và schema chung; ba bước tệp Local của B7 vẫn có loại trả cố định. Không có đường che tệp bỏ Local.

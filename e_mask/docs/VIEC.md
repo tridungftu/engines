@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| MASK-B11 | Danh sách đóng nhãn kế toán sau marker (lượt 4), giữ siết lượt 3 | Quyết định lead 17/11/2026; lượt 4: 1–2 giờ ƯỚC TÍNH | Xong mã và hồi quy lượt 4 — 17/11/2026 / Chờ Core cũ và Anh đo thật | Full **4.659 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed/skip; B11 **550 passed**, giữ đủ 156 regression lượt 3. B10 **19/19 chặn đúng, 0 lọt, 12/12 hợp lệ phát hành và mở che đủ**. Độc lập mã 0; kiểm kê 60/60 LF, 1.6.0; CLI nợ quyền Core cũ 0/2. PR: **chờ lead mở**. Chi tiết lượt 4 cuối sổ; lượt 1/2/3 giữ làm lịch sử. |
 | MASK-B10 | Công cụ nghiệm thu DEMO tệp, biên và vòng đời RAM P4 | Sau B1…B9/R1…R7, MASK-2c/AI-9; phiếu B10 6–8 giờ ƯỚC TÍNH, kho | Xong công cụ/kiểm giả / Chờ lead, Core và Anh — 16/11/2026; chưa đạt nghiệm thu chung | Đúng ba tệp ngoài gói + cập nhật sổ này; 31 tệp ứng viên (12 hỗ trợ, 19 phải chặn), không runtime/dependency/Cloud. 12/12 chặn sai, 19/19 chặn đúng, phát hành 0; không kết luận 0 lọt. Đối chứng cơ học 26/26; chi tiết kiểm/giờ/Cần Core ở mục B10 cuối sổ. PR: **chờ lead mở**. |
 
 | MASK-B9b | Kiểm cuối trước khi Core phát hành mở che/hậu kiểm tệp | Phiếu lead 16/11/2026; sau B9; MASK-P4 | Xong mã/kiểm B9b / Chờ Core — 16/11/2026 | Full **4109 passed, 4 xfailed cũ, 190 subtests passed, 0 failed/skip**, mã 0; 44 regression B9b đạt. Kiểm kê 60/60 LF, phiên bản 1.6.0; độc lập/diff mã 0; CLI 0/2 thiếu quyền C-MS22-01 cũ. Đã kiểm bằng Core giả (CoreGia); PR: **chờ lead mở**, không commit/push. |
@@ -1409,3 +1410,260 @@ Kiểm CLI bộ ứng viên cuối qua process con: **mã 2**, stderr rỗng; đ
 **Lệch khỏi phiếu / quyết định tạm đã dùng:** không mở rộng mã/phạm vi chức năng, không dependency mới. Fixture `demo_mask_r3.json` chỉ trả checkout CRLF về đúng blob Git LF có SHA khóa `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`; không diff nội dung, không sửa gold/assertion. Hai tài liệu gói chỉ sửa khoảng trắng cuối và tính lại kiểm kê trong lúc full đang ở nhóm 2c, trước các ca nguồn/kiểm kê; runtime không đổi sau lượt mục tiêu. Đoạn VIEC mới từng bị pipeline PowerShell đổi dấu tiếng Việt đã ghi lại UTF-8 và kiểm không có dấu hỏi thay thế. Không sửa hoặc nhận đã kiểm công cụ B10.
 
 **Cần Core / Chờ Anh mới phát sinh:** không cổng hoặc câu hỏi nghiệp vụ mới; kế thừa C-P4-01…05 và C-MS22-01. **Điểm NHẸ được chấp nhận:** chot_metadata tăng so_gap trước tai_tep_ra; upload lỗi có thể đã tăng đếm nhưng chưa phát hành; **C-P4-03 chống lặp xuyên chuỗi** vẫn cần Core. C-P4-05 cần kiểm/cách ly nguyên tử qua commit thật, hủy khi context thoát bằng ngoại lệ, giữ ngữ nghĩa ACK/ChuaRo. Chưa Core/Office/Local/Linux thật.
+
+
+## MASK-B11 lượt 1 — giảm chặn nhầm tệp hợp lệ, 16/11/2026 (lịch sử)
+
+**Kết luận: Chưa đạt MASK-B11 — lớp 1 đã qua nhưng B7 vẫn chặn phát hành, phạm vi B7 đang chờ duyệt.** Bắt đầu **14:16 ngày 16/11/2026 (UTC+07)** theo lead; **4–6 giờ ƯỚC TÍNH**, độ khó cao. PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia); Cloud tắt, chưa Core/Office/Local/Linux thật. Không commit/push.
+
+### Chẩn đoán trước sửa — chỉ mã lỗi, vùng và loại cảnh báo
+
+Cả 12 ca có mã `MASK_DINH_DANH_CHUA_DAT` ở `_kiem_vung` lớp 1; `day_du=true`, kiểm tiền/ngày đạt. Chỉ số vùng runtime bắt đầu từ 0. Không ghi bản rõ.
+
+| Mã tệp | Vùng/gate chặn đầu tiên trước sửa | Nhóm nguyên nhân |
+|---|---|---|
+| D01 | `word/document.xml`, vùng 1, gold V02; B5 | Marker kỹ thuật và cụm tổng hợp trong vùng thường |
+| D02 | `word/document.xml`, vùng 1, gold V02; B5 | Như D01; không phải gate NFD |
+| D03 | `word/document.xml`, vùng 1, gold V02; B5 | Như D01; không phải gate Cf |
+| D04 | `word/document.xml`, vùng 1, gold V02; B5 | Như D01; không phải gate story/chữ ẩn |
+| D05 | `word/document.xml`, vùng 1, gold V02; B5 | Như D01; chưa đi tới bảng/notes tại gate đầu |
+| D06 | `word/document.xml`, vùng 1, gold V02; B5 | Như D01; không phải trần alias |
+| X01 | `xl/workbook.xml`, vùng 0, `ten_sheet`, sheet index 0; B6 | Marker kỹ thuật trên tên sheet bất biến |
+| X02 | `xl/workbook.xml`, vùng 1, `ten_sheet`, sheet index 0; B6 | Như X01; không phải shared/rich text |
+| X03 | `xl/workbook.xml`, vùng 1, `ten_sheet`, sheet index 0; B6 | Như X01; không phải Unicode |
+| X04 | `xl/workbook.xml`, vùng 0, `ten_sheet`, sheet index 0; B6 | Như X01; không phải hàng/cột ẩn |
+| X05 | `xl/workbook.xml`, vùng 1, `ten_sheet`, sheet index 0; B6 | Như X01; không phải merge |
+| X06 | `xl/workbook.xml`, vùng 0, `ten_sheet`, sheet index 0; B6 | Như X01; không phải trần alias |
+
+Metadata/docProps có cùng loại marker trên title/Application/tên thuộc tính custom; không coi việc chưa đi tới vùng này ở baseline là đã quét đạt. Các ô số đã qua B6b trước vòng vùng, không phải nguyên nhân chặn của 12 ca. Markup chưa hỗ trợ vẫn chặn cả gói.
+
+### Phạm vi và development
+
+- Chỉ sửa lớp 1 `tep_word.py`, `tep_excel.py`: cú pháp đóng nhận marker kỹ thuật ở đầu đơn vị/trường và nhãn tổng hợp tài chính đi liền vị ngữ nghiệp vụ. Miễn đúng khoảng cảnh báo chữ đã chứng minh, không miễn cả đoạn/số, không suy an toàn từ kho không tìm thấy hoặc Local chưa trả. Nhãn định danh/danh xưng và định danh đã biết còn sót vẫn thắng; giữ kiểm đủ, numeric_review, tiền/ngày, API v1, manifest 1.6.0, trần và map RAM.
+- Development mới `tests/demo_mask_b11.json`, `tests/test_mask_b11.py`: không nhập công cụ/recipe B10; dữ liệu DEMO tự dựng. Có Word run/bảng/notes, Excel inline/shared/rich/hàng ẩn/ô số, ba loại properties; oracle literal/ElementTree; khứ hồi RAM, nguồn Local sai, Local nhận diện thêm marker, tên/số phải chặn và SHA bộ bảo vệ.
+- B5/B5b/B6/B6b/B8: **1.014 passed, 118,65 giây, mã 0**. Nhóm B11 không phụ thuộc phát hành B7 sau chốt cú pháp: **69 passed, 32 deselected, 2,37 giây, mã 0** (lượt focused, không skip trong full).
+- Development phát hành qua lớp 1 nhưng bị lần `_kiem_con_sot` độc lập ở `hau_kiem_tep.py::_kiem_cuoi` chặn tiếp. Đã chuẩn bị diff chỉ đổi một biểu thức để B7 dùng cùng bộ lọc cú pháp đóng, giữ `day_du`, kiểm nhãn/số/ngày và nguồn Local. Tệp B7 ngoài closure ban đầu nên **chưa sửa, chờ Anh duyệt**; không monkeypatch detector để lách phạm vi.
+- CLI chuẩn **0/2 ĐẠT, mã 1**, thiếu nguồn phiên/quyền tin cậy C-MS22-01 cũ. Kiểm kê cuối **60/60**, phiên bản **1.6.0**; độc lập **ĐẠT, mã 0**. Kết quả full và B10 thật ở bảng dưới.
+
+### Cần Core / Chờ phạm vi — MASK-B11
+
+Không phát sinh cổng Core/SDK mới; kế thừa C-MS22-01 và C-P4-01…06. Hai mục đang xin duyệt: biểu thức hậu kiểm B7 nêu trên; khôi phục riêng EOL `tests/demo_mask_r3.json` về đúng blob Git LF SHA `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181` (nội dung hiện tại chuẩn hóa LF khớp blob, không đổi gold/assertion). Chưa thực hiện khi chưa được duyệt.
+
+
+### Kết quả kiểm thực tế và báo cáo AGENTS.md §6
+
+| Lệnh / đối chứng | Kết quả thật |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**; thiếu quyền C-MS22-01 cũ, không nới gate |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **4.179 passed, 31 failed, 4 xfailed cũ, 190 subtests passed**, 0 skipped; **667,51 giây, mã 1**. 30 lỗi B11 vì B7 chặn phát hành/khứ hồi; một lỗi nền R3 do checkout CRLF. Không thêm skip/xfail, không sửa test/gold cũ để làm xanh |
+| Development B11 lượt cuối | **71 passed, 30 failed**, **10,58 giây, mã 1**; 28/28 tệp qua chuẩn bị lớp 1 nhưng bị B7 chặn, hai ca khứ hồi chưa có tệp phát hành. SHA trong test mới so byte LF để chạy được Linux/Windows; không ghi lại held-out |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0** |
+| `pytest e_mask/tests/test_mask_r1.py -q` sau cập nhật metadata/kiểm kê | **46 passed**, 0,81 giây, mã 0; kiểm kê khớp **60/60**, `phien_ban=1.6.0` bằng manifest |
+| `thu_mask_tep_that.py --bao-cao .venv/b11-b10-luot1.json` trên nguyên bộ held-out | **31 ca: 19/19 chặn đúng, 12/12 chặn nhầm, phát hành 0/12**, mã **2** (bộ ứng viên chưa nghiệm thu, không phải lỗi công cụ). Cả 12 ca có chuẩn bị `XONG`, Local giả chạy, hậu kiểm `LOI/MASK_DINH_DANH_CHUA_DAT`. **0 lỗi công cụ/gold, 0 mạng, 0 engine ghi tệp, 0 Cloud** |
+| B5/B5b/B6/B6b/B8 focused | **1.014 passed**, 118,65 giây, mã 0; full cũng không phát sinh lỗi các nhóm này |
+| `git diff --check` | **Mã 0**; không commit/push |
+
+Không có tệp phải chặn nào lọt (**19/19 vẫn chặn**); do không phát hành tệp hợp lệ, mẫu số đo lọt trên phát hành là **0/0**, không nhận đã chứng minh 0 lọt hoặc đạt mục tiêu ≥9/12. Runtime giữ fail-closed ở B7. Không giả lập áp bản vá ngoài closure để báo số chất lượng đẹp hơn.
+
+SHA-256 bytes giữ nguyên: B10 JSON `a3712d104bd9e116776a7ae56cad615c617a2455de51ba6c6aa04bf2e0d4231c`; công cụ B10 `5b9a8b1d8cb3a3818656f5e3b0ac71ab90933e7f80123313a95860a245308e1e`; MASK-2c JSON `155c1b558260a83eedd0bff7ca1b4729624d2db4559931bd5c9f5be8d7a9837f`, SHA nội dung canonical MASK-2c vẫn `b720fb2d9a330110ed5c4d5fd777b9728887f863651a2b0c46dc395dc45c95ad`. `engine.json`, Core, e_hoi_ai và toàn bộ `cong-cu/**` không đổi.
+
+**Kết luận:** Chưa đạt — chưa phát hành được tệp hợp lệ qua B7 và full còn 31 lỗi nêu rõ trên.
+
+**Đã làm:** chẩn đoán 12 ca không bản rõ, sửa hai runtime lớp 1, dựng 101 test development/đối kháng, cập nhật VIEC/CHANGELOG/NGUON/kiểm kê; chuẩn bị diff một biểu thức B7 để duyệt. Không sửa hai tệp ngoài phạm vi khi chưa được chấp thuận.
+
+**Kết quả kiểm:** SDK 0/2 ĐẠT; full 4.179 passed/31 failed/4 xfailed cũ, 0 skipped; độc lập mã 0; kiểm kê 60/60; B10 19/19 chặn đúng và 0/12 phát hành. Đã kiểm bằng Core giả (CoreGia).
+
+**Thời gian thực tế đến mốc chốt báo cáo:** **14:16:00–14:59:20 ngày 16/11/2026 (UTC+07), 0.72 giờ** (gồm thời gian chờ trong phiên; phiếu **4–6 giờ ƯỚC TÍNH**). Chưa tính việc sửa B7/khôi phục EOL và kiểm lại sau khi được duyệt.
+
+**Lệch khỏi phiếu / quyết định tạm:** chưa đạt ≥9/12 và full xanh; không dùng quyết định tạm hay mở rộng closure. Cần thêm đúng một biểu thức ở `hau_kiem_tep.py` để cùng áp chứng minh cú pháp và phục hồi EOL R3 đúng Git; hai đề nghị đã gửi Anh, chưa có trả lời tại mốc chốt. Diff đề nghị ở `.venv/b11-hau-kiem-de-nghi.patch`, chưa áp vào runtime.
+
+**Cần Core / Chờ Anh mới phát sinh:** không có cổng Core mới; nợ C-MS22-01/C-P4 giữ nguyên. Chờ Anh duyệt hai ngoại lệ phạm vi trên; chưa hoàn tất MASK-B11, PR **chờ lead mở**.
+
+## MASK-B11 lượt 2 — áp hậu kiểm đã duyệt, 16/11/2026
+
+**Kết luận: Đạt tiêu chí MASK-B11 lượt 2 — full pytest xanh, B10 chặn đúng 19/19 và phát hành 12/12; CLI SDK còn nợ quyền Core cũ 0/2.**
+
+Lead đã duyệt cả hai ngoại lệ ngày 16/11; trạng thái chờ duyệt trong mục lượt 1 ở trên chỉ còn là lịch sử. Bắt đầu **22:45 ngày 16/11/2026 (UTC+07)** theo lead; phiếu lượt 2 **1–2 giờ ƯỚC TÍNH**, độ khó vừa. PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia), Local giả; chưa Core/Office/Local/Linux thật, Cloud tắt. Không commit/push.
+
+### Phần đã áp và ranh giới
+
+- Áp nguyên `.venv/b11-hau-kiem-de-nghi.patch` vào duy nhất biểu thức `_kiem_cuoi` trong `hau_kiem_tep.py`: dùng `module._canh_bao_chu_chua_dat(chu, con)`. Kiểm reverse patch đạt; giữ `du`, kiểm nhãn/số/ngày, nguồn Local và vòng đời RAM. Không mở rộng bộ lọc, hai runtime lớp 1 giữ nguyên SHA bytes lượt 1.
+- Khôi phục `tests/demo_mask_r3.json` từ đúng blob Git LF; SHA-256 bytes `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181`. Đã đối chiếu nội dung trước khôi phục chuẩn hóa LF bằng blob; không sửa nội dung/gold/assertion.
+- Thêm `tests/test_mask_b11_hau_kiem.py`: **38 ca**. Kiểm cửa cuối bằng detector thật với tên công ty ngoài marker, tên người có nhãn/danh xưng/viết hoa, số định danh và số có hình dạng ngày nhưng mang nhãn. Cô lập writer/lần kiểm map trước đó để ca độc hại thực sự tới biểu thức mới; không thay detector/bộ lọc/kiểm nhãn-ngày. Có đối chứng cú pháp đóng hợp lệ và từ chối khi `du=False`. Bộ development lượt 1 vẫn kiểm phát hành/khứ hồi hai lớp bằng nguyên runtime.
+- Cập nhật CHANGELOG/NGUON; sinh `sql/kiem_ke.json` theo bytes thật, LF, **60/60 tệp**, `phien_ban=1.6.0` bằng engine.json. Không thêm dependency, không sửa Core/SDK/e_hoi_ai/engine.json hoặc mã lượt 1.
+
+### Held-out B10 nguyên trạng
+
+Lệnh thật: `.venv/Scripts/python -B e_mask/cong-cu/thu_mask_tep_that.py --bao-cao .venv/b11-b10-luot2.json`.
+
+| Chỉ tiêu | Kết quả thật lượt 2 |
+|---|---|
+| Tổng tệp / tệp phân biệt | **31/31** |
+| Tệp phải chặn | **19/19 chặn đúng**, 0 lọt |
+| Tệp hợp lệ phát hành | **12/12**, vượt mục tiêu ≥9/12; lượt 1 là 0/12 |
+| Lọt trên bản phát hành theo oracle gold | **0/12 tệp, 0/53 span** |
+| Vùng báo nhầm / tệp hợp lệ báo nhầm | **0/89 vùng, 0/12 tệp** |
+| Mở che đủ | **12/12** tệp đã phát hành |
+| Lỗi công cụ/gold, mạng, engine ghi tệp, Cloud | **0 / 0 / 0 / 0** |
+| Mã thoát B10 | **2**: công cụ giữ nhãn bộ ứng viên chưa đóng băng/nghiệm thu chung; không phải lỗi chạy/gold |
+
+Báo cáo JSON nguyên bản: `KET-QUA-DO-MASK-B11-LUOT-2.json`. Số 0 lọt chỉ thuộc bộ DEMO và Local giả này, không là chứng minh recall/0 lọt của Local thật. Không truyền cờ xác nhận đóng băng thay lead.
+
+SHA-256 bytes giữ nguyên: B10 JSON `a3712d104bd9e116776a7ae56cad615c617a2455de51ba6c6aa04bf2e0d4231c`; công cụ B10 `5b9a8b1d8cb3a3818656f5e3b0ac71ab90933e7f80123313a95860a245308e1e`; MASK-2c JSON `155c1b558260a83eedd0bff7ca1b4729624d2db4559931bd5c9f5be8d7a9837f`. Hai tệp lớp 1 và manifest cũng đã đối chiếu SHA trước/sau lượt 2.
+
+### Cần Core — MASK-B11 lượt 2
+
+Không phát sinh cửa Core/SDK hoặc câu chờ Anh mới. Kế thừa C-MS22-01 (nguồn phiên/quyền tin cậy cho CLI DEMO) và C-P4-01…06 (binding quyền, Local, bàn giao/ACK, budget). CLI SDK chuẩn vẫn từ chối cả hai ví dụ vì chưa xác minh phiên/quyền; giữ nguyên gate, không coi test adapter là nối Core thật. Hai ngoại lệ phạm vi của lượt 1 đã được giải quyết theo lead duyệt.
+
+### Kết quả kiểm thực tế lượt 2
+
+| Lệnh / đối chứng | Kết quả thật |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**, 0,62 giây; cả hai ví dụ báo “Chưa xác minh được phiên và quyền xử lý yêu cầu.”, nợ C-MS22-01 cũ |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **4.248 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed, 0 skipped; **631,97 giây, mã 0**. Bao gồm nguyên các bộ rà bảo mật B5/B5b/B6/B6b/B8 và regression B7/B9 |
+| `.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b11.py e_mask/tests/test_mask_b11_hau_kiem.py -q --tb=short` | **139 passed**, 14,89 giây, mã 0; 101 ca development lượt 1 và 38 ca cửa cuối mới |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**, 0,53 giây; không tham chiếu bị cấm hoặc tệp biên dịch |
+| Kiểm kê bytes/SHA | **60/60**, LF, `phien_ban=1.6.0` bằng manifest |
+| `git diff --check` | **Mã 0**; Git chỉ nhắc chính sách checkout CRLF của fixture R3, bytes trên đĩa vẫn đúng LF đã duyệt |
+
+Bốn xfailed giữ nguyên tại `test_mask_2b.py::test_held_out_ten_khong_lot`, lý do cũ “giới hạn quy tắc, nợ CAO”; không thêm skip/xfail. Log lệnh thật tại `KET-QUA-KIEM-MASK-B11-LUOT-2.txt`.
+
+### Báo cáo AGENTS.md §6 — MASK-B11 lượt 2
+
+**Kết luận:** Đạt tiêu chí giao lượt 2; chưa đạt toàn bộ kiểm chuẩn CLI SDK vì nợ quyền Core cũ 0/2.
+
+**Đã làm:** áp nguyên biểu thức hậu kiểm lead duyệt, khôi phục R3 đúng blob LF, thêm 38 regression cửa cuối, giữ mã lượt 1 và held-out/gold, cập nhật VIEC/CHANGELOG/NGUON/kiểm kê.
+
+**Kết quả kiểm:** SDK 0/2 ĐẠT (mã 1, thiếu phiên/quyền C-MS22-01); pytest **4.248 passed, 4 xfailed cũ, 190 subtests passed**, 0 skipped; độc lập mã 0; kiểm kê 60/60; B10 **19/19 chặn đúng, 12/12 phát hành và mở che đủ, 0/12 tệp và 0/53 span lọt theo gold DEMO**. Đã kiểm bằng Core giả (CoreGia), Local giả.
+
+**Thời gian thực tế:** **22:45–23:02 ngày 16/11/2026 (UTC+07), 17 phút = 0,28 giờ** (gồm đọc bàn giao và chờ kiểm; phiếu lượt 2 **1–2 giờ ƯỚC TÍNH**). Không cộng giờ lượt 1.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** không mở rộng bộ lọc hoặc dùng quyết định tạm; CLI SDK chuẩn chưa đạt do nợ Core đã có, không nới gate. B10 mã 2 do bộ ứng viên chưa được lead đóng băng/nghiệm thu chung, dù mọi ca đo và oracle đạt.
+
+**Cần Core / Chờ Anh mới phát sinh:** không có. Kế thừa C-MS22-01/C-P4-01…06; chưa Core/Office/Local/Linux thật, Cloud tắt. PR: **chờ lead mở**; không commit/push.
+
+## MASK-B11 lượt 3 — bịt hai ngoại lệ lọt bản rõ, giao ngày 16/11/2026
+
+**Phạm vi đã làm:** chỉ sửa thêm runtime `tep_word.py`, hai tệp `tests/test_mask_b11*.py`, VIEC/CHANGELOG/NGUON và sinh lại kiểm kê. Giữ nguyên toàn bộ thay đổi có sẵn của lượt 1/2 trong worktree. Không commit/push; PR: **chờ lead mở**. Bắt đầu **23:53 ngày 16/11/2026 (UTC+07)**; phiếu **1–2 giờ ƯỚC TÍNH**, độ khó vừa. Đã kiểm bằng Core giả (CoreGia), Local giả; chưa Core/Office/Local/Linux thật.
+
+- Marker chỉ được miễn khi đuôi tới hết đơn vị không có chữ cái nào. Dấu gạch, ngoặc, chấm và `&` không cắt việc kiểm đuôi.
+- Cụm tổng hợp chỉ được miễn khi phần đuôi không còn chữ tự do; chữ của tiền/ngày chỉ được giữ khi nằm trong span do bộ `_cac_tien_ngay` hiện có nhận diện. Biên đơn vị CR/LF, `;`, `|` giữ như trước. Excel và B7 dùng chung hàm nên cùng được siết; không sửa thêm `tep_excel.py`/`hau_kiem_tep.py` ở lượt 3.
+- Thêm **156 ca**: **114 end-to-end** qua CoreGia, **24 ca cửa cuối B7** với detector thật và **18 đối chứng** số/tiền/ngày hợp lệ. Bao gồm toàn bộ phản ví dụ lead giao trong DOCX/XLSX, docProps title và tên sheet hợp lệ; cả tên có/không trong kho. Nếu phát hành, oracle độc lập quét mọi ZIP part, text ghép run và attribute, bỏ dấu/Cf/dấu câu để tìm bản rõ. Nếu chặn, phải đúng lỗi định danh/không hỗ trợ và không có kết quả/bàn giao, RAM đã dọn. Bộ B11 tổng **295 passed**, không thêm skip/xfail.
+- Đã tái hiện test đỏ trước bản sửa: bản rõ hiện trong `word/document.xml`, `xl/worksheets/sheet1.xml` và `docProps/core.xml` của cả hai định dạng; bốn ca đầu đều fail oracle bản rõ. Sau sửa, cả bộ B11 xanh.
+
+### B10 giữ nguyên gold/công cụ — kết quả thật lượt 3
+
+Lệnh: `.venv/Scripts/python -B e_mask/cong-cu/thu_mask_tep_that.py --bao-cao .venv/b11-b10-luot3-cuoi.json`; mã thoát thật **2** (nhãn bộ ứng viên/chưa nghiệm thu chung của công cụ). Không truyền cờ xác nhận đóng băng thay lead.
+
+| Chỉ tiêu | Lượt 2 | Lượt 3 |
+|---|---:|---:|
+| Tệp phải chặn | 19/19 | **19/19**, 0 lọt |
+| Tệp hợp lệ phát hành | 12/12 | **0/12**, giảm 12 tệp; chưa đạt mục tiêu ≥9/12 |
+| Tệp hợp lệ bị chặn | 0/12 | **12/12** |
+| Lọt trên tập đã phát hành | 0/12 tệp, 0/53 span | **0/0 tệp, 0/0 span** — không có bản phát hành để đo |
+| Lỗi công cụ/gold | 0 | **0** |
+| Mạng / engine ghi tệp / Cloud | 0/0/0 | **0/0/0** |
+
+Nguyên nhân giảm đã được đối chiếu lúc chạy thật `chuan_bi` bằng quan sát cảnh báo của detector/bộ lọc, không chỉ suy từ gold: **cả 12 ca đều có vùng V02 chứa `DEMO số sổ cái 73; tổng thu đã kiểm tra.`**. Đơn vị đầu vẫn còn chữ sau DEMO, nên quy tắc mới phải giữ cảnh báo `CONG_TY` trên marker và trả `MASK_DINH_DANH_CHUA_DAT`. Không nới để bù tỷ lệ phát hành.
+
+| Ca hợp lệ không còn phát hành | Vùng gây chặn | Lý do xác nhận riêng từng ca |
+|---|---|---|
+| D01 | V02, word/document.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| D02 | V02, word/document.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| D03 | V02, word/document.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| D04 | V02, word/document.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| D05 | V02, word/document.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| D06 | V02, word/document.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| X01 | V02, xl/worksheets/sheet1.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| X02 | V02, xl/worksheets/sheet1.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| X03 | V02, xl/worksheets/sheet1.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| X04 | V02, xl/worksheets/sheet1.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| X05 | V02, xl/worksheets/sheet1.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+| X06 | V02, xl/worksheets/sheet1.xml | Marker còn chữ trong đơn vị; MASK_DINH_DANH_CHUA_DAT |
+
+SHA-256 bytes của B10 gold `a3712d104bd9e116776a7ae56cad615c617a2455de51ba6c6aa04bf2e0d4231c`, công cụ `5b9a8b1d8cb3a3818656f5e3b0ac71ab90933e7f80123313a95860a245308e1e`, MASK-2c `155c1b558260a83eedd0bff7ca1b4729624d2db4559931bd5c9f5be8d7a9837f` và fixture R3 LF `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181` đều khớp trước lượt 3. Không đổi held-out/gold, manifest, Core/SDK hoặc nguồn cũ.
+
+### Cần Core — MASK-B11 lượt 3
+
+Không phát sinh cửa Core/SDK hoặc câu chờ Anh mới. Kế thừa C-MS22-01 và C-P4-01…06. CLI chuẩn tiếp tục từ chối cả hai DEMO vì thiếu phiên/quyền tin cậy; không nới gate và không coi CoreGia là Core thật. Tỷ lệ phát hành B10 giảm là hệ quả quy tắc siết đã giao, không phải thiếu cửa SDK mới.
+
+### Kiểm cuối và báo cáo AGENTS.md §6 — lượt 3
+
+| Lệnh / đối chứng | Kết quả thật lượt 3 |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**; cả hai ví dụ báo “Chưa xác minh được phiên và quyền xử lý yêu cầu.” — nợ C-MS22-01 cũ |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **4.404 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed/skip; **627,21 giây, mã 0** |
+| `.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b11.py e_mask/tests/test_mask_b11_hau_kiem.py -q --tb=short` | **295 passed**, 18,57 giây, mã 0 |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**; không tham chiếu bị cấm hoặc tệp biên dịch |
+| Kiểm kê bằng chính `_kiem_ke` của checker | **60/60 tệp**, bytes/SHA khớp, LF, `phien_ban=1.6.0` bằng engine.json |
+| `git diff --check` | **Mã 0**; nhắc checkout CRLF của R3 là cảnh báo Git đã có, bytes R3 vẫn đúng blob LF |
+
+Log nguyên văn ở `.venv/b11-luot3-pytest.txt`, `.venv/b11-luot3-sdk.txt`, `.venv/b11-luot3-doc-lap.txt`; báo cáo B10 nguyên bản ở `.venv/b11-b10-luot3-cuoi.json`. Không thêm skip/xfail; bốn xfailed vẫn thuộc `test_mask_2b.py::test_held_out_ten_khong_lot`, lý do giới hạn quy tắc/nợ CAO cũ.
+
+**Kết luận:** Đạt phần bịt hai lỗi và kiểm hồi quy lượt 3; **chưa đạt mục tiêu phát hành ≥9/12**, CLI chuẩn còn nợ quyền Core cũ.
+
+**Đã làm:** siết hai ngoại lệ tại hàm dùng chung Word/Excel/B7, thêm 156 ca hồi quy (bao gồm toàn bộ phản ví dụ), quét mọi phần tệp nếu phát hành, cập nhật VIEC/CHANGELOG/NGUON và kiểm kê. Gold/held-out giữ nguyên.
+
+**Kết quả kiểm:** SDK **0/2 ĐẠT** (mã 1, thiếu phiên/quyền C-MS22-01); pytest **4.404 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed/skip; độc lập **mã 0**; kiểm kê **60/60**, LF/1.6.0; B10 **19/19 chặn đúng, 0 lọt**, hợp lệ **0/12 phát hành**, mẫu số lọt trên bản phát hành **0/0**. Đã kiểm bằng Core giả (CoreGia), Local giả.
+
+**Thời gian thực tế:** **23:53:00 ngày 16/11/2026 → 00:12:17 ngày 17/11/2026 (UTC+07), 19 phút 17 giây ≈ 0,32 giờ**, gồm đọc, sửa, chờ kiểm và báo cáo; phiếu **1–2 giờ ƯỚC TÍNH**. Không cộng giờ lượt 1/2.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** phát hành B10 giảm **12/12 → 0/12** do toàn bộ ca hợp lệ có marker còn chữ tại V02; đã xác nhận và liệt kê từng ca phía trên, không nới để bù. Không dùng quyết định tạm. CLI SDK chưa đạt do nợ Core cũ; B10 mã 2 là nhãn chưa nghiệm thu chung, không phải lỗi công cụ/gold.
+
+**Cần Core / Chờ Anh mới phát sinh:** không có. Kế thừa C-MS22-01/C-P4-01…06; chưa Core/Office/Local/Linux thật, Cloud tắt. PR: **chờ lead mở**; không commit/push.
+
+## MASK-B11 lượt 4 — danh sách đóng nhãn kế toán sau marker, 17/11/2026
+
+**Phạm vi:** quyết định lead 17/11/2026; bắt đầu **00:46 ngày 17/11/2026 (UTC+07)**, **1–2 giờ ƯỚC TÍNH**, độ khó vừa. Tiếp tục đúng worktree/nhánh `codex/e_mask-mask-b11`; giữ mọi thay đổi có sẵn và toàn bộ 156 regression lượt 3. Chỉ sửa thêm runtime `tep_word.py`, thêm `tests/test_mask_b11_nhan_ke_toan.py`, cập nhật VIEC/CHANGELOG/NGUON và kiểm kê; báo cáo B10 ở ngoài gói. PR: **chờ lead mở**; không commit/push.
+
+- Hằng số có chú thích `NHAN_KE_TOAN_SAU_MARKER` chứa đúng 21 cụm lead chốt. Chỉ dùng cho đuôi marker DEMO/TEST/SAMPLE/DRAFT; khớp nguyên cụm theo ranh giới từ sau NFC và gọn khoảng trắng, phân biệt hoa/thường và dấu. Chữ khác còn lại, kể cả một từ, giữ chặn. Không thêm câu/tên/mã tệp từ held-out vào runtime.
+- Khớp các khoảng nhãn và tiền/ngày trên cùng chuỗi chuẩn hóa rồi xét hợp khoảng; không xóa ngày trước để tạo ranh giới giả cho `số2026-11-09` hoặc `2026-11-09số`. Đã thêm test đỏ tái hiện và sửa trước lượt kiểm cuối. Giữ ngày viết bằng chữ có tháng/năm, không đổi bytes/offset gốc. `_TONG_HOP` và `_duoi_tong_hop_hop_le` giữ nguyên lượt 3; danh sách đóng không áp cho Tổng thu/chi.
+- Word, Excel và cửa cuối B7 dùng chung bộ lọc. Không sửa thêm `tep_excel.py`/`hau_kiem_tep.py`; không đổi detector, nhãn định danh, kiểm quét đủ/số/tiền/ngày, nguồn Local, kho/ngăn, vòng đời RAM, trần, API v1, manifest 1.6.0 hoặc dependency.
+- **255 ca mới**, tổng bộ B11 **550 passed**: khóa đúng danh sách, đủ bốn marker × 21 nhãn, NFD/khoảng trắng thừa, tiền tố/hậu tố/chữ hoa/không dấu/chữ dính; không áp nhãn sang nhánh Tổng thu/chi; 70 ca phản ví dụ hai lớp có/không trong kho tại thân DOCX/XLSX, docProps và tên sheet hợp lệ; 19 ca phát hành hợp lệ hai lớp; đối chứng giữ nguyên nhãn/tiền/ngày/NFD và kiểm cửa cuối bằng detector thật. Tên sheet chứa `/` thuộc profile không hỗ trợ, nên mẫu `DEMO - số chứng từ 12/2026` kiểm phát hành ở thân và docProps của cả hai định dạng, không nới tên sheet. Bản phát hành được quét mọi ZIP part, text ghép run và attribute bằng oracle độc lập để tìm bản rõ.
+
+### B10 trên held-out nguyên trạng — lượt 4
+
+Lệnh thật: `.venv/Scripts/python -B e_mask/cong-cu/thu_mask_tep_that.py --bao-cao e_mask/docs/KET-QUA-DO-MASK-B11-LUOT-4.json`. **Mã thoát chương trình 2**, 27,79 giây; mã 2 là nhãn bộ ứng viên/chưa nghiệm thu chung, không phải lỗi công cụ/gold. Không truyền cờ xác nhận đóng băng thay lead. [Báo cáo nguyên bản](KET-QUA-DO-MASK-B11-LUOT-4.json).
+
+| Chỉ tiêu | Kết quả thật lượt 4 |
+|---|---:|
+| Tệp phải chặn | **19/19 chặn đúng, 0 lọt** |
+| Tệp hợp lệ phát hành | **12/12** (6 DOCX + 6 XLSX), lượt 3 là 0/12 |
+| Tệp hợp lệ mở che đủ | **12/12** |
+| Lọt trong tập đã phát hành theo gold DEMO | **0/12 tệp, 0/53 span** |
+| Báo nhầm theo gold DEMO | **0/12 tệp, 0/89 vùng** |
+| Lỗi công cụ/gold | **0** |
+| Mạng / engine ghi tệp / Cloud | **0/0/0** |
+
+Bộ held-out 12 tệp hợp lệ cùng một mẫu (`DEMO số sổ cái 73`), độ đa dạng thấp; cần bộ đóng băng mới đa dạng hơn và đo trên tệp thật (Chờ Anh).
+
+Không suy chất lượng ngoài tập DEMO từ số 0 lọt này. Đã kiểm bằng Core giả (CoreGia), Local giả; chưa Core/Office/Local/Linux thật. SHA-256 bytes B10 gold `a3712d104bd9e116776a7ae56cad615c617a2455de51ba6c6aa04bf2e0d4231c`, công cụ `5b9a8b1d8cb3a3818656f5e3b0ac71ab90933e7f80123313a95860a245308e1e`, MASK-2c `155c1b558260a83eedd0bff7ca1b4729624d2db4559931bd5c9f5be8d7a9837f` và fixture R3 LF `b200f74a29547965c637487ee0c6ded78cb6174028b5ce09236e06f5798d5181` đều giữ nguyên so với đầu lượt 4. Manifest và hai runtime Excel/hậu kiểm cũng giữ nguyên bytes.
+
+### Cần Core / Chờ Anh — MASK-B11 lượt 4
+
+Không phát sinh cửa Core/SDK mới. Kế thừa **C-MS22-01/C-P4-01…06**: CLI chuẩn vẫn thiếu phiên/quyền tin cậy cho hai DEMO; không nới gate hoặc dựng port giả trong gói. **Chờ Anh:** bộ đóng băng mới đa dạng hơn và đo trên tệp thật như giới hạn mẫu đã ghi trên; Cloud tiếp tục tắt.
+
+### Kiểm cuối và báo cáo AGENTS.md §6 — lượt 4
+
+| Lệnh / đối chứng | Kết quả thật lượt 4 |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_mask/goi/e_mask` | **0/2 ĐẠT, mã 1**; cả hai DEMO báo “Chưa xác minh được phiên và quyền xử lý yêu cầu.” — nợ C-MS22-01 cũ |
+| `.venv/Scripts/python -B -m pytest e_mask/tests -q --tb=short` | **4.659 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed/skip, **638,95 giây, mã 0** |
+| `.venv/Scripts/python -B -m pytest e_mask/tests/test_mask_b11.py e_mask/tests/test_mask_b11_hau_kiem.py e_mask/tests/test_mask_b11_nhan_ke_toan.py -q --tb=short` | **550 passed**, **29,67 giây, mã 0**; gồm toàn bộ 156 regression lượt 3 và 255 ca lượt 4 |
+| `.venv/Scripts/python -B e_mask/tests/kiem_doc_lap.py` | **ĐẠT, mã 0**; không tham chiếu bị cấm hoặc tệp biên dịch |
+| Kiểm kê qua chính `_kiem_ke` của checker | **60/60 tệp**, bytes/SHA khớp, toàn gói LF, `phien_ban=1.6.0` bằng engine.json |
+| `git diff --check` | **Mã 0**; chỉ cảnh báo chính sách checkout CRLF, không đổi bytes gold/R3 |
+
+Log nguyên văn ở `.venv/b11-luot4-pytest.txt`, `.venv/b11-luot4-sdk.txt`, `.venv/b11-luot4-doc-lap.txt` và `.venv/b11-luot4-b10.txt`; metadata thời gian/mã thoát full ở `.venv/b11-luot4-pytest.txt.json`. Lượt full cuối chạy **00:56:17–01:06:57 ngày 17/11/2026 (UTC+07)**. Không dùng lượt pytest bị dừng trước bản sửa ranh giới từ làm kết quả cuối. Bốn xfailed vẫn ở `test_mask_2b.py::test_held_out_ten_khong_lot`, lý do cũ giới hạn quy tắc/nợ CAO; không thêm skip/xfail.
+
+**Kết luận:** Đạt tiêu chí mã, hồi quy và đo held-out của MASK-B11 lượt 4; CLI SDK chuẩn còn nợ quyền Core cũ.
+
+**Đã làm:** thêm đúng danh sách đóng 21 nhãn sau marker, giữ siết và 156 ca lượt 3, bổ sung 255 ca; chạy lại B10 nguyên held-out/gold, cập nhật VIEC/CHANGELOG/NGUON và kiểm kê LF 1.6.0. Chỉ sửa thêm một runtime dùng chung Word/Excel/B7.
+
+**Kết quả kiểm:** SDK **0/2 ĐẠT, mã 1** do thiếu phiên/quyền C-MS22-01; pytest **4.659 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed/skip; độc lập **mã 0**, kiểm kê **60/60**; B10 **19/19 chặn đúng, 0 lọt**, **12/12 hợp lệ phát hành và mở che đủ**, lọt theo gold DEMO **0/12 tệp, 0/53 span**. Đã kiểm bằng Core giả (CoreGia), Local giả.
+
+**Thời gian thực tế:** **00:46–01:08 ngày 17/11/2026 (UTC+07), 22 phút ≈ 0,37 giờ**, gồm đọc, sửa, kiểm và báo cáo; phiếu **1–2 giờ ƯỚC TÍNH**. Không cộng lượt 1/2/3.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** không nới ngoài danh sách lead duyệt, không quyết định tạm. CLI SDK chưa đạt do nợ Core cũ; B10 mã 2 là nhãn bộ ứng viên/chưa nghiệm thu chung. Không đổi held-out/gold hoặc công cụ B10.
+
+**Cần Core / Chờ Anh mới phát sinh:** không có cửa Core mới; kế thừa C-MS22-01/C-P4-01…06. Chờ bộ đóng băng đa dạng hơn và đo trên tệp thật như yêu cầu lead; chưa Core/Office/Local/Linux thật, Cloud tắt. PR: **chờ lead mở**; không commit/push.

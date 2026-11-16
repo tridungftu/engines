@@ -19,6 +19,7 @@
 | `e_hoa_don\` | Hóa đơn điện tử | Đọc XML ✅; ZIP, bảng kê, tải chưa công bố; còn 9 lát, 29 giờ công ước tính | **Chưa có quyết định cuối** |
 | `e_tra_cuu\` | Tra cứu tài liệu (hỏi đáp 3 tầng) | Chưa có mã; đặc tả TL 56 | Đã chốt QĐ-1 đến QĐ-4 |
 | `e_doi_chieu\` | Đối chiếu bản ký | Chưa có mã; đặc tả TL 57 | Đã chốt 5 câu |
+| `e_kiem_excel\` | Kiểm và đọc file Excel (dùng chung mọi module) | Thêm 16/11/2026: phiếu đã chỉnh, mã gốc `toan_ven.py`/`master_hd.py` tham chiếu; 7 lát, 29 giờ công ước tính, chưa có mã gói | Anh đồng ý tiến hành 16/11; Q1–Q3 áp đề xuất |
 | `_chung\` | Tài liệu và mã tham chiếu chung | `docs\`: yêu cầu chung, phiếu nối engine thật, khảo sát kênh, phiếu chuỗi, kế hoạch đóng gói. `tham-chieu-cong-hien-tai\`: bản sao mã cổng engine hiện có trong Core (kênh, SDK, khởi động, nạp, chuỗi). `du_kien.json`: danh sách 5 engine dự kiến (trước đây nằm trong Core) | — |
 
 **Thư mục con của mỗi engine có mã:**

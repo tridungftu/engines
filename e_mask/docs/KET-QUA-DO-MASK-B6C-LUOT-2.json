@@ -1,0 +1,98 @@
+[
+  {
+    "so_hang": 2000,
+    "so_cot": 5,
+    "bytes": 35196,
+    "giay": 5.3625,
+    "xac_minh": 210,
+    "cach": 8,
+    "tham_do": true,
+    "ma_loi": null,
+    "bam_da_che": "sha256:d193403a7f5eec502ee0e08ce49314ec1216fa8af2534bd11f68399974a0a75e",
+    "so_phep_thay": 2000
+  },
+  {
+    "so_hang": 2000,
+    "so_cot": 5,
+    "bytes": 35196,
+    "giay": 5.7872,
+    "xac_minh": 208,
+    "cach": 8,
+    "tham_do": false,
+    "ma_loi": null,
+    "bam_da_che": "sha256:d193403a7f5eec502ee0e08ce49314ec1216fa8af2534bd11f68399974a0a75e",
+    "so_phep_thay": 2000
+  },
+  {
+    "so_hang": 2000,
+    "so_cot": 5,
+    "bytes": 35196,
+    "giay": 5.6273,
+    "xac_minh": 197,
+    "cach": 8,
+    "tham_do": false,
+    "ma_loi": null,
+    "bam_da_che": "sha256:d193403a7f5eec502ee0e08ce49314ec1216fa8af2534bd11f68399974a0a75e",
+    "so_phep_thay": 2000
+  },
+  {
+    "so_hang": 2000,
+    "so_cot": 5,
+    "bytes": 35196,
+    "giay": 7.0294,
+    "xac_minh": 215,
+    "cach": 8,
+    "tham_do": false,
+    "ma_loi": null,
+    "bam_da_che": "sha256:d193403a7f5eec502ee0e08ce49314ec1216fa8af2534bd11f68399974a0a75e",
+    "so_phep_thay": 2000
+  },
+  {
+    "so_hang": 3550,
+    "so_cot": 5,
+    "bytes": 1039053,
+    "giay": 11.6585,
+    "xac_minh": 386,
+    "cach": 0,
+    "tham_do": true,
+    "ma_loi": null,
+    "bam_da_che": "sha256:3fc886ffba2b967f4af4b7fc61910b0606a434943605319540fb5359aa15d319",
+    "so_phep_thay": 3550
+  },
+  {
+    "so_hang": 3550,
+    "so_cot": 5,
+    "bytes": 1039053,
+    "giay": 10.4217,
+    "xac_minh": 341,
+    "cach": 0,
+    "tham_do": false,
+    "ma_loi": null,
+    "bam_da_che": "sha256:3fc886ffba2b967f4af4b7fc61910b0606a434943605319540fb5359aa15d319",
+    "so_phep_thay": 3550
+  },
+  {
+    "so_hang": 3550,
+    "so_cot": 5,
+    "bytes": 1039053,
+    "giay": 15.8028,
+    "xac_minh": 414,
+    "cach": 0,
+    "tham_do": false,
+    "ma_loi": null,
+    "bam_da_che": "sha256:3fc886ffba2b967f4af4b7fc61910b0606a434943605319540fb5359aa15d319",
+    "so_phep_thay": 3550
+  },
+  {
+    "so_hang": 3550,
+    "so_cot": 5,
+    "bytes": 1039053,
+    "giay": 11.5764,
+    "xac_minh": 362,
+    "cach": 0,
+    "tham_do": false,
+    "ma_loi": null,
+    "bam_da_che": "sha256:3fc886ffba2b967f4af4b7fc61910b0606a434943605319540fb5359aa15d319",
+    "so_phep_thay": 3550
+  }
+]

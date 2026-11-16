@@ -1,15 +1,15 @@
 {
-  "phien_ban": "1.5.0",
+  "phien_ban": "1.6.0",
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 52194,
-      "sha256": "f17dc9936507b616c3e40096f99c368269738bc91fb4f268a8ddaa843b240bd5"
+      "bytes": 56573,
+      "sha256": "dd0726e3b8029dd04e11f3bc68fe7b9c9e6ae9b76fde3d38c6dabc0c41695afc"
     },
     {
       "duong_dan": "NGUON.md",
-      "bytes": 111205,
-      "sha256": "acbca38a5821cdc3a473278cf21255cd359a5bb3d92a16bb74d8534d2957d5d0"
+      "bytes": 117236,
+      "sha256": "57c5e4ef66f4edf66a9d670bd15d182e60fed51dbb2b4e3f9d5f22319ecdb8c3"
     },
     {
       "duong_dan": "README.md",
@@ -38,8 +38,8 @@
     },
     {
       "duong_dan": "e_mask/chay.py",
-      "bytes": 4429,
-      "sha256": "31da2de1d8a640b9fd4ab43bac4cdfeddd0dc76c824736168c257ff457dabfe3"
+      "bytes": 5077,
+      "sha256": "f5fdfc70ce7dae23893a09e6c9871515be211e3e354cb30d586ce04b9f476cf7"
     },
     {
       "duong_dan": "e_mask/che_van_ban.py",
@@ -58,8 +58,8 @@
     },
     {
       "duong_dan": "e_mask/doc_excel.py",
-      "bytes": 23334,
-      "sha256": "09d3700c527583e3a2191b9833a078ddd9c28c81982618208c6a5df58cecb382"
+      "bytes": 30224,
+      "sha256": "4f246d0979791dfaf055bf84acd5b16d820845a2e83c295dca14b280961e9c26"
     },
     {
       "duong_dan": "e_mask/doc_tep.py",
@@ -108,8 +108,8 @@
     },
     {
       "duong_dan": "e_mask/kho_dinh_danh.py",
-      "bytes": 5074,
-      "sha256": "fd8633450de5ae85484d78d74a8583b3efd5078f19a27221f14326975b16ecb9"
+      "bytes": 12737,
+      "sha256": "a2190eb979714282022146df514d9c4585030755f6ec4a778d0e43af728c7921"
     },
     {
       "duong_dan": "e_mask/kho_ngan.py",
@@ -118,8 +118,8 @@
     },
     {
       "duong_dan": "e_mask/kho_qua_core.py",
-      "bytes": 16704,
-      "sha256": "1b7f9023d4e73b5ac45df98988ef2bea4085db1532c2a7361e9d0f799159129d"
+      "bytes": 26313,
+      "sha256": "c3e08b11d81d0557aa06eee5fa50383cd7bf2c9b0def9b98f7fe936fa9167ed3"
     },
     {
       "duong_dan": "e_mask/khoi_tao_ngan.py",
@@ -183,8 +183,8 @@
     },
     {
       "duong_dan": "e_mask/phong_bi.py",
-      "bytes": 14780,
-      "sha256": "83ccbdaba8d10a68b247068a9ce7fa72d6962e415ce46595538697b302541625"
+      "bytes": 21633,
+      "sha256": "d9793b13a40e9902a125efd3cbac3b98c72d54c70ce8278672d720f2a3993902"
     },
     {
       "duong_dan": "e_mask/quyen_yeu_cau.py",
@@ -218,8 +218,8 @@
     },
     {
       "duong_dan": "e_mask/tep_excel.py",
-      "bytes": 25411,
-      "sha256": "b22d1e60bacd13b7f10874b30d8d6d0b9685c88697e4c02fe27dfe5437758972"
+      "bytes": 28020,
+      "sha256": "9eee85619ed5e03edc6e1873c8b65e1a289138a6c7ca376fc1fbfaef3e4e7c3c"
     },
     {
       "duong_dan": "e_mask/tep_word.py",
@@ -283,8 +283,8 @@
     },
     {
       "duong_dan": "engine.json",
-      "bytes": 8873,
-      "sha256": "0077c6a90e2abd8be485ea767fb05914b45049c51f64782b5b9f237549dc9021"
+      "bytes": 9740,
+      "sha256": "18ae3bc83f5d8307223151d460d3ed265daee24059ef39432499da8b2fa8f630"
     },
     {
       "duong_dan": "requirements.lock",

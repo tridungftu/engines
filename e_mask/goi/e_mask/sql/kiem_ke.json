@@ -3,13 +3,13 @@
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 50514,
-      "sha256": "474d91b91a4d0e46e00f759e25054e2a401d527f81111c98cb73b26c31f83a14"
+      "bytes": 52194,
+      "sha256": "f17dc9936507b616c3e40096f99c368269738bc91fb4f268a8ddaa843b240bd5"
     },
     {
       "duong_dan": "NGUON.md",
-      "bytes": 103730,
-      "sha256": "915b4d2d0a26402c02b34b1e3b922510ebe9655471ff2af835d055db7e68002a"
+      "bytes": 111205,
+      "sha256": "acbca38a5821cdc3a473278cf21255cd359a5bb3d92a16bb74d8534d2957d5d0"
     },
     {
       "duong_dan": "README.md",
@@ -98,8 +98,8 @@
     },
     {
       "duong_dan": "e_mask/ho_so_tep.py",
-      "bytes": 5827,
-      "sha256": "e09533a55d77c090c41d2bc15761a8ecb3fb0464fd26e5405e2818ccb10eb3c7"
+      "bytes": 12502,
+      "sha256": "80b3e511a3912c0fcb10efc120d1049ffaa14675837706fca6847256d80ecafa"
     },
     {
       "duong_dan": "e_mask/kho_anh_xa_ram.py",
@@ -130,6 +130,16 @@
       "duong_dan": "e_mask/mo_che_ram.py",
       "bytes": 15653,
       "sha256": "3894db53a087f2faf2244cf360f548c20c721744f15b45bfc982c1d336314799"
+    },
+    {
+      "duong_dan": "e_mask/mo_tep_excel.py",
+      "bytes": 505,
+      "sha256": "d75afb2eee7886ed9f6ab55cee021257233ba216f465bf741c3452b3ddd87c7f"
+    },
+    {
+      "duong_dan": "e_mask/mo_tep_word.py",
+      "bytes": 10939,
+      "sha256": "3bced79c8a887e167a9dae39133e9675f2e847893de35355be3d435f544d48cb"
     },
     {
       "duong_dan": "e_mask/ngan.py",

@@ -1,0 +1,28 @@
+{
+  "phien_ban": 1,
+  "chi_demo": true,
+  "nguon": "Development B11 tự dựng; không dùng recipe/gold/câu văn hoặc định danh của held-out B10.",
+  "ten": "Công ty DEMO Kim Sơn Phát",
+  "alias": "[[KH-DEMO-B11-DEV]]",
+  "tien": {"so": 3754200, "tien_te": "VND"},
+  "ngay": "2026-11-09",
+  "marker": ["TEST", "SAMPLE", "DRAFT", "DEMO"],
+  "chi_tieu": ["chi", "vốn", "nợ", "lãi", "lỗ", "thu"],
+  "trang_thai": ["đã đối chiếu", "đang tổng hợp", "sẽ cập nhật", "đã được hạch toán", "sẽ được kiểm tra"],
+  "chan": [
+    "Ông tổng thu đã đối chiếu.",
+    "Họ tên: tổng chi đã đối chiếu.",
+    "Công ty DRAFT",
+    "SAMPLE Công ty DEMO Chưa Duyệt",
+    "TEST; trần an đã ký.",
+    "DEMO; Tài khoản: 2026-11-09",
+    "SAMPLE; 0123456789012",
+    "DRAFT; CCCD: 09/11/2026",
+    "tổng Thu đã đối chiếu.",
+    "tổng chi của ông trần an đã đối chiếu.",
+    "khách hàng SAMPLE",
+    "người liên hệ: DRAFT",
+    "khách hàng: tổng thu đã đối chiếu.",
+    "người liên hệ: tổng chi đã đối chiếu."
+  ]
+}

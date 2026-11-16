@@ -31,6 +31,7 @@ from .tra_cuu_dinh_danh import (
     TRAN_KY_TU_DO, TRAN_UNG_VIEN, TRAN_VI_TRI, TraCuuDinhDanh, UngVien,
     chan_phat_hanh, loi as loi_ung_vien,
 )
+from .tep_word import _canh_bao_chu_chua_dat
 from .va_xml import bam, lap_kich_ban, _goc_vung
 
 
@@ -260,12 +261,13 @@ def _kiem_vung(goc, phep, buoc):
     _kiem_span(m)
     tat_ca = [(goc[a:b], 'KHAC', True) for a, b, _ in phep]
     con_sot, day_du = che._kiem_con_sot(m.da_che, tat_ca)
+    if che.core.leaked_known(m.da_che, tat_ca):
+        raise _loi('MASK_DINH_DANH_CHUA_DAT')
     ngay = [(a, b) for a, b, loai, _ in che._cac_tien_ngay(m.da_che) if loai == 'ngay']
-    for muc in con_sot:
+    for muc in _canh_bao_chu_chua_dat(m.da_che, con_sot):
         buoc.kiem()
         a, b = muc['vi_tri']['bat_dau'], muc['vi_tri']['ket_thuc']
-        if (muc['nhom'] not in {'GIAY_TO', 'TAI_KHOAN'}
-                or not any(x <= a < b <= y for x, y in ngay)):
+        if not che._duoc_mien_ngay(m.da_che, a, b, muc['nhom'], ngay):
             raise _loi('MASK_DINH_DANH_CHUA_DAT')
     if not day_du or not con_sot or not che._kiem_tien_ngay(goc, m.da_che):
         raise _loi('MASK_DINH_DANH_CHUA_DAT')

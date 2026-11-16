@@ -5,10 +5,13 @@ R4 sở hữu toàn bộ dữ liệu, R5 kiểm map/tiền/ngày. B7/B9 còn ph�
 nguồn Local đủ mọi vùng và quyền bàn giao. Không nhận cờ đã kiểm Local.
 Nguồn/symbol/quyền/băm trước và sau được ghi trong NGUON.md.
 """
+from bisect import bisect_right
 from dataclasses import dataclass
 from functools import wraps
 from hashlib import sha256
+import re
 from time import monotonic
+from unicodedata import normalize
 
 from kho_tri_thuc_sdk.engine import ChuaRo, LoiNghiepVu, ViecDaHuy
 
@@ -188,14 +191,97 @@ def _phep_alias(m):
                  for p in m.goc_che if p.loai == 'thay_bi_danh') if m else ()
 
 
+# B11: cú pháp đóng, không có biến chứa tên/chữ tự do. Không thêm câu,
+# tên hoặc mã tệp từ held-out vào luật. Chỉ marker ở đầu đơn vị/đầu trường
+# và nhãn tổng hợp đi liền vị ngữ nghiệp vụ; không miễn cả vùng văn bản.
+_MARKER_KY_THUAT = re.compile(
+    r'(?:^|[\r\n;|])[ \u00a0]*(DEMO|TEST|SAMPLE|DRAFT)(?!\w)(?P<duoi>[^\r\n;|]*)')
+# Lead chốt 17/11/2026: danh sách ĐÓNG sau marker, chỉ đúng cụm chữ
+# thường có dấu, NFC và gọn khoảng trắng; không dùng cho nhánh tổng hợp.
+# Không bổ sung tên/câu/mã tệp từ held-out hoặc khớp tiền tố/hậu tố.
+NHAN_KE_TOAN_SAU_MARKER = (
+    'số sổ cái', 'sổ cái', 'số chứng từ', 'chứng từ', 'số hóa đơn',
+    'hóa đơn', 'số phiếu', 'phiếu thu', 'phiếu chi', 'số tài liệu',
+    'bảng kê', 'bảng', 'trang', 'kỳ', 'tháng', 'quý', 'năm', 'dòng',
+    'cột', 'mục', 'số',
+)
+_NHAN_KE_TOAN_SAU_MARKER = re.compile(
+    r'(?<!\w)(?:' + '|'.join(re.escape(c) for c in sorted(
+        NHAN_KE_TOAN_SAU_MARKER, key=len, reverse=True)) + r')(?!\w)')
+_TONG_HOP = re.compile(
+    r'(?:^|[\r\n;|])[ \u00a0]*((?:[Tt]ổng[ \u00a0]+(?:thu|chi|vốn|nợ|lãi|lỗ)|[Ss]ố[ \u00a0]+dư)'
+    r'[ \u00a0]+(?:đã|đang|sẽ)(?:[ \u00a0]+được)?[ \u00a0]+'
+    r'(?:kiểm[ \u00a0]+tra|đối[ \u00a0]+chiếu|tổng[ \u00a0]+hợp|cập[ \u00a0]+nhật|hạch[ \u00a0]+toán))(?!\w)'
+    r'(?P<duoi>[^\r\n;|]*)')
+
+
+def _duoi_tong_hop_hop_le(chu):
+    """Đuôi chỉ có số/dấu hoặc tiền/ngày đã được bộ kiểm chung nhận diện."""
+    if not any(c.isalpha() for c in chu):
+        return True
+    cuoi = 0
+    for a, b, _, _ in sorted(che._cac_tien_ngay(chu)):
+        if any(c.isalpha() for c in chu[cuoi:a]):
+            return False
+        cuoi = max(cuoi, b)
+    return not any(c.isalpha() for c in chu[cuoi:])
+
+
+def _duoi_marker_hop_le(chu):
+    """Chỉ nhãn đóng và số/tiền/ngày/dấu; không đổi bytes hay offset gốc."""
+    chu = ' '.join(normalize('NFC', chu).split())
+    # Khớp trên cùng chuỗi trước khi xét hợp các khoảng; không xóa tiền/ngày
+    # rồi tạo ranh giới giả cho nhãn dính số, hoặc phá ngày có chữ tháng/năm.
+    mien = [m.span() for m in _NHAN_KE_TOAN_SAU_MARKER.finditer(chu)]
+    mien.extend((a, b) for a, b, _, _ in che._cac_tien_ngay(chu))
+    cuoi = 0
+    for a, b in sorted(mien):
+        if any(c.isalpha() for c in chu[cuoi:a]):
+            return False
+        cuoi = max(cuoi, b)
+    return not any(c.isalpha() for c in chu[cuoi:])
+
+
+def _canh_bao_chu_chua_dat(chu, cac_muc):
+    """Chỉ giữ cảnh báo chưa chứng minh thuộc cú pháp không có tên tự do.
+
+    Không dùng điểm thấp, kho không tìm thấy hoặc Local chưa trả để suy
+    an toàn. Nhãn định danh/danh xưng vẫn thắng; nghi vấn số không đi qua
+    cửa này. Phần còn lại của đơn vị vẫn chịu nguyên bộ hậu kiểm R5.
+    Chỉ miễn khi đuôi tới hết đơn vị không còn chữ tự do: marker
+    chỉ thêm nhãn kế toán đóng, số, tiền, ngày và dấu; tổng hợp giữ luật
+    lượt 3, không nhận danh sách nhãn. Quét cú pháp
+    một lần, tìm khoảng bằng bisect; không quét lại từng cảnh báo.
+    """
+    marker = {m.span(1) for m in _MARKER_KY_THUAT.finditer(chu)
+              if _duoi_marker_hop_le(m.group('duoi'))}
+    tong = tuple(m.span(1) for m in _TONG_HOP.finditer(chu)
+                 if _duoi_tong_hop_hop_le(m.group('duoi')))
+    dau = tuple(a for a, _ in tong)
+    nhan = tuple(che._vung_nhan(chu)) if tong else ()
+    for muc in cac_muc:
+        a, b = muc['vi_tri']['bat_dau'], muc['vi_tri']['ket_thuc']
+        if muc['nhom'] == 'CONG_TY' and (a, b) in marker:
+            continue
+        i = bisect_right(dau, a) - 1
+        if (muc['nhom'] == 'CA_NHAN' and muc.get('ly_do') == 'nghi tên người viết thường'
+                and all(c.split(':', 1)[0] in {'HO_TU_DIEN', 'AM_TEN', 'AM_CHUA_BIET'}
+                        for c in muc.get('can_cu', ()))
+                and i >= 0 and a < b <= tong[i][1]
+                and not any(x < b and a < y for x, y, _ in nhan)):
+            continue
+        yield muc
+
+
 def _kiem_vung(goc, phep, buoc):
-    """Dùng R5; chỉ miễn báo trùng trong ngày hợp lệ không có nhãn định danh.
+    """Dùng R5; miễn báo trùng ngày và cảnh báo chữ có chứng minh B11.
 
     R5 có thể báo GIAY_TO/TAI_KHOAN bên trong một ngày đã được chính
     _cac_tien_ngay nhận diện sau kiểm lịch/nhãn chung với văn bản thường.
     Nhãn tài khoản/giấy tờ thắng hình dạng ngày; chỉ miễn số nằm trọn ngày;
     vẫn kiểm đủ, nguyên tiền/ngày, numeric_review và mọi nghi vấn khác.
-    Không nới detector tên hoặc dùng kết quả này làm chứng cứ Local.
+    Cú pháp đóng B11 chỉ miễn đúng khoảng chữ, không đổi detector chung
+    hoặc dùng kết quả này làm chứng cứ Local.
     """
     try:
         return ket_qua_ram(buoc._ctx.quyen.ma_yeu_cau, goc, phep, buoc=buoc)[1]
@@ -208,8 +294,10 @@ def _kiem_vung(goc, phep, buoc):
     _kiem_span(m)
     tat_ca = [(goc[a:b], 'KHAC', True) for a, b, _ in phep]
     con_sot, day_du = che._kiem_con_sot(m.da_che, tat_ca)
+    if che.core.leaked_known(m.da_che, tat_ca):
+        raise _loi('MASK_DINH_DANH_CHUA_DAT')
     ngay = sorted((a, b) for a, b, loai, _ in che._cac_tien_ngay(m.da_che) if loai == 'ngay')
-    for muc in con_sot:
+    for muc in _canh_bao_chu_chua_dat(m.da_che, con_sot):
         buoc.kiem()
         a, b = muc['vi_tri']['bat_dau'], muc['vi_tri']['ket_thuc']
         if not che._duoc_mien_ngay(m.da_che, a, b, muc['nhom'], ngay):

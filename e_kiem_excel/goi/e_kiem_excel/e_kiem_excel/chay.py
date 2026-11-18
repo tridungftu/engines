@@ -99,8 +99,13 @@ def kiem_toan_ven(viec):
 
 @app.nang_luc("excel.doc_bang@1")
 def doc_bang(viec):
-    _doc_va_kiem(viec)
-    raise LoiNghiepVu("CHUA_LAM", "Chức năng đọc bảng Excel chưa được triển khai ở lát EX-0.")
+    from .doc_bang import doc_klgt
+
+    raw = _doc_va_kiem(viec)
+    phien_ban = f"{app.phieu['ma']} {app.phieu['phien_ban']}"
+    truong, noi_dung = doc_klgt(raw, viec.tham_so, phien_ban, viec.kiem_huy)
+    truong["tep_json"] = viec.tai_tep_ra("bang-da-doc.json", noi_dung, "application/json")
+    return {"loai": "truong", "truong": truong}
 
 
 if __name__ == "__main__":

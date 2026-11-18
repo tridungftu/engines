@@ -37,8 +37,8 @@ def test_manifest():
 def test_demo_khong_thanh_cong_gia():
     kq=CoreGia().chay_thu_demo(app)
     assert len(kq)==3
-    assert [k['trang_thai'] for k in kq]==['XONG','XONG','LOI']
-    assert kq[2]['loi']['ma']=='CHUA_LAM' and kq[2]['ket_qua'] is None
+    assert [k['trang_thai'] for k in kq]==['XONG','XONG','XONG']
+    assert kq[2]['ket_qua']['truong']['so_dong']==30
     for k in kq[:2]:
         assert k['ket_qua']['truong']['tep_bao_cao'] is None
         assert k['ket_qua']['truong']['o_dich'] is None

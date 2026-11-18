@@ -265,7 +265,7 @@
     },
     {
       "nang_luc": "excel.doc_bang@1",
-      "ten": "DEMO Đọc bảng khối lượng — EX-0 CHUA_LAM",
+      "ten": "DEMO Đọc bảng khối lượng xây dựng — EX-4",
       "dau_vao": {
         "loai": "tep",
         "tep_demo": "demo/bang-kl-DEMO.xlsx"

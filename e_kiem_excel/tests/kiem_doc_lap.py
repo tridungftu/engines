@@ -77,7 +77,8 @@ from e_kiem_excel.chay import app
 from kho_tri_thuc_sdk.thu import CoreGia
 kq=CoreGia().chay_thu_demo(app)
 assert len(kq)==3
-assert all(k['trang_thai']=='LOI' and k['loi']['ma']=='CHUA_LAM' and k['ket_qua'] is None for k in kq)
+assert all(k['trang_thai']=='LOI' and k['loi']['ma']=='CHUA_LAM' and k['ket_qua'] is None for k in kq[:2])
+assert kq[2]['trang_thai']=='XONG' and kq[2]['ket_qua']['truong']['so_dong']==30
 assert not any(n=='kho_tri_thuc' or n.startswith('kho_tri_thuc.') for n in sys.modules)
 print('EX_DOC_LAP_DAT')
 '''
@@ -98,7 +99,7 @@ def main():
     for cau in loi:
         print('[LỖI] '+cau)
     if not loi:
-        print('[ĐẠT] AST, cây gói, import cô lập; đã kiểm bằng Core giả (CoreGia), 3/3 lỗi CHUA_LAM đúng EX-0.')
+        print('[ĐẠT] AST, cây gói, import cô lập; đã kiểm bằng Core giả (CoreGia), EX-4 đọc bảng thành công; 2 DEMO toàn vẹn CHUA_LAM.')
     return int(bool(loi))
 
 

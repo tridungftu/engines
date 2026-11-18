@@ -37,3 +37,18 @@ EX-1…EX-4 mới chuyển các phần được phiếu cho phép; EX-0 chỉ đ
 
 SHA-256 fixture ở `tests/demo/bam-fixture.json` ngoài gói; sinh lại bằng
 `python -B e_kiem_excel/tests/demo/sinh_demo.py`. Kiểm kê SHA mọi tệp gói thực hiện EX-6.
+
+## EX-4 — chuyển mã đọc bảng, 18/11/2026
+
+Nguồn `master_hd.py`, commit/SHA-256 đã ghim ở trên, không sửa tệp nguồn:
+
+| Dòng nguồn | Vào gói | Điều chỉnh |
+|---|---|---|
+| 43–51, 62–71 | `doc_bang.py`: `_nfc`, `_bo_dau`, `_num` | Hàm riêng tư theo phân công; lead gộp vào `chuan_hoa.py` sau EX-1. `_num` dùng Decimal, bỏ bool và số không hữu hạn |
+| 629–728 | `doc_bang.py`: `_hdr_text`, `tim_bang_chi_tiet`, `khoa` | Giữ cách tìm cột, chấm điểm, nhóm, công thức khóa và hậu tố; kiểm hủy giữa vòng lặp; lỗi qua `LoiNghiepVu` |
+| 730–765 | `doc_bang.py`: `LABELS`, `tim_so_tong_hop` | Decimal; bỏ ngưỡng `abs(v) > 1`; nhận thêm số dạng chữ qua `_num` kèm cảnh báo khi xuất |
+
+Phần tạo phong bì/JSON, kiểm tham số, nhận đơn vị tiền và cảnh báo là mã mới nội bộ
+bám phiếu §4.2–4.3, §5.2. Không thêm dependency, không mạng, không ghi tệp trên máy.
+`chay.py` chỉ nối `excel.doc_bang@1`; helper đọc chung thêm trả bytes đã kiểm,
+không đổi hành vi năng lực toàn vẹn. Kiểm kê SHA-256 toàn gói để EX-6 thực hiện.

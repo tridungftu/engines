@@ -1,10 +1,13 @@
-"""Cổng SDK nhận tệp; EX-0 kiểm an toàn rồi từ chối phần chưa triển khai."""
+"""Cổng SDK kiểm an toàn tệp; EX-1 thực hiện kiểm toàn vẹn K1–K6."""
 
 from copy import deepcopy
+from hashlib import sha256
 
 from kho_tri_thuc_sdk.engine import Engine, LoiDuongTruyen, LoiNghiepVu
 
 from .nhan_dien import CAU_VUOT_TRAN, TEP_TOI_DA_BYTE, kiem_tep
+from .so_do import SoDo
+from .kiem_tra import KiemTra, ma_hoa_json
 
 
 if not all(callable(getattr(Engine, ten, None)) for ten in ("_ghi", "_lam")):
@@ -73,8 +76,25 @@ def _doc_va_kiem(viec):
 
 @app.nang_luc("excel.toan_ven@1")
 def kiem_toan_ven(viec):
-    _doc_va_kiem(viec)
-    raise LoiNghiepVu("CHUA_LAM", "Chức năng kiểm toàn vẹn Excel chưa được triển khai ở lát EX-0.")
+    raw = _doc_va_kiem(viec)
+    sd = SoDo(raw)
+    try:
+        kt = KiemTra(sd, viec.tham_so).chay(viec)
+        bam = "sha256:" + sha256(raw).hexdigest()
+        phien_ban = "e_kiem_excel " + app.phieu["phien_ban"]
+        chi_tiet = kt.ket_qua_json(bam, phien_ban)
+        viec.kiem_huy()
+        tep_json = viec.tai_tep_ra("toan-ven.json", ma_hoa_json(chi_tiet), "application/json")
+        return {"loai": "truong", "truong": {
+            "so_co_cao": sum(p["muc"] == "Cao" for p in kt.ph),
+            "so_co_trung_binh": sum(p["muc"] == "Trung bình" for p in kt.ph),
+            "so_kiem_soat": sum(p["muc"] == "Kiểm soát" for p in kt.ph),
+            "so_ngoai_nhom": None, "o_dich": None, "tep_bao_cao": None,
+            "da_tinh_lai": not any(d[8] for d in kt.kq["sheet"]),
+            "co_lien_ket_ngoai": bool(kt._ngoai_o),
+            "tep_json": tep_json, "bam_dau_vao": bam, "phien_ban_engine": phien_ban}}
+    finally:
+        sd.dong()
 
 
 @app.nang_luc("excel.doc_bang@1")

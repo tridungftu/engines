@@ -243,7 +243,7 @@
   "chay_thu_demo": [
     {
       "nang_luc": "excel.toan_ven@1",
-      "ten": "DEMO Kiểm toàn vẹn có bộ nhóm — EX-0 CHUA_LAM",
+      "ten": "DEMO Kiểm toàn vẹn — EX-1 K1–K6, chưa chạy bộ nhóm/K7/K8",
       "dau_vao": {
         "loai": "tep",
         "tep_demo": "demo/K1-K8-DEMO.xlsx"
@@ -256,7 +256,7 @@
     },
     {
       "nang_luc": "excel.toan_ven@1",
-      "ten": "DEMO Kiểm toàn vẹn không bộ nhóm — EX-0 CHUA_LAM",
+      "ten": "DEMO Kiểm toàn vẹn — EX-1 K1–K6 không bộ nhóm",
       "dau_vao": {
         "loai": "tep",
         "tep_demo": "demo/sach-DEMO.xlsx"

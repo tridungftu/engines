@@ -1,0 +1,536 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Kết quả toàn vẹn Excel — EX-1, chờ lead duyệt",
+  "description": "Số nghiệp vụ và số đếm là chuỗi thập phân; phien_ban là số nguyên phiên bản cấu trúc. K7/K8 dành cho lát sau. gia_tri là số hoặc nội dung ô, chưa suy ra đơn vị tiền.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "phien_ban": {
+      "const": 1,
+      "type": "integer"
+    },
+    "phien_ban_engine": {
+      "type": "string"
+    },
+    "bam_dau_vao": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "o_dich": {
+      "type": "null"
+    },
+    "bo_nhom": {
+      "type": "null"
+    },
+    "phat_hien": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "muc",
+          "kiem",
+          "o",
+          "mo_ta",
+          "so_o",
+          "gia_tri",
+          "tai_lieu"
+        ],
+        "properties": {
+          "muc": {
+            "enum": [
+              "Cao",
+              "Trung bình",
+              "Kiểm soát"
+            ]
+          },
+          "kiem": {
+            "enum": [
+              "K1",
+              "K2",
+              "K3",
+              "K4",
+              "K5",
+              "K6"
+            ]
+          },
+          "o": {
+            "type": "string"
+          },
+          "mo_ta": {
+            "type": "string"
+          },
+          "so_o": {
+            "$ref": "#/$defs/dem"
+          },
+          "gia_tri": {
+            "$ref": "#/$defs/gia_tri"
+          },
+          "tai_lieu": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "k1_so_ten_loi": {
+      "$ref": "#/$defs/dem"
+    },
+    "k1_sheet": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sheet",
+          "trang_thai",
+          "so_dong",
+          "so_cot",
+          "so_cong_thuc",
+          "so_go_tay",
+          "so_ref_loi",
+          "so_o_loi",
+          "so_chua_tinh"
+        ],
+        "properties": {
+          "sheet": {
+            "type": "string"
+          },
+          "trang_thai": {
+            "type": "string"
+          },
+          "so_dong": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_cot": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_cong_thuc": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_go_tay": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_ref_loi": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_o_loi": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_chua_tinh": {
+            "$ref": "#/$defs/dem"
+          }
+        }
+      }
+    },
+    "k1_lien_ket_ngoai": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stt",
+          "ten_tep",
+          "so_cong_thuc"
+        ],
+        "properties": {
+          "stt": {
+            "$ref": "#/$defs/dem"
+          },
+          "ten_tep": {
+            "type": "string"
+          },
+          "so_cong_thuc": {
+            "$ref": "#/$defs/dem"
+          }
+        }
+      }
+    },
+    "k2_mau_cot": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sheet",
+          "cot",
+          "tieu_de",
+          "so_cong_thuc",
+          "so_khong_tong",
+          "so_theo_mau",
+          "ty_le",
+          "so_mau",
+          "cong_thuc_mau"
+        ],
+        "properties": {
+          "sheet": {
+            "type": "string"
+          },
+          "cot": {
+            "type": "string"
+          },
+          "tieu_de": {
+            "type": "string"
+          },
+          "so_cong_thuc": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_khong_tong": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_theo_mau": {
+            "$ref": "#/$defs/dem"
+          },
+          "ty_le": {
+            "$ref": "#/$defs/so"
+          },
+          "so_mau": {
+            "$ref": "#/$defs/dem"
+          },
+          "cong_thuc_mau": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "k2_lech_mau": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sheet",
+          "o",
+          "tieu_de",
+          "nhan_dong",
+          "cong_thuc",
+          "cong_thuc_mau",
+          "gia_tri"
+        ],
+        "properties": {
+          "sheet": {
+            "type": "string"
+          },
+          "o": {
+            "$ref": "#/$defs/o"
+          },
+          "tieu_de": {
+            "type": "string"
+          },
+          "nhan_dong": {
+            "type": "string"
+          },
+          "cong_thuc": {
+            "type": "string"
+          },
+          "cong_thuc_mau": {
+            "type": "string"
+          },
+          "gia_tri": {
+            "$ref": "#/$defs/gia_tri"
+          }
+        }
+      }
+    },
+    "k2_go_tay": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sheet",
+          "o",
+          "tieu_de",
+          "nhan_dong",
+          "gia_tri",
+          "cong_thuc_mau",
+          "nhom"
+        ],
+        "properties": {
+          "sheet": {
+            "type": "string"
+          },
+          "o": {
+            "$ref": "#/$defs/o"
+          },
+          "tieu_de": {
+            "type": "string"
+          },
+          "nhan_dong": {
+            "type": "string"
+          },
+          "gia_tri": {
+            "$ref": "#/$defs/gia_tri"
+          },
+          "cong_thuc_mau": {
+            "type": "string"
+          },
+          "nhom": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "k3_lien_ket_dong": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sheet",
+          "o",
+          "tieu_de",
+          "nhan_dong",
+          "cong_thuc",
+          "tro_toi",
+          "nhan_dich",
+          "do_giong",
+          "ket_luan",
+          "gia_tri"
+        ],
+        "properties": {
+          "sheet": {
+            "type": "string"
+          },
+          "o": {
+            "$ref": "#/$defs/o"
+          },
+          "tieu_de": {
+            "type": "string"
+          },
+          "nhan_dong": {
+            "type": "string"
+          },
+          "cong_thuc": {
+            "type": "string"
+          },
+          "tro_toi": {
+            "type": "string"
+          },
+          "nhan_dich": {
+            "type": "string"
+          },
+          "do_giong": {
+            "$ref": "#/$defs/so"
+          },
+          "ket_luan": {
+            "type": "string"
+          },
+          "gia_tri": {
+            "$ref": "#/$defs/gia_tri"
+          }
+        }
+      }
+    },
+    "k4_sheet_an": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sheet",
+          "trang_thai",
+          "so_dong",
+          "so_cong_thuc",
+          "so_tham_chieu",
+          "tu_sheet",
+          "ban_hien",
+          "so_o_khac"
+        ],
+        "properties": {
+          "sheet": {
+            "type": "string"
+          },
+          "trang_thai": {
+            "type": "string"
+          },
+          "so_dong": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_cong_thuc": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_tham_chieu": {
+            "$ref": "#/$defs/dem"
+          },
+          "tu_sheet": {
+            "type": "string"
+          },
+          "ban_hien": {
+            "type": "string"
+          },
+          "so_o_khac": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/dem"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "k4_khac_ban_hien": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sheet_hien",
+          "sheet_an",
+          "o",
+          "nhan_dong",
+          "gia_tri_hien",
+          "gia_tri_an"
+        ],
+        "properties": {
+          "sheet_hien": {
+            "type": "string"
+          },
+          "sheet_an": {
+            "type": "string"
+          },
+          "o": {
+            "$ref": "#/$defs/o"
+          },
+          "nhan_dong": {
+            "type": "string"
+          },
+          "gia_tri_hien": {
+            "$ref": "#/$defs/gia_tri"
+          },
+          "gia_tri_an": {
+            "$ref": "#/$defs/gia_tri"
+          }
+        }
+      }
+    },
+    "k5_so_dang_chu": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sheet",
+          "o",
+          "tieu_de",
+          "nhan_dong",
+          "noi_dung"
+        ],
+        "properties": {
+          "sheet": {
+            "type": "string"
+          },
+          "o": {
+            "$ref": "#/$defs/o"
+          },
+          "tieu_de": {
+            "type": "string"
+          },
+          "nhan_dong": {
+            "type": "string"
+          },
+          "noi_dung": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "k6_hang_so": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "hang_so",
+          "loai",
+          "so_cong_thuc",
+          "so_trong_cay",
+          "vi_du_o",
+          "cong_thuc"
+        ],
+        "properties": {
+          "hang_so": {
+            "type": "string"
+          },
+          "loai": {
+            "type": "string"
+          },
+          "so_cong_thuc": {
+            "$ref": "#/$defs/dem"
+          },
+          "so_trong_cay": {
+            "$ref": "#/$defs/dem"
+          },
+          "vi_du_o": {
+            "type": "string"
+          },
+          "cong_thuc": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "k7_cay": {
+      "type": "array",
+      "maxItems": 0,
+      "description": "Chưa thực hiện ở EX-1."
+    },
+    "k8_nguon": {
+      "type": "array",
+      "maxItems": 0,
+      "description": "Chưa thực hiện ở EX-1."
+    },
+    "canh_bao": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "dem": {
+      "type": "string",
+      "pattern": "^[0-9]+$"
+    },
+    "so": {
+      "type": "string",
+      "pattern": "^-?[0-9]+(\\.[0-9]+)?$"
+    },
+    "gia_tri": {
+      "type": [
+        "string",
+        "boolean",
+        "null"
+      ]
+    },
+    "o": {
+      "type": "string",
+      "pattern": "^.+![A-Z]{1,3}[1-9][0-9]*$"
+    }
+  },
+  "required": [
+    "phien_ban",
+    "phien_ban_engine",
+    "bam_dau_vao",
+    "o_dich",
+    "bo_nhom",
+    "phat_hien",
+    "k1_so_ten_loi",
+    "k1_sheet",
+    "k1_lien_ket_ngoai",
+    "k2_mau_cot",
+    "k2_lech_mau",
+    "k2_go_tay",
+    "k3_lien_ket_dong",
+    "k4_sheet_an",
+    "k4_khac_ban_hien",
+    "k5_so_dang_chu",
+    "k6_hang_so",
+    "k7_cay",
+    "k8_nguon",
+    "canh_bao"
+  ]
+}

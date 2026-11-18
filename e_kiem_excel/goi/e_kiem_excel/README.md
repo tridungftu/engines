@@ -1,8 +1,11 @@
-# Kiểm và đọc Excel — EX-0
+# Kiểm và đọc Excel — EX-1
 
 Khung SDK 2.2.0 cho `excel.toan_ven@1` và `excel.doc_bang@1`.
-Kiểm đuôi, chữ ký, ZIP/XML, trần ô trước khi nạp workbook. Hai năng lực hiện
-trả lỗi `CHUA_LAM`; chưa thực hiện kiểm K1–K8 hoặc đọc bảng nghiệp vụ.
+Kiểm đuôi, chữ ký, ZIP/XML, trần ô trước khi nạp workbook. `excel.toan_ven@1`
+chạy K1–K6, tải JSON chi tiết qua Core; số trong JSON là chuỗi thập phân.
+K7/K8 và báo cáo Excel chưa triển khai; kết quả ghi cảnh báo và để trống/null.
+K6 liệt kê hằng số nhưng chưa phát cờ theo cây K7. `excel.doc_bang@1` vẫn
+trả lỗi `CHUA_LAM`, thuộc lát EX-4 làm ở worktree khác.
 
 Không mạng ngoài Core, không CSDL, không ngăn/cấu hình, không lưu dữ liệu trên máy.
 DEMO hoàn toàn giả: Công ty DEMO Ánh Dương. Script sinh ở `tests/demo/sinh_demo.py`

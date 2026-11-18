@@ -40,7 +40,11 @@ def kiem_doc_lap(goi=GOI):
                 goc=module.split('.')[0]
                 if goc in MODULE_CAM or goc not in sys.stdlib_module_names|CHO_PHEP:
                     loi.append(f'{ten}:{nut.lineno}: import bị cấm hoặc chưa ghim.')
-            if isinstance(nut,ast.Name) and nut.id in TEN_CAM or isinstance(nut,ast.Attribute) and nut.attr in TEN_CAM:
+            # re.compile biên dịch mẫu regex cố định của mã gốc, không chạy mã Python.
+            la_regex = (isinstance(nut,ast.Attribute) and nut.attr=='compile'
+                        and isinstance(nut.value,ast.Name) and nut.value.id=='re')
+            if (isinstance(nut,ast.Name) and nut.id in TEN_CAM
+                    or isinstance(nut,ast.Attribute) and nut.attr in TEN_CAM and not la_regex):
                 loi.append(f'{ten}:{nut.lineno}: cơ chế động/kênh cũ bị cấm.')
             if isinstance(nut,ast.Constant) and isinstance(nut.value,str):
                 if any(x in nut.value for x in ('kho_tri_thuc.', 'ma-nguon', 'shim-kho_tri_thuc', 'tu-core-cu')):
@@ -77,7 +81,9 @@ from e_kiem_excel.chay import app
 from kho_tri_thuc_sdk.thu import CoreGia
 kq=CoreGia().chay_thu_demo(app)
 assert len(kq)==3
-assert all(k['trang_thai']=='LOI' and k['loi']['ma']=='CHUA_LAM' and k['ket_qua'] is None for k in kq)
+assert [k['trang_thai'] for k in kq]==['XONG','XONG','LOI']
+assert kq[2]['loi']['ma']=='CHUA_LAM' and kq[2]['ket_qua'] is None
+assert all(k['ket_qua']['truong']['tep_bao_cao'] is None for k in kq[:2])
 assert not any(n=='kho_tri_thuc' or n.startswith('kho_tri_thuc.') for n in sys.modules)
 print('EX_DOC_LAP_DAT')
 '''
@@ -98,7 +104,7 @@ def main():
     for cau in loi:
         print('[LỖI] '+cau)
     if not loi:
-        print('[ĐẠT] AST, cây gói, import cô lập; đã kiểm bằng Core giả (CoreGia), 3/3 lỗi CHUA_LAM đúng EX-0.')
+        print('[ĐẠT] AST, cây gói, import cô lập; đã kiểm bằng Core giả (CoreGia): 2/2 DEMO toàn vẹn XONG, đọc bảng CHUA_LAM (EX-4).')
     return int(bool(loi))
 
 

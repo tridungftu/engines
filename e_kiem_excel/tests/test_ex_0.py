@@ -37,7 +37,11 @@ def test_manifest():
 def test_demo_khong_thanh_cong_gia():
     kq=CoreGia().chay_thu_demo(app)
     assert len(kq)==3
-    assert all(k['trang_thai']=='LOI' and k['loi']['ma']=='CHUA_LAM' and k['ket_qua'] is None for k in kq)
+    assert [k['trang_thai'] for k in kq]==['XONG','XONG','LOI']
+    assert kq[2]['loi']['ma']=='CHUA_LAM' and kq[2]['ket_qua'] is None
+    for k in kq[:2]:
+        assert k['ket_qua']['truong']['tep_bao_cao'] is None
+        assert k['ket_qua']['truong']['o_dich'] is None
 
 
 def test_fixture_tat_dinh(demo,tmp_path):
@@ -148,7 +152,7 @@ def test_defusedxml_hoat_dong(demo):
 
 
 @pytest.mark.parametrize('nl',['excel.toan_ven@1','excel.doc_bang@1'])
-@pytest.mark.parametrize('ten,ma',[('cu-DEMO.xls','TEP_KHONG_HO_TRO'),('thuc-the-DEMO.xlsx','TEP_HONG'),('sach-DEMO.xlsx','CHUA_LAM')])
+@pytest.mark.parametrize('ten,ma',[('cu-DEMO.xls','TEP_KHONG_HO_TRO'),('thuc-the-DEMO.xlsx','TEP_HONG')])
 def test_core_gia_kiem_truoc_openpyxl(demo,monkeypatch,nl,ten,ma):
     def cam(*a,**k):
         pytest.fail('Không được nạp openpyxl trong khung EX-0.')
@@ -168,7 +172,7 @@ def test_mime_xlsm_sdk(demo,gui_kem):
     viec_id=core.giao_viec('excel.toan_ven@1',pb,gui_kem_dau_vao=gui_kem)
     core.chay(app)
     k=core.xem(viec_id)
-    assert k['loi']['ma']=='CHUA_LAM'
+    assert k['trang_thai']=='XONG'
     assert tep['mime'].endswith('macroEnabled.12')  # không sửa phong bì của caller
 
 

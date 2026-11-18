@@ -1,0 +1,81 @@
+{
+  "nhan": "Công ty DEMO Ánh Dương",
+  "python": "3.13.14",
+  "he_dieu_hanh": "Windows",
+  "openpyxl": "3.1.5",
+  "defusedxml": "0.7.1",
+  "profile": "ZIP_DEFLATED; 20 cột, 15 chuỗi DEMO hex/5 công thức mỗi dòng; giữ hai workbook trong RAM",
+  "do": [
+    {
+      "tep_byte": 5237078,
+      "giai_nen_byte": 10745255,
+      "so_o": 44481,
+      "giay": 3.931,
+      "tracemalloc_dinh_byte": 54314901,
+      "rss_nen_byte": 42934272,
+      "rss_sau_byte": 159682560,
+      "rss_dinh_byte": 167641088,
+      "nhan_dien": {
+        "so_o": 44481,
+        "so_entry": 5,
+        "giai_nen_byte": 10745255,
+        "so_o_vung": 44500
+      },
+      "sha256": "237c8a82fcecbdf7f4e65dcafa87cac39a84d6e2dd532f88235ee8a98a976557",
+      "co_mib": 5
+    },
+    {
+      "tep_byte": 10474292,
+      "giai_nen_byte": 21520535,
+      "so_o": 88961,
+      "giay": 8.032,
+      "tracemalloc_dinh_byte": 108659122,
+      "rss_nen_byte": 48312320,
+      "rss_sau_byte": 281788416,
+      "rss_dinh_byte": 293285888,
+      "nhan_dien": {
+        "so_o": 88961,
+        "so_entry": 5,
+        "giai_nen_byte": 21520535,
+        "so_o_vung": 88980
+      },
+      "sha256": "889fd7191aa919ff7d9f312a8344c55d4f59efcda0c825f6d13ee4ae425e667c",
+      "co_mib": 10
+    },
+    {
+      "tep_byte": 20948296,
+      "giai_nen_byte": 43085735,
+      "so_o": 177901,
+      "giay": 16.425,
+      "tracemalloc_dinh_byte": 217329237,
+      "rss_nen_byte": 58494976,
+      "rss_sau_byte": 544456704,
+      "rss_dinh_byte": 565501952,
+      "nhan_dien": {
+        "so_o": 177901,
+        "so_entry": 5,
+        "giai_nen_byte": 43085735,
+        "so_o_vung": 177920
+      },
+      "sha256": "bf09e32575c4abb91646bbbe75f25d5d2fc4566af8685a0741ae5fc69768bd52",
+      "co_mib": 20
+    }
+  ],
+  "mat_do_250k": {
+    "tep_byte": 897056,
+    "giai_nen_byte": 9280226,
+    "so_o": 249981,
+    "giay": 12.662,
+    "tracemalloc_dinh_byte": 190610997,
+    "rss_nen_byte": 38998016,
+    "rss_sau_byte": 575385600,
+    "rss_dinh_byte": 575385600,
+    "nhan_dien": {
+      "so_o": 249981,
+      "so_entry": 5,
+      "giai_nen_byte": 9280226,
+      "so_o_vung": 250000
+    },
+    "sha256": "78b09c3bf42d184952a328b308be403b5a5afc019be76afd8aab49d1fd113b90"
+  }
+}

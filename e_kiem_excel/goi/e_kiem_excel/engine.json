@@ -1,0 +1,281 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_kiem_excel",
+  "ten": "Kiểm và đọc file Excel",
+  "phien_ban": "0.1.0",
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "api": "v1",
+    "sdk": ">=2.2.0 <3.0.0"
+  },
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {
+    "lenh": [
+      "{python}",
+      "-m",
+      "e_kiem_excel.chay"
+    ],
+    "thu_muc": "."
+  },
+  "nang_luc": [
+    {
+      "ma": "excel.toan_ven@1",
+      "ten": "Kiểm tính toàn vẹn file Excel",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "truong",
+      "huy_duoc": true,
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 120,
+        "mime": [
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/vnd.ms-excel.sheet.macroenabled.12",
+          "application/octet-stream"
+        ]
+      },
+      "truong_ra": [
+        {
+          "ma": "so_co_cao",
+          "ten": "Số cờ mức Cao",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_co_trung_binh",
+          "ten": "Số cờ mức Trung bình",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_kiem_soat",
+          "ten": "Số mục cần kiểm soát",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_ngoai_nhom",
+          "ten": "Số ô nhập tay ngoài nhóm",
+          "kieu": "so"
+        },
+        {
+          "ma": "o_dich",
+          "ten": "Ô đích đã dùng",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "da_tinh_lai",
+          "ten": "File đã tính lại",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "co_lien_ket_ngoai",
+          "ten": "Có liên kết file ngoài đang dùng",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "tep_bao_cao",
+          "ten": "Báo cáo Lớp 1 (Excel)",
+          "kieu": "tep"
+        },
+        {
+          "ma": "tep_json",
+          "ten": "Kết quả chi tiết (JSON)",
+          "kieu": "tep"
+        },
+        {
+          "ma": "bam_dau_vao",
+          "ten": "Mã băm tệp vào",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "ten": "Phiên bản engine",
+          "kieu": "van_ban"
+        }
+      ],
+      "tham_so": [
+        {
+          "ma": "o_dich",
+          "ten": "Ô đích cần truy vết",
+          "kieu": "van_ban",
+          "mac_dinh": "",
+          "toi_da": 512
+        },
+        {
+          "ma": "nhan_o_dich_json",
+          "ten": "Nhãn tự tìm ô đích (JSON)",
+          "kieu": "van_ban",
+          "mac_dinh": "",
+          "toi_da": 4096
+        },
+        {
+          "ma": "bo_nhom_json",
+          "ten": "Bộ nhóm dữ liệu gốc (JSON)",
+          "kieu": "van_ban",
+          "mac_dinh": "",
+          "toi_da": 32768
+        },
+        {
+          "ma": "kiem_nguon_kl",
+          "ten": "Kiểm nguồn khối lượng (K8)",
+          "kieu": "co_khong",
+          "mac_dinh": false
+        }
+      ]
+    },
+    {
+      "ma": "excel.doc_bang@1",
+      "ten": "Đọc bảng Excel nhiều tầng tiêu đề",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "truong",
+      "huy_duoc": true,
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 120,
+        "mime": [
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/vnd.ms-excel.sheet.macroenabled.12",
+          "application/octet-stream"
+        ]
+      },
+      "truong_ra": [
+        {
+          "ma": "tep_json",
+          "ten": "Bảng đã đọc (JSON)",
+          "kieu": "tep"
+        },
+        {
+          "ma": "sheet",
+          "ten": "Sheet chứa bảng",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "dong_tieu_de",
+          "ten": "Dòng tiêu đề",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_dong",
+          "ten": "Số dòng dữ liệu",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_dong_nhom",
+          "ten": "Số dòng tiêu đề nhóm",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_canh_bao",
+          "ten": "Số cảnh báo",
+          "kieu": "so"
+        },
+        {
+          "ma": "gia_tri_hop_dong",
+          "ten": "Giá trị hợp đồng",
+          "kieu": "so_tien"
+        },
+        {
+          "ma": "gia_tri_de_nghi",
+          "ten": "Giá trị đề nghị thanh toán kỳ này",
+          "kieu": "so_tien"
+        },
+        {
+          "ma": "tien_te_chua_ro",
+          "ten": "Tiền tệ chưa rõ",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "bam_dau_vao",
+          "ten": "Mã băm tệp vào",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "ten": "Phiên bản engine",
+          "kieu": "van_ban"
+        }
+      ],
+      "tham_so": [
+        {
+          "ma": "khuon",
+          "ten": "Khuôn đọc bảng",
+          "kieu": "chon",
+          "bat_buoc": true,
+          "mac_dinh": "xay_dung_klgt",
+          "lua_chon": [
+            {
+              "ma": "xay_dung_klgt",
+              "ten": "Bảng khối lượng xây dựng"
+            },
+            {
+              "ma": "tong_quat",
+              "ten": "Bảng theo khuôn cột"
+            }
+          ]
+        },
+        {
+          "ma": "khuon_cot_json",
+          "ten": "Khuôn cột (JSON)",
+          "kieu": "van_ban",
+          "mac_dinh": "",
+          "toi_da": 32768,
+          "mo_ta": "Bắt buộc khi chọn Bảng theo khuôn cột."
+        },
+        {
+          "ma": "tien_te",
+          "ten": "Mã tiền tệ ISO",
+          "kieu": "van_ban",
+          "mac_dinh": "",
+          "toi_da": 3
+        }
+      ]
+    }
+  ],
+  "loai_du_lieu_rieng": [],
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
+  "chay_thu_demo": [
+    {
+      "nang_luc": "excel.toan_ven@1",
+      "ten": "DEMO Kiểm toàn vẹn có bộ nhóm — EX-0 CHUA_LAM",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/K1-K8-DEMO.xlsx"
+      },
+      "tham_so": {
+        "o_dich": "BTH!J39",
+        "bo_nhom_json": "{\"phien_ban\": 1, \"ten_bo\": \"Nhóm DEMO\", \"nhom\": [{\"ma\": \"demo\", \"ten\": \"Đơn giá DEMO\", \"tai_lieu\": \"Bảng giá DEMO\", \"khi\": [{\"vung\": [\"tieu_de_cot\"], \"tat_ca\": [[\"don gia\"]]}]}]}",
+        "kiem_nguon_kl": true
+      }
+    },
+    {
+      "nang_luc": "excel.toan_ven@1",
+      "ten": "DEMO Kiểm toàn vẹn không bộ nhóm — EX-0 CHUA_LAM",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/sach-DEMO.xlsx"
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "excel.doc_bang@1",
+      "ten": "DEMO Đọc bảng khối lượng — EX-0 CHUA_LAM",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/bang-kl-DEMO.xlsx"
+      },
+      "tham_so": {
+        "khuon": "xay_dung_klgt",
+        "tien_te": "VND"
+      }
+    }
+  ],
+  "bi_mat": [],
+  "webhook": null
+}

@@ -1,0 +1,109 @@
+{
+  "nhan": "Công ty DEMO Ánh Dương",
+  "tien_te": "VND",
+  "ngay": "2026-10-30",
+  "K1-K8-DEMO.xlsx": {
+    "o_dich": "BTH!J39",
+    "kiem_nguon_kl": true,
+    "dau_hieu": [
+      {
+        "kiem": "K1",
+        "muc": "Cao",
+        "o": "BTH!M7",
+        "ly_do": "Công thức #REF! có giá trị lỗi lưu"
+      },
+      {
+        "kiem": "K2",
+        "muc": "Cao",
+        "o": "BTH!J20",
+        "ly_do": "Nhập tay giữa hơn 10 công thức cùng mẫu"
+      },
+      {
+        "kiem": "K1",
+        "muc": "Trung bình",
+        "o": "BTH",
+        "ly_do": "Công thức chứa #REF!"
+      },
+      {
+        "kiem": "K2",
+        "muc": "Trung bình",
+        "o": "BTH!F18",
+        "o_lien_quan": [
+          "BTH!F18",
+          "BTH!J21"
+        ],
+        "ly_do": "Mã gốc gom hai công thức lệch mẫu theo sheet"
+      },
+      {
+        "kiem": "K3",
+        "muc": "Cao",
+        "o": "BTH!F18",
+        "ly_do": "Trỏ lệch tên công tác trong cặp sheet có 30 liên kết"
+      },
+      {
+        "kiem": "K4",
+        "muc": "Trung bình",
+        "o": "An",
+        "ly_do": "Sheet ẩn được tham chiếu"
+      },
+      {
+        "kiem": "K5",
+        "muc": "Trung bình",
+        "o": "BTH!P10",
+        "ly_do": "Số lưu dạng chữ"
+      },
+      {
+        "kiem": "K6",
+        "muc": "Trung bình",
+        "o": "BTH!J21",
+        "ly_do": "Hằng 1.08 trong cột cây K7"
+      },
+      {
+        "kiem": "K7",
+        "muc": "Cao",
+        "o": "BTH!O1",
+        "ly_do": "Ô nhập tay ngoài nhóm"
+      },
+      {
+        "kiem": "K8",
+        "muc": "Cao",
+        "o": "BTH!E",
+        "ly_do": "KL kỳ trước nhập tay"
+      },
+      {
+        "kiem": "K8",
+        "muc": "Cao",
+        "o": "BTH!G",
+        "ly_do": "KL lũy kế nhập tay"
+      }
+    ]
+  },
+  "sach-DEMO.xlsx": {
+    "phat_hien_K1_K6": [],
+    "gia_tri_luu": {
+      "DEMO!B3": 2
+    }
+  },
+  "thieu-v-DEMO.xlsx": {
+    "kiem": "K1",
+    "muc": "Kiểm soát",
+    "o": "DEMO",
+    "da_tinh_lai": false
+  },
+  "thuc-the-DEMO.xlsx": {
+    "ma_loi": "TEP_HONG"
+  },
+  "cu-DEMO.xls": {
+    "ma_loi": "TEP_KHONG_HO_TRO"
+  },
+  "bang-kl-DEMO.xlsx": {
+    "sheet": "BTH",
+    "dong_tieu_de": 3,
+    "so_dong": 30,
+    "so_dong_nhom": 1,
+    "gia_tri_de_nghi": {
+      "so": "60000000",
+      "tien_te": "VND"
+    }
+  }
+}

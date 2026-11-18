@@ -1,0 +1,199 @@
+{
+  "phien_ban": 1,
+  "ten_bo": "Review TTKL - 7 nhóm dữ liệu gốc",
+  "nhom": [
+    {
+      "ma": "2",
+      "ten": "2 Đơn giá",
+      "tai_lieu": "A02 BOQ / A03 phụ lục",
+      "khi": [
+        {
+          "vung": [
+            "tieu_de_cot",
+            "ten_sheet"
+          ],
+          "tat_ca": [
+            [
+              "don gia"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ma": "3-4",
+      "ten": "3-4 Kỳ trước / lũy kế trước",
+      "tai_lieu": "E01 hồ sơ đợt trước đã duyệt",
+      "khi": [
+        {
+          "vung": [
+            "tieu_de_cot",
+            "ten_sheet",
+            "nhan_dong"
+          ],
+          "tat_ca": [
+            [
+              "ky truoc",
+              "ki truoc",
+              "dot truoc",
+              "luy ke truoc"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ma": "1",
+      "ten": "1 KL hợp đồng",
+      "tai_lieu": "A02 BOQ / A03 phụ lục",
+      "khi": [
+        {
+          "vung": [
+            "tieu_de_cot",
+            "ten_sheet"
+          ],
+          "tat_ca": [
+            [
+              "hop dong",
+              "=hd"
+            ],
+            [
+              "khoi luong",
+              "=kl"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ma": "7",
+      "ten": "7 Đã thanh toán / tạm ứng",
+      "tai_lieu": "E01 hồ sơ đã duyệt, E02 UNC",
+      "khi": [
+        {
+          "vung": [
+            "tieu_de_cot",
+            "ten_sheet",
+            "nhan_dong"
+          ],
+          "tat_ca": [
+            [
+              "tam ung",
+              "da thanh toan",
+              "thanh toan dot",
+              "dot #",
+              "unc"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ma": "5",
+      "ten": "5 KL kỳ này",
+      "tai_lieu": "C01/C02 biên bản nghiệm thu",
+      "khi": [
+        {
+          "vung": [
+            "tieu_de_cot",
+            "ten_sheet"
+          ],
+          "tat_ca": [
+            [
+              "ky nay",
+              "ki nay",
+              "thuc hien",
+              "nghiem thu",
+              "hoan thanh"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ma": "6",
+      "ten": "6 Tham số HĐ",
+      "tai_lieu": "A01 điều khoản hợp đồng",
+      "khi": [
+        {
+          "vung": [
+            "tieu_de_cot",
+            "ten_sheet",
+            "nhan_dong"
+          ],
+          "tat_ca": [
+            [
+              "%",
+              "ty le",
+              "thue suat",
+              "he so",
+              "giu lai"
+            ]
+          ]
+        },
+        {
+          "vung": [
+            "tieu_de_cot",
+            "ten_sheet",
+            "nhan_dong"
+          ],
+          "tat_ca": [
+            [
+              "=thue",
+              "vat",
+              "gtgt"
+            ]
+          ],
+          "khong_co": [
+            "gia tri"
+          ]
+        }
+      ]
+    },
+    {
+      "ma": "1-2",
+      "ten": "1-2 Giá trị HĐ",
+      "tai_lieu": "A01 hợp đồng / A03 phụ lục",
+      "khi": [
+        {
+          "vung": [
+            "tieu_de_cot",
+            "ten_sheet",
+            "nhan_dong"
+          ],
+          "tat_ca": [
+            [
+              "gia tri hop dong",
+              "gia tri hd"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "ma": "5b",
+      "ten": "5 KL / diễn giải",
+      "tai_lieu": "B01 bản vẽ / B03 hoàn công / diễn giải KL",
+      "khi": [
+        {
+          "vung": [
+            "tieu_de_cot",
+            "ten_sheet"
+          ],
+          "tat_ca": [
+            [
+              "khoi luong",
+              "=kl",
+              "dien giai",
+              "kich thuoc",
+              "dai",
+              "rong",
+              "cao",
+              "so luong"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

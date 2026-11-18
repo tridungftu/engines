@@ -1,0 +1,10 @@
+goi/** text eol=lf
+goi/**/*.xlsx binary
+goi/**/*.xlsm binary
+goi/**/*.docx binary
+goi/**/*.pdf binary
+goi/**/*.png binary
+goi/**/*.jpg binary
+goi/**/*.zip binary
+tests/**/*.xlsx binary
+tests/**/*.xlsm binary

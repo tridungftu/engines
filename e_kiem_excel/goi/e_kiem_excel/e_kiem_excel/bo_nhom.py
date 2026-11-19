@@ -39,7 +39,10 @@ def doc_json(chuoi, tran):
 
 
 def kiem_tu_khoa(tu):
-    if not isinstance(tu, str) or not tu.strip() or (tu.startswith("=") and not tu[1:].strip()):
+    if not isinstance(tu, str):
+        sai_tham_so()
+    tu = tu.strip()
+    if not tu or (tu.startswith("=") and not tu[1:].strip()):
         sai_tham_so()
     return tu
 
@@ -48,17 +51,46 @@ def khop_tu_khoa(tu, van_ban):
     """Chứa chuỗi; = khớp nguyên từ Unicode; # khớp >=1 chữ số.
 
     Mọi ký tự khác (kể cả .*|[]()) được hiểu nguyên văn. Không có cửa regex.
+    # dùng bảng trạng thái O(độ dài từ khóa × độ dài văn bản), không backtracking.
     Hàm dùng chung cho khuôn cột; tự chuẩn hóa cả hai phía.
     """
-    kiem_tu_khoa(tu)
+    tu = kiem_tu_khoa(tu)
     nguyen_tu = tu.startswith("=")
     tu = bo_dau(tu[1:] if nguyen_tu else tu)
     van_ban = bo_dau(van_ban)
-    # Gộp ## để tránh nhiều lượng từ kề nhau. Chỉ mẫu do engine tạo được chạy.
-    mau = r"\d+".join(re.escape(x) for x in re.split(r"#+", tu))
-    if nguyen_tu:
-        mau = r"(?<!\w)" + mau + r"(?!\w)"
-    return re.search(mau, van_ban) is not None
+    def la_tu(ch):
+        return ch.isalnum() or ch == "_"
+
+    if "#" not in tu:
+        if not nguyen_tu:
+            return tu in van_ban
+        i = van_ban.find(tu)
+        while i >= 0:
+            j = i + len(tu)
+            if ((i == 0 or not la_tu(van_ban[i - 1]))
+                    and (j == len(van_ban) or not la_tu(van_ban[j]))):
+                return True
+            i = van_ban.find(tu, i + 1)
+        return False
+    n = len(van_ban)
+    # Mỗi trạng thái là một vị trí có thể kết thúc phần từ khóa đã khớp.
+    trang_thai = [not nguyen_tu or i == 0 or not la_tu(van_ban[i - 1]) for i in range(n + 1)]
+    for phan in re.split(r"(#)", tu):
+        if not phan:
+            continue
+        tiep = [False] * (n + 1)
+        if phan.startswith("#"):
+            for i, ch in enumerate(van_ban):
+                tiep[i + 1] = ch.isdecimal() and (trang_thai[i] or tiep[i])
+        else:
+            for i in range(n - len(phan) + 1):
+                if trang_thai[i] and van_ban.startswith(phan, i):
+                    tiep[i + len(phan)] = True
+        trang_thai = tiep
+        if not any(trang_thai):
+            return False
+    return any(dat and (not nguyen_tu or i == n or not la_tu(van_ban[i]))
+               for i, dat in enumerate(trang_thai))
 
 
 class BoNhom:

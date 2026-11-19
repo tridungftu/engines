@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Kết quả toàn vẹn Excel — EX-1, chờ lead duyệt",
-  "description": "Số nghiệp vụ và số đếm là chuỗi thập phân; phien_ban là số nguyên phiên bản cấu trúc. K7/K8 dành cho lát sau. gia_tri là số hoặc nội dung ô, chưa suy ra đơn vị tiền.",
+  "title": "Kết quả toàn vẹn Excel — EX-2, chờ lead duyệt",
+  "description": "Số nghiệp vụ và số đếm là chuỗi thập phân; K7 giữ đủ cột cây nguồn. K8 và báo cáo Excel thuộc EX-3.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -17,10 +17,38 @@
       "pattern": "^sha256:[0-9a-f]{64}$"
     },
     "o_dich": {
-      "type": "null"
+      "anyOf": [
+        {
+          "$ref": "#/$defs/o"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "bo_nhom": {
-      "type": "null"
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ten_bo",
+            "bam"
+          ],
+          "properties": {
+            "ten_bo": {
+              "type": "string"
+            },
+            "bam": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          }
+        }
+      ]
     },
     "phat_hien": {
       "type": "array",
@@ -51,7 +79,8 @@
               "K3",
               "K4",
               "K5",
-              "K6"
+              "K6",
+              "K7"
             ]
           },
           "o": {
@@ -474,8 +503,57 @@
     },
     "k7_cay": {
       "type": "array",
-      "maxItems": 0,
-      "description": "Chưa thực hiện ở EX-1."
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ten",
+          "o",
+          "cong_thuc",
+          "loai",
+          "tai_lieu",
+          "ghi_chu",
+          "cap",
+          "gia_tri",
+          "la",
+          "nhom"
+        ],
+        "properties": {
+          "ten": {
+            "type": "string"
+          },
+          "o": {
+            "type": "string"
+          },
+          "cong_thuc": {
+            "type": "string"
+          },
+          "loai": {
+            "type": "string"
+          },
+          "tai_lieu": {
+            "type": "string"
+          },
+          "ghi_chu": {
+            "type": "string"
+          },
+          "cap": {
+            "$ref": "#/$defs/dem"
+          },
+          "gia_tri": {
+            "$ref": "#/$defs/gia_tri"
+          },
+          "la": {
+            "type": "boolean"
+          },
+          "nhom": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
     },
     "k8_nguon": {
       "type": "array",

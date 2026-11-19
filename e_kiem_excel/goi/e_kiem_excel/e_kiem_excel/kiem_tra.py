@@ -1,18 +1,20 @@
-"""K1–K6 chuyển từ mã nguồn đã ghim; K7/K8 được bổ sung ở lát sau."""
+"""K1–K7 chuyển từ mã nguồn đã ghim; K8 và báo cáo Excel thuộc EX-3."""
 
 from collections import Counter, defaultdict
 from datetime import date, datetime, time
-from decimal import Decimal
+from decimal import Decimal, localcontext
 import json
 import re
 from openpyxl.utils import column_index_from_string, get_column_letter
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
 from .chuan_hoa import bo_dau, num
+from .bo_nhom import (doc_bo_nhom, doc_json, khop_tu_khoa, kiem_tu_khoa,
+                      sai_tham_so, CHUA_PHAN_NHOM, NGOAI_NHOM, TAI_LIEU_NGOAI)
 from .tham_chieu import (LOI, MUC, bo_chuoi, tach_tham_chieu, mau_cong_thuc,
                          la_tong, la_so, la_cong_thuc, giong, hang_so_nhung)
 
 JSON_TOI_DA_BYTE = 20 * 1024 * 1024
-CANH_BAO_EX1 = "EX-1 chỉ chạy K1–K6; K6 chưa phát cờ theo cây K7; K7, K8 và báo cáo Excel chưa được thực hiện."
+CANH_BAO_EX2 = "EX-2 chạy K1–K7; K8 và báo cáo Excel chưa được thực hiện."
 
 # Tên trường theo từng bảng gốc; ô được ghép với tên sheet khi xuất.
 BANG_JSON = {
@@ -56,27 +58,94 @@ class KiemTra:
     def __init__(self, so_do, tham_so):
         self.sd = so_do
         self.tham_so = dict(tham_so)
-        self.o_dich = self.tham_so.get("o_dich") or None
+        self.bo_nhom = doc_bo_nhom(self.tham_so.get("bo_nhom_json", ""))
+        self.o_dich = self._doc_o_dich(self.tham_so.get("o_dich", ""))
+        nhan = self.tham_so.get("nhan_o_dich_json", "")
+        self.nhan_o_dich = [] if nhan == "" else doc_json(nhan, 4096)
+        if (not isinstance(self.nhan_o_dich, list)
+                or (nhan != "" and not self.nhan_o_dich)):
+            sai_tham_so()
+        for tu in self.nhan_o_dich:
+            kiem_tu_khoa(tu)
+        self.so_ngoai_nhom = None if self.bo_nhom is None else 0
+        self._kiem_huy = lambda: None
         self.ph = []          # phát hiện
         self.kq = {}          # bảng kết quả theo kiểm tra
+
+    def _doc_o_dich(self, dich):
+        if dich == "":
+            return None
+        if not isinstance(dich, str) or len(dich) > 512:
+            sai_tham_so()
+        m = re.fullmatch(r"(?P<sh>'(?:[^']|'')+'|[^'!]+)!\$?(?P<c>[A-Za-z]{1,3})\$?(?P<r>[1-9][0-9]{0,6})", dich)
+        if not m:
+            sai_tham_so()
+        sh = m['sh']
+        if sh.startswith("'"):
+            sh = sh[1:-1].replace("''", "'")
+        c, r = m['c'].upper(), int(m['r'])
+        if sh not in self.sd.wb.sheetnames or column_index_from_string(c) > 16384 or r > 1048576:
+            sai_tham_so()
+        return f"{sh}!{c}{r}"
+
+    def _nhom_goc(self, tieu_de, nhan="", sh=""):
+        if self.bo_nhom is None:
+            return CHUA_PHAN_NHOM
+        n = self.bo_nhom.tim(tieu_de, nhan, sh)
+        return n['ten'] if n else NGOAI_NHOM
+
+    def _tai_lieu(self, nhom):
+        if nhom == NGOAI_NHOM:
+            return TAI_LIEU_NGOAI
+        return self.bo_nhom.tai_lieu(nhom) if self.bo_nhom else ""
+
+    def _tim_o_dich(self):
+        """master_hd.tim_so_tong_hop: 80 dòng, 12 cột, số đầu trong 6 ô bên phải.
+
+        LABELS/tim_so_tong_hop Decimal đã chuyển ở EX-4 trong doc_bang.py;
+        bản K7 thay LABELS bằng nhãn module, không sửa tệp EX-5 sở hữu.
+        """
+        if not self.nhan_o_dich:
+            return None
+        for ws in self.sd.wv.worksheets:
+            if ws.sheet_state != "visible":
+                continue
+            for row in ws.iter_rows(max_row=min(ws.max_row, 80), max_col=min(ws.max_column, 12)):
+                self._kiem_huy()
+                for cell in row:
+                    t = bo_dau(cell.value) if isinstance(cell.value, str) else ""
+                    if not t or len(t) > 140 or not any(khop_tu_khoa(tu, t) for tu in self.nhan_o_dich):
+                        continue
+                    for c in range(cell.column + 1, min(ws.max_column, cell.column + 6) + 1):
+                        o = f"{ws.title}!{get_column_letter(c)}{cell.row}"
+                        if num(ws.cell(cell.row, c).value) is not None:
+                            return o
+        return None
 
     def them(self, muc, kt, o, mo_ta, so_o=1, gia_tri=None, tai_lieu=""):
         self.ph.append(dict(muc=muc, kt=kt, o=o, mo_ta=mo_ta, so_o=so_o, gia_tri=gia_tri, tai_lieu=tai_lieu))
 
     def chay(self, viec):
+        self._kiem_huy = viec.kiem_huy
         for kiem in (self.k1_tong_quan, self.k2_ban_do_cong_thuc, self.k3_lien_ket_dong,
-                     self.k4_sheet_an, self.k5_so_dang_chu, self.k6_tham_so_nhung):
+                     self.k4_sheet_an, self.k5_so_dang_chu, self.k7_cay_truy_vet, self.k6_tham_so_nhung):
             viec.kiem_huy()
             kiem()
             viec.kiem_huy()
+        self._xep_lai()
         self.ph.sort(key=lambda x: (MUC[x["muc"]], x["kt"]))
         return self
 
     def ket_qua_json(self, bam, phien_ban):
         kq = {"phien_ban": 1, "phien_ban_engine": phien_ban, "bam_dau_vao": bam,
-              "o_dich": None, "bo_nhom": None, "phat_hien": [],
+              "o_dich": self.kq['dich'], "bo_nhom": self.bo_nhom.tham_chieu if self.bo_nhom else None, "phat_hien": [],
               "k1_so_ten_loi": str(self.kq["ten_loi"]),
-              "k7_cay": [], "k8_nguon": [], "canh_bao": [CANH_BAO_EX1]}
+              "k7_cay": [], "k8_nguon": [], "canh_bao": [CANH_BAO_EX2]}
+        for row in self.kq['cay']:
+            cap, ten, o, f, v, loai, nhom, tai_lieu, ghi = row
+            kq['k7_cay'].append(dict(cap=str(cap), ten=ten, o=o, cong_thuc=f, gia_tri=_gia_tri_json(v),
+                                     la=loai in ('Nhập tay', 'Nhóm nhập tay'), loai=loai,
+                                     nhom=nhom or None, tai_lieu=tai_lieu, ghi_chu=ghi))
         for p in self.ph:
             kq["phat_hien"].append({
                 "muc": p["muc"], "kiem": p["kt"], "o": p["o"], "mo_ta": p["mo_ta"],
@@ -187,7 +256,7 @@ class KiemTra:
                               or sd.nhan_dong(sh, r)
                     if du_lieu:
                         tay.append([sh, f"{get_column_letter(c)}{r}", hdr, sd.nhan_dong(sh, r), v,
-                                    next(ff for rr, mm, ff in ds_ if mm == mau)[:80], "Chưa phân nhóm"])
+                                    next(ff for rr, mm, ff in ds_ if mm == mau)[:80], self._nhom_goc(hdr, sd.nhan_dong(sh, r), sh)])
         self.kq.update(cot=tom, lech=lech, tay=tay)
         by = Counter(x[0] for x in lech)
         for sh, n in by.items():
@@ -200,7 +269,7 @@ class KiemTra:
         for (sh, col), xs in by.items():
             self.them("Cao", "K2", f"{sh}!{xs[0][1]}",
                       f"{len(xs)} số gõ tay nằm giữa cột công thức '{xs[0][2][:40]}' ({', '.join(x[1] for x in xs[:6])}...)",
-                      len(xs), sum((num(x[4]) for x in xs), Decimal(0)), "")
+                      len(xs), sum((num(x[4]) for x in xs), Decimal(0)), self._tai_lieu(xs[0][6]))
 
     # ---------------------------------------------------------- K3
     def k3_lien_ket_dong(self):
@@ -332,5 +401,126 @@ class KiemTra:
             if not loai.startswith("Hằng số khác") and n_cay:
                 n = n_cay
                 self.them("Trung bình", "K6", vd.split(",")[0], f"Hằng số {s} ({loai}) gõ thẳng trong {n} công thức: cần đối chiếu tài liệu nguồn "
-                                                               "và nên đặt thành ô tham số", n, tai_lieu="")
+                                                               "và nên đặt thành ô tham số", n, tai_lieu=self._tai_lieu(self._nhom_goc("Tỷ lệ %")))
 
+
+    def k7_cay_truy_vet(self, max_sau=14):
+        sd = self.sd
+        dich = self.o_dich
+        if not dich:
+            dich = self._tim_o_dich()
+        rows = []
+        so_o_da_doc = 0
+        if not dich or "!" not in dich:
+            self.kq["cay"], self.kq["dich"] = rows, None
+            self.them("Kiểm soát", "K7", "-", "Không có ô đích để truy vết. Quản trị viên kiểm tra ô đích hoặc danh sách nhãn trong cài đặt bước.")
+            return
+        sh0, cd0 = dich.rsplit("!", 1)
+        m = re.match(r"([A-Z]+)(\d+)", cd0.replace("$", ""))
+        da = {}
+
+        def them_dong(cap, ten, o, f, v, loai, nhom="", ghi=""):
+            self._kiem_huy()
+            if len(rows) >= 100000:
+                raise LoiNghiepVu("VUOT_GIOI_HAN", "Cây truy vết vượt giới hạn 100.000 nút.")
+            rows.append([cap, ("    " * cap) + ten, o, f, v, loai, nhom, self._tai_lieu(nhom) if loai in ("Nhập tay", "Nhóm nhập tay") else "", ghi])
+
+        def tham(sh, c, r, cap):
+            nonlocal so_o_da_doc
+            self._kiem_huy()
+            key = (sh, c, r)
+            o = f"{sh}!{get_column_letter(c)}{r}"
+            ten = (sd.nhan_dong(sh, r) or "") + (f"  [{sd.tieu_de(sh, c)}]" if sd.tieu_de(sh, c) else "")
+            if key in da:
+                them_dong(cap, ten, o, "", sd.v(sh, c, r), "Đã phân rã", ghi=f"xem dòng {da[key]}")
+                return
+            f = sd.f(sh, c, r)
+            if not la_cong_thuc(f):
+                loai = "Nhập tay" if la_so(f) else ("Trống" if f in (None, "") else "Chữ")
+                da[key] = len(rows) + 2
+                them_dong(cap, ten, o, "", f, loai, self._nhom_goc(sd.tieu_de(sh, c), sd.nhan_dong(sh, r), sh) if loai == "Nhập tay" else "")
+                return
+            da[key] = len(rows) + 2
+            them_dong(cap, ten, o, f[:150], sd.v(sh, c, r), "Công thức", ghi="sheet ẩn" if sd.an(sh) else "")
+            if cap >= max_sau:
+                raise LoiNghiepVu("VUOT_GIOI_HAN", "Cây truy vết vượt giới hạn 14 tầng.")
+            for s in hang_so_nhung(f):
+                them_dong(cap + 1, f"Hằng số trong công thức: {s}", o, "", s, "Tham số gõ cứng", self._nhom_goc("Tỷ lệ %"))
+            for x in tach_tham_chieu(f, sh):
+                if x["ngoai"] is not None:
+                    them_dong(cap + 1, f"File ngoài: {sd.ngoai.get(x['ngoai'], '?')[:80]}",
+                              f"[{x['ngoai']}]{x['sh']}!{get_column_letter(x['c1'])}{x['r1']}", "", None, "File ngoài",
+                              ghi="File Excel đang được liên kết")
+                    continue
+                if x["sh"] not in sd.wb.sheetnames:
+                    them_dong(cap + 1, f"Sheet không tồn tại: {x['sh']}", "", "", None, "Lỗi tham chiếu")
+                    continue
+                n_o = (x["c2"] - x["c1"] + 1) * (x["r2"] - x["r1"] + 1)
+                if n_o > 250000:
+                    raise LoiNghiepVu("VUOT_GIOI_HAN", "Dải truy vết vượt giới hạn 250.000 ô.")
+                so_o_da_doc += n_o
+                if so_o_da_doc > 500000:
+                    raise LoiNghiepVu("VUOT_GIOI_HAN", "Tổng lượt đọc ô truy vết vượt giới hạn 500.000.")
+                if n_o == 1:
+                    tham(x["sh"], x["c1"], x["r1"], cap + 1)
+                    continue
+                # dải: gom theo mẫu công thức, phân rã 1 ô đại diện cho mỗi mẫu; ô nhập tay gom thành 1 nút
+                mau, tay, tong_tay = defaultdict(list), [], Decimal(0)
+                for rr in range(x["r1"], x["r2"] + 1):
+                    self._kiem_huy()
+                    for cc in range(x["c1"], x["c2"] + 1):
+                        ff = sd.f(x["sh"], cc, rr)
+                        if la_cong_thuc(ff):
+                            mau[mau_cong_thuc(ff, rr, cc)].append((cc, rr))
+                        elif la_so(ff):
+                            tay.append((cc, rr))
+                            v = num(ff)
+                            if v is None:
+                                raise LoiNghiepVu("TEP_HONG", "Tệp Excel có giá trị số không hợp lệ.")
+                            with localcontext() as ctx:
+                                ctx.prec = max(tong_tay.adjusted(), v.adjusted()) - min(
+                                    tong_tay.as_tuple().exponent, v.as_tuple().exponent) + 2
+                                tong_tay += v
+                rg = f"{x['sh']}!{get_column_letter(x['c1'])}{x['r1']}:{get_column_letter(x['c2'])}{x['r2']}"
+                them_dong(cap + 1, f"Dải {n_o} ô: {sum(len(v) for v in mau.values())} công thức ({len(mau)} mẫu), {len(tay)} ô nhập tay",
+                          rg, "", None, "Dải")
+                if tay:
+                    hd = sd.tieu_de(x["sh"], tay[0][0])
+                    them_dong(cap + 2, f"{len(tay)} ô nhập tay trong dải  [{hd}]", rg, "", tong_tay, "Nhóm nhập tay",
+                              self._nhom_goc(hd, "", x["sh"]))
+                if len(mau) > 12:
+                    raise LoiNghiepVu("VUOT_GIOI_HAN", "Dải truy vết vượt giới hạn 12 mẫu công thức.")
+                for mm, cells in sorted(mau.items(), key=lambda kv: -len(kv[1])):
+                    # đại diện: ô có giá trị lớn nhất (tránh dòng tiêu đề nhóm bằng 0)
+                    cc, rr = max(cells, key=lambda o: abs(sd.v(x["sh"], o[0], o[1])) if la_so(sd.v(x["sh"], o[0], o[1])) else -1)
+                    them_dong(cap + 2, f"Mẫu công thức áp dụng cho {len(cells)} ô, đại diện:", "", "", None, "Mẫu")
+                    tham(x["sh"], cc, rr, cap + 3)
+
+        tham(sh0, column_index_from_string(m.group(1)), int(m.group(2)), 0)
+        self.kq["cay"], self.kq["dich"] = rows, dich
+        la = [r for r in rows if r[5] in ("Nhập tay", "Nhóm nhập tay")]
+        ngoai7 = [r for r in la if r[6] == NGOAI_NHOM]
+        self.so_ngoai_nhom = len(ngoai7) if self.bo_nhom else None
+        if ngoai7:
+            self.them("Cao", "K7", ngoai7[0][2], f"Ô đích phụ thuộc {len(ngoai7)} nút nhập tay không thuộc bộ nhóm dữ liệu gốc "
+                                                f"({', '.join(r[2] for r in ngoai7[:5])}...)", len(ngoai7),
+                      tai_lieu="Yêu cầu nhà thầu giải trình nguồn")
+        fn = [r for r in rows if r[5] == "File ngoài"]
+        if fn:
+            self.them("Cao", "K7", fn[0][2], f"Ô đích phụ thuộc {len(fn)} tham chiếu file ngoài", len(fn),
+                      tai_lieu="File Excel đang được liên kết")
+
+
+    def _xep_lai(self):
+        """File ngoài chỉ dùng ở cột phụ (không nằm trên cây truy vết số đề nghị) -> hạ mức."""
+        cot_cay = set()
+        for row in self.kq.get("cay", []):
+            m = re.match(r"(.+)!([A-Z]+)\d+", str(row[2] or ""))
+            if m:
+                cot_cay.add((m.group(1), m.group(2)))
+        if not cot_cay:
+            return
+        for x in self.ph:
+            if x.get("_ngoai") and not (self._ngoai_o.get(x["_ngoai"], set()) & cot_cay):
+                x["muc"] = "Trung bình"
+                x["mo_ta"] += " | không nằm trên đường tính ra ô đích (cột phụ / kiểm tra)"

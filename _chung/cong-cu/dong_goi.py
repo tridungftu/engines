@@ -15,7 +15,7 @@ import zipfile
 SDK = "2.2.0"
 WHEEL = f"kho_tri_thuc_sdk-{SDK}-py3-none-any.whl"
 THU_MUC_SDK = f"docs/goi-gui-engine/sdk-{SDK}"
-CAC_ENGINE = ("e_hoa_don", "e_hoi_ai", "e_ocr", "e_trich_xuat", "e_doi_chieu", "e_tra_cuu", "e_mask")
+CAC_ENGINE = ("e_hoa_don", "e_hoi_ai", "e_ocr", "e_trich_xuat", "e_doi_chieu", "e_tra_cuu", "e_mask", "e_kiem_excel")
 TEP_GOC = {"engine.json", "README.md", "CHANGELOG.md", "NGUON.md",
            "requirements.lock", "cau_hinh.schema.json", ".gitattributes"}
 TEN_CAM = {".venv", "__pycache__", ".pytest-tmp", ".pytest_cache", "luu-tru"}

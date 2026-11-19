@@ -1,4 +1,4 @@
-"""Cổng SDK kiểm an toàn tệp; EX-1 thực hiện kiểm toàn vẹn K1–K6."""
+"""Cổng SDK kiểm an toàn tệp; EX-2 thực hiện kiểm toàn vẹn K1–K7."""
 
 from copy import deepcopy
 from hashlib import sha256
@@ -89,7 +89,7 @@ def kiem_toan_ven(viec):
             "so_co_cao": sum(p["muc"] == "Cao" for p in kt.ph),
             "so_co_trung_binh": sum(p["muc"] == "Trung bình" for p in kt.ph),
             "so_kiem_soat": sum(p["muc"] == "Kiểm soát" for p in kt.ph),
-            "so_ngoai_nhom": None, "o_dich": None, "tep_bao_cao": None,
+            "so_ngoai_nhom": kt.so_ngoai_nhom, "o_dich": kt.kq['dich'], "tep_bao_cao": None,
             "da_tinh_lai": not any(d[8] for d in kt.kq["sheet"]),
             "co_lien_ket_ngoai": bool(kt._ngoai_o),
             "tep_json": tep_json, "bam_dau_vao": bam, "phien_ban_engine": phien_ban}}

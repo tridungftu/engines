@@ -104,7 +104,7 @@ def main():
     for cau in loi:
         print('[LỖI] '+cau)
     if not loi:
-        print('[ĐẠT] AST, cây gói, import cô lập; đã kiểm bằng Core giả (CoreGia): 5/5 DEMO XONG (toàn vẹn K1–K6, đọc bảng EX-4/EX-5).')
+        print('[ĐẠT] AST, cây gói, import cô lập; đã kiểm bằng Core giả (CoreGia): 5/5 DEMO XONG (toàn vẹn K1–K7, đọc bảng EX-4/EX-5).')
     return int(bool(loi))
 
 

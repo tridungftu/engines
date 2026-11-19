@@ -51,7 +51,7 @@ def test_dap_an_demo(demo):
         assert t[k] == v
     assert t['gia_tri_hop_dong'] is None
     assert t['so_canh_bao'] == 0 and t['tien_te_chua_ro'] is False
-    assert t['phien_ban_engine'] == 'e_kiem_excel 0.1.0'
+    assert t['phien_ban_engine'] == 'e_kiem_excel 0.1.1'
     assert t['bam_dau_vao'] == j['bam_dau_vao'] == 'sha256:'+sha256(raw).hexdigest()
     assert j['phien_ban'] == 1 and j['khuon'] == 'xay_dung_klgt'
     assert j['cot'] == dict(ten='B', dg='H', stt='A', dvt='C',

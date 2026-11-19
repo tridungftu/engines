@@ -266,14 +266,14 @@ Quy ước chung cho mọi tệp JSON engine tải lên:
 ## 6. Giới hạn, an toàn, lỗi
 
 - **Giới hạn đầu vào:** `tep_toi_da_mib: 20` (giống `e_ocr`).
-- **`thoi_han_giay`:** đo trên DEMO trước khi chốt. Quy trình v2.5 mục 11 ghi hồ sơ thật chạy khoảng 25 giây mỗi file trên máy Anh; con số này chưa đo trong gói.
+- **`thoi_han_giay`: đề xuất cuối EX-6 = 120 giây cho cả hai năng lực**, giữ `tep_toi_da_mib = 20`; dựa trên số đo DEMO thật bên dưới. Không dùng số 25 giây hồ sơ thật của quy trình cũ làm bằng chứng cho gói.
 - **Nhận diện tệp:** không chỉ dựa vào mime Core gửi (một số trình duyệt gửi `application/octet-stream`). Engine kiểm thêm đuôi `.xlsx`/`.xlsm` và chữ ký ZIP `PK\x03\x04` ở đầu tệp; `.xls` cũ (chữ ký OLE `D0 CF 11 E0`) → `TEP_KHONG_HO_TRO`. EX-0 ghi rõ Core gán mime gì khi tải `.xlsx` lên; nếu Core gán `application/octet-stream` thì thêm mime này vào `gioi_han.mime` và dựa vào kiểm chữ ký.
 - **Trước khi nạp `openpyxl`:**
   - kiểm tổng dung lượng giải nén của gói ZIP .xlsx và số tệp bên trong để chặn "bom nén";
   - chặn số ô quá trần (đếm thẻ `<c` trong các sheet XML theo luồng, không nạp cả cây);
   - ghim `defusedxml` để `openpyxl` tự dùng bộ phân tích an toàn; test có một tệp DEMO chứa thực thể XML lồng nhau phải bị từ chối.
   - Trần cụ thể Codex đo và đề xuất **ở EX-0**.
-- **Bộ nhớ:** `SoDo` nạp workbook đầy đủ **hai lần** (công thức và giá trị lưu, không chế độ chỉ đọc: `toan_ven.py` dòng 57–58). `openpyxl` nạp đầy đủ tốn bộ nhớ gấp nhiều lần dung lượng tệp (chưa đo). **Đo đỉnh bộ nhớ ngay ở EX-0** trên tệp DEMO 5, 10, 20 MiB; kết quả quyết định `tep_toi_da_mib` và trần ô. EX-6 đo lại trên bản hoàn chỉnh.
+- **Bộ nhớ:** `SoDo` nạp workbook đầy đủ hai lần. EX-6 đã đo toàn năng lực trên bản 0.1.1 ở 1/5/10/20 MiB và sát trần ô/vùng/giải nén, bảng dưới. Giữ trần 250.000 ô thực, 500.000 ô vùng, 128 MiB giải nén, 2.048 entry, một việc đồng thời.
 - **Không chạy macro, không mở file ngoài:** nạp `.xlsm` với `keep_vba=False`; liên kết ngoài chỉ đọc tên.
 - **Engine không lưu gì trên máy** (Anh chốt 15/11): tệp tạm của một việc nằm trong RAM; nếu buộc phải ghi đĩa thì xóa trong `finally`.
 - **Mã lỗi** (câu tiếng Việt cho người dùng, mã để trong "Chi tiết hỗ trợ"):
@@ -285,6 +285,32 @@ Quy ước chung cho mọi tệp JSON engine tải lên:
 | `VUOT_GIOI_HAN` | Quá trần dung lượng, ô, giải nén, JSON | Tệp vượt giới hạn xử lý. Vui lòng tách tệp hoặc liên hệ quản trị. |
 | `THAM_SO_KHONG_HOP_LE` | `bo_nhom_json`, `khuon_cot_json`, `o_dich`, `tien_te` sai | Cài đặt bước chưa đúng. Quản trị viên kiểm tra lại cài đặt của quy trình. |
 | `KHONG_TIM_THAY_BANG` | `doc_bang` không thấy bảng theo khuôn | Không tìm thấy bảng có đủ cột cần đọc trong tệp này. |
+
+
+### Số đo EX-6 — 19/11/2026 (bản 0.1.1)
+
+**Đã kiểm bằng Core giả (CoreGia)** trên Windows x64/Python 3.13.14, SDK 2.2.0,
+openpyxl 3.1.5; ba tiến trình riêng mỗi mẫu/năng lực, **36/36 XONG**. Đo
+perf_counter quanh toàn bộ chay_thu, RSS đỉnh tiến trình, không tracemalloc;
+không tính sinh DEMO/import module. Toàn vẹn bật K8, bộ nhóm và cây K7;
+đọc bảng xay_dung_klgt kiểm đúng 30 dòng. Chi tiết phương pháp/SHA runtime và
+input ở `tests/demo/so-do-hieu-nang-EX6.json`, diễn giải ở `docs/VIEC.md` EX-6.
+
+| DEMO | Byte tệp / MiB giải nén / ô thực / ô vùng | Toàn vẹn: trung vị / lớn nhất (s) | Toàn vẹn: RSS đỉnh (MiB) | Đọc bảng: trung vị / lớn nhất (s) | Đọc bảng: RSS đỉnh (MiB) |
+|---|---|---:|---:|---:|---:|
+| 1 MiB | 1,049,804 / 2.057 / 9,325 / 9,512 | 0.667 / 0.708 | 54.10 | 0.269 / 0.394 | 45.53 |
+| 5 MiB | 5,240,493 / 10.267 / 44,925 / 45,112 | 3.375 / 3.384 | 118.59 | 1.196 / 1.211 | 77.12 |
+| 10 MiB | 10,477,707 / 20.543 / 89,405 / 89,592 | 6.504 / 6.976 | 192.79 | 2.483 / 3.067 | 115.03 |
+| 20 MiB | 20,951,711 / 41.109 / 178,345 / 178,532 | 12.163 / 12.719 | 342.29 | 4.760 / 4.915 | 190.88 |
+| Sát trần ô/vùng | 575,218 / 7.242 / 249,421 / 499,552 | 8.495 / 8.498 | 343.56 | 3.080 / 3.578 | 139.79 |
+| Sát trần giải nén | 329,594 / 127.847 / 4,534 / 4,702 | 1.712 / 2.205 | 300.70 | 1.099 / 1.166 | 170.00 |
+
+Chậm nhất **12.719 giây**, RSS lớn nhất **343.56 MiB**. Giữ
+**20 MiB/120 giây**, hệ số dự phòng thời gian đo **9.43 lần**.
+Mật độ/giải nén ảnh hưởng độc lập với dung lượng tệp; không bỏ các trần phụ.
+Số đo không chứng minh worst case cây K7 hoặc bảng xuất cực lớn/mọi khuôn.
+Chưa đo Linux/Python 3.11 hay Core thật; CI đã cấu hình, chờ lead chạy.
+Báo cáo Excel ghi cả XML worksheet trong RAM, không dùng tệp tạm của openpyxl.
 
 ## 7. DEMO và tiêu chí đạt
 

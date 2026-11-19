@@ -1,0 +1,90 @@
+{
+  "phien_ban": 1,
+  "bam": "SHA-256 bytes nguyên trạng",
+  "tep": {
+    "CHANGELOG.md": {
+      "bytes": 3513,
+      "sha256": "b58f09a60c517d454ce51b89f897a240ba0a6a2670e98e09b8a490b9e0ff3029"
+    },
+    "demo/bang-kl-DEMO.xlsx": {
+      "bytes": 4508,
+      "sha256": "9e14f6142c32faedf1ca60a01f64a43cd3004b237cea27373ea2383d2f66d0ab"
+    },
+    "demo/bao-gia-DEMO.xlsx": {
+      "bytes": 2048,
+      "sha256": "ac25a7b8e36cd0fa0e5c9e67f04d23c19afbde654c21d029beb83f66ec9cffb2"
+    },
+    "demo/gia-thanh-DEMO.xlsx": {
+      "bytes": 1811,
+      "sha256": "010ffccbb70784a09fab3247a39e5c23425d335e9421fd50305216c16d6226bf"
+    },
+    "demo/K1-K8-DEMO.xlsx": {
+      "bytes": 4831,
+      "sha256": "e6da3f0932bffe5e2451a2dcb65261d24682bc1b1cb937fb211af4f8809743cb"
+    },
+    "demo/sach-DEMO.xlsx": {
+      "bytes": 1438,
+      "sha256": "20a53e89a4a5cb22e58879b4fa7b82a2e47e24f9914944ee3c4d831c7851da6b"
+    },
+    "e_kiem_excel/__init__.py": {
+      "bytes": 73,
+      "sha256": "263ee64fdff5df021cfd6a2fcf0788675b784c3aa86cc7982914690a1d51c4b1"
+    },
+    "e_kiem_excel/bao_cao.py": {
+      "bytes": 12602,
+      "sha256": "735ae0dafabace05c7aab838de0c4d21e907d85185524b9870a222fab4c422e6"
+    },
+    "e_kiem_excel/bo_nhom.py": {
+      "bytes": 5910,
+      "sha256": "63ed37b33c4c2663e8aa90d0cd19643bcda3e5ef25cad21ea9b9ebabe22fcd0e"
+    },
+    "e_kiem_excel/chay.py": {
+      "bytes": 4372,
+      "sha256": "10eeb3c7d53f28f8d2a0b4b877daf2470165072b50ba69d17765decd39c7c9a2"
+    },
+    "e_kiem_excel/chuan_hoa.py": {
+      "bytes": 1459,
+      "sha256": "808cf278993e87c6b019567bb77907bf45b642b2ff717144aadb26b0529b0bf8"
+    },
+    "e_kiem_excel/doc_bang.py": {
+      "bytes": 13973,
+      "sha256": "040db8dcf22494b52f897f0ef833fae735d6c7545d487b533be21f98cb7f64f2"
+    },
+    "e_kiem_excel/doc_tong_quat.py": {
+      "bytes": 8997,
+      "sha256": "3375d048ed6be7662f91157c44de28111e8ca58324dd6816be4bd801a94b1ca1"
+    },
+    "e_kiem_excel/kiem_tra.py": {
+      "bytes": 40753,
+      "sha256": "bcea7d28bb6abd008df98b886d8fb5aa900b794975ae3da4dc6b6cf4e550cd0f"
+    },
+    "e_kiem_excel/nhan_dien.py": {
+      "bytes": 6696,
+      "sha256": "9365db7e0b5094b7defa4761a00d621fe119a53c0db5a90d2f69d201c2abb6a7"
+    },
+    "e_kiem_excel/so_do.py": {
+      "bytes": 4802,
+      "sha256": "5be9894b22ff44c1ac3b55f8230b0aaf2f0e25f8d5381839c504fe7a801ba25b"
+    },
+    "e_kiem_excel/tham_chieu.py": {
+      "bytes": 3712,
+      "sha256": "820b34509482de02dde7fe3f2643ad0ee3afa09c17832ee03ddaf3755f19f19f"
+    },
+    "engine.json": {
+      "bytes": 8885,
+      "sha256": "ccdfe2e252dd94f97425773fdfeab705aa29dce38248674f80f97bb316a410d3"
+    },
+    "NGUON.md": {
+      "bytes": 17191,
+      "sha256": "a9e2e03b1f423071d192ff1f9c3f74b638318d0fd03b5f72bb3cf8d50411f394"
+    },
+    "README.md": {
+      "bytes": 5951,
+      "sha256": "1fe66edd93ac09749fca4de59eb57f57461c72c363b86de894ae48e5497258ff"
+    },
+    "requirements.lock": {
+      "bytes": 631,
+      "sha256": "d82a377d03f0489bbfaccaa739373b000b45dd519b749a585edec90874dc99ec"
+    }
+  }
+}

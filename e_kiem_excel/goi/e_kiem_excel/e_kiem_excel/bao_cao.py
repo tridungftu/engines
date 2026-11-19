@@ -6,12 +6,38 @@ from decimal import Decimal
 from functools import partial
 from io import BytesIO
 import re
+from zipfile import ZipFile, ZIP_DEFLATED
 import openpyxl
+from openpyxl.drawing.spreadsheet_drawing import SpreadsheetDrawing
 from openpyxl.styles import PatternFill, Font, Alignment
 from openpyxl.utils import get_column_letter, column_index_from_string
+from openpyxl.worksheet._writer import WorksheetWriter
+from openpyxl.writer.excel import ExcelWriter
 from .chuan_hoa import bo_dau, num
 from .doc_bang import _tim_tien_te
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
+
+
+class _GhiExcelBoNho(ExcelWriter):
+    """openpyxl 3.1.5 mặc định ghi XML sheet ra tệp dù đích là BytesIO.
+
+    Theo ExcelWriter.write_worksheet, chỉ đổi nơi chứa XML sang RAM. Gói đã
+    ghim đúng phiên bản thư viện; báo cáo do engine tự tạo, không có macro.
+    """
+
+    def write_worksheet(self, ws):
+        ws._drawing = SpreadsheetDrawing()
+        ws._drawing.charts = ws._charts
+        ws._drawing.images = ws._images
+        with BytesIO() as out:
+            writer = WorksheetWriter(ws, out=out)
+            try:
+                writer.write()
+                ws._rels = writer._rels
+                self._archive.writestr(ws.path[1:], writer.read())
+                self.manifest.append(ws)
+            finally:
+                writer.close()
 
 
 def _du_lieu_bao_cao(kt):
@@ -175,7 +201,8 @@ def ghi(kt):
                    k.get("tang_kt", []))
         kt._kiem_huy()
         out = BytesIO()
-        wb.save(out)
+        with ZipFile(out, 'w', ZIP_DEFLATED, allowZip64=True) as archive:
+            _GhiExcelBoNho(wb, archive).write_data()
         kt._kiem_huy()
         return out.getvalue()
     finally:

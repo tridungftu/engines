@@ -215,9 +215,9 @@ def test_huy_va_tran_json(monkeypatch):
     assert e.value.ma == 'VUOT_GIOI_HAN'
 
 
-def test_tong_quat_de_ex5():
+def test_tong_quat_thieu_khuon_ex5():
     t, _ = chay(bang_kl(), {'khuon':'tong_quat'})
-    assert t['loi']['ma'] == 'CHUA_LAM'
+    assert t['loi']['ma'] == 'THAM_SO_KHONG_HOP_LE'
 
 
 

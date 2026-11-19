@@ -105,5 +105,87 @@
       "so": "60000000",
       "tien_te": "VND"
     }
+  },
+  "gia-thanh-DEMO.xlsx": {
+    "sheet": "Gia thanh DEMO",
+    "dong_tieu_de": 3,
+    "so_dong": 2,
+    "so_dong_nhom": 1,
+    "cot": {
+      "san_pham": "A",
+      "san_luong": "B",
+      "vat_lieu": "C",
+      "nhan_cong": "D",
+      "ngay": "E"
+    },
+    "tien_te": "VND",
+    "so_canh_bao": 0,
+    "gia_tri": [
+      {
+        "san_pham": "SP DEMO 001",
+        "san_luong": "12.5",
+        "vat_lieu": {
+          "so": "1000000",
+          "tien_te": "VND"
+        },
+        "nhan_cong": {
+          "so": "250000",
+          "tien_te": "VND"
+        },
+        "ngay": "2026-10-30",
+        "ghi_chu": null
+      },
+      {
+        "san_pham": "SP DEMO 002",
+        "san_luong": "0",
+        "vat_lieu": {
+          "so": "-125.25",
+          "tien_te": "VND"
+        },
+        "nhan_cong": {
+          "so": "0",
+          "tien_te": "VND"
+        },
+        "ngay": "2026-10-31",
+        "ghi_chu": null
+      }
+    ]
+  },
+  "bao-gia-DEMO.xlsx": {
+    "sheet": "Bao gia DEMO",
+    "dong_tieu_de": 4,
+    "so_dong": 2,
+    "so_dong_nhom": 0,
+    "cot": {
+      "ma_hang": "B",
+      "mo_ta": "D",
+      "don_gia": "F",
+      "hieu_luc": "H",
+      "chiet_khau": "J"
+    },
+    "tien_te": "USD",
+    "so_canh_bao": 1,
+    "gia_tri": [
+      {
+        "ma_hang": "0001",
+        "mo_ta": "Dịch vụ DEMO A",
+        "don_gia": {
+          "so": "2500000000.125",
+          "tien_te": "USD"
+        },
+        "hieu_luc": "2026-10-30",
+        "chiet_khau": "0.05"
+      },
+      {
+        "ma_hang": "0002",
+        "mo_ta": "Dịch vụ DEMO B",
+        "don_gia": {
+          "so": "9007199254740993",
+          "tien_te": "USD"
+        },
+        "hieu_luc": "2026-11-01",
+        "chiet_khau": null
+      }
+    ]
   }
 }

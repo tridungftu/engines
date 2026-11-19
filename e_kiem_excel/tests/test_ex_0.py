@@ -36,8 +36,8 @@ def test_manifest():
 
 def test_demo_khong_thanh_cong_gia():
     kq=CoreGia().chay_thu_demo(app)
-    assert len(kq)==3
-    assert [k['trang_thai'] for k in kq]==['XONG','XONG','XONG']
+    assert len(kq)==5
+    assert [k['trang_thai'] for k in kq]==['XONG']*5
     assert kq[2]['ket_qua']['truong']['so_dong']==30
     for k in kq[:2]:
         assert k['ket_qua']['truong']['tep_bao_cao']['mime'].endswith('spreadsheetml.sheet')

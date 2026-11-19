@@ -1,5 +1,7 @@
 # Wheel PyPI thuần Python; SHA-256 đối chiếu metadata PyPI.
 # SDK 2.2.0 cài riêng từ wheel trong repo, không kéo dependency module.
+# EX-6: chỉ ba thư viện runtime. openpyxl đọc/ghi; et_xmlfile ghi báo cáo;
+# defusedxml bắt buộc để openpyxl đọc XML an toàn. pytest chỉ dùng ngoài gói.
 openpyxl==3.1.5 \
     --hash=sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2
 et_xmlfile==2.0.0 \

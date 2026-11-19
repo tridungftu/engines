@@ -1,4 +1,7 @@
-# Nguồn và giấy phép — EX-0 / EX-1, 18/11/2026
+# Nguồn và giấy phép — EX-6, 19/11/2026
+
+Trạng thái hiện hành: đủ EX-0…EX-6; các mục EX-0…EX-5 dưới đây là lịch sử
+chuyển mã theo từng lát. Bảng tổng hợp và SHA-256 hiện hành ở cuối tệp.
 
 Chỉ dùng dữ liệu DEMO giả. EX-1 chuyển thuật toán từ nguồn đã ghim dưới đây;
 không sửa nguồn tham chiếu và không thêm dependency runtime.
@@ -120,3 +123,89 @@ Khác nguồn: vượt đường truy nguồn 8 tầng từ chối `VUOT_GIOI_HA
 cắt ngầm. Thiếu bảng/cột KL vẫn là một phát hiện Kiểm soát K8, không coi là
 đã kiểm đủ nguồn. Tiền K8 giữ cách `round` từng dòng của nguồn; Decimal tránh
 mất chữ số của float. Không thêm dependency; kiểm kê SHA toàn gói thuộc EX-6.
+
+## EX-6 — tổng hợp nguồn hiện hành và kiểm kê
+
+Đường nguồn tính từ repo `review_xaydung` tại commit `1bed645ed56a36a59995afe1617af9dec83b8d82`;
+bản chép chỉ đọc ở `e_kiem_excel/ma-nguon/`. Đường đích tính từ gốc gói.
+SHA nguồn ở đầu tệp tính với LF đúng git; test chỉ đổi CRLF→LF trong RAM khi
+đối chiếu bản tham chiếu trên Windows, không sửa nguồn.
+
+| Nguồn cũ / dòng | Đích trong gói | Nội dung |
+|---|---|---|
+| `toan_ven.py` 42–50, 144–229 | `e_kiem_excel/tham_chieu.py` | Hằng, tách tham chiếu, mẫu công thức, so sánh |
+| `toan_ven.py` 54–142 | `e_kiem_excel/so_do.py` | SoDo, hai workbook, nhãn/cột/ô gộp; nạp BytesIO |
+| `toan_ven.py` 262–515 | `e_kiem_excel/kiem_tra.py` | KiemTra và K1–K6; Decimal, nhóm/tài liệu từ tham số |
+| `toan_ven.py` 516–604 | `e_kiem_excel/kiem_tra.py` | K7; tham số ô đích và bộ nhóm module |
+| `toan_ven.py` 605–736 | `e_kiem_excel/kiem_tra.py` | K8, _lech, _nguon; chỉ bật khi được yêu cầu |
+| `toan_ven.py` 737–762 | `e_kiem_excel/kiem_tra.py` | chay, _xep_lai; điều phối và hủy |
+| `toan_ven.py` 764–866 | `e_kiem_excel/bao_cao.py` | Kiểu ô, _sheet, ghi; báo cáo vào RAM |
+| `master_hd.py` 43–72 | `e_kiem_excel/chuan_hoa.py` | nfc, bo_dau, so, num; Decimal hữu hạn |
+| `master_hd.py` 629–728 | `e_kiem_excel/doc_bang.py` | _hdr_text, tim_bang_chi_tiet, khoa |
+| `master_hd.py` 730–765 | `e_kiem_excel/doc_bang.py` | LABELS, tim_so_tong_hop; Decimal, giữ số nhỏ/0 |
+| `master_hd.py` 741–765 | `e_kiem_excel/kiem_tra.py` | _tim_o_dich chuyển cách quét; nhãn nhận từ module |
+| `toan_ven.py` 231–260 | Ngoài gói: fixture Phụ lục A | Không mang 7 nhóm nghiệp vụ viết cứng vào engine |
+| `toan_ven.py` 1–41, 867–887 | Không chuyển | Import/CLI cũ thay bằng cổng SDK |
+| `master_hd.py` 1–42, 74–627, 767–1234 | Không chuyển | Import/AI/hợp đồng/master/CLI cũ không thuộc engine |
+| Phiếu §4.1.1 | `e_kiem_excel/bo_nhom.py` | Mã mới: kiểm bộ nhóm và matcher chung |
+| Phiếu §4.2 | `e_kiem_excel/doc_tong_quat.py` | Mã mới: khuôn tổng quát, dùng chung matcher |
+| API v1/SDK 2.2.0 và mẫu Hóa đơn đã ghim | `e_kiem_excel/chay.py`, `e_kiem_excel/__init__.py` | Mã nối SDK, kiểm hủy, trả tệp và bọc MIME |
+| Phiếu §6 và thư viện chuẩn Python | `e_kiem_excel/nhan_dien.py` | Mã mới: chặn ZIP/XML/ô/vùng trước openpyxl |
+| Phiếu/SDK và công cụ DEMO nội bộ | `engine.json`, `README.md`, `CHANGELOG.md`, `requirements.lock`, `NGUON.md`, `demo/*.xlsx` | Metadata, hướng dẫn, dependency và dữ liệu giả |
+
+Rà lock EX-6: giữ đúng **openpyxl 3.1.5, et_xmlfile 2.0.0, defusedxml 0.7.1**.
+`openpyxl.xml.functions` dùng `et_xmlfile.xmlfile` khi không có lxml;
+`openpyxl.xml.DEFUSEDXML` phải là true trong tiến trình cô lập. Cài sạch
+không có lxml/numpy/pandas. SDK cài riêng từ wheel nội bộ đã ghim, pytest
+chỉ là công cụ test ngoài gói. Kiểm dependency sau cài dùng `pip check`, chỉ cho
+phép thiếu đúng `cryptography`/`jsonschema` của **phần module SDK** theo hướng
+dẫn cài wheel `--no-deps`; không cài hai gói này vào engine. Mọi lỗi khác làm
+script thất bại; kiểm thêm phiên bản ba thư viện và cờ DEFUSEDXML.
+
+EX-6 bổ sung lớp ghi worksheet vào BytesIO ở `bao_cao.py`, dựa trên
+`openpyxl 3.1.5` (MIT), `openpyxl/writer/excel.py: ExcelWriter.write_worksheet`
+và `openpyxl/worksheet/_writer.py: WorksheetWriter(out=...), read, close`.
+`wb.save(BytesIO)` mặc định của thư viện vẫn tạo XML tạm; lớp con giữ dữ liệu
+và quan hệ sheet nhưng đổi XML sang RAM, đóng stream trong finally. Test hồi
+quy chặn `create_temporary_file`, mở lại đủ 15 sheet/K8. Phiên bản gói 0.1.1.
+
+SHA dưới đây là **bytes nguyên trạng**, không chuẩn hóa khi kiểm; `.gitattributes`
+đã khóa LF cho tệp chữ trong gói và binary cho XLSX. Không thể ghi SHA của
+toàn bộ chính `NGUON.md` vào nội dung của nó. SHA nguyên trạng **mọi tệp, gồm
+NGUON.md**, nằm ở `e_kiem_excel/tests/demo/bam-goi.json` ngoài gói và
+`.dong-goi-thu/KIEM-KE-EX6.json` cạnh ZIP thử. Công cụ
+`tests/kiem_bam_goi.py` kiểm đủ tập tên, số bytes và SHA, từ chối tệp thừa/thiếu.
+
+Lệnh tái lập: `python -B e_kiem_excel/tests/kiem_bam_goi.py --cap-nhat --dong-goi-thu`.
+ZIP thử gọi trực tiếp bộ kiểm/tạo ZIP của `_chung/cong-cu/dong_goi.py`,
+đọc bytes worktree vì Codex không được commit. Sau khi lead commit, tạo bản
+phát hành bằng CLI `python -B _chung/cong-cu/dong_goi.py --engine e_kiem_excel
+--ref HEAD --nhan EX-6 --ra <thu_muc_moi_ngoai_repo>`; CLI chỉ đọc bytes đã
+commit nên **không dùng CLI tại HEAD cũ để gọi đó là gói EX-6**.
+
+<!-- BAT-DAU-SHA256-EX6 -->
+
+| Tệp trong gói | Bytes | SHA-256 |
+|---|---:|---|
+| `CHANGELOG.md` | 3513 | `b58f09a60c517d454ce51b89f897a240ba0a6a2670e98e09b8a490b9e0ff3029` |
+| `demo/bang-kl-DEMO.xlsx` | 4508 | `9e14f6142c32faedf1ca60a01f64a43cd3004b237cea27373ea2383d2f66d0ab` |
+| `demo/bao-gia-DEMO.xlsx` | 2048 | `ac25a7b8e36cd0fa0e5c9e67f04d23c19afbde654c21d029beb83f66ec9cffb2` |
+| `demo/gia-thanh-DEMO.xlsx` | 1811 | `010ffccbb70784a09fab3247a39e5c23425d335e9421fd50305216c16d6226bf` |
+| `demo/K1-K8-DEMO.xlsx` | 4831 | `e6da3f0932bffe5e2451a2dcb65261d24682bc1b1cb937fb211af4f8809743cb` |
+| `demo/sach-DEMO.xlsx` | 1438 | `20a53e89a4a5cb22e58879b4fa7b82a2e47e24f9914944ee3c4d831c7851da6b` |
+| `e_kiem_excel/__init__.py` | 73 | `263ee64fdff5df021cfd6a2fcf0788675b784c3aa86cc7982914690a1d51c4b1` |
+| `e_kiem_excel/bao_cao.py` | 12602 | `735ae0dafabace05c7aab838de0c4d21e907d85185524b9870a222fab4c422e6` |
+| `e_kiem_excel/bo_nhom.py` | 5910 | `63ed37b33c4c2663e8aa90d0cd19643bcda3e5ef25cad21ea9b9ebabe22fcd0e` |
+| `e_kiem_excel/chay.py` | 4372 | `10eeb3c7d53f28f8d2a0b4b877daf2470165072b50ba69d17765decd39c7c9a2` |
+| `e_kiem_excel/chuan_hoa.py` | 1459 | `808cf278993e87c6b019567bb77907bf45b642b2ff717144aadb26b0529b0bf8` |
+| `e_kiem_excel/doc_bang.py` | 13973 | `040db8dcf22494b52f897f0ef833fae735d6c7545d487b533be21f98cb7f64f2` |
+| `e_kiem_excel/doc_tong_quat.py` | 8997 | `3375d048ed6be7662f91157c44de28111e8ca58324dd6816be4bd801a94b1ca1` |
+| `e_kiem_excel/kiem_tra.py` | 40753 | `bcea7d28bb6abd008df98b886d8fb5aa900b794975ae3da4dc6b6cf4e550cd0f` |
+| `e_kiem_excel/nhan_dien.py` | 6696 | `9365db7e0b5094b7defa4761a00d621fe119a53c0db5a90d2f69d201c2abb6a7` |
+| `e_kiem_excel/so_do.py` | 4802 | `5be9894b22ff44c1ac3b55f8230b0aaf2f0e25f8d5381839c504fe7a801ba25b` |
+| `e_kiem_excel/tham_chieu.py` | 3712 | `820b34509482de02dde7fe3f2643ad0ee3afa09c17832ee03ddaf3755f19f19f` |
+| `engine.json` | 8885 | `ccdfe2e252dd94f97425773fdfeab705aa29dce38248674f80f97bb316a410d3` |
+| `README.md` | 5951 | `1fe66edd93ac09749fca4de59eb57f57461c72c363b86de894ae48e5497258ff` |
+| `requirements.lock` | 631 | `d82a377d03f0489bbfaccaa739373b000b45dd519b749a585edec90874dc99ec` |
+
+<!-- KET-THUC-SHA256-EX6 -->

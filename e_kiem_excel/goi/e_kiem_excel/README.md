@@ -1,15 +1,13 @@
-# Kiểm và đọc Excel — EX-2
+# Kiểm và đọc Excel — 0.1.1 (EX-6)
 
 Khung SDK 2.2.0 cho `excel.toan_ven@1` và `excel.doc_bang@1`.
 Kiểm đuôi, chữ ký, ZIP/XML, trần ô trước khi nạp workbook. `excel.toan_ven@1`
-chạy K1–K6, tải JSON chi tiết qua Core; số trong JSON là chuỗi thập phân.
-K7/K8 và báo cáo Excel chưa triển khai; kết quả ghi cảnh báo và để trống/null.
-K6 liệt kê hằng số nhưng chưa phát cờ theo cây K7. `excel.doc_bang@1` đọc được
+chạy K1–K8, tải JSON và báo cáo Excel qua Core; số trong JSON là chuỗi thập phân.
+K8 chỉ chạy khi bật `kiem_nguon_kl`. `excel.doc_bang@1` đọc được
 khuôn `xay_dung_klgt` (EX-4) và `tong_quat` (EX-5).
 
-chạy K1–K7, tải JSON chi tiết qua Core; số trong JSON là chuỗi thập phân.
-K7 dựng cây trước K6, phân nhóm bằng bộ module truyền. K8 và báo cáo Excel
-thuộc EX-3; kết quả ghi cảnh báo. `excel.doc_bang@1` đã đọc khuôn KLGT ở EX-4.
+K7 dựng cây trước K6, phân nhóm bằng bộ module truyền. Báo cáo giữ kiểu ô,
+màu cờ, 15 sheet khi bật K8 và 12 sheet khi tắt; cả ZIP và XML sheet ghi trong RAM.
 
 Ô đích nhận `Sheet!A1` (có thể có dấu `$` và tên sheet đặt trong nháy đơn),
 phải thuộc workbook và giới hạn Excel. Nếu trống, tìm theo `nhan_o_dich_json`:
@@ -28,7 +26,7 @@ DEMO hoàn toàn giả: Công ty DEMO Ánh Dương. Script sinh ở `tests/demo/
 ngoài gói. Cài thư viện bằng `requirements.lock` với `--require-hashes --no-deps`;
 SDK cài riêng từ wheel 2.2.0 trong repo. Bật `PYTHONDONTWRITEBYTECODE=1` khi kiểm.
 
-Trần tạm: tệp 20 MiB; giải nén 128 MiB; 2.048 entry; 250.000 ô thực,
+Trần đề xuất cuối EX-6: tệp 20 MiB; giải nén 128 MiB; 2.048 entry; 250.000 ô thực,
 500.000 ô trong tổng hình chữ nhật các sheet; thời hạn Core 120 giây.
 Số đo và giới hạn phép kiểm ghi trong `docs/VIEC.md` ngoài gói.
 K7 giữ trần 14 tầng/12 mẫu mỗi dải của nguồn nhưng từ chối khi vượt,
@@ -39,6 +37,11 @@ hoa. Cổng tạm chuẩn hóa MIME trước bộ kiểm, cho cả đầu vào g
 không sửa phong bì gốc. Đợi Core/SDK sửa để bỏ lớp bọc này.
 
 Đã kiểm bằng Core giả (CoreGia); chưa nối Core thật.
+
+Kiểm kê SHA-256: `NGUON.md` và `tests/demo/bam-goi.json` ngoài gói (gồm cả
+băm của NGUON.md). Cài sạch offline: `sh e_kiem_excel/tests/kiem_may_sach.sh
+<thu_muc_wheel>` trên Linux Python 3.11; Windows dùng `tests/KIEM-MAY-SACH.cmd`
+do Anh chạy. CI chuẩn bị wheel theo lock có hash rồi script cài hoàn toàn offline.
 
 ## Khuôn tổng quát (EX-5)
 

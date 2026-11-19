@@ -11,7 +11,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 4 | Báo cáo Excel trong RAM; K8 sau công tắc `kiem_nguon_kl` | EX-3 | Xong — 19/11/2026 | 4 | PR: chờ lead mở. CLI 3/3; pytest 183 passed; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia); chi tiết cuối sổ |
 | 5 | `excel.doc_bang@1` khuôn `xay_dung_klgt` | EX-4 | Đang làm — 18/11/2026 | 4 | Mã EX-4 xong, chờ gộp các lát toàn vẹn để CLI chung đạt 3/3. PR: chờ lead mở |
 | 6 | Khuôn `tong_quat` | EX-5 | Xong — 18/11/2026 | 4 | PR: chờ lead mở. CLI 5/5 ĐẠT; pytest 144 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia) |
-| 7 | Ghim nguồn, cài máy sạch, đo thời gian/bộ nhớ trên bản hoàn chỉnh, chốt `thoi_han_giay` | EX-6 | Chờ làm | 3 | Cuối |
+| 7 | Ghim nguồn, cài máy sạch, đo thời gian/bộ nhớ trên bản hoàn chỉnh, chốt `thoi_han_giay` | EX-6 | Xong — 19/11/2026 (mã + kiểm cục bộ) | 3 | PR: chờ lead mở. CLI 5/5; pytest 240 passed; độc lập mã 0; cài sạch offline đạt. CI Linux 3.11 và Windows CMD chờ chạy; chi tiết cuối sổ |
 | | **Tổng** | | | **29** | |
 
 ## Chờ Anh
@@ -19,6 +19,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - Phụ lục A, hai chỗ lệch nhỏ so với mã gốc (nhóm 6 xét cả nhãn dòng; `dai|rong|cao` khớp chứa chuỗi): EX-2 báo kết quả đo, Anh duyệt nếu muốn chặt hơn.
 
 ## Cần Core
+- **EX-6 (19/11):** không phát sinh cửa mới. Đã kiểm bằng Core giả (CoreGia): CLI 5/5, pytest 240 passed, kiểm độc lập mã 0; cài sạch offline từ ZIP thử đạt. EX0-SDK-01 là lịch sử, không còn chặn. Giữ EX0-SDK-02/MIME Core thật. CI Linux 3.11, CMD Windows và gói phát hành từ commit chờ lead/Anh.
 - Không có cửa mới cho engine.
 - **EX-3 (19/11):** không phát sinh yêu cầu Core/SDK; báo cáo Excel và JSON qua `viec.tai_tep_ra`. Giữ EX0-SDK-02 về MIME/Core thật; chưa kiểm với Core thật.
 
@@ -541,3 +542,116 @@ Không có. Giữ ghi nhận EX0-SDK-02 về MIME/Core thật. Lead review schem
 ngưỡng dừng truy nguồn và ghép EX-5 theo phạm vi đã phân công; commit/mở PR.
 
 Thời gian thực tế theo mốc lead giao: **1.41 giờ**, từ **19/11/2026 08:06:00 đến 09:30:35** (giờ Việt Nam); ước tính trong phiếu **4 giờ**. PR: **chờ lead mở**.
+
+## EX-6 — thực hiện 19/11/2026, PR: chờ lead mở
+
+Kết luận: **Đạt ba lệnh kiểm và cài sạch cục bộ** trên Windows/Python 3.13.14;
+đã chuẩn bị CI Linux/Python 3.11, chưa có kết quả CI vì không commit/push.
+**Đã kiểm bằng Core giả (CoreGia)**, chưa nối Core thật. Bản gói **0.1.1**.
+
+### Đã làm
+
+- Lock chỉ giữ openpyxl 3.1.5, et_xmlfile 2.0.0, defusedxml 0.7.1: cả ba đều dùng.
+  Không thêm dependency runtime. Cài wheel SDK 2.2.0 offline, SHA khớp bộ phát hành.
+  Kiểm phiên bản/cờ DEFUSEDXML; pip check chỉ được thiếu đúng hai dependency
+  phần module SDK (cryptography/jsonschema), theo hướng dẫn SDK --no-deps.
+- NGUON.md tổng hợp đủ đường/dòng toan_ven/master_hd → tệp đích, phần không lấy,
+  nguồn/giấy phép thư viện và mã mới. SHA bytes nguyên trạng **21/21 tệp gói**;
+  NGUON.md liệt kê 20 tệp khác, SHA của chính nó nằm ngoài gói tại
+  `tests/demo/bam-goi.json`, tránh tự tham chiếu. Test phát hiện bytes bị sửa.
+- ZIP thử bằng `kiem_ten/doc_json/kiem_ke_sql/tao_zip` của chính
+  `_chung/cong-cu/dong_goi.py`; kiểm tên, đọc ZIP so từng byte với worktree.
+  Artifact: `.dong-goi-thu/e_kiem_excel-0.1.1-EX6-worktree.zip`, SHA-256
+  `04b01cf47629dba57e71265466cd06e25a9ce6854557d3997c3bfd4dc08d200b`.
+  Kiểm kê rời `.dong-goi-thu/KIEM-KE-EX6.json`. Đây là bản thử chưa commit.
+- Cài venv mới tại `.venv/kiem-sach-EX6`, wheel offline có hash, trích riêng gói
+  từ chính ZIP thử, không mang mã tham chiếu/shim vào cây kiểm. SHA 21/21,
+  CLI 5/5, kiểm độc lập mã 0. **Không chạy KIEM-MAY-SACH.cmd.**
+- `kiem_may_sach.sh`: Python 3.11, wheel offline, chuẩn hóa đường wheel tương đối,
+  kiểm SHA/phiên bản, copy riêng gói, CLI 5/5 và kiểm độc lập; dọn môi trường tạm.
+  Workflow `.github/workflows/ex-6-may-sach.yml` chạy ubuntu-latest/Python 3.11,
+  tải wheel theo lock có hash rồi cài offline, chạy đủ ba lệnh. Đã kiểm cú pháp
+  shell bằng `bash -n`; **chưa chạy trên Linux** do máy này chưa cài WSL.
+- Sửa một tệp Python runtime `bao_cao.py`: openpyxl.save(BytesIO) vẫn ghi XML
+  worksheet tạm trên đĩa; dùng WorksheetWriter(out=BytesIO) và ExcelWriter
+  để toàn bộ báo cáo ở RAM, đóng XML trong finally. Test chặn tạo tệp tạm,
+  mở lại đủ 15 sheet, K8/JSON vẫn đúng. Dùng API nội bộ của openpyxl **đã ghim 3.1.5**;
+  khi nâng thư viện phải kiểm lại lớp ghi. Tăng manifest lên 0.1.1, không đổi API v1.
+
+### Số đo thật trên runtime cuối
+
+Lệnh: `.venv/Scripts/python -B e_kiem_excel/tests/do_hieu_nang.py --ra e_kiem_excel/tests/demo/so-do-hieu-nang-EX6.json`.
+Máy: Windows-11-10.0.26200-SP0; Python 3.13.14; Intel64 Family 6 Model 154 Stepping 4, GenuineIntel; 12 CPU logic;
+SDK 2.2.0/openpyxl 3.1.5/defusedxml 0.7.1, không lxml. Phiên đo từ
+`2026-11-19T15:01:56.425639+07:00` đến `2026-11-19T15:05:17.261646+07:00`; raw JSON chứa SHA từng input và
+SHA mọi tệp runtime để chứng minh phép đo trên mã cuối.
+
+Mỗi mẫu/năng lực chạy **3 tiến trình riêng**, tổng **36/36 XONG**. Thời gian
+perf_counter bao trọn CoreGia.chay_thu: kiểm ZIP/XML, nạp workbook, xử lý,
+JSON/báo cáo và nộp tệp vào CoreGia. RSS đỉnh là PeakWorkingSetSize gồm cả
+Python/SDK/input/output; không tracemalloc. Sinh DEMO/import module và kiểm
+đáp án sau chạy nằm ngoài đồng hồ. Không chủ động chạy pytest/cài venv đồng
+thời trong lượt đo cuối; thời gian vẫn chịu tải chung của máy.
+
+| DEMO | Byte tệp / MiB giải nén / ô thực / ô vùng | Toàn vẹn: trung vị / lớn nhất (s) | Toàn vẹn: RSS đỉnh (MiB) | Đọc bảng: trung vị / lớn nhất (s) | Đọc bảng: RSS đỉnh (MiB) |
+|---|---|---:|---:|---:|---:|
+| 1 MiB | 1,049,804 / 2.057 / 9,325 / 9,512 | 0.667 / 0.708 | 54.10 | 0.269 / 0.394 | 45.53 |
+| 5 MiB | 5,240,493 / 10.267 / 44,925 / 45,112 | 3.375 / 3.384 | 118.59 | 1.196 / 1.211 | 77.12 |
+| 10 MiB | 10,477,707 / 20.543 / 89,405 / 89,592 | 6.504 / 6.976 | 192.79 | 2.483 / 3.067 | 115.03 |
+| 20 MiB | 20,951,711 / 41.109 / 178,345 / 178,532 | 12.163 / 12.719 | 342.29 | 4.760 / 4.915 | 190.88 |
+| Sát trần ô/vùng | 575,218 / 7.242 / 249,421 / 499,552 | 8.495 / 8.498 | 343.56 | 3.080 / 3.578 | 139.79 |
+| Sát trần giải nén | 329,594 / 127.847 / 4,534 / 4,702 | 1.712 / 2.205 | 300.70 | 1.099 / 1.166 | 170.00 |
+
+Mẫu 1/5/10/20 MiB có dung lượng thực lệch dưới 0,2% so mốc; 1 MiB thực hơi
+lớn hơn mốc do ghép bảng KL. Không đệm ZIP bằng tệp lạ: sheet tải có 15 chuỗi
+DEMO hex khó nén và 5 công thức có giá trị lưu mỗi dòng, cộng bảng KL/Nguon
+DEMO 30 hạng mục. Toàn vẹn bật K8, ô đích BTH!J39 và bộ nhóm Phụ lục A, có
+assert K7/K8 thực sự chạy; đọc bảng dùng xay_dung_klgt, VND, assert đủ 30 dòng.
+Mẫu mật độ có 249.421 ô thực và 499.552 ô vùng; mẫu giải nén có XML ô chứa
+chuỗi DEMO dưới 32.767 ký tự, 127,847 MiB giải nén. Hai mẫu đều qua bộ chặn.
+
+**Đề xuất cuối:** giữ **tep_toi_da_mib=20**, **thoi_han_giay=120** cho cả hai
+năng lực như manifest; giữ **250.000 ô thực, 500.000 ô vùng, 128 MiB giải nén,
+2.048 entry, một việc đồng thời**. Lượt chậm nhất đo được **12.719 giây**,
+RSS đỉnh lớn nhất **343.56 MiB**; 120 giây có hệ số dự phòng
+**9.43 lần** thời gian đã đo. Đây là đề xuất từ các mẫu trên,
+không phải chứng minh worst case cho mọi tổ hợp ở trần. Bảng đọc chỉ 30 dòng;
+chưa đo bảng xuất 250.000 ô, cây K7 phức tạp tới 100.000 nút hay mọi khuôn.
+Không suy số đo này sang Linux 3.11/Core thật; giữ các test từ chối vượt trần,
+không nới trần. Chưa có số đo hiệu năng Core thật/Windows Python 3.11.
+
+### Ba lệnh nghiệm thu
+
+Chạy `.venv/Scripts/python`, PYTHONDONTWRITEBYTECODE=1, UTF-8; đã kiểm bằng Core giả (CoreGia).
+
+```text
+python -m kho_tri_thuc_sdk.thu e_kiem_excel/goi/e_kiem_excel
+→ 5/5 ĐẠT; mã thoát 0.
+python -m pytest e_kiem_excel/tests -q
+→ 240 passed in 7.43s, 0 skipped; mã thoát 0.
+python e_kiem_excel/tests/kiem_doc_lap.py
+→ AST, cây gói, import cô lập, 5/5 DEMO XONG; mã thoát 0.
+```
+
+`git diff --check` mã 0; không sửa ma-nguon/SDK/Core; không commit/push.
+
+### Lệch khỏi phiếu / quyết định tạm
+
+- Máy có Python 3.13.14, chưa có Linux/WSL: số đo/cài sạch cục bộ là Windows
+  3.13.14; CI 3.11 đã soạn và chờ lead chạy. Windows CMD chỉ soạn để Anh chạy.
+- Công cụ đóng gói CLI chỉ đọc commit git, không đọc worktree. Theo lệnh
+  không commit/push, Codex đóng **bản thử** bằng đúng hàm của công cụ; lead
+  đóng phát hành sau commit bằng `python _chung/cong-cu/dong_goi.py --engine
+  e_kiem_excel --ref HEAD --nhan EX-6 --ra <thu_muc_moi_ngoai_repo>`.
+- Băm NGUON.md ở kiểm kê ngoài gói thay vì tự nhúng băm của chính nội dung.
+- Bổ sung sửa đường ghi XML tạm của thư viện để đáp ứng quy tắc không lưu trên
+  máy. Một tệp runtime thay đổi; không viết lại thuật toán K1–K8/đọc bảng.
+
+### Cần Core / Chờ Anh mới phát sinh
+
+Không phát sinh yêu cầu Core/SDK mới. Giữ EX0-SDK-02 về MIME và xác nhận MIME
+Core thật. Lead commit/mở PR (**chờ lead mở**), chạy CI Linux 3.11 và đóng gói
+phát hành từ commit; Anh chạy `e_kiem_excel/tests/KIEM-MAY-SACH.cmd`.
+
+Thời gian thực tế: **0.31 giờ**, từ **19/11/2026 14:48:00 đến 15:06:39**
+(giờ Việt Nam); ước tính trong phiếu **3 giờ**. PR: **chờ lead mở**.

@@ -1,5 +1,13 @@
 # Thay đổi
 
+## 0.1.1 — 19/11/2026
+- EX-6: rà đúng ba dependency runtime, tổng hợp nguồn/dòng cũ → tệp mới và SHA-256.
+- Ghi cả XML worksheet trong RAM: wb.save(BytesIO) của openpyxl vẫn tạo tệp tạm;
+  lớp ghi báo cáo riêng dùng BytesIO và đóng stream trong finally.
+- Bổ sung kiểm máy sạch offline, CI Linux/Python 3.11, số đo toàn hai năng lực
+  và mẫu sát trần ô/vùng/giải nén; đề xuất giữ 20 MiB/120 giây.
+- Đã kiểm bằng Core giả (CoreGia); bản phát hành từ git do lead đóng sau commit.
+
 ## 0.1.0 — 19/11/2026
 - EX-3: K8 sau công tắc `kiem_nguon_kl`, dùng bộ đọc bảng của EX-4; giữ phân loại,
   mức/mã/ô nguồn trên DEMO. Tính Decimal, giới hạn truy nguồn 8 tầng từ chối khi vượt.

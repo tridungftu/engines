@@ -17,7 +17,8 @@ jobs:
         with:
           python-version: "3.11"
       - name: Chuẩn bị wheel có SHA-256 trong lock
-        run: python -m pip download --only-binary=:all: --require-hashes --no-deps -r e_kiem_excel/goi/e_kiem_excel/requirements.lock -d .venv/banh
+        run: |
+          python -m pip download --only-binary=:all: --require-hashes --no-deps -r e_kiem_excel/goi/e_kiem_excel/requirements.lock -d .venv/banh
       - name: Cài sạch offline và kiểm bằng CoreGia
         run: sh e_kiem_excel/tests/kiem_may_sach.sh .venv/banh
       - name: Cài pytest cho kiểm mã tham chiếu

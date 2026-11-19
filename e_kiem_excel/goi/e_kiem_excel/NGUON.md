@@ -65,3 +65,25 @@ Phần tạo phong bì/JSON, kiểm tham số, nhận đơn vị tiền và cả
 bám phiếu §4.2–4.3, §5.2. Không thêm dependency, không mạng, không ghi tệp trên máy.
 `chay.py` chỉ nối `excel.doc_bang@1`; helper đọc chung thêm trả bytes đã kiểm,
 không đổi hành vi năng lực toàn vẹn. Kiểm kê SHA-256 toàn gói để EX-6 thực hiện.
+
+## EX-2 — cây truy vết và bộ nhóm, 18/11/2026
+
+| Nguồn đã ghim | Đích | Điều chỉnh |
+|---|---|---|
+| `toan_ven.py` 516–604 | `kiem_tra.py`: `k7_cay_truy_vet` | Giữ thứ tự/nút/dải/mẫu/đại diện; ô đích và phân nhóm theo tham số; tổng Decimal; hủy và từ chối vượt trần |
+| `toan_ven.py` 750–762 | `kiem_tra.py`: `_xep_lai` | Giữ cách hạ mức liên kết ngoài theo cột cây; câu mô tả dùng ô đích chung |
+| `master_hd.py` 741–765 | `kiem_tra.py`: `_tim_o_dich` | Cùng vùng quét/số đầu bên phải; dùng danh sách nhãn module thay LABELS; giữ số 0/nhỏ qua num Decimal |
+| Phiếu §4.1.1 | `bo_nhom.py` | Mã mới kiểm JSON/bộ nhóm và so từ khóa; `#` dùng bảng trạng thái không backtracking; không chạy regex do module cung cấp |
+| `toan_ven.py` 231–260 → Phiếu Phụ lục A | Fixture ngoài gói | Bộ Review TTKL chỉ nằm trong tests/demo; không chép nhóm/tài liệu nghiệp vụ vào runtime |
+
+`LABELS/tim_so_tong_hop` Decimal đã có ở EX-4 trong `doc_bang.py` (bảng trên).
+EX-2 giữ nguyên tệp này và năng lực đọc bảng theo phân công EX-5; không tạo bản
+LABELS thứ hai. Hàm tìm ô đích riêng cần nhãn tùy biến nên chuyển cùng thuật toán
+quét với helper Decimal dùng chung của EX-1. K2 phân nhóm số gõ tay; K6 lấy tài liệu
+từ bộ nhóm. K7 trước K6, sau cùng `_xep_lai`, đúng thứ tự nguồn.
+
+Khác biệt có chủ đích: đổi tên Ngoài 7 nhóm thành Ngoài nhóm; Phụ lục A nhóm 6
+xét cả nhãn dòng; giới hạn 14 tầng/12 mẫu từ chối thay vì cắt ngầm. Thêm trần
+100.000 nút, 250.000 ô/dải, 500.000 lượt đọc ô để chặn mở rộng workbook từ tham chiếu.
+Tổng Decimal đặt precision theo toán hạng, không làm tròn mặc định ở chữ số thứ 28.
+Không sửa nguồn đã ghim, không thêm dependency. Số đo lệch/test ở docs/VIEC.md.

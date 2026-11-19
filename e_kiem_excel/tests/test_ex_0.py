@@ -41,7 +41,7 @@ def test_demo_khong_thanh_cong_gia():
     assert kq[2]['ket_qua']['truong']['so_dong']==30
     for k in kq[:2]:
         assert k['ket_qua']['truong']['tep_bao_cao'] is None
-        assert k['ket_qua']['truong']['o_dich'] is None
+        assert k['ket_qua']['truong']['o_dich'] in {'BTH!J39', 'DEMO!B3'}
 
 
 def test_fixture_tat_dinh(demo,tmp_path):

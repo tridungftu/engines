@@ -1,6 +1,13 @@
 # Thay đổi
 
 ## 0.1.0 — 18/11/2026
+- EX-2: chuyển cây K7, chạy trước K6; cờ K6 tại BTH!J21 đã khớp mã gốc.
+- Kiểm ô đích, tìm theo nhãn do module truyền; thiếu đích có một mục Kiểm soát.
+- Bộ nhóm được kiểm cấu trúc/trần; hỗ trợ chứa chuỗi, nguyên từ và chữ số,
+  không thực thi regex; không bộ thì Chưa phân nhóm và so_ngoai_nhom null.
+- K2/K6 lấy nhóm/tài liệu từ bộ; hạ mức liên kết ngoài ở cột phụ theo cây nguồn.
+- Mở schema JSON K7, giữ số Decimal; từ chối vượt trần cây thay vì cắt ngầm.
+- Phụ lục A chỉ là fixture ngoài gói; báo riêng lệch nhóm 6 và hành vi dai/rong/cao.
 - EX-1: chuyển SoDo, tham chiếu, chuẩn hóa Decimal và K1–K6; nạp bytes,
   bỏ thư mục liên kết ngoài; trả trường và tải JSON UTF-8 trong RAM.
 - Kiểm hủy giữa các kiểm, TEP_HONG an toàn, trần JSON 20 MiB; schema ngoài gói

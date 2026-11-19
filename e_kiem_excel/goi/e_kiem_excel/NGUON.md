@@ -100,3 +100,23 @@ xét cả nhãn dòng; giới hạn 14 tầng/12 mẫu từ chối thay vì cắ
 100.000 nút, 250.000 ô/dải, 500.000 lượt đọc ô để chặn mở rộng workbook từ tham chiếu.
 Tổng Decimal đặt precision theo toán hạng, không làm tròn mặc định ở chữ số thứ 28.
 Không sửa nguồn đã ghim, không thêm dependency. Số đo lệch/test ở docs/VIEC.md.
+
+## EX-3 — K8 và báo cáo Excel, 19/11/2026
+
+| Nguồn đã ghim | Đích | Điều chỉnh |
+|---|---|---|
+| `toan_ven.py` 605–736 | `kiem_tra.py`: `k8_nguon_kl`, `_lech`, `_nguon` | Dùng `doc_bang.tim_bang_chi_tiet` EX-4; bật theo tham số; Decimal; kiểm hủy; không chép nội dung exception vào phát hiện |
+| `toan_ven.py` 737–762 | `kiem_tra.py`: `chay`, `_xep_lai` | Bổ sung K8 có điều kiện vào điều phối EX-2; giữ xếp mức/cột cây nguồn |
+| `toan_ven.py` 764–866 | `bao_cao.py`: kiểu ô, `_sheet`, `ghi` | Giữ sheet, cột, màu, độ rộng, freeze panes; BytesIO; tiền có đơn vị/để trống; công thức dạng chuỗi; không ghi đĩa |
+
+Dùng lại hàm `_tim_tien_te` sẵn có của EX-4 để nhận đơn vị rõ ràng, không tạo
+mã nhận diện tiền tệ thứ hai. Báo cáo nhận bản sao bảng để định dạng không làm
+đổi dữ liệu kiểm/JSON. Phần nối tải báo cáo trong `chay.py`, schema và test
+là mã nội bộ theo phiếu §4.1/§5.1. Không sửa `doc_bang.py`, `bo_nhom.py`,
+`excel.doc_bang@1`, mã nguồn tham chiếu hoặc SDK.
+
+Khác nguồn: vượt đường truy nguồn 8 tầng từ chối `VUOT_GIOI_HAN` thay vì trả
+`Khác` với đường bị dừng; ô báo cáo quá 32.767 ký tự từ chối thay vì để openpyxl
+cắt ngầm. Thiếu bảng/cột KL vẫn là một phát hiện Kiểm soát K8, không coi là
+đã kiểm đủ nguồn. Tiền K8 giữ cách `round` từng dòng của nguồn; Decimal tránh
+mất chữ số của float. Không thêm dependency; kiểm kê SHA toàn gói thuộc EX-6.

@@ -1,4 +1,4 @@
-"""K1–K7 chuyển từ mã nguồn đã ghim; K8 và báo cáo Excel thuộc EX-3."""
+"""K1–K8 chuyển từ mã nguồn đã ghim; xử lý trong RAM."""
 
 from collections import Counter, defaultdict
 from datetime import date, datetime, time
@@ -10,11 +10,11 @@ from kho_tri_thuc_sdk.engine import LoiNghiepVu
 from .chuan_hoa import bo_dau, num
 from .bo_nhom import (doc_bo_nhom, doc_json, khop_tu_khoa, kiem_tu_khoa,
                       sai_tham_so, CHUA_PHAN_NHOM, NGOAI_NHOM, TAI_LIEU_NGOAI)
-from .tham_chieu import (LOI, MUC, bo_chuoi, tach_tham_chieu, mau_cong_thuc,
+from .doc_bang import tim_bang_chi_tiet, _tim_tien_te
+from .tham_chieu import (LOI, MUC, QREF, LREF, bo_chuoi, tach_tham_chieu, mau_cong_thuc,
                          la_tong, la_so, la_cong_thuc, giong, hang_so_nhung)
 
 JSON_TOI_DA_BYTE = 20 * 1024 * 1024
-CANH_BAO_EX2 = "EX-2 chạy K1–K7; K8 và báo cáo Excel chưa được thực hiện."
 
 # Tên trường theo từng bảng gốc; ô được ghép với tên sheet khi xuất.
 BANG_JSON = {
@@ -44,6 +44,10 @@ def _gia_tri_json(v):
     raise LoiNghiepVu("TEP_HONG", "Tệp Excel có kiểu ô chưa được hỗ trợ.")
 
 
+def _la_so_kl(v):
+    return (isinstance(v, Decimal) and v.is_finite()) or la_so(v)
+
+
 def ma_hoa_json(du_lieu):
     """Chặn trần trong lúc mã hóa; không cắt bớt dữ liệu kết quả."""
     raw = bytearray()
@@ -58,6 +62,8 @@ class KiemTra:
     def __init__(self, so_do, tham_so):
         self.sd = so_do
         self.tham_so = dict(tham_so)
+        if type(self.tham_so.get('kiem_nguon_kl', False)) is not bool:
+            sai_tham_so()
         self.bo_nhom = doc_bo_nhom(self.tham_so.get("bo_nhom_json", ""))
         self.o_dich = self._doc_o_dich(self.tham_so.get("o_dich", ""))
         nhan = self.tham_so.get("nhan_o_dich_json", "")
@@ -132,6 +138,10 @@ class KiemTra:
             viec.kiem_huy()
             kiem()
             viec.kiem_huy()
+        if self.tham_so.get('kiem_nguon_kl', False):
+            viec.kiem_huy()
+            self.k8_nguon_kl()
+            viec.kiem_huy()
         self._xep_lai()
         self.ph.sort(key=lambda x: (MUC[x["muc"]], x["kt"]))
         return self
@@ -140,16 +150,26 @@ class KiemTra:
         kq = {"phien_ban": 1, "phien_ban_engine": phien_ban, "bam_dau_vao": bam,
               "o_dich": self.kq['dich'], "bo_nhom": self.bo_nhom.tham_chieu if self.bo_nhom else None, "phat_hien": [],
               "k1_so_ten_loi": str(self.kq["ten_loi"]),
-              "k7_cay": [], "k8_nguon": [], "canh_bao": [CANH_BAO_EX2]}
+              "k7_cay": [], "k8_nguon": [], "canh_bao": []}
         for row in self.kq['cay']:
             cap, ten, o, f, v, loai, nhom, tai_lieu, ghi = row
             kq['k7_cay'].append(dict(cap=str(cap), ten=ten, o=o, cong_thuc=f, gia_tri=_gia_tri_json(v),
                                      la=loai in ('Nhập tay', 'Nhóm nhập tay'), loai=loai,
                                      nhom=nhom or None, tai_lieu=tai_lieu, ghi_chu=ghi))
+        for row in self.kq.get('nguon', []):
+            dong, ten, dvt, hd, lk, gkn, glk, nguon, co, duong, kt, nkt = row
+            kq['k8_nguon'].append(dict(
+                o=f"{self.kq['bang_sh']}!{self.kq['cot_kl']}{dong}", dong=str(dong), ten=ten, dvt=dvt,
+                kl_hd=_gia_tri_json(hd), kl_luy_ke=_gia_tri_json(lk),
+                gia_tri_ky_nay={"so": _gia_tri_json(gkn), "tien_te": self.kq.get('tien_te')},
+                gia_tri_luy_ke={"so": _gia_tri_json(glk), "tien_te": self.kq.get('tien_te')},
+                nguon=nguon, luu_y=co, duong_di=duong, kl_ky_truoc=_gia_tri_json(kt), nguon_ky_truoc=nkt))
         for p in self.ph:
             kq["phat_hien"].append({
                 "muc": p["muc"], "kiem": p["kt"], "o": p["o"], "mo_ta": p["mo_ta"],
-                "so_o": str(p["so_o"]), "gia_tri": _gia_tri_json(p["gia_tri"]), "tai_lieu": p["tai_lieu"]})
+                "so_o": str(p["so_o"]), "gia_tri": (
+                    {"so": _gia_tri_json(p["gia_tri"]), "tien_te": self.kq.get('tien_te')}
+                    if p["kt"] == "K8" and p["gia_tri"] is not None else _gia_tri_json(p["gia_tri"])), "tai_lieu": p["tai_lieu"]})
         for ten, (nguon, cot) in BANG_JSON.items():
             ds = []
             for dong in self.kq[nguon]:
@@ -509,6 +529,172 @@ class KiemTra:
         if fn:
             self.them("Cao", "K7", fn[0][2], f"Ô đích phụ thuộc {len(fn)} tham chiếu file ngoài", len(fn),
                       tai_lieu="File Excel đang được liên kết")
+
+
+    def k8_nguon_kl(self):
+        # Tránh mất chữ số khi nhân/cộng Decimal lớn; vẫn giữ round của nguồn.
+        with localcontext() as ctx:
+            do_dai = 28
+            for ws in self.sd.wv.worksheets:
+                for row in ws.iter_rows():
+                    self._kiem_huy()
+                    for c in row:
+                        if la_so(c.value):
+                            d = num(c.value)
+                            do_dai = max(do_dai, len(d.as_tuple().digits) + abs(d.as_tuple().exponent))
+            ctx.prec = do_dai * 2 + 16
+            self._k8_nguon_kl()
+
+    def _mo_ta_tien(self, ky_nay, luy_ke):
+        ma = self.kq.get('tien_te')
+        if not ma:
+            return ": chưa rõ đơn vị tiền tệ."
+        cau = f": GT lũy kế {luy_ke:,.0f} {ma}"
+        return cau + (f", kỳ này {ky_nay:,.0f} {ma}" if ky_nay is not None else "")
+
+    def _k8_nguon_kl(self):
+        sd = self.sd
+        try:
+            bang = tim_bang_chi_tiet(sd.wv, self._kiem_huy)
+        except LoiNghiepVu as loi:
+            if loi.ma != "KHONG_TIM_THAY_BANG":
+                raise
+            self.kq["nguon"] = []
+            self.them("Kiểm soát", "K8", "-", "Không nhận được bảng chi tiết KL × đơn giá.")
+            return
+        sh, cols = bang["sheet"], bang["cols"]
+        cot_kl = cols.get("kl_lk") or cols.get("kl_kn")
+        if not cot_kl:
+            self.kq["nguon"] = []
+            self.them("Kiểm soát", "K8", "-", "Bảng chưa có cột KL lũy kế hoặc kỳ này để kiểm nguồn.")
+            return
+        self.kq['tien_te'] = _tim_tien_te(sd.wv, bang, self._kiem_huy)
+        out = []
+        for it in bang["items"]:
+            self._kiem_huy()
+            if not it["dvt"]:
+                continue
+            nguon, duong, co = self._nguon(sh, cot_kl, it["dong"], it.get("kl_hd"))
+            if cols.get("kl_kt") and (it.get("kl_kt") or 0):
+                n_kt, d_kt, co_kt = self._nguon(sh, cols["kl_kt"], it["dong"], it.get("kl_hd"))
+                n_kt = n_kt + (" (qua sheet ẩn)" if "qua sheet ẩn" in co_kt else "")
+            else:
+                n_kt = "0 / không có"
+            dg = it.get("don_gia") or 0
+            gt_kn = it.get("gt_kn") if it.get("gt_kn") is not None else (it.get("kl_kn") or 0) * dg
+            gt_lk = it.get("gt_lk") if it.get("gt_lk") is not None else (it.get("kl_lk") or 0) * dg
+            out.append([it["dong"], it["ten"][:80], it["dvt"], it.get("kl_hd"), it.get("kl_lk"), round(gt_kn or 0), round(gt_lk or 0),
+                        nguon, "; ".join(co), " -> ".join(duong), it.get("kl_kt"), n_kt])
+        self.kq.update(nguon=out, bang_sh=sh, cot_kl=get_column_letter(cot_kl) if cot_kl else "")
+        tang = defaultdict(lambda: [0, Decimal(0), Decimal(0)])
+        for x in out:
+            self._kiem_huy()
+            t = tang[x[7]]
+            t[0] += 1
+            t[1] += x[5]
+            t[2] += x[6]
+        self.kq["tang"] = sorted(([k] + v for k, v in tang.items()), key=lambda r: -r[3])
+        chan = [x for x in out if "đang bị chặn" in x[8]]
+        if chan:
+            self.them("Trung bình", "K8", f"{sh}!{self.kq['cot_kl']}{chan[0][0]}",
+                      f"{len(chan)} hạng mục có KL diễn giải vượt KL HĐ, đang bị công thức chặn về KL HĐ: phát sinh chưa xử lý, "
+                      "BOQ sai hay diễn giải thổi phồng?", len(chan), tai_lieu="A04 hồ sơ phát sinh / B04 thay đổi thiết kế")
+        kt_dem = Counter(x[11] for x in out if not x[11].startswith("0 /"))
+        self.kq["tang_kt"] = [[k, n] for k, n in kt_dem.most_common()]
+        for k, n in kt_dem.items():
+            if k.startswith(("Nhập tay", "Tỷ lệ")) or "sheet ẩn" in k:
+                self.them("Cao" if "Nhập tay" in k or "sheet ẩn" in k else "Trung bình", "K8", f"{sh}!{get_column_letter(cols['kl_kt'])}",
+                          f"{n} hạng mục có KL kỳ trước nguồn '{k}'", n, tai_lieu="E01 hồ sơ đợt trước đã duyệt (đối chiếu từng hạng mục)")
+        for k, n, gkn, glk in self.kq["tang"]:
+            if k in ("Nhập tay", "Bằng KL HĐ", "Nguồn trống", "Link lệch dòng", "File ngoài") and n:
+                self.them("Cao", "K8", f"{sh}!{self.kq['cot_kl']}", f"{n} hạng mục có KL lũy kế nguồn '{k}'" + self._mo_ta_tien(gkn, glk),
+                          n, glk, {"Nhập tay": "Diễn giải KL, bản vẽ / hoàn công", "Bằng KL HĐ": "Hoàn công + BB nghiệm thu (không chấp nhận 'bằng KL HĐ')",
+                                   "Nguồn trống": "Sửa liên kết, xác định nguồn", "Link lệch dòng": "Sửa liên kết, xác định nguồn",
+                                   "File ngoài": "File Excel đang liên kết"}[k])
+            elif k == "Tỷ lệ × KL HĐ" and n:
+                self.them("Trung bình", "K8", f"{sh}!{self.kq['cot_kl']}", f"{n} hạng mục KL lũy kế = tỷ lệ % × KL HĐ (ước tính tiến độ)" + self._mo_ta_tien(None, glk),
+                          n, glk, "Xác nhận % tiến độ của tư vấn giám sát")
+
+    def _lech(self, sh, r, x):
+        a, b = self.sd.nhan_dong(sh, r), self.sd.nhan_dong(x["sh"], x["r1"])
+        g = giong(a, b)
+        return bool(a) and len(a) >= 6 and (g is None or g < 0.6)
+
+    def _nguon(self, sh, c, r, kl_hd, sau=0, duong=None, co=None):
+        """Lần theo ô KL qua các tham chiếu 1 ô cho tới khi gặp công thức tính, số gõ tay, hoặc ô trống."""
+        self._kiem_huy()
+        sd = self.sd
+        duong = (duong or []) + [f"{sh}!{get_column_letter(c)}{r}"]
+        co = co or []
+        if sd.an(sh) and "qua sheet ẩn" not in co:
+            co.append("qua sheet ẩn")
+        f = sd.f(sh, c, r)
+        v = sd.v(sh, c, r)
+        v = num(v) if _la_so_kl(v) else v
+        bang_hd = lambda x: _la_so_kl(x) and _la_so_kl(kl_hd) and kl_hd and abs(num(x) - kl_hd) <= Decimal("0.000001") * max(1, abs(kl_hd))
+        if f in (None, ""):
+            return "Nguồn trống", duong, co
+        if _la_so_kl(f):
+            if bang_hd(f) and sau > 0:
+                co.append("số gõ tay đúng bằng KL HĐ")
+            return "Nhập tay", duong, co
+        if not la_cong_thuc(f) or sau > 8:
+            if la_cong_thuc(f) and sau > 8:
+                raise LoiNghiepVu("VUOT_GIOI_HAN", "Đường truy nguồn KL vượt giới hạn 8 tầng.")
+            return "Khác", duong, co
+        refs = tach_tham_chieu(f, sh)
+        if any(x["ngoai"] is not None for x in refs):
+            return "File ngoài", duong, co
+        don = [x for x in refs if x["c1"] == x["c2"] and x["r1"] == x["r2"]]
+        body = bo_chuoi(f)
+        chi_1_ref = len(refs) == 1 and len(don) == 1 and re.fullmatch(r"=\s*\+?\s*(?:'[^']+'|[^!=]+)?!?\$?[A-Z]{1,3}\$?\d+\s*", body)
+        if chi_1_ref:
+            x = don[0]
+            if bang_hd(v) and x["sh"] in sd.wb.sheetnames and re.search(r"hop dong|\bhd\b", bo_dau(sd.tieu_de(x["sh"], x["c1"]))):
+                return "Bằng KL HĐ", duong + [f"{x['sh']}!{get_column_letter(x['c1'])}{x['r1']}"], co
+            if x["sh"] != sh and self._lech(sh, r, x):
+                return "Link lệch dòng", duong + [f"{x['sh']}!{get_column_letter(x['c1'])}{x['r1']}"], co
+            if x["sh"] in sd.wb.sheetnames:
+                return self._nguon(x["sh"], x["c1"], x["r1"], kl_hd, sau + 1, duong, co)
+            return "Nguồn trống", duong, co
+        # tham chiếu 1 ô nhân hằng số: tỷ lệ x KL HĐ ?
+        if len(don) == 1 and len(refs) == 1 and hang_so_nhung(f):
+            if _la_so_kl(v) and _la_so_kl(kl_hd) and kl_hd and 0 < v / kl_hd < 1:
+                return "Tỷ lệ × KL HĐ", duong, co
+            return "Hệ số × ô khác", duong, co
+        cong_tru = re.fullmatch(r"=\s*[+\-]?\s*X(\s*[+\-]\s*X)+\s*", LREF.sub("X", QREF.sub("X", body)))
+        if cong_tru and len(don) == len(refs) >= 2:
+            # lũy kế = kỳ trước + kỳ này, kỳ này = lũy kế - kỳ trước ...: đi theo thành phần 'lũy kế', rồi 'kỳ này'
+            def uu_tien(x):
+                t = bo_dau(sd.tieu_de(x["sh"], x["c1"])) if x["sh"] in sd.wb.sheetnames else ""
+                return (0 if "luy ke" in t and "truoc" not in t else 1 if re.search(r"k[iy] nay", t) else 2)
+            x = sorted(don, key=uu_tien)[0]
+            co.append("cộng/trừ nhiều ô")
+            if x["sh"] != sh and self._lech(sh, r, x):
+                return "Link lệch dòng", duong + [f"{x['sh']}!{get_column_letter(x['c1'])}{x['r1']}"], co
+            return self._nguon(x["sh"], x["c1"], x["r1"], kl_hd, sau + 1, duong, co)
+        if re.match(r"^=\s*(IF|MIN|MAX)\(", f, re.I):
+            co.append("có IF/MIN/MAX")
+            # đi theo nhánh thực sự cho ra giá trị (so giá trị đã lưu); ưu tiên tham chiếu sang sheet khác (nguồn diễn giải)
+            ung = [x for x in don if x["sh"] in sd.wb.sheetnames]
+            gia = lambda x: num(sd.v(x["sh"], x["c1"], x["r1"]))
+            khop = [x for x in ung if _la_so_kl(gia(x)) and _la_so_kl(v) and abs(gia(x) - v) <= Decimal("0.000000001") * max(1, abs(v))]
+            khop.sort(key=lambda x: x["sh"] == sh)
+            dg = next((x for x in ung if x["sh"] != sh), None)
+            if dg and self._lech(sh, r, dg):
+                return "Link lệch dòng", duong + [f"{dg['sh']}!{get_column_letter(dg['c1'])}{dg['r1']}"], co
+            if dg and _la_so_kl(gia(dg)) and _la_so_kl(kl_hd) and gia(dg) > kl_hd + Decimal("0.000000001") and bang_hd(v):
+                co.append(f"diễn giải {gia(dg):g} > KL HĐ {kl_hd:g}, đang bị chặn về KL HĐ")
+                x = dg
+            else:
+                x = (khop or ([dg] if dg else []) or ung or [None])[0]
+            if x:
+                if x["sh"] != sh and self._lech(sh, r, x):
+                    return "Link lệch dòng", duong + [f"{x['sh']}!{get_column_letter(x['c1'])}{x['r1']}"], co
+                return self._nguon(x["sh"], x["c1"], x["r1"], kl_hd, sau + 1, duong, co)
+        if bang_hd(v) and len(refs) == 1:
+            return "Bằng KL HĐ", duong, co
+        return "Tính từ diễn giải / công thức", duong, co
 
 
     def _xep_lai(self):

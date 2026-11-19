@@ -83,7 +83,7 @@ kq=CoreGia().chay_thu_demo(app)
 assert len(kq)==5
 assert [k['trang_thai'] for k in kq]==['XONG']*5
 assert kq[2]['ket_qua']['truong']['so_dong']==30
-assert all(k['ket_qua']['truong']['tep_bao_cao'] is None for k in kq[:2])
+assert all(k['ket_qua']['truong']['tep_bao_cao']['mime'].endswith('spreadsheetml.sheet') for k in kq[:2])
 assert not any(n=='kho_tri_thuc' or n.startswith('kho_tri_thuc.') for n in sys.modules)
 print('EX_DOC_LAP_DAT')
 '''
@@ -104,7 +104,7 @@ def main():
     for cau in loi:
         print('[LỖI] '+cau)
     if not loi:
-        print('[ĐẠT] AST, cây gói, import cô lập; đã kiểm bằng Core giả (CoreGia): 5/5 DEMO XONG (toàn vẹn K1–K7, đọc bảng EX-4/EX-5).')
+        print('[ĐẠT] AST, cây gói, import cô lập; đã kiểm bằng Core giả (CoreGia): 5/5 DEMO XONG (toàn vẹn K1–K8, đọc bảng EX-4/EX-5).')
     return int(bool(loi))
 
 

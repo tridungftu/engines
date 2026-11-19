@@ -1,4 +1,4 @@
-"""Cổng SDK kiểm an toàn tệp; EX-2 thực hiện kiểm toàn vẹn K1–K7."""
+"""Cổng SDK kiểm an toàn tệp; kiểm toàn vẹn K1–K8 và báo cáo trong RAM."""
 
 from copy import deepcopy
 from hashlib import sha256
@@ -8,6 +8,7 @@ from kho_tri_thuc_sdk.engine import Engine, LoiDuongTruyen, LoiNghiepVu
 from .nhan_dien import CAU_VUOT_TRAN, TEP_TOI_DA_BYTE, kiem_tep
 from .so_do import SoDo
 from .kiem_tra import KiemTra, ma_hoa_json
+from .bao_cao import ghi
 
 
 if not all(callable(getattr(Engine, ten, None)) for ten in ("_ghi", "_lam")):
@@ -83,13 +84,18 @@ def kiem_toan_ven(viec):
         bam = "sha256:" + sha256(raw).hexdigest()
         phien_ban = "e_kiem_excel " + app.phieu["phien_ban"]
         chi_tiet = kt.ket_qua_json(bam, phien_ban)
+        noi_dung_json = ma_hoa_json(chi_tiet)
+        noi_dung_bao_cao = ghi(kt)
         viec.kiem_huy()
-        tep_json = viec.tai_tep_ra("toan-ven.json", ma_hoa_json(chi_tiet), "application/json")
+        tep_json = viec.tai_tep_ra("toan-ven.json", noi_dung_json, "application/json")
+        viec.kiem_huy()
+        tep_bao_cao = viec.tai_tep_ra("bao-cao-toan-ven.xlsx", noi_dung_bao_cao,
+                                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         return {"loai": "truong", "truong": {
             "so_co_cao": sum(p["muc"] == "Cao" for p in kt.ph),
             "so_co_trung_binh": sum(p["muc"] == "Trung bình" for p in kt.ph),
             "so_kiem_soat": sum(p["muc"] == "Kiểm soát" for p in kt.ph),
-            "so_ngoai_nhom": kt.so_ngoai_nhom, "o_dich": kt.kq['dich'], "tep_bao_cao": None,
+            "so_ngoai_nhom": kt.so_ngoai_nhom, "o_dich": kt.kq['dich'], "tep_bao_cao": tep_bao_cao,
             "da_tinh_lai": not any(d[8] for d in kt.kq["sheet"]),
             "co_lien_ket_ngoai": bool(kt._ngoai_o),
             "tep_json": tep_json, "bam_dau_vao": bam, "phien_ban_engine": phien_ban}}

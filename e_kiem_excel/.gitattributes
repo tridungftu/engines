@@ -8,3 +8,4 @@ goi/**/*.jpg binary
 goi/**/*.zip binary
 tests/**/*.xlsx binary
 tests/**/*.xlsm binary
+tests/demo/*.json text eol=lf

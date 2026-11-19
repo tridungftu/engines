@@ -111,10 +111,12 @@ def sinh(thu_muc=None, *, chep_goi=False):
     thieu=workbook([('DEMO',sheet([('A1',NHAN),('B3',None,'1+1')]),'visible')])
     xml=f'<!DOCTYPE worksheet [<!ENTITY a "DEMO"><!ENTITY b "&a;&a;"><!ENTITY c "&b;&b;">]><worksheet xmlns="{NS}"><sheetData><row r="1"><c r="A1" t="inlineStr"><is><t>&c;</t></is></c></row></sheetData></worksheet>'.encode()
     files={'sach-DEMO.xlsx':sach,'thieu-v-DEMO.xlsx':thieu,'thuc-the-DEMO.xlsx':workbook([('DEMO',xml,'visible')]),'cu-DEMO.xls':bytes.fromhex('D0CF11E0A1B11AE1')+b'DEMO\0'*20,'K1-K8-DEMO.xlsx':bang_kl(cai_loi=True),'bang-kl-DEMO.xlsx':bang_kl()}
+    from sinh_tong_quat import cac_mau, DAP_AN
+    files.update(cac_mau())
     for ten,raw in files.items():
         (out/ten).write_bytes(raw)
     # Bộ nhóm của module chỉ là fixture test, không chép vào gói runtime.
-    bo_nhom = Path(__file__).with_name('bo_nhom_review_ttkl.json').read_bytes()
+    bo_nhom = Path(__file__).with_name('bo_nhom_review_ttkl.json').read_bytes().replace(b'\r\n', b'\n')
     (out/'bo_nhom_review_ttkl.json').write_bytes(bo_nhom)
     dap_an={
       'nhan':NHAN,'tien_te':'VND','ngay':'2026-10-30',
@@ -134,14 +136,15 @@ def sinh(thu_muc=None, *, chep_goi=False):
       'thieu-v-DEMO.xlsx':{'kiem':'K1','muc':'Kiểm soát','o':'DEMO','da_tinh_lai':False},
       'thuc-the-DEMO.xlsx':{'ma_loi':'TEP_HONG'},'cu-DEMO.xls':{'ma_loi':'TEP_KHONG_HO_TRO'},
       'bang-kl-DEMO.xlsx':{'sheet':'BTH','dong_tieu_de':3,'so_dong':30,'so_dong_nhom':1,'gia_tri_de_nghi':{'so':'60000000','tien_te':'VND'}}}
-    (out/'dap-an.json').write_text(json.dumps(dap_an,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    dap_an.update(DAP_AN)
+    (out/'dap-an.json').write_text(json.dumps(dap_an,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     bam={ten:hashlib.sha256(raw).hexdigest() for ten,raw in sorted(files.items())}
     bam['dap-an.json']=hashlib.sha256((out/'dap-an.json').read_bytes()).hexdigest()
     bam['bo_nhom_review_ttkl.json']=hashlib.sha256(bo_nhom).hexdigest()
-    (out/'bam-fixture.json').write_text(json.dumps(bam,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    (out/'bam-fixture.json').write_text(json.dumps(bam,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     if chep_goi:
         demo=GOI/'demo'; demo.mkdir(parents=True,exist_ok=True)
-        for ten in ('K1-K8-DEMO.xlsx','bang-kl-DEMO.xlsx','sach-DEMO.xlsx'):
+        for ten in ('K1-K8-DEMO.xlsx','bang-kl-DEMO.xlsx','sach-DEMO.xlsx','gia-thanh-DEMO.xlsx','bao-gia-DEMO.xlsx'):
             (demo/ten).write_bytes(files[ten])
     return files
 

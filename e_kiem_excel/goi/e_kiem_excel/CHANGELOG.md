@@ -1,6 +1,11 @@
 # Thay đổi
 
 ## 0.1.0 — 18/11/2026
+- EX-5: đọc khuôn `tong_quat`, kiểm cấu trúc/trần JSON, dùng chung matcher từ khóa
+  của `bo_nhom.py`; tiêu đề nhiều tầng/ô gộp, cột bắt buộc/tùy chọn, dòng dừng,
+  Decimal/ngày ISO/tiền tệ và cảnh báo dữ liệu. Thêm DEMO giá thành, báo giá, đáp án.
+- EX-5: bỏ helper chuẩn hóa riêng EX-4; import trực tiếp hàm EX-1 từ `chuan_hoa.py`.
+
 - EX-2: chuyển cây K7, chạy trước K6; cờ K6 tại BTH!J21 đã khớp mã gốc.
 - Kiểm ô đích, tìm theo nhãn do module truyền; thiếu đích có một mục Kiểm soát.
 - Bộ nhóm được kiểm cấu trúc/trần; hỗ trợ chứa chuỗi, nguyên từ và chữ số,

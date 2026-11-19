@@ -66,10 +66,10 @@ def test_tuong_duong_k1_k6(goc, demo, ten):
         chay_goc_1_6(kt)
         truong, chi_tiet = chay((demo / ten).read_bytes())
         assert Counter((p['muc'], p['kt'], p['o']) for p in kt.ph) == Counter(
-            (p['muc'], p['kiem'], p['o']) for p in chi_tiet['phat_hien'])
+            (p['muc'], p['kiem'], p['o']) for p in chi_tiet['phat_hien'] if p['kiem'] != 'K7')
         dem = Counter(p['muc'] for p in kt.ph)
         assert [truong[k] for k in ('so_co_cao', 'so_co_trung_binh', 'so_kiem_soat')] == [
-            dem['Cao'], dem['Trung bình'], dem['Kiểm soát']]
+            dem['Cao'], dem['Trung bình'], dem['Kiểm soát'] + 1]
         assert truong['bam_dau_vao'] == 'sha256:' + hashlib.sha256((demo / ten).read_bytes()).hexdigest()
         assert truong['da_tinh_lai'] == (ten != 'thieu-v-DEMO.xlsx')
         assert truong['o_dich'] is None and truong['tep_bao_cao'] is None and truong['so_ngoai_nhom'] is None
@@ -79,18 +79,18 @@ def test_tuong_duong_k1_k6(goc, demo, ten):
         kt.sd.wb.close(); kt.sd.wv.close()
 
 
-def test_lech_da_biet_voi_chay_day_du_goc(goc, demo):
-    """Không sửa thuật toán cho khớp: bản gốc đủ K7 phát thêm K6 tại J21."""
+def test_k6_da_khop_sau_k7_voi_chay_day_du_goc(goc, demo):
+    """EX-2 dựng K7 trước K6: cờ J21 từng thiếu ở EX-1 đã khớp gốc."""
     kt = goc.KiemTra(demo / 'K1-K8-DEMO.xlsx', o_dich='BTH!J39')
     try:
         kt.chay()
         _, data = chay((demo / 'K1-K8-DEMO.xlsx').read_bytes(), {'o_dich': 'BTH!J39'})
         cu = Counter((p['muc'], p['kt'], p['o']) for p in kt.ph if p['kt'] in {f'K{i}' for i in range(1, 7)})
-        moi = Counter((p['muc'], p['kiem'], p['o']) for p in data['phat_hien'])
-        assert cu - moi == Counter({('Trung bình', 'K6', 'BTH!J21'): 1})
-        assert not moi - cu
+        moi = Counter((p['muc'], p['kiem'], p['o']) for p in data['phat_hien'] if p['kiem'] != 'K7')
+        assert cu == moi
+        assert cu[('Trung bình', 'K6', 'BTH!J21')] == 1
         assert data['k6_hang_so'][0]['hang_so'] == '1.08'
-        assert data['k6_hang_so'][0]['so_trong_cay'] == '0'
+        assert data['k6_hang_so'][0]['so_trong_cay'] == '1'
     finally:
         kt.sd.wb.close(); kt.sd.wv.close()
 

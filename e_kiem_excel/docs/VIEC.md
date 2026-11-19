@@ -7,7 +7,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 0 | Phiếu engine, tạo thư mục, chép mã gốc tham chiếu, lập phiếu giao Codex | EX-P | Xong — 16/11/2026 | — | Lead Claude. Anh đồng ý tiến hành 16/11; Q1–Q3 áp đề xuất |
 | 1 | Khung gói SDK 2.2.0, ghim thư viện, sinh DEMO có giá trị lưu, nhận diện tệp, trần giải nén/ô, đo bộ nhớ | EX-0 | Chờ Core — 18/11/2026 | 4 | Mã và phép đo đã thực hiện; chưa đạt điều kiện CLI do yêu cầu hàm tạm CHUA_LAM. PR: chờ lead mở. Chi tiết bên dưới |
 | 2 | `SoDo` + hàm tham chiếu + K1–K6 nạp từ bytes; schema `tep_json` | EX-1 | Xong — 18/11/2026 (phần EX-1) | 6 | PR: chờ lead mở. 62 pytest đạt; CLI chung 2/3, còn CHUA_LAM của EX-4. Schema chờ lead duyệt; chi tiết bên dưới |
-| 3 | K7 + `o_dich`, `nhan_o_dich_json`, `bo_nhom_json`; Phụ lục A làm fixture | EX-2 | Chờ làm | 4 | Sau EX-1 |
+| 3 | K7 + `o_dich`, `nhan_o_dich_json`, `bo_nhom_json`; Phụ lục A làm fixture | EX-2 | Xong — 18/11/2026 | 4 | PR: chờ lead mở. CLI 3/3; pytest 163 passed; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia); chi tiết bên dưới |
 | 4 | Báo cáo Excel trong RAM; K8 sau công tắc `kiem_nguon_kl` | EX-3 | Chờ làm | 4 | Sau EX-2 |
 | 5 | `excel.doc_bang@1` khuôn `xay_dung_klgt` | EX-4 | Đang làm — 18/11/2026 | 4 | Mã EX-4 xong, chờ gộp các lát toàn vẹn để CLI chung đạt 3/3. PR: chờ lead mở |
 | 6 | Khuôn `tong_quat` | EX-5 | Chờ làm | 4 | Sau EX-4 |
@@ -20,6 +20,10 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 ## Cần Core
 - Không có cửa mới cho engine.
+- **EX-2 (18/11):** không phát sinh cửa Core/SDK mới. Gói hiện đã có EX-4 và K1–K7,
+  CLI chuẩn **3/3 ĐẠT**, mã 0; EX0-SDK-01 không còn chặn bản hiện tại. Các ghi nhận
+  CLI mã 1 trong báo cáo EX-0/EX-1/EX-4 bên dưới là lịch sử của từng lượt.
+  EX0-SDK-02 về MIME/Core thật vẫn giữ nguyên.
 - **EX-1 (18/11):** không phát sinh yêu cầu Core/SDK. Hai DEMO `excel.toan_ven@1` đã XONG qua CLI chuẩn; mục EX0-SDK-01 bên dưới hiện chỉ còn ví dụ `excel.doc_bang@1` của EX-4. Giữ nguyên ví dụ này, không thay kỳ vọng CLI thành đạt; lead chạy lại cả gói sau khi ghép EX-4. MIME vẫn theo EX0-SDK-02.
 - **Cần Core xác nhận** MIME khi tải `.xlsx`/`.xlsm` lên Core thật. `API-ENGINE-v1.md` chỉ quy định trường `mime`, không cam kết thuật toán gán MIME. SDK `thu.py`, `CoreGia.them_tep` → `_mime` trả `.xlsx`: `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`; `.xlsm`: `application/vnd.ms-excel.sheet.macroEnabled.12`. HTTP tải byte của `MayChuGia` dùng `application/octet-stream`, khác metadata trong phong bì. Chưa có bằng chứng Core thật; manifest tạm nhận thêm `application/octet-stream`, vẫn kiểm đuôi/chữ ký/ZIP/XML.
 - **EX0-SDK-01 — CLI và hàm tạm mâu thuẫn:** SDK 2.2.0 `thu.main()` chỉ cho `[ĐẠT]` khi `trang_thai == "XONG"`, không có cách khai lỗi kỳ vọng trong `chay_thu_demo`. Yêu cầu EX-0 giữ `LoiNghiepVu("CHUA_LAM", …)` làm ba ví dụ đều kết thúc `LOI`. Giữ nguyên API/SDK và yêu cầu hàm tạm; không đổi lỗi thành thành công hay bỏ DEMO. Cần lead thống nhất nghiệm thu EX-0 theo test lỗi kỳ vọng, hoặc SDK bổ sung cơ chế kiểm lỗi kỳ vọng. CLI chuẩn vẫn mã 1 ở bản này; không tuyên bố đạt ba lệnh.
@@ -258,3 +262,111 @@ Không phát sinh "Cần Core / Chờ Anh" mới. Phần cần lead: duyệt sch
 đã liệt kê; ghép EX-4 rồi chạy lại CLI toàn gói.
 
 Thời gian thực tế EX-1: **0,24 giờ**, từ **18/11/2026 20:47 đến 21:01:10** (giờ Việt Nam); ước tính trong phiếu: **6 giờ**. PR: **chờ lead mở**.
+
+
+## EX-2 — thực hiện 18/11/2026, PR: chờ lead mở
+
+Kết luận: **Đạt phạm vi EX-2 và ba lệnh nghiệm thu chung**. Đã kiểm bằng Core giả
+(CoreGia); chưa nối Core thật. K8/báo cáo Excel thuộc EX-3; khuôn tong_quat thuộc
+EX-5 đang làm ở worktree khác. Không commit/push.
+
+### Đã làm
+
+- Ba tệp Python runtime: sửa `kiem_tra.py`, phần toàn vẹn trong `chay.py`,
+  thêm `bo_nhom.py`; manifest chỉ đổi hai DEMO toàn vẹn, trong giới hạn ~5 tệp mã.
+  Chuyển K7 và `_xep_lai` từ nguồn đã ghim; thứ tự K7 → K6 → xếp lại mức cờ.
+- Ô đích kiểm fullmatch, tên sheet tồn tại, giới hạn XFD/1048576, hỗ trợ `$` và
+  nháy đơn Excel. Sai → THAM_SO_KHONG_HOP_LE. Ưu tiên ô đích; nếu trống, tìm
+  theo nhãn module trên sheet hiện (80 dòng đầu, 12 cột đầu; số đầu trong sáu ô
+  bên phải). Số 0, âm, lẻ đều giữ; không có đích → đúng một mục Kiểm soát K7.
+- LABELS/tim_so_tong_hop Decimal đã có từ EX-4: **không sửa doc_bang.py**.
+  `_tim_o_dich` chuyển cùng thuật toán quét với nhãn tùy biến và num Decimal
+  của EX-1; không sao chép LABELS nghiệp vụ vào K7. Năng lực/hàm/DEMO đọc bảng
+  trong chay.py và engine.json so AST/JSON với HEAD giữ nguyên.
+- Bộ nhóm kiểm chặt kiểu/cấu trúc/khóa trùng/phien_ban, vùng, nhóm trùng,
+  danh sách điều kiện, từ khóa; đúng trần 30 nhóm/200 từ khóa/32768 byte UTF-8
+  nhận được, vượt một đơn vị → THAM_SO_KHONG_HOP_LE. JSON NaN/Infinity bị từ chối.
+- Từ khóa chứa chuỗi, `=tu` nguyên từ Unicode, `#` một hoặc nhiều chữ số;
+  bỏ dấu/viết thường/gộp khoảng trắng. Các ký tự regex là chữ nguyên văn;
+  không thực thi regex đầu vào. `#` dùng bảng trạng thái, không backtracking.
+  API dùng chung cho EX-5: kiem_tu_khoa(tu), khop_tu_khoa(tu, van_ban).
+- Không bộ nhóm: lá Chưa phân nhóm, so_ngoai_nhom null, không cờ Ngoài nhóm.
+  Có bộ: nhóm đầu khớp, tài liệu theo nhóm; K2/K6 cũng lấy tài liệu từ bộ.
+  Băm bộ nhóm là SHA-256 JSON UTF-8 chuẩn hóa; không lưu bộ lên máy/ngăn.
+- Fixture tests/demo/bo_nhom_review_ttkl.json đã có từ EX-0: tái dùng, test so
+  đúng nguyên object Phụ lục A, đủ tám mã (7 nhóm nghiệp vụ có nhánh 5b).
+  Không chép fixture vào goi/.
+- JSON K7 giữ đủ cột nguồn và boolean la; số chuỗi thập phân, tổng dải Decimal,
+  đặt precision theo toán hạng. Schema mở cho K7, chờ lead duyệt trong PR.
+  Đã cập nhật CHANGELOG, README, NGUON và schema README.
+
+### Kết quả tương đương và các lệch đo riêng
+
+Test kiểm SHA-256 hai mã nguồn (CRLF→LF chỉ trong RAM) trước khi import bản gốc.
+So **mọi cột cây và nhóm/tài liệu từng lá**, số theo giá trị Decimal; phát hiện
+so mức/mã/ô với KiemTra.chay() gốc đầy đủ rồi lọc K8 khỏi phạm vi EX-2.
+
+| DEMO / ô đích | Nút K7 | Lá nhập tay/nhóm nhập tay | Ngoài nhóm | Phát hiện K1–K7 |
+|---|---:|---:|---:|---|
+| K1-K8-DEMO.xlsx / BTH!J39 | 13 | 6 | 1 | 4 Cao, 5 Trung bình, 0 Kiểm soát; khớp gốc |
+| bang-kl-DEMO.xlsx / BTH!J39 | 6 | 2 | 0 | Không cờ; khớp gốc |
+| sach-DEMO.xlsx / DEMO!B3 | 2 | 1 | 1 | 1 Cao K7; khớp gốc khi truyền bộ nhóm |
+| thieu-v-DEMO.xlsx / DEMO!B3 | 1 | 0 | 0 | 1 Kiểm soát K1; khớp gốc |
+
+Tổng **22 nút, 9 lá**, không lệch cấu trúc/giá trị/nhóm trên bốn DEMO này sau
+chuẩn hóa tên Ngoài nhóm. Cờ **Trung bình / K6 / BTH!J21** từng thiếu ở EX-1
+nay khớp, so_trong_cay = "1"; không còn lệch K1–K7 về mức/mã/ô trên bộ chuẩn.
+Hai cờ K8 của tệp lỗi vẫn thuộc EX-3, chưa chạy trong engine.
+
+| Chỗ Phụ lục A yêu cầu đo riêng | Kết quả |
+|---|---|
+| Nhóm 6 xét cả nhãn dòng trong khong_co gia tri | Trên bộ bốn DEMO chuẩn: 0 lệch. Ba ca bổ sung (thuế/VAT/GTGT, nhãn có Giá trị): gốc 3/3 vào nhóm 6; Phụ lục A 3/3 ra Ngoài nhóm. Có kiểm lá K7 thật cho VAT + nhãn Giá trị DEMO |
+| dai/rong/cao chứa chuỗi | Báo cáo DEMO / Trong DEMO / Đại diện DEMO: cả gốc và EX-2 đều 3/3 vào 5 KL / diễn giải, 0 lệch. Có kiểm lá K7 thật cho Báo cáo DEMO. Chưa đổi thành =dai/=rong/=cao |
+
+Lệch có chủ đích và quyết định tạm:
+
+- Tên Ngoài 7 nhóm - cần giải thích → Ngoài nhóm — cần giải thích theo phiếu.
+  Không coi đổi nhãn này là lệch phân loại. Không bộ nhóm thì dùng hành vi mới
+  Chưa phân nhóm; ô đích không còn tự tìm nhãn thanh toán nếu module không truyền.
+- Tổng dải 2.000.000 nguồn float ghi 2000000.0; EX-2 Decimal ghi 2000000,
+  **chênh giá trị = 0**. Ca 0.1 + 0.2 - 1000000000.125 giữ -999999999.825;
+  ca 10^30 + 1 - 10^30 giữ 1, không mất chữ số do precision mặc định.
+- Giữ trần cây nguồn 14 tầng/12 mẫu mỗi dải nhưng **từ chối VUOT_GIOI_HAN thay
+  vì cắt ngầm** theo AGENTS.md §4.6. Trần tạm bổ sung 100.000 nút,
+  250.000 ô/dải, 500.000 lượt đọc ô; EX-6 đo lại sức chứa/thời gian trên bản đủ.
+- Cây vẫn gom dải theo mẫu, chọn một ô đại diện/mẫu và gom ô nhập tay như nguồn;
+  so_ngoai_nhom đếm **nút nhập tay** ngoài nhóm, đúng cách phát cờ nguồn,
+  không phải kiểm kê từng ô trong một nút dải.
+
+### Kết quả ba lệnh nghiệm thu
+
+Dùng .venv/Scripts/python trong worktree, PYTHONUTF8=1 và
+PYTHONDONTWRITEBYTECODE=1. SDK 2.2.0 cài offline từ wheel repo, SHA-256
+0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984 khớp SHA256SUMS.
+Ba dependency runtime cài offline bằng lock có hash từ wheel EX-0 (chỉ đọc).
+Không tải mạng, không thêm dependency. **Đã kiểm bằng Core giả (CoreGia).**
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_kiem_excel/goi/e_kiem_excel
+→ 3/3 ĐẠT; mọi ví dụ chạy thử DEMO đều đạt; mã thoát 0.
+.venv/Scripts/python -m pytest e_kiem_excel/tests -q
+→ 163 passed in 2.83s, 0 skipped; mã thoát 0.
+.venv/Scripts/python e_kiem_excel/tests/kiem_doc_lap.py
+→ [ĐẠT] AST, cây gói, import cô lập;
+  đã kiểm bằng Core giả (CoreGia): 3/3 DEMO XONG (K1–K7, đọc bảng EX-4);
+  mã thoát 0.
+```
+
+Có kiểm ca hủy trong K7, chu trình, sheet thiếu, trống/chữ, dải và nhiều mẫu,
+liên kết ngoài thuộc cây/hạ mức cột phụ (khớp gốc), không lộ thư mục, giới hạn
+độ sâu/dải/mẫu, tham số sai qua CoreGia. Kiểm độc lập không bytecode/symlink,
+không import Core, không mạng/tiến trình ngoài. Test tương thích Linux;
+**chưa chạy Linux** trong phiên Windows này. git diff --check mã 0.
+
+### Cần Core / Chờ Anh mới phát sinh
+
+Không có. EX0-SDK-01 không còn chặn CLI bản hiện tại; EX0-SDK-02 MIME/Core thật
+vẫn giữ. Lead duyệt schema và các lệch đã nêu, ghép EX-5 dùng chung matcher,
+commit và mở PR. Không sửa doc_bang.py, ma-nguon/, SDK, _chung/ hoặc mã Core.
+
+Thời gian thực tế: **0.23 giờ**, từ **18/11/2026 21:47:00 đến 22:01:03** (giờ Việt Nam); ước tính trong phiếu **4 giờ**. PR: **chờ lead mở**.

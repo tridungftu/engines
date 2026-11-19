@@ -274,6 +274,30 @@
         "khuon": "xay_dung_klgt",
         "tien_te": "VND"
       }
+    },
+    {
+      "nang_luc": "excel.doc_bang@1",
+      "ten": "DEMO Đọc bảng giá thành theo khuôn tổng quát — EX-5",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/gia-thanh-DEMO.xlsx"
+      },
+      "tham_so": {
+        "khuon": "tong_quat",
+        "khuon_cot_json": "{\"phien_ban\": 1, \"cot\": [{\"ma\": \"san_pham\", \"tu_khoa\": [\"san pham\"], \"bat_buoc\": true, \"kieu\": \"van_ban\"}, {\"ma\": \"san_luong\", \"tu_khoa\": [\"san luong\"], \"bat_buoc\": true, \"kieu\": \"so\"}, {\"ma\": \"vat_lieu\", \"tu_khoa\": [\"chi phi vat lieu\"], \"bat_buoc\": true, \"kieu\": \"so_tien\"}, {\"ma\": \"nhan_cong\", \"tu_khoa\": [\"chi phi nhan cong\"], \"bat_buoc\": true, \"kieu\": \"so_tien\"}, {\"ma\": \"ngay\", \"tu_khoa\": [\"ngay\"], \"bat_buoc\": true, \"kieu\": \"ngay\"}, {\"ma\": \"ghi_chu\", \"tu_khoa\": [\"ghi chu\"], \"bat_buoc\": false, \"kieu\": \"van_ban\"}], \"dong_dung\": [\"=tong cong\"]}"
+      }
+    },
+    {
+      "nang_luc": "excel.doc_bang@1",
+      "ten": "DEMO Đọc bảng báo giá theo khuôn tổng quát — EX-5",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/bao-gia-DEMO.xlsx"
+      },
+      "tham_so": {
+        "khuon": "tong_quat",
+        "khuon_cot_json": "{\"phien_ban\": 1, \"cot\": [{\"ma\": \"ma_hang\", \"tu_khoa\": [\"=ma hang\"], \"bat_buoc\": true, \"kieu\": \"van_ban\"}, {\"ma\": \"mo_ta\", \"tu_khoa\": [\"mo ta\"], \"bat_buoc\": true, \"kieu\": \"van_ban\"}, {\"ma\": \"don_gia\", \"tu_khoa\": [\"gia dot #\"], \"bat_buoc\": true, \"kieu\": \"so_tien\"}, {\"ma\": \"hieu_luc\", \"tu_khoa\": [\"hieu luc\"], \"bat_buoc\": true, \"kieu\": \"ngay\"}, {\"ma\": \"chiet_khau\", \"tu_khoa\": [\"chiet khau\"], \"bat_buoc\": false, \"kieu\": \"so\"}], \"dong_dung\": [\"=cong\"]}"
+      }
     }
   ],
   "bi_mat": [],

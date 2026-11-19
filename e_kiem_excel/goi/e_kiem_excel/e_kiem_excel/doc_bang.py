@@ -1,40 +1,17 @@
 """Đọc KLGT từ master_hd.py 629–765; không tính lại công thức Excel."""
 
-from decimal import Decimal, InvalidOperation, localcontext
+from decimal import Decimal, localcontext
 from hashlib import sha256
 from io import BytesIO
 import json
 import re
-import unicodedata
 
 import openpyxl
 from openpyxl.utils import get_column_letter
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
 from .nhan_dien import CAU_VUOT_TRAN, TEP_TOI_DA_BYTE
-
-
-# lead gộp vào chuan_hoa.py sau EX-1.
-def _nfc(s):
-    return unicodedata.normalize("NFC", str(s or ""))
-
-
-def _bo_dau(s):
-    s = _nfc(s).replace("đ", "d").replace("Đ", "D")
-    s = unicodedata.normalize("NFD", s)
-    s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
-    return re.sub(r"\s+", " ", s.lower()).strip()
-
-
-def _num(v):
-    """Giữ cách đọc num gốc (dấu phẩy phân nhóm), chỉ đổi sang Decimal."""
-    if v is None or v == "" or isinstance(v, bool):
-        return None
-    try:
-        d = Decimal(str(v).replace(",", ""))
-    except (InvalidOperation, ValueError):
-        return None
-    return d if d.is_finite() else None
+from .chuan_hoa import nfc as _nfc, bo_dau as _bo_dau, num as _num
 
 
 def _hdr_text(ws, rows, col):

@@ -65,3 +65,16 @@ Phần tạo phong bì/JSON, kiểm tham số, nhận đơn vị tiền và cả
 bám phiếu §4.2–4.3, §5.2. Không thêm dependency, không mạng, không ghi tệp trên máy.
 `chay.py` chỉ nối `excel.doc_bang@1`; helper đọc chung thêm trả bytes đã kiểm,
 không đổi hành vi năng lực toàn vẹn. Kiểm kê SHA-256 toàn gói để EX-6 thực hiện.
+
+## EX-5 — khuôn tổng quát, 18/11/2026
+
+`doc_tong_quat.py` là mã mới nội bộ theo phiếu §4.2. Không thêm dependency.
+`doc_bang.py` nay import trực tiếp `nfc/bo_dau/num` từ `chuan_hoa.py` của EX-1,
+không còn ba bản helper riêng EX-4; không sửa hàm nào trong `chuan_hoa.py`.
+
+`bo_nhom.py` lấy nguyên tệp đang triển khai của EX-2 để gói này tự chạy độc lập,
+không viết lại matcher. SHA-256 bytes lúc nhận: `319f034694ab3dacf4c8ea6f628ddecb80a5e67ffdb67d681c804d3b50488255`.
+EX-5 import `doc_json`, `kiem_tu_khoa`, `khop_tu_khoa(tu, van_ban)` từ đúng module
+này. Lead giữ một tệp chung khi gộp EX-2/EX-5; không cần hai bản thuật toán.
+Hai DEMO mới do `tests/demo/sinh_tong_quat.py` sinh bằng OOXML/ZIP tất định,
+ghép vào script sinh chung và bảng băm fixture; dữ liệu/đáp án đều giả.

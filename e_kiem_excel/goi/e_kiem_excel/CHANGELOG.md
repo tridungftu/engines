@@ -1,6 +1,10 @@
 # Thay đổi
 
 ## 0.1.0 — 18/11/2026
+- EX-5: đọc khuôn `tong_quat`, kiểm cấu trúc/trần JSON, dùng chung matcher từ khóa
+  của `bo_nhom.py`; tiêu đề nhiều tầng/ô gộp, cột bắt buộc/tùy chọn, dòng dừng,
+  Decimal/ngày ISO/tiền tệ và cảnh báo dữ liệu. Thêm DEMO giá thành, báo giá, đáp án.
+- EX-5: bỏ helper chuẩn hóa riêng EX-4; import trực tiếp hàm EX-1 từ `chuan_hoa.py`.
 - EX-1: chuyển SoDo, tham chiếu, chuẩn hóa Decimal và K1–K6; nạp bytes,
   bỏ thư mục liên kết ngoài; trả trường và tải JSON UTF-8 trong RAM.
 - Kiểm hủy giữa các kiểm, TEP_HONG an toàn, trần JSON 20 MiB; schema ngoài gói

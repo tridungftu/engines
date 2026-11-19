@@ -10,7 +10,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 3 | K7 + `o_dich`, `nhan_o_dich_json`, `bo_nhom_json`; Phụ lục A làm fixture | EX-2 | Chờ làm | 4 | Sau EX-1 |
 | 4 | Báo cáo Excel trong RAM; K8 sau công tắc `kiem_nguon_kl` | EX-3 | Chờ làm | 4 | Sau EX-2 |
 | 5 | `excel.doc_bang@1` khuôn `xay_dung_klgt` | EX-4 | Đang làm — 18/11/2026 | 4 | Mã EX-4 xong, chờ gộp các lát toàn vẹn để CLI chung đạt 3/3. PR: chờ lead mở |
-| 6 | Khuôn `tong_quat` | EX-5 | Chờ làm | 4 | Sau EX-4 |
+| 6 | Khuôn `tong_quat` | EX-5 | Xong — 18/11/2026 | 4 | PR: chờ lead mở. CLI 5/5 ĐẠT; pytest 144 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia) |
 | 7 | Ghim nguồn, cài máy sạch, đo thời gian/bộ nhớ trên bản hoàn chỉnh, chốt `thoi_han_giay` | EX-6 | Chờ làm | 3 | Cuối |
 | | **Tổng** | | | **29** | |
 
@@ -20,6 +20,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 ## Cần Core
 - Không có cửa mới cho engine.
+- **EX-5 (18/11):** không phát sinh yêu cầu Core/SDK. Bản worktree đã có EX-1 + EX-4 + EX-5: CLI chuẩn **5/5 ĐẠT**, mã 0; vướng hàm tạm EX0-SDK-01 trong các báo cáo lịch sử dưới đây không còn chặn bản này. EX0-SDK-02/MIME Core thật vẫn giữ nguyên, không thuộc phạm vi EX-5.
 - **EX-1 (18/11):** không phát sinh yêu cầu Core/SDK. Hai DEMO `excel.toan_ven@1` đã XONG qua CLI chuẩn; mục EX0-SDK-01 bên dưới hiện chỉ còn ví dụ `excel.doc_bang@1` của EX-4. Giữ nguyên ví dụ này, không thay kỳ vọng CLI thành đạt; lead chạy lại cả gói sau khi ghép EX-4. MIME vẫn theo EX0-SDK-02.
 - **Cần Core xác nhận** MIME khi tải `.xlsx`/`.xlsm` lên Core thật. `API-ENGINE-v1.md` chỉ quy định trường `mime`, không cam kết thuật toán gán MIME. SDK `thu.py`, `CoreGia.them_tep` → `_mime` trả `.xlsx`: `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`; `.xlsm`: `application/vnd.ms-excel.sheet.macroEnabled.12`. HTTP tải byte của `MayChuGia` dùng `application/octet-stream`, khác metadata trong phong bì. Chưa có bằng chứng Core thật; manifest tạm nhận thêm `application/octet-stream`, vẫn kiểm đuôi/chữ ký/ZIP/XML.
 - **EX0-SDK-01 — CLI và hàm tạm mâu thuẫn:** SDK 2.2.0 `thu.main()` chỉ cho `[ĐẠT]` khi `trang_thai == "XONG"`, không có cách khai lỗi kỳ vọng trong `chay_thu_demo`. Yêu cầu EX-0 giữ `LoiNghiepVu("CHUA_LAM", …)` làm ba ví dụ đều kết thúc `LOI`. Giữ nguyên API/SDK và yêu cầu hàm tạm; không đổi lỗi thành thành công hay bỏ DEMO. Cần lead thống nhất nghiệm thu EX-0 theo test lỗi kỳ vọng, hoặc SDK bổ sung cơ chế kiểm lỗi kỳ vọng. CLI chuẩn vẫn mã 1 ở bản này; không tuyên bố đạt ba lệnh.
@@ -258,3 +259,88 @@ Không phát sinh "Cần Core / Chờ Anh" mới. Phần cần lead: duyệt sch
 đã liệt kê; ghép EX-4 rồi chạy lại CLI toàn gói.
 
 Thời gian thực tế EX-1: **0,24 giờ**, từ **18/11/2026 20:47 đến 21:01:10** (giờ Việt Nam); ước tính trong phiếu: **6 giờ**. PR: **chờ lead mở**.
+
+## EX-5 — thực hiện 18/11/2026, PR: chờ lead mở
+
+Kết luận: **Đạt phạm vi EX-5 và ba lệnh nghiệm thu chung trên worktree này.**
+Đã kiểm bằng Core giả (CoreGia), chưa nối Core thật. Không commit/push.
+
+### Đã làm
+
+- `doc_tong_quat.py` đọc khuôn `{phien_ban, cot[{ma, tu_khoa, bat_buoc, kieu}], dong_dung}`;
+  bốn kiểu `van_ban/so/so_tien/ngay`, cột bắt buộc/tùy chọn, tiêu đề nhiều tầng/ô gộp,
+  dòng nhóm/dòng dừng. Dòng thiếu cột bắt buộc giữ trong JSON với cảnh báo, không
+  tính vào số dòng dữ liệu. Sai kiểu ô trả null và cảnh báo; không cắt dữ liệu ngầm.
+- Khuôn sai cấu trúc, phiên bản/kiểu/khóa lạ, khóa JSON trùng, mã cột trùng,
+  từ khóa không hợp lệ, vượt trần → `THAM_SO_KHONG_HOP_LE`. Dùng nguyên
+  `bo_nhom.doc_json`, `kiem_tu_khoa`, `khop_tu_khoa(tu, van_ban)` của EX-2,
+  không tạo thuật toán từ khóa thứ hai. Tệp chung nhận từ worktree EX-2, SHA-256
+  `319f034694ab3dacf4c8ea6f628ddecb80a5e67ffdb67d681c804d3b50488255`.
+- Chỉ phần `excel.doc_bang@1` trong `chay.py` được nối thêm nhánh; manifest chỉ thêm
+  hai DEMO thuộc năng lực đọc bảng. Không sửa `kiem_tra.py`, `so_do.py`,
+  `tham_chieu.py` hoặc năng lực `excel.toan_ven@1` đang thuộc EX-2.
+- Ba helper EX-4 `_nfc/_bo_dau/_num` nay là import trực tiếp từ `chuan_hoa.py` của
+  EX-1. Không thêm/sửa hàm nào trong `chuan_hoa.py`. Toàn bộ test EX-1/EX-4 xanh;
+  chỉ đổi ca cũ chờ EX-5 từ `CHUA_LAM` thành lỗi thiếu khuôn đúng nghiệp vụ.
+- Hai DEMO OOXML/ZIP tất định, có `<f>` và `<v>` cho công thức; script sinh ngoài gói,
+  đáp án độc lập trong `dap-an.json`, SHA-256 trong `bam-fixture.json`:
+
+| Mẫu | Kết quả đối chiếu đáp án |
+|---|---|
+| Bảng giá thành DEMO | 2 dòng dữ liệu, 1 dòng nhóm, 0 cảnh báo; tiêu đề 2 tầng có ô gộp, cột tùy chọn vắng; Decimal số âm/số 0, đơn vị VND, ngày ISO |
+| Bảng báo giá DEMO | 2 dòng dữ liệu, 0 dòng nhóm, 1 cảnh báo số lưu dạng chữ; cột rời/đổi sheet, từ khóa `#` và `=`, mã `0001`/`0002`, số nguyên 9007199254740993 và tiền 2500000000.125 USD giữ đúng |
+
+- Giữ tiền/ngày theo §4.3/§5.2: Decimal → chuỗi thập phân, tiền kèm đơn vị, chưa rõ
+  thì JSON giữ số nguồn với `tien_te: null` như EX-4; hai trường giá trị hợp đồng/đề nghị
+  của khuôn tổng quát luôn null. Ngày Excel hoặc chuỗi ISO/dd/mm/yyyy xuất ISO.
+- Chỉ RAM, đóng workbook trong `finally`, kiểm hủy giữa các vòng, trần JSON đầu ra
+  20 MiB; không thêm dependency. SDK 2.2.0 cài từ wheel repo, SHA-256 khớp
+  `SHA256SUMS.txt`; ba thư viện runtime cài offline từ wheel sẵn có bằng lock có hash.
+- Cập nhật README, CHANGELOG, NGUON; chi tiết JSON động và quy tắc chọn bảng ghi
+  trong README. Bốn tệp Python runtime sửa/thêm (gồm tệp chung `bo_nhom.py`) và
+  một manifest, trong giới hạn lát. Không sửa mã nguồn tham chiếu, SDK/Core, `_chung/`.
+- Cố định JSON fixture về LF trong script sinh và `.gitattributes`, chuẩn hóa xuống dòng
+  của bản sao bộ nhóm fixture trước khi băm; tránh hash khác giữa Windows/Linux.
+
+### Kết quả ba lệnh nghiệm thu
+
+Chạy bằng `.venv/Scripts/python`, `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`.
+**Đã kiểm bằng Core giả (CoreGia).**
+
+```text
+python -m kho_tri_thuc_sdk.thu e_kiem_excel/goi/e_kiem_excel
+→ 5/5 ĐẠT (2 toàn vẹn EX-1, 1 bảng KLGT EX-4, 2 bảng tổng quát EX-5); mã thoát 0.
+python -m pytest e_kiem_excel/tests -q
+→ 144 passed in 2.74s, 0 skipped; mã thoát 0.
+python e_kiem_excel/tests/kiem_doc_lap.py
+→ [ĐẠT] AST, cây gói, import cô lập; 5/5 DEMO XONG; mã thoát 0.
+```
+
+55 ca EX-5 bổ sung: hai đáp án; cấu trúc sai; biên đúng/vượt 30 cột, 200 từ khóa,
+32 KiB theo byte UTF-8; JSON trùng khóa/không chuẩn/lồng sâu; matcher dùng cùng hàm;
+tiêu đề mơ hồ; thiếu giá trị/sai kiểu; tiền tệ thiếu/tham số/định dạng ô; ngày không hợp
+lệ/ngày Excel; hủy hoặc lỗi đóng workbook; biên đúng/vượt trần JSON; lỗi không lộ đầu vào.
+Kiểm độc lập không có `kho_tri_thuc.*`, bytecode/symlink; `git diff --check` mã 0.
+Phiên này chạy Windows; test viết tương thích Linux, chưa chạy Linux.
+
+### Lệch khỏi phiếu / chi tiết triển khai chốt trong EX-5
+
+- §4.2 chỉ nêu trần JSON 32 KiB; áp thêm **30 cột, tổng 200 từ khóa kể cả dòng dừng**
+  theo mức cùng bộ nhóm §4.1.1. Yêu cầu ít nhất một cột bắt buộc, mã cột duy nhất
+  dạng `[a-z][a-z0-9_]{0,63}`. Không đổi API/SDK hay trường ra đã khóa.
+- Dò tiêu đề bắt đầu trong 40 dòng đầu, ghép tối đa 4 tầng. Chọn nhiều cột khớp nhất,
+  rồi ít tầng nhất, rồi dòng trên cùng; hòa giữa sheet thì sheet trước. Không tự chọn
+  khi từ khóa khớp nhiều cột. JSON động để giá trị theo mã trong `dong[].gia_tri`.
+- `dong_dung` xét ô có giá trị ngoài cùng bên trái của các cột đã nhận diện. Một ô chữ
+  duy nhất ở cột văn bản, khi thiếu cột bắt buộc, được coi là dòng nhóm; quy ước này
+  là heuristic và đã ghi README để module chọn khuôn phù hợp.
+
+### Cần Core / Chờ Anh mới phát sinh
+
+- Không có cửa Core/SDK hoặc câu chặn mới. Vấn đề MIME Core thật có từ EX-0 giữ nguyên.
+- Lead gộp EX-2/EX-5 cần giữ **một** `bo_nhom.py` chung với giao diện trên;
+  snapshot EX-5 trùng bytes EX-2 lúc nhận. Không lấy toàn bộ `chay.py`/`engine.json`
+  của nhánh này đè phần năng lực toàn vẹn EX-2.
+- PR: **chờ lead mở**; đề xuất tiêu đề `[e_kiem_excel] EX-5 — Đọc bảng theo khuôn tổng quát`.
+
+Thời gian thực tế EX-5: **0.20 giờ**, từ **18/11/2026 21:48 đến 21:59:58** (giờ Việt Nam); ước tính trong phiếu: **4 giờ**. PR: **chờ lead mở**.

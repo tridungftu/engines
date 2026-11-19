@@ -100,10 +100,12 @@ def kiem_toan_ven(viec):
 @app.nang_luc("excel.doc_bang@1")
 def doc_bang(viec):
     from .doc_bang import doc_klgt
+    from .doc_tong_quat import doc_tong_quat
 
     raw = _doc_va_kiem(viec)
     phien_ban = f"{app.phieu['ma']} {app.phieu['phien_ban']}"
-    truong, noi_dung = doc_klgt(raw, viec.tham_so, phien_ban, viec.kiem_huy)
+    doc = doc_tong_quat if viec.tham_so.get("khuon") == "tong_quat" else doc_klgt
+    truong, noi_dung = doc(raw, viec.tham_so, phien_ban, viec.kiem_huy)
     truong["tep_json"] = viec.tai_tep_ra("bang-da-doc.json", noi_dung, "application/json")
     return {"loai": "truong", "truong": truong}
 

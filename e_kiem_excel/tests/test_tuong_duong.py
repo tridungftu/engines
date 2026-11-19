@@ -72,9 +72,9 @@ def test_tuong_duong_k1_k6(goc, demo, ten):
             dem['Cao'], dem['Trung bình'], dem['Kiểm soát'] + 1]
         assert truong['bam_dau_vao'] == 'sha256:' + hashlib.sha256((demo / ten).read_bytes()).hexdigest()
         assert truong['da_tinh_lai'] == (ten != 'thieu-v-DEMO.xlsx')
-        assert truong['o_dich'] is None and truong['tep_bao_cao'] is None and truong['so_ngoai_nhom'] is None
+        assert truong['o_dich'] is None and truong['tep_bao_cao']['mime'].endswith('spreadsheetml.sheet') and truong['so_ngoai_nhom'] is None
         assert chi_tiet['k7_cay'] == chi_tiet['k8_nguon'] == []
-        assert chi_tiet['bo_nhom'] is None and chi_tiet['canh_bao']
+        assert chi_tiet['bo_nhom'] is None and chi_tiet['canh_bao'] == []
     finally:
         kt.sd.wb.close(); kt.sd.wv.close()
 

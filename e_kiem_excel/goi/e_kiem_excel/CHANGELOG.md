@@ -1,5 +1,13 @@
 # Thay đổi
 
+## 0.1.0 — 19/11/2026
+- EX-3: K8 sau công tắc `kiem_nguon_kl`, dùng bộ đọc bảng của EX-4; giữ phân loại,
+  mức/mã/ô nguồn trên DEMO. Tính Decimal, giới hạn truy nguồn 8 tầng từ chối khi vượt.
+- Báo cáo giữ kiểu ô, màu cờ và 15 sheet nguồn; tắt K8 còn 12 sheet. Ghi bằng
+  openpyxl vào BytesIO, tải qua Core; công thức nguồn chỉ là chuỗi hiển thị.
+- Tiền báo cáo có đơn vị rõ từ tệp hoặc để trống; JSON K8 giữ số thập phân cùng
+  tiền tệ (null nếu chưa rõ). Hoàn tất `tep_bao_cao`, mở schema K8 ngoài gói.
+
 ## 0.1.0 — 18/11/2026
 - EX-2: chuyển cây K7, chạy trước K6; cờ K6 tại BTH!J21 đã khớp mã gốc.
 - Kiểm ô đích, tìm theo nhãn do module truyền; thiếu đích có một mục Kiểm soát.

@@ -335,5 +335,6 @@ def test_ho_so_moi_khong_bi_bo_nghiep_vu_trong_cung_thang():
 def test_chay_thu_demo_pl4_van_dat():
     core = CoreGia()
     cac_kq = core.chay_thu_demo(app)
-    assert len(cac_kq) == 1 and all(kq["trang_thai"] == "XONG" for kq in cac_kq)
+    # Nhánh sau thêm ví dụ của năng lực khác; mọi ví dụ phải đạt.
+    assert len(cac_kq) == len(app.phieu["chay_thu_demo"]) and all(kq["trang_thai"] == "XONG" for kq in cac_kq)
     assert core.xem_ngan(app.ma, "ho_so_hanh_vi")

@@ -40,6 +40,9 @@ class ChuoiDemo:
             "truong_phan_loai": "dien_giai",
             "danh_muc_loai_json": json.dumps(danh_muc, ensure_ascii=False),
             "bo_phan_loai_json": (DEMO / "bo-phan-loai-DEMO.json").read_text(encoding="utf-8"),
+            # PL-4: tắt cờ DOI_TAC_MOI (khóa Admin) để giữ oracle tần suất của chuỗi PL-3;
+            # hành vi mặc định của cờ đã kiểm ở test_pl2_phan_luong và test_pl4_*.
+            "chinh_sach_json": json.dumps({"toi_thieu_ho_so_doi_tac_moi": 1000000}),
         }
         self.cac_dau_vao = []
         self.cac_truong_ra = []
@@ -271,7 +274,11 @@ def test_05_loi_te_kiem_100_phan_tram_sad_ve_30_rui_ro_cao(chuoi_demo):
                 and Decimal(ng["sad"]["so"]) <= abs(Decimal(tien["so"])) < Decimal(ng["te"]["so"])):
             vung.append(theo_ma[dong["ma"]])
     assert len(vung) >= 30
-    assert all(d["luong"] == "do" and d["ly_do"] == ["CHON_MAU"] for d in vung)
+    # Kiểm 100%: không dòng nào Xanh. PL-4 + Anh chốt Q8: nộp lại cùng lô cộng trùng
+    # tổng chia nhỏ qua hồ sơ nên một số dòng thành Đỏ bắt buộc NGHI_CHIA_NHO.
+    assert all(d["luong"] == "do" for d in vung)
+    assert all(d["ly_do"] == ["CHON_MAU"] or "NGHI_CHIA_NHO" in d["ly_do"] for d in vung)
+    assert any(d["ly_do"] == ["CHON_MAU"] for d in vung)
 
 
 def test_06_mau_sach_thu_30_xuong_20_luot_ke_tiep_doc_bac_moi(chuoi_demo):
@@ -336,6 +343,16 @@ def test_07_c4_moi_bang_sau_toan_bo_chuoi_khong_lo_chi_tiet_demo(chuoi_demo):
             # Core tạo không phải ngày giao dịch bị lưu; vẫn kiểm tên mọi cột.
             noi_dung = {k: v for k, v in dong.items()
                         if k not in {"tao_luc", "sua_luc", "het_han_luc", "doi_bac_luc"}}
+            if bang["bang"] == "ho_so_hanh_vi":
+                # Ngoại lệ Anh duyệt ở phiếu §4.1: tổng tiền theo (băm đối tác, ngày) 7 ngày
+                # gần nhất để chống chia nhỏ qua lô; không có mã giao dịch hay đối tác thô.
+                tong = json.loads(noi_dung.pop("tong_7_ngay"))
+                for bam, theo_ngay in tong.items():
+                    assert len(bam) == 32 and int(bam, 16) >= 0
+                    ngay = sorted(theo_ngay)
+                    assert len(ngay) <= 7
+                    assert all(len(n) == 10 and n[4] == n[7] == "-" for n in ngay)
+                    assert all(Decimal(v) >= 0 for v in theo_ngay.values())
             for gia_tri in _cac_gia_tri(noi_dung):
                 assert gia_tri not in nhan_biet, (bang["bang"], gia_tri)
                 gia_tri_bang.append(gia_tri)

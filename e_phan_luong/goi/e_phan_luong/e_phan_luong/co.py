@@ -48,7 +48,8 @@ def tinh_co(
             and tien_ss.so > ho_so.phan_vi_95
         ):
             co.add(SO_TIEN_BAT_THUONG)
-        if bam_dt and bam_dt not in ho_so.bam_doi_tac:
+        if (bam_dt and bam_dt not in ho_so.bam_doi_tac
+                and ho_so.so_nghiep_vu >= getattr(cs, "toi_thieu_ho_so_doi_tac_moi", 0)):
             co.add(DOI_TAC_MOI)
 
     if (

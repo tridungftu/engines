@@ -43,6 +43,8 @@ def _app_thu(ham):
         "nhan": ["van_ban"], "tra": "van_ban",
         "gioi_han": {"thoi_han_giay": 300},
     }]
+    # Fixture chỉ khai demo.chot_ky; DEMO phân luồng thuộc phiếu runtime.
+    phieu["chay_thu_demo"] = []
     thu = Engine(phieu)
 
     @thu.nang_luc(MA_NANG_LUC)

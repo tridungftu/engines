@@ -84,17 +84,19 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
     từ module/quy tắc. canh_bao_them: câu cảnh báo bổ sung (không chứa tỷ lệ, C5).
     """
     ts = viec.tham_so
+    if ts.get("ma_module") and ts["ma_module"] != lo.ma_module:
+        raise loi("DU_LIEU_KHONG_HOP_LE")
+    bam_dau_vao = "sha256:" + sha256(du_lieu).hexdigest()
+    ma_luot = ngan_luot.ma_luot_cua_viec(viec, bam_dau_vao)
+    # Ngữ cảnh riêng của việc; giữ nguyên chữ ký lớp 2/3 và các điểm nối PL-5/PL-7.
+    viec._ma_luot_phan_luong = ma_luot
+    luot_cu = viec.ngan.doc("luot", {"ma_luot": ma_luot})
+    hat_giong = (bytes.fromhex(luot_cu.gia_tri["hat_giong"]) if luot_cu is not None
+                 else chon_mau.sinh_hat_giong())
     viec.tien_do(10, "Đang kiểm tra lô nghiệp vụ.")
     cd = doc_cai_dat(ts, lo)
     ds_lop1 = xet_lop1_lo(lo, ts, nguong=cd.nguong, danh_muc=cd.danh_muc, bo=cd.bo,
                           truong_phan_loai=ts.get("truong_phan_loai"), loai_ai=loai_ai)
-    hat_giong = chon_mau.sinh_hat_giong()
-    bam_dau_vao = "sha256:" + sha256(du_lieu).hexdigest()
-    # Hạt giống mới tạo lượt mới; ghim hạt giống + đầu vào tái hiện cả mã lượt.
-    ma_luot = "PL-" + sha256(b"\x1f".join((
-        hat_giong, lo.ma_module.encode("utf-8"), ts["khau"].encode("utf-8"),
-        bam_dau_vao.encode("ascii"),
-    ))).hexdigest()
     thong_tin = {
         "ma_luot": ma_luot, "bam_hat_giong": chon_mau.bam_hat_giong(hat_giong),
         "bam_dau_vao": bam_dau_vao, "phien_ban_engine": __version__,
@@ -102,6 +104,23 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
     }
     viec.tien_do(50, "Đang chọn mẫu kiểm tra.")
     ds_dong = xet_lop23_lo(viec, lo, ds_lop1, khau=ts["khau"], cs=cd.cs, hat_giong=hat_giong)
+    if luot_cu is not None:
+        from .kieu import KHONG_CHON, tach_ly_do
+        from .ngan_chung import tim_tat_ca
+
+        # Tỷ lệ/lịch sử có thể đã đổi sau lần chạy đầu; giữ quyết định đã chốt.
+        da_luu = {bg.gia_tri["ma"]: bg.gia_tri for bg in tim_tat_ca(
+            viec, "dong_luot", {"ma_luot": ma_luot})}
+        da_chot = []
+        for dong in ds_dong:
+            if dong.ma not in da_luu:
+                raise loi("NGAN_BAN")
+            gt = da_luu[dong.ma]
+            ly_do = tach_ly_do(gt["ly_do"])
+            da_chot.append(KetQuaDong(
+                dong.ma, "xanh" if ly_do == (KHONG_CHON,) else "do", ly_do,
+                dong.co, gt["loai"], gt["nguon_loai"]))
+        ds_dong = tuple(da_chot)
     truong = xuat_ket_qua(viec, lo, cd.nguong, ds_dong, thong_tin=thong_tin,
                           canh_bao_them=canh_bao_them)
     viec.tien_do(90, "Đang ghi kết quả lượt phân luồng.")

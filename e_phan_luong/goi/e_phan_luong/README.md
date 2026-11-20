@@ -33,8 +33,30 @@ kèm tiền tệ ngưỡng.
 Luật nộp lại Q5: đọc lượt hoàn tất gần nhất theo `luot.tao_luc` của cùng
 (module, khâu, mã). Đỏ chưa có kết quả `dat`/`sai` → `NOP_LAI`;
 `khong_kiem` chưa giải phóng. Đã kiểm hoặc lần gần nhất Xanh → xét bình
-thường bằng hạt giống mới. Ghi từng lô tối đa 100 dòng bằng `lay_hoac_tao`,
-rồi ghi `luot` sau cùng; dòng ghi dở không có dấu lượt bị bỏ qua khi tra lại.
+thường bằng hạt giống mới khi Core giao một việc mới. Kết quả kiểm đã ẩn
+sau 365 ngày vẫn được đọc để giải phóng Đỏ trong thời gian lượt còn giữ
+400 ngày; `khong_kiem` vẫn chưa giải phóng.
+
+Core giao lại **cùng việc** dùng cùng mã lượt, tính bằng UTF-8:
+`ma_luot = "PL-" + sha256("e_phan_luong|luot|" + viec.id + "|" + bam_dau_vao).hexdigest()`,
+trong đó `bam_dau_vao = "sha256:" + sha256(bytes_dau_vao).hexdigest()`.
+Đọc `luot(ma_luot)` trước khi chọn mẫu: đã có thì dùng lại
+`bytes.fromhex(luot["hat_giong"])`; chưa có thì sinh hạt giống mới. Khi tra
+`NOP_LAI`, bỏ qua chính mã lượt của việc hiện tại. Lượt đã hoàn tất đọc lại
+quyết định từ `dong_luot`, giữ nguyên kết quả khi tỷ lệ/lịch sử nộp lại đã
+đổi; cờ được tính từ đầu vào và bản chụp chính sách của việc. Cùng hạt giống, đầu vào,
+`viec.id` và trạng thái ngăn trước lượt cho cùng tệp kết quả từng byte.
+
+Ghi từng lô tối đa 100 dòng, rồi ghi `luot` sau cùng. Dòng mới dùng
+`lay_hoac_tao`; nếu `dong_luot` đã có nhưng chưa có dấu hoàn tất `luot`,
+sửa bằng CAS (`sua`, `row_version`) theo quyết định hiện tại. Lần chạy dở
+có thể dùng hạt giống khác khi chạy lại; toàn bộ dòng cũ được sửa trước khi
+ghi dấu hoàn tất, không lẫn quyết định giữa hai lần. Lượt đã hoàn tất giữ
+nguyên các dòng ngăn khi Core giao lại.
+
+Admin đổi thang bậc: bậc đã lưu không còn trong thang mới được đưa về bậc
+gần nhất không thấp hơn, không dùng mẫu tích lũy của bậc cũ để xuống ngay.
+Nếu cả thang mới thấp hơn bậc đã lưu, chuyển chế độ kiểm toàn bộ (100%).
 
 ## Công thức để kiểm toán viên chạy lại
 

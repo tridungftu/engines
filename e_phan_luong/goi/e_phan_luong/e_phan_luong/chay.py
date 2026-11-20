@@ -45,10 +45,40 @@ def phan_luong_sau_ai(viec):
 
 @app.nang_luc("audit.phan_luong_hoa_don@1")
 def phan_luong_hoa_don(viec):
-    from . import quy_trinh
+    import json
+
+    from . import doc_lo, hoa_don, quy_trinh
+    from .loi import loi
 
     quy_trinh.bat_dau(viec)
-    raise LoiNghiepVu("CHUA_LAM", "Năng lực đang được xây dựng.")
+    truong = viec.dau_vao["truong"]
+    if not isinstance(truong, dict):
+        raise loi("DU_LIEU_KHONG_HOP_LE")
+    ts = viec.tham_so
+    tham_so_lo = {"ma_module": ts.get("ma_module"),
+                  "loai_nghiep_vu": ts.get("loai_nghiep_vu") or None}
+    so_bo = 0
+    # doc_xml cũng có chi_tiet_nguon, nhưng đó là DTO XML, không phải
+    # kiểm kê ZIP. Phiếu §5.4 dùng bộ trường của XML cho một nghiệp vụ.
+    if (truong.get("nguon_doc") != "xml_strict"
+            and (truong.get("nguon_doc") == "zip_xml_strict"
+                 or truong.get("chi_tiet_nguon") is not None)):
+        tep = hoa_don.lay_tep_chi_tiet(truong)
+        with viec.mo_tep(tep["tep_id"]) as luong:
+            du_lieu = luong.read(doc_lo.TOI_DA_BYTE + 1)
+        lo, so_bo = hoa_don.lo_tu_chi_tiet_zip(du_lieu, **tham_so_lo)
+    else:
+        lo = hoa_don.lo_tu_hoa_don(truong, **tham_so_lo)
+        try:
+            du_lieu = json.dumps(truong, sort_keys=True, separators=(",", ":"),
+                                 ensure_ascii=False, allow_nan=False).encode("utf-8")
+        except (TypeError, ValueError, UnicodeError, RecursionError):
+            raise loi("DU_LIEU_KHONG_HOP_LE") from None
+        if len(du_lieu) > doc_lo.TOI_DA_BYTE:
+            raise loi("VUOT_GIOI_HAN")
+    canh_bao = [f"Bỏ {so_bo} hóa đơn không đọc được"] if so_bo else []
+    return {"loai": "truong", "truong": quy_trinh.chay_phan_luong(
+        viec, lo, du_lieu, canh_bao_them=canh_bao)}
 
 
 @app.nang_luc("audit.ghi_ket_qua@1")

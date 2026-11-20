@@ -485,7 +485,7 @@
     },
     {
       "ma": "audit.phan_luong_hoa_don@1",
-      "ten": "Phân luồng hóa đơn",
+      "ten": "Phân luồng hóa đơn từ XML/ZIP",
       "nhan": [
         "truong"
       ],
@@ -1185,6 +1185,49 @@
         "danh_muc_loai_json": "[\n  {\n    \"ma\": \"thanh_toan_ncc\",\n    \"mo_ta\": \"Nghiệp vụ Thanh toán nhà cung cấp DEMO\",\n    \"ten\": \"Thanh toán nhà cung cấp DEMO\"\n  },\n  {\n    \"ma\": \"tam_ung\",\n    \"mo_ta\": \"Nghiệp vụ Tạm ứng DEMO\",\n    \"ten\": \"Tạm ứng DEMO\"\n  },\n  {\n    \"ma\": \"luong\",\n    \"mo_ta\": \"Nghiệp vụ Lương DEMO\",\n    \"ten\": \"Lương DEMO\"\n  },\n  {\n    \"ma\": \"chi_phi_khac\",\n    \"mo_ta\": \"Nghiệp vụ Chi phí khác DEMO\",\n    \"ten\": \"Chi phí khác DEMO\"\n  },\n  {\n    \"ma\": \"thu_tien\",\n    \"mo_ta\": \"Nghiệp vụ Thu tiền DEMO\",\n    \"ten\": \"Thu tiền DEMO\"\n  }\n]\n",
         "bo_phan_loai_json": "{\n  \"phien_ban\": 1,\n  \"quy_tac\": [\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thanh toán\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thanh_toan_ncc\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"tạm ứng\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"tam_ung\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"lương\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"luong\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"chi phí khác\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"chi_phi_khac\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thu tiền\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thu_tien\"\n    }\n  ]\n}\n",
         "truong_phan_loai": "dien_giai"
+      }
+    },
+    {
+      "nang_luc": "audit.phan_luong_hoa_don@1",
+      "ten": "Phân luồng một hóa đơn XML DEMO theo khâu KTT",
+      "dau_vao": {
+        "loai": "truong",
+        "truong": {
+          "mau_so": "1",
+          "ky_hieu": "C26TAA",
+          "so_hoa_don": "DEMO-0001",
+          "ngay_lap": "2026-10-30",
+          "ma_so_thue_ban": "DEMO-NCC-01",
+          "ma_so_thue_mua": "DEMO-MUA-01",
+          "don_vi_tien": "VND",
+          "tien_truoc_thue": {
+            "so": "1000000",
+            "tien_te": "VND"
+          },
+          "tien_thue": {
+            "so": "100000",
+            "tien_te": "VND"
+          },
+          "tong_thanh_toan": {
+            "so": "1100000",
+            "tien_te": "VND"
+          },
+          "so_dong": 1,
+          "can_kiem_tra": true,
+          "canh_bao": "Hóa đơn DEMO cần kiểm tra.",
+          "tep_xml": null,
+          "chi_tiet_nguon": null,
+          "nguon_doc": "xml_strict",
+          "phien_ban_engine": "e_hoa_don 1.0.0",
+          "bam_dau_vao": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      },
+      "tham_so": {
+        "khau": "ktt_duyet",
+        "ma_module": "demo_thanh_toan",
+        "loai_nghiep_vu": "hoa_don_dau_vao",
+        "nguong_json": "{\"pm\":{\"so\":\"5000000000\",\"tien_te\":\"VND\"},\"sad\":{\"so\":\"250000000\",\"tien_te\":\"VND\"},\"te\":{\"so\":\"3000000000\",\"tien_te\":\"VND\"}}",
+        "danh_muc_loai_json": "[{\"ma\":\"hoa_don_dau_vao\",\"ten\":\"Hóa đơn đầu vào DEMO\",\"mo_ta\":\"DEMO\"}]"
       }
     }
   ],

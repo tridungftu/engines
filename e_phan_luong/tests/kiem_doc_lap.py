@@ -2,6 +2,7 @@
 
 import ast
 import importlib.util
+import json
 from pathlib import Path
 import re
 import subprocess
@@ -68,7 +69,37 @@ def kiem_doc_lap(goi=GOI):
     return ds_loi
 
 
+def kiem_demo(goi=GOI):
+    """Mỗi ví dụ phải trỏ tới tệp trong demo/ và có nhãn DEMO trong nội dung."""
+    goi = Path(goi)
+    try:
+        phieu = json.loads((goi / "engine.json").read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError):
+        return ["Không đọc được phiếu để kiểm tệp DEMO."]
+    ds_loi = []
+    for so, vd in enumerate(phieu["chay_thu_demo"], 1):
+        ten = vd["dau_vao"].get("tep_demo")
+        if not isinstance(ten, str) or not ten.startswith("demo/"):
+            ds_loi.append(f"DEMO thứ {so}: phải trỏ tới tệp trong demo/.")
+            continue
+        tep = (goi / ten).resolve()
+        if not tep.is_relative_to((goi / "demo").resolve()) or not tep.is_file():
+            ds_loi.append(f"DEMO thứ {so}: tệp không tồn tại trong demo/.")
+            continue
+        try:
+            co_nhan = b"DEMO" in tep.read_bytes()
+        except OSError:
+            ds_loi.append(f"DEMO thứ {so}: không đọc được tệp.")
+            continue
+        if not co_nhan:
+            ds_loi.append(f"DEMO thứ {so}: nội dung tệp thiếu nhãn DEMO.")
+    return ds_loi
+
+
 def kiem_tien_trinh_sach(goi=GOI):
+    loi_demo = kiem_demo(goi)
+    if loi_demo:
+        return loi_demo
     spec = importlib.util.find_spec("kho_tri_thuc_sdk")
     if not spec or not spec.origin:
         return ["Thiếu SDK để kiểm import độc lập."]
@@ -88,7 +119,6 @@ assert kho_tri_thuc_sdk.__version__ == '2.2.0'
 from e_phan_luong.chay import app
 from e_phan_luong import kieu, loi, ngan_chung
 assert len(app.cac_nang_luc) == 5
-assert app.phieu['chay_thu_demo'] == []
 assert not any(n == 'kho_tri_thuc' or n.startswith('kho_tri_thuc.') for n in sys.modules)
 print('PL_DOC_LAP_DAT')
 '''
@@ -110,7 +140,7 @@ def main():
     for cau in ds_loi:
         print("[LỖI] " + cau)
     if not ds_loi:
-        print("[ĐẠT] Cây gói, AST, grep tiền tệ và import cô lập; PL-0 chưa có DEMO nghiệp vụ.")
+        print("[ĐẠT] Cây gói, AST, grep tiền tệ, import cô lập và tệp có nhãn DEMO.")
     return int(bool(ds_loi))
 
 

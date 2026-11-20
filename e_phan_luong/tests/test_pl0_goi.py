@@ -12,20 +12,30 @@ from kho_tri_thuc_sdk.thu import CoreGia
 from e_phan_luong import __version__
 from e_phan_luong.chay import app
 from kiem_bam_goi import kiem, tinh_kiem_ke
-from kiem_doc_lap import kiem_doc_lap
+from kiem_doc_lap import kiem_demo, kiem_doc_lap
+
+CHUA_LAM_CON = frozenset({
+    "audit.chuan_bi_phan_loai@1",
+    "audit.phan_luong_sau_ai@1",
+    "audit.phan_luong_hoa_don@1",
+    "audit.ghi_ket_qua@1",
+})
 
 GOI = Path(__file__).resolve().parents[1] / "goi" / "e_phan_luong"
 REPO = GOI.parents[2]
 
 
-def test_doc_phieu_va_nam_nang_luc_chua_co_demo_nghiep_vu():
+def test_doc_phieu_va_nam_nang_luc_co_demo_phan_luong():
     phieu = doc_phieu(GOI / "engine.json")
     assert phieu["phien_ban_manifest"] == 2
     assert phieu["phien_ban"] == __version__ == "0.1.0"
     assert phieu["tuong_thich"]["sdk"] == ">=2.2.0 <3.0.0"
     assert phieu["tai_nguyen"] == {"so_viec_dong_thoi": 1}
-    assert phieu["chay_thu_demo"] == []
-    assert CoreGia().chay_thu_demo(app) == []
+    assert any(vd["nang_luc"] == "audit.phan_luong@1" for vd in phieu["chay_thu_demo"])
+    assert kiem_demo(GOI) == []
+    ket_qua_demo = CoreGia().chay_thu_demo(app)
+    assert len(ket_qua_demo) == len(phieu["chay_thu_demo"])
+    assert all(kq["trang_thai"] == "XONG" for kq in ket_qua_demo), ket_qua_demo
     assert "giao_dien_quan_tri" not in phieu
     assert phieu["du_lieu"]["goi_migration"] == {
         "ma": "e_phan_luong", "thu_muc": "sql", "tep_kiem_ke": "sql/kiem_ke.json", "phien_ban_du_lieu": 1}
@@ -157,8 +167,9 @@ def test_kiem_ke_toan_bo_bytes_that():
     assert "sql/kiem_ke.json" not in {t["duong_dan"] for t in du_lieu["tep"]}
 
 
-@pytest.mark.parametrize("nl", app.phieu["nang_luc"], ids=lambda n: n["ma"])
-def test_nang_luc_tam_tra_loi_chua_lam(nl):
+@pytest.mark.parametrize("ma_nang_luc", sorted(CHUA_LAM_CON))
+def test_nang_luc_tam_tra_loi_chua_lam(ma_nang_luc):
+    nl = {n["ma"]: n for n in app.phieu["nang_luc"]}[ma_nang_luc]
     core = CoreGia()
     loai = nl["nhan"][0]
     if loai == "tep":
@@ -172,7 +183,7 @@ def test_nang_luc_tam_tra_loi_chua_lam(nl):
 
 def test_boc_nhat_ky_khong_lo_noi_dung_ngoai_le(capsys):
     from e_phan_luong.chay import Engine
-    phieu = dict(app.phieu, nang_luc=[{
+    phieu = dict(app.phieu, chay_thu_demo=[], nang_luc=[{
         "ma": "demo.loi@1", "ten": "Lỗi DEMO", "nhan": ["van_ban"], "tra": "van_ban",
         "gioi_han": {"thoi_han_giay": 300}}])
     thu = Engine(phieu)
@@ -199,3 +210,30 @@ def test_kiem_doc_lap_va_chan_vi_pham(tmp_path):
     assert any("tiền tệ" in s for s in kiem_doc_lap(tmp_path))
     (tmp_path / "co.pyc").write_bytes(b"DEMO")
     assert any("bytecode" in s for s in kiem_doc_lap(tmp_path))
+
+
+@pytest.mark.parametrize("duong_dan,noi_dung,co_loi", [
+    ("demo/mau.json", b'{"nhan":"DEMO"}', False),
+    ("demo/thieu.json", None, True),
+    ("demo/mau.json", b'{}', True),
+    ("mau.json", b'{"nhan":"DEMO"}', True),
+    ("demo/../mau.json", b'{"nhan":"DEMO"}', True),
+    (None, None, True),
+])
+def test_kiem_moi_vi_du_demo_co_tep_va_nhan(tmp_path, duong_dan, noi_dung, co_loi):
+    demo = tmp_path / "demo"
+    demo.mkdir()
+    (demo / "dung.json").write_bytes(b'{"nhan":"DEMO"}')
+    if noi_dung is not None:
+        (tmp_path / duong_dan).write_bytes(noi_dung)
+    # Ví dụ hợp lệ đầu tiên không được che lỗi của ví dụ phía sau.
+    phieu = {"chay_thu_demo": [
+        {"dau_vao": {"loai": "tep", "tep_demo": "demo/dung.json"}},
+        {"dau_vao": {"loai": "tep", "tep_demo": duong_dan}},
+    ]}
+    (tmp_path / "engine.json").write_text(json.dumps(phieu), encoding="utf-8")
+    loi = kiem_demo(tmp_path)
+    assert bool(loi) is co_loi
+    if co_loi:
+        assert len(loi) == 1
+        assert "DEMO thứ 2" in loi[0]

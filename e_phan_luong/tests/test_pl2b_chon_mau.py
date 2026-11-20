@@ -192,7 +192,9 @@ def test_tinh_p_kep_san_va_mot(co_so, he_so, san, mong_doi):
     assert Decimal(san) <= p <= Decimal(1)
 
 
-def test_tat_nhan_he_so_duoi_sad():
+@pytest.mark.parametrize("he_so,mong_doi", [("1", "0.02"), ("20.25", "0.405"), ("100", "1")])
+def test_duoi_sad_luon_nhan_he_so_va_kep_mot(he_so, mong_doi):
+    # Anh chốt Q4: dưới SAD truyền sàn 0, luôn nhân hệ số cờ.
     assert chon_mau.tinh_p(
-        Decimal("0.02"), Decimal("20.25"), Decimal(0), nhan_he_so_duoi_sad=False,
-    ) == Decimal("0.02")
+        Decimal("0.02"), Decimal(he_so), Decimal(0),
+    ) == Decimal(mong_doi)

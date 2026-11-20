@@ -202,13 +202,15 @@ def test_dung_va_vuot_ngan_sach_khong_dung_ket_qua_quet_do_dang(so_ma, so_dong):
         assert ngan_luot.tra_nop_lai(viec, MODULE, KHAU, ds_ma + ds_ma) == cu
         ngan_sach = (so_ma + 9) // 10
         vuot = so_dong > ngan_sach * 500
-        assert core.dem["tim"] == 1 + ngan_sach + (so_ma if vuot else 0)
-        cac_loc = [kw["loc"] for _, kw in core.cac_tim]
+        # PL-9H thêm một lượt tìm ket_qua_kiem cho hai ứng viên cùng lượt.
+        assert core.dem["tim"] == 2 + ngan_sach + (so_ma if vuot else 0)
+        cac_tim_dong = [kw for bang, kw in core.cac_tim if bang == "dong_luot"]
+        cac_loc = [kw["loc"] for kw in cac_tim_dong]
         assert all(loc == {"ma_module": MODULE, "khau": KHAU} for loc in cac_loc[:1 + ngan_sach])
         if vuot:
             assert [loc["ma"] for loc in cac_loc[1 + ngan_sach:]] == ds_ma
         assert all(kw["sap_xep"] == [{"truong": c, "giam": False} for c in ("ma_luot", "ma")]
-                   for _, kw in core.cac_tim[1:])
+                   for kw in cac_tim_dong[1:])
         assert core.cac_tim[0][1]["gioi_han"] == 1
 
     _trong_viec(core, kiem)
@@ -224,8 +226,9 @@ def test_so_lan_goi_coregia(n, co_lich_su):
         core.dat_lai_dem()
         moi = ngan_luot.tra_nop_lai(viec, MODULE, KHAU, ds_ma)
         assert moi == (frozenset(ds_ma) if co_lich_su else frozenset())
-        assert core.dem["tim"] == (1 + (n + 499) // 500 if co_lich_su else 1)
-        assert core.dem.get("doc", 0) == (n + 1 if co_lich_su else 0)
+        # PL-9H đọc kết quả bằng một trang rỗng, chỉ còn doc dấu luot.
+        assert core.dem["tim"] == (2 + (n + 499) // 500 if co_lich_su else 1)
+        assert core.dem.get("doc", 0) == (1 if co_lich_su else 0)
         if n == 10000:
             if co_lich_su:
                 assert core.dem["tim"] <= 25

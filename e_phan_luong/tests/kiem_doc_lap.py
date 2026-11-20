@@ -70,29 +70,52 @@ def kiem_doc_lap(goi=GOI):
 
 
 def kiem_demo(goi=GOI):
-    """Mỗi ví dụ phải trỏ tới tệp trong demo/ và có nhãn DEMO trong nội dung."""
+    """Kiểm nhãn đầu vào trực tiếp và mọi tham chiếu tệp DEMO của ví dụ."""
     goi = Path(goi)
     try:
         phieu = json.loads((goi / "engine.json").read_text(encoding="utf-8"))
     except (OSError, UnicodeError, ValueError):
         return ["Không đọc được phiếu để kiểm tệp DEMO."]
+
+    def tham_chieu(gia_tri):
+        if isinstance(gia_tri, dict):
+            for khoa, con in gia_tri.items():
+                if khoa == "tep_demo":
+                    yield con
+                else:
+                    yield from tham_chieu(con)
+        elif isinstance(gia_tri, list):
+            for con in gia_tri:
+                yield from tham_chieu(con)
+        elif isinstance(gia_tri, str) and gia_tri.startswith("demo/"):
+            yield gia_tri
+
     ds_loi = []
     for so, vd in enumerate(phieu["chay_thu_demo"], 1):
-        ten = vd["dau_vao"].get("tep_demo")
-        if not isinstance(ten, str) or not ten.startswith("demo/"):
-            ds_loi.append(f"DEMO thứ {so}: phải trỏ tới tệp trong demo/.")
-            continue
-        tep = (goi / ten).resolve()
-        if not tep.is_relative_to((goi / "demo").resolve()) or not tep.is_file():
-            ds_loi.append(f"DEMO thứ {so}: tệp không tồn tại trong demo/.")
-            continue
-        try:
-            co_nhan = b"DEMO" in tep.read_bytes()
-        except OSError:
-            ds_loi.append(f"DEMO thứ {so}: không đọc được tệp.")
-            continue
-        if not co_nhan:
-            ds_loi.append(f"DEMO thứ {so}: nội dung tệp thiếu nhãn DEMO.")
+        dau_vao = vd["dau_vao"]
+        loai = dau_vao.get("loai")
+        cac_tep = list(tham_chieu(vd))
+        if loai == "tep":
+            if "tep_demo" not in dau_vao:
+                cac_tep.append(None)
+        elif (not isinstance(loai, str) or loai not in dau_vao
+              or "DEMO" not in json.dumps(dau_vao[loai], ensure_ascii=False)):
+            ds_loi.append(f"DEMO thứ {so}: nội dung đầu vào thiếu nhãn DEMO.")
+        for ten in cac_tep:
+            if not isinstance(ten, str) or not ten.startswith("demo/"):
+                ds_loi.append(f"DEMO thứ {so}: phải trỏ tới tệp trong demo/.")
+                continue
+            tep = (goi / ten).resolve()
+            if not tep.is_relative_to((goi / "demo").resolve()) or not tep.is_file():
+                ds_loi.append(f"DEMO thứ {so}: tệp không tồn tại trong demo/.")
+                continue
+            try:
+                co_nhan = b"DEMO" in tep.read_bytes()
+            except OSError:
+                ds_loi.append(f"DEMO thứ {so}: không đọc được tệp.")
+                continue
+            if not co_nhan:
+                ds_loi.append(f"DEMO thứ {so}: nội dung tệp thiếu nhãn DEMO.")
     return ds_loi
 
 

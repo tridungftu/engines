@@ -241,6 +241,8 @@ def test_tham_chieu_giu_nguyen_metadata_va_mo_bang_core_gia():
     phieu = json.loads((REPO / "e_phan_luong/goi/e_phan_luong/engine.json").read_text(encoding="utf-8"))
     phieu["nang_luc"] = [{"ma": "demo.doc_hoa_don@1", "ten": "Đọc chi tiết DEMO",
         "nhan": ["truong"], "tra": "van_ban", "gioi_han": {"tep_toi_da_mib": 20, "thoi_han_giay": 300}}]
+    phieu["chay_thu_demo"] = [v for v in phieu.get("chay_thu_demo", [])
+                              if v["nang_luc"] in {n["ma"] for n in phieu["nang_luc"]}]
     app = Engine(phieu)
 
     @app.nang_luc("demo.doc_hoa_don@1")

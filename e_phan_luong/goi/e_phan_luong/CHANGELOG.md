@@ -14,5 +14,6 @@
 - **PL-8:** JSON và Excel danh sách Đỏ trong RAM, không lộ tỷ lệ/xác suất cho người duyệt; màn Admin chỉ đọc dừng an toàn khi thiếu cổng Core (CC-5).
 - **PL-9:** hoàn thiện README/nguồn, rà lock, script kiểm máy sạch offline và test ZIP tất định/kiểm kê. Mô phỏng 12 tháng và đo C4/C5/hiệu năng thuộc PL-9A/PL-9B; lead ghép và ghi kết quả nghiệm thu chung.
 - **PL-9D/PL-9E (sửa sau rà soát độc lập PL-4…PL-8):** xuất Excel tuyến tính theo số dòng Đỏ; lịch sử chia nhỏ chỉ khoản < TE, bỏ ngày tương lai; hồ sơ ghi tiền tệ ngưỡng (cột `tien_te`); cảnh báo trần 20.000 đối tác lên `canh_bao`; chốt kỳ đếm theo trang, lỗi một cặp không chặn cả việc; số quy đổi trong bảng phải có tiền tệ riêng; mã toàn khoảng trắng bị từ chối; làm tròn số float của Excel về 15 chữ số có nghĩa.
+- **PL-9F–PL-9I (hiệu năng):** tra nộp lại và ghi kết quả bỏ đọc ngăn từng dòng: dò rỗng một lần, quét trang có ngân sách theo lượt, vượt ngân sách mới đọc từng mã; giữ nguyên ngữ nghĩa Q1–Q7 (đối chiếu bản cũ trên 240 trạng thái ngẫu nhiên mỗi phần). Bộ đo tách thời gian engine thuần khỏi Core giả. 50.000 dòng: ≤ 1.130 lần gọi Core, ước tính ≤ 31 giây ở 10 ms/lần gọi (chưa đo trên Core thật).
 
 Đã kiểm bằng Core giả (CoreGia); chưa kiểm tích hợp Core thật. Bản ZIP phát hành từ git do lead đóng sau khi commit; ZIP thử worktree không đưa vào git. Các điểm CC còn mở được nêu trong README.

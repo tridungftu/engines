@@ -3,8 +3,8 @@
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 2679,
-      "sha256": "e83979163d7a998f5e14b56722df0ad7d09c05da202ca94d4ac6d6b974f12068"
+      "bytes": 3190,
+      "sha256": "385438d567c082739d8ba1d0ffb755df66daaba8db4ee2ab38ebe6caf5050a45"
     },
     {
       "duong_dan": "NGUON.md",
@@ -13,8 +13,8 @@
     },
     {
       "duong_dan": "README.md",
-      "bytes": 21281,
-      "sha256": "c4733240990355f7d66d24380a2b06e5550c5bdb4f0445d0ca8593030d02e74b"
+      "bytes": 22390,
+      "sha256": "87acd58fd8b2074bb11d686ee41e822c9c0b37e0f11dc4f4009a6425a6fb6786"
     },
     {
       "duong_dan": "contract/tra_loi_ai.schema.json",

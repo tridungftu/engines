@@ -1,0 +1,28 @@
+{
+  "loai": "truong",
+  "truong": {
+    "nguon_doc": "zip_xml_strict",
+    "phien_ban_engine": "e_hoa_don 1.0.0",
+    "bam_dau_vao": "sha256:0d900a073ca6459dda1a46c3ebf9ee2b3fa64442475ffd9f8d3f0437aa4c74dc",
+    "tep_zip": {
+      "tep_id": "tep-goi-hoa-don-DEMO",
+      "ten": "hoa-don-DEMO.zip",
+      "mime": "application/zip",
+      "kich_thuoc": 1126
+    },
+    "da_doc_het": false,
+    "so_tep": 3,
+    "so_doc_duoc": 2,
+    "so_loi": 1,
+    "so_khong_ho_tro": 0,
+    "so_trung_noi_dung": 0,
+    "can_kiem_tra": true,
+    "chi_tiet_nguon": {
+      "tep_id": "tep-chi-tiet-zip-DEMO",
+      "ten": "hoa-don-chi-tiet-zip-DEMO.json",
+      "mime": "application/json",
+      "kich_thuoc": 23518
+    },
+    "canh_bao": "Đã đọc 2/3 tệp; kết quả cần kiểm tra.\nCó tệp lỗi/chưa hỗ trợ; xem kiểm kê từng tệp.\nChưa xác định độ đủ kỳ tải hoặc trạng thái thuế; chưa ghi nhận nghiệp vụ."
+  }
+}

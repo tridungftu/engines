@@ -54,6 +54,8 @@ def phong_bi_tra_loi(chuyen_tiep):
 def app_thu():
     """Năng lực thử riêng ở ngoài gói, không làm năng lực runtime thành công giả."""
     phieu = deepcopy(app.phieu)
+    # App thử có năng lực riêng; ví dụ runtime không thuộc phiếu giả này.
+    phieu["chay_thu_demo"] = []
     phieu["nang_luc"] = [
         {"ma": "demo.chuan_bi@1", "ten": "Tải tệp DEMO lên CoreGia", "nhan": ["tep"], "tra": "yeu_cau_ai",
          "gioi_han": {"tep_toi_da_mib": 20, "thoi_han_giay": 300}},
@@ -130,6 +132,7 @@ def test_core_gia_cho_chuoi_tron_nhung_kiem_nghiem_tu_choi():
     pb = phong_bi_tra_loi({"tep_lo": tep["tep_id"]})
     assert not co_tham_chieu_tep(pb, tep["tep_id"])
     phieu = deepcopy(app.phieu)
+    phieu["chay_thu_demo"] = []
     phieu["nang_luc"] = [{"ma": "demo.long@1", "ten": "Đo độ lỏng CoreGia DEMO",
         "nhan": ["tra_loi_ai"], "tra": "van_ban", "gioi_han": {"thoi_han_giay": 300}}]
     thu = Engine(phieu)

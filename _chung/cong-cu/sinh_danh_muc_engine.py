@@ -36,7 +36,7 @@ GHI_CHU = {
     "e_kiem_excel": ("Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề",
                      "Ô đích, bộ nhóm, khuôn cột do module truyền"),
     "e_phan_luong": ("Phân luồng kiểm tra theo khâu, ngưỡng PM/TE/SAD và chọn mẫu",
-                     "PL-0 chỉ có khung; cả 5 năng lực trả CHUA_LAM, chưa có DEMO nghiệp vụ"),
+                     "PL-2: `audit.phan_luong@1` nhận JSON, có DEMO; Excel/CSV, AI, hóa đơn và ghi kết quả chờ lát sau; danh sách Excel để trống tới PL-8"),
     "e_doi_chieu": ("So bản Word chuẩn với bản đã ký",
                     "Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module"),
     "e_tra_cuu": ("Hỏi đáp 3 tầng trên kho tài liệu",
@@ -45,6 +45,8 @@ GHI_CHU = {
 
 # Chuỗi mẫu: (mục đích, các bước, cột ngăn nhận). Một bước có nhiều lựa chọn thì dùng tuple.
 CHUOI = [
+    ("Phân luồng kiểm tra lô JSON theo khâu",
+     ["audit.phan_luong@1"], "luồng, lý do, số đếm, tổng tiền Đỏ, tệp JSON, mã lượt và băm"),
     ("Lấy chữ từ PDF scan/ảnh", ["ocr.doc_van_ban@1"], "1 trường văn bản"),
     ("Chuyển PDF scan/ảnh sang Word", ["ocr.xuat_word@1"], "1 trường tệp (DOCX)"),
     ("Hỏi AI về PDF scan/ảnh", ["ocr.doc_tai_lieu@1", "ai.hoi_tai_lieu@1"],

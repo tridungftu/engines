@@ -1,4 +1,4 @@
-"""Ghép phân loại và lớp 1; chưa nối năng lực hay chọn mẫu (PL-2).
+"""Ghép phân loại, lớp 1 và chọn mẫu lớp 2/3 (PL-2).
 
 Chỉ xử lý trong bộ nhớ. Lịch sử tổng ngày, nếu có, do bên gọi cấp;
 không lưu đối tác hoặc chi tiết nghiệp vụ.
@@ -13,10 +13,12 @@ from hashlib import sha256
 import re
 
 from .kieu import (
-    NGHI_CHIA_NHO, THU_TU_LY_DO, VUNG_BAT_BUOC,
-    Lo, NghiepVu, Nguong, Tien,
+    CHON_MAU, KHONG_CHON, NGHI_CHIA_NHO, NOP_LAI, THU_TU_LY_DO,
+    VUNG_BAT_BUOC, VUNG_DUOI_SAD, KetQuaDong, Lo, NghiepVu, Nguong, Tien,
 )
+from . import chon_mau, co, ty_le
 from .loi import loi
+from .ngan_luot import doc_ty_le, tra_nop_lai
 from .nguong import tien_so_sanh, tim_chia_nho, xet_lop1
 from .phan_loai import BoPhanLoai, chot_loai, gan_loai
 
@@ -95,3 +97,41 @@ def xet_lop1_lo(
                 vung=VUNG_BAT_BUOC,
             )
     return tuple(ket_qua)
+
+
+def xet_lop23_lo(
+    viec, lo: Lo, ds_lop1: tuple[QuyetDinhLop1, ...], *,
+    khau: str, cs: ty_le.ChinhSach, hat_giong: bytes,
+) -> tuple[KetQuaDong, ...]:
+    """Giữ đủ dòng và thứ tự; đọc mỗi cặp khâu/loại tối đa một lần.
+
+    PL-4 chưa cấp hồ sơ: ho_so=None, không suy cờ đối tác mới/bất thường.
+    Hạt giống để chọn phải là bytes; bản lưu ngăn dùng .hex().
+    """
+    nop_lai = tra_nop_lai(viec, lo.ma_module, khau, [qd.nv.ma for qd in ds_lop1])
+    trang_thai = {}
+    ds = []
+    for i, qd in enumerate(ds_lop1):
+        if i % 100 == 0:
+            viec.kiem_huy()
+        nv = qd.nv
+        bam_dt = bam_doi_tac(lo.ma_module, nv.doi_tac) if nv.doi_tac is not None else None
+        cac_co = co.tinh_co(nv, qd.tien_ss, None, bam_dt, cs)
+        bat_buoc = set(qd.bat_buoc)
+        if nv.ma in nop_lai:
+            bat_buoc.add(NOP_LAI)
+        if bat_buoc:
+            luong = "do"
+            ly_do = tuple(ma for ma in THU_TU_LY_DO if ma in bat_buoc)
+        else:
+            if qd.loai not in trang_thai:
+                trang_thai[qd.loai] = doc_ty_le(viec, khau, qd.loai, cs)
+            p_co_so = ty_le.p_bac(trang_thai[qd.loai], cs)
+            san = cs.san
+            if qd.vung == VUNG_DUOI_SAD:
+                p_co_so, san = cs.ty_le_duoi_sad, Decimal(0)
+            p = chon_mau.tinh_p(p_co_so, co.tich_he_so(cac_co, cs), san)
+            chon = chon_mau.duoc_chon(hat_giong, lo.ma_module, khau, nv.ma, p)
+            luong, ly_do = ("do", (CHON_MAU,)) if chon else ("xanh", (KHONG_CHON,))
+        ds.append(KetQuaDong(nv.ma, luong, ly_do, cac_co, qd.loai, qd.nguon_loai))
+    return tuple(ds)

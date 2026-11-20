@@ -1172,7 +1172,22 @@
   "readiness": {
     "thoi_han_giay": 30
   },
-  "chay_thu_demo": [],
+  "chay_thu_demo": [
+    {
+      "nang_luc": "audit.phan_luong@1",
+      "ten": "Phân luồng lô JSON nhỏ DEMO theo khâu KTT",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/lo-nho-DEMO.json"
+      },
+      "tham_so": {
+        "khau": "ktt_duyet",
+        "danh_muc_loai_json": "[\n  {\n    \"ma\": \"thanh_toan_ncc\",\n    \"mo_ta\": \"Nghiệp vụ Thanh toán nhà cung cấp DEMO\",\n    \"ten\": \"Thanh toán nhà cung cấp DEMO\"\n  },\n  {\n    \"ma\": \"tam_ung\",\n    \"mo_ta\": \"Nghiệp vụ Tạm ứng DEMO\",\n    \"ten\": \"Tạm ứng DEMO\"\n  },\n  {\n    \"ma\": \"luong\",\n    \"mo_ta\": \"Nghiệp vụ Lương DEMO\",\n    \"ten\": \"Lương DEMO\"\n  },\n  {\n    \"ma\": \"chi_phi_khac\",\n    \"mo_ta\": \"Nghiệp vụ Chi phí khác DEMO\",\n    \"ten\": \"Chi phí khác DEMO\"\n  },\n  {\n    \"ma\": \"thu_tien\",\n    \"mo_ta\": \"Nghiệp vụ Thu tiền DEMO\",\n    \"ten\": \"Thu tiền DEMO\"\n  }\n]\n",
+        "bo_phan_loai_json": "{\n  \"phien_ban\": 1,\n  \"quy_tac\": [\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thanh toán\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thanh_toan_ncc\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"tạm ứng\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"tam_ung\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"lương\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"luong\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"chi phí khác\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"chi_phi_khac\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thu tiền\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thu_tien\"\n    }\n  ]\n}\n",
+        "truong_phan_loai": "dien_giai"
+      }
+    }
+  ],
   "bi_mat": [],
   "webhook": null
 }

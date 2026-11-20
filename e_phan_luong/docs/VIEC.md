@@ -10,11 +10,11 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 3 | `tien.py`, `doc_lo.py` | PL-1A (PR PL-1) | Xong — 20/11/2026 | Codex | Không | 2 | PR PL-1. Sửa sau rà: loai rỗng = chưa gán; bộ đọc số chung; 0 thừa |
 | 4 | `nguong.py`: ngưỡng, lớp 1, chia nhỏ trong lô | PL-1B (PR PL-1) | Xong — 20/11/2026 | Codex | Không (Q3 đã chốt) | 2 | PR PL-1. Số âm trị tuyệt đối (Q3); ngưỡng {} dùng nguong_json; đọc số chung |
 | 5 | `tu_khoa.py`, `phan_loai.py` | PL-1C (PR PL-1) | Xong — 20/11/2026 | Codex | Không | 2 | PR PL-1. Chép cách so từ khóa e_kiem_excel §4.1.1 |
-| 6 | `thong_ke.py` (Clopper-Pearson), `ty_le.py`, `doi_bac.py` | PL-2A (PR PL-2, `doi_bac` vào PR PL-3) | Đang làm — 20/11/2026 | Codex | Không | 3 | |
-| 7 | `co.py`, `chon_mau.py` (SHA-256) | PL-2B (PR PL-2) | Đang làm — 20/11/2026 | Codex | Không (Q4 đã chốt) | 2 | |
+| 6 | `thong_ke.py` (Clopper-Pearson), `ty_le.py`, `doi_bac.py` | PL-2A (PR PL-2, `doi_bac` vào PR PL-3) | Xong — 20/11/2026 | Codex | Không | 3 | PR PL-2 (doi_bac.py cũng vào PR này). Q6 đã sửa; 158 test |
+| 7 | `co.py`, `chon_mau.py` (SHA-256) | PL-2B (PR PL-2) | Xong — 20/11/2026 | Codex | Không (Q4 đã chốt) | 2 | PR PL-2. Bỏ tham số tắt hệ số dưới SAD (Q4) |
 | 8 | `ket_qua.py`: JSON kết quả kiểm, mức sai, nguồn mẫu | PL-3A (PR PL-3) | Đang làm — 20/11/2026 | Codex | Không (Q1, Q2, Q7 đã chốt) | 2 | |
 | 9 | Ghép lớp 1 + phân loại (`phan_luong.py`) | PL-1 | Xong — 20/11/2026 | Codex | Không | 1 | PR PL-1. 570 test; thu mã 1 (chưa có ví dụ, CC-4); kiểm độc lập 0. Rà độc lập Sonnet: 0 lỗi cao, 5 điểm đã sửa |
-| 10 | Ghép lớp 2 + 3, năng lực `audit.phan_luong@1`, ngăn lượt, `tep_json` | PL-2 | Chờ làm | Codex | Không (Q4, Q5 đã chốt) | 2 | Sau PL-1 |
+| 10 | Ghép lớp 2 + 3, năng lực `audit.phan_luong@1`, ngăn lượt, `tep_json` | PL-2 | Xong — 20/11/2026 | Codex | Không (Q4, Q5 đã chốt) | 2 | PR PL-2. thu 1/1 ĐẠT mã 0; 929 test; kiểm độc lập 0; tái hiện từng byte; C4/C5; luot ghi sau cùng |
 | 11 | Năng lực `audit.ghi_ket_qua@1`, CAS thử lại | PL-3 | Chờ làm | Codex | Không (Q1, Q2, Q6 đã chốt) | 2 | Sau PL-1; song song PL-2 ghép |
 | 12 | **Dừng, báo Anh bản dùng được với JSON** | — | Chờ làm | Lead | Có | — | Trước PL-4 |
 | 13 | Hồ sơ hành vi, chốt kỳ tháng, chia nhỏ qua lô | PL-4 | Chờ làm | Codex | Sau báo cáo PL-3 | 4 | |

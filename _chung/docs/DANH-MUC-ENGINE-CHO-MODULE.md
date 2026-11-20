@@ -18,7 +18,7 @@
 | `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.0 | 4 | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
 | `e_hoa_don` | Đọc XML hóa đơn | 1.0.0 | 3 | Đọc XML, ZIP hóa đơn điện tử; lập bảng kê XLSX | Chưa có PDF, chưa tải cổng thuế |
 | `e_kiem_excel` | Kiểm và đọc file Excel | 0.1.1 | 2 | Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề | Ô đích, bộ nhóm, khuôn cột do module truyền |
-| `e_phan_luong` | Phân luồng kiểm tra | 0.1.0 | 5 | Phân luồng kiểm tra theo khâu, ngưỡng PM/TE/SAD và chọn mẫu | PL-0 chỉ có khung; cả 5 năng lực trả CHUA_LAM, chưa có DEMO nghiệp vụ |
+| `e_phan_luong` | Phân luồng kiểm tra | 0.1.0 | 5 | Phân luồng kiểm tra theo khâu, ngưỡng PM/TE/SAD và chọn mẫu | PL-2: `audit.phan_luong@1` nhận JSON, có DEMO; Excel/CSV, AI, hóa đơn và ghi kết quả chờ lát sau; danh sách Excel để trống tới PL-8 |
 | `e_doi_chieu` | Đối chiếu bản ký | 0.9.0 | 7 | So bản Word chuẩn với bản đã ký | Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module |
 | `e_tra_cuu` | Tra cứu tài liệu | 0.2.0 | 8 | Hỏi đáp 3 tầng trên kho tài liệu | Bước đầu nhận **tệp JSON yêu cầu**; cần Kho tài liệu của Core (chưa có) |
 
@@ -51,20 +51,21 @@ Script đã kiểm mọi chuỗi dưới đây nối đúng `nhan`/`tra` trong `
 
 | # | Mục đích | Chuỗi bước | Cột ngăn nhận |
 |---:|---|---|---|
-| 1 | Lấy chữ từ PDF scan/ảnh | `ocr.doc_van_ban@1` | 1 trường văn bản |
-| 2 | Chuyển PDF scan/ảnh sang Word | `ocr.xuat_word@1` | 1 trường tệp (DOCX) |
-| 3 | Hỏi AI về PDF scan/ảnh | `ocr.doc_tai_lieu@1` → `ai.hoi_tai_lieu@1` | trả lời, có căn cứ, trích dẫn, model |
-| 4 | Hỏi AI về hợp đồng Word | `trich.doc_docx@1` → `ai.hoi_tai_lieu@1` | như trên |
-| 5 | Trích tham số hợp đồng Word | `trich.doc_docx@1` → `trich.chuan_bi@1` → `ai.hoi_theo_yeu_cau@1` → `trich.hau_kiem@1` → `trich.xuat_ket_qua@1` | tệp JSON, tệp Excel, số tham số, số ô cần soát, có căn cứ |
-| 6 | Trích tham số hợp đồng PDF | `ocr.doc_tai_lieu@1` → `trich.chuan_bi@1` → `ai.hoi_theo_yeu_cau@1` → `trich.hau_kiem@1` → `trich.xuat_ket_qua@1` | như trên |
-| 7 | Đọc một hóa đơn XML | `hoa_don.doc_xml@2` | các trường hóa đơn (số, ngày, MST, tiền…) |
-| 8 | Đọc gói ZIP hóa đơn | `hoa_don.doc_zip@1` | số tệp, đọc được, lỗi, trùng… |
-| 9 | Lập bảng kê XLSX | `hoa_don.doc_xml@2` / `hoa_don.doc_zip@1` → `hoa_don.bang_ke_xlsx@1` | tệp bảng kê + số đếm |
-| 10 | Kiểm toàn vẹn file Excel | `excel.toan_ven@1` | số cờ Cao/Trung bình, ô đích, báo cáo Excel, JSON |
-| 11 | Đọc bảng Excel (BOQ, hồ sơ đợt, báo giá…) | `excel.doc_bang@1` | sheet, số dòng, giá trị HĐ, giá trị đề nghị, JSON |
-| 12 | Che tệp Word/Excel bằng Local AI, giữ định dạng | `mask.chuan_bi_tep_ai_cuc_bo@1` → `ai.hoi_mask_cuc_bo@1` → `mask.hau_kiem_tep_giu_dinh_dang@1` | tệp đã che, mã yêu cầu, phần còn sót, kiểm tiền/ngày |
-| 13 | Đối chiếu bản ký | `doi_chieu.nhan_cap@1` → `doi_chieu.so_van_ban@1` → `doi_chieu.phat_hien_sua_tay@1` → `doi_chieu.chuan_bi_ai@1` → `ai.hoi_theo_yeu_cau@1` → `doi_chieu.phan_loai_diem_lech@1` → `doi_chieu.xuat_ket_qua@1` | kết luận, số điểm nghiêm trọng, đề nghị chặn, JSON, PDF |
-| 14 | Tra cứu tài liệu | `tra_cuu.nhan_yeu_cau@1` → `tra_cuu.cat_doan@1` → `tra_cuu.chuan_bi_ai@1` → `ai.hoi_theo_yeu_cau@1` → `tra_cuu.phan_loai_tai_lieu@1` / `tra_cuu.phan_tich_cau_hoi@1` / `tra_cuu.xep_hang_lai@1` / `tra_cuu.soan_tra_loi@1` → `tra_cuu.xuat_ket_qua@1` | trả lời, nhãn, tầng, có căn cứ, có mâu thuẫn, cần duyệt, JSON |
+| 1 | Phân luồng kiểm tra lô JSON theo khâu | `audit.phan_luong@1` | luồng, lý do, số đếm, tổng tiền Đỏ, tệp JSON, mã lượt và băm |
+| 2 | Lấy chữ từ PDF scan/ảnh | `ocr.doc_van_ban@1` | 1 trường văn bản |
+| 3 | Chuyển PDF scan/ảnh sang Word | `ocr.xuat_word@1` | 1 trường tệp (DOCX) |
+| 4 | Hỏi AI về PDF scan/ảnh | `ocr.doc_tai_lieu@1` → `ai.hoi_tai_lieu@1` | trả lời, có căn cứ, trích dẫn, model |
+| 5 | Hỏi AI về hợp đồng Word | `trich.doc_docx@1` → `ai.hoi_tai_lieu@1` | như trên |
+| 6 | Trích tham số hợp đồng Word | `trich.doc_docx@1` → `trich.chuan_bi@1` → `ai.hoi_theo_yeu_cau@1` → `trich.hau_kiem@1` → `trich.xuat_ket_qua@1` | tệp JSON, tệp Excel, số tham số, số ô cần soát, có căn cứ |
+| 7 | Trích tham số hợp đồng PDF | `ocr.doc_tai_lieu@1` → `trich.chuan_bi@1` → `ai.hoi_theo_yeu_cau@1` → `trich.hau_kiem@1` → `trich.xuat_ket_qua@1` | như trên |
+| 8 | Đọc một hóa đơn XML | `hoa_don.doc_xml@2` | các trường hóa đơn (số, ngày, MST, tiền…) |
+| 9 | Đọc gói ZIP hóa đơn | `hoa_don.doc_zip@1` | số tệp, đọc được, lỗi, trùng… |
+| 10 | Lập bảng kê XLSX | `hoa_don.doc_xml@2` / `hoa_don.doc_zip@1` → `hoa_don.bang_ke_xlsx@1` | tệp bảng kê + số đếm |
+| 11 | Kiểm toàn vẹn file Excel | `excel.toan_ven@1` | số cờ Cao/Trung bình, ô đích, báo cáo Excel, JSON |
+| 12 | Đọc bảng Excel (BOQ, hồ sơ đợt, báo giá…) | `excel.doc_bang@1` | sheet, số dòng, giá trị HĐ, giá trị đề nghị, JSON |
+| 13 | Che tệp Word/Excel bằng Local AI, giữ định dạng | `mask.chuan_bi_tep_ai_cuc_bo@1` → `ai.hoi_mask_cuc_bo@1` → `mask.hau_kiem_tep_giu_dinh_dang@1` | tệp đã che, mã yêu cầu, phần còn sót, kiểm tiền/ngày |
+| 14 | Đối chiếu bản ký | `doi_chieu.nhan_cap@1` → `doi_chieu.so_van_ban@1` → `doi_chieu.phat_hien_sua_tay@1` → `doi_chieu.chuan_bi_ai@1` → `ai.hoi_theo_yeu_cau@1` → `doi_chieu.phan_loai_diem_lech@1` → `doi_chieu.xuat_ket_qua@1` | kết luận, số điểm nghiêm trọng, đề nghị chặn, JSON, PDF |
+| 15 | Tra cứu tài liệu | `tra_cuu.nhan_yeu_cau@1` → `tra_cuu.cat_doan@1` → `tra_cuu.chuan_bi_ai@1` → `ai.hoi_theo_yeu_cau@1` → `tra_cuu.phan_loai_tai_lieu@1` / `tra_cuu.phan_tich_cau_hoi@1` / `tra_cuu.xep_hang_lai@1` / `tra_cuu.soan_tra_loi@1` → `tra_cuu.xuat_ket_qua@1` | trả lời, nhãn, tầng, có căn cứ, có mâu thuẫn, cần duyệt, JSON |
 
 **Lưu ý:**
 - **Mask:**

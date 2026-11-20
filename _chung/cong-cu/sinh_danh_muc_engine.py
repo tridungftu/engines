@@ -36,7 +36,7 @@ GHI_CHU = {
     "e_kiem_excel": ("Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề",
                      "Ô đích, bộ nhóm, khuôn cột do module truyền"),
     "e_phan_luong": ("Phân luồng kiểm tra theo khâu, ngưỡng PM/TE/SAD và chọn mẫu",
-                     "PL-3/PL-7: nhận JSON, ghi kết quả kiểm và phân luồng XML/ZIP hóa đơn đã có DEMO/test; Excel/CSV và AI chờ lát sau; danh sách Excel để trống tới PL-8"),
+                     "Nhận JSON, Excel/CSV theo khuôn cột, chuỗi Local AI và XML/ZIP hóa đơn; ghi kết quả kiểm; trả danh sách Đỏ Excel. Màn Admin bảng tỷ lệ chờ Core (CC-5)"),
     "e_doi_chieu": ("So bản Word chuẩn với bản đã ký",
                     "Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module"),
     "e_tra_cuu": ("Hỏi đáp 3 tầng trên kho tài liệu",

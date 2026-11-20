@@ -94,7 +94,8 @@ def test_xml_mot_hoa_don_co_chi_tiet_xml_van_dung_truong(chi_tiet):
     assert truong["luong"] == "do" and truong["can_nguoi_kiem"] is True
     assert tep["nghiep_vu"] == [{
         "ma": "1-C26TAA-0000123", "luong": "do", "ly_do": ["CO_DO_CUNG"],
-        "co": ["CUOI_KY"], "loai": "hoa_don_dau_vao", "nguon_loai": "module",
+        # PL-4: mặc định lượt đầu (hồ sơ trống) coi người bán là đối tác mới.
+        "co": ["DOI_TAC_MOI", "CUOI_KY"], "loai": "hoa_don_dau_vao", "nguon_loai": "module",
     }]
     assert truong["tong_tien_do"] == {"so": "1100000", "tien_te": "VND"}
 

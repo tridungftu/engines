@@ -17,12 +17,12 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 10 | Ghép lớp 2 + 3, năng lực `audit.phan_luong@1`, ngăn lượt, `tep_json` | PL-2 | Xong — 20/11/2026 | Codex | Không (Q4, Q5 đã chốt) | 2 | PR PL-2. thu 1/1 ĐẠT mã 0; 929 test; kiểm độc lập 0; tái hiện từng byte; C4/C5; luot ghi sau cùng |
 | 11 | Năng lực `audit.ghi_ket_qua@1`, CAS thử lại | PL-3 | Xong — 20/11/2026 | Codex | Không (Q1, Q2, Q6 đã chốt) | 2 | PR PL-3. 1123 test (8 test đầu-cuối); thu 1/1; kiểm độc lập 0. Rà Sonnet: 0 lỗi cao; M1, M3, T1–T5 sửa ở đầu nhánh PL-4 |
 | 12 | **Dừng, báo Anh bản dùng được với JSON** | — | Xong — 20/11/2026 | Lead | Có | — | Báo cáo mốc PL-3 gửi Anh trong phiên; Anh yêu cầu làm tối đa nên PL-4…PL-8 chạy song song, chưa gộp main |
-| 13 | Hồ sơ hành vi, chốt kỳ tháng, chia nhỏ qua lô | PL-4 | Chờ làm | Codex | Sau báo cáo PL-3 | 4 | |
-| 14 | Chuỗi Local AI: `chuan_bi_phan_loai`, `phan_luong_sau_ai` | PL-5 | Chờ làm | Codex | Sau báo cáo PL-3 | 6 | Theo GIAO-CODEX §2.5 |
-| 15 | Excel/CSV theo khuôn cột | PL-6 | Chờ làm | Codex | Sau báo cáo PL-3 | 4 | |
-| 16 | `phan_luong_hoa_don` | PL-7 | Chờ làm | Codex | Sau báo cáo PL-3 | 4 | |
-| 17 | Tệp JSON, Excel danh sách Đỏ, màn `ui/bang_ty_le.js` | PL-8 | Chờ làm | Codex | Sau báo cáo PL-3 | 5 | |
-| 18 | Mô phỏng 12 tháng, test C4/C5, đo hiệu năng, kiểm độc lập, đóng gói, danh mục | PL-9 | Chờ làm | Codex | Sau báo cáo PL-3 | 3 | |
+| 13 | Hồ sơ hành vi, chốt kỳ tháng, chia nhỏ qua lô | PL-4 | Xong — 21/11/2026 | Codex | Sau báo cáo PL-3 | 4 | PR PL-4 (#146). Hồ sơ cộng cùng lô với dấu luot (giao lại không cộng hai lần); khóa toi_thieu_ho_so_doi_tac_moi; 1302 test |
+| 14 | Chuỗi Local AI: `chuan_bi_phan_loai`, `phan_luong_sau_ai` | PL-5 | Xong — 21/11/2026 | Codex | Sau báo cáo PL-3 | 6 | PR PL-5. Chuỗi Local AI; chuỗi mẫu (b) trong danh mục; chưa chạy Core thật |
+| 15 | Excel/CSV theo khuôn cột | PL-6 | Xong — 21/11/2026 | Codex | Sau báo cáo PL-3 | 4 | PR PL-6. xlsx/csv theo khuôn cột; .xls từ chối; không tự gán VND |
+| 16 | `phan_luong_hoa_don` | PL-7 | Xong — 21/11/2026 | Codex | Sau báo cáo PL-3 | 4 | PR PL-7. Nối sau hoa_don.doc_xml@2 / doc_zip@1; 5/5 năng lực chạy thật |
+| 17 | Tệp JSON, Excel danh sách Đỏ, màn `ui/bang_ty_le.js` | PL-8 | Chờ Core — 21/11/2026 | Codex | Sau báo cáo PL-3 | 5 | PR PL-8. ds-can-kiem.xlsx + schema tep_json xong; màn Admin chờ CC-5 (xfail) |
+| 18 | Mô phỏng 12 tháng, test C4/C5, đo hiệu năng, kiểm độc lập, đóng gói, danh mục | PL-9 | Đang làm — 21/11/2026 | Codex | Sau báo cáo PL-3 | 3 | 3 Codex song song: PL-9A mô phỏng 12 tháng, PL-9B C4/C5 + đo hiệu năng (CC-6), PL-9C đóng gói |
 | | **Cộng** | | | | | **48** | Giờ phiếu §9; việc con chia lại trong cùng tổng |
 
 ## Chờ Anh

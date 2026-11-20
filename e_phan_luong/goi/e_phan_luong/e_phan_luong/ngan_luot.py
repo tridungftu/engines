@@ -83,18 +83,24 @@ def ghi_luot(viec, luot: dict, ds_dong: Sequence[KetQuaDong], *,
             "loai": dong.loai, "nguon_loai": dong.nguon_loai,
         }) for dong in ds_dong
     ]
+    if viec.ngan.doc("luot", {"ma_luot": ma_luot}) is not None:
+        return  # Lượt đã hoàn tất: giữ nguyên dòng và dấu luot.
+    # Hiệu năng (PL-4 lead): đọc MỘT lần các dòng còn lại của lần chạy dở bằng tim
+    # (≤500/trang) thay vì đọc từng dòng; lần đầu thường rỗng. Lô xung đột thì lần
+    # thử lại đọc từng dòng của lô đó để có row_version mới.
+    da_co = {bg.gia_tri["ma"]: bg for bg in tim_tat_ca(viec, "dong_luot", {"ma_luot": ma_luot})}
     for dau in range(0, len(ds), 100):
         nhom = ds[dau:dau + 100]
+        lan = [0]
 
         def lap_lenh(lo):
-            if viec.ngan.doc("luot", {"ma_luot": ma_luot}) is not None:
-                return
             for khoa, gia_tri in nhom:
-                cu = viec.ngan.doc("dong_luot", khoa)
+                cu = da_co.get(khoa["ma"]) if lan[0] == 0 else viec.ngan.doc("dong_luot", khoa)
                 if cu is None:
                     lo.lay_hoac_tao("dong_luot", khoa, gia_tri)
                 else:
                     lo.sua("dong_luot", khoa, gia_tri, row_version=cu.row_version)
+            lan[0] += 1
 
         ghi_lo_thu_lai(viec, lap_lenh)
     gia_tri = {**ngu_canh, **{cot: luot[cot] for cot in ("hat_giong", "bam_dau_vao")}}

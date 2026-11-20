@@ -6,14 +6,14 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 |---|---|---|---|---|---|---:|---|
 | 0 | Phiếu engine (Anh duyệt 20/11), phiếu giao Codex, `kieu.py`, `loi.py`, kiểm 2 điểm Cần Core bằng đọc mã | PL-P | Xong — 20/11/2026 | Lead | Không | — | Kết quả kiểm: GIAO-CODEX §4 |
 | 1 | Khung gói, `engine.json`, SQL 6 bảng + kiểm kê, `ngan_chung.py`, kiểm độc lập, test Cần Core bằng CoreGia | PL-0 | Chờ Core — 20/11/2026 | Codex | Không (Q1, Q2 đã chốt) | 3 | Khung xong; đã kiểm bằng Core giả (CoreGia): pytest 33 passed, 0 skipped; kiểm độc lập mã 0; thu mã 1 do chưa có ví dụ thật (CC-4). PR: chờ lead mở. Giữ nguyên kieu.py/loi.py; không tạo demo PL-0B. |
-| 2 | Bộ DEMO 500 nghiệp vụ, đáp án lớp 1, AI giả `tra_loi_ai` | PL-0B (PR PL-0) | Đang làm — 20/11/2026 | Codex | Không | 1 | |
-| 3 | `tien.py`, `doc_lo.py` | PL-1A (PR PL-1) | Đang làm — 20/11/2026 | Codex | Không | 2 | |
-| 4 | `nguong.py`: ngưỡng, lớp 1, chia nhỏ trong lô | PL-1B (PR PL-1) | Đang làm — 20/11/2026 | Codex | Không (Q3 đã chốt) | 2 | |
-| 5 | `tu_khoa.py`, `phan_loai.py` | PL-1C (PR PL-1) | Đang làm — 20/11/2026 | Codex | Không | 2 | |
+| 2 | Bộ DEMO 500 nghiệp vụ, đáp án lớp 1, AI giả `tra_loi_ai` | PL-0B (PR PL-0) | Xong — 20/11/2026 | Codex | Không | 1 | Gộp vào PR PL-0 (#142). 11 test; sinh lại cùng byte |
+| 3 | `tien.py`, `doc_lo.py` | PL-1A (PR PL-1) | Xong — 20/11/2026 | Codex | Không | 2 | PR PL-1. Sửa sau rà: loai rỗng = chưa gán; bộ đọc số chung; 0 thừa |
+| 4 | `nguong.py`: ngưỡng, lớp 1, chia nhỏ trong lô | PL-1B (PR PL-1) | Xong — 20/11/2026 | Codex | Không (Q3 đã chốt) | 2 | PR PL-1. Số âm trị tuyệt đối (Q3); ngưỡng {} dùng nguong_json; đọc số chung |
+| 5 | `tu_khoa.py`, `phan_loai.py` | PL-1C (PR PL-1) | Xong — 20/11/2026 | Codex | Không | 2 | PR PL-1. Chép cách so từ khóa e_kiem_excel §4.1.1 |
 | 6 | `thong_ke.py` (Clopper-Pearson), `ty_le.py`, `doi_bac.py` | PL-2A (PR PL-2, `doi_bac` vào PR PL-3) | Đang làm — 20/11/2026 | Codex | Không | 3 | |
 | 7 | `co.py`, `chon_mau.py` (SHA-256) | PL-2B (PR PL-2) | Đang làm — 20/11/2026 | Codex | Không (Q4 đã chốt) | 2 | |
 | 8 | `ket_qua.py`: JSON kết quả kiểm, mức sai, nguồn mẫu | PL-3A (PR PL-3) | Đang làm — 20/11/2026 | Codex | Không (Q1, Q2, Q7 đã chốt) | 2 | |
-| 9 | Ghép lớp 1 + phân loại (`phan_luong.py`) | PL-1 | Chờ làm | Codex | Không | 1 | Sau PL-0, PL-1A/B/C |
+| 9 | Ghép lớp 1 + phân loại (`phan_luong.py`) | PL-1 | Xong — 20/11/2026 | Codex | Không | 1 | PR PL-1. 570 test; thu mã 1 (chưa có ví dụ, CC-4); kiểm độc lập 0. Rà độc lập Sonnet: 0 lỗi cao, 5 điểm đã sửa |
 | 10 | Ghép lớp 2 + 3, năng lực `audit.phan_luong@1`, ngăn lượt, `tep_json` | PL-2 | Chờ làm | Codex | Không (Q4, Q5 đã chốt) | 2 | Sau PL-1 |
 | 11 | Năng lực `audit.ghi_ket_qua@1`, CAS thử lại | PL-3 | Chờ làm | Codex | Không (Q1, Q2, Q6 đã chốt) | 2 | Sau PL-1; song song PL-2 ghép |
 | 12 | **Dừng, báo Anh bản dùng được với JSON** | — | Chờ làm | Lead | Có | — | Trước PL-4 |

@@ -2,4 +2,7 @@
 goi/** text eol=lf
 # Schema chép nguyên byte từ nguồn trong worktree; không chuyển CRLF/LF.
 goi/e_phan_luong/contract/*.schema.json -text
+goi/**/*.xlsx binary
+goi/**/*.zip binary
 tests/** text eol=lf
+tests/**/*.xlsx binary

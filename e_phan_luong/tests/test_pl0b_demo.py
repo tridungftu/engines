@@ -19,6 +19,13 @@ GOC_ENGINE = Path(__file__).resolve().parents[1]
 GOC_REPO = GOC_ENGINE.parent
 DEMO = GOC_ENGINE / "tests" / "demo"
 SINH = runpy.run_path(str(DEMO / "sinh_demo.py"))
+# PL-7A lấy từ đầu ra e_hoa_don với XML DEMO, không do sinh_demo.py sinh.
+# Khóa bytes riêng, không đưa vào phép so tái sinh của bộ PL-0B.
+BAM_HOA_DON_DEMO = {
+    "tests/demo/hoa-don-xml-DEMO.json": "sha256:907aa867c39963aaad135f54d81d3d843a6fb9a5f41fdb00b016e535cdaf8e5f",
+    "tests/demo/hoa-don-zip-DEMO.json": "sha256:b3a07740b90edde4537931f60eab8c23e9722e2ea07ba8988667869757c89811",
+    "tests/demo/hoa-don-chi-tiet-zip-DEMO.json": "sha256:3815c23a5a5dd571b5ef258747dc8c01fe229ab80368714d01067c02ea71f5d8",
+}
 
 
 def doc(ten):
@@ -97,9 +104,13 @@ def test_moi_json_doc_duoc_va_dung_danh_sach():
     tep_thuc = {"tests/demo/" + p.name for p in DEMO.glob("*.json")}
     tep_thuc |= {"goi/e_phan_luong/demo/" + p.name
                  for p in (GOC_ENGINE / "goi/e_phan_luong/demo").glob("*.json")}
-    assert tep_thuc == set(SINH["sinh_bo_demo"]())
+    assert tep_thuc == set(SINH["sinh_bo_demo"]()) | set(BAM_HOA_DON_DEMO)
     for ten in tep_thuc:
-        du_lieu = json.loads((GOC_ENGINE / ten).read_bytes().decode("utf-8"),
+        noi_dung = (GOC_ENGINE / ten).read_bytes()
+        if ten in BAM_HOA_DON_DEMO:
+            assert sha(noi_dung) == BAM_HOA_DON_DEMO[ten], ten
+            assert b"DEMO" in noi_dung, ten
+        du_lieu = json.loads(noi_dung.decode("utf-8"),
                             parse_constant=lambda _: pytest.fail("JSON có hằng số ngoài chuẩn."))
         assert isinstance(du_lieu, (dict, list)), ten
 
@@ -285,22 +296,32 @@ def test_chi_du_lieu_demo_khong_dinh_danh_nhay_cam():
     # Không sinh MST/số tài khoản ngân hàng; 331/1121 chỉ là tài khoản hạch toán.
     khoa_cam = {"mst", "ma_so_thue", "so_tai_khoan", "tai_khoan_ngan_hang", "iban"}
 
-    def duyet(gia_tri, khoa=""):
+    def duyet(gia_tri, khoa="", *, hoa_don_demo=False):
         if isinstance(gia_tri, dict):
             assert not (set(gia_tri) & khoa_cam)
             for k, v in gia_tri.items():
-                duyet(v, k)
+                duyet(v, k, hoa_don_demo=hoa_don_demo)
         elif isinstance(gia_tri, list):
             for v in gia_tri:
-                duyet(v, khoa)
+                duyet(v, khoa, hoa_don_demo=hoa_don_demo)
         elif isinstance(gia_tri, str):
             assert "thật" not in gia_tri.casefold()
             if khoa in {"ten", "mo_ta", "dien_giai", "noi_dung", "doi_tac"}:
                 assert "demo" in gia_tri.casefold()
             if khoa != "so":
-                assert not re.fullmatch(r"\d{10,}", gia_tri)
+                # Chỉ hai MST giả trong XML DEMO gốc của e_hoa_don;
+                # lexeme là bản giữ nguyên MST đó trong chi tiết nguồn.
+                mst_demo = (hoa_don_demo
+                            and khoa in {"ma_so_thue_ban", "ma_so_thue_mua", "lexeme"}
+                            and gia_tri in {"0100000001", "0100000002"})
+                assert mst_demo or not re.fullmatch(r"\d{10,}", gia_tri)
             if khoa in {"tai_khoan_no", "tai_khoan_co"}:
                 assert gia_tri in {"331", "1121"}
 
     for ten, noi_dung in SINH["sinh_bo_demo"]().items():
         duyet(json.loads(noi_dung))
+    for ten, bam in BAM_HOA_DON_DEMO.items():
+        noi_dung = (GOC_ENGINE / ten).read_bytes()
+        assert sha(noi_dung) == bam, ten
+        assert b"DEMO" in noi_dung, ten
+        duyet(json.loads(noi_dung), hoa_don_demo=True)

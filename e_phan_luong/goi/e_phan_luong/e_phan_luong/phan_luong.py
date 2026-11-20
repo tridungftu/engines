@@ -8,8 +8,9 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, replace
 from datetime import date
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from hashlib import sha256
+import re
 
 from .kieu import (
     NGHI_CHIA_NHO, THU_TU_LY_DO, VUNG_BAT_BUOC,
@@ -31,7 +32,11 @@ def bam_doi_tac(ma_module: str, doi_tac: str) -> str:
 
 @dataclass(frozen=True)
 class QuyetDinhLop1:
-    """Quyết định trung gian; vùng chưa bắt buộc còn chờ lớp 2 và 3."""
+    """Quyết định trung gian; vùng chưa bắt buộc còn chờ lớp 2 và 3.
+
+    tien_ss giữ đúng giá trị nguong.tien_so_sanh trả về, đã lấy trị tuyệt đối
+    theo Q3, để truyền tiếp cho lớp sau; nv vẫn giữ số tiền gốc có dấu.
+    """
     nv: NghiepVu
     loai: str
     nguon_loai: str
@@ -48,19 +53,28 @@ def xet_lop1_lo(
 ) -> tuple[QuyetDinhLop1, ...]:
     """Giữ thứ tự lô, gộp mọi lý do bắt buộc theo THU_TU_LY_DO.
 
-    Cửa sổ mặc định 7 ngày; tham số kiểu số phải có giá trị nguyên dương.
+    Cửa sổ mặc định 7 ngày; nhận int/Decimal/float/chuỗi số nguyên trong 1..31.
     tong_truoc nhận băm theo module và ngày, trả tổng cùng tiền tệ ngưỡng,
     không chứa lại dòng của lô hiện tại (hợp đồng tim_chia_nho).
     """
+    khau = tham_so.get("khau")
+    if not isinstance(khau, str) or re.fullmatch(r"[a-z][a-z0-9_]{0,39}", khau) is None:
+        raise loi("THAM_SO_KHONG_HOP_LE")
+    if not isinstance(lo.ma_module, str) or re.fullmatch(
+        r"[a-z][a-z0-9_]{0,30}", lo.ma_module
+    ) is None:
+        raise loi("DU_LIEU_KHONG_HOP_LE")
+
     cua_so = tham_so.get("cua_so_chia_nho_ngay", 7)
-    if isinstance(cua_so, bool) or not isinstance(cua_so, (int, float, Decimal)):
+    if isinstance(cua_so, bool) or not isinstance(cua_so, (int, float, Decimal, str)):
         raise loi("THAM_SO_KHONG_HOP_LE")
     try:
-        so_ngay = int(cua_so)
-    except (ValueError, OverflowError):
+        cua_so = Decimal(str(cua_so))
+    except (InvalidOperation, ValueError):
         raise loi("THAM_SO_KHONG_HOP_LE") from None
-    if cua_so != so_ngay or so_ngay < 1:
+    if not cua_so.is_finite() or not 1 <= cua_so <= 31 or cua_so != cua_so.to_integral_value():
         raise loi("THAM_SO_KHONG_HOP_LE")
+    so_ngay = int(cua_so)
 
     ket_qua = []
     for nv in lo.nghiep_vu:

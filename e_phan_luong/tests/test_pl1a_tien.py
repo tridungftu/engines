@@ -95,3 +95,26 @@ def test_tien_ra_khong_mu_khong_mat_do_chinh_xac(so, chuoi):
         ket_qua = tien.tien_ra(kieu.Tien(Decimal(so), "VND"))
     assert ket_qua == {"so": chuoi, "tien_te": "VND"}
     assert tien.doc_tien(ket_qua).so == Decimal(so)
+
+
+@pytest.mark.parametrize("gia_tri", ["0.1234560", Decimal("-0.123456000"),
+                                     "999999999999999999.123456000", "0.0000000",
+                                     Decimal("0E-100"), 1000000])
+def test_doc_so_dung_chung_bo_so_khong_le_thua_khong_lam_tron(gia_tri):
+    with localcontext() as ctx:
+        ctx.prec = 6
+        so = tien.doc_so_thap_phan(gia_tri)
+        assert so == Decimal(gia_tri)
+        assert isinstance(so, Decimal)
+        assert tien.doc_tien({"so": gia_tri, "tien_te": "VND"}).so == so
+
+
+@pytest.mark.parametrize("gia_tri", ["0.1234567", "0.12345670", Decimal("0.00000010"),
+                                     "5e9", " 5000000000 ", "1_000", "1\n", "+1",
+                                     "NaN", "Inf", Decimal("sNaN"), Decimal("Infinity"),
+                                     1.0, float("nan"), True, None, "1000000000000000000"])
+def test_doc_so_dung_chung_tu_choi_sai_dinh_dang_va_vuot_tran(gia_tri):
+    with pytest.raises(loi.LoiNghiepVu) as bat:
+        tien.doc_so_thap_phan(gia_tri)
+    assert bat.value.ma == "DU_LIEU_KHONG_HOP_LE"
+    assert bat.value.thong_diep == loi.CAU_LOI[bat.value.ma]

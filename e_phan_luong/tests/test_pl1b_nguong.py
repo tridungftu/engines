@@ -48,7 +48,7 @@ def kiem_loi(ma, ham, *args):
 def test_tep_thang_tham_so_ke_ca_tham_so_sai():
     assert nguong.doc_nguong(khoi(), "khong-phai-json") == NG
     assert nguong.doc_nguong(khoi(), json.dumps(khoi(pm="6", te="5", sad="1"))) == NG
-    kiem_loi("THIEU_NGUONG", nguong.doc_nguong, {}, json.dumps(khoi()))
+    kiem_loi("THIEU_NGUONG", nguong.doc_nguong, {"pm": None}, json.dumps(khoi()))
 
 
 def test_doc_tham_so_khi_khong_co_khoi_tep():
@@ -57,6 +57,38 @@ def test_doc_tham_so_khi_khong_co_khoi_tep():
     assert nguong.doc_nguong(None, '{"pm":{"so":5.5,"tien_te":"USD"},'
                             '"te":{"so":3.3,"tien_te":"USD"},'
                             '"sad":{"so":1.1,"tien_te":"USD"}}').te == tien("3.3", "USD")
+
+
+@pytest.mark.parametrize("tu_tep", [None, {}])
+def test_khoi_tep_null_hoac_rong_dung_cai_dat_buoc(tu_tep):
+    assert nguong.doc_nguong(tu_tep, json.dumps(khoi())) == NG
+    kiem_loi("THIEU_NGUONG", nguong.doc_nguong, tu_tep, None)
+
+
+@pytest.mark.parametrize("tu_tep", [{"pm": None}, {"DEMO": 1}, khoi(te="5e9")])
+def test_khoi_co_khoa_nhung_sai_khong_quay_ve_cai_dat(tu_tep):
+    kiem_loi("THIEU_NGUONG", nguong.doc_nguong, tu_tep, json.dumps(khoi()))
+
+
+@pytest.mark.parametrize("ten", ["pm", "te", "sad"])
+@pytest.mark.parametrize("so", ["5e9", " 5000000000 ", "1_000", "+1", "1\n",
+                               "0.1234567", "0.12345670", Decimal("sNaN")])
+def test_so_nguong_dung_cung_luat_voi_dong_nghiep_vu(ten, so):
+    du_lieu = khoi()
+    du_lieu[ten]["so"] = so
+    kiem_loi("THIEU_NGUONG", nguong.doc_nguong, du_lieu, None)
+
+
+@pytest.mark.parametrize("tu_tham_so", [False, True])
+def test_nguong_chap_nhan_sau_khi_bo_so_khong_le_thua(tu_tham_so):
+    du_lieu = khoi(pm="5.1234560", te="3.12345600", sad="0.123456000")
+    ng = nguong.doc_nguong(None, json.dumps(du_lieu)) if tu_tham_so else nguong.doc_nguong(du_lieu, None)
+    assert (ng.pm.so, ng.te.so, ng.sad.so) == tuple(map(Decimal, ("5.123456", "3.123456", "0.123456")))
+
+
+@pytest.mark.parametrize("tien_te", [None, "vnd", "VN", "VNDD", " VND", "VND\n", 123])
+def test_nguong_van_bat_buoc_ma_tien_te_ba_chu_hoa(tien_te):
+    kiem_loi("THIEU_NGUONG", nguong.doc_nguong, khoi(tien_te=tien_te), None)
 
 
 @pytest.mark.parametrize("tham_so", [None, "", " \n\t"])

@@ -8,14 +8,13 @@ from .kieu import Tien
 from .loi import loi
 
 
-def doc_tien(gia_tri, *, cho_phep_null: bool = False) -> Tien | None:
-    """Chỉ nhận số thập phân hữu hạn, tối đa 18 chữ số nguyên và 6 chữ số lẻ."""
-    if gia_tri is None and cho_phep_null:
-        return None
-    if not isinstance(gia_tri, dict) or "so" not in gia_tri:
-        raise loi("DU_LIEU_KHONG_HOP_LE")
+def doc_so_thap_phan(gia_tri) -> Decimal:
+    r"""Đọc str/int/Decimal hữu hạn, tối đa 18 chữ số nguyên và 6 chữ số lẻ.
 
-    so = gia_tri["so"]
+    Chuỗi phải đúng -?[0-9]+(\.[0-9]+)?, không mũ/khoảng trắng/float.
+    Chữ số lẻ được đếm sau khi bỏ số 0 thừa, không làm tròn theo context.
+    """
+    so = gia_tri
     if isinstance(so, str):
         if re.fullmatch(r"-?[0-9]+(?:\.[0-9]+)?", so) is None:
             raise loi("DU_LIEU_KHONG_HOP_LE")
@@ -28,8 +27,25 @@ def doc_tien(gia_tri, *, cho_phep_null: bool = False) -> Tien | None:
 
     if not so.is_finite():
         raise loi("DU_LIEU_KHONG_HOP_LE")
-    if so.as_tuple().exponent < -6 or (not so.is_zero() and so.adjusted() >= 18):
+    _, chu_so, so_mu = so.as_tuple()
+    so_khong_thua = 0
+    for chu in reversed(chu_so):
+        if chu != 0:
+            break
+        so_khong_thua += 1
+    so_le = 0 if so.is_zero() else max(0, -so_mu - so_khong_thua)
+    if so_le > 6 or (not so.is_zero() and so.adjusted() >= 18):
         raise loi("DU_LIEU_KHONG_HOP_LE")
+    return so
+
+
+def doc_tien(gia_tri, *, cho_phep_null: bool = False) -> Tien | None:
+    """Đọc số theo doc_so_thap_phan, kèm tiền tệ có thể chưa rõ."""
+    if gia_tri is None and cho_phep_null:
+        return None
+    if not isinstance(gia_tri, dict) or "so" not in gia_tri:
+        raise loi("DU_LIEU_KHONG_HOP_LE")
+    so = doc_so_thap_phan(gia_tri["so"])
 
     tien_te = gia_tri.get("tien_te")
     if tien_te is not None and (

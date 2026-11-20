@@ -9,31 +9,29 @@ import re
 from collections import defaultdict
 from collections.abc import Callable, Sequence
 from datetime import date
-from decimal import Decimal, InvalidOperation, localcontext
+from decimal import Decimal, localcontext
 
 from .kieu import (
     CHUA_QUY_DOI, CHUA_RO_TIEN_TE, CO_DO_CUNG, VUOT_PM, VUOT_TE,
     VUNG_BAT_BUOC, VUNG_CHON_MAU, VUNG_DUOI_SAD, NghiepVu, Nguong, Tien,
 )
-from .loi import loi
+from .loi import LoiNghiepVu, loi
+from .tien import doc_so_thap_phan
 
 
 def _doc_tien_nguong(gia_tri: object) -> Tien:
-    """Tự kiểm tiền ngưỡng, không phụ thuộc mô-đun đọc tiền của PL-1A."""
+    """Dùng cùng luật đọc số với dòng nghiệp vụ, bắt buộc có tiền tệ."""
     if not isinstance(gia_tri, dict):
         raise loi("THIEU_NGUONG")
-    so = gia_tri.get("so")
     tien_te = gia_tri.get("tien_te")
-    if (isinstance(so, bool) or not isinstance(so, (str, int, Decimal))
-            or not isinstance(tien_te, str)
+    if (not isinstance(tien_te, str)
             or re.fullmatch(r"[A-Z]{3}", tien_te) is None):
         raise loi("THIEU_NGUONG")
     try:
-        so = Decimal(so)
-    except InvalidOperation:
+        so = doc_so_thap_phan(gia_tri.get("so"))
+    except LoiNghiepVu:
         raise loi("THIEU_NGUONG") from None
-    if (not so.is_finite() or so <= 0 or so.adjusted() >= 18
-            or so.as_tuple().exponent < -6):
+    if so <= 0:
         raise loi("THIEU_NGUONG")
     return Tien(so, tien_te)
 
@@ -43,9 +41,9 @@ def _hang_so_json_khong_hop_le(chuoi: str) -> None:
 
 
 def doc_nguong(tu_tep: dict | None, tu_tham_so: str | None) -> Nguong:
-    """Khối trong tệp thắng tham số, kể cả khi khối đó không hợp lệ."""
+    """Khối tệp có khóa thắng tham số; null hoặc {} dùng Cài đặt bước."""
     khoi = tu_tep
-    if khoi is None:
+    if khoi is None or khoi == {}:
         if tu_tham_so is None or tu_tham_so.strip() == "":
             raise loi("THIEU_NGUONG")
         try:

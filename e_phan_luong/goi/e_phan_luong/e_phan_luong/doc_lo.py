@@ -76,13 +76,17 @@ def _doc_dong(dong: dict, chi_so: int) -> NghiepVu:
             # str(Decimal) gọn cả với số mũ lớn; đây là nội dung, không phải tiền.
         noi_dung[f"thuoc_tinh.{khoa}"] = str(gia_tri)
 
+    loai = _chu_tuy_chon(dong, "loai")
+    if loai is not None and not loai.strip():
+        loai = None
+
     return NghiepVu(
         chi_so=chi_so,
         ma=ma,
         ngay=ngay,
         so_tien=doc_tien(dong.get("so_tien")),
         so_tien_quy_doi=doc_tien(dong.get("so_tien_quy_doi"), cho_phep_null=True),
-        loai=_chu_tuy_chon(dong, "loai"),
+        loai=loai,
         doi_tac=_chu_tuy_chon(dong, "doi_tac"),
         noi_dung=noi_dung,
         nhap_tay=nhap_tay,

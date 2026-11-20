@@ -231,3 +231,17 @@ def test_lo_rong_va_truong_null_tuy_chon():
     assert nv.noi_dung == {"thuoc_tinh.bo_phan": "Bộ phận DEMO", "thuoc_tinh.so_dot": "2"}
     lo["nghiep_vu"] = []
     assert doc_lo.doc_lo_json(_bytes(lo)).nghiep_vu == ()
+
+
+@pytest.mark.parametrize("loai", ["", " ", "\t\n", "\u2003"])
+def test_loai_trong_duoc_coi_la_chua_gan(loai):
+    lo = _lo_demo()
+    lo["nghiep_vu"][0]["loai"] = loai
+    assert doc_lo.doc_lo_json(_bytes(lo)).nghiep_vu[0].loai is None
+
+
+@pytest.mark.parametrize("loai", ["loai_demo", " loai_demo ", "DEMO-ngoai-danh-muc"])
+def test_loai_khong_trong_giu_nguyen_cho_phan_loai_kiem(loai):
+    lo = _lo_demo()
+    lo["nghiep_vu"][0]["loai"] = loai
+    assert doc_lo.doc_lo_json(_bytes(lo)).nghiep_vu[0].loai == loai

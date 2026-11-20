@@ -398,6 +398,20 @@
           "mac_dinh": 0.7,
           "toi_thieu": 0,
           "toi_da": 1
+        },
+        {
+          "ma": "khuon_cot_json",
+          "ten": "Khuôn cột Excel/CSV (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 32768,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "tien_te",
+          "ten": "Mã tiền tệ",
+          "kieu": "van_ban",
+          "toi_da": 3,
+          "mac_dinh": ""
         }
       ],
       "truong_ra": [
@@ -1185,6 +1199,23 @@
         "danh_muc_loai_json": "[\n  {\n    \"ma\": \"thanh_toan_ncc\",\n    \"mo_ta\": \"Nghiệp vụ Thanh toán nhà cung cấp DEMO\",\n    \"ten\": \"Thanh toán nhà cung cấp DEMO\"\n  },\n  {\n    \"ma\": \"tam_ung\",\n    \"mo_ta\": \"Nghiệp vụ Tạm ứng DEMO\",\n    \"ten\": \"Tạm ứng DEMO\"\n  },\n  {\n    \"ma\": \"luong\",\n    \"mo_ta\": \"Nghiệp vụ Lương DEMO\",\n    \"ten\": \"Lương DEMO\"\n  },\n  {\n    \"ma\": \"chi_phi_khac\",\n    \"mo_ta\": \"Nghiệp vụ Chi phí khác DEMO\",\n    \"ten\": \"Chi phí khác DEMO\"\n  },\n  {\n    \"ma\": \"thu_tien\",\n    \"mo_ta\": \"Nghiệp vụ Thu tiền DEMO\",\n    \"ten\": \"Thu tiền DEMO\"\n  }\n]\n",
         "bo_phan_loai_json": "{\n  \"phien_ban\": 1,\n  \"quy_tac\": [\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thanh toán\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thanh_toan_ncc\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"tạm ứng\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"tam_ung\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"lương\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"luong\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"chi phí khác\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"chi_phi_khac\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thu tiền\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thu_tien\"\n    }\n  ]\n}\n",
         "truong_phan_loai": "dien_giai"
+      }
+    },
+    {
+      "nang_luc": "audit.chuan_bi_phan_loai@1",
+      "ten": "Chuẩn bị phân loại lô nhỏ DEMO bằng Local AI",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/lo-nho-DEMO.json"
+      },
+      "tham_so": {
+        "khau": "ktt_duyet",
+        "danh_muc_loai_json": "[\n  {\n    \"ma\": \"thanh_toan_ncc\",\n    \"mo_ta\": \"Nghiệp vụ Thanh toán nhà cung cấp DEMO\",\n    \"ten\": \"Thanh toán nhà cung cấp DEMO\"\n  },\n  {\n    \"ma\": \"tam_ung\",\n    \"mo_ta\": \"Nghiệp vụ Tạm ứng DEMO\",\n    \"ten\": \"Tạm ứng DEMO\"\n  },\n  {\n    \"ma\": \"luong\",\n    \"mo_ta\": \"Nghiệp vụ Lương DEMO\",\n    \"ten\": \"Lương DEMO\"\n  },\n  {\n    \"ma\": \"chi_phi_khac\",\n    \"mo_ta\": \"Nghiệp vụ Chi phí khác DEMO\",\n    \"ten\": \"Chi phí khác DEMO\"\n  },\n  {\n    \"ma\": \"thu_tien\",\n    \"mo_ta\": \"Nghiệp vụ Thu tiền DEMO\",\n    \"ten\": \"Thu tiền DEMO\"\n  }\n]\n",
+        "bo_phan_loai_json": "{\n  \"phien_ban\": 1,\n  \"quy_tac\": [\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thanh toán\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thanh_toan_ncc\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"tạm ứng\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"tam_ung\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"lương\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"luong\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"chi phí khác\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"chi_phi_khac\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thu tiền\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thu_tien\"\n    }\n  ]\n}\n",
+        "truong_phan_loai": "dien_giai",
+        "ma_prompt": "demo_thanh_toan.phan_loai_DEMO",
+        "phien_ban_prompt": "DEMO-1",
+        "prompt": "DEMO: chỉ chọn loại trong danh mục."
       }
     }
   ],

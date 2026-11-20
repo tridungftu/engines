@@ -47,6 +47,9 @@ GHI_CHU = {
 CHUOI = [
     ("Phân luồng kiểm tra lô JSON theo khâu",
      ["audit.phan_luong@1"], "luồng, lý do, số đếm, tổng tiền Đỏ, tệp JSON, mã lượt và băm"),
+    ("Phân luồng kiểm tra có phân loại bằng Local AI",
+     ["audit.chuan_bi_phan_loai@1", "ai.hoi_theo_yeu_cau@1", "audit.phan_luong_sau_ai@1"],
+     "như phân luồng; dòng AI gán loại ghi nguồn loại ai"),
     ("Lấy chữ từ PDF scan/ảnh", ["ocr.doc_van_ban@1"], "1 trường văn bản"),
     ("Chuyển PDF scan/ảnh sang Word", ["ocr.xuat_word@1"], "1 trường tệp (DOCX)"),
     ("Hỏi AI về PDF scan/ảnh", ["ocr.doc_tai_lieu@1", "ai.hoi_tai_lieu@1"],

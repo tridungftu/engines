@@ -150,7 +150,8 @@ def test_chuan_bi_giu_nguyen_bytes_ten_mime_bam_va_khong_ghi_ngan(monkeypatch):
     assert pl["bam_cai_dat"] == chuoi_ai.bam_cai_dat(tham_so())
     assert all(core.xem_ngan(app.ma, b["bang"]) == [] for b in app.phieu["ngan_du_lieu"])
     # Kiểm envelope theo schema nguồn, không chỉ theo tên loại của SDK.
-    import jsonschema
+    jsonschema = pytest.importorskip(
+        "jsonschema", reason="Kiểm schema nguồn cần jsonschema (chỉ dùng trong test, không thuộc gói).")
     schema = json.loads((REPO / "_chung/contract/yeu_cau_ai.schema.json").read_text(encoding="utf-8"))
     jsonschema.Draft202012Validator(schema).validate(yc)
 

@@ -170,5 +170,7 @@ def test_phieu_mime_va_demo_excel_tai_hien_tu_script():
         goi.comment = b"DEMO - Cong ty DEMO Anh Duong"
     assert (app.thu_muc_goi / vd["dau_vao"]["tep_demo"]).read_bytes() == raw.getvalue()
     ds = CoreGia().chay_thu_demo(app)
-    assert len(ds) == len(phieu["chay_thu_demo"]) == 2
+    # Nhánh sau có thể thêm ví dụ của năng lực khác; PL-6 chỉ khẳng định đủ 2 ví dụ phân luồng.
+    assert len(ds) == len(phieu["chay_thu_demo"])
+    assert sum(v["nang_luc"] == "audit.phan_luong@1" for v in phieu["chay_thu_demo"]) == 2
     assert all(k["trang_thai"] == "XONG" for k in ds), ds

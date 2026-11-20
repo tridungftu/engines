@@ -68,13 +68,13 @@
     },
     {
       "duong_dan": "e_phan_luong/doc_bang.py",
-      "bytes": 15678,
-      "sha256": "a4478e1207125a1f469cfb7b20bb9c0eacf66e0f4e7fb2a070b06e8a9388d502"
+      "bytes": 16376,
+      "sha256": "d598d65381ba5f3aa0e639d57bba70f84c75e126d9b093f9deb1b43eb03b57e2"
     },
     {
       "duong_dan": "e_phan_luong/doc_lo.py",
-      "bytes": 5114,
-      "sha256": "fe8b88a83e551a17fa303e2a4c49e61b6f82dcb9cb1566c366d0a235b4d0466e"
+      "bytes": 5132,
+      "sha256": "9bad2aef95406230b62682d2e57bd9071b7df852b1945e71c4ca816122639680"
     },
     {
       "duong_dan": "e_phan_luong/doi_bac.py",
@@ -173,8 +173,8 @@
     },
     {
       "duong_dan": "e_phan_luong/xuat_excel.py",
-      "bytes": 10542,
-      "sha256": "2bea11a74280df74f5196bc869f45cf9a65cb7b1bbcd6c830290018897f1cfbd"
+      "bytes": 10529,
+      "sha256": "0cdec51ee81aba6a1683584293f7493a792f7468b4efd444431e3d5eb109aff2"
     },
     {
       "duong_dan": "e_phan_luong/xuat_json.py",

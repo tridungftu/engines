@@ -1,0 +1,5046 @@
+{
+  "co_ky_vong_theo_ma": {
+    "PC-DEMO-0006": [
+      "DOI_TAC_MOI"
+    ],
+    "PC-DEMO-0007": [
+      "SO_TRON"
+    ],
+    "PC-DEMO-0008": [
+      "NGAY_NGHI"
+    ],
+    "PC-DEMO-0009": [
+      "CUOI_KY"
+    ],
+    "PC-DEMO-0010": [
+      "NHAP_TAY"
+    ]
+  },
+  "ghi_chu": "DEMO: ly_do chỉ lớp 1; không dự đoán CHON_MAU/KHONG_CHON. Cùng lô áp dụng riêng từng khâu; không chia lô theo khâu.",
+  "ho_so_demo": {
+    "doi_tac_da_gap_theo_loai": {
+      "chi_phi_khac": [
+        "DEMO-NCC-0001",
+        "DEMO-NCC-0002",
+        "DEMO-NCC-0007",
+        "DEMO-NCC-0008",
+        "DEMO-NCC-0009",
+        "DEMO-NCC-0010",
+        "DEMO-NCC-0011",
+        "DEMO-NCC-0012",
+        "DEMO-NCC-0013",
+        "DEMO-NCC-0014",
+        "DEMO-NCC-0015",
+        "DEMO-NCC-0016",
+        "DEMO-NCC-0017",
+        "DEMO-NCC-0018",
+        "DEMO-NCC-0019",
+        "DEMO-NCC-0020",
+        "DEMO-NCC-0021",
+        "DEMO-NCC-0022",
+        "DEMO-NCC-0023",
+        "DEMO-NCC-0024",
+        "DEMO-NCC-0025",
+        "DEMO-NCC-0026",
+        "DEMO-NCC-0027",
+        "DEMO-NCC-0028",
+        "DEMO-NCC-0029",
+        "DEMO-NCC-0030",
+        "DEMO-NCC-0031",
+        "DEMO-NCC-0032",
+        "DEMO-NCC-0033",
+        "DEMO-NCC-0034",
+        "DEMO-NCC-0035",
+        "DEMO-NCC-0036",
+        "DEMO-NCC-0037",
+        "DEMO-NCC-0038",
+        "DEMO-NCC-0039",
+        "DEMO-NCC-0040",
+        "DEMO-NCC-0041",
+        "DEMO-NCC-0042",
+        "DEMO-NCC-0043",
+        "DEMO-NCC-0044",
+        "DEMO-NCC-0045",
+        "DEMO-NCC-0046",
+        "DEMO-NCC-0047",
+        "DEMO-NCC-0048",
+        "DEMO-NCC-0049",
+        "DEMO-NCC-0050",
+        "DEMO-NCC-0051",
+        "DEMO-NCC-0052",
+        "DEMO-NCC-0053",
+        "DEMO-NCC-0054",
+        "DEMO-NCC-0055",
+        "DEMO-NCC-0056",
+        "DEMO-NCC-0057",
+        "DEMO-NCC-0058",
+        "DEMO-NCC-0059",
+        "DEMO-NCC-0060",
+        "DEMO-NCC-0061",
+        "DEMO-NCC-0062",
+        "DEMO-NCC-0063",
+        "DEMO-NCC-0064",
+        "DEMO-NCC-0065",
+        "DEMO-NCC-0066",
+        "DEMO-NCC-0067",
+        "DEMO-NCC-0068",
+        "DEMO-NCC-0069",
+        "DEMO-NCC-0070",
+        "DEMO-NCC-0071",
+        "DEMO-NCC-0072",
+        "DEMO-NCC-0073",
+        "DEMO-NCC-0074",
+        "DEMO-NCC-0075",
+        "DEMO-NCC-0076",
+        "DEMO-NCC-0077",
+        "DEMO-NCC-0078",
+        "DEMO-NCC-0079",
+        "DEMO-NCC-0080",
+        "DEMO-NCC-0081",
+        "DEMO-NCC-0082",
+        "DEMO-NCC-0083",
+        "DEMO-NCC-0084",
+        "DEMO-NCC-0085",
+        "DEMO-NCC-0086",
+        "DEMO-NCC-0087",
+        "DEMO-NCC-0088",
+        "DEMO-NCC-0089",
+        "DEMO-NCC-0090",
+        "DEMO-NCC-0091",
+        "DEMO-NCC-0092",
+        "DEMO-NCC-0093",
+        "DEMO-NCC-0094",
+        "DEMO-NCC-0095",
+        "DEMO-NCC-0096",
+        "DEMO-NCC-0097",
+        "DEMO-NCC-0098",
+        "DEMO-NCC-0099",
+        "DEMO-NCC-0100",
+        "DEMO-NCC-0101",
+        "DEMO-NCC-0102",
+        "DEMO-NCC-0103",
+        "DEMO-NCC-0104",
+        "DEMO-NCC-0105",
+        "DEMO-NCC-0106",
+        "DEMO-NCC-0107",
+        "DEMO-NCC-0108",
+        "DEMO-NCC-0109",
+        "DEMO-NCC-0110",
+        "DEMO-NCC-0111",
+        "DEMO-NCC-0112",
+        "DEMO-NCC-0113",
+        "DEMO-NCC-0114",
+        "DEMO-NCC-0115",
+        "DEMO-NCC-0116",
+        "DEMO-NCC-0117",
+        "DEMO-NCC-0118",
+        "DEMO-NCC-0119",
+        "DEMO-NCC-0120",
+        "DEMO-NCC-0121",
+        "DEMO-NCC-0122",
+        "DEMO-NCC-0123",
+        "DEMO-NCC-0124",
+        "DEMO-NCC-0125",
+        "DEMO-NCC-0126",
+        "DEMO-NCC-0127",
+        "DEMO-NCC-0128",
+        "DEMO-NCC-0129",
+        "DEMO-NCC-0130",
+        "DEMO-NCC-0131",
+        "DEMO-NCC-0132",
+        "DEMO-NCC-0133",
+        "DEMO-NCC-0134",
+        "DEMO-NCC-0135",
+        "DEMO-NCC-0136",
+        "DEMO-NCC-0137",
+        "DEMO-NCC-0138",
+        "DEMO-NCC-0139",
+        "DEMO-NCC-0140",
+        "DEMO-NCC-0141",
+        "DEMO-NCC-0142",
+        "DEMO-NCC-0143",
+        "DEMO-NCC-0144",
+        "DEMO-NCC-0145",
+        "DEMO-NCC-0146",
+        "DEMO-NCC-0147",
+        "DEMO-NCC-0148",
+        "DEMO-NCC-0149",
+        "DEMO-NCC-0150",
+        "DEMO-NCC-0151",
+        "DEMO-NCC-0152",
+        "DEMO-NCC-0153",
+        "DEMO-NCC-0154",
+        "DEMO-NCC-0155",
+        "DEMO-NCC-0156",
+        "DEMO-NCC-0157",
+        "DEMO-NCC-0158",
+        "DEMO-NCC-0159",
+        "DEMO-NCC-0160",
+        "DEMO-NCC-0161",
+        "DEMO-NCC-0162",
+        "DEMO-NCC-0163",
+        "DEMO-NCC-0164",
+        "DEMO-NCC-0165",
+        "DEMO-NCC-0166",
+        "DEMO-NCC-0167",
+        "DEMO-NCC-0168",
+        "DEMO-NCC-0169",
+        "DEMO-NCC-0170",
+        "DEMO-NCC-0171",
+        "DEMO-NCC-0172",
+        "DEMO-NCC-0173",
+        "DEMO-NCC-0174",
+        "DEMO-NCC-0175",
+        "DEMO-NCC-0176",
+        "DEMO-NCC-0177",
+        "DEMO-NCC-0178",
+        "DEMO-NCC-0179",
+        "DEMO-NCC-0180",
+        "DEMO-NCC-0181",
+        "DEMO-NCC-0182",
+        "DEMO-NCC-0183",
+        "DEMO-NCC-0184",
+        "DEMO-NCC-0185",
+        "DEMO-NCC-0186",
+        "DEMO-NCC-0187",
+        "DEMO-NCC-0188",
+        "DEMO-NCC-0189",
+        "DEMO-NCC-0190",
+        "DEMO-NCC-0191",
+        "DEMO-NCC-0192",
+        "DEMO-NCC-0193",
+        "DEMO-NCC-0194",
+        "DEMO-NCC-0195",
+        "DEMO-NCC-0196",
+        "DEMO-NCC-0197",
+        "DEMO-NCC-0198",
+        "DEMO-NCC-0199",
+        "DEMO-NCC-0200",
+        "DEMO-NCC-0201",
+        "DEMO-NCC-0202",
+        "DEMO-NCC-0203",
+        "DEMO-NCC-0204",
+        "DEMO-NCC-0205",
+        "DEMO-NCC-0206",
+        "DEMO-NCC-0207",
+        "DEMO-NCC-0208",
+        "DEMO-NCC-0209",
+        "DEMO-NCC-0210",
+        "DEMO-NCC-0211",
+        "DEMO-NCC-0212",
+        "DEMO-NCC-0213",
+        "DEMO-NCC-0214",
+        "DEMO-NCC-0215",
+        "DEMO-NCC-0216",
+        "DEMO-NCC-0217",
+        "DEMO-NCC-0218",
+        "DEMO-NCC-0219",
+        "DEMO-NCC-0220",
+        "DEMO-NCC-0221",
+        "DEMO-NCC-0222",
+        "DEMO-NCC-0223",
+        "DEMO-NCC-0224",
+        "DEMO-NCC-0225",
+        "DEMO-NCC-0226",
+        "DEMO-NCC-0227",
+        "DEMO-NCC-0228",
+        "DEMO-NCC-0229",
+        "DEMO-NCC-0230",
+        "DEMO-NCC-0231",
+        "DEMO-NCC-0232",
+        "DEMO-NCC-0233",
+        "DEMO-NCC-0234",
+        "DEMO-NCC-0235",
+        "DEMO-NCC-0236",
+        "DEMO-NCC-0237",
+        "DEMO-NCC-0238",
+        "DEMO-NCC-0239",
+        "DEMO-NCC-0240",
+        "DEMO-NCC-0241",
+        "DEMO-NCC-0242",
+        "DEMO-NCC-0243",
+        "DEMO-NCC-0244",
+        "DEMO-NCC-0245",
+        "DEMO-NCC-0246",
+        "DEMO-NCC-0247",
+        "DEMO-NCC-0248",
+        "DEMO-NCC-0249",
+        "DEMO-NCC-0250",
+        "DEMO-NCC-0251",
+        "DEMO-NCC-0252",
+        "DEMO-NCC-0253",
+        "DEMO-NCC-0254",
+        "DEMO-NCC-0255",
+        "DEMO-NCC-0256",
+        "DEMO-NCC-0257",
+        "DEMO-NCC-0258",
+        "DEMO-NCC-0259",
+        "DEMO-NCC-0260",
+        "DEMO-NCC-0261",
+        "DEMO-NCC-0262",
+        "DEMO-NCC-0263",
+        "DEMO-NCC-0264",
+        "DEMO-NCC-0265",
+        "DEMO-NCC-0266",
+        "DEMO-NCC-0267",
+        "DEMO-NCC-0268",
+        "DEMO-NCC-0269",
+        "DEMO-NCC-0270",
+        "DEMO-NCC-0271",
+        "DEMO-NCC-0272",
+        "DEMO-NCC-0273",
+        "DEMO-NCC-0274",
+        "DEMO-NCC-0275",
+        "DEMO-NCC-0276",
+        "DEMO-NCC-0277",
+        "DEMO-NCC-0278",
+        "DEMO-NCC-0279",
+        "DEMO-NCC-0280",
+        "DEMO-NCC-0281",
+        "DEMO-NCC-0282",
+        "DEMO-NCC-0283",
+        "DEMO-NCC-0284",
+        "DEMO-NCC-0285",
+        "DEMO-NCC-0286",
+        "DEMO-NCC-0287",
+        "DEMO-NCC-0288",
+        "DEMO-NCC-0289",
+        "DEMO-NCC-0290",
+        "DEMO-NCC-0291",
+        "DEMO-NCC-0292",
+        "DEMO-NCC-0293",
+        "DEMO-NCC-0294",
+        "DEMO-NCC-0295",
+        "DEMO-NCC-0296",
+        "DEMO-NCC-0297",
+        "DEMO-NCC-0298",
+        "DEMO-NCC-0299",
+        "DEMO-NCC-0300",
+        "DEMO-NCC-0301",
+        "DEMO-NCC-0302",
+        "DEMO-NCC-0303",
+        "DEMO-NCC-0304",
+        "DEMO-NCC-0305",
+        "DEMO-NCC-0306",
+        "DEMO-NCC-0307",
+        "DEMO-NCC-0308",
+        "DEMO-NCC-0309",
+        "DEMO-NCC-0310",
+        "DEMO-NCC-0311",
+        "DEMO-NCC-0312",
+        "DEMO-NCC-0313",
+        "DEMO-NCC-0314",
+        "DEMO-NCC-0315",
+        "DEMO-NCC-0316",
+        "DEMO-NCC-0317",
+        "DEMO-NCC-0318",
+        "DEMO-NCC-0319",
+        "DEMO-NCC-0320",
+        "DEMO-NCC-0321",
+        "DEMO-NCC-0322",
+        "DEMO-NCC-0323",
+        "DEMO-NCC-0324",
+        "DEMO-NCC-0325",
+        "DEMO-NCC-0326",
+        "DEMO-NCC-0327",
+        "DEMO-NCC-0328",
+        "DEMO-NCC-0329",
+        "DEMO-NCC-0330",
+        "DEMO-NCC-0331",
+        "DEMO-NCC-0332",
+        "DEMO-NCC-0333",
+        "DEMO-NCC-0334",
+        "DEMO-NCC-0335",
+        "DEMO-NCC-0336",
+        "DEMO-NCC-0337",
+        "DEMO-NCC-0338",
+        "DEMO-NCC-0339",
+        "DEMO-NCC-0340",
+        "DEMO-NCC-0341",
+        "DEMO-NCC-0342",
+        "DEMO-NCC-0343",
+        "DEMO-NCC-0344",
+        "DEMO-NCC-0345",
+        "DEMO-NCC-0346",
+        "DEMO-NCC-0347",
+        "DEMO-NCC-0348",
+        "DEMO-NCC-0349",
+        "DEMO-NCC-0350",
+        "DEMO-NCC-0351",
+        "DEMO-NCC-0352",
+        "DEMO-NCC-0353",
+        "DEMO-NCC-0354",
+        "DEMO-NCC-0355",
+        "DEMO-NCC-0356",
+        "DEMO-NCC-0357",
+        "DEMO-NCC-0358",
+        "DEMO-NCC-0359",
+        "DEMO-NCC-0360",
+        "DEMO-NCC-0361",
+        "DEMO-NCC-0362",
+        "DEMO-NCC-0363",
+        "DEMO-NCC-0364",
+        "DEMO-NCC-0365",
+        "DEMO-NCC-0366",
+        "DEMO-NCC-0367",
+        "DEMO-NCC-0368",
+        "DEMO-NCC-0369",
+        "DEMO-NCC-0370",
+        "DEMO-NCC-0371",
+        "DEMO-NCC-0372",
+        "DEMO-NCC-0373",
+        "DEMO-NCC-0374",
+        "DEMO-NCC-0375",
+        "DEMO-NCC-0376",
+        "DEMO-NCC-0377",
+        "DEMO-NCC-0378",
+        "DEMO-NCC-0379",
+        "DEMO-NCC-0380",
+        "DEMO-NCC-0381",
+        "DEMO-NCC-0382",
+        "DEMO-NCC-0383",
+        "DEMO-NCC-0384",
+        "DEMO-NCC-0385",
+        "DEMO-NCC-0386",
+        "DEMO-NCC-0387",
+        "DEMO-NCC-0388",
+        "DEMO-NCC-0389",
+        "DEMO-NCC-0390",
+        "DEMO-NCC-0391",
+        "DEMO-NCC-0392",
+        "DEMO-NCC-0393",
+        "DEMO-NCC-0394",
+        "DEMO-NCC-0395",
+        "DEMO-NCC-0396",
+        "DEMO-NCC-0397",
+        "DEMO-NCC-0398",
+        "DEMO-NCC-0399",
+        "DEMO-NCC-0400",
+        "DEMO-NCC-0401",
+        "DEMO-NCC-0402",
+        "DEMO-NCC-0403",
+        "DEMO-NCC-0404",
+        "DEMO-NCC-0405",
+        "DEMO-NCC-0406",
+        "DEMO-NCC-0407",
+        "DEMO-NCC-0408",
+        "DEMO-NCC-0409",
+        "DEMO-NCC-0410",
+        "DEMO-NCC-0411",
+        "DEMO-NCC-0412",
+        "DEMO-NCC-0413",
+        "DEMO-NCC-0414",
+        "DEMO-NCC-0415",
+        "DEMO-NCC-0416",
+        "DEMO-NCC-0417",
+        "DEMO-NCC-0418",
+        "DEMO-NCC-0419",
+        "DEMO-NCC-0420",
+        "DEMO-NCC-0421",
+        "DEMO-NCC-0422",
+        "DEMO-NCC-0423",
+        "DEMO-NCC-0424",
+        "DEMO-NCC-0425",
+        "DEMO-NCC-0426",
+        "DEMO-NCC-0427",
+        "DEMO-NCC-0428",
+        "DEMO-NCC-0429",
+        "DEMO-NCC-0430",
+        "DEMO-NCC-0431",
+        "DEMO-NCC-0432",
+        "DEMO-NCC-0433",
+        "DEMO-NCC-0434",
+        "DEMO-NCC-0435",
+        "DEMO-NCC-0436",
+        "DEMO-NCC-0437",
+        "DEMO-NCC-0438",
+        "DEMO-NCC-0439",
+        "DEMO-NCC-0440",
+        "DEMO-NCC-0441",
+        "DEMO-NCC-0442",
+        "DEMO-NCC-0443",
+        "DEMO-NCC-0444",
+        "DEMO-NCC-0445",
+        "DEMO-NCC-0446",
+        "DEMO-NCC-0447",
+        "DEMO-NCC-0448",
+        "DEMO-NCC-0449",
+        "DEMO-NCC-0450",
+        "DEMO-NCC-0451",
+        "DEMO-NCC-0452",
+        "DEMO-NCC-0453",
+        "DEMO-NCC-0454",
+        "DEMO-NCC-0455",
+        "DEMO-NCC-0456",
+        "DEMO-NCC-0457",
+        "DEMO-NCC-0458",
+        "DEMO-NCC-0459",
+        "DEMO-NCC-0460",
+        "DEMO-NCC-0461",
+        "DEMO-NCC-0462",
+        "DEMO-NCC-0463",
+        "DEMO-NCC-0464",
+        "DEMO-NCC-0465",
+        "DEMO-NCC-0466",
+        "DEMO-NCC-0467",
+        "DEMO-NCC-0468",
+        "DEMO-NCC-0469",
+        "DEMO-NCC-0470",
+        "DEMO-NCC-0471",
+        "DEMO-NCC-0472",
+        "DEMO-NCC-0473",
+        "DEMO-NCC-0474",
+        "DEMO-NCC-0475",
+        "DEMO-NCC-0476",
+        "DEMO-NCC-0477",
+        "DEMO-NCC-0478",
+        "DEMO-NCC-0479",
+        "DEMO-NCC-0480",
+        "DEMO-NCC-0481",
+        "DEMO-NCC-0482",
+        "DEMO-NCC-0483",
+        "DEMO-NCC-0484",
+        "DEMO-NCC-0485",
+        "DEMO-NCC-0486",
+        "DEMO-NCC-0487",
+        "DEMO-NCC-0488",
+        "DEMO-NCC-0489",
+        "DEMO-NCC-0490",
+        "DEMO-NCC-0491",
+        "DEMO-NCC-0492",
+        "DEMO-NCC-0493",
+        "DEMO-NCC-0494",
+        "DEMO-NCC-0495",
+        "DEMO-NCC-0496",
+        "DEMO-NCC-0497",
+        "DEMO-NCC-0498",
+        "DEMO-NCC-0499",
+        "DEMO-NCC-0500",
+        "DEMO-NCC-CHIA-NHO"
+      ],
+      "luong": [
+        "DEMO-NCC-0001",
+        "DEMO-NCC-0002",
+        "DEMO-NCC-0007",
+        "DEMO-NCC-0008",
+        "DEMO-NCC-0009",
+        "DEMO-NCC-0010",
+        "DEMO-NCC-0011",
+        "DEMO-NCC-0012",
+        "DEMO-NCC-0013",
+        "DEMO-NCC-0014",
+        "DEMO-NCC-0015",
+        "DEMO-NCC-0016",
+        "DEMO-NCC-0017",
+        "DEMO-NCC-0018",
+        "DEMO-NCC-0019",
+        "DEMO-NCC-0020",
+        "DEMO-NCC-0021",
+        "DEMO-NCC-0022",
+        "DEMO-NCC-0023",
+        "DEMO-NCC-0024",
+        "DEMO-NCC-0025",
+        "DEMO-NCC-0026",
+        "DEMO-NCC-0027",
+        "DEMO-NCC-0028",
+        "DEMO-NCC-0029",
+        "DEMO-NCC-0030",
+        "DEMO-NCC-0031",
+        "DEMO-NCC-0032",
+        "DEMO-NCC-0033",
+        "DEMO-NCC-0034",
+        "DEMO-NCC-0035",
+        "DEMO-NCC-0036",
+        "DEMO-NCC-0037",
+        "DEMO-NCC-0038",
+        "DEMO-NCC-0039",
+        "DEMO-NCC-0040",
+        "DEMO-NCC-0041",
+        "DEMO-NCC-0042",
+        "DEMO-NCC-0043",
+        "DEMO-NCC-0044",
+        "DEMO-NCC-0045",
+        "DEMO-NCC-0046",
+        "DEMO-NCC-0047",
+        "DEMO-NCC-0048",
+        "DEMO-NCC-0049",
+        "DEMO-NCC-0050",
+        "DEMO-NCC-0051",
+        "DEMO-NCC-0052",
+        "DEMO-NCC-0053",
+        "DEMO-NCC-0054",
+        "DEMO-NCC-0055",
+        "DEMO-NCC-0056",
+        "DEMO-NCC-0057",
+        "DEMO-NCC-0058",
+        "DEMO-NCC-0059",
+        "DEMO-NCC-0060",
+        "DEMO-NCC-0061",
+        "DEMO-NCC-0062",
+        "DEMO-NCC-0063",
+        "DEMO-NCC-0064",
+        "DEMO-NCC-0065",
+        "DEMO-NCC-0066",
+        "DEMO-NCC-0067",
+        "DEMO-NCC-0068",
+        "DEMO-NCC-0069",
+        "DEMO-NCC-0070",
+        "DEMO-NCC-0071",
+        "DEMO-NCC-0072",
+        "DEMO-NCC-0073",
+        "DEMO-NCC-0074",
+        "DEMO-NCC-0075",
+        "DEMO-NCC-0076",
+        "DEMO-NCC-0077",
+        "DEMO-NCC-0078",
+        "DEMO-NCC-0079",
+        "DEMO-NCC-0080",
+        "DEMO-NCC-0081",
+        "DEMO-NCC-0082",
+        "DEMO-NCC-0083",
+        "DEMO-NCC-0084",
+        "DEMO-NCC-0085",
+        "DEMO-NCC-0086",
+        "DEMO-NCC-0087",
+        "DEMO-NCC-0088",
+        "DEMO-NCC-0089",
+        "DEMO-NCC-0090",
+        "DEMO-NCC-0091",
+        "DEMO-NCC-0092",
+        "DEMO-NCC-0093",
+        "DEMO-NCC-0094",
+        "DEMO-NCC-0095",
+        "DEMO-NCC-0096",
+        "DEMO-NCC-0097",
+        "DEMO-NCC-0098",
+        "DEMO-NCC-0099",
+        "DEMO-NCC-0100",
+        "DEMO-NCC-0101",
+        "DEMO-NCC-0102",
+        "DEMO-NCC-0103",
+        "DEMO-NCC-0104",
+        "DEMO-NCC-0105",
+        "DEMO-NCC-0106",
+        "DEMO-NCC-0107",
+        "DEMO-NCC-0108",
+        "DEMO-NCC-0109",
+        "DEMO-NCC-0110",
+        "DEMO-NCC-0111",
+        "DEMO-NCC-0112",
+        "DEMO-NCC-0113",
+        "DEMO-NCC-0114",
+        "DEMO-NCC-0115",
+        "DEMO-NCC-0116",
+        "DEMO-NCC-0117",
+        "DEMO-NCC-0118",
+        "DEMO-NCC-0119",
+        "DEMO-NCC-0120",
+        "DEMO-NCC-0121",
+        "DEMO-NCC-0122",
+        "DEMO-NCC-0123",
+        "DEMO-NCC-0124",
+        "DEMO-NCC-0125",
+        "DEMO-NCC-0126",
+        "DEMO-NCC-0127",
+        "DEMO-NCC-0128",
+        "DEMO-NCC-0129",
+        "DEMO-NCC-0130",
+        "DEMO-NCC-0131",
+        "DEMO-NCC-0132",
+        "DEMO-NCC-0133",
+        "DEMO-NCC-0134",
+        "DEMO-NCC-0135",
+        "DEMO-NCC-0136",
+        "DEMO-NCC-0137",
+        "DEMO-NCC-0138",
+        "DEMO-NCC-0139",
+        "DEMO-NCC-0140",
+        "DEMO-NCC-0141",
+        "DEMO-NCC-0142",
+        "DEMO-NCC-0143",
+        "DEMO-NCC-0144",
+        "DEMO-NCC-0145",
+        "DEMO-NCC-0146",
+        "DEMO-NCC-0147",
+        "DEMO-NCC-0148",
+        "DEMO-NCC-0149",
+        "DEMO-NCC-0150",
+        "DEMO-NCC-0151",
+        "DEMO-NCC-0152",
+        "DEMO-NCC-0153",
+        "DEMO-NCC-0154",
+        "DEMO-NCC-0155",
+        "DEMO-NCC-0156",
+        "DEMO-NCC-0157",
+        "DEMO-NCC-0158",
+        "DEMO-NCC-0159",
+        "DEMO-NCC-0160",
+        "DEMO-NCC-0161",
+        "DEMO-NCC-0162",
+        "DEMO-NCC-0163",
+        "DEMO-NCC-0164",
+        "DEMO-NCC-0165",
+        "DEMO-NCC-0166",
+        "DEMO-NCC-0167",
+        "DEMO-NCC-0168",
+        "DEMO-NCC-0169",
+        "DEMO-NCC-0170",
+        "DEMO-NCC-0171",
+        "DEMO-NCC-0172",
+        "DEMO-NCC-0173",
+        "DEMO-NCC-0174",
+        "DEMO-NCC-0175",
+        "DEMO-NCC-0176",
+        "DEMO-NCC-0177",
+        "DEMO-NCC-0178",
+        "DEMO-NCC-0179",
+        "DEMO-NCC-0180",
+        "DEMO-NCC-0181",
+        "DEMO-NCC-0182",
+        "DEMO-NCC-0183",
+        "DEMO-NCC-0184",
+        "DEMO-NCC-0185",
+        "DEMO-NCC-0186",
+        "DEMO-NCC-0187",
+        "DEMO-NCC-0188",
+        "DEMO-NCC-0189",
+        "DEMO-NCC-0190",
+        "DEMO-NCC-0191",
+        "DEMO-NCC-0192",
+        "DEMO-NCC-0193",
+        "DEMO-NCC-0194",
+        "DEMO-NCC-0195",
+        "DEMO-NCC-0196",
+        "DEMO-NCC-0197",
+        "DEMO-NCC-0198",
+        "DEMO-NCC-0199",
+        "DEMO-NCC-0200",
+        "DEMO-NCC-0201",
+        "DEMO-NCC-0202",
+        "DEMO-NCC-0203",
+        "DEMO-NCC-0204",
+        "DEMO-NCC-0205",
+        "DEMO-NCC-0206",
+        "DEMO-NCC-0207",
+        "DEMO-NCC-0208",
+        "DEMO-NCC-0209",
+        "DEMO-NCC-0210",
+        "DEMO-NCC-0211",
+        "DEMO-NCC-0212",
+        "DEMO-NCC-0213",
+        "DEMO-NCC-0214",
+        "DEMO-NCC-0215",
+        "DEMO-NCC-0216",
+        "DEMO-NCC-0217",
+        "DEMO-NCC-0218",
+        "DEMO-NCC-0219",
+        "DEMO-NCC-0220",
+        "DEMO-NCC-0221",
+        "DEMO-NCC-0222",
+        "DEMO-NCC-0223",
+        "DEMO-NCC-0224",
+        "DEMO-NCC-0225",
+        "DEMO-NCC-0226",
+        "DEMO-NCC-0227",
+        "DEMO-NCC-0228",
+        "DEMO-NCC-0229",
+        "DEMO-NCC-0230",
+        "DEMO-NCC-0231",
+        "DEMO-NCC-0232",
+        "DEMO-NCC-0233",
+        "DEMO-NCC-0234",
+        "DEMO-NCC-0235",
+        "DEMO-NCC-0236",
+        "DEMO-NCC-0237",
+        "DEMO-NCC-0238",
+        "DEMO-NCC-0239",
+        "DEMO-NCC-0240",
+        "DEMO-NCC-0241",
+        "DEMO-NCC-0242",
+        "DEMO-NCC-0243",
+        "DEMO-NCC-0244",
+        "DEMO-NCC-0245",
+        "DEMO-NCC-0246",
+        "DEMO-NCC-0247",
+        "DEMO-NCC-0248",
+        "DEMO-NCC-0249",
+        "DEMO-NCC-0250",
+        "DEMO-NCC-0251",
+        "DEMO-NCC-0252",
+        "DEMO-NCC-0253",
+        "DEMO-NCC-0254",
+        "DEMO-NCC-0255",
+        "DEMO-NCC-0256",
+        "DEMO-NCC-0257",
+        "DEMO-NCC-0258",
+        "DEMO-NCC-0259",
+        "DEMO-NCC-0260",
+        "DEMO-NCC-0261",
+        "DEMO-NCC-0262",
+        "DEMO-NCC-0263",
+        "DEMO-NCC-0264",
+        "DEMO-NCC-0265",
+        "DEMO-NCC-0266",
+        "DEMO-NCC-0267",
+        "DEMO-NCC-0268",
+        "DEMO-NCC-0269",
+        "DEMO-NCC-0270",
+        "DEMO-NCC-0271",
+        "DEMO-NCC-0272",
+        "DEMO-NCC-0273",
+        "DEMO-NCC-0274",
+        "DEMO-NCC-0275",
+        "DEMO-NCC-0276",
+        "DEMO-NCC-0277",
+        "DEMO-NCC-0278",
+        "DEMO-NCC-0279",
+        "DEMO-NCC-0280",
+        "DEMO-NCC-0281",
+        "DEMO-NCC-0282",
+        "DEMO-NCC-0283",
+        "DEMO-NCC-0284",
+        "DEMO-NCC-0285",
+        "DEMO-NCC-0286",
+        "DEMO-NCC-0287",
+        "DEMO-NCC-0288",
+        "DEMO-NCC-0289",
+        "DEMO-NCC-0290",
+        "DEMO-NCC-0291",
+        "DEMO-NCC-0292",
+        "DEMO-NCC-0293",
+        "DEMO-NCC-0294",
+        "DEMO-NCC-0295",
+        "DEMO-NCC-0296",
+        "DEMO-NCC-0297",
+        "DEMO-NCC-0298",
+        "DEMO-NCC-0299",
+        "DEMO-NCC-0300",
+        "DEMO-NCC-0301",
+        "DEMO-NCC-0302",
+        "DEMO-NCC-0303",
+        "DEMO-NCC-0304",
+        "DEMO-NCC-0305",
+        "DEMO-NCC-0306",
+        "DEMO-NCC-0307",
+        "DEMO-NCC-0308",
+        "DEMO-NCC-0309",
+        "DEMO-NCC-0310",
+        "DEMO-NCC-0311",
+        "DEMO-NCC-0312",
+        "DEMO-NCC-0313",
+        "DEMO-NCC-0314",
+        "DEMO-NCC-0315",
+        "DEMO-NCC-0316",
+        "DEMO-NCC-0317",
+        "DEMO-NCC-0318",
+        "DEMO-NCC-0319",
+        "DEMO-NCC-0320",
+        "DEMO-NCC-0321",
+        "DEMO-NCC-0322",
+        "DEMO-NCC-0323",
+        "DEMO-NCC-0324",
+        "DEMO-NCC-0325",
+        "DEMO-NCC-0326",
+        "DEMO-NCC-0327",
+        "DEMO-NCC-0328",
+        "DEMO-NCC-0329",
+        "DEMO-NCC-0330",
+        "DEMO-NCC-0331",
+        "DEMO-NCC-0332",
+        "DEMO-NCC-0333",
+        "DEMO-NCC-0334",
+        "DEMO-NCC-0335",
+        "DEMO-NCC-0336",
+        "DEMO-NCC-0337",
+        "DEMO-NCC-0338",
+        "DEMO-NCC-0339",
+        "DEMO-NCC-0340",
+        "DEMO-NCC-0341",
+        "DEMO-NCC-0342",
+        "DEMO-NCC-0343",
+        "DEMO-NCC-0344",
+        "DEMO-NCC-0345",
+        "DEMO-NCC-0346",
+        "DEMO-NCC-0347",
+        "DEMO-NCC-0348",
+        "DEMO-NCC-0349",
+        "DEMO-NCC-0350",
+        "DEMO-NCC-0351",
+        "DEMO-NCC-0352",
+        "DEMO-NCC-0353",
+        "DEMO-NCC-0354",
+        "DEMO-NCC-0355",
+        "DEMO-NCC-0356",
+        "DEMO-NCC-0357",
+        "DEMO-NCC-0358",
+        "DEMO-NCC-0359",
+        "DEMO-NCC-0360",
+        "DEMO-NCC-0361",
+        "DEMO-NCC-0362",
+        "DEMO-NCC-0363",
+        "DEMO-NCC-0364",
+        "DEMO-NCC-0365",
+        "DEMO-NCC-0366",
+        "DEMO-NCC-0367",
+        "DEMO-NCC-0368",
+        "DEMO-NCC-0369",
+        "DEMO-NCC-0370",
+        "DEMO-NCC-0371",
+        "DEMO-NCC-0372",
+        "DEMO-NCC-0373",
+        "DEMO-NCC-0374",
+        "DEMO-NCC-0375",
+        "DEMO-NCC-0376",
+        "DEMO-NCC-0377",
+        "DEMO-NCC-0378",
+        "DEMO-NCC-0379",
+        "DEMO-NCC-0380",
+        "DEMO-NCC-0381",
+        "DEMO-NCC-0382",
+        "DEMO-NCC-0383",
+        "DEMO-NCC-0384",
+        "DEMO-NCC-0385",
+        "DEMO-NCC-0386",
+        "DEMO-NCC-0387",
+        "DEMO-NCC-0388",
+        "DEMO-NCC-0389",
+        "DEMO-NCC-0390",
+        "DEMO-NCC-0391",
+        "DEMO-NCC-0392",
+        "DEMO-NCC-0393",
+        "DEMO-NCC-0394",
+        "DEMO-NCC-0395",
+        "DEMO-NCC-0396",
+        "DEMO-NCC-0397",
+        "DEMO-NCC-0398",
+        "DEMO-NCC-0399",
+        "DEMO-NCC-0400",
+        "DEMO-NCC-0401",
+        "DEMO-NCC-0402",
+        "DEMO-NCC-0403",
+        "DEMO-NCC-0404",
+        "DEMO-NCC-0405",
+        "DEMO-NCC-0406",
+        "DEMO-NCC-0407",
+        "DEMO-NCC-0408",
+        "DEMO-NCC-0409",
+        "DEMO-NCC-0410",
+        "DEMO-NCC-0411",
+        "DEMO-NCC-0412",
+        "DEMO-NCC-0413",
+        "DEMO-NCC-0414",
+        "DEMO-NCC-0415",
+        "DEMO-NCC-0416",
+        "DEMO-NCC-0417",
+        "DEMO-NCC-0418",
+        "DEMO-NCC-0419",
+        "DEMO-NCC-0420",
+        "DEMO-NCC-0421",
+        "DEMO-NCC-0422",
+        "DEMO-NCC-0423",
+        "DEMO-NCC-0424",
+        "DEMO-NCC-0425",
+        "DEMO-NCC-0426",
+        "DEMO-NCC-0427",
+        "DEMO-NCC-0428",
+        "DEMO-NCC-0429",
+        "DEMO-NCC-0430",
+        "DEMO-NCC-0431",
+        "DEMO-NCC-0432",
+        "DEMO-NCC-0433",
+        "DEMO-NCC-0434",
+        "DEMO-NCC-0435",
+        "DEMO-NCC-0436",
+        "DEMO-NCC-0437",
+        "DEMO-NCC-0438",
+        "DEMO-NCC-0439",
+        "DEMO-NCC-0440",
+        "DEMO-NCC-0441",
+        "DEMO-NCC-0442",
+        "DEMO-NCC-0443",
+        "DEMO-NCC-0444",
+        "DEMO-NCC-0445",
+        "DEMO-NCC-0446",
+        "DEMO-NCC-0447",
+        "DEMO-NCC-0448",
+        "DEMO-NCC-0449",
+        "DEMO-NCC-0450",
+        "DEMO-NCC-0451",
+        "DEMO-NCC-0452",
+        "DEMO-NCC-0453",
+        "DEMO-NCC-0454",
+        "DEMO-NCC-0455",
+        "DEMO-NCC-0456",
+        "DEMO-NCC-0457",
+        "DEMO-NCC-0458",
+        "DEMO-NCC-0459",
+        "DEMO-NCC-0460",
+        "DEMO-NCC-0461",
+        "DEMO-NCC-0462",
+        "DEMO-NCC-0463",
+        "DEMO-NCC-0464",
+        "DEMO-NCC-0465",
+        "DEMO-NCC-0466",
+        "DEMO-NCC-0467",
+        "DEMO-NCC-0468",
+        "DEMO-NCC-0469",
+        "DEMO-NCC-0470",
+        "DEMO-NCC-0471",
+        "DEMO-NCC-0472",
+        "DEMO-NCC-0473",
+        "DEMO-NCC-0474",
+        "DEMO-NCC-0475",
+        "DEMO-NCC-0476",
+        "DEMO-NCC-0477",
+        "DEMO-NCC-0478",
+        "DEMO-NCC-0479",
+        "DEMO-NCC-0480",
+        "DEMO-NCC-0481",
+        "DEMO-NCC-0482",
+        "DEMO-NCC-0483",
+        "DEMO-NCC-0484",
+        "DEMO-NCC-0485",
+        "DEMO-NCC-0486",
+        "DEMO-NCC-0487",
+        "DEMO-NCC-0488",
+        "DEMO-NCC-0489",
+        "DEMO-NCC-0490",
+        "DEMO-NCC-0491",
+        "DEMO-NCC-0492",
+        "DEMO-NCC-0493",
+        "DEMO-NCC-0494",
+        "DEMO-NCC-0495",
+        "DEMO-NCC-0496",
+        "DEMO-NCC-0497",
+        "DEMO-NCC-0498",
+        "DEMO-NCC-0499",
+        "DEMO-NCC-0500",
+        "DEMO-NCC-CHIA-NHO"
+      ],
+      "tam_ung": [
+        "DEMO-NCC-0001",
+        "DEMO-NCC-0002",
+        "DEMO-NCC-0007",
+        "DEMO-NCC-0008",
+        "DEMO-NCC-0009",
+        "DEMO-NCC-0010",
+        "DEMO-NCC-0011",
+        "DEMO-NCC-0012",
+        "DEMO-NCC-0013",
+        "DEMO-NCC-0014",
+        "DEMO-NCC-0015",
+        "DEMO-NCC-0016",
+        "DEMO-NCC-0017",
+        "DEMO-NCC-0018",
+        "DEMO-NCC-0019",
+        "DEMO-NCC-0020",
+        "DEMO-NCC-0021",
+        "DEMO-NCC-0022",
+        "DEMO-NCC-0023",
+        "DEMO-NCC-0024",
+        "DEMO-NCC-0025",
+        "DEMO-NCC-0026",
+        "DEMO-NCC-0027",
+        "DEMO-NCC-0028",
+        "DEMO-NCC-0029",
+        "DEMO-NCC-0030",
+        "DEMO-NCC-0031",
+        "DEMO-NCC-0032",
+        "DEMO-NCC-0033",
+        "DEMO-NCC-0034",
+        "DEMO-NCC-0035",
+        "DEMO-NCC-0036",
+        "DEMO-NCC-0037",
+        "DEMO-NCC-0038",
+        "DEMO-NCC-0039",
+        "DEMO-NCC-0040",
+        "DEMO-NCC-0041",
+        "DEMO-NCC-0042",
+        "DEMO-NCC-0043",
+        "DEMO-NCC-0044",
+        "DEMO-NCC-0045",
+        "DEMO-NCC-0046",
+        "DEMO-NCC-0047",
+        "DEMO-NCC-0048",
+        "DEMO-NCC-0049",
+        "DEMO-NCC-0050",
+        "DEMO-NCC-0051",
+        "DEMO-NCC-0052",
+        "DEMO-NCC-0053",
+        "DEMO-NCC-0054",
+        "DEMO-NCC-0055",
+        "DEMO-NCC-0056",
+        "DEMO-NCC-0057",
+        "DEMO-NCC-0058",
+        "DEMO-NCC-0059",
+        "DEMO-NCC-0060",
+        "DEMO-NCC-0061",
+        "DEMO-NCC-0062",
+        "DEMO-NCC-0063",
+        "DEMO-NCC-0064",
+        "DEMO-NCC-0065",
+        "DEMO-NCC-0066",
+        "DEMO-NCC-0067",
+        "DEMO-NCC-0068",
+        "DEMO-NCC-0069",
+        "DEMO-NCC-0070",
+        "DEMO-NCC-0071",
+        "DEMO-NCC-0072",
+        "DEMO-NCC-0073",
+        "DEMO-NCC-0074",
+        "DEMO-NCC-0075",
+        "DEMO-NCC-0076",
+        "DEMO-NCC-0077",
+        "DEMO-NCC-0078",
+        "DEMO-NCC-0079",
+        "DEMO-NCC-0080",
+        "DEMO-NCC-0081",
+        "DEMO-NCC-0082",
+        "DEMO-NCC-0083",
+        "DEMO-NCC-0084",
+        "DEMO-NCC-0085",
+        "DEMO-NCC-0086",
+        "DEMO-NCC-0087",
+        "DEMO-NCC-0088",
+        "DEMO-NCC-0089",
+        "DEMO-NCC-0090",
+        "DEMO-NCC-0091",
+        "DEMO-NCC-0092",
+        "DEMO-NCC-0093",
+        "DEMO-NCC-0094",
+        "DEMO-NCC-0095",
+        "DEMO-NCC-0096",
+        "DEMO-NCC-0097",
+        "DEMO-NCC-0098",
+        "DEMO-NCC-0099",
+        "DEMO-NCC-0100",
+        "DEMO-NCC-0101",
+        "DEMO-NCC-0102",
+        "DEMO-NCC-0103",
+        "DEMO-NCC-0104",
+        "DEMO-NCC-0105",
+        "DEMO-NCC-0106",
+        "DEMO-NCC-0107",
+        "DEMO-NCC-0108",
+        "DEMO-NCC-0109",
+        "DEMO-NCC-0110",
+        "DEMO-NCC-0111",
+        "DEMO-NCC-0112",
+        "DEMO-NCC-0113",
+        "DEMO-NCC-0114",
+        "DEMO-NCC-0115",
+        "DEMO-NCC-0116",
+        "DEMO-NCC-0117",
+        "DEMO-NCC-0118",
+        "DEMO-NCC-0119",
+        "DEMO-NCC-0120",
+        "DEMO-NCC-0121",
+        "DEMO-NCC-0122",
+        "DEMO-NCC-0123",
+        "DEMO-NCC-0124",
+        "DEMO-NCC-0125",
+        "DEMO-NCC-0126",
+        "DEMO-NCC-0127",
+        "DEMO-NCC-0128",
+        "DEMO-NCC-0129",
+        "DEMO-NCC-0130",
+        "DEMO-NCC-0131",
+        "DEMO-NCC-0132",
+        "DEMO-NCC-0133",
+        "DEMO-NCC-0134",
+        "DEMO-NCC-0135",
+        "DEMO-NCC-0136",
+        "DEMO-NCC-0137",
+        "DEMO-NCC-0138",
+        "DEMO-NCC-0139",
+        "DEMO-NCC-0140",
+        "DEMO-NCC-0141",
+        "DEMO-NCC-0142",
+        "DEMO-NCC-0143",
+        "DEMO-NCC-0144",
+        "DEMO-NCC-0145",
+        "DEMO-NCC-0146",
+        "DEMO-NCC-0147",
+        "DEMO-NCC-0148",
+        "DEMO-NCC-0149",
+        "DEMO-NCC-0150",
+        "DEMO-NCC-0151",
+        "DEMO-NCC-0152",
+        "DEMO-NCC-0153",
+        "DEMO-NCC-0154",
+        "DEMO-NCC-0155",
+        "DEMO-NCC-0156",
+        "DEMO-NCC-0157",
+        "DEMO-NCC-0158",
+        "DEMO-NCC-0159",
+        "DEMO-NCC-0160",
+        "DEMO-NCC-0161",
+        "DEMO-NCC-0162",
+        "DEMO-NCC-0163",
+        "DEMO-NCC-0164",
+        "DEMO-NCC-0165",
+        "DEMO-NCC-0166",
+        "DEMO-NCC-0167",
+        "DEMO-NCC-0168",
+        "DEMO-NCC-0169",
+        "DEMO-NCC-0170",
+        "DEMO-NCC-0171",
+        "DEMO-NCC-0172",
+        "DEMO-NCC-0173",
+        "DEMO-NCC-0174",
+        "DEMO-NCC-0175",
+        "DEMO-NCC-0176",
+        "DEMO-NCC-0177",
+        "DEMO-NCC-0178",
+        "DEMO-NCC-0179",
+        "DEMO-NCC-0180",
+        "DEMO-NCC-0181",
+        "DEMO-NCC-0182",
+        "DEMO-NCC-0183",
+        "DEMO-NCC-0184",
+        "DEMO-NCC-0185",
+        "DEMO-NCC-0186",
+        "DEMO-NCC-0187",
+        "DEMO-NCC-0188",
+        "DEMO-NCC-0189",
+        "DEMO-NCC-0190",
+        "DEMO-NCC-0191",
+        "DEMO-NCC-0192",
+        "DEMO-NCC-0193",
+        "DEMO-NCC-0194",
+        "DEMO-NCC-0195",
+        "DEMO-NCC-0196",
+        "DEMO-NCC-0197",
+        "DEMO-NCC-0198",
+        "DEMO-NCC-0199",
+        "DEMO-NCC-0200",
+        "DEMO-NCC-0201",
+        "DEMO-NCC-0202",
+        "DEMO-NCC-0203",
+        "DEMO-NCC-0204",
+        "DEMO-NCC-0205",
+        "DEMO-NCC-0206",
+        "DEMO-NCC-0207",
+        "DEMO-NCC-0208",
+        "DEMO-NCC-0209",
+        "DEMO-NCC-0210",
+        "DEMO-NCC-0211",
+        "DEMO-NCC-0212",
+        "DEMO-NCC-0213",
+        "DEMO-NCC-0214",
+        "DEMO-NCC-0215",
+        "DEMO-NCC-0216",
+        "DEMO-NCC-0217",
+        "DEMO-NCC-0218",
+        "DEMO-NCC-0219",
+        "DEMO-NCC-0220",
+        "DEMO-NCC-0221",
+        "DEMO-NCC-0222",
+        "DEMO-NCC-0223",
+        "DEMO-NCC-0224",
+        "DEMO-NCC-0225",
+        "DEMO-NCC-0226",
+        "DEMO-NCC-0227",
+        "DEMO-NCC-0228",
+        "DEMO-NCC-0229",
+        "DEMO-NCC-0230",
+        "DEMO-NCC-0231",
+        "DEMO-NCC-0232",
+        "DEMO-NCC-0233",
+        "DEMO-NCC-0234",
+        "DEMO-NCC-0235",
+        "DEMO-NCC-0236",
+        "DEMO-NCC-0237",
+        "DEMO-NCC-0238",
+        "DEMO-NCC-0239",
+        "DEMO-NCC-0240",
+        "DEMO-NCC-0241",
+        "DEMO-NCC-0242",
+        "DEMO-NCC-0243",
+        "DEMO-NCC-0244",
+        "DEMO-NCC-0245",
+        "DEMO-NCC-0246",
+        "DEMO-NCC-0247",
+        "DEMO-NCC-0248",
+        "DEMO-NCC-0249",
+        "DEMO-NCC-0250",
+        "DEMO-NCC-0251",
+        "DEMO-NCC-0252",
+        "DEMO-NCC-0253",
+        "DEMO-NCC-0254",
+        "DEMO-NCC-0255",
+        "DEMO-NCC-0256",
+        "DEMO-NCC-0257",
+        "DEMO-NCC-0258",
+        "DEMO-NCC-0259",
+        "DEMO-NCC-0260",
+        "DEMO-NCC-0261",
+        "DEMO-NCC-0262",
+        "DEMO-NCC-0263",
+        "DEMO-NCC-0264",
+        "DEMO-NCC-0265",
+        "DEMO-NCC-0266",
+        "DEMO-NCC-0267",
+        "DEMO-NCC-0268",
+        "DEMO-NCC-0269",
+        "DEMO-NCC-0270",
+        "DEMO-NCC-0271",
+        "DEMO-NCC-0272",
+        "DEMO-NCC-0273",
+        "DEMO-NCC-0274",
+        "DEMO-NCC-0275",
+        "DEMO-NCC-0276",
+        "DEMO-NCC-0277",
+        "DEMO-NCC-0278",
+        "DEMO-NCC-0279",
+        "DEMO-NCC-0280",
+        "DEMO-NCC-0281",
+        "DEMO-NCC-0282",
+        "DEMO-NCC-0283",
+        "DEMO-NCC-0284",
+        "DEMO-NCC-0285",
+        "DEMO-NCC-0286",
+        "DEMO-NCC-0287",
+        "DEMO-NCC-0288",
+        "DEMO-NCC-0289",
+        "DEMO-NCC-0290",
+        "DEMO-NCC-0291",
+        "DEMO-NCC-0292",
+        "DEMO-NCC-0293",
+        "DEMO-NCC-0294",
+        "DEMO-NCC-0295",
+        "DEMO-NCC-0296",
+        "DEMO-NCC-0297",
+        "DEMO-NCC-0298",
+        "DEMO-NCC-0299",
+        "DEMO-NCC-0300",
+        "DEMO-NCC-0301",
+        "DEMO-NCC-0302",
+        "DEMO-NCC-0303",
+        "DEMO-NCC-0304",
+        "DEMO-NCC-0305",
+        "DEMO-NCC-0306",
+        "DEMO-NCC-0307",
+        "DEMO-NCC-0308",
+        "DEMO-NCC-0309",
+        "DEMO-NCC-0310",
+        "DEMO-NCC-0311",
+        "DEMO-NCC-0312",
+        "DEMO-NCC-0313",
+        "DEMO-NCC-0314",
+        "DEMO-NCC-0315",
+        "DEMO-NCC-0316",
+        "DEMO-NCC-0317",
+        "DEMO-NCC-0318",
+        "DEMO-NCC-0319",
+        "DEMO-NCC-0320",
+        "DEMO-NCC-0321",
+        "DEMO-NCC-0322",
+        "DEMO-NCC-0323",
+        "DEMO-NCC-0324",
+        "DEMO-NCC-0325",
+        "DEMO-NCC-0326",
+        "DEMO-NCC-0327",
+        "DEMO-NCC-0328",
+        "DEMO-NCC-0329",
+        "DEMO-NCC-0330",
+        "DEMO-NCC-0331",
+        "DEMO-NCC-0332",
+        "DEMO-NCC-0333",
+        "DEMO-NCC-0334",
+        "DEMO-NCC-0335",
+        "DEMO-NCC-0336",
+        "DEMO-NCC-0337",
+        "DEMO-NCC-0338",
+        "DEMO-NCC-0339",
+        "DEMO-NCC-0340",
+        "DEMO-NCC-0341",
+        "DEMO-NCC-0342",
+        "DEMO-NCC-0343",
+        "DEMO-NCC-0344",
+        "DEMO-NCC-0345",
+        "DEMO-NCC-0346",
+        "DEMO-NCC-0347",
+        "DEMO-NCC-0348",
+        "DEMO-NCC-0349",
+        "DEMO-NCC-0350",
+        "DEMO-NCC-0351",
+        "DEMO-NCC-0352",
+        "DEMO-NCC-0353",
+        "DEMO-NCC-0354",
+        "DEMO-NCC-0355",
+        "DEMO-NCC-0356",
+        "DEMO-NCC-0357",
+        "DEMO-NCC-0358",
+        "DEMO-NCC-0359",
+        "DEMO-NCC-0360",
+        "DEMO-NCC-0361",
+        "DEMO-NCC-0362",
+        "DEMO-NCC-0363",
+        "DEMO-NCC-0364",
+        "DEMO-NCC-0365",
+        "DEMO-NCC-0366",
+        "DEMO-NCC-0367",
+        "DEMO-NCC-0368",
+        "DEMO-NCC-0369",
+        "DEMO-NCC-0370",
+        "DEMO-NCC-0371",
+        "DEMO-NCC-0372",
+        "DEMO-NCC-0373",
+        "DEMO-NCC-0374",
+        "DEMO-NCC-0375",
+        "DEMO-NCC-0376",
+        "DEMO-NCC-0377",
+        "DEMO-NCC-0378",
+        "DEMO-NCC-0379",
+        "DEMO-NCC-0380",
+        "DEMO-NCC-0381",
+        "DEMO-NCC-0382",
+        "DEMO-NCC-0383",
+        "DEMO-NCC-0384",
+        "DEMO-NCC-0385",
+        "DEMO-NCC-0386",
+        "DEMO-NCC-0387",
+        "DEMO-NCC-0388",
+        "DEMO-NCC-0389",
+        "DEMO-NCC-0390",
+        "DEMO-NCC-0391",
+        "DEMO-NCC-0392",
+        "DEMO-NCC-0393",
+        "DEMO-NCC-0394",
+        "DEMO-NCC-0395",
+        "DEMO-NCC-0396",
+        "DEMO-NCC-0397",
+        "DEMO-NCC-0398",
+        "DEMO-NCC-0399",
+        "DEMO-NCC-0400",
+        "DEMO-NCC-0401",
+        "DEMO-NCC-0402",
+        "DEMO-NCC-0403",
+        "DEMO-NCC-0404",
+        "DEMO-NCC-0405",
+        "DEMO-NCC-0406",
+        "DEMO-NCC-0407",
+        "DEMO-NCC-0408",
+        "DEMO-NCC-0409",
+        "DEMO-NCC-0410",
+        "DEMO-NCC-0411",
+        "DEMO-NCC-0412",
+        "DEMO-NCC-0413",
+        "DEMO-NCC-0414",
+        "DEMO-NCC-0415",
+        "DEMO-NCC-0416",
+        "DEMO-NCC-0417",
+        "DEMO-NCC-0418",
+        "DEMO-NCC-0419",
+        "DEMO-NCC-0420",
+        "DEMO-NCC-0421",
+        "DEMO-NCC-0422",
+        "DEMO-NCC-0423",
+        "DEMO-NCC-0424",
+        "DEMO-NCC-0425",
+        "DEMO-NCC-0426",
+        "DEMO-NCC-0427",
+        "DEMO-NCC-0428",
+        "DEMO-NCC-0429",
+        "DEMO-NCC-0430",
+        "DEMO-NCC-0431",
+        "DEMO-NCC-0432",
+        "DEMO-NCC-0433",
+        "DEMO-NCC-0434",
+        "DEMO-NCC-0435",
+        "DEMO-NCC-0436",
+        "DEMO-NCC-0437",
+        "DEMO-NCC-0438",
+        "DEMO-NCC-0439",
+        "DEMO-NCC-0440",
+        "DEMO-NCC-0441",
+        "DEMO-NCC-0442",
+        "DEMO-NCC-0443",
+        "DEMO-NCC-0444",
+        "DEMO-NCC-0445",
+        "DEMO-NCC-0446",
+        "DEMO-NCC-0447",
+        "DEMO-NCC-0448",
+        "DEMO-NCC-0449",
+        "DEMO-NCC-0450",
+        "DEMO-NCC-0451",
+        "DEMO-NCC-0452",
+        "DEMO-NCC-0453",
+        "DEMO-NCC-0454",
+        "DEMO-NCC-0455",
+        "DEMO-NCC-0456",
+        "DEMO-NCC-0457",
+        "DEMO-NCC-0458",
+        "DEMO-NCC-0459",
+        "DEMO-NCC-0460",
+        "DEMO-NCC-0461",
+        "DEMO-NCC-0462",
+        "DEMO-NCC-0463",
+        "DEMO-NCC-0464",
+        "DEMO-NCC-0465",
+        "DEMO-NCC-0466",
+        "DEMO-NCC-0467",
+        "DEMO-NCC-0468",
+        "DEMO-NCC-0469",
+        "DEMO-NCC-0470",
+        "DEMO-NCC-0471",
+        "DEMO-NCC-0472",
+        "DEMO-NCC-0473",
+        "DEMO-NCC-0474",
+        "DEMO-NCC-0475",
+        "DEMO-NCC-0476",
+        "DEMO-NCC-0477",
+        "DEMO-NCC-0478",
+        "DEMO-NCC-0479",
+        "DEMO-NCC-0480",
+        "DEMO-NCC-0481",
+        "DEMO-NCC-0482",
+        "DEMO-NCC-0483",
+        "DEMO-NCC-0484",
+        "DEMO-NCC-0485",
+        "DEMO-NCC-0486",
+        "DEMO-NCC-0487",
+        "DEMO-NCC-0488",
+        "DEMO-NCC-0489",
+        "DEMO-NCC-0490",
+        "DEMO-NCC-0491",
+        "DEMO-NCC-0492",
+        "DEMO-NCC-0493",
+        "DEMO-NCC-0494",
+        "DEMO-NCC-0495",
+        "DEMO-NCC-0496",
+        "DEMO-NCC-0497",
+        "DEMO-NCC-0498",
+        "DEMO-NCC-0499",
+        "DEMO-NCC-0500",
+        "DEMO-NCC-CHIA-NHO"
+      ],
+      "thanh_toan_ncc": [
+        "DEMO-NCC-0001",
+        "DEMO-NCC-0002",
+        "DEMO-NCC-0007",
+        "DEMO-NCC-0008",
+        "DEMO-NCC-0009",
+        "DEMO-NCC-0010",
+        "DEMO-NCC-0011",
+        "DEMO-NCC-0012",
+        "DEMO-NCC-0013",
+        "DEMO-NCC-0014",
+        "DEMO-NCC-0015",
+        "DEMO-NCC-0016",
+        "DEMO-NCC-0017",
+        "DEMO-NCC-0018",
+        "DEMO-NCC-0019",
+        "DEMO-NCC-0020",
+        "DEMO-NCC-0021",
+        "DEMO-NCC-0022",
+        "DEMO-NCC-0023",
+        "DEMO-NCC-0024",
+        "DEMO-NCC-0025",
+        "DEMO-NCC-0026",
+        "DEMO-NCC-0027",
+        "DEMO-NCC-0028",
+        "DEMO-NCC-0029",
+        "DEMO-NCC-0030",
+        "DEMO-NCC-0031",
+        "DEMO-NCC-0032",
+        "DEMO-NCC-0033",
+        "DEMO-NCC-0034",
+        "DEMO-NCC-0035",
+        "DEMO-NCC-0036",
+        "DEMO-NCC-0037",
+        "DEMO-NCC-0038",
+        "DEMO-NCC-0039",
+        "DEMO-NCC-0040",
+        "DEMO-NCC-0041",
+        "DEMO-NCC-0042",
+        "DEMO-NCC-0043",
+        "DEMO-NCC-0044",
+        "DEMO-NCC-0045",
+        "DEMO-NCC-0046",
+        "DEMO-NCC-0047",
+        "DEMO-NCC-0048",
+        "DEMO-NCC-0049",
+        "DEMO-NCC-0050",
+        "DEMO-NCC-0051",
+        "DEMO-NCC-0052",
+        "DEMO-NCC-0053",
+        "DEMO-NCC-0054",
+        "DEMO-NCC-0055",
+        "DEMO-NCC-0056",
+        "DEMO-NCC-0057",
+        "DEMO-NCC-0058",
+        "DEMO-NCC-0059",
+        "DEMO-NCC-0060",
+        "DEMO-NCC-0061",
+        "DEMO-NCC-0062",
+        "DEMO-NCC-0063",
+        "DEMO-NCC-0064",
+        "DEMO-NCC-0065",
+        "DEMO-NCC-0066",
+        "DEMO-NCC-0067",
+        "DEMO-NCC-0068",
+        "DEMO-NCC-0069",
+        "DEMO-NCC-0070",
+        "DEMO-NCC-0071",
+        "DEMO-NCC-0072",
+        "DEMO-NCC-0073",
+        "DEMO-NCC-0074",
+        "DEMO-NCC-0075",
+        "DEMO-NCC-0076",
+        "DEMO-NCC-0077",
+        "DEMO-NCC-0078",
+        "DEMO-NCC-0079",
+        "DEMO-NCC-0080",
+        "DEMO-NCC-0081",
+        "DEMO-NCC-0082",
+        "DEMO-NCC-0083",
+        "DEMO-NCC-0084",
+        "DEMO-NCC-0085",
+        "DEMO-NCC-0086",
+        "DEMO-NCC-0087",
+        "DEMO-NCC-0088",
+        "DEMO-NCC-0089",
+        "DEMO-NCC-0090",
+        "DEMO-NCC-0091",
+        "DEMO-NCC-0092",
+        "DEMO-NCC-0093",
+        "DEMO-NCC-0094",
+        "DEMO-NCC-0095",
+        "DEMO-NCC-0096",
+        "DEMO-NCC-0097",
+        "DEMO-NCC-0098",
+        "DEMO-NCC-0099",
+        "DEMO-NCC-0100",
+        "DEMO-NCC-0101",
+        "DEMO-NCC-0102",
+        "DEMO-NCC-0103",
+        "DEMO-NCC-0104",
+        "DEMO-NCC-0105",
+        "DEMO-NCC-0106",
+        "DEMO-NCC-0107",
+        "DEMO-NCC-0108",
+        "DEMO-NCC-0109",
+        "DEMO-NCC-0110",
+        "DEMO-NCC-0111",
+        "DEMO-NCC-0112",
+        "DEMO-NCC-0113",
+        "DEMO-NCC-0114",
+        "DEMO-NCC-0115",
+        "DEMO-NCC-0116",
+        "DEMO-NCC-0117",
+        "DEMO-NCC-0118",
+        "DEMO-NCC-0119",
+        "DEMO-NCC-0120",
+        "DEMO-NCC-0121",
+        "DEMO-NCC-0122",
+        "DEMO-NCC-0123",
+        "DEMO-NCC-0124",
+        "DEMO-NCC-0125",
+        "DEMO-NCC-0126",
+        "DEMO-NCC-0127",
+        "DEMO-NCC-0128",
+        "DEMO-NCC-0129",
+        "DEMO-NCC-0130",
+        "DEMO-NCC-0131",
+        "DEMO-NCC-0132",
+        "DEMO-NCC-0133",
+        "DEMO-NCC-0134",
+        "DEMO-NCC-0135",
+        "DEMO-NCC-0136",
+        "DEMO-NCC-0137",
+        "DEMO-NCC-0138",
+        "DEMO-NCC-0139",
+        "DEMO-NCC-0140",
+        "DEMO-NCC-0141",
+        "DEMO-NCC-0142",
+        "DEMO-NCC-0143",
+        "DEMO-NCC-0144",
+        "DEMO-NCC-0145",
+        "DEMO-NCC-0146",
+        "DEMO-NCC-0147",
+        "DEMO-NCC-0148",
+        "DEMO-NCC-0149",
+        "DEMO-NCC-0150",
+        "DEMO-NCC-0151",
+        "DEMO-NCC-0152",
+        "DEMO-NCC-0153",
+        "DEMO-NCC-0154",
+        "DEMO-NCC-0155",
+        "DEMO-NCC-0156",
+        "DEMO-NCC-0157",
+        "DEMO-NCC-0158",
+        "DEMO-NCC-0159",
+        "DEMO-NCC-0160",
+        "DEMO-NCC-0161",
+        "DEMO-NCC-0162",
+        "DEMO-NCC-0163",
+        "DEMO-NCC-0164",
+        "DEMO-NCC-0165",
+        "DEMO-NCC-0166",
+        "DEMO-NCC-0167",
+        "DEMO-NCC-0168",
+        "DEMO-NCC-0169",
+        "DEMO-NCC-0170",
+        "DEMO-NCC-0171",
+        "DEMO-NCC-0172",
+        "DEMO-NCC-0173",
+        "DEMO-NCC-0174",
+        "DEMO-NCC-0175",
+        "DEMO-NCC-0176",
+        "DEMO-NCC-0177",
+        "DEMO-NCC-0178",
+        "DEMO-NCC-0179",
+        "DEMO-NCC-0180",
+        "DEMO-NCC-0181",
+        "DEMO-NCC-0182",
+        "DEMO-NCC-0183",
+        "DEMO-NCC-0184",
+        "DEMO-NCC-0185",
+        "DEMO-NCC-0186",
+        "DEMO-NCC-0187",
+        "DEMO-NCC-0188",
+        "DEMO-NCC-0189",
+        "DEMO-NCC-0190",
+        "DEMO-NCC-0191",
+        "DEMO-NCC-0192",
+        "DEMO-NCC-0193",
+        "DEMO-NCC-0194",
+        "DEMO-NCC-0195",
+        "DEMO-NCC-0196",
+        "DEMO-NCC-0197",
+        "DEMO-NCC-0198",
+        "DEMO-NCC-0199",
+        "DEMO-NCC-0200",
+        "DEMO-NCC-0201",
+        "DEMO-NCC-0202",
+        "DEMO-NCC-0203",
+        "DEMO-NCC-0204",
+        "DEMO-NCC-0205",
+        "DEMO-NCC-0206",
+        "DEMO-NCC-0207",
+        "DEMO-NCC-0208",
+        "DEMO-NCC-0209",
+        "DEMO-NCC-0210",
+        "DEMO-NCC-0211",
+        "DEMO-NCC-0212",
+        "DEMO-NCC-0213",
+        "DEMO-NCC-0214",
+        "DEMO-NCC-0215",
+        "DEMO-NCC-0216",
+        "DEMO-NCC-0217",
+        "DEMO-NCC-0218",
+        "DEMO-NCC-0219",
+        "DEMO-NCC-0220",
+        "DEMO-NCC-0221",
+        "DEMO-NCC-0222",
+        "DEMO-NCC-0223",
+        "DEMO-NCC-0224",
+        "DEMO-NCC-0225",
+        "DEMO-NCC-0226",
+        "DEMO-NCC-0227",
+        "DEMO-NCC-0228",
+        "DEMO-NCC-0229",
+        "DEMO-NCC-0230",
+        "DEMO-NCC-0231",
+        "DEMO-NCC-0232",
+        "DEMO-NCC-0233",
+        "DEMO-NCC-0234",
+        "DEMO-NCC-0235",
+        "DEMO-NCC-0236",
+        "DEMO-NCC-0237",
+        "DEMO-NCC-0238",
+        "DEMO-NCC-0239",
+        "DEMO-NCC-0240",
+        "DEMO-NCC-0241",
+        "DEMO-NCC-0242",
+        "DEMO-NCC-0243",
+        "DEMO-NCC-0244",
+        "DEMO-NCC-0245",
+        "DEMO-NCC-0246",
+        "DEMO-NCC-0247",
+        "DEMO-NCC-0248",
+        "DEMO-NCC-0249",
+        "DEMO-NCC-0250",
+        "DEMO-NCC-0251",
+        "DEMO-NCC-0252",
+        "DEMO-NCC-0253",
+        "DEMO-NCC-0254",
+        "DEMO-NCC-0255",
+        "DEMO-NCC-0256",
+        "DEMO-NCC-0257",
+        "DEMO-NCC-0258",
+        "DEMO-NCC-0259",
+        "DEMO-NCC-0260",
+        "DEMO-NCC-0261",
+        "DEMO-NCC-0262",
+        "DEMO-NCC-0263",
+        "DEMO-NCC-0264",
+        "DEMO-NCC-0265",
+        "DEMO-NCC-0266",
+        "DEMO-NCC-0267",
+        "DEMO-NCC-0268",
+        "DEMO-NCC-0269",
+        "DEMO-NCC-0270",
+        "DEMO-NCC-0271",
+        "DEMO-NCC-0272",
+        "DEMO-NCC-0273",
+        "DEMO-NCC-0274",
+        "DEMO-NCC-0275",
+        "DEMO-NCC-0276",
+        "DEMO-NCC-0277",
+        "DEMO-NCC-0278",
+        "DEMO-NCC-0279",
+        "DEMO-NCC-0280",
+        "DEMO-NCC-0281",
+        "DEMO-NCC-0282",
+        "DEMO-NCC-0283",
+        "DEMO-NCC-0284",
+        "DEMO-NCC-0285",
+        "DEMO-NCC-0286",
+        "DEMO-NCC-0287",
+        "DEMO-NCC-0288",
+        "DEMO-NCC-0289",
+        "DEMO-NCC-0290",
+        "DEMO-NCC-0291",
+        "DEMO-NCC-0292",
+        "DEMO-NCC-0293",
+        "DEMO-NCC-0294",
+        "DEMO-NCC-0295",
+        "DEMO-NCC-0296",
+        "DEMO-NCC-0297",
+        "DEMO-NCC-0298",
+        "DEMO-NCC-0299",
+        "DEMO-NCC-0300",
+        "DEMO-NCC-0301",
+        "DEMO-NCC-0302",
+        "DEMO-NCC-0303",
+        "DEMO-NCC-0304",
+        "DEMO-NCC-0305",
+        "DEMO-NCC-0306",
+        "DEMO-NCC-0307",
+        "DEMO-NCC-0308",
+        "DEMO-NCC-0309",
+        "DEMO-NCC-0310",
+        "DEMO-NCC-0311",
+        "DEMO-NCC-0312",
+        "DEMO-NCC-0313",
+        "DEMO-NCC-0314",
+        "DEMO-NCC-0315",
+        "DEMO-NCC-0316",
+        "DEMO-NCC-0317",
+        "DEMO-NCC-0318",
+        "DEMO-NCC-0319",
+        "DEMO-NCC-0320",
+        "DEMO-NCC-0321",
+        "DEMO-NCC-0322",
+        "DEMO-NCC-0323",
+        "DEMO-NCC-0324",
+        "DEMO-NCC-0325",
+        "DEMO-NCC-0326",
+        "DEMO-NCC-0327",
+        "DEMO-NCC-0328",
+        "DEMO-NCC-0329",
+        "DEMO-NCC-0330",
+        "DEMO-NCC-0331",
+        "DEMO-NCC-0332",
+        "DEMO-NCC-0333",
+        "DEMO-NCC-0334",
+        "DEMO-NCC-0335",
+        "DEMO-NCC-0336",
+        "DEMO-NCC-0337",
+        "DEMO-NCC-0338",
+        "DEMO-NCC-0339",
+        "DEMO-NCC-0340",
+        "DEMO-NCC-0341",
+        "DEMO-NCC-0342",
+        "DEMO-NCC-0343",
+        "DEMO-NCC-0344",
+        "DEMO-NCC-0345",
+        "DEMO-NCC-0346",
+        "DEMO-NCC-0347",
+        "DEMO-NCC-0348",
+        "DEMO-NCC-0349",
+        "DEMO-NCC-0350",
+        "DEMO-NCC-0351",
+        "DEMO-NCC-0352",
+        "DEMO-NCC-0353",
+        "DEMO-NCC-0354",
+        "DEMO-NCC-0355",
+        "DEMO-NCC-0356",
+        "DEMO-NCC-0357",
+        "DEMO-NCC-0358",
+        "DEMO-NCC-0359",
+        "DEMO-NCC-0360",
+        "DEMO-NCC-0361",
+        "DEMO-NCC-0362",
+        "DEMO-NCC-0363",
+        "DEMO-NCC-0364",
+        "DEMO-NCC-0365",
+        "DEMO-NCC-0366",
+        "DEMO-NCC-0367",
+        "DEMO-NCC-0368",
+        "DEMO-NCC-0369",
+        "DEMO-NCC-0370",
+        "DEMO-NCC-0371",
+        "DEMO-NCC-0372",
+        "DEMO-NCC-0373",
+        "DEMO-NCC-0374",
+        "DEMO-NCC-0375",
+        "DEMO-NCC-0376",
+        "DEMO-NCC-0377",
+        "DEMO-NCC-0378",
+        "DEMO-NCC-0379",
+        "DEMO-NCC-0380",
+        "DEMO-NCC-0381",
+        "DEMO-NCC-0382",
+        "DEMO-NCC-0383",
+        "DEMO-NCC-0384",
+        "DEMO-NCC-0385",
+        "DEMO-NCC-0386",
+        "DEMO-NCC-0387",
+        "DEMO-NCC-0388",
+        "DEMO-NCC-0389",
+        "DEMO-NCC-0390",
+        "DEMO-NCC-0391",
+        "DEMO-NCC-0392",
+        "DEMO-NCC-0393",
+        "DEMO-NCC-0394",
+        "DEMO-NCC-0395",
+        "DEMO-NCC-0396",
+        "DEMO-NCC-0397",
+        "DEMO-NCC-0398",
+        "DEMO-NCC-0399",
+        "DEMO-NCC-0400",
+        "DEMO-NCC-0401",
+        "DEMO-NCC-0402",
+        "DEMO-NCC-0403",
+        "DEMO-NCC-0404",
+        "DEMO-NCC-0405",
+        "DEMO-NCC-0406",
+        "DEMO-NCC-0407",
+        "DEMO-NCC-0408",
+        "DEMO-NCC-0409",
+        "DEMO-NCC-0410",
+        "DEMO-NCC-0411",
+        "DEMO-NCC-0412",
+        "DEMO-NCC-0413",
+        "DEMO-NCC-0414",
+        "DEMO-NCC-0415",
+        "DEMO-NCC-0416",
+        "DEMO-NCC-0417",
+        "DEMO-NCC-0418",
+        "DEMO-NCC-0419",
+        "DEMO-NCC-0420",
+        "DEMO-NCC-0421",
+        "DEMO-NCC-0422",
+        "DEMO-NCC-0423",
+        "DEMO-NCC-0424",
+        "DEMO-NCC-0425",
+        "DEMO-NCC-0426",
+        "DEMO-NCC-0427",
+        "DEMO-NCC-0428",
+        "DEMO-NCC-0429",
+        "DEMO-NCC-0430",
+        "DEMO-NCC-0431",
+        "DEMO-NCC-0432",
+        "DEMO-NCC-0433",
+        "DEMO-NCC-0434",
+        "DEMO-NCC-0435",
+        "DEMO-NCC-0436",
+        "DEMO-NCC-0437",
+        "DEMO-NCC-0438",
+        "DEMO-NCC-0439",
+        "DEMO-NCC-0440",
+        "DEMO-NCC-0441",
+        "DEMO-NCC-0442",
+        "DEMO-NCC-0443",
+        "DEMO-NCC-0444",
+        "DEMO-NCC-0445",
+        "DEMO-NCC-0446",
+        "DEMO-NCC-0447",
+        "DEMO-NCC-0448",
+        "DEMO-NCC-0449",
+        "DEMO-NCC-0450",
+        "DEMO-NCC-0451",
+        "DEMO-NCC-0452",
+        "DEMO-NCC-0453",
+        "DEMO-NCC-0454",
+        "DEMO-NCC-0455",
+        "DEMO-NCC-0456",
+        "DEMO-NCC-0457",
+        "DEMO-NCC-0458",
+        "DEMO-NCC-0459",
+        "DEMO-NCC-0460",
+        "DEMO-NCC-0461",
+        "DEMO-NCC-0462",
+        "DEMO-NCC-0463",
+        "DEMO-NCC-0464",
+        "DEMO-NCC-0465",
+        "DEMO-NCC-0466",
+        "DEMO-NCC-0467",
+        "DEMO-NCC-0468",
+        "DEMO-NCC-0469",
+        "DEMO-NCC-0470",
+        "DEMO-NCC-0471",
+        "DEMO-NCC-0472",
+        "DEMO-NCC-0473",
+        "DEMO-NCC-0474",
+        "DEMO-NCC-0475",
+        "DEMO-NCC-0476",
+        "DEMO-NCC-0477",
+        "DEMO-NCC-0478",
+        "DEMO-NCC-0479",
+        "DEMO-NCC-0480",
+        "DEMO-NCC-0481",
+        "DEMO-NCC-0482",
+        "DEMO-NCC-0483",
+        "DEMO-NCC-0484",
+        "DEMO-NCC-0485",
+        "DEMO-NCC-0486",
+        "DEMO-NCC-0487",
+        "DEMO-NCC-0488",
+        "DEMO-NCC-0489",
+        "DEMO-NCC-0490",
+        "DEMO-NCC-0491",
+        "DEMO-NCC-0492",
+        "DEMO-NCC-0493",
+        "DEMO-NCC-0494",
+        "DEMO-NCC-0495",
+        "DEMO-NCC-0496",
+        "DEMO-NCC-0497",
+        "DEMO-NCC-0498",
+        "DEMO-NCC-0499",
+        "DEMO-NCC-0500",
+        "DEMO-NCC-CHIA-NHO"
+      ],
+      "thu_tien": [
+        "DEMO-NCC-0001",
+        "DEMO-NCC-0002",
+        "DEMO-NCC-0007",
+        "DEMO-NCC-0008",
+        "DEMO-NCC-0009",
+        "DEMO-NCC-0010",
+        "DEMO-NCC-0011",
+        "DEMO-NCC-0012",
+        "DEMO-NCC-0013",
+        "DEMO-NCC-0014",
+        "DEMO-NCC-0015",
+        "DEMO-NCC-0016",
+        "DEMO-NCC-0017",
+        "DEMO-NCC-0018",
+        "DEMO-NCC-0019",
+        "DEMO-NCC-0020",
+        "DEMO-NCC-0021",
+        "DEMO-NCC-0022",
+        "DEMO-NCC-0023",
+        "DEMO-NCC-0024",
+        "DEMO-NCC-0025",
+        "DEMO-NCC-0026",
+        "DEMO-NCC-0027",
+        "DEMO-NCC-0028",
+        "DEMO-NCC-0029",
+        "DEMO-NCC-0030",
+        "DEMO-NCC-0031",
+        "DEMO-NCC-0032",
+        "DEMO-NCC-0033",
+        "DEMO-NCC-0034",
+        "DEMO-NCC-0035",
+        "DEMO-NCC-0036",
+        "DEMO-NCC-0037",
+        "DEMO-NCC-0038",
+        "DEMO-NCC-0039",
+        "DEMO-NCC-0040",
+        "DEMO-NCC-0041",
+        "DEMO-NCC-0042",
+        "DEMO-NCC-0043",
+        "DEMO-NCC-0044",
+        "DEMO-NCC-0045",
+        "DEMO-NCC-0046",
+        "DEMO-NCC-0047",
+        "DEMO-NCC-0048",
+        "DEMO-NCC-0049",
+        "DEMO-NCC-0050",
+        "DEMO-NCC-0051",
+        "DEMO-NCC-0052",
+        "DEMO-NCC-0053",
+        "DEMO-NCC-0054",
+        "DEMO-NCC-0055",
+        "DEMO-NCC-0056",
+        "DEMO-NCC-0057",
+        "DEMO-NCC-0058",
+        "DEMO-NCC-0059",
+        "DEMO-NCC-0060",
+        "DEMO-NCC-0061",
+        "DEMO-NCC-0062",
+        "DEMO-NCC-0063",
+        "DEMO-NCC-0064",
+        "DEMO-NCC-0065",
+        "DEMO-NCC-0066",
+        "DEMO-NCC-0067",
+        "DEMO-NCC-0068",
+        "DEMO-NCC-0069",
+        "DEMO-NCC-0070",
+        "DEMO-NCC-0071",
+        "DEMO-NCC-0072",
+        "DEMO-NCC-0073",
+        "DEMO-NCC-0074",
+        "DEMO-NCC-0075",
+        "DEMO-NCC-0076",
+        "DEMO-NCC-0077",
+        "DEMO-NCC-0078",
+        "DEMO-NCC-0079",
+        "DEMO-NCC-0080",
+        "DEMO-NCC-0081",
+        "DEMO-NCC-0082",
+        "DEMO-NCC-0083",
+        "DEMO-NCC-0084",
+        "DEMO-NCC-0085",
+        "DEMO-NCC-0086",
+        "DEMO-NCC-0087",
+        "DEMO-NCC-0088",
+        "DEMO-NCC-0089",
+        "DEMO-NCC-0090",
+        "DEMO-NCC-0091",
+        "DEMO-NCC-0092",
+        "DEMO-NCC-0093",
+        "DEMO-NCC-0094",
+        "DEMO-NCC-0095",
+        "DEMO-NCC-0096",
+        "DEMO-NCC-0097",
+        "DEMO-NCC-0098",
+        "DEMO-NCC-0099",
+        "DEMO-NCC-0100",
+        "DEMO-NCC-0101",
+        "DEMO-NCC-0102",
+        "DEMO-NCC-0103",
+        "DEMO-NCC-0104",
+        "DEMO-NCC-0105",
+        "DEMO-NCC-0106",
+        "DEMO-NCC-0107",
+        "DEMO-NCC-0108",
+        "DEMO-NCC-0109",
+        "DEMO-NCC-0110",
+        "DEMO-NCC-0111",
+        "DEMO-NCC-0112",
+        "DEMO-NCC-0113",
+        "DEMO-NCC-0114",
+        "DEMO-NCC-0115",
+        "DEMO-NCC-0116",
+        "DEMO-NCC-0117",
+        "DEMO-NCC-0118",
+        "DEMO-NCC-0119",
+        "DEMO-NCC-0120",
+        "DEMO-NCC-0121",
+        "DEMO-NCC-0122",
+        "DEMO-NCC-0123",
+        "DEMO-NCC-0124",
+        "DEMO-NCC-0125",
+        "DEMO-NCC-0126",
+        "DEMO-NCC-0127",
+        "DEMO-NCC-0128",
+        "DEMO-NCC-0129",
+        "DEMO-NCC-0130",
+        "DEMO-NCC-0131",
+        "DEMO-NCC-0132",
+        "DEMO-NCC-0133",
+        "DEMO-NCC-0134",
+        "DEMO-NCC-0135",
+        "DEMO-NCC-0136",
+        "DEMO-NCC-0137",
+        "DEMO-NCC-0138",
+        "DEMO-NCC-0139",
+        "DEMO-NCC-0140",
+        "DEMO-NCC-0141",
+        "DEMO-NCC-0142",
+        "DEMO-NCC-0143",
+        "DEMO-NCC-0144",
+        "DEMO-NCC-0145",
+        "DEMO-NCC-0146",
+        "DEMO-NCC-0147",
+        "DEMO-NCC-0148",
+        "DEMO-NCC-0149",
+        "DEMO-NCC-0150",
+        "DEMO-NCC-0151",
+        "DEMO-NCC-0152",
+        "DEMO-NCC-0153",
+        "DEMO-NCC-0154",
+        "DEMO-NCC-0155",
+        "DEMO-NCC-0156",
+        "DEMO-NCC-0157",
+        "DEMO-NCC-0158",
+        "DEMO-NCC-0159",
+        "DEMO-NCC-0160",
+        "DEMO-NCC-0161",
+        "DEMO-NCC-0162",
+        "DEMO-NCC-0163",
+        "DEMO-NCC-0164",
+        "DEMO-NCC-0165",
+        "DEMO-NCC-0166",
+        "DEMO-NCC-0167",
+        "DEMO-NCC-0168",
+        "DEMO-NCC-0169",
+        "DEMO-NCC-0170",
+        "DEMO-NCC-0171",
+        "DEMO-NCC-0172",
+        "DEMO-NCC-0173",
+        "DEMO-NCC-0174",
+        "DEMO-NCC-0175",
+        "DEMO-NCC-0176",
+        "DEMO-NCC-0177",
+        "DEMO-NCC-0178",
+        "DEMO-NCC-0179",
+        "DEMO-NCC-0180",
+        "DEMO-NCC-0181",
+        "DEMO-NCC-0182",
+        "DEMO-NCC-0183",
+        "DEMO-NCC-0184",
+        "DEMO-NCC-0185",
+        "DEMO-NCC-0186",
+        "DEMO-NCC-0187",
+        "DEMO-NCC-0188",
+        "DEMO-NCC-0189",
+        "DEMO-NCC-0190",
+        "DEMO-NCC-0191",
+        "DEMO-NCC-0192",
+        "DEMO-NCC-0193",
+        "DEMO-NCC-0194",
+        "DEMO-NCC-0195",
+        "DEMO-NCC-0196",
+        "DEMO-NCC-0197",
+        "DEMO-NCC-0198",
+        "DEMO-NCC-0199",
+        "DEMO-NCC-0200",
+        "DEMO-NCC-0201",
+        "DEMO-NCC-0202",
+        "DEMO-NCC-0203",
+        "DEMO-NCC-0204",
+        "DEMO-NCC-0205",
+        "DEMO-NCC-0206",
+        "DEMO-NCC-0207",
+        "DEMO-NCC-0208",
+        "DEMO-NCC-0209",
+        "DEMO-NCC-0210",
+        "DEMO-NCC-0211",
+        "DEMO-NCC-0212",
+        "DEMO-NCC-0213",
+        "DEMO-NCC-0214",
+        "DEMO-NCC-0215",
+        "DEMO-NCC-0216",
+        "DEMO-NCC-0217",
+        "DEMO-NCC-0218",
+        "DEMO-NCC-0219",
+        "DEMO-NCC-0220",
+        "DEMO-NCC-0221",
+        "DEMO-NCC-0222",
+        "DEMO-NCC-0223",
+        "DEMO-NCC-0224",
+        "DEMO-NCC-0225",
+        "DEMO-NCC-0226",
+        "DEMO-NCC-0227",
+        "DEMO-NCC-0228",
+        "DEMO-NCC-0229",
+        "DEMO-NCC-0230",
+        "DEMO-NCC-0231",
+        "DEMO-NCC-0232",
+        "DEMO-NCC-0233",
+        "DEMO-NCC-0234",
+        "DEMO-NCC-0235",
+        "DEMO-NCC-0236",
+        "DEMO-NCC-0237",
+        "DEMO-NCC-0238",
+        "DEMO-NCC-0239",
+        "DEMO-NCC-0240",
+        "DEMO-NCC-0241",
+        "DEMO-NCC-0242",
+        "DEMO-NCC-0243",
+        "DEMO-NCC-0244",
+        "DEMO-NCC-0245",
+        "DEMO-NCC-0246",
+        "DEMO-NCC-0247",
+        "DEMO-NCC-0248",
+        "DEMO-NCC-0249",
+        "DEMO-NCC-0250",
+        "DEMO-NCC-0251",
+        "DEMO-NCC-0252",
+        "DEMO-NCC-0253",
+        "DEMO-NCC-0254",
+        "DEMO-NCC-0255",
+        "DEMO-NCC-0256",
+        "DEMO-NCC-0257",
+        "DEMO-NCC-0258",
+        "DEMO-NCC-0259",
+        "DEMO-NCC-0260",
+        "DEMO-NCC-0261",
+        "DEMO-NCC-0262",
+        "DEMO-NCC-0263",
+        "DEMO-NCC-0264",
+        "DEMO-NCC-0265",
+        "DEMO-NCC-0266",
+        "DEMO-NCC-0267",
+        "DEMO-NCC-0268",
+        "DEMO-NCC-0269",
+        "DEMO-NCC-0270",
+        "DEMO-NCC-0271",
+        "DEMO-NCC-0272",
+        "DEMO-NCC-0273",
+        "DEMO-NCC-0274",
+        "DEMO-NCC-0275",
+        "DEMO-NCC-0276",
+        "DEMO-NCC-0277",
+        "DEMO-NCC-0278",
+        "DEMO-NCC-0279",
+        "DEMO-NCC-0280",
+        "DEMO-NCC-0281",
+        "DEMO-NCC-0282",
+        "DEMO-NCC-0283",
+        "DEMO-NCC-0284",
+        "DEMO-NCC-0285",
+        "DEMO-NCC-0286",
+        "DEMO-NCC-0287",
+        "DEMO-NCC-0288",
+        "DEMO-NCC-0289",
+        "DEMO-NCC-0290",
+        "DEMO-NCC-0291",
+        "DEMO-NCC-0292",
+        "DEMO-NCC-0293",
+        "DEMO-NCC-0294",
+        "DEMO-NCC-0295",
+        "DEMO-NCC-0296",
+        "DEMO-NCC-0297",
+        "DEMO-NCC-0298",
+        "DEMO-NCC-0299",
+        "DEMO-NCC-0300",
+        "DEMO-NCC-0301",
+        "DEMO-NCC-0302",
+        "DEMO-NCC-0303",
+        "DEMO-NCC-0304",
+        "DEMO-NCC-0305",
+        "DEMO-NCC-0306",
+        "DEMO-NCC-0307",
+        "DEMO-NCC-0308",
+        "DEMO-NCC-0309",
+        "DEMO-NCC-0310",
+        "DEMO-NCC-0311",
+        "DEMO-NCC-0312",
+        "DEMO-NCC-0313",
+        "DEMO-NCC-0314",
+        "DEMO-NCC-0315",
+        "DEMO-NCC-0316",
+        "DEMO-NCC-0317",
+        "DEMO-NCC-0318",
+        "DEMO-NCC-0319",
+        "DEMO-NCC-0320",
+        "DEMO-NCC-0321",
+        "DEMO-NCC-0322",
+        "DEMO-NCC-0323",
+        "DEMO-NCC-0324",
+        "DEMO-NCC-0325",
+        "DEMO-NCC-0326",
+        "DEMO-NCC-0327",
+        "DEMO-NCC-0328",
+        "DEMO-NCC-0329",
+        "DEMO-NCC-0330",
+        "DEMO-NCC-0331",
+        "DEMO-NCC-0332",
+        "DEMO-NCC-0333",
+        "DEMO-NCC-0334",
+        "DEMO-NCC-0335",
+        "DEMO-NCC-0336",
+        "DEMO-NCC-0337",
+        "DEMO-NCC-0338",
+        "DEMO-NCC-0339",
+        "DEMO-NCC-0340",
+        "DEMO-NCC-0341",
+        "DEMO-NCC-0342",
+        "DEMO-NCC-0343",
+        "DEMO-NCC-0344",
+        "DEMO-NCC-0345",
+        "DEMO-NCC-0346",
+        "DEMO-NCC-0347",
+        "DEMO-NCC-0348",
+        "DEMO-NCC-0349",
+        "DEMO-NCC-0350",
+        "DEMO-NCC-0351",
+        "DEMO-NCC-0352",
+        "DEMO-NCC-0353",
+        "DEMO-NCC-0354",
+        "DEMO-NCC-0355",
+        "DEMO-NCC-0356",
+        "DEMO-NCC-0357",
+        "DEMO-NCC-0358",
+        "DEMO-NCC-0359",
+        "DEMO-NCC-0360",
+        "DEMO-NCC-0361",
+        "DEMO-NCC-0362",
+        "DEMO-NCC-0363",
+        "DEMO-NCC-0364",
+        "DEMO-NCC-0365",
+        "DEMO-NCC-0366",
+        "DEMO-NCC-0367",
+        "DEMO-NCC-0368",
+        "DEMO-NCC-0369",
+        "DEMO-NCC-0370",
+        "DEMO-NCC-0371",
+        "DEMO-NCC-0372",
+        "DEMO-NCC-0373",
+        "DEMO-NCC-0374",
+        "DEMO-NCC-0375",
+        "DEMO-NCC-0376",
+        "DEMO-NCC-0377",
+        "DEMO-NCC-0378",
+        "DEMO-NCC-0379",
+        "DEMO-NCC-0380",
+        "DEMO-NCC-0381",
+        "DEMO-NCC-0382",
+        "DEMO-NCC-0383",
+        "DEMO-NCC-0384",
+        "DEMO-NCC-0385",
+        "DEMO-NCC-0386",
+        "DEMO-NCC-0387",
+        "DEMO-NCC-0388",
+        "DEMO-NCC-0389",
+        "DEMO-NCC-0390",
+        "DEMO-NCC-0391",
+        "DEMO-NCC-0392",
+        "DEMO-NCC-0393",
+        "DEMO-NCC-0394",
+        "DEMO-NCC-0395",
+        "DEMO-NCC-0396",
+        "DEMO-NCC-0397",
+        "DEMO-NCC-0398",
+        "DEMO-NCC-0399",
+        "DEMO-NCC-0400",
+        "DEMO-NCC-0401",
+        "DEMO-NCC-0402",
+        "DEMO-NCC-0403",
+        "DEMO-NCC-0404",
+        "DEMO-NCC-0405",
+        "DEMO-NCC-0406",
+        "DEMO-NCC-0407",
+        "DEMO-NCC-0408",
+        "DEMO-NCC-0409",
+        "DEMO-NCC-0410",
+        "DEMO-NCC-0411",
+        "DEMO-NCC-0412",
+        "DEMO-NCC-0413",
+        "DEMO-NCC-0414",
+        "DEMO-NCC-0415",
+        "DEMO-NCC-0416",
+        "DEMO-NCC-0417",
+        "DEMO-NCC-0418",
+        "DEMO-NCC-0419",
+        "DEMO-NCC-0420",
+        "DEMO-NCC-0421",
+        "DEMO-NCC-0422",
+        "DEMO-NCC-0423",
+        "DEMO-NCC-0424",
+        "DEMO-NCC-0425",
+        "DEMO-NCC-0426",
+        "DEMO-NCC-0427",
+        "DEMO-NCC-0428",
+        "DEMO-NCC-0429",
+        "DEMO-NCC-0430",
+        "DEMO-NCC-0431",
+        "DEMO-NCC-0432",
+        "DEMO-NCC-0433",
+        "DEMO-NCC-0434",
+        "DEMO-NCC-0435",
+        "DEMO-NCC-0436",
+        "DEMO-NCC-0437",
+        "DEMO-NCC-0438",
+        "DEMO-NCC-0439",
+        "DEMO-NCC-0440",
+        "DEMO-NCC-0441",
+        "DEMO-NCC-0442",
+        "DEMO-NCC-0443",
+        "DEMO-NCC-0444",
+        "DEMO-NCC-0445",
+        "DEMO-NCC-0446",
+        "DEMO-NCC-0447",
+        "DEMO-NCC-0448",
+        "DEMO-NCC-0449",
+        "DEMO-NCC-0450",
+        "DEMO-NCC-0451",
+        "DEMO-NCC-0452",
+        "DEMO-NCC-0453",
+        "DEMO-NCC-0454",
+        "DEMO-NCC-0455",
+        "DEMO-NCC-0456",
+        "DEMO-NCC-0457",
+        "DEMO-NCC-0458",
+        "DEMO-NCC-0459",
+        "DEMO-NCC-0460",
+        "DEMO-NCC-0461",
+        "DEMO-NCC-0462",
+        "DEMO-NCC-0463",
+        "DEMO-NCC-0464",
+        "DEMO-NCC-0465",
+        "DEMO-NCC-0466",
+        "DEMO-NCC-0467",
+        "DEMO-NCC-0468",
+        "DEMO-NCC-0469",
+        "DEMO-NCC-0470",
+        "DEMO-NCC-0471",
+        "DEMO-NCC-0472",
+        "DEMO-NCC-0473",
+        "DEMO-NCC-0474",
+        "DEMO-NCC-0475",
+        "DEMO-NCC-0476",
+        "DEMO-NCC-0477",
+        "DEMO-NCC-0478",
+        "DEMO-NCC-0479",
+        "DEMO-NCC-0480",
+        "DEMO-NCC-0481",
+        "DEMO-NCC-0482",
+        "DEMO-NCC-0483",
+        "DEMO-NCC-0484",
+        "DEMO-NCC-0485",
+        "DEMO-NCC-0486",
+        "DEMO-NCC-0487",
+        "DEMO-NCC-0488",
+        "DEMO-NCC-0489",
+        "DEMO-NCC-0490",
+        "DEMO-NCC-0491",
+        "DEMO-NCC-0492",
+        "DEMO-NCC-0493",
+        "DEMO-NCC-0494",
+        "DEMO-NCC-0495",
+        "DEMO-NCC-0496",
+        "DEMO-NCC-0497",
+        "DEMO-NCC-0498",
+        "DEMO-NCC-0499",
+        "DEMO-NCC-0500",
+        "DEMO-NCC-CHIA-NHO"
+      ]
+    }
+  },
+  "khau": [
+    "kt_kiem",
+    "ktt_duyet",
+    "cfo_duyet"
+  ],
+  "phien_ban": 1,
+  "ten": "Công ty DEMO Ánh Dương",
+  "theo_ma": {
+    "PC-DEMO-0001": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [
+        "VUOT_TE"
+      ],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0002": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [
+        "VUOT_PM"
+      ],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0003": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [
+        "NGHI_CHIA_NHO"
+      ],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0004": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [
+        "NGHI_CHIA_NHO"
+      ],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0005": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [
+        "NGHI_CHIA_NHO"
+      ],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0006": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0007": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0008": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0009": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0010": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0011": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [
+        "CO_DO_CUNG"
+      ],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0012": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [
+        "CHUA_QUY_DOI"
+      ],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0013": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [
+        "VUOT_TE"
+      ],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0014": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [
+        "CHUA_RO_TIEN_TE"
+      ],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0015": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0016": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0017": {
+      "loai": "chua_phan_loai",
+      "ly_do": [],
+      "nguon_loai": "chua_phan_loai"
+    },
+    "PC-DEMO-0018": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0019": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0020": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0021": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0022": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0023": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0024": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0025": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0026": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0027": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0028": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0029": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0030": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0031": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0032": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0033": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0034": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0035": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0036": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0037": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0038": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0039": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0040": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0041": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0042": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0043": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0044": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0045": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0046": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0047": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0048": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0049": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0050": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0051": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0052": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0053": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0054": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0055": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0056": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0057": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0058": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0059": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0060": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0061": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0062": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0063": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0064": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0065": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0066": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0067": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0068": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0069": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0070": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0071": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0072": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0073": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0074": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0075": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0076": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0077": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0078": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0079": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0080": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0081": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0082": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0083": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0084": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0085": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0086": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0087": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0088": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0089": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0090": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0091": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0092": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0093": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0094": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0095": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0096": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0097": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0098": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0099": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0100": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0101": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0102": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0103": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0104": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0105": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0106": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0107": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0108": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0109": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0110": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0111": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0112": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0113": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0114": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0115": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0116": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0117": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0118": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0119": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0120": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0121": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0122": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0123": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0124": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0125": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0126": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0127": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0128": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0129": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0130": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0131": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0132": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0133": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0134": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0135": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0136": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0137": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0138": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0139": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0140": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0141": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0142": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0143": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0144": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0145": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0146": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0147": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0148": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0149": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0150": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0151": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0152": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0153": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0154": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0155": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0156": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0157": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0158": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0159": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0160": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0161": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0162": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0163": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0164": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0165": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0166": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0167": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0168": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0169": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0170": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0171": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0172": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0173": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0174": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0175": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0176": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0177": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0178": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0179": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0180": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0181": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0182": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0183": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0184": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0185": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0186": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0187": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0188": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0189": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0190": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0191": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0192": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0193": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0194": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0195": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0196": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0197": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0198": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0199": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0200": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0201": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0202": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0203": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0204": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0205": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0206": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0207": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0208": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0209": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0210": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0211": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0212": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0213": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0214": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0215": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0216": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0217": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0218": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0219": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0220": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0221": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0222": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0223": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0224": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0225": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0226": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0227": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0228": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0229": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0230": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0231": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0232": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0233": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0234": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0235": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0236": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0237": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0238": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0239": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0240": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0241": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0242": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0243": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0244": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0245": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0246": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0247": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0248": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0249": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0250": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0251": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0252": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0253": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0254": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0255": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0256": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0257": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0258": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0259": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0260": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0261": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0262": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0263": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0264": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0265": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0266": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0267": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0268": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0269": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0270": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0271": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0272": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0273": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0274": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0275": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0276": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0277": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0278": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0279": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0280": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0281": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0282": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0283": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0284": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0285": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0286": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0287": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0288": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0289": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0290": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0291": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0292": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0293": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0294": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0295": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0296": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0297": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0298": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0299": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0300": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0301": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0302": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0303": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0304": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0305": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0306": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0307": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0308": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0309": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0310": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0311": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0312": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0313": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0314": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0315": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0316": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0317": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0318": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0319": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0320": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0321": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0322": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0323": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0324": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0325": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0326": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0327": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0328": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0329": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0330": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0331": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0332": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0333": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0334": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0335": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0336": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0337": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0338": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0339": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0340": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0341": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0342": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0343": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0344": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0345": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0346": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0347": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0348": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0349": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0350": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0351": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0352": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0353": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0354": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0355": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0356": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0357": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0358": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0359": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0360": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0361": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0362": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0363": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0364": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0365": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0366": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0367": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0368": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0369": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0370": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0371": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0372": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0373": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0374": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0375": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0376": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0377": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0378": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0379": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0380": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0381": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0382": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0383": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0384": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0385": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0386": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0387": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0388": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0389": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0390": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0391": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0392": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0393": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0394": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0395": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0396": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0397": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0398": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0399": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0400": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0401": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0402": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0403": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0404": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0405": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0406": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0407": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0408": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0409": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0410": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0411": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0412": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0413": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0414": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0415": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0416": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0417": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0418": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0419": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0420": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0421": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0422": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0423": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0424": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0425": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0426": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0427": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0428": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0429": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0430": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0431": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0432": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0433": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0434": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0435": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0436": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0437": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0438": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0439": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0440": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0441": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0442": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0443": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0444": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0445": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0446": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0447": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0448": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0449": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0450": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0451": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0452": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0453": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0454": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0455": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0456": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0457": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0458": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0459": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0460": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0461": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0462": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0463": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0464": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0465": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0466": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0467": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0468": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0469": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0470": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0471": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0472": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0473": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0474": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0475": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0476": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0477": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0478": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0479": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0480": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0481": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0482": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0483": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0484": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0485": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0486": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0487": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0488": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0489": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0490": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0491": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0492": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0493": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0494": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0495": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0496": {
+      "loai": "thanh_toan_ncc",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0497": {
+      "loai": "tam_ung",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0498": {
+      "loai": "luong",
+      "ly_do": [],
+      "nguon_loai": "module"
+    },
+    "PC-DEMO-0499": {
+      "loai": "chi_phi_khac",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    },
+    "PC-DEMO-0500": {
+      "loai": "thu_tien",
+      "ly_do": [],
+      "nguon_loai": "quy_tac"
+    }
+  }
+}

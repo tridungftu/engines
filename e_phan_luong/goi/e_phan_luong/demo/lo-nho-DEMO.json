@@ -1,0 +1,404 @@
+{
+  "ky": "2026-11",
+  "ma_module": "demo_thanh_toan",
+  "nghiep_vu": [
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0001",
+      "loai": null,
+      "ma": "PC-DEMO-0001",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "3200000000",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "vuot_te"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0002",
+      "loai": null,
+      "ma": "PC-DEMO-0002",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "5100000000",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "vuot_pm"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-CHIA-NHO",
+      "loai": null,
+      "ma": "PC-DEMO-0003",
+      "ngay": "2026-11-09",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "1100000000",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "chia_nho"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-CHIA-NHO",
+      "loai": null,
+      "ma": "PC-DEMO-0004",
+      "ngay": "2026-11-10",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "1100000000",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "chia_nho"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-CHIA-NHO",
+      "loai": null,
+      "ma": "PC-DEMO-0005",
+      "ngay": "2026-11-15",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "1100000000",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "chia_nho"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Lương DEMO cho đối tác mới",
+      "doi_tac": "DEMO-NCC-MOI",
+      "loai": null,
+      "ma": "PC-DEMO-0006",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "doi_tac_moi"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0007",
+      "loai": null,
+      "ma": "PC-DEMO-0007",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "10000000",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "so_tron"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0008",
+      "loai": null,
+      "ma": "PC-DEMO-0008",
+      "ngay": "2026-11-21",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "ngay_nghi"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0009",
+      "loai": null,
+      "ma": "PC-DEMO-0009",
+      "ngay": "2026-11-30",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "cuoi_ky"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0010",
+      "loai": null,
+      "ma": "PC-DEMO-0010",
+      "ngay": "2026-11-16",
+      "nhap_tay": true,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "nhap_tay"
+      }
+    },
+    {
+      "co_do_cung": true,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0011",
+      "loai": null,
+      "ma": "PC-DEMO-0011",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "co_do_cung"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0012",
+      "loai": null,
+      "ma": "PC-DEMO-0012",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "1000",
+        "tien_te": "USD"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "usd_chua_quy_doi"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0013",
+      "loai": null,
+      "ma": "PC-DEMO-0013",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "124000",
+        "tien_te": "USD"
+      },
+      "so_tien_quy_doi": {
+        "so": "3100000000",
+        "tien_te": "VND"
+      },
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "usd_co_quy_doi"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0014",
+      "loai": null,
+      "ma": "PC-DEMO-0014",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "1000000"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "thieu_tien_te"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0015",
+      "loai": "luong",
+      "ma": "PC-DEMO-0015",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "module_da_gan"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thanh toán DEMO",
+      "doi_tac": "DEMO-NCC-0016",
+      "loai": null,
+      "ma": "PC-DEMO-0016",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "chi_quy_tac_phan_loai"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Nội dung ZZZ DEMO chưa xác định",
+      "doi_tac": "DEMO-NCC-0017",
+      "loai": null,
+      "ma": "PC-DEMO-0017",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "khong_khop"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Tạm ứng DEMO công tác",
+      "doi_tac": "DEMO-NCC-0018",
+      "loai": null,
+      "ma": "PC-DEMO-0018",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "tam_ung"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Chi phí khác DEMO",
+      "doi_tac": "DEMO-NCC-0019",
+      "loai": null,
+      "ma": "PC-DEMO-0019",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "chi_phi_khac"
+      }
+    },
+    {
+      "co_do_cung": false,
+      "dien_giai": "Thu tiền DEMO",
+      "doi_tac": "DEMO-NCC-0020",
+      "loai": null,
+      "ma": "PC-DEMO-0020",
+      "ngay": "2026-11-16",
+      "nhap_tay": false,
+      "so_tien": {
+        "so": "251000001",
+        "tien_te": "VND"
+      },
+      "so_tien_quy_doi": null,
+      "tai_khoan_co": "1121",
+      "tai_khoan_no": "331",
+      "thuoc_tinh": {
+        "ca_demo": "thu_tien"
+      }
+    }
+  ],
+  "nguong": {
+    "pm": {
+      "so": "5000000000",
+      "tien_te": "VND"
+    },
+    "sad": {
+      "so": "250000000",
+      "tien_te": "VND"
+    },
+    "te": {
+      "so": "3000000000",
+      "tien_te": "VND"
+    }
+  },
+  "phien_ban": 1,
+  "ten": "Công ty DEMO Ánh Dương"
+}

@@ -1,0 +1,69 @@
+{
+  "loai": "yeu_cau_ai",
+  "yeu_cau_ai": {
+    "bat_buoc_trich_dan": false,
+    "chuyen_tiep": {
+      "phan_luong": {
+        "bam_tep": "sha256:45117e5780d5e25900fa132b358208eceaf3eba6c7fdb0cfe42c5742e3a091f0",
+        "khau": "ktt_duyet",
+        "khong_can_ai": false,
+        "phien_ban": 1,
+        "tep_lo": {
+          "kich_thuoc": 12117,
+          "mime": "application/json",
+          "ten": "lo-chuyen-tiep-DEMO.json",
+          "tep_id": "tep-DEMO-lo-chuyen-tiep"
+        }
+      }
+    },
+    "khuon_tra_loi": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "phan_loai": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "chi_so": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "loai": {
+                "enum": [
+                  "thanh_toan_ncc",
+                  "tam_ung",
+                  "luong",
+                  "chi_phi_khac",
+                  "thu_tien"
+                ],
+                "type": "string"
+              },
+              "tin_cay": {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              }
+            },
+            "required": [
+              "chi_so",
+              "loai",
+              "tin_cay"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "phan_loai"
+      ],
+      "type": "object"
+    },
+    "ma_prompt": "demo_thanh_toan.phan_loai_DEMO",
+    "model_uu_tien": "DEMO-local-gia",
+    "phien_ban": 1,
+    "phien_ban_prompt": "DEMO-1",
+    "prompt": "DEMO: chỉ chọn loại trong danh mục.",
+    "tai_lieu": "[{\"chi_so\": 0, \"noi_dung\": \"Nội dung ZZZ DEMO chưa xác định\"}]"
+  }
+}

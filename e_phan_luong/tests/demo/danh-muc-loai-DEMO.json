@@ -1,0 +1,27 @@
+[
+  {
+    "ma": "thanh_toan_ncc",
+    "mo_ta": "Nghiệp vụ Thanh toán nhà cung cấp DEMO",
+    "ten": "Thanh toán nhà cung cấp DEMO"
+  },
+  {
+    "ma": "tam_ung",
+    "mo_ta": "Nghiệp vụ Tạm ứng DEMO",
+    "ten": "Tạm ứng DEMO"
+  },
+  {
+    "ma": "luong",
+    "mo_ta": "Nghiệp vụ Lương DEMO",
+    "ten": "Lương DEMO"
+  },
+  {
+    "ma": "chi_phi_khac",
+    "mo_ta": "Nghiệp vụ Chi phí khác DEMO",
+    "ten": "Chi phí khác DEMO"
+  },
+  {
+    "ma": "thu_tien",
+    "mo_ta": "Nghiệp vụ Thu tiền DEMO",
+    "ten": "Thu tiền DEMO"
+  }
+]

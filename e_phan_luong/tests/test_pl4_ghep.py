@@ -259,18 +259,19 @@ def test_hai_viec_cong_cung_ho_so_khong_mat_cap_nhat(monkeypatch):
     assert _hs(core).tong_ngay["b" * 32]["2026-11-16"] == Decimal("2000002")
 
 
-def test_ghi_ho_so_sau_dau_hoan_tat_luot(monkeypatch):
+def test_ho_so_cong_cung_lo_nguyen_tu_voi_dau_luot(monkeypatch):
+    # Lead PL-4: hồ sơ rỗng tạo trước; phép cộng đi CÙNG lô với luot để giao lại không cộng hai lần.
     core = CoreGia()
     thu_tu = []
     ghi_goc = core._ngan_ghi_lo
 
     def ghi(ma, instance, lenh, khoa, **kw):
-        thu_tu.extend(c["bang"] for c in lenh)
+        thu_tu.append([c["bang"] for c in lenh])
         return ghi_goc(ma, instance, lenh, khoa, **kw)
 
     monkeypatch.setattr(core, "_ngan_ghi_lo", ghi)
     lay_kq(core, chay(core, _lo(_dong("PC-DEMO-THU-TU"))))
-    assert thu_tu == ["dong_luot", "luot", "ho_so_hanh_vi", "ho_so_hanh_vi"]
+    assert thu_tu == [["ho_so_hanh_vi"], ["dong_luot"], ["ho_so_hanh_vi", "luot"]]
 
 
 def test_ghi_luot_that_bai_khong_cong_ho_so(monkeypatch):
@@ -282,7 +283,8 @@ def test_ghi_luot_that_bai_khong_cong_ho_so(monkeypatch):
     monkeypatch.setattr(ngan_luot, "ghi_luot", hong)
     kq = chay(core, _lo(_dong("PC-DEMO-LOI-GHI")))
     assert kq["trang_thai"] == "LOI" and kq["loi"]["ma"] == "NGAN_BAN"
-    assert core.xem_ngan(app.ma, "ho_so_hanh_vi") == []
+    # Chỉ còn hồ sơ rỗng tạo trước; chưa cộng nghiệp vụ nào.
+    assert [int(b["so_nghiep_vu"]) for b in core.xem_ngan(app.ma, "ho_so_hanh_vi")] == [0]
 
 
 def test_q9_log_so_bo_chi_sau_cas_thanh_cong(caplog):

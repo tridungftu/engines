@@ -158,10 +158,6 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
     truong = xuat_ket_qua(viec, lo, cd.nguong, ds_dong, thong_tin=thong_tin,
                           canh_bao_them=canh_bao_them)
     viec.tien_do(90, "Đang ghi kết quả lượt phân luồng.")
-    ngan_luot.ghi_luot(viec, {
-        "ma_luot": ma_luot, "ma_module": lo.ma_module, "khau": ts["khau"],
-        "hat_giong": hat_giong.hex(), "bam_dau_vao": bam_dau_vao,
-    }, ds_dong)
     theo_loai = {}
     for qd in ds_lop1:
         nv = qd.nv
@@ -169,18 +165,33 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
         theo_loai.setdefault(qd.loai, []).append((qd.tien_ss, bam, nv.ngay))
     ky = chot_ky.ky_hien_tai()
     cua_so = int(Decimal(str(ts.get("cua_so_chia_nho_ngay", 7))))
-    for loai, ds in theo_loai.items():
-        so_bo = 0
+    so_bo = {}
 
+    def ham_cong(loai, ds):
         def cap_nhat(hs):
-            nonlocal so_bo
-            moi, so_bo = ho_so.cong(hs, ds, ky=ky, cua_so_ngay=cua_so)
+            moi, so_bo[loai] = ho_so.cong(hs, ds, ky=ky, cua_so_ngay=cua_so)
             return moi
+        return cap_nhat
 
-        ngan_ho_so.ghi_ho_so(viec, ts["khau"], loai, cap_nhat)
-        if so_bo:
-            logging.getLogger(__name__).warning(
-                "Hồ sơ hành vi vượt trần 20.000 đối tác; đã bỏ %d đối tác lâu không gặp.", so_bo)
+    cap_nhat = {loai: ham_cong(loai, ds) for loai, ds in theo_loai.items()}
+    # Hồ sơ cộng CÙNG lô nguyên tử với dấu luot: Core giao lại việc không cộng hai lần.
+    # Lô ≤ 100 lệnh nên tối đa 99 hồ sơ đi cùng luot; phần dư (chỉ khi lô có
+    # trên 99 loại, danh mục tối đa 100 + chua_phan_loai) ghi trước, không nguyên tử.
+    cac_loai = list(cap_nhat)
+    du, cuoi = cac_loai[:-99], cac_loai[-99:]
+    ngan_ho_so.tao_ho_so_rong(viec, ts["khau"], cac_loai)
+    if luot_cu is None:
+        for loai in du:
+            ngan_ho_so.ghi_ho_so(viec, ts["khau"], loai, cap_nhat[loai])
+    ngan_luot.ghi_luot(viec, {
+        "ma_luot": ma_luot, "ma_module": lo.ma_module, "khau": ts["khau"],
+        "hat_giong": hat_giong.hex(), "bam_dau_vao": bam_dau_vao,
+    }, ds_dong, lenh_cuoi=lambda lo_ngan: ngan_ho_so.them_lenh_cap_nhat(
+        viec, lo_ngan, ts["khau"], {loai: cap_nhat[loai] for loai in cuoi}))
+    if sum(so_bo.values()):
+        logging.getLogger(__name__).warning(
+            "Hồ sơ hành vi vượt trần 20.000 đối tác; đã bỏ %d đối tác lâu không gặp.",
+            sum(so_bo.values()))
     return truong
 
 

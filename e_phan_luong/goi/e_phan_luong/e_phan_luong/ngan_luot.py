@@ -1,7 +1,7 @@
 """Đọc trạng thái và ghi dấu hoàn tất lượt qua ngăn Core (PL-2)."""
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from datetime import datetime
 from hashlib import sha256
 
@@ -63,8 +63,12 @@ def tra_nop_lai(viec, ma_module: str, khau: str, ds_ma: Sequence[str]) -> frozen
     return frozenset(nop_lai)
 
 
-def ghi_luot(viec, luot: dict, ds_dong: Sequence[KetQuaDong]) -> None:
+def ghi_luot(viec, luot: dict, ds_dong: Sequence[KetQuaDong], *,
+             lenh_cuoi: Callable[[object], None] | None = None) -> None:
     """Ghi dòng trước (≤100/lô), dấu luot sau cùng; gửi lại không tạo trùng.
+
+    lenh_cuoi(lo) (PL-4): thêm tối đa 99 lệnh vào CÙNG lô với dấu luot, chạy lại
+    khi lô xung đột (phải tự đọc lại CAS). Lượt đã có dấu luot thì bỏ qua cả lô.
 
     Chỉ lấy danh sách cột cho phép, không chuyển toàn bộ nghiệp vụ vào ngăn.
     Các lô dòng đã ghi trước một lỗi chưa trở thành lịch sử lượt hoàn tất.
@@ -94,4 +98,14 @@ def ghi_luot(viec, luot: dict, ds_dong: Sequence[KetQuaDong]) -> None:
 
         ghi_lo_thu_lai(viec, lap_lenh)
     gia_tri = {**ngu_canh, **{cot: luot[cot] for cot in ("hat_giong", "bam_dau_vao")}}
-    ghi_lay_hoac_tao_nhieu(viec, "luot", [({"ma_luot": ma_luot}, gia_tri)])
+    if lenh_cuoi is None:
+        ghi_lay_hoac_tao_nhieu(viec, "luot", [({"ma_luot": ma_luot}, gia_tri)])
+        return
+
+    def lap_cuoi(lo):
+        if viec.ngan.doc("luot", {"ma_luot": ma_luot}) is not None:
+            return
+        lenh_cuoi(lo)
+        lo.lay_hoac_tao("luot", {"ma_luot": ma_luot}, gia_tri)
+
+    ghi_lo_thu_lai(viec, lap_cuoi)

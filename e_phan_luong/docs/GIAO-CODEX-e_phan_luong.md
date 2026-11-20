@@ -329,6 +329,97 @@ Test (Python, không cần trình duyệt): quét bang_ty_le.js không có inner
 Chạy pytest test của mình.
 ```
 
+### 3.3 Đợt 5 — lệnh ghép PL-4 … PL-8 (giao 20/11; lưu nguyên bản đã giao)
+
+Lead tách `quy_trinh.py` (điểm nối có chủ sở hữu) ở đầu nhánh PL-4 để 5 lát ghép chạy song song. PL-5…PL-8 nền trên commit tách; PL-4 bước 2 chạy sau bước 1.
+
+#### PL-4 (bước 1) — sửa sau rà soát độc lập PL-2/PL-3
+```
+Sửa sau rà soát độc lập PL-2/PL-3 cho e_phan_luong (lead duyệt 20/11/2026). Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md §4.3–§4.5, §5.3, §6, §7; GIAO-CODEX-e_phan_luong.md §2, §4 (Q1–Q9); e_phan_luong/goi/e_phan_luong/e_phan_luong/quy_trinh.py (lead tách 20/11). Nhánh này có PL-0…PL-3 + quy_trinh.py + ho_so.py + chot_ky.py (chưa nối). Các lát PL-5…PL-8 đang ghép song song ở nhánh khác: KHÔNG đổi chữ ký hàm công khai của quy_trinh.py; KHÔNG sửa quy_trinh.doc_tep_lo, quy_trinh.xuat_ket_qua, chay.py.
+Sửa đúng 7 điểm, mỗi điểm có test chứng minh (tests/test_pl4_sua_ra.py; sửa test cũ nếu cần nhưng không nới mục đích):
+M1 (vừa) — chạy lại cùng việc phải idempotent: ma_luot suy từ việc, không từ hạt giống: ma_luot = "PL-" + sha256("e_phan_luong|luot|" + viec.id + "|" + bam_dau_vao). Đầu quy_trinh.chay_phan_luong: doc luot(ma_luot) — đã có → đây là việc Core giao lại → dùng lại hat_giong đã lưu (bytes.fromhex), kết quả trùng từng byte với lần trước; chưa có → hạt giống mới. dong_luot đã có của chính ma_luot này mà luot chưa có (lần trước chạy dở) → ghi đè bằng sua (CAS) cho đúng quyết định của lần chạy hiện tại, không để lẫn quyết định cũ. tra_nop_lai bỏ qua lượt của chính ma_luot hiện tại. Kiểm tái hiện vẫn đúng: cùng hạt giống + đầu vào + viec.id → cùng bytes. Ghi rõ trong README.
+M3 (thấp-vừa) — doi_bac.cap_nhat: ty_le.bac đã lưu không còn trong thang cs.bac hiện hành (Admin đổi chinh_sach_json) → ép về bậc gần nhất KHÔNG THẤP HƠN giá trị đã lưu trong thang mới (thận trọng); không ném ValueError thô.
+T1 — ngan_luot.tra_nop_lai đọc ket_qua_kiem với gom_het_han=True (luot giữ 400 ngày, kết quả 365 ngày), như ngan_ket_qua._da_ghi.
+T2 — ngan_chung.tim_tat_ca và mọi tim có phân trang truyền sap_xep theo các cột khóa của bảng để thứ tự ổn định trên Core thật (CoreGia sắp theo id).
+T3 — quy_trinh.chay_phan_luong: Cài đặt bước có ma_module mà khác ma_module của tệp → loi("DU_LIEU_KHONG_HOP_LE").
+T4 — ket_qua._doc_tien dùng tien.doc_so_thap_phan (bỏ số 0 lẻ thừa trước khi đếm), một luật đọc số chung.
+T5 — ngan_ket_qua: chỉ đọc/kiểm ngưỡng khi có ít nhất một dòng ket_qua = sai; nguong_json sai mà không cần ngưỡng → không làm hỏng cả tệp.
+Tệp được sửa: quy_trinh.py (CHỈ hàm chay_phan_luong), ngan_luot.py, ngan_chung.py, doi_bac.py, ket_qua.py, ngan_ket_qua.py, README.md, sql/kiem_ke.json (tính lại), test. Không sửa kieu.py, loi.py, VIEC.md.
+Đạt: 3 lệnh AGENTS.md §5 (thu mã 0; pytest 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật.
+```
+
+#### PL-4 (bước 2) — ghép hồ sơ hành vi, chốt kỳ, chia nhỏ qua lô
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md (đủ); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2 (hợp đồng), §3.2 (việc con đợt 4), §4 (Cần Core, bảng Q1–Q9 Anh chốt); e_phan_luong/goi/e_phan_luong/e_phan_luong/quy_trinh.py (lead tách 20/11: mỗi hàm là một ĐIỂM NỐI có chủ sở hữu, xem docstring đầu tệp).
+Nhánh này có PL-0…PL-3 (thu 1/1 ĐẠT, 1115 test) + quy_trinh.py + việc con của lát bạn. Các lát ghép khác chạy SONG SONG ở nhánh khác (PL-4 hồ sơ hành vi/chốt kỳ, PL-5 chuỗi Local AI, PL-6 Excel/CSV, PL-7 hóa đơn, PL-8 Excel danh sách Đỏ + màn Admin): chỉ sửa ĐÚNG điểm nối và tệp ghi trong lệnh của bạn; không đổi chữ ký hàm công khai đã có; không sửa kieu.py, loi.py, VIEC.md, CHANGELOG.md.
+Sau khi đổi tệp trong goi/: tính lại kiểm kê (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat); đổi engine.json thì chạy python _chung/cong-cu/sinh_danh_muc_engine.py. Năng lực vừa làm thật thì bỏ khỏi CHUA_LAM_CON trong tests/test_pl0_goi.py. Chạy pytest bằng --basetemp trong worktree nếu thư mục tạm bị chặn.
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+
+LÀM LÁT PL-4 — ghép hồ sơ hành vi, chốt kỳ tháng, chia nhỏ qua lô (phiếu §4.1, §4.4, §4.5). Đã có ho_so.py (PL-4A), chot_ky.py (PL-4B). Tệp được sửa: quy_trinh.py (CHỈ hai hàm bat_dau và chay_phan_luong), chot_ky.py, ty_le.py và co.py (chỉ thêm khóa chính sách ở mục 5, giữ hành vi mặc định), tệp mới ngan_ho_so.py, test tests/test_pl4_*.py.
+1. ngan_ho_so.py: doc_ho_so_khau(viec, khau) → dict loai → (HoSo, BanGhi|None), đọc mọi ho_so_hanh_vi của khâu (ngan_chung.tim_tat_ca); ghi_ho_so(viec, khau, loai, ham_cap_nhat) — CAS qua ngan_chung.ghi_lo_thu_lai; chưa có thì lay_hoac_tao rồi sửa CAS; xung đột thì đọc lại và áp lại ham_cap_nhat.
+2. quy_trinh.bat_dau: gọi chot_ky.chot_neu_can(viec, doc_chinh_sach_buoc(viec.tham_so), lam_moi_ho_so=hàm (cu, ky) → ho_so.ve_ban_ghi(ho_so.lam_moi(ho_so.tu_ban_ghi(cu), ky))); trả số cặp đã chốt.
+3. Sửa chot_ky.py theo ghi nhận PL-4B: tạo bản chụp chot_ky và sửa ty_le (số 12 tháng) trong CÙNG MỘT lô nguyên tử (them chot_ky + sua ty_le CAS); trùng khóa chot_ky (bên khác đã chốt) → coi như đã chốt, không tính lại; xung đột CAS → đọc lại và thử lại. Test chứng minh lỗi giữa chừng không để lại chot_ky mà ty_le chưa tính lại.
+4. quy_trinh.chay_phan_luong: trước lớp 1 đọc hồ sơ mọi loại của khâu; tong_truoc(bam, ngay) = tổng tong_ngay của MỌI loại trong khâu (chia nhỏ gom theo đối tác + khâu, không theo loại; Anh chốt Q8: không khử trùng riêng dòng nộp lại); truyền tong_truoc vào xet_lop1_lo và ho_so_theo_loai (loại → ho_so.anh_chup của hồ sơ loại đó; loại chưa có hồ sơ → anh_chup của hồ sơ mới) vào xet_lop23_lo. SAU ngan_luot.ghi_luot: cộng lô vào hồ sơ từng (khâu, loại) bằng ho_so.cong (tien_ss đã trị tuyệt đối của lớp 1, băm đối tác bằng phan_luong.bam_doi_tac, ngày nghiệp vụ, ky = chot_ky.ky_hien_tai), ghi CAS; số đối tác bị bỏ vì trần 20.000 (Q9) ghi logging.
+5. ty_le.ChinhSach thêm khóa toi_thieu_ho_so_doi_tac_moi (số nguyên ≥ 0, MẶC ĐỊNH 0 = đúng phiếu: đối tác chưa gặp trong 12 tháng là mới, kể cả khi hồ sơ trống): cờ DOI_TAC_MOI chỉ bật khi hồ sơ loại có so_nghiep_vu ≥ giá trị này. Ghi rõ trong README: theo mặc định, lượt đầu tiên của engine mới coi mọi đối tác là "mới" (×2); Admin đặt khóa này trong chinh_sach_json nếu muốn chờ đủ lịch sử.
+Test: chia nhỏ qua 2 lô (lô 1: 1,1 tỷ + 1,1 tỷ; lô 2 hai ngày sau: 1,1 tỷ cùng đối tác, TE 3 tỷ → dòng lô 2 Đỏ NGHI_CHIA_NHO); DOI_TAC_MOI bật ở đối tác chưa gặp, tắt khi đã gặp, theo khóa mới; SO_TIEN_BAT_THUONG chỉ khi ≥ 50 nghiệp vụ; chốt kỳ khi sang tháng (ghim thời gian), chỉ một lần, cả khi hai việc cùng lúc; hồ sơ làm mới bỏ tháng thứ 13; xem_ngan C4 ho_so_hanh_vi không có mã đối tác thô/mã giao dịch/diễn giải; gay_xung_dot_ngan khi ghi hồ sơ → đúng một lần thử lại; chay_thu_demo vẫn ĐẠT.
+```
+
+#### PL-5 — ghép chuỗi Local AI
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md (đủ); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2 (hợp đồng, nhất là §2.5), §3.2, §4 (Cần Core: Core thật chỉ cho mo_tep khi đầu vào có ĐỐI TƯỢNG có khóa tep_id; bảng Q1–Q9); _chung/docs/LOAI-DU-LIEU-RIENG.md §2.2–2.3; e_phan_luong/goi/e_phan_luong/e_phan_luong/quy_trinh.py (lead tách 20/11: mỗi hàm là một ĐIỂM NỐI có chủ sở hữu).
+Nhánh này có PL-0…PL-3 (thu 1/1 ĐẠT, 1115 test) + quy_trinh.py + chuoi_ai.py (PL-5A). Các lát ghép khác chạy SONG SONG ở nhánh khác (PL-4, PL-6, PL-7, PL-8): chỉ sửa ĐÚNG tệp ghi dưới đây; không đổi chữ ký hàm công khai đã có; không sửa kieu.py, loi.py, VIEC.md, CHANGELOG.md.
+Sau khi đổi tệp trong goi/: tính lại kiểm kê (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat); đổi engine.json thì chạy python _chung/cong-cu/sinh_danh_muc_engine.py. Năng lực vừa làm thật thì bỏ khỏi CHUA_LAM_CON trong tests/test_pl0_goi.py. Chạy pytest bằng --basetemp trong worktree nếu thư mục tạm bị chặn.
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+
+LÀM LÁT PL-5 — chuỗi Local AI: audit.chuan_bi_phan_loai@1 (tep → yeu_cau_ai) và audit.phan_luong_sau_ai@1 (tra_loi_ai → truong) (phiếu §3 chuỗi b, §4.2 mục 3). Tệp được sửa: chay.py (CHỈ thân hai hàm năng lực trên), chuoi_ai.py, engine.json (chỉ phần hai năng lực này + chay_thu_demo của chúng), tệp mới ngan_chuoi.py nếu cần, test tests/test_pl5_*.py. KHÔNG sửa quy_trinh.py: chỉ gọi quy_trinh.bat_dau, doc_tep_lo, doc_cai_dat, chay_phan_luong(viec, lo, du_lieu, loai_ai=..., canh_bao_them=...).
+1. chuan_bi_phan_loai: bat_dau → doc_tep_lo → doc_cai_dat; dòng chưa có loại từ module/quy tắc (phan_loai.gan_loai trả (None, None)) và có nội dung trường phân loại → chuoi_ai.lap_tai_lieu; trần tổng 500.000 ký tự của tai_lieu (giới hạn e_hoi_ai): phần vượt không gửi AI, đếm vào cảnh báo; tải NGUYÊN bytes tệp đầu vào lên Core bằng viec.tai_tep_ra (giữ tên/mime gốc) làm tep_lo; chuyen_tiep (≤ 4 KiB) gồm tep_lo là NGUYÊN đối tượng tệp, bam_tep, khau, khong_can_ai, và băm SHA-256 của (danh_muc_loai_json, bo_phan_loai_json, truong_phan_loai, khuon_cot_json) + băm tai_lieu để bước 3 kiểm khớp; không dòng nào cần AI → vẫn trả yeu_cau_ai với tai_lieu rỗng, khong_can_ai true.
+2. phan_luong_sau_ai: bat_dau → chuoi_ai.doc_chuyen_tiep → kiem_tham_chieu_tep (hình dạng nghiêm như Core thật) → viec.mo_tep(tep_lo["tep_id"]) → so SHA-256 với bam_tep (khác → CHUOI_KHONG_KHOP) → đọc lại Lo đúng loại tệp (dựng đầu vào {"tep": tep_lo} rồi dùng logic của quy_trinh.doc_tep_lo qua một hàm phụ trong tệp của bạn, KHÔNG sửa quy_trinh.py) → tính lại tai_lieu, so băm cài đặt và băm tai_lieu (khác → CHUOI_KHONG_KHOP) → chuoi_ai.doc_tra_loi_ai (KHONG_PHAI_LOCAL; khong_thay_can_cu/sai khuôn → không lỗi cả lượt, chỉ cảnh báo) → ánh xạ chỉ số tài liệu → mã nghiệp vụ → loai_ai → quy_trinh.chay_phan_luong(..., loai_ai=loai_ai, canh_bao_them=các cảnh báo). khong_can_ai → bỏ qua phần AI.
+3. engine.json: chay_thu_demo cho chuan_bi_phan_loai (lô nhỏ DEMO, cài đặt DEMO có prompt DEMO). Ví dụ phan_luong_sau_ai cần tệp do bước trước tải lên — nếu CLI không hỗ trợ thì KHÔNG thêm ví dụ giả; kiểm bằng test CoreGia nối 2 bước (bước 2 dùng phong bì tra_loi_ai giả DEMO, giữ nguyên chuyen_tiep từ bước 1). Danh mục: CHUOI mẫu audit.chuan_bi_phan_loai@1 → ai.hoi_theo_yeu_cau@1 → audit.phan_luong_sau_ai@1; script phải báo nối đúng.
+Test: chuỗi đủ trên CoreGia với 5 phong bì AI giả (đúng enum → loại ai, nguồn ai; sai enum/tin cậy thấp → chua_phan_loai + cảnh báo; cloud → KHONG_PHAI_LOCAL; khong_thay_can_cu → chua_phan_loai, không lỗi lượt); sửa 1 byte tệp → CHUOI_KHONG_KHOP; đổi cài đặt giữa 2 bước → CHUOI_KHONG_KHOP; chuyen_tiep chỉ mang chuỗi tep_id (không phải đối tượng) → CHUOI_KHONG_KHOP; không dòng nào cần AI; C5: cảnh báo, trường ra không có tỷ lệ/độ tin cậy.
+```
+
+#### PL-6 — ghép Excel/CSV
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md (đủ); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2, §3.2, §4 (bảng Q1–Q9); e_phan_luong/goi/e_phan_luong/e_phan_luong/quy_trinh.py (lead tách 20/11: mỗi hàm là một ĐIỂM NỐI có chủ sở hữu).
+Nhánh này có PL-0…PL-3 (thu 1/1 ĐẠT, 1115 test) + quy_trinh.py + doc_bang.py (PL-6A). Các lát ghép khác chạy SONG SONG ở nhánh khác (PL-4, PL-5, PL-7, PL-8): chỉ sửa ĐÚNG tệp ghi dưới đây; không đổi chữ ký hàm công khai đã có; không sửa kieu.py, loi.py, VIEC.md, CHANGELOG.md.
+Sau khi đổi tệp trong goi/: tính lại kiểm kê (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat); đổi engine.json thì chạy python _chung/cong-cu/sinh_danh_muc_engine.py. Chạy pytest bằng --basetemp trong worktree nếu thư mục tạm bị chặn.
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+
+LÀM LÁT PL-6 — Excel/CSV theo khuôn cột cho audit.phan_luong@1 (phiếu §5.2). Tệp được sửa: quy_trinh.py (CHỈ hàm doc_tep_lo), doc_bang.py, engine.json (chỉ mime/đuôi nhận của audit.phan_luong@1 và audit.chuan_bi_phan_loai@1 + một chay_thu_demo Excel), goi/e_phan_luong/demo/ (thêm tệp .xlsx DEMO sinh bằng tests/demo/sinh_bang_demo.py), test tests/test_pl6_*.py.
+1. Môi trường: .venv của worktree phải có đủ openpyxl, et_xmlfile, defusedxml đúng requirements.lock (pip install --require-hashes -r e_phan_luong/goi/e_phan_luong/requirements.lock; không có mạng thì cài từ cache pip hoặc từ site-packages của .venv tại D:/Claude/engines-wt/e_kiem_excel-ex-6 — ghi rõ cách đã làm và phiên bản).
+2. quy_trinh.doc_tep_lo: dùng doc_bang.nhan_dien; json → doc_lo_json như cũ; xlsx/csv → doc_bang.doc_lo_bang với khuon_cot_json, ma_module, tien_te, ky từ Cài đặt bước (thiếu khuon_cot_json hoặc ma_module → THAM_SO_KHONG_HOP_LE; ngưỡng lấy từ nguong_json — doc_cai_dat đã báo THIEU_NGUONG khi thiếu); .xls → TEP_KHONG_HO_TRO. Trả (Lo, bytes gốc).
+3. engine.json: nhận mime .xlsx và text/csv cho audit.phan_luong@1 và audit.chuan_bi_phan_loai@1 (dùng chung doc_tep_lo); một chay_thu_demo Excel DEMO.
+Test: cùng dữ liệu ở JSON/xlsx/csv → cùng danh sách luồng với cùng hạt giống (ghim sinh_hat_giong); thiếu cột tiền tệ và không có tien_te → dòng Đỏ CHUA_RO_TIEN_TE, không gán VND; .xls → TEP_KHONG_HO_TRO; thiếu khuon_cot_json → THAM_SO_KHONG_HOP_LE; thiếu nguong_json → THIEU_NGUONG.
+```
+
+#### PL-7 — ghép nối sau e_hoa_don
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md (đủ); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2, §3.2, §4 (Cần Core: Core thật chỉ cho mo_tep khi đầu vào có ĐỐI TƯỢNG có khóa tep_id; bảng Q1–Q9); e_phan_luong/goi/e_phan_luong/e_phan_luong/quy_trinh.py (lead tách 20/11: mỗi hàm là một ĐIỂM NỐI có chủ sở hữu); e_hoa_don/goi/e_hoa_don/engine.json.
+Nhánh này có PL-0…PL-3 (thu 1/1 ĐẠT, 1115 test) + quy_trinh.py + hoa_don.py (PL-7A). Các lát ghép khác chạy SONG SONG ở nhánh khác (PL-4, PL-5, PL-6, PL-8): chỉ sửa ĐÚNG tệp ghi dưới đây; không đổi chữ ký hàm công khai đã có; không sửa kieu.py, loi.py, VIEC.md, CHANGELOG.md.
+Sau khi đổi tệp trong goi/: tính lại kiểm kê (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat); đổi engine.json thì chạy python _chung/cong-cu/sinh_danh_muc_engine.py. Năng lực vừa làm thật thì bỏ khỏi CHUA_LAM_CON trong tests/test_pl0_goi.py. Chạy pytest bằng --basetemp trong worktree nếu thư mục tạm bị chặn.
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+
+LÀM LÁT PL-7 — audit.phan_luong_hoa_don@1 (truong → truong), nối sau hoa_don.doc_xml@2 / hoa_don.doc_zip@1 (phiếu §5.4). Tệp được sửa: chay.py (CHỈ thân hàm phan_luong_hoa_don), hoa_don.py, engine.json (chỉ phần năng lực này + chay_thu_demo của nó), test tests/test_pl7_*.py. KHÔNG sửa quy_trinh.py: chỉ gọi quy_trinh.bat_dau và quy_trinh.chay_phan_luong.
+1. phan_luong_hoa_don: bat_dau; đầu vào là truong của bước e_hoa_don; có tệp chi tiết (hoa_don.lay_tep_chi_tiet) → viec.mo_tep(tep["tep_id"]) đọc tối đa TOI_DA_BYTE + 1 → lo_tu_chi_tiet_zip; không có → lo_tu_hoa_don (một hóa đơn); ma_module, loai_nghiep_vu, nguong_json từ Cài đặt bước (lô hóa đơn không mang ngưỡng); bytes để băm đầu vào = JSON chuẩn hóa (sort_keys, separators gọn, UTF-8) của trường đầu vào, hoặc bytes tệp chi tiết khi có; quy_trinh.chay_phan_luong(viec, lo, du_lieu, canh_bao_them=["Bỏ N hóa đơn không đọc được"] khi N > 0).
+2. engine.json: khai nhan/trường vào của năng lực khớp trường ra của hoa_don.doc_xml@2 và hoa_don.doc_zip@1; chay_thu_demo một hóa đơn DEMO. Danh mục: CHUOI mẫu hoa_don.doc_xml@2 → audit.phan_luong_hoa_don@1 (phiếu §8); script phải báo nối đúng.
+Test: XML một hóa đơn; ZIP nhiều hóa đơn qua mo_tep (tệp chi tiết đặt trong đầu vào bằng đối tượng có khóa tep_id, đúng như Core thật); can_kiem_tra → Đỏ CO_DO_CUNG; thiếu tiền tệ → CHUA_RO_TIEN_TE; thiếu nguong_json → THIEU_NGUONG; mã số thuế bán không xuất hiện trong xem_ngan (C4).
+```
+
+#### PL-8 — ghép tệp kết quả, màn Admin
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md (đủ); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2, §3.2, §4 (Cần Core; bảng Q1–Q9); e_phan_luong/goi/e_phan_luong/e_phan_luong/quy_trinh.py (lead tách 20/11: mỗi hàm là một ĐIỂM NỐI có chủ sở hữu).
+Nhánh này có PL-0…PL-3 (thu 1/1 ĐẠT, 1115 test) + quy_trinh.py + xuat_excel.py (PL-8A) + ui/bang_ty_le.js (PL-8B). Các lát ghép khác chạy SONG SONG ở nhánh khác (PL-4, PL-5, PL-6, PL-7): chỉ sửa ĐÚNG tệp ghi dưới đây; không đổi chữ ký hàm công khai đã có; không sửa kieu.py, loi.py, VIEC.md, CHANGELOG.md.
+Sau khi đổi tệp trong goi/: tính lại kiểm kê (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat); đổi engine.json thì chạy python _chung/cong-cu/sinh_danh_muc_engine.py. Chạy pytest bằng --basetemp trong worktree nếu thư mục tạm bị chặn.
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+
+LÀM LÁT PL-8 — tệp kết quả: Excel danh sách Đỏ, schema tep_json, màn Admin (phiếu §5.5, §6, C5). Tệp được sửa: quy_trinh.py (CHỈ hàm xuat_ket_qua), xuat_excel.py, xuat_json.py, ui/bang_ty_le.js, engine.json (chỉ giao_dien_quan_tri và mô tả trường tep_ds_do), tests/schema/tep_json.schema.json, test tests/test_pl8_*.py.
+1. Môi trường: .venv có openpyxl, et_xmlfile, defusedxml đúng requirements.lock (pip install --require-hashes; không có mạng thì cài từ cache pip hoặc site-packages của .venv tại D:/Claude/engines-wt/e_kiem_excel-ex-6 — ghi rõ cách đã làm).
+2. quy_trinh.xuat_ket_qua: có ≥ 1 dòng Đỏ → tep_ds_do = viec.tai_tep_ra("ds-can-kiem.xlsx", xuat_excel.lap_ds_do(...), mime xlsx); không có dòng Đỏ → tep_ds_do null. Giữ nguyên tep_json.
+3. tests/schema/tep_json.schema.json: JSON Schema chốt cấu trúc tep_json hiện có (additionalProperties false); test mọi tep_json DEMO hợp schema.
+4. engine.json giao_dien_quan_tri theo báo cáo PL-8B: [{"ma":"bang_ty_le","ten":"Bảng tỷ lệ kiểm tra","tep":"ui/bang_ty_le.js","quyen":"admin_core"}] — kiểm doc_phieu của SDK 2.2.0 nhận khai báo này (đúng tên khóa theo MAU-PHIEU-ENGINE.md); không nhận thì KHÔNG khai, ghi "Cần Core" trong báo cáo (SDK 2.2.0 chưa có KttCore.engine — CC-5).
+Test: phân luồng lô 500 DEMO → tep_ds_do mở được, đúng số dòng Đỏ, không có tỷ lệ/xác suất/bậc/hạt giống (C5); lô toàn Xanh → tep_ds_do null; khứ hồi người kiểm điền tệp → JSON §5.3 → audit.ghi_ket_qua@1 nhận đúng; tep_json hợp schema; chay_thu_demo vẫn ĐẠT.
+```
+
 ## 4. Cần Core / Chờ Anh
 
 **Kiểm 2 điểm "Cần Core" (20/11/2026, lead đọc mã Core `ma-nguon-core-sach` HEAD `a07e061` và CoreGia SDK 2.2.0; chưa chạy trên Core thật):**
@@ -351,3 +442,5 @@ Chạy pytest test của mình.
 | Q7 | `so_tien_sai` khác tiền tệ ngưỡng | Từ chối (`DU_LIEU_KHONG_HOP_LE`), module gửi số đã quy đổi |
 | Q8 | Nộp lại làm cộng trùng tổng chia nhỏ | Không xử lý riêng: "Đã có chống trùng rồi. Không lo việc chia nhỏ vì việc xác lập TE để phân luồng chỉ thực hiện bởi admin, người dùng cũng không biết ngưỡng" |
 | Q9 | Trần tập băm đối tác trong hồ sơ hành vi | 20.000 đối tác mỗi (khâu, loại); vượt thì bỏ đối tác lâu không gặp nhất, cảnh báo ở màn engine |
+| Q10 | Dưới SAD khi cặp đang kiểm 100% | Vẫn 2% × hệ số; 100% chỉ áp vùng chọn mẫu |
+| Q11 | Chưa phân loại, số tiền dưới SAD | 2% × hệ số như mọi loại; 30% cố định chỉ cho vùng chọn mẫu |

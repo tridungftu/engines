@@ -422,7 +422,9 @@ def test_hai_ghi_dong_thoi_mot_xung_dot_khong_lech_khong_trung(dong_ho, monkeypa
             lan.result(timeout=20)
     dem = [truong(core, v) for v in cac_viec]
     n = 1 if gui_trung else 2
-    assert sum(so_thu_lai) == 1
+    # PL-9I: một xung đột giả; cùng khóa còn có một xung đột unique vì
+    # việc thứ hai dùng bản đọc trước cũ ở lần thử đầu, rồi đọc lại khóa.
+    assert sum(so_thu_lai) == 1 + int(gui_trung)
     assert sum(d["so_dong_nhan"] for d in dem) == n
     assert sum(d["so_trung"] for d in dem) == int(gui_trung)
     ds = core.xem_ngan(app.ma, "ket_qua_kiem")

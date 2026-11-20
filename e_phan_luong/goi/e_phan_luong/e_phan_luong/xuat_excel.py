@@ -124,6 +124,7 @@ def lap_ds_do(ds: Sequence[KetQuaDong], *, ma_luot, ma_module, khau,
             o = _ghi_chu(ws, 2, cot, ten)
             o.font = Font(bold=True, color="FFFFFF")
             o.fill = PatternFill("solid", fgColor="9C3030")
+        dong = 2
         for nv in ds:
             if nv.luong != "do":
                 continue
@@ -133,7 +134,7 @@ def lap_ds_do(ds: Sequence[KetQuaDong], *, ma_luot, ma_module, khau,
                 co = "; ".join(TEN_CO[m] for m in nv.co)
             except KeyError:
                 raise loi("DU_LIEU_KHONG_HOP_LE") from None
-            dong = ws.max_row + 1
+            dong += 1
             for cot, gia_tri in enumerate((nv.ma, ly_do, co, nv.loai, nv.nguon_loai), 1):
                 _ghi_chu(ws, dong, cot, _chu(gia_tri, 32767) if gia_tri else "")
             for cot in range(6, 10):
@@ -145,10 +146,10 @@ def lap_ds_do(ds: Sequence[KetQuaDong], *, ma_luot, ma_module, khau,
         dv.errorTitle = "Kết quả chưa đúng"
         dv.error = "Chọn dat, sai hoặc khong_kiem."
         ws.add_data_validation(dv)
-        if ws.max_row >= 3:
-            dv.add(f"F3:F{ws.max_row}")
+        if dong >= 3:
+            dv.add(f"F3:F{dong}")
         ws.freeze_panes = "F3"
-        ws.auto_filter.ref = f"A2:I{ws.max_row}"
+        ws.auto_filter.ref = f"A2:I{dong}"
         for cot, rong in enumerate((25, 48, 40, 25, 22, 18, 25, 12, 25), 1):
             ws.column_dimensions[get_column_letter(cot)].width = rong
         hd = wb.create_sheet("Huong dan")

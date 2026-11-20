@@ -119,7 +119,7 @@ def test_sau_bang_c4_sql_phieu_cot_he_thong_va_comment():
         "dong_luot": (["ma_luot", "ma"], "ma_luot ma ma_module khau ly_do loai nguon_loai".split(), 400),
         "ket_qua_kiem": (["ma_luot", "ma", "khau"], "ma_luot ma khau ma_module loai ket_qua muc_sai nguon_mau nguon_loai_sai".split(), 365),
         "ty_le": (["khau", "loai"], ["khau", "loai"] + cs_ty_le, None),
-        "ho_so_hanh_vi": (["khau", "loai"], "khau loai so_nghiep_vu bieu_do bam_doi_tac tong_7_ngay ky_lam_moi".split(), None),
+        "ho_so_hanh_vi": (["khau", "loai"], "khau loai so_nghiep_vu bieu_do bam_doi_tac tong_7_ngay ky_lam_moi tien_te".split(), None),
         "chot_ky": (["ky", "khau", "loai"], ["ky", "khau", "loai"] + cs_ty_le, None)}
     he_thong = {"id": "uuid", "phap_nhan_id": "uuid", "row_version": "bigint", "tao_luc": "timestamptz",
                 "sua_luc": "timestamptz", "het_han_luc": "timestamptz", "viec_id": "uuid"}
@@ -138,7 +138,11 @@ def test_sau_bang_c4_sql_phieu_cot_he_thong_va_comment():
         assert b.get("giu_toi_da_ngay") == han
         assert [t["ma"] for t in b["truong"]] == cot
         assert not set(cot) & set(he_thong)
-        assert not set(cot) & {"so_tien", "tien_te", "ngay", "ngay_giao_dich", "doi_tac", "noi_dung", "dien_giai"}
+        # PL-9D: chỉ hồ sơ hành vi có mã đơn vị của số liệu gộp; vẫn cấm chi tiết tiền/ngày/đối tác.
+        cam = {"so_tien", "ngay", "ngay_giao_dich", "doi_tac", "noi_dung", "dien_giai"}
+        if b["bang"] != "ho_so_hanh_vi":
+            cam.add("tien_te")
+        assert not set(cot) & cam
         ten = "eng_e_phan_luong." + b["bang"]
         than = dict(tao)[ten]
         sql_cot = dict(re.findall(r"^\s+(\w+) (uuid|bigint|timestamptz|text|numeric)\b", than, re.M))

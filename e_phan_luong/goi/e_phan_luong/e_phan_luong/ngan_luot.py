@@ -30,10 +30,18 @@ def tra_nop_lai(viec, ma_module: str, khau: str, ds_ma: Sequence[str]) -> frozen
     trùng thời điểm, dùng ma_luot làm khóa phụ ổn định. Bỏ qua chính lượt
     của việc Core hiện tại để giao lại không tự sinh lý do NOP_LAI.
     """
+    cac_ma = dict.fromkeys(ds_ma)
+    if not cac_ma:
+        return frozenset()
+    dong_theo_ma = _quet_dong_nop_lai(viec, ma_module, khau, cac_ma)
+    if dong_theo_ma == {}:
+        return frozenset()
     luot_da_doc = {}
-    nop_lai = set()
-    for ma in dict.fromkeys(ds_ma):
-        ds = tim_tat_ca(viec, "dong_luot", {"ma_module": ma_module, "khau": khau, "ma": ma})
+    ung_vien_theo_luot = {}
+    for ma in cac_ma:
+        viec.kiem_huy()
+        ds = (tim_tat_ca(viec, "dong_luot", {"ma_module": ma_module, "khau": khau, "ma": ma})
+              if dong_theo_ma is None else dong_theo_ma.get(ma, ()))
         gan_nhat = None
         for bg in ds:
             dong = bg.gia_tri
@@ -56,11 +64,89 @@ def tra_nop_lai(viec, ma_module: str, khau: str, ds_ma: Sequence[str]) -> frozen
         dong = gan_nhat[1]
         if not set(tach_ly_do(dong["ly_do"])) & (LY_DO_BAT_BUOC | {CHON_MAU}):
             continue
-        kq = viec.ngan.doc("ket_qua_kiem", {"ma_luot": dong["ma_luot"], "ma": ma, "khau": khau},
-                          gom_het_han=True)
-        if kq is None or kq.gia_tri["ket_qua"] not in {KQ_DAT, KQ_SAI}:
-            nop_lai.add(ma)
+        ung_vien_theo_luot.setdefault(dong["ma_luot"], {})[ma] = None
+    nop_lai = set()
+    for ma_luot, cac_ma_luot in ung_vien_theo_luot.items():
+        ket_qua_theo_ma = _quet_ket_qua_nop_lai(viec, ma_luot, khau, cac_ma_luot)
+        for ma in cac_ma_luot:
+            viec.kiem_huy()
+            kq = (viec.ngan.doc("ket_qua_kiem", {"ma_luot": ma_luot, "ma": ma, "khau": khau},
+                               gom_het_han=True)
+                  if ket_qua_theo_ma is None else ket_qua_theo_ma.get(ma))
+            if kq is None or kq.gia_tri["ket_qua"] not in {KQ_DAT, KQ_SAI}:
+                nop_lai.add(ma)
     return frozenset(nop_lai)
+
+
+def _quet_ket_qua_nop_lai(viec, ma_luot, khau, cac_ma):
+    """Quét kết quả của một lượt, chỉ giữ mã ứng viên, kể cả đã hết hạn.
+
+    Hết trong max(1, ceil(số ứng viên / 10)) trang 500 dòng thì dùng kết quả.
+    Vượt ngân sách trả None, bỏ kết quả dở để đọc lại từng mã như trước PL-9H.
+    """
+    from .loi import loi
+
+    loc = {"ma_luot": ma_luot, "khau": khau}
+    sap_xep = [{"truong": cot, "giam": False} for cot in ("ma_luot", "ma", "khau")]
+    ket_qua_theo_ma = {}
+    tiep = None
+    da_gap = set()
+    for _ in range(max(1, (len(cac_ma) + 9) // 10)):
+        viec.kiem_huy()
+        trang = viec.ngan.tim("ket_qua_kiem", loc=loc, sap_xep=sap_xep,
+                             gioi_han=500, tiep=tiep, gom_het_han=True)
+        for bg in trang.danh_sach:
+            viec.kiem_huy()
+            ma = bg.gia_tri["ma"]
+            if ma in cac_ma:
+                ket_qua_theo_ma[ma] = bg
+        tiep = trang.tiep
+        if tiep is None:
+            return ket_qua_theo_ma
+        if tiep in da_gap:
+            raise loi("NGAN_BAN")
+        da_gap.add(tiep)
+    return None
+
+
+def _quet_dong_nop_lai(viec, ma_module, khau, cac_ma):
+    """Chỉ giữ dòng thuộc mã cần tra; None nghĩa là quay về tìm từng mã.
+
+    Dò rỗng một lần, rồi quét tối đa ceil(số mã / 10) trang 500 dòng.
+    Chưa hết lịch sử thì bỏ toàn bộ kết quả quét trước khi quay về đường cũ.
+    Phụ phí tìm tối đa 1 + ceil(số mã / 10), kể cả khi số mã không chia hết 10.
+    Trần mỗi mã giống tim_tat_ca, không áp trần lên toàn lịch sử module/khâu.
+    """
+    from .loi import loi
+
+    loc = {"ma_module": ma_module, "khau": khau}
+    sap_xep = [{"truong": cot, "giam": False} for cot in ("ma_luot", "ma")]
+    viec.kiem_huy()
+    if not viec.ngan.tim("dong_luot", loc=loc, gioi_han=1).danh_sach:
+        return {}
+
+    dong_theo_ma = {}
+    tiep = None
+    da_gap = set()
+    for _ in range(max(1, (len(cac_ma) + 9) // 10)):
+        viec.kiem_huy()
+        trang = viec.ngan.tim("dong_luot", loc=loc, sap_xep=sap_xep,
+                             gioi_han=500, tiep=tiep)
+        for bg in trang.danh_sach:
+            viec.kiem_huy()
+            ma = bg.gia_tri["ma"]
+            if ma in cac_ma:
+                ds = dong_theo_ma.setdefault(ma, [])
+                ds.append(bg)
+                if len(ds) > 200000:
+                    raise loi("VUOT_GIOI_HAN")
+        tiep = trang.tiep
+        if tiep is None:
+            return dong_theo_ma
+        if tiep in da_gap:
+            raise loi("NGAN_BAN")
+        da_gap.add(tiep)
+    return None
 
 
 def ghi_luot(viec, luot: dict, ds_dong: Sequence[KetQuaDong], *,

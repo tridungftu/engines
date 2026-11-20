@@ -104,7 +104,7 @@ def test_khu_hoi_dung_cot_json_chuan_va_tien_chuoi():
     hs = replace(hs, ky_lam_moi="2026-11")
     ban_ghi = ho_so.ve_ban_ghi(hs)
     assert set(ban_ghi) == {"khau", "loai", "so_nghiep_vu", "bieu_do",
-                            "bam_doi_tac", "tong_7_ngay", "ky_lam_moi"}
+                            "bam_doi_tac", "tong_7_ngay", "ky_lam_moi", "tien_te"}
     for cot in ("bieu_do", "bam_doi_tac", "tong_7_ngay"):
         assert isinstance(ban_ghi[cot], str)
         assert ban_ghi[cot] == json.dumps(json.loads(ban_ghi[cot]), ensure_ascii=False,
@@ -155,7 +155,8 @@ def test_cua_so_7_ngay_toan_ho_so_khong_phu_thuoc_thu_tu():
     assert "bam-demo-cu" in a.doi_tac
     assert a.so_nghiep_vu == 10
     # Lô kế tiếp đẩy cửa sổ của cả đối tác không xuất hiện trong lô mới.
-    c, _ = ho_so.cong(a, [dong("3", "bam-demo-moi", NGAY + timedelta(days=7))], ky="2026-11")
+    c, _ = ho_so.cong(a, [dong("3", "bam-demo-moi", NGAY + timedelta(days=7))],
+                       ky="2026-11", ngay_xu_ly=NGAY + timedelta(days=7))
     assert c.tong_ngay == {"bam-demo-moi": {"2026-11-27": Decimal(3)}}
 
 

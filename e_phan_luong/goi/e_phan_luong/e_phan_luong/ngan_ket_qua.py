@@ -31,6 +31,51 @@ def _da_ghi(viec, dong: _DongGhi) -> bool:
     return viec.ngan.doc("ket_qua_kiem", dong.khoa, gom_het_han=True) is not None
 
 
+def _quet_luot(viec, bang: str, loc: dict, cac_ma: set[str]) -> dict | None:
+    """Chỉ giữ mã trong tệp; None nghĩa là bỏ bản quét và đọc từng dòng.
+
+    Quét hết trong tối đa ceil(k / 10) trang 500 dòng, ít nhất một trang.
+    Không dừng khi đã gặp đủ mã: chỉ dùng bản đọc trước khi đã hết trang.
+    """
+    cot_khoa = ("ma_luot", "ma", "khau") if bang == "ket_qua_kiem" else ("ma_luot", "ma")
+    sap_xep = [{"truong": cot, "giam": False} for cot in cot_khoa]
+    ds = {}
+    tiep = None
+    da_gap = set()
+    for _ in range(max(1, (len(cac_ma) + 9) // 10)):
+        viec.kiem_huy()
+        trang = viec.ngan.tim(bang, loc=loc, sap_xep=sap_xep, gioi_han=500,
+                             tiep=tiep, gom_het_han=bang == "ket_qua_kiem")
+        for bg in trang.danh_sach:
+            viec.kiem_huy()
+            ma = bg.gia_tri["ma"]
+            if ma in cac_ma:
+                ds[ma] = bg
+        tiep = trang.tiep
+        if tiep is None:
+            return ds
+        if tiep in da_gap:
+            raise loi("NGAN_BAN")
+        da_gap.add(tiep)
+    return None
+
+
+def _doc_truoc_da_ghi(viec, tep: ket_qua.KetQuaTep) -> dict:
+    cac_ma = {}
+    for dong in tep.dong:
+        cac_ma.setdefault((dong.ma_luot, dong.khau), set()).add(dong.ma)
+    da_co = {}
+    for (ma_luot, khau), ds_ma in cac_ma.items():
+        ds = _quet_luot(viec, "ket_qua_kiem", {"ma_luot": ma_luot, "khau": khau}, ds_ma)
+        da_co[ma_luot, khau] = None if ds is None else frozenset(ds)
+    return da_co
+
+
+def _da_ghi_lan_dau(viec, dong: _DongGhi, da_co: dict | None) -> bool:
+    ds = None if da_co is None else da_co.get((dong.gia_tri["ma_luot"], dong.gia_tri["khau"]))
+    return _da_ghi(viec, dong) if ds is None else dong.gia_tri["ma"] in ds
+
+
 def _chuan_bi(viec, tep: ket_qua.KetQuaTep) -> dict[tuple[str, str], list[_DongGhi]]:
     """Kiểm toàn bộ tệp trước lệnh ghi đầu tiên, giữ thứ tự chi_so mỗi cặp."""
     ts = viec.tham_so
@@ -52,8 +97,12 @@ def _chuan_bi(viec, tep: ket_qua.KetQuaTep) -> dict[tuple[str, str], list[_DongG
             raise loi("THAM_SO_KHONG_HOP_LE")
         ng = nguong.doc_nguong(tep.nguong, nguong_json)
 
+    cac_ma = {}
+    for dong in tep.dong:
+        cac_ma.setdefault(dong.ma_luot, set()).add(dong.ma)
     nhom = {}
     cac_luot = {}
+    cac_dong = {}
     for dong in sorted(tep.dong, key=lambda d: d.chi_so):
         viec.kiem_huy()
         if dong.ma_luot not in cac_luot:
@@ -68,7 +117,12 @@ def _chuan_bi(viec, tep: ket_qua.KetQuaTep) -> dict[tuple[str, str], list[_DongG
                 and dong.loai_dung not in danh_muc):
             raise loi("DU_LIEU_KHONG_HOP_LE")
 
-        ban_ghi = viec.ngan.doc("dong_luot", {"ma_luot": dong.ma_luot, "ma": dong.ma})
+        if dong.ma_luot not in cac_dong:
+            cac_dong[dong.ma_luot] = _quet_luot(
+                viec, "dong_luot", {"ma_luot": dong.ma_luot}, cac_ma[dong.ma_luot])
+        ds = cac_dong[dong.ma_luot]
+        ban_ghi = (viec.ngan.doc("dong_luot", {"ma_luot": dong.ma_luot, "ma": dong.ma})
+                   if ds is None else ds.get(dong.ma))
         dong_luot = {} if ban_ghi is None else ban_ghi.gia_tri
         if ban_ghi is not None and (dong_luot.get("ma_module") != tep.ma_module
                                    or dong_luot.get("khau") != dong.khau):
@@ -88,11 +142,17 @@ def _chuan_bi(viec, tep: ket_qua.KetQuaTep) -> dict[tuple[str, str], list[_DongG
     return nhom
 
 
-def _tao_cap_moi(viec, khoa: dict, dong: list[_DongGhi], cs: ty_le.ChinhSach) -> None:
+def _tao_cap_moi(viec, khoa: dict, dong: list[_DongGhi], cs: ty_le.ChinhSach,
+                 da_co: dict | None = None) -> None:
     """Tạo nền bằng lay_hoac_tao; luôn đọc lại nền trước khi sửa CAS."""
+    lan_dau = True
+
     def lap_lenh(lo):
+        nonlocal lan_dau
+        ban_doc_truoc = da_co if lan_dau else None
+        lan_dau = False
         if (viec.ngan.doc("ty_le", khoa) is None
-                and any(not _da_ghi(viec, d) for d in dong)):
+                and any(not _da_ghi_lan_dau(viec, d, ban_doc_truoc) for d in dong)):
             lo.lay_hoac_tao("ty_le", khoa, ty_le.ve_ban_ghi(
                 ty_le.moi(khoa["khau"], khoa["loai"], cs)))
 
@@ -102,24 +162,29 @@ def _tao_cap_moi(viec, khoa: dict, dong: list[_DongGhi], cs: ty_le.ChinhSach) ->
 def ghi_ket_qua(viec, tep: ket_qua.KetQuaTep) -> dict[str, int]:
     """Trả số đếm của các lô đã ghi; không trả tỷ lệ hay trạng thái bậc.
 
-    Trong mỗi lần thử lại: đọc lại ty_le và dấu chống trùng, tính lại toàn
-    bộ lô. Chỉ cộng số đếm sau khi lô được Core xác nhận thành công.
+    Lần đầu dùng dấu chống trùng đọc trước nếu quét hết trong ngân sách.
+    Mỗi lần thử lại đọc lại từng khóa và ty_le, tính lại toàn bộ lô.
+    Chỉ cộng số đếm sau khi lô được Core xác nhận thành công.
     """
     cs = ty_le.doc_chinh_sach(viec.tham_so.get("chinh_sach_json"))
     cac_nhom = _chuan_bi(viec, tep)
+    da_co = _doc_truoc_da_ghi(viec, tep)
     tong = {"so_dong_nhan": 0, "so_trung": tep.so_trung_trong_tep,
             "so_ngoai_mau": 0, "so_sua_loai": 0}
     cap_da_doi = set()
     for cap, dong in cac_nhom.items():
         khoa = dict(zip(("khau", "loai"), cap))
-        _tao_cap_moi(viec, khoa, dong, cs)
+        _tao_cap_moi(viec, khoa, dong, cs, da_co)
         for dau in range(0, len(dong), 99):
             nhom = dong[dau:dau + 99]
             dem = {}
             da_doi = False
+            lan_dau = True
 
             def lap_lenh(lo):
-                nonlocal dem, da_doi
+                nonlocal dem, da_doi, lan_dau
+                ban_doc_truoc = da_co if lan_dau else None
+                lan_dau = False
                 dem = {cot: 0 for cot in tong}
                 da_doi = False
                 ban_ghi = viec.ngan.doc("ty_le", khoa)
@@ -127,7 +192,7 @@ def ghi_ket_qua(viec, tep: ket_qua.KetQuaTep) -> dict[str, int]:
                 luc = datetime.now(timezone.utc).isoformat()
                 for d in nhom:
                     viec.kiem_huy()
-                    if _da_ghi(viec, d):
+                    if _da_ghi_lan_dau(viec, d, ban_doc_truoc):
                         dem["so_trung"] += 1
                         continue
                     # Cặp mới đã tạo bằng lay_hoac_tao, không ghi đè nền cũ.

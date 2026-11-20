@@ -1,96 +1,156 @@
-# Phân luồng kiểm tra — PL-4
+# Phân luồng kiểm tra — 0.1.0
 
-Engine chia nghiệp vụ vào luồng Đỏ (người phải kiểm trước khi duyệt)
-hoặc Xanh theo khâu, ngưỡng PM/TE/SAD, loại nghiệp vụ và chọn mẫu tái hiện được.
-**PL-2 đã nối `audit.phan_luong@1` cho JSON**: phân loại module/quy tắc,
-ngưỡng, chống chia nhỏ trong lô, tỷ lệ theo khâu × loại, cờ và chọn mẫu.
-PL-3 đã nối `audit.ghi_ket_qua@1`; PL-4 bổ sung hồ sơ hành vi, chia nhỏ
-qua nhiều lô và chốt kỳ tháng. Excel/CSV chờ PL-6. Ba năng lực chuỗi AI/
-hóa đơn còn trả `CHUA_LAM`: “Năng lực đang được xây dựng.”
+Engine SDK 2.2.0 chia từng nghiệp vụ theo khâu vào Đỏ (cần người kiểm trước khi duyệt) hoặc Xanh, kèm lý do. Năm năng lực đã chạy thật trong bộ kiểm DEMO; đã kiểm bằng Core giả (CoreGia), chưa kiểm tích hợp Core thật.
 
-Mặc định, lượt đầu tiên của engine mới coi mọi đối tác có mã là **mới**
-ở loại nghiệp vụ đó (`DOI_TAC_MOI`, ×2), kể cả khi hồ sơ còn trống.
-Admin đặt `toi_thieu_ho_so_doi_tac_moi` trong `chinh_sach_json` nếu muốn
-chờ đủ lịch sử, ví dụ `{"toi_thieu_ho_so_doi_tac_moi":50}`. Khóa này là
-số nguyên ≥ 0, mặc định 0; cờ chỉ bật khi số nghiệp vụ trong hồ sơ loại
-đạt mức đã đặt. `SO_TIEN_BAT_THUONG` luôn cần ít nhất 50 nghiệp vụ.
+## Dành cho người viết module
 
-Trước lớp 1 đọc mọi hồ sơ của khâu: tổng chia nhỏ gom theo băm đối tác
-và ngày qua **mọi loại** trong khâu; cùng mã đối tác ở module khác có
-băm khác. Sau khi ghi lượt, cộng tiền so sánh đã lấy trị tuyệt đối, băm
-đối tác và ngày vào hồ sơ từng loại bằng CAS. Không khử trùng riêng các
-dòng nộp lại (Q8). Trần 20.000 đối tác mỗi (khâu, loại): bỏ đối tác lâu
-không gặp nhất và ghi số đã bỏ vào nhật ký kỹ thuật, không ghi mã thô.
-
-Đầu mọi năng lực chốt tháng trước cho cặp đã tồn tại từ tháng trước,
-theo giờ Việt Nam: `them chot_ky`,
-`sua ty_le` bằng CAS và làm mới hồ sơ nằm trong **một lô nguyên tử**.
-Tranh khóa bản chốt thì đọc lại và dừng; xung đột CAS thì đọc lại và áp
-lại phép cập nhật (tối đa 3 lần thử lại). Hồ sơ chưa có kết quả kiểm/
-tỷ lệ cũng được làm mới; chỉ giữ biểu đồ và băm đối tác của 12 tháng
-trước kỳ mới. Các số liệu gộp ở ngăn không chứa mã đối tác thô, mã giao
-dịch hay diễn giải.
-
-| Năng lực | Nhận → trả | Phạm vi |
+| Năng lực | Nhận → trả | Cách dùng |
 |---|---|---|
-| `audit.phan_luong@1` | tep → truong | PL-2: phân luồng lô JSON; Excel/CSV chờ PL-6 |
-| `audit.chuan_bi_phan_loai@1` | tep → yeu_cau_ai | Quy tắc trước, chuẩn bị dòng chờ Local AI |
-| `audit.phan_luong_sau_ai@1` | tra_loi_ai → truong | Hậu kiểm phân loại AI rồi phân luồng |
-| `audit.phan_luong_hoa_don@1` | truong → truong | Nối sau bước đọc hóa đơn |
-| `audit.ghi_ket_qua@1` | tep → truong | Nhận kết quả kiểm, cập nhật thống kê |
+| `audit.phan_luong@1` | `tep` → `truong` | JSON, Excel .xlsx, CSV UTF-8; module gán loại hoặc dùng quy tắc |
+| `audit.chuan_bi_phan_loai@1` | `tep` → `yeu_cau_ai` | Quy tắc trước, chuẩn bị nội dung chưa khớp cho Local AI |
+| `audit.phan_luong_sau_ai@1` | `tra_loi_ai` → `truong` | Kiểm kết quả AI và tham chiếu lô rồi phân luồng |
+| `audit.phan_luong_hoa_don@1` | `truong` → `truong` | Sau `hoa_don.doc_xml@2` hoặc `hoa_don.doc_zip@1` |
+| `audit.ghi_ket_qua@1` | `tep` → `truong` | Nhận JSON kết quả người kiểm, cập nhật thống kê |
 
-Giới hạn khai báo: 20 MiB/tệp, 300 giây/bước (tạm, chưa đo), một việc đồng thời.
-Tiền luôn kèm mã tiền tệ; không tự gán VND khi thiếu. Dữ liệu giữ lại đi qua
-`viec.ngan` của Core; không tệp cấu hình, sổ hoặc bộ đệm bền trên máy engine.
-Ngăn theo pháp nhân, không lưu chi tiết số tiền/ngày/đối tác/nội dung giao dịch.
-`dong_luot` có `loai`, `nguon_loai` theo quyết định Q2 ngày 20/11/2026.
+Mỗi khâu có nút/quy trình riêng, ví dụ `ktt_duyet`. Module giữ chi tiết giao dịch và đầu vào gốc, ghép trường trả về khi `quy_trinh.xong`. Người lập không xem luồng; người duyệt chỉ xem luồng, lý do và chứng từ thuộc quyền mình. Module thực thi quyền và yêu cầu mở cảnh báo trước nút Duyệt. Trường ra, JSON và Excel dành cho người duyệt không chứa tỷ lệ, xác suất hay bậc (C5).
 
-Trường ra đủ phiếu §5.5. `tep_json` có mã, luồng, lý do, cờ, loại và nguồn
-loại từng dòng; metadata gồm mã lượt, khâu, module, phiên bản và các băm.
-`canh_bao` chỉ gồm câu lý do cố định, tổng dưới 500 ký tự. `tep_ds_do = null`
-tới PL-8: SDK 2.2.0 cho phép trường tệp không có giá trị. `tong_tien_do`
-cộng tiền so ngưỡng (đã quy đổi nếu có, theo trị tuyệt đối); một dòng Đỏ
-chưa so được tiền tệ làm tổng là `null`. Không dòng Đỏ thì tổng bằng không,
-kèm tiền tệ ngưỡng.
+Module lập Blob JSON, gửi multipart bằng `api.goi({tep: new File([blob], "lo-DEMO.json")})` tới `POST /api/v1/module/{ma}/nut/{nut}/chay`; khai `nhan_tep.mime` của nút có `application/json`. Cách tạm này dùng khi SDK trình duyệt 2.2.0 chưa có `nut.chay`.
 
-Luật nộp lại Q5: đọc lượt hoàn tất gần nhất theo `luot.tao_luc` của cùng
-(module, khâu, mã). Đỏ chưa có kết quả `dat`/`sai` → `NOP_LAI`;
-`khong_kiem` chưa giải phóng. Đã kiểm hoặc lần gần nhất Xanh → xét bình
-thường bằng hạt giống mới khi Core giao một việc mới. Kết quả kiểm đã ẩn
-sau 365 ngày vẫn được đọc để giải phóng Đỏ trong thời gian lượt còn giữ
-400 ngày; `khong_kiem` vẫn chưa giải phóng.
+### Đầu vào và đầu ra
 
-Core giao lại **cùng việc** dùng cùng mã lượt, tính bằng UTF-8:
-`ma_luot = "PL-" + sha256("e_phan_luong|luot|" + viec.id + "|" + bam_dau_vao).hexdigest()`,
-trong đó `bam_dau_vao = "sha256:" + sha256(bytes_dau_vao).hexdigest()`.
-Đọc `luot(ma_luot)` trước khi chọn mẫu: đã có thì dùng lại
-`bytes.fromhex(luot["hat_giong"])`; chưa có thì sinh hạt giống mới. Khi tra
-`NOP_LAI`, bỏ qua chính mã lượt của việc hiện tại. Lượt đã hoàn tất đọc lại
-quyết định từ `dong_luot`, giữ nguyên kết quả khi tỷ lệ/lịch sử nộp lại đã
-đổi; cờ được tính từ đầu vào và bản chụp chính sách của việc. Cùng hạt giống, đầu vào,
-`viec.id` và trạng thái ngăn trước lượt cho cùng tệp kết quả từng byte.
+JSON lô tối thiểu (mọi giá trị dưới đây là DEMO):
 
-Ghi từng lô tối đa 100 dòng, rồi ghi `luot` sau cùng. Dòng mới dùng
-`lay_hoac_tao`; nếu `dong_luot` đã có nhưng chưa có dấu hoàn tất `luot`,
-sửa bằng CAS (`sua`, `row_version`) theo quyết định hiện tại. Lần chạy dở
-có thể dùng hạt giống khác khi chạy lại; toàn bộ dòng cũ được sửa trước khi
-ghi dấu hoàn tất, không lẫn quyết định giữa hai lần. Lượt đã hoàn tất giữ
-nguyên các dòng ngăn khi Core giao lại.
+```json
+{"phien_ban":1,"ma_module":"demo_thanh_toan","ky":"2026-11",
+ "nguong":{"pm":{"so":"5000000000","tien_te":"VND"},
+           "te":{"so":"3000000000","tien_te":"VND"},
+           "sad":{"so":"250000000","tien_te":"VND"}},
+ "nghiep_vu":[{"ma":"PC-DEMO-0001","ngay":"2026-10-30",
+ "so_tien":{"so":"1000000","tien_te":"VND"},
+ "doi_tac":"DEMO-NCC-01","dien_giai":"Thanh toán DEMO",
+ "loai":null,"nhap_tay":false,"co_do_cung":false,"thuoc_tinh":{}}]}
+```
 
-Admin đổi thang bậc: bậc đã lưu không còn trong thang mới được đưa về bậc
-gần nhất không thấp hơn, không dùng mẫu tích lũy của bậc cũ để xuống ngay.
-Nếu cả thang mới thấp hơn bậc đã lưu, chuyển chế độ kiểm toàn bộ (100%).
+`ma_module`, `ma`, `ngay`, `so_tien` bắt buộc; mã không trùng trong lô. `ma` dài 1–120, không ký tự điều khiển. Ngày `YYYY-MM-DD`; tiền là chuỗi thập phân, tối đa 18 chữ số nguyên và 6 chữ số lẻ, luôn kèm mã tiền tệ. Số âm so theo trị tuyệt đối (Q3). Có thể thêm `so_tien_quy_doi`, `tai_khoan_no`, `tai_khoan_co`, nội dung mở rộng trong `thuoc_tinh`. Khối `nguong` trong tệp ưu tiên hơn `nguong_json`; phải cùng tiền tệ và `0 < SAD < TE <= PM`. Không tự gán VND: thiếu đơn vị hoặc quy đổi thì dòng Đỏ `CHUA_RO_TIEN_TE` / `CHUA_QUY_DOI`.
 
-## Công thức để kiểm toán viên chạy lại
+Excel đọc giá trị đã lưu (`read_only`, `data_only`), không tính công thức; CSV UTF-8 có/không BOM, dấu `,` hoặc `;`. Đặt `ma_module`, `nguong_json`, `khuon_cot_json`; không nhận `.xls` cũ hoặc PDF. Khuôn cột xem phần Admin. Excel có thể đã mất chữ số sau khoảng 15 chữ số có nghĩa; dùng JSON chuỗi thập phân khi cần giữ chính xác.
 
-Lấy hạt giống 32 byte từ 64 ký tự hex ở ngăn `luot` (chỉ Admin được xem),
-đầu vào gốc và phiên bản engine/chính sách tại thời điểm chạy. Mã hóa các mã
-bằng UTF-8, giữ nguyên thứ tự byte và dấu phân cách `0x1f`:
+Các bước phân luồng trả `ma_luot`, `luong`, `can_nguoi_kiem`, `canh_bao` (≤ 500 ký tự), `so_nghiep_vu`, `so_do`, `so_do_bat_buoc`, `so_do_chon_mau`, `so_xanh`, `so_chua_phan_loai`, `tong_tien_do`, `tep_json`, `tep_ds_do`, `bam_hat_giong`, `bam_dau_vao`, `phien_ban_engine`. `tep_json` chứa từng mã, luồng, lý do, cờ, loại, nguồn loại; `tep_ds_do` là Excel các dòng Đỏ, có cột trống ghi kết quả kiểm và loại đúng, không có Đỏ thì `null`. `tong_tien_do` cộng tiền so ngưỡng theo trị tuyệt đối; có dòng Đỏ chưa so được tiền tệ thì `null`. Phong bì trả `{"loai":"truong","truong":{...}}`; trường tệp là đối tượng `{tep_id, ten, mime, kich_thuoc}` do Core giữ.
+
+### Chuỗi mẫu
+
+```text
+(a) JSON/Excel/CSV → audit.phan_luong@1 → trường ngăn module
+(b) JSON/Excel/CSV → audit.chuan_bi_phan_loai@1
+    → ai.hoi_theo_yeu_cau@1 → audit.phan_luong_sau_ai@1 → trường ngăn module
+Hóa đơn XML → hoa_don.doc_xml@2 → audit.phan_luong_hoa_don@1
+Hóa đơn ZIP → hoa_don.doc_zip@1 → audit.phan_luong_hoa_don@1
+```
+
+Core điều phối chuỗi (b); engine không gọi engine khác. Hai bước audit dùng cùng khâu, danh mục, quy tắc, ngưỡng và chính sách. Module cung cấp prompt; AI chỉ chọn mã trong danh mục. Nội dung khử trùng trước gửi: ≤ 5.000 giá trị; giá trị quá 2.000 ký tự để chưa phân loại, không cắt ngầm. Không cần AI vẫn trả `yeu_cau_ai` rỗng và `khong_can_ai: true`. Sai khuôn/không có căn cứ/tin cậy thấp để dòng chưa phân loại, kèm cảnh báo; nhà cung cấp khác `local` bị từ chối `KHONG_PHAI_LOCAL`.
+
+Giữ **nguyên đối tượng tệp** trong `chuyen_tiep.phan_luong.tep_lo`, cùng `phien_ban: 1`, `bam_tep`, `khau`, `khong_can_ai` trong khối `phan_luong`. Chuyển tiếp mục tiêu ≤ 4 KiB, trần phong bì chung 64 KiB. Core thật đòi đối tượng có khóa `tep_id` và tệp cùng việc; không thay bằng chuỗi ID trơn.
+
+Hóa đơn XML: mã = `mau_so-ky_hieu-so_hoa_don`, ngày = `ngay_lap`, tiền = `tong_thanh_toan`, đối tác = `ma_so_thue_ban` (băm trước khi lưu ngăn), `can_kiem_tra: true` thành Đỏ cứng. ZIP mở `chi_tiet_nguon` qua Core; chỉ bỏ/đếm tệp lỗi hoặc không hỗ trợ và cảnh báo nguồn chưa đủ. Đặt `ma_module`, `nguong_json`, `loai_nghiep_vu` thuộc danh mục.
+
+### Kết quả kiểm và nộp lại
+
+```json
+{"phien_ban":1,"ma_module":"demo_thanh_toan","ket_qua":[
+ {"ma_luot":"PL-DEMO-…","ma":"PC-DEMO-0001","khau":"ktt_duyet",
+  "ket_qua":"dat","so_tien_sai":{"so":"0","tien_te":"VND"},"loai_dung":null}]}
+```
+
+`ket_qua` nhận `dat`, `sai`, `khong_kiem`. Dòng `sai` bắt buộc có `so_tien_sai` cùng tiền tệ ngưỡng; module quy đổi trước khi gửi (Q7). Gửi kèm `nguong` như lô hoặc đặt `nguong_json` ở bước ghi kết quả (Q1). Loại/nguồn loại đọc từ `dong_luot` (Q2); `loai_dung` nếu sửa phải thuộc danh mục. Kết quả tính cho loại đúng và đếm sai loại theo nguồn để Admin sửa quy tắc/prompt. Người kiểm, ghi chú, chứng từ giữ ở module.
+
+Trả `so_dong_nhan`, `so_trung`, `so_ngoai_mau`, `so_cap_doi_bac`, `so_sua_loai`, `phien_ban_engine`. Trùng (lượt, mã, khâu) bỏ qua và đếm; mã ngoài lượt ghi nguồn ngoài mẫu; lượt không tồn tại bị từ chối. `so_cap_doi_bac` chỉ là số cặp đã đổi, không tiết lộ bậc từng cặp.
+
+Q5: xét lần hoàn tất gần nhất của cùng (module, khâu, mã). Đỏ chưa có kết quả `dat`/`sai` giữ Đỏ `NOP_LAI`; `khong_kiem` chưa giải phóng. Đã kiểm hoặc lần trước Xanh thì xét bình thường ở việc mới. Kết quả ẩn sau 365 ngày vẫn được tra để giải phóng trong thời gian lượt còn giữ 400 ngày. Core giao lại cùng việc dùng lại lượt và quyết định.
+
+## Cài đặt và chính sách — chỉ dành cho Admin
+
+Python ≥ 3.11; SDK `>=2.2.0 <3.0.0`. Cài wheel SDK đã đối chiếu SHA256SUMS bằng `pip install --no-index --no-deps <wheel-sdk>`, rồi:
+
+```sh
+python -m pip install --no-index --find-links <kho-wheel-offline> --require-hashes --no-deps -r requirements.lock
+```
+
+Core cài gói và migration `sql/001_tao_ngan.sql`, giữ cấu hình/dữ liệu trong ngăn theo pháp nhân; engine không kết nối CSDL, không lưu sổ/cấu hình/đệm bền trên máy. Không thêm pháp nhân vào khóa bảng. Một việc đồng thời; 20 MiB/tệp, 50.000 dòng/lô, 300 giây/bước (chưa có số đo Core thật). XLSX: ≤ 2.048 ZIP entry, 128 MiB giải nén, 250.000 ô, 500.000 ô trong vùng khai báo. Vượt trần từ chối, không cắt ngầm.
+
+| Khóa Cài đặt bước | Giới hạn / mặc định | Dùng khi |
+|---|---|---|
+| `khau` | Bắt buộc 1–40, mã chữ thường/số/gạch dưới | Cả 5 năng lực |
+| `ma_module` | ≤ 31; `^[a-z][a-z0-9_]*$`; rỗng | JSON lấy từ tệp; bảng/hóa đơn cần đặt |
+| `nguong_json` | ≤ 4.096 ký tự; rỗng | Tệp thắng cấu hình; cần nếu không có trong tệp |
+| `danh_muc_loai_json` | ≤ 16.384; rỗng; ≤ 100 loại | `[{ma,ten,mo_ta}]`, mã ≤ 40; không khai `chua_phan_loai` |
+| `truong_phan_loai` | ≤ 60; rỗng | `dien_giai`, `tai_khoan_no`, `tai_khoan_co`, `thuoc_tinh.<khóa>` |
+| `bo_phan_loai_json` | ≤ 32.768, 32 KiB; rỗng | Quy tắc xét theo thứ tự, khớp đầu tiên thắng |
+| `chinh_sach_json` | ≤ 8.192, 8 KiB; rỗng = mặc định | Chính sách Admin bên dưới |
+| `ty_le_duoi_sad` | 0–1; 0,02 | JSON chính sách ưu tiên hơn khóa bước |
+| `cua_so_chia_nho_ngay` | Số nguyên ≥ 1; 7 | Các bước phân luồng |
+| `khuon_cot_json` | ≤ 32.768, 32 KiB; rỗng | Đọc Excel/CSV |
+| `tien_te` | ≤ 3, mã 3 chữ hoa; rỗng | Bảng thiếu cột tiền tệ, không mặc định |
+| `ma_prompt`, `phien_ban_prompt`, `prompt` | Rỗng; cần cung cấp khi chuẩn bị AI | Chỉ `chuan_bi_phan_loai`; phiếu chưa đặt trần riêng |
+| `model_uu_tien` | Rỗng | Chỉ `chuan_bi_phan_loai`, model Local |
+| `nguong_tin_cay` | 0–1; 0,7 | Chỉ `phan_luong_sau_ai` |
+| `loai_nghiep_vu` | Rỗng, mã phải trong danh mục | Chỉ hóa đơn |
+
+Bước `ghi_ket_qua` chỉ khai `khau`, `ma_module`, `nguong_json`, `danh_muc_loai_json`, `chinh_sach_json`; dùng đúng tập khóa mỗi năng lực trong `engine.json`.
+Quy tắc mẫu: `{"phien_ban":1,"quy_tac":[{"loai":"thanh_toan_ncc","khi":[{"tat_ca":[["thanh toan"]],"khong_co":[]}]}]}`. So bỏ dấu/chữ thường; `=tu` nguyên từ, `#` một hoặc nhiều chữ số, không regex. Module gán loại hợp lệ ưu tiên hơn quy tắc, rồi AI.
+
+Khuôn cột phải có đủ bốn khóa `phien_ban`, `sheet`, `cot`, `dong_dung`;
+`sheet: null` để dò sheet, tối đa 30 cột và 200 từ khóa tổng cộng. Ví dụ DEMO:
+
+```json
+{"phien_ban":1,"sheet":null,"cot":[
+ {"ma":"ma","tu_khoa":["Mã"],"bat_buoc":true},
+ {"ma":"ngay","tu_khoa":["Ngày"],"bat_buoc":true},
+ {"ma":"so_tien","tu_khoa":["Số tiền"],"bat_buoc":true},
+ {"ma":"tien_te","tu_khoa":["Tiền tệ"],"bat_buoc":false}],
+ "dong_dung":["Cộng","Tổng cộng"]}
+```
+
+Có thể ánh xạ thêm `so_tien_quy_doi`, `tien_te_quy_doi`, `loai`, `doi_tac`,
+nội dung, cờ hoặc `thuoc_tinh.<khóa>`. Ngày chuỗi nhận ISO hoặc DD/MM/YYYY.
+
+### `chinh_sach_json` (Admin)
+
+JSON object chỉ nhận các khóa sau; giá trị số là số JSON, không chuỗi/boolean. Khóa vắng giữ mặc định; khóa lạ/trùng hoặc giá trị sai bị từ chối.
+
+| Khóa | Mặc định | Điều kiện |
+|---|---|---|
+| `bac` | `[0.30,0.20,0.10,0.05]` | Giảm nghiêm ngặt trong (0,1] |
+| `nguong_xuong` | `[0.10,0.05,0.03]` | [0,1], dài bằng số bậc trừ 1 |
+| `mau_toi_thieu` | `[30,60,100]` | Số nguyên dương, dài như `nguong_xuong` |
+| `ty_le_chua_phan_loai` | 0,30 | [0,1]; cố định ở vùng chọn mẫu, không xuống bậc |
+| `mau_sach_toan_bo` | 30 | Số nguyên dương |
+| `nguong_diem_rui_ro` | 0,10 | [0,1] |
+| `do_tin_cay` | 0,95 | (0,1), cận trên một phía Clopper-Pearson |
+| `he_so` | Hai cờ đầu ×2, bốn cờ sau ×1,5 | Object theo mã cờ dưới đây, mỗi hệ số ≥ 1 |
+| `don_vi_so_tron` | 10000000 | Số nguyên dương, đơn vị tiền ngưỡng |
+| `ty_le_duoi_sad` | 0,02 | [0,1]; ghi đè khóa bước cùng tên |
+| `san` | 0,05 | [0,1], sàn vùng chọn mẫu |
+| `toi_thieu_ho_so_doi_tac_moi` | 0 | Số nguyên ≥ 0 |
+
+Các cờ: `SO_TIEN_BAT_THUONG` (trên phân vị 95, cần ≥ 50 nghiệp vụ), `DOI_TAC_MOI`, `SO_TRON`, `NGAY_NGHI`, `CUOI_KY` (3 ngày cuối tháng), `NHAP_TAY`. Mặc định `toi_thieu_ho_so_doi_tac_moi = 0`: lượt đầu coi mọi đối tác có mã là mới; ví dụ `{"toi_thieu_ho_so_doi_tac_moi":50}` để đợi đủ lịch sử. Đối tác đã gặp trong 12 tháng không mang cờ mới.
+
+Tiền ≥ TE bắt buộc Đỏ (≥ PM có lý do riêng). Vùng SAD ≤ tiền < TE: `p = min(1, max(san, p_bac × tích hệ số))`. Dưới SAD luôn `p = min(1, ty_le_duoi_sad × tích hệ số)` (Q4), kể cả cặp đang kiểm toàn bộ (Q10) hoặc chưa phân loại (Q11). Chế độ 100% và mức cố định 30% của `chua_phan_loai` chỉ áp vùng chọn mẫu.
+
+Kết quả kiểm cập nhật ngay cho lượt sau: chỉ mẫu ngẫu nhiên đã kiểm dùng ước lượng xuống bậc, cần đủ mẫu từ lần đổi bậc và cận trên đạt ngưỡng. Lỗi nhỏ lên một bậc; lỗi ≥ SAD về bậc đầu và nhãn rủi ro cao; lỗi ≥ TE kiểm toàn bộ tới đủ 30 mẫu sạch. Đang kiểm toàn bộ, chỉ lỗi ≥ TE đặt lại bộ đếm sạch (Q6). Lỗi ngoài mẫu về bậc đầu và gắn nhãn. `chua_phan_loai` không đổi bậc/chế độ. Admin đổi thang: bậc cũ không còn trong thang được đưa tới bậc gần nhất không thấp hơn, không dùng mẫu cũ để xuống ngay; toàn thang thấp hơn bậc cũ thì kiểm toàn bộ.
+
+### Hồ sơ hành vi và kiểm toán (Admin)
+
+Chia nhỏ gom tiền tuyệt đối theo băm đối tác và ngày qua mọi loại trong cùng khâu, mặc định 7 ngày; đối tác cùng mã ở module khác có băm khác. Khoản riêng dưới TE nhưng tổng đạt TE bị `NGHI_CHIA_NHO`. Q8: không khử trùng riêng dòng nộp lại trong việc mới. Đây là giới hạn đã được Anh chốt; TE do Admin quản lý. Phân biệt với Core giao lại **cùng việc**, dùng dấu hoàn tất `luot` tránh cộng hai lần.
+
+Hồ sơ hành vi được cộng trong **CÙNG lô nguyên tử với dấu `luot`**; Core giao lại việc không cộng hai lần. Chỉ khi một lô có **trên 99 loại**, phần dư ghi trước, không nguyên tử; phần dư không có cùng bảo đảm chống cộng lại khi lỗi giữa chừng. `dong_luot` ghi trước theo lô ≤ 100; `luot` ghi sau cùng. Xung đột CAS đọc lại/thử lại tối đa 3 lần, quá mức trả `NGAN_BAN`, cho phép thử lại.
+
+Q9: tối đa **20.000 đối tác mỗi (khâu, loại)**; bỏ đối tác lâu không gặp nhất (hòa kỳ thì theo băm), ghi số đã bỏ vào log kỹ thuật và thêm câu cảnh báo vào `canh_bao` của lượt. Lịch sử chống chia nhỏ chỉ cộng khoản < TE và bỏ ngày nghiệp vụ sau ngày xử lý + 1 (giờ Việt Nam). Hồ sơ ghi tiền tệ ngưỡng; lô sau có ngưỡng khác tiền tệ thì bỏ số liệu tiền cũ, giữ tập đối tác, kèm cảnh báo. Ngăn giữ `luot`, `dong_luot` 400 ngày; kết quả kiểm 365 ngày. Hồ sơ chỉ giữ biểu đồ tiền gộp, băm đối tác, tổng theo băm/ngày cửa sổ gần nhất; không giữ chi tiết giao dịch, diễn giải, mã đối tác thô (C4). Đầu tháng theo giờ Việt Nam chốt tháng trước: bản chụp `chot_ky`, tính lại số 12 tháng, làm mới hồ sơ cùng lô nguyên tử; chỉ chốt một lần.
+
+Kiểm toán viên cần hạt giống gốc 32 byte trong `luot` (chỉ Admin), đầu vào, snapshot chính sách và trạng thái ngăn trước lượt do module giữ:
 
 ```python
 from hashlib import sha256
 from fractions import Fraction
-
 hat_giong = bytes.fromhex(luot["hat_giong"])
 raw = (hat_giong + b"\x1f" + ma_module.encode("utf-8")
        + b"\x1f" + khau.encode("utf-8") + b"\x1f" + ma.encode("utf-8"))
@@ -98,45 +158,50 @@ h = int.from_bytes(sha256(raw).digest(), "big")
 duoc_chon = Fraction(h, 2**256) < Fraction(p)
 ```
 
-`p` phải lấy bằng Decimal/phân số, không qua float. Vùng chọn mẫu:
-`p = min(1, max(san, p_bac × tích hệ số cờ))`; dưới SAD:
-`p = min(1, ty_le_duoi_sad × tích hệ số cờ)` (mặc định 0,02).
-Lớp ngưỡng/cờ bắt buộc và luật nộp lại được áp riêng trước chọn mẫu.
-`ma_module` và `khau` đã kiểm dạng mã thường/số/gạch dưới trong
-`phan_luong.py`; `ma` đã kiểm không có ký tự điều khiển trong `doc_lo.py`.
-Do đó các mã không thể chứa dấu phân cách `0x1f`. Dùng bytes 32 byte để
-chọn; không dùng chuỗi hex 64 ký tự làm hạt giống trực tiếp. Khi kiểm lại
-phải giữ cùng trạng thái ngăn trước lượt (đặc biệt tỷ lệ và lịch sử nộp lại).
-Băm hạt giống là `sha256:<SHA256(hat_giong)>`. Để chạy lại cần hạt giống gốc,
-không chỉ băm; C4 không cho lưu chi tiết đầu vào trong ngăn engine nên module
-phải giữ đầu vào và snapshot chính sách phục vụ kiểm toán.
-Kết quả cho người duyệt không mang tỷ lệ, xác suất hay bậc. Riêng
-`ghi_ket_qua.so_cap_doi_bac` là số cặp đã đổi, theo phiếu §5.5, không phải bậc.
+`p` là Decimal/phân số, không float; không dùng trực tiếp 64 ký tự hex làm hạt giống. `bam_hat_giong = "sha256:" + SHA256(hat_giong)`; các mã không có ký tự điều khiển nên không chứa dấu phân cách `0x1f`. `bam_dau_vao = "sha256:" + SHA256(bytes_dau_vao)`; `ma_luot = "PL-" + SHA256(UTF8("e_phan_luong|luot|" + viec.id + "|" + bam_dau_vao))`. Cùng việc hoàn tất dùng lại hạt giống/quyết định; cùng đầu vào, việc, hạt giống, trạng thái trước lượt tái hiện từng byte.
 
-## Nhúng module và điều kiện Core
+## Lỗi cho người dùng (§7)
 
-Mỗi khâu dùng một nút/quy trình riêng. Module tự lập Blob JSON, gửi multipart
-bằng `api.goi({tep: new File([blob], "lo-DEMO.json")})` tới
-`POST /api/v1/module/{ma}/nut/{nut}/chay`; nút khai `nhan_tep.mime` có
-`application/json`. SDK trình duyệt 2.2.0 chưa có `nut.chay`.
-Phân quyền người lập/người duyệt/Admin thuộc module và Core.
+| Mã | Câu tiếng Việt |
+|---|---|
+| `TEP_KHONG_HO_TRO` | Chỉ nhận tệp JSON, Excel .xlsx hoặc CSV UTF-8. |
+| `DU_LIEU_KHONG_HOP_LE` | Dữ liệu nghiệp vụ chưa đúng mẫu. Vui lòng kiểm tra lại tệp gửi. |
+| `THIEU_NGUONG` | Chưa có ngưỡng PM/TE/SAD hợp lệ cho kỳ này. Quản trị viên cần nhập ngưỡng. |
+| `THAM_SO_KHONG_HOP_LE` | Cài đặt bước chưa đúng. Quản trị viên kiểm tra lại cài đặt của quy trình. |
+| `KHONG_PHAI_LOCAL` | Bước phân loại chỉ nhận kết quả từ AI nội bộ. |
+| `CHUOI_KHONG_KHOP` | Không khớp dữ liệu giữa các bước. Vui lòng chạy lại kiểm tra cảnh báo. |
+| `LUOT_KHONG_TON_TAI` | Không tìm thấy lượt phân luồng. Vui lòng chạy lại kiểm tra cảnh báo. |
+| `NGAN_BAN` | Dữ liệu thống kê đang được cập nhật. Vui lòng thử lại sau ít phút. |
+| `VUOT_GIOI_HAN` | Tệp vượt giới hạn xử lý. Vui lòng tách lô nhỏ hơn. |
 
-Chuỗi Local AI do Core điều phối; engine không gọi engine khác. Giữ nguyên
-đối tượng tệp `{tep_id, ten, mime, kich_thuoc}` do `tai_tep_ra` trả ở
-`chuyen_tiep.phan_luong.tep_lo`, cùng băm tệp, khâu và cờ `khong_can_ai`.
-Core thật đòi đối tượng có khóa `tep_id` và tệp cùng việc. CoreGia 2.2.0
-chỉ so chuỗi con trong đầu vào và kho tệp toàn cục; test hình dạng nghiêm
-không chứng nhận quyền/vòng đời tệp ở Core thật. Cần chạy thật Blob và
-chuỗi ba bước trên Core tập; đã kiểm bằng Core giả (CoreGia).
+## Đang chờ Core
 
-## Tự kiểm PL-2
+- **CC-1:** phát hành `nut.chay` trong SDK; kiểm multipart/Blob/nút JS trên Core tập. CoreGia chỉ kiểm byte JSON, chưa chứng minh nút thực tế.
+- **CC-2:** CoreGia cần khớp quyền/phạm vi cùng việc/pháp nhân khi mở tệp chuyển tiếp; chạy thật chuỗi ba bước và ZIP hóa đơn trên Core tập. Kiểm hình dạng `tep_id` nghiêm không thay kiểm quyền thật.
+- **CC-3:** hạt giống hiện là trường thường chỉ Admin đọc. Muốn mã hóa cần đường giải mã Core phục vụ kiểm toán, chưa tự đổi sang trường bí mật.
+- **CC-4:** vướng CLI với demo rỗng là lịch sử PL-0/PL-1, đã có ví dụ thật từ PL-2; không còn chặn đóng gói hiện hành.
+- **CC-5:** màn Admin bảng tỷ lệ `ui/bang_ty_le.js` chỉ đọc. SDK 2.2.0 từ chối `giao_dien_quan_tri`, chưa có `KttCore.engine(ma)`; màn dừng an toàn. Cần phát hành cơ chế gắn màn/cổng ngăn và lead nối cảnh báo Q9; chưa xác nhận Admin xem được bảng trên Core thật.
+- **CC-7:** engine chỉ hậu kiểm `nha_cung_cap = local` trên `tra_loi_ai`; `yeu_cau_ai` chung chưa có khóa bắt buộc Local để Core từ chối TRƯỚC khi gửi (quy ước `nha_cung_cap_bat_buoc` hiện chỉ có ở hồ sơ Mask). Bước AI của Core cấu hình nhầm Cloud thì diễn giải đã rời máy trước khi engine báo `KHONG_PHAI_LOCAL`. Cần cửa chung ở Core.
+- **Giới hạn đã biết:** Core giao lại việc trong lúc lần đầu còn chạy (quá `thoi_han_giay`) thì hai lần chạy có thể sinh hai hạt giống; `luot` và tệp ra theo lần ghi dấu trước, `dong_luot` có thể theo lần sau. Giao lại SAU khi lượt xong thì luồng và lý do giữ nguyên bản đã lưu; cột `co` tính lại theo hồ sơ mới nên có thể khác lần đầu.
+- **CC-6 (không còn chặn):** `viec.ngan.tim` chỉ lọc bằng (=), chưa có `ma IN [...]`. Từ PL-9F/9H/9I engine không còn đọc ngăn từng dòng: dò rỗng một lần, quét trang 500 dòng theo lượt/khâu với ngân sách ceil(số mã/10) trang, vượt ngân sách mới quay về đọc từng mã. Đo trên ngăn giả có chỉ mục (PL-9G, 21/11): 50.000 dòng phân luồng 526–631 lần gọi Core, engine thuần 10–24 giây; ghi kết quả 50.000 dòng 723–1.130 lần gọi, engine thuần 3–10 giây. **Ước tính, chưa đo trên Core thật**, giả định 10 ms/lần gọi: ≤ 31 giây, dưới hạn 300 giây. Lô ghi 100 lệnh hoặc trang 500 dòng trên Core thật có thể chậm hơn 10 ms; cần đo một lần trên Core tập. Lọc `IN` ở Core vẫn giảm thêm số trang quét khi lịch sử lớn.
+- **Giới hạn đã biết (PL-9F/9I):** khi quét, engine giữ trong RAM các dòng lịch sử của chính các mã trong lô (không giữ mã khác); mã nộp lại nhiều lần làm bộ nhớ tăng theo số lần. Ghi kết quả dùng bản đọc chống trùng lấy trước ở lần thử đầu; việc khác ghi chen cùng khóa thì lô xung đột, lần thử lại đọc từng khóa nên không ghi trùng, chỉ tốn thêm một lần thử.
 
-Chạy ba lệnh AGENTS.md bằng Python của venv, đặt `PYTHONDONTWRITEBYTECODE=1`
-để không tạo bytecode trong gói. `chay_thu_demo` chạy
-`demo/lo-nho-DEMO.json` với khâu `ktt_duyet`, danh mục, bộ quy tắc và
-trường phân loại DEMO trong Cài đặt bước; ngưỡng nằm trong tệp.
-Pytest chạy lô 500 dòng, C4/C5, Q2/Q4/Q5, khứ hồi hex/bytes, thứ tự ghi
-và tái hiện từng byte trên cùng đầu vào/hạt giống/trạng thái ngăn.
-Mọi kết quả này đã kiểm bằng Core giả (CoreGia), chưa nối Core thật.
-Sau mọi thay đổi gói (kể cả demo PL-0B), tính lại kiểm kê bằng
-`python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat` từ gốc repo.
+## Kiểm và đóng gói
+
+Từ gốc repo, đặt `PYTHONDONTWRITEBYTECODE=1`, dùng Python của `.venv`:
+
+```sh
+python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat
+python -B -m kho_tri_thuc_sdk.thu e_phan_luong/goi/e_phan_luong
+python -B -m pytest e_phan_luong/tests -q
+python -B e_phan_luong/tests/kiem_doc_lap.py
+sh e_phan_luong/tests/kiem_may_sach.sh <kho-wheel-offline>
+```
+
+Linux CI yêu cầu Python 3.11; Git Bash dùng được khi `PYTHON` trỏ Python 3.11. Windows: Anh tự chạy `e_phan_luong\tests\KIEM-MAY-SACH.cmd <kho-wheel-offline>`. Script tạo venv tạm, cài offline theo hash, chép gói, kiểm dependency/kiểm kê/DEMO/độc lập. Adapter `test_pl9c_dong_goi.py --kiem-ke` gọi `kiem_bam_goi.kiem` có sẵn; không cần kiểm kê ngoài gói thứ hai. Môi trường thử giữ lại cho việc xem bằng chứng, không đưa vào git.
+
+ZIP thử bytes worktree dùng chính `kiem_ten`, `kiem_ke_sql`, `tao_zip` của `_chung/cong-cu/dong_goi.py`:
+`python -B e_phan_luong/tests/test_pl9c_dong_goi.py --dong-goi-thu <thư-mục-mới-ngoài-repo>`.
+Lead sau commit chạy CLI phát hành từ bytes git:
+`python -B _chung/cong-cu/dong_goi.py --engine e_phan_luong --ref HEAD --nhan PL-9 --ra <thư-mục-mới-ngoài-repo>`.
+Không gọi ZIP từ HEAD cũ là bản phát hành của worktree chưa commit.

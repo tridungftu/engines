@@ -116,11 +116,16 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
     viec.tien_do(10, "Đang kiểm tra lô nghiệp vụ.")
     cd = doc_cai_dat(ts, lo)
     cac_ho_so = ngan_ho_so.doc_ho_so_khau(viec, ts["khau"])
+    canh_bao = list(canh_bao_them)
+    if any(hs.tien_te is not None and hs.tien_te != cd.nguong.tien_te
+           for hs, _ in cac_ho_so.values()):
+        canh_bao.append("Tiền tệ ngưỡng đã đổi; lịch sử số tiền được tính lại, vẫn giữ lịch sử đối tác.")
     # Chia nhỏ gom theo đối tác + khâu, kể cả lịch sử thuộc loại khác (Q8).
     tong_ngay = {}
     with localcontext() as ctx:
         ctx.prec = 40
         for hs, _ in cac_ho_so.values():
+            hs = ho_so.theo_tien_te(hs, cd.nguong.tien_te)
             for bam, cac_ngay in hs.tong_ngay.items():
                 ngay_so = tong_ngay.setdefault(bam, {})
                 for ngay, so in cac_ngay.items():
@@ -163,25 +168,35 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
                 dong.ma, "xanh" if ly_do == (KHONG_CHON,) else "do", ly_do,
                 dong.co, gt["loai"], gt["nguon_loai"]))
         ds_dong = tuple(da_chot)
-    truong = xuat_ket_qua(viec, lo, cd.nguong, ds_dong, thong_tin=thong_tin,
-                          canh_bao_them=canh_bao_them)
-    viec.tien_do(90, "Đang ghi kết quả lượt phân luồng.")
     theo_loai = {}
     for qd in ds_lop1:
         nv = qd.nv
         bam = bam_doi_tac(lo.ma_module, nv.doi_tac) if nv.doi_tac is not None else None
         theo_loai.setdefault(qd.loai, []).append((qd.tien_ss, bam, nv.ngay))
     ky = chot_ky.ky_hien_tai()
+    ngay_xu_ly = chot_ky.ngay_hien_tai()
     cua_so = int(Decimal(str(ts.get("cua_so_chia_nho_ngay", 7))))
     so_bo = {}
 
     def ham_cong(loai, ds):
         def cap_nhat(hs):
-            moi, so_bo[loai] = ho_so.cong(hs, ds, ky=ky, cua_so_ngay=cua_so)
+            moi, so_bo[loai] = ho_so.cong(
+                hs, ds, ky=ky, cua_so_ngay=cua_so, te=cd.nguong.te.so,
+                tien_te_nguong=cd.nguong.tien_te, ngay_xu_ly=ngay_xu_ly)
             return moi
         return cap_nhat
 
     cap_nhat = {loai: ham_cong(loai, ds) for loai, ds in theo_loai.items()}
+    if luot_cu is None:
+        # Chỉ tính trên ảnh chụp đã đọc, thuần và không ghi ngăn trước khi xuất.
+        for loai, ham in cap_nhat.items():
+            ham(cac_ho_so[loai][0] if loai in cac_ho_so else ho_so.moi(ts["khau"], loai))
+        if sum(so_bo.values()):
+            canh_bao.append("Hồ sơ hành vi vượt trần 20.000 đối tác; đã bỏ đối tác lâu không gặp.")
+        so_bo.clear()  # Nhật ký bên dưới chỉ dùng số thực sự cộng qua CAS.
+    truong = xuat_ket_qua(viec, lo, cd.nguong, ds_dong, thong_tin=thong_tin,
+                          canh_bao_them=canh_bao)
+    viec.tien_do(90, "Đang ghi kết quả lượt phân luồng.")
     # Hồ sơ cộng CÙNG lô nguyên tử với dấu luot: Core giao lại việc không cộng hai lần.
     # Lô ≤ 100 lệnh nên tối đa 99 hồ sơ đi cùng luot; phần dư (chỉ khi lô có
     # trên 99 loại, danh mục tối đa 100 + chua_phan_loai) ghi trước, không nguyên tử.

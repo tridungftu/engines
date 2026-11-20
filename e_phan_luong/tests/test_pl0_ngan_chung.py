@@ -12,12 +12,14 @@ from e_phan_luong.ngan_chung import ghi_lay_hoac_tao_nhieu, ghi_lo_thu_lai, tim_
 
 
 def chay_ngan(core, ham):
-    """App test có cùng khai báo ngăn; không thay hàm tạm của gói runtime."""
+    """App test có cùng khai báo ngăn và năng lực DEMO riêng."""
     phieu = deepcopy(app.phieu)
     nl = phieu["nang_luc"][0]
-    nl.update(nhan=["van_ban"], tra="van_ban")
+    nl.update(ma="demo.ngan@1", ten="Kiểm ngăn DEMO", nhan=["van_ban"], tra="van_ban")
     nl.pop("truong_ra")
     phieu["nang_luc"] = [nl]
+    # Ví dụ audit.phan_luong nhận tệp chỉ dành cho app runtime.
+    phieu["chay_thu_demo"] = []
     thu = Engine(phieu)
 
     @thu.nang_luc(nl["ma"])

@@ -13,7 +13,7 @@ from hashlib import sha256
 import re
 
 from .kieu import (
-    CHON_MAU, KHONG_CHON, NGHI_CHIA_NHO, NOP_LAI, THU_TU_LY_DO,
+    CHON_MAU, KHONG_CHON, NGHI_CHIA_NHO, NGUON_AI, NOP_LAI, THU_TU_LY_DO,
     VUNG_BAT_BUOC, VUNG_DUOI_SAD, KetQuaDong, Lo, NghiepVu, Nguong, Tien,
 )
 from . import chon_mau, co, ty_le
@@ -52,6 +52,7 @@ def xet_lop1_lo(
     danh_muc: dict[str, dict], bo: BoPhanLoai,
     truong_phan_loai: str | None,
     tong_truoc: Callable[[str, date], Decimal] | None = None,
+    loai_ai: Mapping[str, str] | None = None,
 ) -> tuple[QuyetDinhLop1, ...]:
     """Giữ thứ tự lô, gộp mọi lý do bắt buộc theo THU_TU_LY_DO.
 
@@ -80,7 +81,13 @@ def xet_lop1_lo(
 
     ket_qua = []
     for nv in lo.nghiep_vu:
-        loai, nguon_loai = chot_loai(gan_loai(nv, danh_muc, bo, truong_phan_loai))
+        gan = gan_loai(nv, danh_muc, bo, truong_phan_loai)
+        if gan == (None, None) and loai_ai and nv.ma in loai_ai:
+            # PL-5: Local AI chỉ gán dòng module/quy tắc chưa có loại; loại phải trong danh mục.
+            if loai_ai[nv.ma] not in danh_muc:
+                raise loi("CHUOI_KHONG_KHOP")
+            gan = (loai_ai[nv.ma], NGUON_AI)
+        loai, nguon_loai = chot_loai(gan)
         vung, bat_buoc = xet_lop1(nv, nguong)
         tien_ss, _ = tien_so_sanh(nv, nguong)
         ket_qua.append(QuyetDinhLop1(nv, loai, nguon_loai, tien_ss, bat_buoc, vung))
@@ -102,10 +109,11 @@ def xet_lop1_lo(
 def xet_lop23_lo(
     viec, lo: Lo, ds_lop1: tuple[QuyetDinhLop1, ...], *,
     khau: str, cs: ty_le.ChinhSach, hat_giong: bytes,
+    ho_so_theo_loai: Callable[[str], co.HoSoLoai | None] | None = None,
 ) -> tuple[KetQuaDong, ...]:
     """Giữ đủ dòng và thứ tự; đọc mỗi cặp khâu/loại tối đa một lần.
 
-    PL-4 chưa cấp hồ sơ: ho_so=None, không suy cờ đối tác mới/bất thường.
+    ho_so_theo_loai (PL-4) trả ảnh chụp hồ sơ của loại; None → không suy cờ đối tác mới/bất thường.
     Hạt giống để chọn phải là bytes; bản lưu ngăn dùng .hex().
     """
     nop_lai = tra_nop_lai(viec, lo.ma_module, khau, [qd.nv.ma for qd in ds_lop1])
@@ -116,7 +124,8 @@ def xet_lop23_lo(
             viec.kiem_huy()
         nv = qd.nv
         bam_dt = bam_doi_tac(lo.ma_module, nv.doi_tac) if nv.doi_tac is not None else None
-        cac_co = co.tinh_co(nv, qd.tien_ss, None, bam_dt, cs)
+        ho_so = ho_so_theo_loai(qd.loai) if ho_so_theo_loai is not None else None
+        cac_co = co.tinh_co(nv, qd.tien_ss, ho_so, bam_dt, cs)
         bat_buoc = set(qd.bat_buoc)
         if nv.ma in nop_lai:
             bat_buoc.add(NOP_LAI)

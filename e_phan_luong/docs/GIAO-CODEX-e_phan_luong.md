@@ -66,7 +66,7 @@ e_phan_luong/
 
 `nguong.py` (PL-1B)
 - `doc_nguong(tu_tep: dict | None, tu_tham_so: str | None) -> Nguong` — khối trong tệp thắng `nguong_json` của Cài đặt bước; cả hai trống → `loi("THIEU_NGUONG")`. Mỗi ngưỡng là tiền có tiền tệ; ba ngưỡng cùng tiền tệ; `0 < SAD < TE <= PM`; sai → `loi("THIEU_NGUONG")`. `nguong_json` không phải JSON object → `loi("THAM_SO_KHONG_HOP_LE")`.
-- `tien_so_sanh(nv: NghiepVu, ng: Nguong) -> tuple[Tien | None, str | None]` — `so_tien_quy_doi` cùng tiền tệ ngưỡng thì dùng; không thì `so_tien` nếu cùng tiền tệ; `so_tien.tien_te` None → `(None, CHUA_RO_TIEN_TE)`; khác tiền tệ không quy đổi → `(None, CHUA_QUY_DOI)`. **Số tiền âm:** theo quyết định của Anh (lead ghi vào `them` khi giao); chưa có quyết định thì so theo giá trị tuyệt đối, gói trong một hàm `_gia_tri_so(t)` duy nhất để đổi một chỗ.
+- `tien_so_sanh(nv: NghiepVu, ng: Nguong) -> tuple[Tien | None, str | None]` — `so_tien_quy_doi` cùng tiền tệ ngưỡng thì dùng; không thì `so_tien` nếu cùng tiền tệ; `so_tien.tien_te` None → `(None, CHUA_RO_TIEN_TE)`; khác tiền tệ không quy đổi → `(None, CHUA_QUY_DOI)`. **Số tiền âm: so theo giá trị tuyệt đối (Anh chốt Q3, 20/11)**, gói trong một hàm `_gia_tri_so(t)` duy nhất; chia nhỏ cộng theo giá trị tuyệt đối.
 - `xet_lop1(nv, ng) -> tuple[str, tuple[str, ...]]` — trả `(vung, ly_do)`: `ly_do` gồm mọi mã bắt buộc áp dụng (`VUOT_PM` khi ≥ PM, `VUOT_TE` khi TE ≤ x < PM, `CHUA_QUY_DOI`, `CHUA_RO_TIEN_TE`, `CO_DO_CUNG`); có mã → `VUNG_BAT_BUOC`; không thì `VUNG_CHON_MAU` (SAD ≤ x < TE) hoặc `VUNG_DUOI_SAD`.
 - `tim_chia_nho(ds: Sequence[NghiepVu], ng: Nguong, *, cua_so_ngay: int = 7, tong_truoc: Callable[[str, date], Decimal] | None = None, bam: Callable[[str], str]) -> frozenset[str]` — trả tập `ma` bị `NGHI_CHIA_NHO`. Chỉ xét dòng có đối tác, có tiền so sánh được và < TE. Theo từng đối tác (khóa = `bam(doi_tac)`), mọi cửa sổ `[d − cua_so_ngay + 1, d]`: tổng các khoản trong cửa sổ (+ `tong_truoc(bam, ngay)` cho các ngày trong cửa sổ nếu có — PL-4 cấp từ hồ sơ hành vi) ≥ TE → mọi dòng trong cửa sổ đó bị gắn. Khâu là một trong một lượt nên không cần gom theo khâu.
 
@@ -87,7 +87,7 @@ e_phan_luong/
 - `doi_bac.MotKetQua(nguon_mau, ket_qua, muc_sai)`; `doi_bac.cap_nhat(tt, kq, cs, *, luc: str) -> tuple[TrangThai, bool]` (bool = có đổi bậc/chế độ). Luật (phiếu §4.3; chỗ in nghiêng là diễn giải của lead, báo Anh ở PL-3):
   1. `khong_kiem` → không đổi gì.
   2. Đếm: `nguon_mau = chon_mau` → `mau_tu_doi_bac += 1`, `mau_12t += 1`, nếu sai thêm `loi_tu_doi_bac`, `loi_12t`. Sai với `muc_sai ∈ {sad, te}` (mọi nguồn) → `loi_sad_12t += 1`. Sai và `nguon_mau = ngoai_mau` → `loi_ngoai_mau_12t += 1`.
-  3. Sai (mọi nguồn), áp **mức nặng nhất**: `te` → chế độ `toan_bo`, `mau_sach_toan_bo = 0`; `sad` hoặc `ngoai_mau` → bậc `bac[0]` (chế độ `bac`); `nho` → lên một bậc (đã ở `bac[0]` thì giữ). *Đang `toan_bo` mà sai `nho`/`sad` → giữ `toan_bo`, đếm lại `mau_sach_toan_bo` từ 0.* Mọi lần đổi bậc/chế độ: `mau_tu_doi_bac = loi_tu_doi_bac = 0`, `doi_bac_luc = luc`.
+  3. Sai (mọi nguồn), áp **mức nặng nhất**: `te` → chế độ `toan_bo`, `mau_sach_toan_bo = 0`; `sad` hoặc `ngoai_mau` → bậc `bac[0]` (chế độ `bac`); `nho` → lên một bậc (đã ở `bac[0]` thì giữ). **Đang `toan_bo` (Anh chốt Q6, 20/11): chỉ lỗi `te` mới đưa `mau_sach_toan_bo` về 0; lỗi `nho`/`sad`/ngoài mẫu giữ `toan_bo`, không xóa bộ đếm, không cộng mẫu sạch.** Mọi lần đổi bậc/chế độ: `mau_tu_doi_bac = loi_tu_doi_bac = 0`, `doi_bac_luc = luc`.
   4. Đạt: chế độ `toan_bo` → `mau_sach_toan_bo += 1`; đủ `cs.mau_sach_toan_bo` → chế độ `bac`, bậc `bac[0]`. Chế độ `bac` và `nguon_mau = chon_mau` → xét xuống: chỉ số bậc `i` chưa ở sàn, `mau_tu_doi_bac ≥ mau_toi_thieu[i]` **và** `can_tren(loi_tu_doi_bac, mau_tu_doi_bac) ≤ nguong_xuong[i]` → xuống bậc `i + 1`.
   5. *`chua_phan_loai`: không bao giờ đổi bậc hay vào `toan_bo` (30% cố định); vẫn đếm và gắn nhãn.*
   6. Sau mỗi lần cập nhật: `diem = can_tren(loi_12t, mau_12t)` (None khi `mau_12t = 0`); nhãn `rui_ro_cao` khi `diem > nguong_diem_rui_ro` hoặc `loi_sad_12t > 0`; nhãn `loi_ngoai_mau` khi `loi_ngoai_mau_12t > 0`. (PL-4 chốt kỳ tính lại số 12 tháng.)
@@ -99,11 +99,11 @@ e_phan_luong/
 - `chon_mau.sinh_hat_giong() -> bytes` (`secrets.token_bytes(32)`); `chon_mau.bam_hat_giong(hg) -> str` (`"sha256:" + hex`).
 - `chon_mau.gia_tri_bam(hg, ma_module, khau, ma) -> int` = `int.from_bytes(sha256(hg + b"\x1f" + ma_module + b"\x1f" + khau + b"\x1f" + ma), "big")` (chuỗi mã hóa UTF-8). Ghi công thức này vào docstring để kiểm toán viên chạy lại.
 - `chon_mau.duoc_chon(hg, ma_module, khau, ma, p: Decimal) -> bool` — so chính xác bằng số nguyên/`Fraction`: `gia_tri_bam < p × 2^256` (không qua float).
-- `chon_mau.tinh_p(p_co_so: Decimal, he_so: Decimal, san: Decimal) -> Decimal` = `min(1, max(san, p_co_so × he_so))`. Vùng dưới SAD: `p_co_so = cs.ty_le_duoi_sad`, `san = 0` (**theo quyết định của Anh**, lead ghi vào `them`; chưa có thì làm đúng công thức này và thêm tham số `nhan_he_so_duoi_sad: bool = True`).
+- `chon_mau.tinh_p(p_co_so: Decimal, he_so: Decimal, san: Decimal) -> Decimal` = `min(1, max(san, p_co_so × he_so))`. Vùng dưới SAD: `p_co_so = cs.ty_le_duoi_sad`, `san = 0`, **có nhân hệ số cờ (Anh chốt Q4, 20/11)**: `p = min(1, ty_le_duoi_sad × tích hệ số)`.
 
 `ket_qua.py` (PL-3A)
-- `doc_ket_qua_json(du_lieu: bytes) -> tuple[str, tuple[DongKetQua, ...]]` — §5.3; trần 20 MiB/50.000 dòng (`VUOT_GIOI_HAN`); `DongKetQua(chi_so, ma_luot, ma, khau, ket_qua, so_tien_sai: Tien | None, loai_dung: str | None, loai: str | None)`; `ket_qua ∈ {dat, sai, khong_kiem}`; `sai` bắt buộc `so_tien_sai` có tiền tệ; trùng (ma_luot, ma, khau) **trong tệp** → chỉ giữ dòng đầu, đếm trùng. Sai → `loi("DU_LIEU_KHONG_HOP_LE")`.
-- `muc_sai(so_tien_sai: Tien, ng: Nguong) -> str` — `< SAD` → `nho`; `SAD ≤ x < TE` → `sad`; `≥ TE` → `te` (cùng quy ước số âm với `nguong.py`). Khác tiền tệ ngưỡng → theo quyết định của Anh (lead ghi vào `them`).
+- `doc_ket_qua_json(du_lieu: bytes) -> KetQuaTep` — §5.3, thêm khối tùy chọn `"nguong"` cùng dạng §5.1 (**Anh chốt Q1, 20/11: module gửi kèm ngưỡng** trong tệp; không có thì dùng `nguong_json` của Cài đặt bước ghi kết quả; thiếu cả hai mà có dòng `sai` → `THIEU_NGUONG`). `KetQuaTep(ma_module, nguong: dict | None, dong: tuple[DongKetQua, ...], so_trung_trong_tep: int)`; `DongKetQua(chi_so, ma_luot, ma, khau, ket_qua, so_tien_sai: Tien | None, loai_dung: str | None)`. Trần 20 MiB/50.000 dòng (`VUOT_GIOI_HAN`); `ket_qua ∈ {dat, sai, khong_kiem}`; `sai` bắt buộc `so_tien_sai` có tiền tệ; trùng (ma_luot, ma, khau) **trong tệp** → chỉ giữ dòng đầu, đếm trùng. Sai → `loi("DU_LIEU_KHONG_HOP_LE")`.
+- `muc_sai(so_tien_sai: Tien, ng: Nguong) -> str` — theo giá trị tuyệt đối (Q3): `< SAD` → `nho`; `SAD ≤ x < TE` → `sad`; `≥ TE` → `te`. **Khác tiền tệ ngưỡng → `loi("DU_LIEU_KHONG_HOP_LE")` (Anh chốt 20/11: từ chối, module gửi số đã quy đổi; không đoán).**
 - `nguon_mau(ly_do: str | None) -> str` — chuỗi cột `dong_luot.ly_do`: có `CHON_MAU` → `chon_mau`; có mã bắt buộc → `bat_buoc`; `KHONG_CHON` hoặc `None` (mã không thuộc lượt) → `ngoai_mau`.
 
 ### 2.4 Ngăn dữ liệu (`ngan_du_lieu`, đều `pham_vi: "phap_nhan"`, khóa không chứa `phap_nhan_id`)
@@ -113,7 +113,7 @@ Cột hệ thống theo mẫu `e_demo_ngan` (`id, phap_nhan_id, row_version, tao
 | Bảng | Khóa | Trường (kiểu) | `giu_toi_da_ngay` |
 |---|---|---|---|
 | `luot` | `ma_luot` | `ma_luot` (van_ban), `ma_module` (van_ban), `khau` (van_ban), `hat_giong` (van_ban, 64 hex), `bam_dau_vao` (van_ban) | 400 |
-| `dong_luot` | `ma_luot`, `ma` | `ma_luot`, `ma`, `ma_module`, `khau`, `ly_do` (van_ban) — *cột thêm theo câu Q2 của Anh nếu có* | 400 |
+| `dong_luot` | `ma_luot`, `ma` | `ma_luot`, `ma`, `ma_module`, `khau`, `ly_do`, `loai`, `nguon_loai` (đều van_ban) — **2 cột cuối Anh chốt Q2, 20/11** (mã danh mục, không phải chi tiết giao dịch) | 400 |
 | `ket_qua_kiem` | `ma_luot`, `ma`, `khau` | `ma_luot`, `ma`, `khau`, `ma_module`, `loai`, `ket_qua`, `muc_sai`, `nguon_mau`, `nguon_loai_sai` (đều van_ban) | 365 |
 | `ty_le` | `khau`, `loai` | `khau`, `loai`, `bac` (so), `che_do` (van_ban), `mau_tu_doi_bac`, `loi_tu_doi_bac`, `mau_sach_toan_bo`, `mau_12t`, `loi_12t`, `loi_sad_12t`, `loi_ngoai_mau_12t` (so), `diem` (so), `nhan` (van_ban), `doi_bac_luc` (thoi_diem) | không |
 | `ho_so_hanh_vi` | `khau`, `loai` | `khau`, `loai`, `so_nghiep_vu` (so), `bieu_do` (van_ban, JSON), `bam_doi_tac` (van_ban, JSON), `tong_7_ngay` (van_ban, JSON), `ky_lam_moi` (van_ban) | không |
@@ -139,7 +139,7 @@ Làm lát PL-0 cho e_phan_luong. kieu.py và loi.py đã có trong gói (lead gi
 6. tests/conftest.py, tests/kiem_doc_lap.py (không import kho_tri_thuc.*, không __pycache__/.pyc/symlink trong goi/, không mạng/socket/subprocess/sqlite/psycopg trong gói, không từ "VND" gán mặc định trong mã gói — kiểm bằng grep có danh sách ngoại lệ là chuỗi trong test/README).
 7. test_pl0_*.py: phiếu đọc được (doc_phieu), schema loại riêng trùng băm _chung/contract/, SQL không json/jsonb và không cột cấm (C4), kiểm kê khớp, ngan_chung đúng (đúng một lần thử lại khi gay_xung_dot_ngan(so_lan=1); NGAN_BAN sau 4 lần xung đột), C5: truong_ra không có mã chứa "ty_le"/"xac_suat"/"bac".
 8. Hai điểm "Cần Core" (GIAO-CODEX §4): viết tests/test_pl0_can_core.py bằng CoreGia — (a) bước 1 tai_tep_ra rồi bước sau mo_tep tep_id nằm trong đối tượng {"tep_id",...} lồng trong chuyen_tiep của phong bì tra_loi_ai: mở được; (b) ghi chú rằng CoreGia lỏng hơn Core thật (so chuỗi con) — test kèm hàm kiểm hình dạng nghiêm như Core thật (jsonpath $.** ? (@.tep_id == id)) để PL-5 dùng lại.
-Đạt: 3 lệnh AGENTS.md §5 (thu: nếu không có ví dụ nào thì ghi kết quả thật, không bịa [ĐẠT]); pytest 0 lỗi; kiem_doc_lap mã 0. Không sửa kieu.py, loi.py, VIEC.md.
+Đạt: 3 lệnh AGENTS.md §5 (thu: nếu không có ví dụ nào thì ghi kết quả thật, không bịa [ĐẠT]); pytest 0 lỗi; kiem_doc_lap mã 0. Không sửa kieu.py, loi.py. VIEC.md chỉ sửa dòng PL-0 và mục "Cần Core". Tệp tests/demo/* và goi/e_phan_luong/demo/* do PL-0B làm song song: không tạo.
 ```
 
 ### PL-0B — Bộ DEMO và AI giả
@@ -215,8 +215,8 @@ Test e_phan_luong/tests/test_pl1_phan_luong.py trên tests/demo/lo-500-DEMO.json
 ### PL-2 — ghép: lớp 2 + 3, năng lực `audit.phan_luong@1`, ngăn lượt
 ```
 Đọc AGENTS.md; PHIEU §3, §4, §5.1, §5.5, §6, §8; GIAO-CODEX §2. Nhánh này đã có PL-0…PL-1, PL-2A, PL-2B.
-1. ngan_luot.py: doc_ty_le(viec, khau, loai, cs) → TrangThai (chưa có → ty_le.moi, không ghi); tra_nop_lai(viec, ma_module, khau, ds_ma) → tập ma có lần trước gần nhất là Đỏ (tìm dong_luot theo {ma_module, khau, ma}; chỉ tính dòng có luot tồn tại; lần gần nhất theo tao_luc của luot) — luật nộp lại theo quyết định của Anh trong `them`; ghi_luot(viec, luot, ds_dong) — dong_luot trước (lay_hoac_tao, lô ≤ 100), luot SAU CÙNG (dấu hoàn tất).
-2. phan_luong.py thêm lớp 2 + 3: p theo GIAO-CODEX §2.3 (p_bac, he_so từ co.tinh_co với ho_so=None, tinh_p; vùng dưới SAD theo quyết định của Anh), duoc_chon; NOP_LAI; ra KetQuaDong cho mọi dòng.
+1. ngan_luot.py: doc_ty_le(viec, khau, loai, cs) → TrangThai (chưa có → ty_le.moi, không ghi); tra_nop_lai(viec, ma_module, khau, ds_ma) → tập ma có lần trước gần nhất là Đỏ (tìm dong_luot theo {ma_module, khau, ma}; chỉ tính dòng có luot tồn tại; lần gần nhất theo tao_luc của luot) — **Anh chốt Q5 (20/11): lần gần nhất Đỏ mà CHƯA có ket_qua_kiem (dat/sai) cho (ma_luot, ma, khau) → NOP_LAI; đã có kết quả kiểm → xét bình thường với hạt giống mới; lần gần nhất Xanh → bình thường**; ghi_luot(viec, luot, ds_dong) — dong_luot trước (lay_hoac_tao, lô ≤ 100), luot SAU CÙNG (dấu hoàn tất).
+2. phan_luong.py thêm lớp 2 + 3: p theo GIAO-CODEX §2.3 (p_bac, he_so từ co.tinh_co với ho_so=None, tinh_p; vùng dưới SAD = ty_le_duoi_sad × tích hệ số, Q4), duoc_chon; NOP_LAI; ra KetQuaDong cho mọi dòng; dong_luot ghi cả loai, nguon_loai (Q2).
 3. xuat_json.py: tep_json (mỗi dòng: ma, luong, ly_do, co, loai, nguon_loai — KHÔNG tỷ lệ/xác suất/bậc; kèm ma_luot, bam_hat_giong, bam_dau_vao, phien_ban_engine, khau, ma_module), canh_bao ≤ 500 ký tự chỉ lý do; tep_ds_do tạm null nếu SDK cho trường tệp rỗng (PL-8 làm Excel), không thì ghi rõ.
 4. chay.py: năng lực audit.phan_luong@1 (mo_tep JSON; Excel/CSV → TEP_KHONG_HO_TRO tới PL-6) trả đủ truong_ra §5.5; chay_thu_demo với goi/e_phan_luong/demo/lo-nho-DEMO.json.
 Test: tái hiện từng byte với hạt giống cố định (mock sinh_hat_giong); xem_ngan mọi bảng không có số tiền/ngày giao dịch/đối tác/nội dung (C4); trường ra và tep_json không có tỷ lệ/xác suất/bậc (C5); nộp lại; lô 500 DEMO qua CoreGia; luot ghi sau cùng.
@@ -226,7 +226,7 @@ Test: tái hiện từng byte với hạt giống cố định (mock sinh_hat_gi
 ### PL-3 — ghép: năng lực `audit.ghi_ket_qua@1`
 ```
 Đọc AGENTS.md; PHIEU §4.3, §4.5, §5.3, §6, §7, §8; GIAO-CODEX §2. Nhánh này đã có PL-0…PL-2 và ket_qua.py, doi_bac.py.
-1. ngan_ket_qua.py: kiểm luot có thật (không → LUOT_KHONG_TON_TAI), ma_module/khau khớp; dòng không thuộc lượt → ngoai_mau; gửi trùng (đã có ket_qua_kiem) → so_trung; loại tính cho loai_dung nếu có (đếm so_sua_loai, nguon_loai_sai); gom theo (khau, loai): đọc ty_le (CAS row_version), áp doi_bac.cap_nhat lần lượt, ghi ket_qua_kiem + ty_le cùng lô (≤ 99 kết quả + 1 ty_le mỗi lô) qua ngan_chung.ghi_lo_thu_lai; cặp mới dùng lay_hoac_tao rồi sửa CAS.
+1. ngan_ket_qua.py: ngưỡng = nguong.doc_nguong(khối "nguong" của tệp, tham số nguong_json) (Q1); kiểm luot có thật (không → LUOT_KHONG_TON_TAI), ma_module/khau khớp; dòng không thuộc lượt → ngoai_mau; gửi trùng (đã có ket_qua_kiem) → so_trung; loại = loai_dung nếu có, không thì dong_luot.loai (Q2); loai_dung khác dong_luot.loai → so_sua_loai += 1, nguon_loai_sai = dong_luot.nguon_loai; dòng ngoài lượt không có loại → dùng loai_dung, không có thì chua_phan_loai; gom theo (khau, loai): đọc ty_le (CAS row_version), áp doi_bac.cap_nhat lần lượt, ghi ket_qua_kiem + ty_le cùng lô (≤ 99 kết quả + 1 ty_le mỗi lô) qua ngan_chung.ghi_lo_thu_lai; cặp mới dùng lay_hoac_tao rồi sửa CAS.
 2. chay.py: năng lực audit.ghi_ket_qua@1 trả so_dong_nhan, so_trung, so_ngoai_mau, so_cap_doi_bac, so_sua_loai, phien_ban_engine; chay_thu_demo: chạy phan_luong DEMO rồi ghi kết quả (nếu CLI không nối được 2 bước thì dựng ngăn bằng dữ liệu DEMO trong test, ghi rõ).
 Test: hai ghi_ket_qua cùng lúc (gay_xung_dot_ngan) → đúng một lần thử lại, số đếm không lệch; NGAN_BAN sau 3 lần thử lại; đổi bậc hiệu lực ngay ở lượt phân luồng kế tiếp; lỗi ngoài mẫu; sửa loại; xem_ngan C4; kết quả không có tỷ lệ (C5).
 Đạt: 3 lệnh AGENTS.md §5.
@@ -241,4 +241,14 @@ Test: hai ghi_ket_qua cùng lúc (gay_xung_dot_ngan) → đúng một lần th�
 | 1. Module chạy nút bằng tệp tự lập (Blob JSON), không qua hộp chọn tệp | **Được** về cơ chế. Core không phân biệt Blob hay tệp chọn; mime dò theo byte (JSON → `application/json`). SDK 2.2.0 **chưa có** hàm JS `nut.chay` (chỉ có ở mã Core 2.4.0); module dùng `api.goi({tep: new File([blob], "lo.json")})` gọi `POST /api/v1/module/{ma}/nut/{nut}/chay`; nút phải khai `nhan_tep.mime` có `application/json` | `core/cong_quy_trinh.py:128-132`, `core/tep.py:132-154`, `trinh_duyet.js` 2.2.0 dòng 378-390 | Ghi vào §3 hướng dẫn nhúng (README). Cần Core: phát hành `nut.chay` trong SDK cho module; chạy thật một lần trên Core tập |
 | 2. Bước 3 `mo_tep` tệp do bước 1 tải lên | **Được có điều kiện:** đầu vào bước phải chứa **đối tượng có khóa `tep_id`** (Core thật dùng `jsonb_path_exists '$.** ? (@.tep_id == $t)'`), tệp cùng việc. CoreGia lỏng hơn (so chuỗi con, kho tệp toàn cục) | `core/sql/134_engine_keo_viec.sql:392-413`, `thu.py:548-557` | `chuyen_tiep` mang nguyên đối tượng tệp (§2.5); test kiểm hình dạng nghiêm. Cần Core: CoreGia cùng ngữ nghĩa Core thật; chạy thật chuỗi 3 bước trên Core tập |
 
-**Chờ Anh** (lead hỏi 20/11/2026; Codex làm theo câu trả lời lead ghi vào `them`): Q1 ngưỡng xếp mức sai khi ghi kết quả; Q2 loại và nguồn loại của dòng khi ghi kết quả; Q3 số tiền âm; Q4 vùng dưới SAD có nhân hệ số cờ không. Ghi kết quả vào `VIEC.md` mục "Chờ Anh".
+**Anh chốt 20/11/2026** (lead hỏi vì phiếu chưa rõ; đã ghi vào các mục §2–§3 ở trên):
+
+| # | Câu | Anh chốt |
+|---|---|---|
+| Q1 | Ngưỡng để xếp mức sai khi ghi kết quả kiểm | Module gửi kèm khối `nguong` trong JSON kết quả (không có thì `nguong_json` của Cài đặt bước); không thêm cột |
+| Q2 | Loại, nguồn loại của dòng khi ghi kết quả | Thêm 2 cột `loai`, `nguon_loai` vào `dong_luot` |
+| Q3 | Số tiền âm | So theo giá trị tuyệt đối |
+| Q4 | Dưới SAD có nhân hệ số cờ | Có: `p = min(1, 2% × tích hệ số)` |
+| Q5 | Nộp lại | Lần trước Đỏ chưa có kết quả kiểm → giữ Đỏ `NOP_LAI`; đã có kết quả → xét lại bình thường |
+| Q6 | Lỗi khi đang 100% | Chỉ lỗi ≥ TE mới đếm lại 30 mẫu sạch |
+| Q7 | `so_tien_sai` khác tiền tệ ngưỡng | Từ chối (`DU_LIEU_KHONG_HOP_LE`), module gửi số đã quy đổi |

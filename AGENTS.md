@@ -69,6 +69,7 @@ sha256sum docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl 
   python <engine>/tests/kiem_doc_lap.py                 # không import kho_tri_thuc.*, không __pycache__ trong goi/
   ```
 - Cập nhật `<engine>/docs/VIEC.md` (trạng thái, ngày, mã PR) và `<engine>/goi/<ma>/CHANGELOG.md` (nếu có).
+- **Danh mục engine cho module** (Anh yêu cầu 20/11/2026): PR nào đổi `*/goi/*/engine.json` thì chạy `python _chung/cong-cu/sinh_danh_muc_engine.py` và commit `_chung/docs/DANH-MUC-ENGINE-CHO-MODULE.md` trong cùng PR. Engine mới: thêm ghi chú vào `GHI_CHU`; năng lực mới dùng được thành quy trình: thêm chuỗi mẫu vào `CHUOI`. Không sửa tay tệp danh mục. CI `danh muc engine cho module` báo đỏ nếu tệp chưa khớp hoặc chuỗi mẫu nối sai.
 - Mọi kiểm tra trước khi nối Core thật ghi rõ **"đã kiểm bằng Core giả (CoreGia)"**. Không ghi "SẴN SÀNG".
 
 ## 6. Báo cáo cuối PR (mẫu)

@@ -1,0 +1,23 @@
+name: danh muc engine cho module
+on:
+  push:
+    paths: ["*/goi/*/engine.json", "_chung/cong-cu/sinh_danh_muc_engine.py", "_chung/docs/DANH-MUC-ENGINE-CHO-MODULE.md", ".github/workflows/danh-muc-engine.yml"]
+  pull_request:
+    paths: ["*/goi/*/engine.json", "_chung/cong-cu/sinh_danh_muc_engine.py", "_chung/docs/DANH-MUC-ENGINE-CHO-MODULE.md", ".github/workflows/danh-muc-engine.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  kiem:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Kiem danh muc khop engine.json va chuoi mau noi dung
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONUTF8: "1"
+        run: python -I _chung/cong-cu/sinh_danh_muc_engine.py --kiem

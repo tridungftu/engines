@@ -1,35 +1,35 @@
 # Danh mục engine cho lập trình module
 
-*Cập nhật 20/11/2026 (Claude, lead). Căn cứ: `engine.json` của 8 gói trên nhánh `main` repo `tridungftu/engines` (commit `b9033f7`); bản phát hành trên GitHub; `docs/goi-gui-engine/API-ENGINE-v1.md` và SDK 2.2.0 (`HUONG-DAN-VIET-MODULE.md`, `MAU-PHIEU-ENGINE.md`); `_chung/docs/LOAI-DU-LIEU-RIENG.md`. Phần 5 sinh tự động từ `engine.json`; khi engine đổi phiên bản phải sinh lại.*
+*Tệp **sinh tự động** bằng `python _chung/cong-cu/sinh_danh_muc_engine.py` từ `engine.json` của mọi gói; không sửa tay. Muốn đổi ghi chú hay chuỗi mẫu: sửa `GHI_CHU`/`CHUOI` trong script rồi chạy lại. Kiểm tự động trên GitHub báo đỏ khi tệp chưa cập nhật theo `engine.json` hoặc một chuỗi mẫu nối sai.*
+
+*Phiên bản gói lúc sinh: `e_ocr` 1.0.9, `e_hoi_ai` 0.12.0, `e_mask` 1.6.1, `e_trich_xuat` 0.5.0, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.1, `e_doi_chieu` 0.9.0, `e_tra_cuu` 0.2.0.*
 
 ## 1. Kết luận
 
-- **8 engine, 38 năng lực, đều đã đóng gói và phát hành.** Tất cả mới **kiểm bằng Core giả (CoreGia)**, chưa nối Core thật, nên chưa engine nào "SẴN SÀNG". Module lập trình và test bằng dữ liệu DEMO.
+- **8 engine, 38 năng lực.** Tất cả mới **kiểm bằng Core giả (CoreGia)**, chưa nối Core thật, nên chưa engine nào "SẴN SÀNG". Module lập trình và test bằng dữ liệu DEMO.
 - **Module không gọi engine.** Module khai **nút** trong phiếu module. Admin tạo **quy trình** (chuỗi bước engine) gắn vào nút trên Core. Kết quả bước cuối về **ngăn** của module.
-- Những gì thuộc nghiệp vụ module (prompt, bộ tham số hợp đồng, bộ nhóm dữ liệu gốc, khuôn cột, bộ quy tắc đối chiếu…) **đặt trong Cài đặt bước** của quy trình. Engine không có mặc định chung cho các thứ này.
+- Tải gói: mục **Releases** của repo `tridungftu/engines`; chọn bản có tệp `<engine>-<phiên bản gói>.zip` khớp cột "Gói" dưới đây. Mỗi bản có `SHA256SUMS.txt`, `DANH-SACH-GOI.json`, `HUONG-DAN-CAI-NGHIEM-THU.md` và wheel SDK.
 
-| Engine | Tên | Gói | Bản phát hành | Dùng khi | Lưu ý cho module |
-|---|---|---|---|---|---|
-| `e_ocr` | Nhận dạng văn bản | 1.0.9 | `engines-20261115` | PDF scan, ảnh → chữ có vị trí, văn bản thuần, Word giữ bảng | ABBYY trước, Tesseract dự phòng; ABBYY thật chưa chạy thử |
-| `e_hoi_ai` | Hỏi AI | 0.12.0 | `engines-20261115` | Hỏi AI về tài liệu có trích dẫn; bước AI giữa chuỗi của engine khác | **Chỉ Local AI**; chưa có năng lực Cloud; prompt thuộc module |
-| `e_mask` | Che định danh | 1.6.1 | `engines-20261117` | Che/mở che tên, MST, địa chỉ… trước khi đưa ra ngoài | Kho bí danh tạm giữ trong bộ nhớ (mất khi khởi động lại); mở che cần `ma_yeu_cau` |
-| `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.0 | `engines-20261115` | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
-| `e_hoa_don` | Đọc XML hóa đơn | 1.0.0 | `engines-20261115` | Đọc XML, ZIP hóa đơn điện tử; lập bảng kê XLSX | Chưa có PDF, chưa tải cổng thuế |
-| `e_kiem_excel` | Kiểm và đọc file Excel | 0.1.1 | `engines-20261119` | Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề | Ô đích, bộ nhóm, khuôn cột do module truyền |
-| `e_doi_chieu` | Đối chiếu bản ký | 0.9.0 | `engines-20261115b` | So bản Word chuẩn với bản đã ký | Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module |
-| `e_tra_cuu` | Tra cứu tài liệu | 0.2.0 | `engines-20261115b` | Hỏi đáp 3 tầng trên kho tài liệu | Bước đầu nhận **tệp JSON yêu cầu**; cần Kho tài liệu của Core (chưa có) |
-
-Tải gói: mục **Releases** của repo `tridungftu/engines`. Mỗi bản có `SHA256SUMS.txt`, `DANH-SACH-GOI.json`, `HUONG-DAN-CAI-NGHIEM-THU.md` và wheel SDK 2.2.0.
+| Engine | Tên | Gói | Số năng lực | Dùng khi | Lưu ý cho module |
+|---|---|---|---:|---|---|
+| `e_ocr` | Nhận dạng văn bản | 1.0.9 | 3 | PDF scan, ảnh → chữ có vị trí, văn bản thuần, Word giữ bảng | ABBYY trước, Tesseract dự phòng; ABBYY thật chưa chạy thử |
+| `e_hoi_ai` | Hỏi AI | 0.12.0 | 3 | Hỏi AI về tài liệu có trích dẫn; bước AI giữa chuỗi của engine khác | **Chỉ Local AI**; chưa có năng lực Cloud; prompt thuộc module |
+| `e_mask` | Che định danh | 1.6.1 | 8 | Che/mở che tên, MST, địa chỉ… trước khi đưa ra ngoài | Kho bí danh tạm giữ trong bộ nhớ (mất khi khởi động lại); mở che cần `ma_yeu_cau` |
+| `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.0 | 4 | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
+| `e_hoa_don` | Đọc XML hóa đơn | 1.0.0 | 3 | Đọc XML, ZIP hóa đơn điện tử; lập bảng kê XLSX | Chưa có PDF, chưa tải cổng thuế |
+| `e_kiem_excel` | Kiểm và đọc file Excel | 0.1.1 | 2 | Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề | Ô đích, bộ nhóm, khuôn cột do module truyền |
+| `e_doi_chieu` | Đối chiếu bản ký | 0.9.0 | 7 | So bản Word chuẩn với bản đã ký | Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module |
+| `e_tra_cuu` | Tra cứu tài liệu | 0.2.0 | 8 | Hỏi đáp 3 tầng trên kho tài liệu | Bước đầu nhận **tệp JSON yêu cầu**; cần Kho tài liệu của Core (chưa có) |
 
 ## 2. Quy tắc module phải theo
 
 1. **Quy tắc nối bước** (API v1 b.2):
    - bước 1 nhận `tep`, là tệp người dùng tải ở nút;
    - bước *k* hợp lệ khi loại `tra` của bước *k−1* nằm trong `nhan` của bước *k*; Core tự kiểm khi khai quy trình.
-2. **Bước cuối phải trả `truong`, `van_ban` hoặc `tep`** thì mới ghép được vào cột ngăn của module. Năng lực trả loại riêng (`van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`, `van_ban_da_che`, `bang_trich_xuat`, `ho_so_doi_chieu`, `ho_so_tra_cuu`) **chỉ dùng ở giữa chuỗi**.
+2. **Bước cuối phải trả `truong`, `van_ban` hoặc `tep`** thì mới ghép được vào cột ngăn của module. Năng lực trả loại riêng (mục 4) **chỉ dùng ở giữa chuỗi**.
 3. **Bước sau không nhận lại tệp gốc.** Cần hai kết quả khác nhau từ cùng một tệp thì làm **hai nút** (hai quy trình), người dùng tải tệp hai lần. Ví dụ: kiểm toàn vẹn Excel và đọc bảng Excel.
 4. **Nhận kết quả:**
-   - khi quy trình xong, Core gửi `quy_trinh.xong`; SDK module gọi hàm nhận với `tep_nut` và `ghep` (xem `HUONG-DAN-VIET-MODULE.md`);
+   - khi quy trình xong, Core gửi `quy_trinh.xong`; SDK module gọi hàm nhận với `tep_nut` và `ghep` (xem `docs/goi-gui-engine/sdk-2.2.0/HUONG-DAN-VIET-MODULE.md`);
    - trường kiểu `tep` (báo cáo Excel, JSON chi tiết, Word…) là tham chiếu tệp trong kho Core; module đọc nội dung bằng cổng đọc tệp của SDK module.
 5. **Tiền** (kiểu `so_tien`):
    - dạng `{"so": "<chuỗi thập phân>", "tien_te": "VND"}`;
@@ -42,47 +42,48 @@ Tải gói: mục **Releases** của repo `tridungftu/engines`. Mỗi bản có 
    - M9 và nhóm tài liệu 07-Nhân sự luôn chỉ Local.
 7. **Lỗi:** engine trả mã lỗi kèm câu tiếng Việt. Module hiển thị câu đó, không tự diễn giải lại. Quá trần thì engine từ chối, không cắt ngầm.
 8. **Dữ liệu thử:** chỉ dùng DEMO (ví dụ "Công ty DEMO Ánh Dương", 1.000.000 VND, 30/10/2026).
+9. **Cài đặt bước thuộc module:** prompt, bộ tham số hợp đồng, bộ nhóm dữ liệu gốc, khuôn cột, bộ quy tắc đối chiếu… đặt trong Cài đặt bước của quy trình; engine không có mặc định chung cho các thứ này.
 
 ## 3. Chuỗi bước mẫu (quy trình)
 
-Mọi chuỗi đã đối chiếu với `nhan`/`tra` trong `engine.json`. Tên trường ra chi tiết xem phần 5.
+Script đã kiểm mọi chuỗi dưới đây nối đúng `nhan`/`tra` trong `engine.json`. Tên trường ra chi tiết ở mục 5.
 
 | # | Mục đích | Chuỗi bước | Cột ngăn nhận |
 |---:|---|---|---|
 | 1 | Lấy chữ từ PDF scan/ảnh | `ocr.doc_van_ban@1` | 1 trường văn bản |
 | 2 | Chuyển PDF scan/ảnh sang Word | `ocr.xuat_word@1` | 1 trường tệp (DOCX) |
 | 3 | Hỏi AI về PDF scan/ảnh | `ocr.doc_tai_lieu@1` → `ai.hoi_tai_lieu@1` | trả lời, có căn cứ, trích dẫn, model |
-| 4 | Hỏi AI về hợp đồng Word | `trich.doc_docx@1` → `ai.hoi_tai_lieu@1` | như #3 |
+| 4 | Hỏi AI về hợp đồng Word | `trich.doc_docx@1` → `ai.hoi_tai_lieu@1` | như trên |
 | 5 | Trích tham số hợp đồng Word | `trich.doc_docx@1` → `trich.chuan_bi@1` → `ai.hoi_theo_yeu_cau@1` → `trich.hau_kiem@1` → `trich.xuat_ket_qua@1` | tệp JSON, tệp Excel, số tham số, số ô cần soát, có căn cứ |
-| 6 | Trích tham số hợp đồng PDF | `ocr.doc_tai_lieu@1` → (các bước 2–5 của #5) | như #5 |
-| 7 | Đọc một hóa đơn XML | `hoa_don.doc_xml@2` | 18 trường hóa đơn (số, ngày, MST, tiền…) |
+| 6 | Trích tham số hợp đồng PDF | `ocr.doc_tai_lieu@1` → `trich.chuan_bi@1` → `ai.hoi_theo_yeu_cau@1` → `trich.hau_kiem@1` → `trich.xuat_ket_qua@1` | như trên |
+| 7 | Đọc một hóa đơn XML | `hoa_don.doc_xml@2` | các trường hóa đơn (số, ngày, MST, tiền…) |
 | 8 | Đọc gói ZIP hóa đơn | `hoa_don.doc_zip@1` | số tệp, đọc được, lỗi, trùng… |
-| 9 | Lập bảng kê XLSX | `hoa_don.doc_xml@2` hoặc `hoa_don.doc_zip@1` → `hoa_don.bang_ke_xlsx@1` | tệp bảng kê + số đếm |
+| 9 | Lập bảng kê XLSX | `hoa_don.doc_xml@2` / `hoa_don.doc_zip@1` → `hoa_don.bang_ke_xlsx@1` | tệp bảng kê + số đếm |
 | 10 | Kiểm toàn vẹn file Excel | `excel.toan_ven@1` | số cờ Cao/Trung bình, ô đích, báo cáo Excel, JSON |
 | 11 | Đọc bảng Excel (BOQ, hồ sơ đợt, báo giá…) | `excel.doc_bang@1` | sheet, số dòng, giá trị HĐ, giá trị đề nghị, JSON |
 | 12 | Che tệp Word/Excel bằng Local AI, giữ định dạng | `mask.chuan_bi_tep_ai_cuc_bo@1` → `ai.hoi_mask_cuc_bo@1` → `mask.hau_kiem_tep_giu_dinh_dang@1` | tệp đã che, mã yêu cầu, phần còn sót, kiểm tiền/ngày |
 | 13 | Đối chiếu bản ký | `doi_chieu.nhan_cap@1` → `doi_chieu.so_van_ban@1` → `doi_chieu.phat_hien_sua_tay@1` → `doi_chieu.chuan_bi_ai@1` → `ai.hoi_theo_yeu_cau@1` → `doi_chieu.phan_loai_diem_lech@1` → `doi_chieu.xuat_ket_qua@1` | kết luận, số điểm nghiêm trọng, đề nghị chặn, JSON, PDF |
-| 14 | Tra cứu tài liệu | `tra_cuu.nhan_yeu_cau@1` → `tra_cuu.cat_doan@1` → `tra_cuu.chuan_bi_ai@1` → `ai.hoi_theo_yeu_cau@1` → một bước hậu kiểm (`phan_loai_tai_lieu` / `phan_tich_cau_hoi` / `xep_hang_lai` / `soan_tra_loi`) → `tra_cuu.xuat_ket_qua@1` | trả lời, nhãn, tầng, có căn cứ, có mâu thuẫn, cần duyệt, JSON |
+| 14 | Tra cứu tài liệu | `tra_cuu.nhan_yeu_cau@1` → `tra_cuu.cat_doan@1` → `tra_cuu.chuan_bi_ai@1` → `ai.hoi_theo_yeu_cau@1` → `tra_cuu.phan_loai_tai_lieu@1` / `tra_cuu.phan_tich_cau_hoi@1` / `tra_cuu.xep_hang_lai@1` / `tra_cuu.soan_tra_loi@1` → `tra_cuu.xuat_ket_qua@1` | trả lời, nhãn, tầng, có căn cứ, có mâu thuẫn, cần duyệt, JSON |
 
 **Lưu ý:**
-- **#12 và các năng lực Mask khác:**
+- **Mask:**
   - `mask.che_van_ban@1` và `mask.hau_kiem_ai_cuc_bo@1` trả `van_ban_da_che`, hiện chưa có bước nào nhận tiếp. Bước Cloud thuộc bản 2.
   - Mở che (`mask.mo_che_tep@1`, `mask.mo_che_van_ban@1`) cần đúng `ma_yeu_cau` do Core cấp lúc che.
   - Hỏi lead Mask trước khi thiết kế luồng che/mở che trong module.
-- **#13, #14:** bước đầu nhận **tệp JSON** (cặp tài liệu, yêu cầu tra cứu) do module lập, không phải tệp người dùng tải. Thứ tự các bước giữa theo README của gói.
-- **#14** cần Kho tài liệu và chỉ mục của Core. Core chưa có phần này.
+- **Đối chiếu, Tra cứu:** bước đầu nhận **tệp JSON** (cặp tài liệu, yêu cầu tra cứu) do module lập, không phải tệp người dùng tải. Thứ tự các bước giữa theo README của gói.
+- **Tra cứu** cần Kho tài liệu và chỉ mục của Core. Core chưa có phần này.
 
 ## 4. Loại dữ liệu dùng chung giữa các bước
 
-| Mã | Ý nghĩa | Engine tạo | Engine nhận |
+| Mã | Ý nghĩa | Năng lực tạo ra | Năng lực nhận |
 |---|---|---|---|
-| `van_ban_tai_lieu` | Văn bản có vị trí trang, bảng, nguồn đọc | `e_ocr`, `trich.doc_docx`, `doi_chieu.doc_docx` | `e_hoi_ai`, `e_trich_xuat`, `e_mask`, `e_doi_chieu`, `e_tra_cuu` |
-| `yeu_cau_ai` | Yêu cầu hỏi AI (prompt, tài liệu, khuôn trả lời) | bước "chuẩn bị" của Trích xuất, Mask, Đối chiếu, Tra cứu | `e_hoi_ai` |
-| `tra_loi_ai` | Trả lời AI có trích dẫn, đã kiểm | `e_hoi_ai` | bước "hậu kiểm" của engine đã chuẩn bị |
-| `van_ban_da_che` | Văn bản đã che định danh | `e_mask` | (Cloud, bản 2) |
-| `bang_trich_xuat` | Bảng tham số đã trích | `trich.hau_kiem` | `trich.xuat_ket_qua` |
-| `ho_so_doi_chieu` | Hồ sơ đối chiếu giữa các bước | `e_doi_chieu` | `e_doi_chieu` |
-| `ho_so_tra_cuu` | Hồ sơ tra cứu giữa các bước | `e_tra_cuu` | `e_tra_cuu` |
+| `van_ban_tai_lieu` | Văn bản có vị trí trang, bảng, nguồn đọc | `ocr.doc_tai_lieu@1`, `trich.doc_docx@1`, `doi_chieu.doc_docx@1` | `ai.hoi_tai_lieu@1`, `mask.chuan_bi_ai_cuc_bo@1`, `mask.che_van_ban@1`, `trich.chuan_bi@1` |
+| `yeu_cau_ai` | Yêu cầu hỏi AI (prompt, tài liệu, khuôn trả lời) | `mask.chuan_bi_tep_ai_cuc_bo@1`, `mask.chuan_bi_ai_cuc_bo@1`, `trich.chuan_bi@1`, `doi_chieu.chuan_bi_ai@1`, `tra_cuu.chuan_bi_ai@1` | `ai.hoi_theo_yeu_cau@1`, `ai.hoi_mask_cuc_bo@1` |
+| `tra_loi_ai` | Trả lời AI có trích dẫn, đã kiểm | `ai.hoi_theo_yeu_cau@1`, `ai.hoi_mask_cuc_bo@1` | `mask.hau_kiem_tep_van_ban@1`, `mask.hau_kiem_tep_giu_dinh_dang@1`, `mask.hau_kiem_ai_cuc_bo@1`, `mask.mo_che_van_ban@1`, `trich.hau_kiem@1`, `doi_chieu.phan_loai_diem_lech@1`, `tra_cuu.phan_loai_tai_lieu@1`, `tra_cuu.phan_tich_cau_hoi@1`, `tra_cuu.xep_hang_lai@1`, `tra_cuu.soan_tra_loi@1` |
+| `van_ban_da_che` | Văn bản đã che định danh | `mask.hau_kiem_tep_van_ban@1`, `mask.hau_kiem_ai_cuc_bo@1`, `mask.che_van_ban@1` | — (chưa có) |
+| `bang_trich_xuat` | Bảng tham số đã trích | `trich.hau_kiem@1` | `trich.xuat_ket_qua@1` |
+| `ho_so_doi_chieu` | Hồ sơ đối chiếu giữa các bước | `doi_chieu.nhan_cap@1`, `doi_chieu.so_van_ban@1`, `doi_chieu.phat_hien_sua_tay@1`, `doi_chieu.phan_loai_diem_lech@1` | `doi_chieu.so_van_ban@1`, `doi_chieu.phat_hien_sua_tay@1`, `doi_chieu.chuan_bi_ai@1`, `doi_chieu.xuat_ket_qua@1` |
+| `ho_so_tra_cuu` | Hồ sơ tra cứu giữa các bước | `tra_cuu.nhan_yeu_cau@1`, `tra_cuu.cat_doan@1`, `tra_cuu.phan_loai_tai_lieu@1`, `tra_cuu.phan_tich_cau_hoi@1`, `tra_cuu.xep_hang_lai@1`, `tra_cuu.soan_tra_loi@1` | `tra_cuu.cat_doan@1`, `tra_cuu.chuan_bi_ai@1`, `tra_cuu.soan_tra_loi@1`, `tra_cuu.xuat_ket_qua@1` |
 
 Module **không đọc** các loại này: chúng chỉ đi giữa các bước. Định nghĩa đầy đủ: `_chung/docs/LOAI-DU-LIEU-RIENG.md`.
 
@@ -596,4 +597,3 @@ Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`, `ho_s
 | `co_mau_thuan` | Có mâu thuẫn | có/không |
 | `can_duyet` | Cần duyệt | có/không |
 | `tep_json` | Tệp JSON | tệp |
-

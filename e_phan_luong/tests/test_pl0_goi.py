@@ -43,7 +43,8 @@ def test_doc_phieu_va_nam_nang_luc_co_demo_phan_luong():
         ("audit.phan_luong_hoa_don@1", ["truong"], "truong"),
         ("audit.ghi_ket_qua@1", ["tep"], "truong")]
     for nl in phieu["nang_luc"]:
-        assert nl["gioi_han"] == {"tep_toi_da_mib": 20, "thoi_han_giay": 300}
+        # PL-6 thêm danh sách mime nhận cho năng lực nhận tệp; trần dung lượng/thời hạn giữ nguyên.
+        assert {k: v for k, v in nl["gioi_han"].items() if k != "mime"} == {"tep_toi_da_mib": 20, "thoi_han_giay": 300}
         assert nl["huy_duoc"] is True
 
 

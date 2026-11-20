@@ -234,18 +234,22 @@ def test_q4_duoi_sad_nhan_he_so_khong_kep_san_va_tien_am_da_tuyet_doi(monkeypatc
     assert tep["nghiep_vu"][0]["co"] == ["SO_TRON", "NHAP_TAY"]
 
 
-@pytest.mark.parametrize("ten,mime,raw", [
-    ("lo-DEMO.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", b"PK-DEMO"),
-    ("lo-DEMO.csv", "text/csv", b"ma,so_tien\nPC-DEMO,1000000"),
-    ("lo-DEMO.json", "application/json", b"khong phai JSON DEMO"),
-    ("lo-DEMO.pdf", "application/pdf", b"%PDF-DEMO"),
+@pytest.mark.parametrize("ten,mime,raw,ma_loi", [
+    # PL-6: Excel/CSV đã được nhận; tệp hỏng hoặc thiếu khuôn cột bị từ chối đúng mã.
+    ("lo-DEMO.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", b"PK-DEMO",
+     "TEP_KHONG_HO_TRO"),
+    ("lo-DEMO.csv", "text/csv", b"ma,so_tien\nPC-DEMO,1000000", "THAM_SO_KHONG_HOP_LE"),
+    ("lo-DEMO.json", "application/json", b"khong phai JSON DEMO", "TEP_KHONG_HO_TRO"),
+    # SDK chặn mime không khai trước khi tới engine.
+    ("lo-DEMO.pdf", "application/pdf", b"%PDF-DEMO", "LOAI_TEP_KHONG_NHAN"),
 ])
-def test_tep_chua_ho_tro_tu_choi_khong_ghi_ngan(ten, mime, raw):
+def test_tep_chua_ho_tro_tu_choi_khong_ghi_ngan(ten, mime, raw, ma_loi):
     core = CoreGia()
     kq = chay(core, raw, ten=ten, mime=mime)
     assert kq["trang_thai"] == "LOI"
-    assert kq["loi"]["ma"] == "TEP_KHONG_HO_TRO"
-    assert kq["loi"]["thong_diep"] == CAU_LOI["TEP_KHONG_HO_TRO"]
+    assert kq["loi"]["ma"] == ma_loi
+    if ma_loi in CAU_LOI:
+        assert kq["loi"]["thong_diep"] == CAU_LOI[ma_loi]
     assert all(core.xem_ngan(app.ma, b["bang"]) == [] for b in app.phieu["ngan_du_lieu"])
 
 

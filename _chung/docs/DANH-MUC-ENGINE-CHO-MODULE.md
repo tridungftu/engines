@@ -442,7 +442,7 @@ Loại dữ liệu riêng: `yeu_cau_ai`, `tra_loi_ai`. Số việc đồng thờ
 #### `audit.phan_luong@1` — Phân luồng kiểm tra
 
 - **Nhận:** `tep` → **Trả:** `truong` (ghép được vào cột ngăn)
-- **Giới hạn:** tệp ≤ 20 MiB; thời hạn 300 giây; hủy được: có
+- **Giới hạn:** tệp ≤ 20 MiB; thời hạn 300 giây; loại tệp: `application/json`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `text/csv`, `application/vnd.ms-excel`; hủy được: có
 - **Cài đặt bước:**
 
 | Mã | Tên | Kiểu | Bắt buộc | Mặc định | Lựa chọn / trần |
@@ -483,7 +483,7 @@ Loại dữ liệu riêng: `yeu_cau_ai`, `tra_loi_ai`. Số việc đồng thờ
 #### `audit.chuan_bi_phan_loai@1` — Chuẩn bị phân loại bằng Local AI
 
 - **Nhận:** `tep` → **Trả:** `yeu_cau_ai` (chỉ dùng ở giữa chuỗi)
-- **Giới hạn:** tệp ≤ 20 MiB; thời hạn 300 giây; hủy được: có
+- **Giới hạn:** tệp ≤ 20 MiB; thời hạn 300 giây; loại tệp: `application/json`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `text/csv`, `application/vnd.ms-excel`; hủy được: có
 - **Cài đặt bước:**
 
 | Mã | Tên | Kiểu | Bắt buộc | Mặc định | Lựa chọn / trần |

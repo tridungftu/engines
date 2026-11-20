@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ktt:contract:tra_loi_ai:1",
+  "title": "Trả lời AI có trích dẫn",
+  "$comment": "Theo _chung/docs/LOAI-DU-LIEU-RIENG.md ngày 14/11/2026. Cho phép thêm trường tùy chọn để tương thích phiên bản 1. Việc kiểm nguyên văn, chỉ số trích dẫn, số trang và khớp khuôn trả lời là kiểm nghiệp vụ ở các lát sau; không giả định JSON Schema kiểm được các quan hệ đó.",
+  "type": "object",
+  "required": [
+    "loai",
+    "tra_loi_ai"
+  ],
+  "properties": {
+    "loai": {
+      "const": "tra_loi_ai"
+    },
+    "tra_loi_ai": {
+      "type": "object",
+      "required": [
+        "phien_ban",
+        "trang_thai",
+        "tra_loi",
+        "du_lieu",
+        "trich_dan",
+        "kiem_trich_dan",
+        "nha_cung_cap",
+        "model",
+        "ly_do_chon_model",
+        "ma_prompt",
+        "phien_ban_prompt",
+        "phien_ban_engine",
+        "bam_dau_vao",
+        "chuyen_tiep",
+        "canh_bao"
+      ],
+      "properties": {
+        "phien_ban": {
+          "type": "integer",
+          "const": 1
+        },
+        "trang_thai": {
+          "type": "string",
+          "enum": [
+            "co_can_cu",
+            "khong_thay_can_cu"
+          ]
+        },
+        "tra_loi": {
+          "type": "string"
+        },
+        "du_lieu": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": true
+        },
+        "trich_dan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "cau",
+              "bat_dau",
+              "ket_thuc"
+            ],
+            "properties": {
+              "cau": {
+                "type": "string",
+                "minLength": 1
+              },
+              "bat_dau": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "ket_thuc": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "kiem_trich_dan": {
+          "type": "object",
+          "required": [
+            "dat",
+            "loi"
+          ],
+          "properties": {
+            "dat": {
+              "type": "boolean"
+            },
+            "loi": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "nha_cung_cap": {
+          "type": "string",
+          "enum": [
+            "local",
+            "cloud"
+          ]
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ly_do_chon_model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ma_prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phien_ban_prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phien_ban_engine": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bam_dau_vao": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "chuyen_tiep": {
+          "type": "object",
+          "additionalProperties": true,
+          "$comment": "Giới hạn 64 KiB JSON UTF-8; giữ nguyên vẹn khi chuyển tiếp. Kiểm dung lượng lúc xử lý (AI-2), không thể dùng maxLength cho số byte của đối tượng."
+        },
+        "canh_bao": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

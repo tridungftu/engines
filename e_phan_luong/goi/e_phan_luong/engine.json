@@ -1,0 +1,1178 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_phan_luong",
+  "ten": "Phân luồng kiểm tra",
+  "phien_ban": "0.1.0",
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "api": "v1",
+    "sdk": ">=2.2.0 <3.0.0"
+  },
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {
+    "lenh": [
+      "{python}",
+      "-m",
+      "e_phan_luong.chay"
+    ],
+    "thu_muc": "."
+  },
+  "nang_luc": [
+    {
+      "ma": "audit.phan_luong@1",
+      "ten": "Phân luồng kiểm tra",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "truong",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 300
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban",
+          "toi_da": 40,
+          "bat_buoc": true,
+          "toi_thieu": 1
+        },
+        {
+          "ma": "ma_module",
+          "ten": "Mã module",
+          "kieu": "van_ban",
+          "toi_da": 31,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "nguong_json",
+          "ten": "Ngưỡng PM/TE/SAD (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 4096,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "danh_muc_loai_json",
+          "ten": "Danh mục loại nghiệp vụ (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 16384,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "truong_phan_loai",
+          "ten": "Trường nội dung để phân loại",
+          "kieu": "van_ban",
+          "toi_da": 60,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "bo_phan_loai_json",
+          "ten": "Bộ quy tắc phân loại (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 32768,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "chinh_sach_json",
+          "ten": "Chính sách kiểm tra (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 8192,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "ty_le_duoi_sad",
+          "ten": "Tỷ lệ kiểm dưới SAD",
+          "kieu": "so",
+          "mac_dinh": 0.02,
+          "toi_thieu": 0,
+          "toi_da": 1
+        },
+        {
+          "ma": "cua_so_chia_nho_ngay",
+          "ten": "Cửa sổ chống chia nhỏ (ngày)",
+          "kieu": "so",
+          "mac_dinh": 7,
+          "toi_thieu": 1
+        },
+        {
+          "ma": "khuon_cot_json",
+          "ten": "Khuôn cột Excel/CSV (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 32768,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "tien_te",
+          "ten": "Mã tiền tệ",
+          "kieu": "van_ban",
+          "toi_da": 3,
+          "mac_dinh": ""
+        }
+      ],
+      "truong_ra": [
+        {
+          "ma": "ma_luot",
+          "ten": "Mã lượt phân luồng",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "luong",
+          "ten": "Luồng",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "can_nguoi_kiem",
+          "ten": "Cần người kiểm",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "canh_bao",
+          "ten": "Cảnh báo",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so_nghiep_vu",
+          "ten": "Số nghiệp vụ",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_do",
+          "ten": "Số dòng Đỏ",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_do_bat_buoc",
+          "ten": "Số dòng Đỏ bắt buộc",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_do_chon_mau",
+          "ten": "Số dòng Đỏ chọn mẫu",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_xanh",
+          "ten": "Số dòng Xanh",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_chua_phan_loai",
+          "ten": "Số dòng chưa phân loại",
+          "kieu": "so"
+        },
+        {
+          "ma": "tong_tien_do",
+          "ten": "Tổng tiền luồng Đỏ",
+          "kieu": "so_tien"
+        },
+        {
+          "ma": "tep_json",
+          "ten": "Kết quả chi tiết",
+          "kieu": "tep"
+        },
+        {
+          "ma": "tep_ds_do",
+          "ten": "Danh sách cần kiểm (Excel)",
+          "kieu": "tep"
+        },
+        {
+          "ma": "bam_hat_giong",
+          "ten": "Băm hạt giống",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bam_dau_vao",
+          "ten": "Băm đầu vào",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "ten": "Phiên bản engine",
+          "kieu": "van_ban"
+        }
+      ]
+    },
+    {
+      "ma": "audit.chuan_bi_phan_loai@1",
+      "ten": "Chuẩn bị phân loại bằng Local AI",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "yeu_cau_ai",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 300
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban",
+          "toi_da": 40,
+          "bat_buoc": true,
+          "toi_thieu": 1
+        },
+        {
+          "ma": "ma_module",
+          "ten": "Mã module",
+          "kieu": "van_ban",
+          "toi_da": 31,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "nguong_json",
+          "ten": "Ngưỡng PM/TE/SAD (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 4096,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "danh_muc_loai_json",
+          "ten": "Danh mục loại nghiệp vụ (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 16384,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "truong_phan_loai",
+          "ten": "Trường nội dung để phân loại",
+          "kieu": "van_ban",
+          "toi_da": 60,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "bo_phan_loai_json",
+          "ten": "Bộ quy tắc phân loại (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 32768,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "chinh_sach_json",
+          "ten": "Chính sách kiểm tra (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 8192,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "ty_le_duoi_sad",
+          "ten": "Tỷ lệ kiểm dưới SAD",
+          "kieu": "so",
+          "mac_dinh": 0.02,
+          "toi_thieu": 0,
+          "toi_da": 1
+        },
+        {
+          "ma": "cua_so_chia_nho_ngay",
+          "ten": "Cửa sổ chống chia nhỏ (ngày)",
+          "kieu": "so",
+          "mac_dinh": 7,
+          "toi_thieu": 1
+        },
+        {
+          "ma": "khuon_cot_json",
+          "ten": "Khuôn cột Excel/CSV (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 32768,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "tien_te",
+          "ten": "Mã tiền tệ",
+          "kieu": "van_ban",
+          "toi_da": 3,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "ma_prompt",
+          "ten": "Mã hướng dẫn của module",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        },
+        {
+          "ma": "phien_ban_prompt",
+          "ten": "Phiên bản hướng dẫn",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        },
+        {
+          "ma": "prompt",
+          "ten": "Hướng dẫn phân loại của module",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        },
+        {
+          "ma": "model_uu_tien",
+          "ten": "Model ưu tiên",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        }
+      ]
+    },
+    {
+      "ma": "audit.phan_luong_sau_ai@1",
+      "ten": "Phân luồng sau Local AI",
+      "nhan": [
+        "tra_loi_ai"
+      ],
+      "tra": "truong",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 300
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban",
+          "toi_da": 40,
+          "bat_buoc": true,
+          "toi_thieu": 1
+        },
+        {
+          "ma": "ma_module",
+          "ten": "Mã module",
+          "kieu": "van_ban",
+          "toi_da": 31,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "nguong_json",
+          "ten": "Ngưỡng PM/TE/SAD (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 4096,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "danh_muc_loai_json",
+          "ten": "Danh mục loại nghiệp vụ (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 16384,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "truong_phan_loai",
+          "ten": "Trường nội dung để phân loại",
+          "kieu": "van_ban",
+          "toi_da": 60,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "bo_phan_loai_json",
+          "ten": "Bộ quy tắc phân loại (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 32768,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "chinh_sach_json",
+          "ten": "Chính sách kiểm tra (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 8192,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "ty_le_duoi_sad",
+          "ten": "Tỷ lệ kiểm dưới SAD",
+          "kieu": "so",
+          "mac_dinh": 0.02,
+          "toi_thieu": 0,
+          "toi_da": 1
+        },
+        {
+          "ma": "cua_so_chia_nho_ngay",
+          "ten": "Cửa sổ chống chia nhỏ (ngày)",
+          "kieu": "so",
+          "mac_dinh": 7,
+          "toi_thieu": 1
+        },
+        {
+          "ma": "nguong_tin_cay",
+          "ten": "Ngưỡng tin cậy phân loại AI",
+          "kieu": "so",
+          "mac_dinh": 0.7,
+          "toi_thieu": 0,
+          "toi_da": 1
+        }
+      ],
+      "truong_ra": [
+        {
+          "ma": "ma_luot",
+          "ten": "Mã lượt phân luồng",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "luong",
+          "ten": "Luồng",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "can_nguoi_kiem",
+          "ten": "Cần người kiểm",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "canh_bao",
+          "ten": "Cảnh báo",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so_nghiep_vu",
+          "ten": "Số nghiệp vụ",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_do",
+          "ten": "Số dòng Đỏ",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_do_bat_buoc",
+          "ten": "Số dòng Đỏ bắt buộc",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_do_chon_mau",
+          "ten": "Số dòng Đỏ chọn mẫu",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_xanh",
+          "ten": "Số dòng Xanh",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_chua_phan_loai",
+          "ten": "Số dòng chưa phân loại",
+          "kieu": "so"
+        },
+        {
+          "ma": "tong_tien_do",
+          "ten": "Tổng tiền luồng Đỏ",
+          "kieu": "so_tien"
+        },
+        {
+          "ma": "tep_json",
+          "ten": "Kết quả chi tiết",
+          "kieu": "tep"
+        },
+        {
+          "ma": "tep_ds_do",
+          "ten": "Danh sách cần kiểm (Excel)",
+          "kieu": "tep"
+        },
+        {
+          "ma": "bam_hat_giong",
+          "ten": "Băm hạt giống",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bam_dau_vao",
+          "ten": "Băm đầu vào",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "ten": "Phiên bản engine",
+          "kieu": "van_ban"
+        }
+      ]
+    },
+    {
+      "ma": "audit.phan_luong_hoa_don@1",
+      "ten": "Phân luồng hóa đơn",
+      "nhan": [
+        "truong"
+      ],
+      "tra": "truong",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 300
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban",
+          "toi_da": 40,
+          "bat_buoc": true,
+          "toi_thieu": 1
+        },
+        {
+          "ma": "ma_module",
+          "ten": "Mã module",
+          "kieu": "van_ban",
+          "toi_da": 31,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "nguong_json",
+          "ten": "Ngưỡng PM/TE/SAD (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 4096,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "danh_muc_loai_json",
+          "ten": "Danh mục loại nghiệp vụ (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 16384,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "truong_phan_loai",
+          "ten": "Trường nội dung để phân loại",
+          "kieu": "van_ban",
+          "toi_da": 60,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "bo_phan_loai_json",
+          "ten": "Bộ quy tắc phân loại (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 32768,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "chinh_sach_json",
+          "ten": "Chính sách kiểm tra (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 8192,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "ty_le_duoi_sad",
+          "ten": "Tỷ lệ kiểm dưới SAD",
+          "kieu": "so",
+          "mac_dinh": 0.02,
+          "toi_thieu": 0,
+          "toi_da": 1
+        },
+        {
+          "ma": "cua_so_chia_nho_ngay",
+          "ten": "Cửa sổ chống chia nhỏ (ngày)",
+          "kieu": "so",
+          "mac_dinh": 7,
+          "toi_thieu": 1
+        },
+        {
+          "ma": "loai_nghiep_vu",
+          "ten": "Loại nghiệp vụ hóa đơn",
+          "kieu": "van_ban",
+          "mac_dinh": ""
+        }
+      ],
+      "truong_ra": [
+        {
+          "ma": "ma_luot",
+          "ten": "Mã lượt phân luồng",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "luong",
+          "ten": "Luồng",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "can_nguoi_kiem",
+          "ten": "Cần người kiểm",
+          "kieu": "co_khong"
+        },
+        {
+          "ma": "canh_bao",
+          "ten": "Cảnh báo",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "so_nghiep_vu",
+          "ten": "Số nghiệp vụ",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_do",
+          "ten": "Số dòng Đỏ",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_do_bat_buoc",
+          "ten": "Số dòng Đỏ bắt buộc",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_do_chon_mau",
+          "ten": "Số dòng Đỏ chọn mẫu",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_xanh",
+          "ten": "Số dòng Xanh",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_chua_phan_loai",
+          "ten": "Số dòng chưa phân loại",
+          "kieu": "so"
+        },
+        {
+          "ma": "tong_tien_do",
+          "ten": "Tổng tiền luồng Đỏ",
+          "kieu": "so_tien"
+        },
+        {
+          "ma": "tep_json",
+          "ten": "Kết quả chi tiết",
+          "kieu": "tep"
+        },
+        {
+          "ma": "tep_ds_do",
+          "ten": "Danh sách cần kiểm (Excel)",
+          "kieu": "tep"
+        },
+        {
+          "ma": "bam_hat_giong",
+          "ten": "Băm hạt giống",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bam_dau_vao",
+          "ten": "Băm đầu vào",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "ten": "Phiên bản engine",
+          "kieu": "van_ban"
+        }
+      ]
+    },
+    {
+      "ma": "audit.ghi_ket_qua@1",
+      "ten": "Ghi kết quả kiểm",
+      "nhan": [
+        "tep"
+      ],
+      "tra": "truong",
+      "gioi_han": {
+        "tep_toi_da_mib": 20,
+        "thoi_han_giay": 300
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban",
+          "toi_da": 40,
+          "bat_buoc": true,
+          "toi_thieu": 1
+        },
+        {
+          "ma": "ma_module",
+          "ten": "Mã module",
+          "kieu": "van_ban",
+          "toi_da": 31,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "nguong_json",
+          "ten": "Ngưỡng PM/TE/SAD (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 4096,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "danh_muc_loai_json",
+          "ten": "Danh mục loại nghiệp vụ (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 16384,
+          "mac_dinh": ""
+        },
+        {
+          "ma": "chinh_sach_json",
+          "ten": "Chính sách kiểm tra (JSON)",
+          "kieu": "van_ban",
+          "toi_da": 8192,
+          "mac_dinh": ""
+        }
+      ],
+      "truong_ra": [
+        {
+          "ma": "so_dong_nhan",
+          "ten": "Số dòng nhận",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_trung",
+          "ten": "Số dòng trùng",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_ngoai_mau",
+          "ten": "Số dòng ngoài mẫu",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_cap_doi_bac",
+          "ten": "Số cặp đổi bậc",
+          "kieu": "so"
+        },
+        {
+          "ma": "so_sua_loai",
+          "ten": "Số lần sửa loại",
+          "kieu": "so"
+        },
+        {
+          "ma": "phien_ban_engine",
+          "ten": "Phiên bản engine",
+          "kieu": "van_ban"
+        }
+      ]
+    }
+  ],
+  "loai_du_lieu_rieng": [
+    {
+      "ma": "yeu_cau_ai",
+      "ten": "Yêu cầu hỏi AI"
+    },
+    {
+      "ma": "tra_loi_ai",
+      "ten": "Trả lời AI có trích dẫn"
+    }
+  ],
+  "ngan_du_lieu": [
+    {
+      "bang": "luot",
+      "ten": "Lượt phân luồng",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "ma_luot"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "ma_luot"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "ma_luot",
+          "ten": "Mã lượt phân luồng",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "ma_module",
+          "ten": "Mã module",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "hat_giong",
+          "ten": "Hạt giống 32 byte biểu diễn 64 ký tự hex cho kiểm toán",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bam_dau_vao",
+          "ten": "Băm dữ liệu đầu vào",
+          "kieu": "van_ban"
+        }
+      ],
+      "giu_toi_da_ngay": 400
+    },
+    {
+      "bang": "dong_luot",
+      "ten": "Dòng của lượt phân luồng",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "ma_luot",
+        "ma"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "ma_luot",
+          "ma"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "ma_luot",
+          "ten": "Mã lượt phân luồng",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "ma",
+          "ten": "Mã giao dịch do module cấp",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "ma_module",
+          "ten": "Mã module",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ly_do",
+          "ten": "Các mã lý do theo thứ tự quy định",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "loai",
+          "ten": "Mã loại nghiệp vụ trong danh mục",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nguon_loai",
+          "ten": "Nguồn gán loại",
+          "kieu": "van_ban"
+        }
+      ],
+      "giu_toi_da_ngay": 400
+    },
+    {
+      "bang": "ket_qua_kiem",
+      "ten": "Kết quả kiểm từng mã",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "ma_luot",
+        "ma",
+        "khau"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "ma_luot",
+          "ma",
+          "khau"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "ma_luot",
+          "ten": "Mã lượt phân luồng",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "ma",
+          "ten": "Mã giao dịch do module cấp",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "ma_module",
+          "ten": "Mã module",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "loai",
+          "ten": "Mã loại nghiệp vụ trong danh mục",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ket_qua",
+          "ten": "Kết quả kiểm",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "muc_sai",
+          "ten": "Mức sai nhỏ hoặc đạt SAD hoặc đạt TE",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nguon_mau",
+          "ten": "Nguồn mẫu kiểm",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "nguon_loai_sai",
+          "ten": "Nguồn gán loại bị sửa",
+          "kieu": "van_ban"
+        }
+      ],
+      "giu_toi_da_ngay": 365
+    },
+    {
+      "bang": "ty_le",
+      "ten": "Thống kê tỷ lệ theo khâu và loại",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "khau",
+        "loai"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "khau",
+          "loai"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "loai",
+          "ten": "Mã loại nghiệp vụ trong danh mục",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "bac",
+          "ten": "Bậc tỷ lệ kiểm",
+          "kieu": "so"
+        },
+        {
+          "ma": "che_do",
+          "ten": "Chế độ kiểm theo bậc hoặc toàn bộ",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "mau_tu_doi_bac",
+          "ten": "Số mẫu từ lần đổi bậc",
+          "kieu": "so"
+        },
+        {
+          "ma": "loi_tu_doi_bac",
+          "ten": "Số lỗi từ lần đổi bậc",
+          "kieu": "so"
+        },
+        {
+          "ma": "mau_sach_toan_bo",
+          "ten": "Số mẫu sạch khi kiểm toàn bộ",
+          "kieu": "so"
+        },
+        {
+          "ma": "mau_12t",
+          "ten": "Số mẫu trong 12 tháng",
+          "kieu": "so"
+        },
+        {
+          "ma": "loi_12t",
+          "ten": "Số lỗi trong 12 tháng",
+          "kieu": "so"
+        },
+        {
+          "ma": "loi_sad_12t",
+          "ten": "Số lỗi từ SAD trong 12 tháng",
+          "kieu": "so"
+        },
+        {
+          "ma": "loi_ngoai_mau_12t",
+          "ten": "Số lỗi ngoài mẫu trong 12 tháng",
+          "kieu": "so"
+        },
+        {
+          "ma": "diem",
+          "ten": "Điểm rủi ro gộp",
+          "kieu": "so"
+        },
+        {
+          "ma": "nhan",
+          "ten": "Các nhãn rủi ro",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "doi_bac_luc",
+          "ten": "Thời điểm đổi bậc",
+          "kieu": "thoi_diem"
+        }
+      ]
+    },
+    {
+      "bang": "ho_so_hanh_vi",
+      "ten": "Hồ sơ hành vi gộp",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "khau",
+        "loai"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "khau",
+          "loai"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "loai",
+          "ten": "Mã loại nghiệp vụ trong danh mục",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "so_nghiep_vu",
+          "ten": "Số nghiệp vụ gộp",
+          "kieu": "so"
+        },
+        {
+          "ma": "bieu_do",
+          "ten": "Biểu đồ tần suất gộp dạng chuỗi JSON",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "bam_doi_tac",
+          "ten": "Tập băm đối tác dạng chuỗi JSON",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "tong_7_ngay",
+          "ten": "Tổng gộp theo băm và ngày trong bảy ngày dạng chuỗi JSON",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ky_lam_moi",
+          "ten": "Kỳ làm mới hồ sơ",
+          "kieu": "van_ban"
+        }
+      ]
+    },
+    {
+      "bang": "chot_ky",
+      "ten": "Bản chụp thống kê theo kỳ",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "ky",
+        "khau",
+        "loai"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "ky",
+          "khau",
+          "loai"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "ky",
+          "ten": "Kỳ chốt thống kê theo tháng",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "khau",
+          "ten": "Mã khâu duyệt",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "loai",
+          "ten": "Mã loại nghiệp vụ trong danh mục",
+          "kieu": "van_ban",
+          "bat_buoc": true
+        },
+        {
+          "ma": "bac",
+          "ten": "Bậc tỷ lệ kiểm",
+          "kieu": "so"
+        },
+        {
+          "ma": "che_do",
+          "ten": "Chế độ kiểm theo bậc hoặc toàn bộ",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "mau_tu_doi_bac",
+          "ten": "Số mẫu từ lần đổi bậc",
+          "kieu": "so"
+        },
+        {
+          "ma": "loi_tu_doi_bac",
+          "ten": "Số lỗi từ lần đổi bậc",
+          "kieu": "so"
+        },
+        {
+          "ma": "mau_sach_toan_bo",
+          "ten": "Số mẫu sạch khi kiểm toàn bộ",
+          "kieu": "so"
+        },
+        {
+          "ma": "mau_12t",
+          "ten": "Số mẫu trong 12 tháng",
+          "kieu": "so"
+        },
+        {
+          "ma": "loi_12t",
+          "ten": "Số lỗi trong 12 tháng",
+          "kieu": "so"
+        },
+        {
+          "ma": "loi_sad_12t",
+          "ten": "Số lỗi từ SAD trong 12 tháng",
+          "kieu": "so"
+        },
+        {
+          "ma": "loi_ngoai_mau_12t",
+          "ten": "Số lỗi ngoài mẫu trong 12 tháng",
+          "kieu": "so"
+        },
+        {
+          "ma": "diem",
+          "ten": "Điểm rủi ro gộp",
+          "kieu": "so"
+        },
+        {
+          "ma": "nhan",
+          "ten": "Các nhãn rủi ro",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "doi_bac_luc",
+          "ten": "Thời điểm đổi bậc",
+          "kieu": "thoi_diem"
+        }
+      ]
+    }
+  ],
+  "du_lieu": {
+    "goi_migration": {
+      "ma": "e_phan_luong",
+      "thu_muc": "sql",
+      "tep_kiem_ke": "sql/kiem_ke.json",
+      "phien_ban_du_lieu": 1
+    }
+  },
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
+  "chay_thu_demo": [],
+  "bi_mat": [],
+  "webhook": null
+}

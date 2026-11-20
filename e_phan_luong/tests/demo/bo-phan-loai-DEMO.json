@@ -1,0 +1,70 @@
+{
+  "phien_ban": 1,
+  "quy_tac": [
+    {
+      "khi": [
+        {
+          "khong_co": [],
+          "tat_ca": [
+            [
+              "thanh toán"
+            ]
+          ]
+        }
+      ],
+      "loai": "thanh_toan_ncc"
+    },
+    {
+      "khi": [
+        {
+          "khong_co": [],
+          "tat_ca": [
+            [
+              "tạm ứng"
+            ]
+          ]
+        }
+      ],
+      "loai": "tam_ung"
+    },
+    {
+      "khi": [
+        {
+          "khong_co": [],
+          "tat_ca": [
+            [
+              "lương"
+            ]
+          ]
+        }
+      ],
+      "loai": "luong"
+    },
+    {
+      "khi": [
+        {
+          "khong_co": [],
+          "tat_ca": [
+            [
+              "chi phí khác"
+            ]
+          ]
+        }
+      ],
+      "loai": "chi_phi_khac"
+    },
+    {
+      "khi": [
+        {
+          "khong_co": [],
+          "tat_ca": [
+            [
+              "thu tiền"
+            ]
+          ]
+        }
+      ],
+      "loai": "thu_tien"
+    }
+  ]
+}

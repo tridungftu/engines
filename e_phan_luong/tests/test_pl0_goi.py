@@ -15,8 +15,6 @@ from kiem_bam_goi import kiem, tinh_kiem_ke
 from kiem_doc_lap import kiem_demo, kiem_doc_lap
 
 CHUA_LAM_CON = frozenset({
-    "audit.chuan_bi_phan_loai@1",
-    "audit.phan_luong_sau_ai@1",
     "audit.phan_luong_hoa_don@1",
 })
 

@@ -38,8 +38,8 @@
     },
     {
       "duong_dan": "e_phan_luong/chay.py",
-      "bytes": 4374,
-      "sha256": "35be5fc24f42cffca777b0912b3d2f497059434db282b454aa1f0490330436ba"
+      "bytes": 4701,
+      "sha256": "f5e4d2648c727fd0b207cbf041ac67f47cd271ec6a126114f048be436d31a546"
     },
     {
       "duong_dan": "e_phan_luong/chon_mau.py",
@@ -62,6 +62,11 @@
       "sha256": "3ef22669e32472a307b7b5aab3a97e568487d4075404cb9fb94d5d068bad7e58"
     },
     {
+      "duong_dan": "e_phan_luong/ket_qua.py",
+      "bytes": 6215,
+      "sha256": "3528794df8b3e256fcc8db4990a4822004a59ec85a7980ee4cd47a6fdf98369a"
+    },
+    {
       "duong_dan": "e_phan_luong/kieu.py",
       "bytes": 5749,
       "sha256": "1f321c331628deb806b79fbbbfd6ad0d00eacac9bce1159fc96018ac39dc4a59"
@@ -75,6 +80,11 @@
       "duong_dan": "e_phan_luong/ngan_chung.py",
       "bytes": 2234,
       "sha256": "382d97cb4f1e7c91ccd5e33b76664a4c914d5012713c7d87e37c9f087f90e877"
+    },
+    {
+      "duong_dan": "e_phan_luong/ngan_ket_qua.py",
+      "bytes": 6935,
+      "sha256": "6af1fa7378671e4e755bc26f6ce46074ee31fc647f22fe102cb983ae61d94fe5"
     },
     {
       "duong_dan": "e_phan_luong/ngan_luot.py",

@@ -98,7 +98,14 @@ def phan_luong_hoa_don(viec):
 
 @app.nang_luc("audit.ghi_ket_qua@1")
 def ghi_ket_qua(viec):
-    raise LoiNghiepVu("CHUA_LAM", "Năng lực đang được xây dựng.")
+    from . import __version__, ket_qua, ngan_ket_qua
+
+    viec.tien_do(5, "Đang đọc kết quả kiểm.")
+    with viec.mo_tep(viec.dau_vao["tep"]["tep_id"]) as tep:
+        du_lieu = tep.read(ket_qua.TOI_DA_BYTE + 1)
+    noi_dung = ket_qua.doc_ket_qua_json(du_lieu)
+    dem = ngan_ket_qua.ghi_ket_qua(viec, noi_dung)
+    return {"loai": "truong", "truong": {**dem, "phien_ban_engine": __version__}}
 
 
 if __name__ == "__main__":

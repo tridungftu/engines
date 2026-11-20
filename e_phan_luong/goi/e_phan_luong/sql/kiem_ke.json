@@ -27,6 +27,11 @@
       "sha256": "97c909c439defaff1d653d1448c8931495a2f81f14df3e05cf4d915111d11a75"
     },
     {
+      "duong_dan": "demo/lo-nho-DEMO.json",
+      "bytes": 9371,
+      "sha256": "1f1354131058a5b74b3ab9804e903ed7474b56d97572928bb53d0ad09d70e52b"
+    },
+    {
       "duong_dan": "e_phan_luong/__init__.py",
       "bytes": 83,
       "sha256": "04a1785a9b913e193f0dd720745de8d6db435ecd2f73a2c6d4a1c6546ff10e08"

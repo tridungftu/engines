@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Kết quả phân luồng công bố cho module — PL-8, C5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["phien_ban", "ma_luot", "bam_hat_giong", "bam_dau_vao", "phien_ban_engine", "khau", "ma_module", "nghiep_vu"],
+  "properties": {
+    "phien_ban": {"type": "integer", "const": 1},
+    "ma_luot": {"type": "string", "minLength": 1, "maxLength": 120},
+    "bam_hat_giong": {"$ref": "#/$defs/bam"},
+    "bam_dau_vao": {"$ref": "#/$defs/bam"},
+    "phien_ban_engine": {"type": "string", "minLength": 1},
+    "khau": {"type": "string", "minLength": 1, "maxLength": 40},
+    "ma_module": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,30}$"},
+    "nghiep_vu": {
+      "type": "array", "maxItems": 50000,
+      "items": {"$ref": "#/$defs/dong"}
+    }
+  },
+  "$defs": {
+    "bam": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "dong": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ma", "luong", "ly_do", "co", "loai", "nguon_loai"],
+      "properties": {
+        "ma": {"type": "string", "minLength": 1, "maxLength": 120},
+        "luong": {"type": "string", "enum": ["do", "xanh"]},
+        "ly_do": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "enum": ["VUOT_PM", "VUOT_TE", "CHUA_QUY_DOI", "CHUA_RO_TIEN_TE", "NGHI_CHIA_NHO", "CO_DO_CUNG", "NOP_LAI", "CHON_MAU", "KHONG_CHON"]}
+        },
+        "co": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "enum": ["SO_TIEN_BAT_THUONG", "DOI_TAC_MOI", "SO_TRON", "NGAY_NGHI", "CUOI_KY", "NHAP_TAY"]}
+        },
+        "loai": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,39}$"},
+        "nguon_loai": {"type": "string", "enum": ["module", "quy_tac", "ai", "chua_phan_loai"]}
+      }
+    }
+  }
+}

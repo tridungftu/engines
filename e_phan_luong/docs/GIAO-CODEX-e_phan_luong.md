@@ -420,6 +420,55 @@ LÀM LÁT PL-8 — tệp kết quả: Excel danh sách Đỏ, schema tep_json, m
 Test: phân luồng lô 500 DEMO → tep_ds_do mở được, đúng số dòng Đỏ, không có tỷ lệ/xác suất/bậc/hạt giống (C5); lô toàn Xanh → tep_ds_do null; khứ hồi người kiểm điền tệp → JSON §5.3 → audit.ghi_ket_qua@1 nhận đúng; tep_json hợp schema; chay_thu_demo vẫn ĐẠT.
 ```
 
+### 3.4 Đợt 6 — việc con PL-9 (giao 21/11; lưu nguyên bản đã giao)
+
+Nền: nhánh PL-8 sau khi nối đủ PL-4 → PL-8. Ba việc con sở hữu tệp riêng, chạy song song; lead gộp vào nhánh `codex/e_phan_luong-pl-9`, sinh lại kiểm kê và danh mục.
+
+#### PL-9A — mô phỏng 12 tháng, tiêu chí §8
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md (đủ, nhất là §4.3, §8, §10); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2 (hợp đồng) và §4 (Q1–Q11 Anh chốt); e_phan_luong/goi/e_phan_luong/README.md.
+Nhánh này có đủ PL-0…PL-8 (5 năng lực chạy thật; thu ĐẠT; ~1.500 test). Hai việc con PL-9 khác chạy SONG SONG ở nhánh khác (PL-9B: C4/C5 tổng + đo hiệu năng; PL-9C: đóng gói, NGUON/CHANGELOG/README, kiểm máy sạch). Chỉ tạo/sửa ĐÚNG tệp ghi dưới đây; KHÔNG sửa mã trong goi/ (thấy lỗi mã → mô tả ca tái hiện trong mục "Cần lead").
+
+LÀM VIỆC CON PL-9A — mô phỏng 12 tháng + tiêu chí §8 (tái hiện, tần suất, đồng thời). Tệp được tạo: tests/demo/mo_phong_12_thang.py (script sinh dữ liệu DEMO tất định, hạt giống cố định, chạy lại ra cùng bytes), tests/test_pl9a_mo_phong.py. Chỉ dữ liệu DEMO "Công ty DEMO Ánh Dương".
+1. Mô phỏng qua cổng công khai: mỗi tháng (ghim thời gian bằng monkeypatch chot_ky.ky_hien_tai và mọi hàm lấy ngày/giờ mà mã đang dùng) chạy audit.phan_luong@1 rồi audit.ghi_ket_qua@1 bằng CoreGia (cùng một CoreGia suốt 12 tháng để ngăn giữ trạng thái; chốt kỳ tự chạy khi sang tháng). Người kiểm giả: kết quả của dòng Đỏ sinh tất định theo tỷ lệ lỗi của loại (băm SHA-256 của mã nghiệp vụ, không dùng random toàn cục).
+2. Ba loại chính: (a) loại SẠCH (0% lỗi), (b) loại LỖI 8% (lỗi nhỏ < SAD), (c) dòng chua_phan_loai. Quy mô DEMO: khoảng 100 nghiệp vụ/loại/tháng cho một khâu (ghi rõ con số dùng).
+3. Khẳng định theo §8: loại sạch xuống bậc ĐÚNG tháng mà §4.3 dự tính (tính độc lập trong test bằng Fraction + công thức 1 − 0,05^(1/n) và số mẫu ngẫu nhiên CHON_MAU đã kiểm kể từ lần đổi bậc gần nhất; không gọi lại hàm của gói để tính đáp án); loại lỗi 8% giữ hoặc lên 30% và có nhãn rui_ro_cao khi gặp lỗi ≥ SAD (thêm vài lỗi ≥ SAD có chủ đích) ; chua_phan_loai luôn 30%. Đọc bậc qua xem_ngan("ty_le") (chỉ trong test, không đưa ra trường ra).
+4. Ghi rõ trong báo cáo bảng từng tháng: số mẫu ngẫu nhiên đã kiểm, số lỗi, bậc của mỗi loại. Thêm một ca riêng (test có đánh dấu rõ, KHÔNG xfail) chạy quy mô lớn: loại lỗi 8% với khoảng 1.000 mẫu ngẫu nhiên/12 tháng — ghi bậc thực tế quan sát được vào báo cáo (lead đang hỏi Anh về điểm này: cận trên CP với n lớn có thể < 10% nên có thể xuống 20%); test chỉ khẳng định điều đúng theo quy tắc hiện hành, không tự đổi quy tắc.
+5. Tái hiện: cùng hạt giống (monkeypatch chon_mau.sinh_hat_giong) + cùng đầu vào + cùng trạng thái ngăn → tep_json giống từng byte (hai CoreGia độc lập).
+6. Tần suất: 10.000 dòng, p = 20% (đặt trạng thái ty_le của cặp ở bậc 20% bằng ghi ngăn qua một việc DEMO, hoặc qua chinh_sach_json) → tỷ lệ chọn thực tế trong [19%, 21%].
+7. Đồng thời: hai ghi_ket_qua cùng lúc (gay_xung_dot_ngan("ty_le", so_lan=1)) → đúng một lần thử lại, số đếm không lệch, không trùng.
+Test nhanh: toàn bộ test_pl9a_mo_phong.py chạy < 120 giây trên máy này (đo, ghi vào báo cáo); ca quy mô lớn có thể đánh dấu pytest.mark.slow nhưng vẫn chạy mặc định nếu < 120 giây.
+Đạt: pytest e_phan_luong/tests/test_pl9a_mo_phong.py 0 lỗi; dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
+#### PL-9B — C4/C5 mọi năng lực, đo hiệu năng
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md (đủ, nhất là C4, C5, §5, §8); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2 (hợp đồng, §2.4 bảng ngăn) và §4 (Cần Core CC-6: tra_nop_lai đọc từng dòng); e_kiem_excel/tests/do_hieu_nang.py và do_bo_nho.py (mẫu đo).
+Nhánh này có đủ PL-0…PL-8 (5 năng lực chạy thật; thu ĐẠT; ~1.500 test). Hai việc con PL-9 khác chạy SONG SONG (PL-9A: mô phỏng 12 tháng; PL-9C: đóng gói, NGUON/CHANGELOG/README, kiểm máy sạch). Chỉ tạo/sửa ĐÚNG tệp ghi dưới đây.
+
+LÀM VIỆC CON PL-9B — kiểm C4/C5 trên MỌI năng lực + đo hiệu năng. Tệp được tạo/sửa: tests/test_pl9b_c4_c5.py, tests/do_hieu_nang.py, tests/test_pl9b_hieu_nang.py; ĐƯỢC sửa e_phan_luong/goi/e_phan_luong/e_phan_luong/ngan_luot.py (CHỈ thân hàm tra_nop_lai, giữ chữ ký và mọi test cũ đạt) nếu số đo ở mục 3 vượt ngân sách. Không sửa tệp khác trong goi/.
+1. C4 (tối thiểu dữ liệu): chạy MỌI ví dụ chay_thu_demo + một vòng đủ 5 năng lực (phan_luong JSON/Excel/CSV, chuỗi chuan_bi_phan_loai → tra_loi_ai DEMO dựng tay → phan_luong_sau_ai, phan_luong_hoa_don, ghi_ket_qua có sửa loại và ngoài mẫu) trên cùng CoreGia; đọc xem_ngan của CẢ 6 bảng; khẳng định không ô nào chứa: số tiền (mọi số tiền DEMO đã dùng, dạng chuỗi/thập phân), ngày nghiệp vụ, mã/tên đối tác thô, diễn giải/nội dung, mã số thuế. Băm đối tác 32 ký tự hex được phép. Danh sách cột mỗi bảng khớp đúng §2.4 (không thừa cột).
+2. C5 (quyền xem): mọi trường ra, mọi tep_json, mọi tep_ds_do (mở bằng openpyxl), mọi yeu_cau_ai của 5 năng lực không chứa khóa hoặc chữ (bỏ dấu, không phân biệt hoa thường) "ty le", "xac suat", "bac", "hat giong", "he so", không chứa giá trị hạt giống hex, không chứa số dạng phần trăm từ bảng tỷ lệ.
+3. Hiệu năng (do_hieu_nang.py là script đo, test_pl9b_hieu_nang.py là ca nhỏ chạy nhanh): đo thời gian và bộ nhớ đỉnh (tracemalloc) của audit.phan_luong@1 với lô JSON 50.000 dòng DEMO (đúng TOI_DA_DONG) ở hai trạng thái: (a) ngăn trống; (b) đã có một lượt trước 50.000 dòng cùng mã (để tra_nop_lai phải tra từng mã — CC-6). Ngân sách: thoi_han_giay của năng lực trong engine.json (300 giây) với dư ≥ 2 lần trên máy này. Thêm đo Excel 50.000 dòng và ghi_ket_qua 5.000 dòng. Ghi bảng số đo thật vào báo cáo (giây, MB). Nếu (b) vượt ngân sách: tối ưu thân tra_nop_lai (ví dụ tìm dong_luot theo lô thay vì từng mã nếu ngăn hỗ trợ loc bằng; giữ đúng ngữ nghĩa Q5) rồi đo lại; không thể đạt → ghi "Cần lead/Cần Core" kèm số đo.
+Test nhanh: test_pl9b_c4_c5.py + test_pl9b_hieu_nang.py chạy < 120 giây (ca 50.000 dòng chỉ trong do_hieu_nang.py, không trong pytest mặc định).
+Đạt: pytest hai tệp test 0 lỗi; nếu sửa ngan_luot.py thì pytest toàn engine 0 lỗi và tính lại kiểm kê (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
+#### PL-9C — đóng gói 0.1.0
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md (đủ); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md (đủ, nhất là §4 Cần Core CC-1…CC-6 và Q1–Q11); e_phan_luong/docs/VIEC.md (chỉ đọc); mẫu đóng gói của e_kiem_excel: e_kiem_excel/goi/e_kiem_excel/NGUON.md, CHANGELOG.md, README.md, e_kiem_excel/tests/kiem_may_sach.sh, KIEM-MAY-SACH.cmd, demo/bam-goi.json; _chung/cong-cu/dong_goi.py.
+Nhánh này có đủ PL-0…PL-8 (5 năng lực chạy thật; thu ĐẠT; ~1.500 test). Hai việc con PL-9 khác chạy SONG SONG (PL-9A: mô phỏng 12 tháng — tệp test mới; PL-9B: C4/C5 + đo hiệu năng, có thể sửa thân ngan_luot.tra_nop_lai). Chỉ tạo/sửa ĐÚNG tệp ghi dưới đây.
+
+LÀM VIỆC CON PL-9C — đóng gói phát hành 0.1.0. Tệp được sửa/tạo: goi/e_phan_luong/README.md, NGUON.md, CHANGELOG.md, requirements.lock (chỉ rà, giữ đúng hash đã ghim), tests/kiem_may_sach.sh, tests/KIEM-MAY-SACH.cmd, tests/demo/bam-goi.json (nếu mẫu cần), tests/test_pl9c_dong_goi.py; _chung/cong-cu/dong_goi.py (CHỈ thêm "e_phan_luong" vào CAC_ENGINE nếu cần để đóng gói, không đổi hành vi engine khác).
+1. README.md: đủ cho người viết module: 5 năng lực, đầu vào/ra, cài đặt bước (bảng khóa, giới hạn), chuỗi mẫu (b) Local AI và hóa đơn, lỗi §7 bằng câu tiếng Việt, khóa chinh_sach_json (gồm toi_thieu_ho_so_doi_tac_moi: mặc định 0 = lượt đầu coi mọi đối tác là mới), cách học từ kết quả kiểm, nộp lại (Q5), chia nhỏ (Q8), trần 20.000 đối tác (Q9). Mục "Đang chờ Core": CC-5 màn Admin bảng tỷ lệ (SDK 2.2.0 từ chối giao_dien_quan_tri, chưa có KttCore.engine) và các điểm CC còn mở theo GIAO-CODEX §4. Ghi rõ: hồ sơ hành vi được cộng trong CÙNG lô nguyên tử với dấu luot (Core giao lại việc không cộng hai lần; chỉ khi một lô có trên 99 loại thì phần dư ghi trước, không nguyên tử). Không có tỷ lệ/xác suất trong phần dành cho người dùng cuối (C5) — phần chính sách dành cho Admin ghi rõ là của Admin.
+2. CHANGELOG.md: mục 0.1.0 liệt kê PL-0…PL-9 (mỗi lát 1–3 dòng).
+3. NGUON.md: trạng thái hiện hành PL-0…PL-9; nguồn, giấy phép, SHA-256 thư viện (giữ bảng đang có); ghi rằng SHA-256 mọi tệp gói nằm ở sql/kiem_ke.json (tính bằng tests/kiem_bam_goi.py).
+4. kiem_may_sach.sh (Linux CI Python 3.11, không mạng, cài wheel offline --require-hashes) và KIEM-MAY-SACH.cmd (Windows, Anh tự chạy; Codex KHÔNG chạy .cmd) theo đúng mẫu e_kiem_excel: cài SDK wheel + requirements.lock vào venv tạm, chép gói, chạy kiem_bam_goi --kiem-ke, kho_tri_thuc_sdk.thu, kiem_doc_lap. Tệp .cmd chỉ ký tự ASCII.
+5. Đóng gói bằng _chung/cong-cu/dong_goi.py ra thư mục tạm ngoài repo (không commit tệp zip); test_pl9c_dong_goi.py khẳng định: gói zip tất định (đóng hai lần cùng bytes), có đủ tệp gốc, không có .venv/__pycache__/tệp ngoài gói, kiểm kê khớp.
+Sau khi đổi tệp trong goi/: tính lại kiểm kê (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat).
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest toàn engine 0 lỗi; kiem_doc_lap mã 0) + kiem_may_sach.sh chạy được trên máy này bằng Git Bash nếu có Python 3.11 (không có thì ghi rõ, không giả kết quả); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
 ## 4. Cần Core / Chờ Anh
 
 **Kiểm 2 điểm "Cần Core" (20/11/2026, lead đọc mã Core `ma-nguon-core-sach` HEAD `a07e061` và CoreGia SDK 2.2.0; chưa chạy trên Core thật):**

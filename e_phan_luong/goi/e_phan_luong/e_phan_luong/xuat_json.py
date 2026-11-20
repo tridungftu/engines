@@ -53,7 +53,7 @@ def tao_truong_ra(
     """Đủ trường phiếu §5.5; tổng theo tiền so ngưỡng (trị tuyệt đối).
 
     Một dòng Đỏ chưa so được tiền tệ làm tổng là null. Không có dòng Đỏ:
-    tổng bằng không, kèm tiền tệ của ngưỡng. Excel để null tới PL-8.
+    tổng bằng không, kèm tiền tệ của ngưỡng. Điểm nối xuat_ket_qua gắn Excel khi có Đỏ.
     """
     ds_do = [d for d in ds_dong if d.luong == "do"]
     ma_do = {d.ma for d in ds_do}

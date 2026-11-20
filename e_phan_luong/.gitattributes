@@ -1,0 +1,6 @@
+goi/** text eol=lf
+goi/**/*.xlsx binary
+goi/**/*.zip binary
+tests/** text eol=lf
+tests/**/*.xlsx binary
+docs/** text eol=lf

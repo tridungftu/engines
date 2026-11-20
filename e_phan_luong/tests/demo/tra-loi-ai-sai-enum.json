@@ -1,0 +1,44 @@
+{
+  "loai": "tra_loi_ai",
+  "tra_loi_ai": {
+    "bam_dau_vao": "sha256:4625abb7f79432325ce134cf8a3d702a8b8b47e012a6e9fbd0c052d4bc2050b1",
+    "canh_bao": [],
+    "chuyen_tiep": {
+      "phan_luong": {
+        "bam_tep": "sha256:45117e5780d5e25900fa132b358208eceaf3eba6c7fdb0cfe42c5742e3a091f0",
+        "khau": "ktt_duyet",
+        "khong_can_ai": false,
+        "phien_ban": 1,
+        "tep_lo": {
+          "kich_thuoc": 12117,
+          "mime": "application/json",
+          "ten": "lo-chuyen-tiep-DEMO.json",
+          "tep_id": "tep-DEMO-lo-chuyen-tiep"
+        }
+      }
+    },
+    "du_lieu": {
+      "phan_loai": [
+        {
+          "chi_so": 0,
+          "loai": "loai_ngoai_danh_muc_DEMO",
+          "tin_cay": 0.9
+        }
+      ]
+    },
+    "kiem_trich_dan": {
+      "dat": true,
+      "loi": []
+    },
+    "ly_do_chon_model": "DEMO dựng tay để kiểm hậu xử lý, không gọi nhà cung cấp.",
+    "ma_prompt": "demo_thanh_toan.phan_loai_DEMO",
+    "model": "DEMO-local-gia",
+    "nha_cung_cap": "local",
+    "phien_ban": 1,
+    "phien_ban_engine": "e_hoi_ai DEMO-1",
+    "phien_ban_prompt": "DEMO-1",
+    "tra_loi": "Phân loại DEMO.",
+    "trang_thai": "co_can_cu",
+    "trich_dan": []
+  }
+}

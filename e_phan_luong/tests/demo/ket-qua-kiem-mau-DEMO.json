@@ -1,0 +1,667 @@
+{
+  "ket_qua": [
+    {
+      "ket_qua": "sai",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0001",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "1000000",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0002",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "250000000",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0003",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "3000000000",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "kt_kiem",
+      "loai_dung": "chi_phi_khac",
+      "ma": "PC-DEMO-0004",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0005",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0006",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0007",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0008",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0009",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0010",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0011",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0012",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0013",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0014",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0015",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0016",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "khong_kiem",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0017",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0018",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0019",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "kt_kiem",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0020",
+      "ma_luot": "PL-DEMO-202611-kt_kiem",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0001",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "1000000",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0002",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "250000000",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0003",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "3000000000",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "ktt_duyet",
+      "loai_dung": "chi_phi_khac",
+      "ma": "PC-DEMO-0004",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0005",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0006",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0007",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0008",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0009",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0010",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0011",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0012",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0013",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0014",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0015",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0016",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "khong_kiem",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0017",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0018",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0019",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "ktt_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0020",
+      "ma_luot": "PL-DEMO-202611-ktt_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0001",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "1000000",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0002",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "250000000",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0003",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "3000000000",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "sai",
+      "khau": "cfo_duyet",
+      "loai_dung": "chi_phi_khac",
+      "ma": "PC-DEMO-0004",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0005",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0006",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0007",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0008",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0009",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0010",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0011",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0012",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0013",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0014",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0015",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0016",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "khong_kiem",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0017",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0018",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0019",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    },
+    {
+      "ket_qua": "dat",
+      "khau": "cfo_duyet",
+      "loai_dung": null,
+      "ma": "PC-DEMO-0020",
+      "ma_luot": "PL-DEMO-202611-cfo_duyet",
+      "so_tien_sai": {
+        "so": "0",
+        "tien_te": "VND"
+      }
+    }
+  ],
+  "ma_module": "demo_thanh_toan",
+  "phien_ban": 1,
+  "ten": "Công ty DEMO Ánh Dương"
+}

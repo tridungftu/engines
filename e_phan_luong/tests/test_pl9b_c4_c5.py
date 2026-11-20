@@ -30,7 +30,7 @@ COT = {
     "dong_luot": set("ma_luot ma ma_module khau ly_do loai nguon_loai".split()),
     "ket_qua_kiem": set("ma_luot ma khau ma_module loai ket_qua muc_sai nguon_mau nguon_loai_sai".split()),
     "ty_le": COT_TY_LE,
-    "ho_so_hanh_vi": set("khau loai so_nghiep_vu bieu_do bam_doi_tac tong_7_ngay ky_lam_moi".split()),
+    "ho_so_hanh_vi": set("khau loai so_nghiep_vu bieu_do bam_doi_tac tong_7_ngay tien_te ky_lam_moi".split()),  # tien_te: PL-9D
     "chot_ky": COT_TY_LE | {"ky"},
 }
 HE_THONG = set("id phap_nhan_id row_version tao_luc sua_luc het_han_luc viec_id".split())

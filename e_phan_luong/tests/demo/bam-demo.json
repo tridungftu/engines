@@ -1,0 +1,21 @@
+{
+  "hat_giong_demo": 20261120,
+  "phien_ban": 1,
+  "ten": "Công ty DEMO Ánh Dương",
+  "tep": {
+    "goi/e_phan_luong/demo/lo-nho-DEMO.json": "sha256:1f1354131058a5b74b3ab9804e903ed7474b56d97572928bb53d0ad09d70e52b",
+    "tests/demo/bo-phan-loai-DEMO.json": "sha256:d465e5c19fa08b4c43b96063d96aa7f15f5589daebcc8bb55c595bf3a682accb",
+    "tests/demo/danh-muc-loai-DEMO.json": "sha256:5b85aa7c64167f7ca8dcf6e52bf359cae52f6fa0d249e2c816d8bad20ceb8f13",
+    "tests/demo/dap-an-lop1.json": "sha256:30c6b421d661b2ba7455899611d46cef24eec869c40b3e1e1cb441bd53459088",
+    "tests/demo/ket-qua-kiem-mau-DEMO.json": "sha256:671a6f0472e8fd669d8a90b14ccdcbc4250ef0bf988704cb530ef5f1ac111193",
+    "tests/demo/lo-500-DEMO.json": "sha256:af447ffe6ff271bb8a600d7f95703ae929d98c5fa44b96b76739b9fd220dbda8",
+    "tests/demo/lo-chuyen-tiep-DEMO.json": "sha256:45117e5780d5e25900fa132b358208eceaf3eba6c7fdb0cfe42c5742e3a091f0",
+    "tests/demo/nguong-DEMO.json": "sha256:298dad7b7ea5a5e0a38aa08e8a96c171daa28338885fe51060f046e0db36da1c",
+    "tests/demo/tra-loi-ai-cloud.json": "sha256:090cfdd7e1927436b823149fa527d2a5c94340b6574f825f9e9e7ae8a116f78e",
+    "tests/demo/tra-loi-ai-dung-enum.json": "sha256:0f2172110878b090bd8a25ee0c37c6837c7444a9ba8e66f397934bc1a7b3d712",
+    "tests/demo/tra-loi-ai-khong-thay-can-cu.json": "sha256:18b021fe1a10f4ae209d0ef6209c5dbaeba7a4c9f1f2f7f829816e53dcd9c012",
+    "tests/demo/tra-loi-ai-sai-enum.json": "sha256:27d499871a7ef6ee90d2ef55f2f966b1e086885522a285bc9f1a5dec9a15751b",
+    "tests/demo/tra-loi-ai-tin-cay-thap.json": "sha256:123ab045221631262dab55de93a94d35c09a315a0ea071d0ef78ae453f328200",
+    "tests/demo/yeu-cau-ai-DEMO.json": "sha256:4625abb7f79432325ce134cf8a3d702a8b8b47e012a6e9fbd0c052d4bc2050b1"
+  }
+}

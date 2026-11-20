@@ -10,18 +10,24 @@ from __future__ import annotations
 from collections.abc import Sequence
 from copy import deepcopy
 from decimal import Decimal
+from hashlib import sha256
 import json
 import re
 import unicodedata
 
 from .loi import loi
+from .phan_loai import gan_loai, lay_noi_dung
 
 TOI_DA_GIA_TRI = 5000
 TOI_DA_KY_TU = 2000
+TOI_DA_KY_TU_TAI_LIEU = 500_000
 TOI_DA_BYTE_CHUYEN_TIEP = 4 * 1024
 _BAM = re.compile(r"sha256:[0-9a-fA-F]{64}")
 _KHOA_TEP = {"tep_id", "ten", "mime", "kich_thuoc"}
 _KHOA_CHUYEN_TIEP = {"phien_ban", "tep_lo", "bam_tep", "khau", "khong_can_ai"}
+_KHOA_BAM = {"bam_cai_dat", "bam_tai_lieu"}
+_CAI_DAT_CAN_KHOP = ("danh_muc_loai_json", "bo_phan_loai_json",
+                    "truong_phan_loai", "khuon_cot_json")
 
 _SAI_KHUON = "Kết quả AI chưa đúng khuôn; các dòng đang chờ được giữ là chưa phân loại."
 _KHONG_CAN_CU = "AI chưa tìm thấy căn cứ phân loại; các dòng đang chờ được giữ là chưa phân loại."
@@ -91,7 +97,11 @@ def _kiem_chuyen_tiep(chuyen_tiep, *, ma_qua_tran="CHUOI_KHONG_KHOP") -> dict:
     if not isinstance(chuyen_tiep, dict):
         raise loi("CHUOI_KHONG_KHOP")
     pl = chuyen_tiep.get("phan_luong")
-    if not isinstance(pl, dict) or set(pl) != _KHOA_CHUYEN_TIEP:
+    if (not isinstance(pl, dict)
+            or set(pl) not in (_KHOA_CHUYEN_TIEP, _KHOA_CHUYEN_TIEP | _KHOA_BAM)):
+        raise loi("CHUOI_KHONG_KHOP")
+    if _KHOA_BAM <= set(pl) and any(
+            not isinstance(pl[k], str) or not _BAM.fullmatch(pl[k]) for k in _KHOA_BAM):
         raise loi("CHUOI_KHONG_KHOP")
     tep = pl["tep_lo"]
     if (type(pl["phien_ban"]) is not int or pl["phien_ban"] != 1
@@ -119,6 +129,60 @@ def lap_chuyen_tiep(tep_lo: dict, bam_tep: str, khau: str, khong_can_ai: bool) -
     return deepcopy(ct)
 
 
+def bam_cai_dat(tham_so) -> str:
+    """Ghim đúng bốn cài đặt quyết định cách đọc và đánh chỉ số tài liệu."""
+    noi_dung = {k: tham_so.get(k) or "" for k in _CAI_DAT_CAN_KHOP}
+    return "sha256:" + sha256(_json(noi_dung).encode("utf-8")).hexdigest()
+
+
+def van_ban_tai_lieu(tai_lieu) -> str:
+    """Cùng một phép tuần tự hóa khi gửi AI, kiểm trần và kiểm băm."""
+    return _json(tai_lieu) if tai_lieu else ""
+
+
+def bam_tai_lieu(tai_lieu) -> str:
+    return "sha256:" + sha256(van_ban_tai_lieu(tai_lieu).encode("utf-8")).hexdigest()
+
+
+def them_bam_chuyen_tiep(chuyen_tiep, tham_so, tai_lieu) -> dict:
+    """Bổ sung băm của PL-5, giữ chữ ký và dữ liệu DEMO nền PL-5A."""
+    ct = deepcopy(chuyen_tiep)
+    ct["phan_luong"].update(bam_cai_dat=bam_cai_dat(tham_so),
+                            bam_tai_lieu=bam_tai_lieu(tai_lieu))
+    _kiem_chuyen_tiep(ct, ma_qua_tran="VUOT_GIOI_HAN")
+    return ct
+
+
+def tai_lieu_cho_lo(lo, cd, tham_so) -> tuple[list[dict], dict[int, list[int]], list[str]]:
+    """Chỉ lấy dòng chưa được module/quy tắc gán loại và có nội dung.
+
+    Trần 500.000 tính trên CHUỖI JSON thực gửi e_hoi_ai, gồm dấu ngoặc,
+    chỉ số và ký tự escape. Giữ các tài liệu đầu vừa trần, không cắt nội
+    dung một tài liệu. Cảnh báo đếm cả các dòng trùng tài liệu đã bị bỏ.
+    """
+    ds = []
+    truong = tham_so.get("truong_phan_loai")
+    for nv in lo.nghiep_vu:
+        if gan_loai(nv, cd.danh_muc, cd.bo, truong) == (None, None):
+            noi_dung = lay_noi_dung(nv, truong)
+            if noi_dung and noi_dung.strip():
+                ds.append((nv.chi_so, noi_dung))
+    tai_lieu, anh_xa = lap_tai_lieu(ds)
+    so_ky_tu, so_nhan = 2, 0  # [] và dấu phẩy giữa các tài liệu.
+    for muc in tai_lieu:
+        them = len(_json(muc)) + (1 if so_nhan else 0)
+        if so_ky_tu + them > TOI_DA_KY_TU_TAI_LIEU:
+            break
+        so_ky_tu += them
+        so_nhan += 1
+    tai_lieu = tai_lieu[:so_nhan]
+    anh_xa = {i: anh_xa[i] for i in range(so_nhan)}
+    so_bo = len(ds) - sum(len(dong) for dong in anh_xa.values())
+    canh_bao = ([f"Có {so_bo} dòng vượt giới hạn nội dung gửi AI; "
+                 "các dòng này được giữ là chưa phân loại."] if so_bo else [])
+    return tai_lieu, anh_xa, canh_bao
+
+
 def lap_yeu_cau_ai(tai_lieu, danh_muc, tham_so, chuyen_tiep) -> dict:
     """Lập phong bì cho ai.hoi_theo_yeu_cau@1 (Local), giữ prompt của module."""
     if (not isinstance(tham_so, dict)
@@ -143,7 +207,9 @@ def lap_yeu_cau_ai(tai_lieu, danh_muc, tham_so, chuyen_tiep) -> dict:
                     or not isinstance(muc["noi_dung"], str)
                     or len(muc["noi_dung"]) > TOI_DA_KY_TU):
                 raise loi("DU_LIEU_KHONG_HOP_LE")
-        van_ban = _json(tai_lieu)
+        van_ban = van_ban_tai_lieu(tai_lieu)
+        if len(van_ban) > TOI_DA_KY_TU_TAI_LIEU:
+            raise loi("VUOT_GIOI_HAN")
     return {"loai": "yeu_cau_ai", "yeu_cau_ai": {
         "phien_ban": 1,
         **{k: tham_so[k] for k in ("ma_prompt", "phien_ban_prompt", "prompt")},

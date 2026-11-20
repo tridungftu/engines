@@ -381,6 +381,7 @@ def test_chuyen_tiep_tep_thuc_qua_core_gia_mo_lai_duoc(danh_muc, tham_so):
     from kho_tri_thuc_sdk.thu import CoreGia
 
     phieu = json.loads((GOI / "engine.json").read_text(encoding="utf-8"))
+    phieu["chay_thu_demo"] = []  # App giả chỉ khai các năng lực DEMO bên dưới.
     phieu["nang_luc"] = [
         {"ma": "demo.chuan_bi@1", "ten": "Chuẩn bị yêu cầu DEMO",
          "nhan": ["tep"], "tra": "yeu_cau_ai",

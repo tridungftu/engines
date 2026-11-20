@@ -94,7 +94,8 @@ def test_500_demo_khop_lop1_loai_chon_bam_doc_lap_va_du_truong_ra():
     assert truong["so_chua_phan_loai"] == sum(d["loai"] == "chua_phan_loai" for d in tep["nghiep_vu"])
     assert truong["luong"] == "do" and truong["can_nguoi_kiem"] is True
     assert truong["tong_tien_do"] is None  # Có ngoại tệ chưa quy đổi/thiếu tiền tệ.
-    assert truong["tep_ds_do"] is None
+    # PL-8: có dòng Đỏ thì có tệp Excel danh sách cần kiểm.
+    assert truong["tep_ds_do"]["ten"] == "ds-can-kiem.xlsx"
     assert core.xem_ngan(app.ma, "ty_le") == []
     assert len(core.xem_ngan(app.ma, "dong_luot")) == 500
     assert len(core.xem_ngan(app.ma, "luot")) == 1

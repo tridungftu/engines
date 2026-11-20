@@ -150,10 +150,15 @@ def test_khu_hoi_nguoi_kiem_dien_excel_gui_json_roi_ghi_ngan():
 
 def test_moi_tep_json_chay_thu_demo_hop_schema():
     core = CoreGia()
+    so_tep = 0
     for kq in core.chay_thu_demo(app):
         assert kq["trang_thai"] == "XONG", kq
+        if kq["ket_qua"]["loai"] != "truong":  # ví dụ chuẩn bị AI trả yeu_cau_ai, không có tep_json
+            continue
         truong = kq["ket_qua"]["truong"]
         KIEM.validate(json.loads(core.doc_tep(truong["tep_json"]["tep_id"])))
+        so_tep += 1
+    assert so_tep >= 2
 
 
 def test_schema_dong_bo_ma_cong_bo():

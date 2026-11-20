@@ -71,3 +71,24 @@ def tim_tat_ca(viec, bang, loc, *, gioi_han=500, toi_da=200000):
         if tiep in da_gap:
             raise loi("NGAN_BAN")
         da_gap.add(tiep)
+
+
+def dem_theo_trang(viec, bang, loc, ham):
+    """Duyệt trang 500 dòng, gọi ham từng bản ghi; không gom danh sách hay đặt trần."""
+    if bang not in _COT_KHOA or not callable(ham):
+        raise loi("THAM_SO_KHONG_HOP_LE")
+    sap_xep = [{"truong": cot, "giam": False} for cot in _COT_KHOA[bang]]
+    tiep = None
+    da_gap = set()
+    while True:
+        viec.kiem_huy()
+        trang = viec.ngan.tim(bang, loc=loc, sap_xep=sap_xep, gioi_han=500, tiep=tiep)
+        for ban in trang.danh_sach:
+            viec.kiem_huy()
+            ham(ban)
+        tiep = trang.tiep
+        if tiep is None:
+            return
+        if tiep in da_gap:
+            raise loi("NGAN_BAN")
+        da_gap.add(tiep)

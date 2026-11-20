@@ -1082,6 +1082,11 @@
           "ma": "ky_lam_moi",
           "ten": "Kỳ làm mới hồ sơ",
           "kieu": "van_ban"
+          },
+          {
+            "ma": "tien_te",
+            "ten": "Mã tiền tệ ISO ba chữ cái của số liệu tiền gộp",
+            "kieu": "van_ban"
         }
       ]
     },

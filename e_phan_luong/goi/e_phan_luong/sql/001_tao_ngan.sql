@@ -170,6 +170,7 @@ CREATE TABLE eng_e_phan_luong.ho_so_hanh_vi (
     bam_doi_tac text,
     tong_7_ngay text,
     ky_lam_moi text,
+    tien_te text,
     UNIQUE (phap_nhan_id, khau, loai)
 );
 COMMENT ON TABLE eng_e_phan_luong.ho_so_hanh_vi IS 'Hồ sơ hành vi gộp';
@@ -188,6 +189,7 @@ COMMENT ON COLUMN eng_e_phan_luong.ho_so_hanh_vi.bieu_do IS 'Biểu đồ tần 
 COMMENT ON COLUMN eng_e_phan_luong.ho_so_hanh_vi.bam_doi_tac IS 'Tập băm đối tác dạng chuỗi JSON';
 COMMENT ON COLUMN eng_e_phan_luong.ho_so_hanh_vi.tong_7_ngay IS 'Tổng gộp theo băm và ngày trong bảy ngày dạng chuỗi JSON';
 COMMENT ON COLUMN eng_e_phan_luong.ho_so_hanh_vi.ky_lam_moi IS 'Kỳ làm mới hồ sơ';
+COMMENT ON COLUMN eng_e_phan_luong.ho_so_hanh_vi.tien_te IS 'Mã tiền tệ ISO ba chữ cái của số liệu tiền gộp';
 
 CREATE TABLE eng_e_phan_luong.chot_ky (
     id uuid PRIMARY KEY,

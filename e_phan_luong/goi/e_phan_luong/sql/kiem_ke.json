@@ -53,8 +53,8 @@
     },
     {
       "duong_dan": "e_phan_luong/chot_ky.py",
-      "bytes": 6728,
-      "sha256": "20922ef51a2f602d1cf230438a77f70738d93dacd46039be0dfe0bdc97814403"
+      "bytes": 8014,
+      "sha256": "11a1bce0083a0eff6939dca4ee3e9e686aed75f43a6344965a1d4f924346ec44"
     },
     {
       "duong_dan": "e_phan_luong/chuoi_ai.py",
@@ -83,8 +83,8 @@
     },
     {
       "duong_dan": "e_phan_luong/ho_so.py",
-      "bytes": 8884,
-      "sha256": "c5dc24bfcee041fc4501a96adae4b8ce2a8771041c839ee24dcaf1c7dbfddddd"
+      "bytes": 11112,
+      "sha256": "1e682fc4429c2284ba029719c0bb4ce411b12c48d32468ed348e8d00405db065"
     },
     {
       "duong_dan": "e_phan_luong/hoa_don.py",
@@ -108,8 +108,8 @@
     },
     {
       "duong_dan": "e_phan_luong/ngan_chung.py",
-      "bytes": 2589,
-      "sha256": "34f8903af3defaa635c13c24e7505d90bfb5be9d9d3142d804157ca5d98cbde1"
+      "bytes": 3307,
+      "sha256": "26d6e60eb34df704d3e42846bf098c0405e0444779354eb5e6e684f87dc1f52f"
     },
     {
       "duong_dan": "e_phan_luong/ngan_chuoi.py",
@@ -148,8 +148,8 @@
     },
     {
       "duong_dan": "e_phan_luong/quy_trinh.py",
-      "bytes": 10285,
-      "sha256": "065df074c79f21c7ce1ba62f6f07e1ce83e913de3b0e4c3851572bd0709ad24b"
+      "bytes": 11297,
+      "sha256": "4bafb312793463b61ac207a69a85cd0daa7c6a514168cadf5b46af893313f8dd"
     },
     {
       "duong_dan": "e_phan_luong/thong_ke.py",
@@ -183,8 +183,8 @@
     },
     {
       "duong_dan": "engine.json",
-      "bytes": 36417,
-      "sha256": "34a2de2a279b1bbe298dc6ac42e4b0d6499f3a7c524d769d837fb7d19ec93007"
+      "bytes": 36588,
+      "sha256": "95ee47409b8d6dcf4b76550acc8e1ae299c1e3d5ba7f30fe3346be6c6dcdb242"
     },
     {
       "duong_dan": "requirements.lock",
@@ -193,8 +193,8 @@
     },
     {
       "duong_dan": "sql/001_tao_ngan.sql",
-      "bytes": 13278,
-      "sha256": "f37512cc2458bfe3c3f9ad0f5ae3e44dd93eab4d9a011772ae629cd94284665b"
+      "bytes": 13424,
+      "sha256": "82f499de6ec08598c8e990811aa0cbcec05333bf34c3ebdd54e086fcfdf41ce3"
     },
     {
       "duong_dan": "ui/bang_ty_le.js",

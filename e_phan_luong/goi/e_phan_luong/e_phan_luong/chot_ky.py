@@ -8,7 +8,10 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
+import logging
 import re
+
+from kho_tri_thuc_sdk.engine import ViecDaHuy
 
 from . import ngan_chung
 from .kieu import (
@@ -21,10 +24,11 @@ from .ty_le import ChinhSach, TrangThai, tu_ban_ghi, ve_ban_ghi
 
 
 _GIO_VN = timezone(timedelta(hours=7))
+_NHAT_KY = logging.getLogger(__name__)
 
 
-def ky_hien_tai(luc: datetime | None = None) -> str:
-    """Kỳ theo UTC+7; datetime không có múi giờ được hiểu là giờ Việt Nam."""
+def ngay_hien_tai(luc: datetime | None = None):
+    """Ngày xử lý theo UTC+7; là nguồn giờ chung của kỳ chốt và hồ sơ."""
     if luc is None:
         luc = datetime.now(_GIO_VN)
     elif not isinstance(luc, datetime):
@@ -32,7 +36,13 @@ def ky_hien_tai(luc: datetime | None = None) -> str:
     if luc.tzinfo is None or luc.utcoffset() is None:
         luc = luc.replace(tzinfo=_GIO_VN)
     luc = luc.astimezone(_GIO_VN)
-    return f"{luc.year:04d}-{luc.month:02d}"
+    return luc.date()
+
+
+def ky_hien_tai(luc: datetime | None = None) -> str:
+    """Kỳ theo UTC+7; datetime không có múi giờ được hiểu là giờ Việt Nam."""
+    ngay = ngay_hien_tai(luc)
+    return f"{ngay.year:04d}-{ngay.month:02d}"
 
 
 def ky_truoc(ky: str) -> str:
@@ -56,12 +66,11 @@ def _tinh_lai(viec, tt: TrangThai, cs: ChinhSach) -> TrangThai:
     Cận trên dùng chung thong_ke; điều kiện nhãn như doi_bac.cap_nhat.
     """
     mau = loi_mau = loi_sad = loi_ngoai = 0
-    ds = ngan_chung.tim_tat_ca(viec, "ket_qua_kiem", {"khau": tt.khau, "loai": tt.loai})
-    for ban in ds:
-        viec.kiem_huy()
+    def dem(ban):
+        nonlocal mau, loi_mau, loi_sad, loi_ngoai
         kq = ban.gia_tri
         if kq.get("ket_qua") not in {KQ_DAT, KQ_SAI}:
-            continue
+            return
         sai = kq["ket_qua"] == KQ_SAI
         if kq.get("nguon_mau") == MAU_CHON:
             mau += 1
@@ -69,6 +78,7 @@ def _tinh_lai(viec, tt: TrangThai, cs: ChinhSach) -> TrangThai:
         loi_sad += int(sai and kq.get("muc_sai") in {MUC_SAD, MUC_TE})
         loi_ngoai += int(sai and kq.get("nguon_mau") == MAU_NGOAI)
 
+    ngan_chung.dem_theo_trang(viec, "ket_qua_kiem", {"khau": tt.khau, "loai": tt.loai}, dem)
     diem = can_tren(loi_mau, mau, cs.do_tin_cay) if mau else None
     nhan = set(tt.nhan) - {NHAN_RUI_RO_CAO, NHAN_LOI_NGOAI_MAU}
     if loi_sad > 0 or (diem is not None and diem > cs.nguong_diem_rui_ro):
@@ -155,18 +165,41 @@ def chot_neu_can(
         for ban in ngan_chung.tim_tat_ca(viec, "chot_ky", {"ky": kt})
     }
     so_chot = 0
+    cap_loi = set()
     for ban in cac_ty_le:
         viec.kiem_huy()
-        if _tao_tu_ky(ban, ky_moi):
-            continue
         khoa = {"khau": ban.gia_tri["khau"], "loai": ban.gia_tri["loai"]}
         cap = (khoa["khau"], khoa["loai"])
-        if cap not in da_chot and _chot_mot(viec, cs, khoa, kt, ky_moi, lam_moi_ho_so):
-            so_chot += 1
-            da_chot.add(cap)
+        try:
+            if _tao_tu_ky(ban, ky_moi):
+                continue
+            if cap not in da_chot and _chot_mot(viec, cs, khoa, kt, ky_moi, lam_moi_ho_so):
+                so_chot += 1
+                da_chot.add(cap)
+        except ViecDaHuy:
+            raise
+        except Exception as exc:
+            # Hủy/mất quyền giữ việc vẫn phải dừng; NGAN_BAN để Core giao lại.
+            viec.kiem_huy()
+            if getattr(exc, "ma", None) == "NGAN_BAN":
+                raise
+            cap_loi.add(cap)
+            _NHAT_KY.warning("Không chốt được một cặp thống kê; sẽ thử lại ở lượt sau.")
     if lam_moi_ho_so is not None:
         for ban in ngan_chung.tim_tat_ca(viec, "ho_so_hanh_vi", {}):
-            if ban.gia_tri.get("ky_lam_moi") != ky_moi:
-                khoa = {"khau": ban.gia_tri["khau"], "loai": ban.gia_tri["loai"]}
+            viec.kiem_huy()
+            khoa = {"khau": ban.gia_tri["khau"], "loai": ban.gia_tri["loai"]}
+            if (khoa["khau"], khoa["loai"]) in cap_loi:
+                continue
+            try:
+                if ban.gia_tri.get("ky_lam_moi") == ky_moi:
+                    continue
                 _lam_moi_mot(viec, khoa, ky_moi, lam_moi_ho_so)
+            except ViecDaHuy:
+                raise
+            except Exception as exc:
+                viec.kiem_huy()
+                if getattr(exc, "ma", None) == "NGAN_BAN":
+                    raise
+                _NHAT_KY.warning("Không làm mới được một hồ sơ hành vi; sẽ thử lại ở lượt sau.")
     return so_chot

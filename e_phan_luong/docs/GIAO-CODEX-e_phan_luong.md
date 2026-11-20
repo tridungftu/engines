@@ -551,6 +551,42 @@ Việc:
 Đạt: pytest các tệp test của việc 0 lỗi; nếu sửa tệp gói thì 3 lệnh AGENTS.md §5 đủ (thu [ĐẠT] mã 0; pytest toàn engine 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật và lệnh chạy script; ghi "đã kiểm bằng Core giả (CoreGia)".
 ```
 
+Sau PL-9F/9G (21/11): engine thuần JSON 50.000 dòng ~12 giây; số lần gọi còn lại chủ yếu là doc từng dòng (ket_qua_kiem khi tra nộp lại; dong_luot + ket_qua_kiem khi ghi kết quả). Lead giao thêm PL-9H, PL-9I chạy song song.
+
+#### PL-9H — tra_nop_lai: gộp đọc ket_qua_kiem theo lượt
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md §6 (nộp lại, Q5); e_phan_luong/goi/e_phan_luong/README.md (CC-6); ngan_luot.py (tra_nop_lai, _quet_dong_nop_lai do PL-9F viết); tests/test_pl9f_tra_nop_lai.py; báo cáo PL-9F, PL-9G ở D:/Claude/engines-phieu/e_phan_luong-pl-9f.bao-cao.md, e_phan_luong-pl-9g.bao-cao.md.
+Nhánh này có đủ PL-0…PL-9G. Một việc con khác (PL-9I) chạy SONG SONG và chỉ sửa ngan_ket_qua.py, tests/test_pl9i_*.py. Bạn KHÔNG sửa các tệp đó; không sửa README/CHANGELOG/NGUON/VIEC.md (lead cập nhật).
+
+LÀM VIỆC CON PL-9H — tra_nop_lai: gộp lượt đọc ket_qua_kiem của các mã ứng viên, GIỮ ĐÚNG ngữ nghĩa Q5, không cần cửa mới của Core.
+Hiện trạng sau PL-9F: tim đã gộp theo trang, nhưng mỗi mã có dòng Đỏ gần nhất vẫn gọi viec.ngan.doc("ket_qua_kiem", {ma_luot, ma, khau}, gom_het_han=True) một lần → nộp lại 50.000 mã ≈ 50.000 lần gọi (ở 5 ms/lần ước tính vượt 300 giây).
+Tệp được sửa: e_phan_luong/goi/e_phan_luong/e_phan_luong/ngan_luot.py (chỉ thân tra_nop_lai và hàm phụ riêng, đặt trong ngan_luot.py; không sửa ngan_chung.py), test mới tests/test_pl9h_*.py; được sửa kỳ vọng đếm lần gọi ở tests/test_pl9f_tra_nop_lai.py và ca phân luồng (json_*, excel_*) của tests/test_pl9b_hieu_nang.py, tests/test_pl9g_do_thuan.py (ghi rõ từng chỗ; KHÔNG đụng ca ghi_ket_qua_* — PL-9I giữ). Không đổi chữ ký hàm công khai.
+Cách làm (lead đã chốt):
+1. Sau khi có dòng gần nhất cho từng mã (đường quét hoặc đường tìm từng mã như hiện tại), gom các mã ứng viên (có ly_do bắt buộc/chọn mẫu) theo ma_luot của dòng gần nhất.
+2. Với mỗi ma_luot có k ứng viên: duyệt trang 500 dòng viec.ngan.tim("ket_qua_kiem", loc={"ma_luot": ma_luot, "khau": khau}, gom_het_han=True, sắp theo cột khóa (ma_luot, ma, khau), chống vòng tiep, kiem_huy như _quet_dong_nop_lai), chỉ giữ kết quả có ma thuộc ứng viên. Ngân sách trang = max(1, ceil(k / 10)). Hết trang trong ngân sách → dùng kết quả quét. Vượt ngân sách → bỏ kết quả quét của ma_luot đó, đọc từng mã bằng doc như cũ.
+3. Quyết định nop_lai giữ nguyên: không có kết quả, hoặc ket_qua không thuộc {dat, sai} → nộp lại. Kết quả hết hạn vẫn tính (gom_het_han=True ở cả hai đường).
+4. Kiểm kê: tính lại (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat).
+Test bắt buộc (tests/test_pl9h_ket_qua_nop_lai.py): (a) tương đương với bản tra_nop_lai hiện tại (chép nguyên thân hiện tại làm hàm tham chiếu trong test) trên ≥ 200 trạng thái ngăn DEMO ngẫu nhiên có hạt cố định: nhiều lượt, ket_qua_kiem dat/sai/khong_kiem/khác/không có/hết hạn, kết quả của khâu khác cùng ma_luot, ứng viên rải nhiều ma_luot, ngân sách vừa đủ/vượt; (b) đếm lần gọi trên CoreGia: nộp lại 10.000 mã chưa kiểm cùng một lượt → tổng doc + tim của tra_nop_lai ≤ 60; lượt cũ rất lớn so với số ứng viên → ≤ 1,1 × số lần gọi cũ + số ma_luot; (c) chống vòng tiep, kiem_huy.
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest toàn engine 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; nêu số lần gọi trước/sau ở N = 1.000/5.000/10.000 (trống, nộp lại); ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
+#### PL-9I — ghi_ket_qua: bỏ đọc ngăn từng dòng
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md §5.3 (JSON kết quả kiểm), §6; e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §4 (Q1, Q2, Q6, Q7); ngan_ket_qua.py; ngan_luot.py (ghi_luot: cách dùng bản đọc trước ở lần thử đầu, đọc lại từng dòng khi thử lại; _quet_dong_nop_lai: quét trang có ngân sách); báo cáo PL-9G ở D:/Claude/engines-phieu/e_phan_luong-pl-9g.bao-cao.md.
+Nhánh này có đủ PL-0…PL-9G. Một việc con khác (PL-9H) chạy SONG SONG và chỉ sửa ngan_luot.py, tests/test_pl9f_tra_nop_lai.py, tests/test_pl9h_*.py và ca phân luồng của tests/test_pl9b_hieu_nang.py, tests/test_pl9g_do_thuan.py. Bạn KHÔNG sửa các tệp/phần đó; không sửa README/CHANGELOG/NGUON/VIEC.md (lead cập nhật).
+
+LÀM VIỆC CON PL-9I — ghi_ket_qua: bỏ đọc ngăn từng dòng, GIỮ ĐÚNG ngữ nghĩa Q1/Q2/Q6/Q7 và chống trùng, không cần cửa mới của Core.
+Hiện trạng (PL-9G đo): mỗi dòng kết quả gọi 2 lần doc — _chuan_bi đọc dong_luot {ma_luot, ma}; _da_ghi đọc ket_qua_kiem {ma_luot, ma, khau} gom_het_han=True trong lap_lenh — 10.000 dòng ≈ 20.000 lần gọi (5 ms/lần ước tính ~100 giây).
+Tệp được sửa: e_phan_luong/goi/e_phan_luong/e_phan_luong/ngan_ket_qua.py (hàm phụ đặt trong tệp này; không sửa ngan_chung.py, ngan_luot.py), test mới tests/test_pl9i_*.py; được sửa kỳ vọng đếm lần gọi ở ca ghi_ket_qua_* của tests/test_pl9b_hieu_nang.py, tests/test_pl9g_do_thuan.py (ghi rõ từng chỗ; KHÔNG đụng ca phân luồng — PL-9H giữ) và test cũ chỉ phần đếm/thứ tự gọi ngăn. Không đổi chữ ký hàm công khai.
+Cách làm (lead đã chốt):
+1. _chuan_bi: gom dòng tệp theo ma_luot (luot vẫn đọc một lần mỗi ma_luot như hiện tại). Với mỗi ma_luot có k dòng: duyệt trang 500 dòng viec.ngan.tim("dong_luot", loc={"ma_luot": ma_luot}) (sắp theo cột khóa, chống vòng tiep, kiem_huy), chỉ giữ dòng có ma thuộc tệp; ngân sách trang = max(1, ceil(k / 10)); vượt ngân sách → đọc từng dòng bằng doc như cũ cho ma_luot đó. Mọi phép kiểm (LUOT_KHONG_TON_TAI, DU_LIEU_KHONG_HOP_LE theo module/khâu/danh mục), thứ tự chi_so, giá trị ghi (loai, nguon_mau, nguon_loai_sai, muc_sai) giữ nguyên.
+2. Chống trùng: đọc trước tập khóa ket_qua_kiem đã có cho từng (ma_luot, khau) bằng tim gom_het_han=True, cùng quy tắc ngân sách (vượt → không có bản đọc trước cho ma_luot đó). Trong lap_lenh (kể cả _tao_cap_moi): LẦN THỬ ĐẦU dùng bản đọc trước; LẦN THỬ LẠI sau xung đột (và ma_luot không có bản đọc trước) đọc từng dòng bằng _da_ghi như hiện tại. lo.them vẫn phải xung đột khi việc khác vừa ghi cùng khóa (dựa vào đó để bản đọc trước cũ không gây ghi trùng) — viết test chứng minh bằng CoreGia gay_xung_dot_ngan hoặc ghi chen giữa hai lô.
+3. Số đếm trả về (so_dong_nhan, so_trung, so_ngoai_mau, so_sua_loai, so_cap_doi_bac) và trạng thái ty_le sau ghi phải giống hệt bản cũ.
+4. Kiểm kê: tính lại (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat).
+Test bắt buộc (tests/test_pl9i_ghi_ket_qua.py): (a) tương đương với bản hiện tại (chép nguyên _chuan_bi/_da_ghi/_tao_cap_moi/ghi_ket_qua hiện tại làm tham chiếu trong test) trên ≥ 200 trạng thái DEMO ngẫu nhiên có hạt cố định: so số đếm trả về, toàn bộ ngăn ket_qua_kiem và ty_le sau ghi, mã lỗi khi lỗi; gồm nhiều ma_luot, dòng không có trong dong_luot, sửa loại, ngoài mẫu, đã ghi trước (kể cả hết hạn), gửi lại cả tệp, ngân sách vừa đủ/vượt; (b) xung đột giữa chừng: kết quả cuối giống bản cũ, không ghi trùng, không cộng thống kê hai lần; (c) đếm lần gọi trên CoreGia: 10.000 dòng một lượt (lượt 10.000 dòng) → tổng doc + tim ≤ 120 (ngoài lô ghi); lượt rất lớn so với số dòng tệp → ≤ 1,1 × số lần gọi cũ + số ma_luot.
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest toàn engine 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; nêu số lần gọi trước/sau ở N = 1.000/5.000/10.000 (ghi mới, ghi trùng); ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
 ## 4. Cần Core / Chờ Anh
 
 **Kiểm 2 điểm "Cần Core" (20/11/2026, lead đọc mã Core `ma-nguon-core-sach` HEAD `a07e061` và CoreGia SDK 2.2.0; chưa chạy trên Core thật):**

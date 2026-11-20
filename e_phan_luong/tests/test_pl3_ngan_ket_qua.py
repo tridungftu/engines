@@ -58,6 +58,7 @@ def trong_viec(core, ham, *, phap_nhan_id="pn-demo"):
         "ma": "demo.ngan@1", "ten": "Ngăn DEMO", "nhan": ["van_ban"],
         "tra": "van_ban", "gioi_han": {"thoi_han_giay": 300},
     }]
+    phieu["chay_thu_demo"] = []  # phiếu giả chỉ để dựng ngăn; ví dụ thật thuộc năng lực khác
     thu = EngineSDK(phieu)
     ket_qua_ham = []
 
@@ -141,6 +142,8 @@ def theo_doi_thu_lai(monkeypatch):
 def app_ghi_rieng():
     phieu = deepcopy(app.phieu)
     phieu["nang_luc"] = [n for n in phieu["nang_luc"] if n["ma"] == "audit.ghi_ket_qua@1"]
+    phieu["chay_thu_demo"] = [v for v in phieu.get("chay_thu_demo", [])
+                              if v["nang_luc"] == "audit.ghi_ket_qua@1"]
     thu = Engine(phieu)
     thu.nang_luc("audit.ghi_ket_qua@1")(ghi_ket_qua)
     return thu

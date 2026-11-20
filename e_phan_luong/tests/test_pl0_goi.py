@@ -18,7 +18,6 @@ CHUA_LAM_CON = frozenset({
     "audit.chuan_bi_phan_loai@1",
     "audit.phan_luong_sau_ai@1",
     "audit.phan_luong_hoa_don@1",
-    "audit.ghi_ket_qua@1",
 })
 
 GOI = Path(__file__).resolve().parents[1] / "goi" / "e_phan_luong"

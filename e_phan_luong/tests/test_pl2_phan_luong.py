@@ -74,7 +74,9 @@ def test_500_demo_khop_lop1_loai_chon_bam_doc_lap_va_du_truong_ra():
     for d, nv in zip(tep["nghiep_vu"], lo.nghiep_vu):
         mong = dap_an[d["ma"]]
         assert (d["loai"], d["nguon_loai"]) == (mong["loai"], mong["nguon_loai"])
-        assert "DOI_TAC_MOI" not in d["co"] and "SO_TIEN_BAT_THUONG" not in d["co"]
+        assert "SO_TIEN_BAT_THUONG" not in d["co"]  # hồ sơ trống: chưa đủ 50 nghiệp vụ
+        # PL-4: mặc định (toi_thieu_ho_so_doi_tac_moi = 0) lượt đầu coi mọi đối tác là mới.
+        assert ("DOI_TAC_MOI" in d["co"]) == (nv.doi_tac is not None)
         if mong["ly_do"]:
             assert d["luong"] == "do" and d["ly_do"] == mong["ly_do"]
         else:
@@ -223,9 +225,11 @@ def test_q4_duoi_sad_nhan_he_so_khong_kep_san_va_tien_am_da_tuyet_doi(monkeypatc
     monkeypatch.setattr(chon_mau, "duoc_chon", lambda *a: cac_p.append(a[-1]) or False)
     _, tep, _ = lay_kq(core, chay(core, lo_mot(
         so_tien={"so": "-10000000", "tien_te": "VND"}, nhap_tay=True, doi_tac="DEMO-NCC-01"),
-        tham_so(chinh_sach_json='{"san":0.9}')))
+        tham_so(chinh_sach_json='{"san":0.9,"toi_thieu_ho_so_doi_tac_moi":1}')))
+    # Khóa PL-4 = 1 với hồ sơ trống → không bật DOI_TAC_MOI; còn SO_TRON × NHAP_TAY.
     assert cac_p == [Decimal("0.045")]
-    assert cac_co == [(Tien(Decimal("10000000"), "VND"), None, bam_chia_nho[0])]
+    assert [(t, b) for t, _, b in cac_co] == [(Tien(Decimal("10000000"), "VND"), bam_chia_nho[0])]
+    assert cac_co[0][1].so_nghiep_vu == 0  # PL-4: ảnh chụp hồ sơ rỗng, không phải None
     assert bam_chia_nho == [phan_luong.bam_doi_tac("demo_thanh_toan", "DEMO-NCC-01")]
     assert tep["nghiep_vu"][0]["co"] == ["SO_TRON", "NHAP_TAY"]
 
@@ -270,18 +274,19 @@ def test_upload_loi_khong_ghi_dau_hoan_tat(monkeypatch):
 
 def test_ghi_luot_la_thao_tac_ngan_sau_cung_va_tep_da_tai(monkeypatch):
     core = CoreGia()
-    cac_bang = []
+    cac_lo = []
     ghi_goc = core._ngan_ghi_lo
 
     def ghi(ma, instance, lenh, khoa, **kw):
-        cac_bang.extend(c["bang"] for c in lenh)
+        cac_lo.append([c["bang"] for c in lenh])
         # SDK đã tải tệp trước lô đầu tiên; kiểm qua nhật ký công khai của CoreGia.
         assert any(d[0] == "tep" for d in core.nhat_ky)
         return ghi_goc(ma, instance, lenh, khoa, **kw)
 
     monkeypatch.setattr(core, "_ngan_ghi_lo", ghi)
     lay_kq(core, chay(core, lo_mot()))
-    assert cac_bang == ["dong_luot", "luot"]
+    # PL-4: hồ sơ rỗng tạo trước; hồ sơ cộng CÙNG lô nguyên tử với dấu luot (luot sau cùng).
+    assert cac_lo == [["ho_so_hanh_vi"], ["dong_luot"], ["ho_so_hanh_vi", "luot"]]
 
 
 def test_lo_rong_tra_du_truong_dem_khong_va_tong_co_tien_te():

@@ -45,12 +45,11 @@ def _chuan_bi(viec, tep: ket_qua.KetQuaTep) -> dict[tuple[str, str], list[_DongG
         raise loi("DU_LIEU_KHONG_HOP_LE")
 
     danh_muc = doc_danh_muc_loai(ts.get("danh_muc_loai_json"))
-    nguong_json = ts.get("nguong_json")
-    if nguong_json is not None and not isinstance(nguong_json, str):
-        raise loi("THAM_SO_KHONG_HOP_LE")
     ng = None
-    if (any(d.ket_qua == KQ_SAI for d in tep.dong)
-            or tep.nguong or (nguong_json and nguong_json.strip())):
+    if any(d.ket_qua == KQ_SAI for d in tep.dong):
+        nguong_json = ts.get("nguong_json")
+        if nguong_json is not None and not isinstance(nguong_json, str):
+            raise loi("THAM_SO_KHONG_HOP_LE")
         ng = nguong.doc_nguong(tep.nguong, nguong_json)
 
     nhom = {}

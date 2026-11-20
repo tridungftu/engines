@@ -28,7 +28,13 @@
       "tra": "truong",
       "gioi_han": {
         "tep_toi_da_mib": 20,
-        "thoi_han_giay": 300
+        "thoi_han_giay": 300,
+        "mime": [
+          "application/json",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "text/csv",
+          "application/vnd.ms-excel"
+        ]
       },
       "huy_duoc": true,
       "tham_so": [
@@ -204,7 +210,13 @@
       "tra": "yeu_cau_ai",
       "gioi_han": {
         "tep_toi_da_mib": 20,
-        "thoi_han_giay": 300
+        "thoi_han_giay": 300,
+        "mime": [
+          "application/json",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "text/csv",
+          "application/vnd.ms-excel"
+        ]
       },
       "huy_duoc": true,
       "tham_so": [
@@ -1185,6 +1197,20 @@
         "danh_muc_loai_json": "[\n  {\n    \"ma\": \"thanh_toan_ncc\",\n    \"mo_ta\": \"Nghiệp vụ Thanh toán nhà cung cấp DEMO\",\n    \"ten\": \"Thanh toán nhà cung cấp DEMO\"\n  },\n  {\n    \"ma\": \"tam_ung\",\n    \"mo_ta\": \"Nghiệp vụ Tạm ứng DEMO\",\n    \"ten\": \"Tạm ứng DEMO\"\n  },\n  {\n    \"ma\": \"luong\",\n    \"mo_ta\": \"Nghiệp vụ Lương DEMO\",\n    \"ten\": \"Lương DEMO\"\n  },\n  {\n    \"ma\": \"chi_phi_khac\",\n    \"mo_ta\": \"Nghiệp vụ Chi phí khác DEMO\",\n    \"ten\": \"Chi phí khác DEMO\"\n  },\n  {\n    \"ma\": \"thu_tien\",\n    \"mo_ta\": \"Nghiệp vụ Thu tiền DEMO\",\n    \"ten\": \"Thu tiền DEMO\"\n  }\n]\n",
         "bo_phan_loai_json": "{\n  \"phien_ban\": 1,\n  \"quy_tac\": [\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thanh toán\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thanh_toan_ncc\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"tạm ứng\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"tam_ung\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"lương\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"luong\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"chi phí khác\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"chi_phi_khac\"\n    },\n    {\n      \"khi\": [\n        {\n          \"khong_co\": [],\n          \"tat_ca\": [\n            [\n              \"thu tiền\"\n            ]\n          ]\n        }\n      ],\n      \"loai\": \"thu_tien\"\n    }\n  ]\n}\n",
         "truong_phan_loai": "dien_giai"
+      }
+    },
+    {
+      "nang_luc": "audit.phan_luong@1",
+      "ten": "Phân luồng bảng Excel DEMO theo khuôn cột",
+      "dau_vao": {
+        "loai": "tep",
+        "tep_demo": "demo/bang-DEMO.xlsx"
+      },
+      "tham_so": {
+        "khau": "ktt_duyet",
+        "ma_module": "demo_thanh_toan",
+        "nguong_json": "{\n  \"pm\": {\n    \"so\": \"5000000000\",\n    \"tien_te\": \"VND\"\n  },\n  \"sad\": {\n    \"so\": \"250000000\",\n    \"tien_te\": \"VND\"\n  },\n  \"te\": {\n    \"so\": \"3000000000\",\n    \"tien_te\": \"VND\"\n  }\n}\n",
+        "khuon_cot_json": "{\"phien_ban\": 1, \"sheet\": \"DEMO\", \"cot\": [{\"ma\": \"ma\", \"tu_khoa\": [\"Mã\"], \"bat_buoc\": true}, {\"ma\": \"ngay\", \"tu_khoa\": [\"Ngày\"], \"bat_buoc\": true}, {\"ma\": \"so_tien\", \"tu_khoa\": [\"Số tiền\"], \"bat_buoc\": true}, {\"ma\": \"tien_te\", \"tu_khoa\": [\"Tiền tệ\"], \"bat_buoc\": false}, {\"ma\": \"dien_giai\", \"tu_khoa\": [\"Diễn giải\"], \"bat_buoc\": false}, {\"ma\": \"doi_tac\", \"tu_khoa\": [\"Đối tác\"], \"bat_buoc\": false}, {\"ma\": \"so_tien_quy_doi\", \"tu_khoa\": [\"Số tiền quy đổi\"], \"bat_buoc\": false}, {\"ma\": \"tien_te_quy_doi\", \"tu_khoa\": [\"Tiền tệ quy đổi\"], \"bat_buoc\": false}, {\"ma\": \"nhap_tay\", \"tu_khoa\": [\"Nhập tay\"], \"bat_buoc\": false}, {\"ma\": \"co_do_cung\", \"tu_khoa\": [\"Cờ đỏ cứng\"], \"bat_buoc\": false}, {\"ma\": \"thuoc_tinh.bo_phan\", \"tu_khoa\": [\"Bộ phận\"], \"bat_buoc\": false}], \"dong_dung\": [\"Cộng\", \"Tổng cộng\"]}"
       }
     }
   ],

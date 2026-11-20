@@ -161,9 +161,9 @@ def _kiem_xlsx(du_lieu):
 def nhan_dien(du_lieu: bytes, ten: str | None, mime: str | None) -> str:
     """Nhận diện theo chữ ký trước, rồi đuôi/mime; không nhận .xls cũ."""
     _kiem_bytes(du_lieu)
-    if du_lieu.startswith(OLE[:4]):
-        raise loi("TEP_KHONG_HO_TRO")
     duoi = PurePosixPath((ten or "").replace("\\", "/")).suffix.lower()
+    if duoi == ".xls" or du_lieu.startswith(OLE[:4]):
+        raise loi("TEP_KHONG_HO_TRO")
     if du_lieu.startswith(b"PK\x03\x04") and duoi == ".xlsx":
         _kiem_xlsx(du_lieu)
         return "xlsx"

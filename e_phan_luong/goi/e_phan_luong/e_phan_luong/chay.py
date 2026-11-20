@@ -29,18 +29,20 @@ def phan_luong(viec):
 
 @app.nang_luc("audit.chuan_bi_phan_loai@1")
 def chuan_bi_phan_loai(viec):
-    from . import quy_trinh
+    from . import ngan_chuoi, quy_trinh
 
     quy_trinh.bat_dau(viec)
-    raise LoiNghiepVu("CHUA_LAM", "Năng lực đang được xây dựng.")
+    lo, du_lieu = quy_trinh.doc_tep_lo(viec)
+    cd = quy_trinh.doc_cai_dat(viec.tham_so, lo)
+    return ngan_chuoi.chuan_bi(viec, lo, du_lieu, cd)
 
 
 @app.nang_luc("audit.phan_luong_sau_ai@1")
 def phan_luong_sau_ai(viec):
-    from . import quy_trinh
+    from . import ngan_chuoi, quy_trinh
 
     quy_trinh.bat_dau(viec)
-    raise LoiNghiepVu("CHUA_LAM", "Năng lực đang được xây dựng.")
+    return {"loai": "truong", "truong": ngan_chuoi.phan_luong_sau_ai(viec)}
 
 
 @app.nang_luc("audit.phan_luong_hoa_don@1")

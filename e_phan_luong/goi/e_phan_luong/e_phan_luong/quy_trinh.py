@@ -41,17 +41,25 @@ def bat_dau(viec) -> int:
 
 
 def doc_tep_lo(viec) -> tuple[Lo, bytes]:
-    """Mở tệp đầu vào `tep` và đọc thành Lo. PL-6 thêm Excel/CSV tại đây."""
+    """Đọc JSON hoặc bảng theo khuôn cột; giữ bytes gốc để băm kiểm toán."""
+    from . import doc_bang
+
     tep = viec.dau_vao["tep"]
-    ten, mime = tep.get("ten", "").lower(), tep.get("mime", "").lower()
-    if (ten.endswith((".xlsx", ".xls", ".csv"))
-            or mime in {"text/csv", "application/vnd.ms-excel",
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
-            or not (ten.endswith(".json") or mime == "application/json")):
-        raise loi("TEP_KHONG_HO_TRO")
     with viec.mo_tep(tep["tep_id"]) as f:
-        du_lieu = f.read()
-    return doc_lo_json(du_lieu), du_lieu
+        du_lieu = f.read(doc_bang.TOI_DA_BYTE + 1)
+    kieu = doc_bang.nhan_dien(du_lieu, tep.get("ten"), tep.get("mime"))
+    if kieu == "json":
+        return doc_lo_json(du_lieu), du_lieu
+    ts = viec.tham_so
+    khuon, ma_module = ts.get("khuon_cot_json"), ts.get("ma_module")
+    if (not isinstance(khuon, str) or not khuon.strip()
+            or not isinstance(ma_module, str) or not ma_module.strip()):
+        raise loi("THAM_SO_KHONG_HOP_LE")
+    lo = doc_bang.doc_lo_bang(
+        du_lieu, kieu, khuon_cot_json=khuon, ma_module=ma_module,
+        tien_te=ts.get("tien_te") or None, ky=ts.get("ky") or None,
+    )
+    return lo, du_lieu
 
 
 def _so_tham_so(gia_tri) -> Decimal | None:

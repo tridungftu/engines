@@ -14,10 +14,8 @@ from e_phan_luong.chay import app
 from kiem_bam_goi import kiem, tinh_kiem_ke
 from kiem_doc_lap import kiem_demo, kiem_doc_lap
 
-CHUA_LAM_CON = frozenset({
-    "audit.chuan_bi_phan_loai@1",
-    "audit.phan_luong_sau_ai@1",
-})
+# Sau PL-5 và PL-7: không còn năng lực tạm nào (tập rỗng → test tham số hóa được bỏ qua có lý do).
+CHUA_LAM_CON = frozenset()
 
 GOI = Path(__file__).resolve().parents[1] / "goi" / "e_phan_luong"
 REPO = GOI.parents[2]
@@ -44,7 +42,8 @@ def test_doc_phieu_va_nam_nang_luc_co_demo_phan_luong():
         ("audit.phan_luong_hoa_don@1", ["truong"], "truong"),
         ("audit.ghi_ket_qua@1", ["tep"], "truong")]
     for nl in phieu["nang_luc"]:
-        assert nl["gioi_han"] == {"tep_toi_da_mib": 20, "thoi_han_giay": 300}
+        # PL-6 thêm danh sách mime nhận cho năng lực nhận tệp; trần dung lượng/thời hạn giữ nguyên.
+        assert {k: v for k, v in nl["gioi_han"].items() if k != "mime"} == {"tep_toi_da_mib": 20, "thoi_han_giay": 300}
         assert nl["huy_duoc"] is True
 
 

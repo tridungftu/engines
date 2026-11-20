@@ -47,14 +47,11 @@ def tinh_p(
     p_co_so: Decimal,
     he_so: Decimal,
     san: Decimal,
-    *,
-    nhan_he_so_duoi_sad: bool = True,
 ) -> Decimal:
     """Kẹp p trong [san, 1]; mặc định nhân hệ số cờ.
 
     Dưới SAD: bên gọi truyền p_co_so = cs.ty_le_duoi_sad và san = 0.
-    Khi cần tắt nhân cờ riêng cho vùng này, truyền
-    nhan_he_so_duoi_sad=False (điểm chờ quyết định Q4, GIAO-CODEX §2.3).
+    Dưới SAD luôn nhân hệ số cờ (Anh chốt Q4, GIAO-CODEX §2.3).
     """
-    p = p_co_so * he_so if nhan_he_so_duoi_sad else p_co_so
+    p = p_co_so * he_so
     return min(Decimal(1), max(san, p))

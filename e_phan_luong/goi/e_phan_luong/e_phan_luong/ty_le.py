@@ -36,7 +36,7 @@ def _so(gia_tri, ma_loi: str) -> Decimal:
         raise loi(ma_loi)
     try:
         so = Decimal(gia_tri)
-    except InvalidOperation:
+    except (InvalidOperation, ValueError, OverflowError):
         raise loi(ma_loi) from None
     if not so.is_finite():
         raise loi(ma_loi)
@@ -74,6 +74,7 @@ def _kiem_chinh_sach(cs: ChinhSach) -> None:
     if any(not Decimal(0) <= p <= Decimal(1) for p in cac_ty_le):
         raise loi("THAM_SO_KHONG_HOP_LE")
     if (not Decimal(0) < cs.do_tin_cay < Decimal(1) or cs.don_vi_so_tron <= 0
+            or cs.don_vi_so_tron != cs.don_vi_so_tron.to_integral_value()
             or any(h < 1 for h in cs.he_so.values())
             or any(n <= 0 or n != n.to_integral_value()
                    for n in (*cs.mau_toi_thieu, cs.mau_sach_toan_bo))):
@@ -103,7 +104,7 @@ def doc_chinh_sach(
                 chuoi, parse_float=Decimal, parse_int=Decimal,
                 parse_constant=_hang_so_khong_hop_le, object_pairs_hook=_doi_tuong,
             ) if chuoi.strip() else {}
-        except (ValueError, UnicodeError, RecursionError):
+        except (ValueError, UnicodeError, RecursionError, InvalidOperation, OverflowError):
             raise loi("THAM_SO_KHONG_HOP_LE") from None
         if not isinstance(du_lieu, dict) or du_lieu.keys() - {f.name for f in fields(cs)}:
             raise loi("THAM_SO_KHONG_HOP_LE")

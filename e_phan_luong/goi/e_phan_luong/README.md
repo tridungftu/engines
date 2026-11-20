@@ -1,13 +1,16 @@
-# Phân luồng kiểm tra — PL-0
+# Phân luồng kiểm tra — PL-2
 
-Engine dự kiến chia nghiệp vụ vào luồng Đỏ (người phải kiểm trước khi duyệt)
+Engine chia nghiệp vụ vào luồng Đỏ (người phải kiểm trước khi duyệt)
 hoặc Xanh theo khâu, ngưỡng PM/TE/SAD, loại nghiệp vụ và chọn mẫu tái hiện được.
-**PL-0 chỉ dựng khung**: mọi năng lực hiện trả lỗi `CHUA_LAM`:
-“Năng lực đang được xây dựng.” Chưa có ví dụ `chay_thu_demo` chạy được.
+**PL-2 đã nối `audit.phan_luong@1` cho JSON**: phân loại module/quy tắc,
+ngưỡng, chống chia nhỏ trong lô, tỷ lệ theo khâu × loại, cờ và chọn mẫu.
+Excel/CSV trả `TEP_KHONG_HO_TRO` tới PL-6. Bốn năng lực còn lại trả
+`CHUA_LAM`: “Năng lực đang được xây dựng.” Hồ sơ hành vi và chốt kỳ
+chờ PL-4; hiện không suy cờ đối tác mới/số tiền bất thường khi chưa có hồ sơ.
 
-| Năng lực | Nhận → trả | Mục đích sau khi triển khai |
+| Năng lực | Nhận → trả | Phạm vi |
 |---|---|---|
-| `audit.phan_luong@1` | tep → truong | Phân luồng lô JSON/Excel/CSV |
+| `audit.phan_luong@1` | tep → truong | PL-2: phân luồng lô JSON; Excel/CSV chờ PL-6 |
 | `audit.chuan_bi_phan_loai@1` | tep → yeu_cau_ai | Quy tắc trước, chuẩn bị dòng chờ Local AI |
 | `audit.phan_luong_sau_ai@1` | tra_loi_ai → truong | Hậu kiểm phân loại AI rồi phân luồng |
 | `audit.phan_luong_hoa_don@1` | truong → truong | Nối sau bước đọc hóa đơn |
@@ -19,7 +22,21 @@ Tiền luôn kèm mã tiền tệ; không tự gán VND khi thiếu. Dữ liệu
 Ngăn theo pháp nhân, không lưu chi tiết số tiền/ngày/đối tác/nội dung giao dịch.
 `dong_luot` có `loai`, `nguon_loai` theo quyết định Q2 ngày 20/11/2026.
 
-## Công thức để kiểm toán viên chạy lại (triển khai ở các lát sau)
+Trường ra đủ phiếu §5.5. `tep_json` có mã, luồng, lý do, cờ, loại và nguồn
+loại từng dòng; metadata gồm mã lượt, khâu, module, phiên bản và các băm.
+`canh_bao` chỉ gồm câu lý do cố định, tổng dưới 500 ký tự. `tep_ds_do = null`
+tới PL-8: SDK 2.2.0 cho phép trường tệp không có giá trị. `tong_tien_do`
+cộng tiền so ngưỡng (đã quy đổi nếu có, theo trị tuyệt đối); một dòng Đỏ
+chưa so được tiền tệ làm tổng là `null`. Không dòng Đỏ thì tổng bằng không,
+kèm tiền tệ ngưỡng.
+
+Luật nộp lại Q5: đọc lượt hoàn tất gần nhất theo `luot.tao_luc` của cùng
+(module, khâu, mã). Đỏ chưa có kết quả `dat`/`sai` → `NOP_LAI`;
+`khong_kiem` chưa giải phóng. Đã kiểm hoặc lần gần nhất Xanh → xét bình
+thường bằng hạt giống mới. Ghi từng lô tối đa 100 dòng bằng `lay_hoac_tao`,
+rồi ghi `luot` sau cùng; dòng ghi dở không có dấu lượt bị bỏ qua khi tra lại.
+
+## Công thức để kiểm toán viên chạy lại
 
 Lấy hạt giống 32 byte từ 64 ký tự hex ở ngăn `luot` (chỉ Admin được xem),
 đầu vào gốc và phiên bản engine/chính sách tại thời điểm chạy. Mã hóa các mã
@@ -29,6 +46,7 @@ bằng UTF-8, giữ nguyên thứ tự byte và dấu phân cách `0x1f`:
 from hashlib import sha256
 from fractions import Fraction
 
+hat_giong = bytes.fromhex(luot["hat_giong"])
 raw = (hat_giong + b"\x1f" + ma_module.encode("utf-8")
        + b"\x1f" + khau.encode("utf-8") + b"\x1f" + ma.encode("utf-8"))
 h = int.from_bytes(sha256(raw).digest(), "big")
@@ -39,6 +57,11 @@ duoc_chon = Fraction(h, 2**256) < Fraction(p)
 `p = min(1, max(san, p_bac × tích hệ số cờ))`; dưới SAD:
 `p = min(1, ty_le_duoi_sad × tích hệ số cờ)` (mặc định 0,02).
 Lớp ngưỡng/cờ bắt buộc và luật nộp lại được áp riêng trước chọn mẫu.
+`ma_module` và `khau` đã kiểm dạng mã thường/số/gạch dưới trong
+`phan_luong.py`; `ma` đã kiểm không có ký tự điều khiển trong `doc_lo.py`.
+Do đó các mã không thể chứa dấu phân cách `0x1f`. Dùng bytes 32 byte để
+chọn; không dùng chuỗi hex 64 ký tự làm hạt giống trực tiếp. Khi kiểm lại
+phải giữ cùng trạng thái ngăn trước lượt (đặc biệt tỷ lệ và lịch sử nộp lại).
 Băm hạt giống là `sha256:<SHA256(hat_giong)>`. Để chạy lại cần hạt giống gốc,
 không chỉ băm; C4 không cho lưu chi tiết đầu vào trong ngăn engine nên module
 phải giữ đầu vào và snapshot chính sách phục vụ kiểm toán.
@@ -61,11 +84,14 @@ chỉ so chuỗi con trong đầu vào và kho tệp toàn cục; test hình d�
 không chứng nhận quyền/vòng đời tệp ở Core thật. Cần chạy thật Blob và
 chuỗi ba bước trên Core tập; đã kiểm bằng Core giả (CoreGia).
 
-## Tự kiểm PL-0
+## Tự kiểm PL-2
 
 Chạy ba lệnh AGENTS.md bằng Python của venv, đặt `PYTHONDONTWRITEBYTECODE=1`
-để không tạo bytecode trong gói. `kho_tri_thuc_sdk.thu` báo
-“Phiếu chưa có ví dụ chay_thu_demo.”, mã thoát 1: không coi là DEMO đạt.
-Pytest kiểm hợp đồng/tiện ích ngăn; không thay cho nghiệm thu nghiệp vụ.
+để không tạo bytecode trong gói. `chay_thu_demo` chạy
+`demo/lo-nho-DEMO.json` với khâu `ktt_duyet`, danh mục, bộ quy tắc và
+trường phân loại DEMO trong Cài đặt bước; ngưỡng nằm trong tệp.
+Pytest chạy lô 500 dòng, C4/C5, Q2/Q4/Q5, khứ hồi hex/bytes, thứ tự ghi
+và tái hiện từng byte trên cùng đầu vào/hạt giống/trạng thái ngăn.
+Mọi kết quả này đã kiểm bằng Core giả (CoreGia), chưa nối Core thật.
 Sau mọi thay đổi gói (kể cả demo PL-0B), tính lại kiểm kê bằng
 `python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat` từ gốc repo.

@@ -56,7 +56,7 @@ export async function mount(goc, {KttCore = globalThis.KttCore} = {}) {
   goc.replaceChildren();
   tao("h2", "Bảng tỷ lệ kiểm tra");
   tao("p", "Chỉ Admin Core được xem. Màn chỉ đọc dữ liệu của pháp nhân đang chọn.");
-  tao("p", "Bậc là chỉ số bậc lưu trong ngăn; điểm là cận trên tỷ lệ lỗi 12 tháng.");
+  tao("p", "Bậc là mức tỷ lệ kiểm tra lưu trong ngăn; điểm là cận trên tỷ lệ lỗi 12 tháng.");
   const taiLai = nut("Tải lại");
   const thongBao = tao("div");
   thongBao.setAttribute("role", "status");

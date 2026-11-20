@@ -114,10 +114,22 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
 
 def xuat_ket_qua(viec, lo: Lo, ng: Nguong, ds_dong: Sequence[KetQuaDong], *,
                  thong_tin: dict, canh_bao_them: Sequence[str] = ()) -> dict:
-    """Tải tep_json lên Core và dựng trường ra §5.5. PL-8 thêm tep_ds_do tại đây."""
+    """Tải JSON và Excel dòng Đỏ lên Core; lô không có Đỏ trả tep_ds_do null."""
     noi_dung = tao_tep_json(ds_dong, thong_tin=thong_tin)
     tep_json = viec.tai_tep_ra("phan-luong.json", noi_dung, "application/json")
     truong = tao_truong_ra(lo, ng, ds_dong, thong_tin=thong_tin, tep_json=tep_json)
+    if any(d.luong == "do" for d in ds_dong):
+        # Nạp khi cần Excel; đường import khung không buộc nạp thư viện Excel.
+        from . import xuat_excel
+
+        du_lieu = xuat_excel.lap_ds_do(ds_dong, **{
+            cot: thong_tin[cot]
+            for cot in ("ma_luot", "ma_module", "khau", "phien_ban_engine")
+        })
+        truong["tep_ds_do"] = viec.tai_tep_ra(
+            "ds-can-kiem.xlsx", du_lieu,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
     if canh_bao_them:
         them = "; ".join(c for c in canh_bao_them if c)
         cu = truong.get("canh_bao") or ""

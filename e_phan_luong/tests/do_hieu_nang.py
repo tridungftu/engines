@@ -1,24 +1,33 @@
-"""PL-9B: đã kiểm bằng Core giả (CoreGia), chưa đo trên Core thật.
+"""PL-9G/PL-9B: đã kiểm bằng Core giả (CoreGia), chưa đo trên Core thật.
 
 Chạy: .venv/Scripts/python -B e_phan_luong/tests/do_hieu_nang.py
---pha core: đếm thật N=1.000/5.000/10.000; --pha may: chỉ mục test, biên
-50.000 JSON/Excel và 5.000 ghi kết quả. Mặc định chạy cả hai và in báo cáo.
+--pha core: giữ chế độ đếm CoreGia N=1.000/5.000/10.000.
+--pha thuan (mặc định; may là bí danh): chỉ mục test, JSON/Excel
+N=10.000/25.000/50.000; ghi kết quả N=1.000/5.000/10.000.
+Engine thuần = tổng giây - hợp các khoảng SDK gọi Core giả, gồm SDK phía engine.
+Mỗi ca có một lượt làm ấm riêng ngoài bộ mẫu; giải phóng Core giả ngoài đồng hồ.
+--ho-so: cProfile lượt riêng, không dùng giây có profiler để ước tính.
 Không có ca lớn trong pytest. Không sửa SDK/gói. MB = 10^6 byte.
 """
 from __future__ import annotations
 
 import argparse
+import ast
 from collections import Counter, defaultdict
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from fractions import Fraction
+import cProfile
 import gc
 import hashlib
+import inspect
+from importlib.metadata import version
 import json
 from pathlib import Path
 import platform
+import pstats
 import sys
 import threading
 import time
@@ -26,11 +35,14 @@ import tracemalloc
 from unittest.mock import patch
 from uuid import uuid4
 
+import openpyxl
+
 sys.dont_write_bytecode = True
 TESTS = Path(__file__).resolve().parent
 GOI = TESTS.parent / "goi/e_phan_luong"
 sys.path[:0] = [str(GOI), str(TESTS)]
-from kho_tri_thuc_sdk.thu import CoreGia, _loi
+from kho_tri_thuc_sdk.thu import CoreGia, _DuongGia, _loi
+from kho_tri_thuc_sdk import __version__ as PHIEN_BAN_SDK
 from kho_tri_thuc_sdk.engine import NganXungDot
 from e_phan_luong import chon_mau, chot_ky, ngan_luot, phan_luong
 from e_phan_luong.chay import app
@@ -43,6 +55,95 @@ CAC_CA = ("json_trong", "json_nop_lai", "excel_trong", "excel_nop_lai",
 CACH_DEM = ("doc", "tim", "lo_ghi", "tai_tep_vao", "tai_tep_ra")
 NGUONG = {k: {"so": str(v), "tien_te": "VND"} for k, v in
           (("pm", 5000000000), ("te", 3000000000), ("sad", 250000000))}
+
+
+def cac_cong_core():
+    """Đọc ranh giới SDK hiện cài; không bỏ sót cửa mới khi chạy lại."""
+    cay = ast.parse(inspect.getsource(_DuongGia))
+    return tuple(sorted({n.func.attr for n in ast.walk(cay)
+                         if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+                         and isinstance(n.func.value, ast.Attribute)
+                         and isinstance(n.func.value.value, ast.Name)
+                         and n.func.value.value.id == "self" and n.func.value.attr == "_core"}))
+
+
+class DongHoCore:
+    """Bọc instance test, không sửa SDK; đo cả lần gọi lỗi/gửi lại.
+
+    Khóa bảo vệ bộ đếm và hợp khoảng wall time qua các luồng. Lời gọi nội bộ
+    Core -> Core không đếm/trừ lại. Tổng từng cửa có thể chồng do gia hạn;
+    chỉ HỢP khoảng được trừ khỏi tổng wall time. Chi phí wrapper nằm trong
+    engine thuần, nên số đo hơi bảo thủ. Không đo CPU time.
+    """
+    def __init__(self, core, *, dong_ho=time.perf_counter):
+        self.core, self.dong_ho = core, dong_ho
+        self.khoa = threading.Lock()
+        self.cuc_bo = threading.local()
+        self.dem, self.giay_cua = Counter(), Counter()
+        self.giay = 0.0
+        self.dang_goi = 0
+        self.cu = {}
+
+    def boc(self, ten, ham):
+        def goi(*args, **kw):
+            if getattr(self.cuc_bo, "trong_core", False):
+                return ham(*args, **kw)
+            self.cuc_bo.trong_core = True
+            with self.khoa:
+                dau = self.dong_ho()
+                if self.dang_goi == 0:
+                    self.dau_hop = dau
+                self.dang_goi += 1
+                self.dem[ten] += 1
+            try:
+                return ham(*args, **kw)
+            finally:
+                with self.khoa:
+                    cuoi = self.dong_ho()
+                    self.giay_cua[ten] += cuoi - dau
+                    self.dang_goi -= 1
+                    if self.dang_goi == 0:
+                        self.giay += cuoi - self.dau_hop
+                self.cuc_bo.trong_core = False
+        return goi
+
+    def __enter__(self):
+        for ten in cac_cong_core():
+            self.cu[ten] = self.core.__dict__.get(ten, None)
+            setattr(self.core, ten, self.boc(ten, getattr(self.core, ten)))
+        return self
+
+    def __exit__(self, *exc):
+        for ten, cu in self.cu.items():
+            if cu is None:
+                delattr(self.core, ten)
+            else:
+                setattr(self.core, ten, cu)
+
+
+def doc_ho_so(ho_so):
+    """Self time chỉ xếp hàm Python engine; cumulative vẫn chứa Core bên dưới.
+
+    SDK self time là cận dưới: không gồm stdlib/thư viện được SDK gọi.
+    cProfile chỉ theo luồng chạy việc; gia hạn vẫn do đồng hồ Core đo đủ.
+    """
+    ds, sdk, duong_gia = [], 0.0, 0.0
+    nguon, dong_dau = inspect.getsourcelines(_DuongGia)
+    for (tep, dong, ten), (cc, nc, tt, ct, _) in pstats.Stats(ho_so).stats.items():
+        duong = Path(tep)
+        if duong.parent == GOI / "e_phan_luong":
+            ds.append({"ham": f"{duong.name}:{dong}:{ten}", "so_goi": nc,
+                       "self_giay": round(tt, 6), "cumulative_giay_gom_core": round(ct, 6)})
+        if "kho_tri_thuc_sdk" in duong.parts and duong.name == "engine.py":
+            sdk += tt
+        if ("kho_tri_thuc_sdk" in duong.parts and duong.name == "thu.py"
+                and dong_dau <= dong < dong_dau + len(nguon)):
+            duong_gia += tt
+    return {"top_5_engine_self": sorted(ds, key=lambda d: d["self_giay"], reverse=True)[:5],
+            "sdk_engine_py_self_giay_can_duoi": round(sdk, 6),
+            "sdk_duong_gia_self_giay_can_duoi": round(duong_gia, 6),
+            "sdk_phia_engine_self_giay_can_duoi": round(sdk + duong_gia, 6),
+            "ghi_chu": "Lượt riêng có cProfile; self time SDK là cận dưới, không dùng để ước tính Core thật."}
 
 
 class CoreDem(CoreGia):
@@ -292,6 +393,21 @@ def tat_dinh(core):
         yield
 
 
+@contextmanager
+def tach_core_gia():
+    """Không giữ kho fake của mẫu trước qua transport/ngăn trên app dùng chung.
+
+    SDK tự gán lại hai thuộc tính khi chay; chỉ dọn tham chiếu của test trước
+    setup và sau khi SDK đã dừng luồng gia hạn. Tránh tính hủy kho fake cũ
+    vào engine thuần của mẫu tiếp theo. Không sửa SDK hoặc dữ liệu ngăn.
+    """
+    app._dt = app.ngan = None
+    try:
+        yield
+    finally:
+        app._dt = app.ngan = None
+
+
 def goi(core, nang_luc, pb):
     nl = next(n for n in app.phieu["nang_luc"] if n["ma"] == nang_luc)
     cho_phep = {t["ma"] for t in nl["tham_so"]}
@@ -323,45 +439,74 @@ def nap(core, ca, so_dong):
     return nl, {"loai": "tep", "tep": ref}, hashlib.sha256(raw).hexdigest()
 
 
-def do_mot(ca, so_dong, *, lop_core=CoreDem, bo_nho=False):
+def do_mot(ca, so_dong, *, lop_core=CoreDem, bo_nho=False, ho_so=False):
     """Setup ngoài đồng hồ/bộ đếm; đo toàn lời gọi công khai của engine.
 
     Ca ghi_trong có sẵn lượt phân luồng bắt buộc, bảng kết quả kiểm trống.
     Ca ghi_nop_lai có cả lượt và kết quả dat trước đó; đo nộp trùng đúng Q5.
     Đo giây khi tắt tracemalloc; chạy riêng cùng dữ liệu/trạng thái để đo MB.
-    Giây vẫn gồm chi phí SDK/ngăn chỉ mục; không phải thời gian Core thật.
+    Engine thuần vẫn gồm SDK phía engine; không phải thời gian Core thật.
+    Giao việc/xem kết quả ở ngoài đồng hồ. Gia hạn dùng nhịp thật 20 giây
+    thay vì nhịp 0,01 giây chỉ dành cho test của CoreGia.
     """
     assert ca in CAC_CA
     core = lop_core()
-    with tat_dinh(core):
+    with tat_dinh(core), tach_core_gia():
         nl, pb, bam = nap(core, ca, so_dong)
         if ca.endswith("nop_lai"):
             goi(core, nl, pb)
         core.dem.clear()
+        nl_phieu = next(n for n in app.phieu["nang_luc"] if n["ma"] == nl)
+        cho_phep = {t["ma"] for t in nl_phieu["tham_so"]}
+        viec_id = core.giao_viec(nl, pb, {k: v for k, v in tham_so().items() if k in cho_phep})
         gc.collect()
+        profiler = cProfile.Profile() if ho_so else None
         if bo_nho:
             tracemalloc.start()
-        bat_dau = time.perf_counter()
         try:
-            ra = goi(core, nl, pb)
-            giay = time.perf_counter() - bat_dau
+            with DongHoCore(core) as dong_ho:
+                bat_dau = time.perf_counter()
+                if profiler:
+                    profiler.enable()
+                try:
+                    core.chay(app, khoang_gia_han=20)
+                finally:
+                    if profiler:
+                        profiler.disable()
+                    giay = time.perf_counter() - bat_dau
             dinh = tracemalloc.get_traced_memory()[1] if bo_nho else None
         finally:
             if bo_nho:
                 tracemalloc.stop()
+        kq = core.xem(viec_id)
+        assert kq["trang_thai"] == "XONG", kq
+        ra = kq["ket_qua"]
     t = ra["truong"]
     assert (t["so_dong_nhan"] + t["so_trung"] if ca.startswith("ghi") else t["so_nghiep_vu"]) == so_dong
     han = next(n["gioi_han"]["thoi_han_giay"] for n in app.phieu["nang_luc"] if n["ma"] == nl)
     dem_kq = {k: v for k, v in t.items() if type(v) in {int, bool}}
     ket_qua = {"ca": ca, "so_dong": so_dong, "ngan": lop_core.__name__, "trang_thai": "XONG",
             "giay": round(giay, 6), "MB": None if dinh is None else round(dinh / 1000000, 3),
+            "giay_core_gia": round(dong_ho.giay, 6),
+            "giay_engine_thuan": round(giay - dong_ho.giay, 6),
+            "giay_core_theo_cua": {k: round(v, 6) for k, v in dong_ho.giay_cua.items()},
+            "dem_moi_cong_core": dict(dong_ho.dem), "tong_moi_cong_core": sum(dong_ho.dem.values()),
+            "co_profiler": ho_so,
             "tracemalloc_dinh_byte": dinh, "thoi_han_giay": han,
             "dem": dict(core.dem), "tong_goi": sum(core.dem[k] for k in CACH_DEM),
             "ket_qua_dem": dem_kq, "sha256": bam}
     if bo_nho:
-        rieng = do_mot(ca, so_dong, lop_core=lop_core, bo_nho=False)
+        # Lượt đo MB đã xong: không mang kho fake của nó sang lượt đo giây.
+        del core, dong_ho
+        gc.collect()
+        rieng = do_mot(ca, so_dong, lop_core=lop_core, bo_nho=False, ho_so=ho_so)
         assert rieng["dem"] == ket_qua["dem"] and rieng["ket_qua_dem"] == dem_kq
-        ket_qua.update(giay=rieng["giay"], giay_co_tracemalloc=round(giay, 6))
+        for k in ("giay", "giay_core_gia", "giay_engine_thuan", "giay_core_theo_cua",
+                  "dem_moi_cong_core", "tong_moi_cong_core"):
+            ket_qua[k] = rieng[k]
+        ket_qua["giay_co_tracemalloc"] = round(giay, 6)
+    if profiler:
+        ket_qua["ho_so"] = doc_ho_so(profiler)
     return ket_qua
 
 
@@ -395,27 +540,57 @@ def bang_uoc_tinh(mau_core, mau_may):
     bang = []
     for may in mau_may:
         ca, n = may["ca"], may["so_dong"]
-        mau = [m for m in mau_core if m["ca"] == ca]
-        if len(mau) < 2:
+        mau = [m for m in mau_core if m["ca"] == ca and not m.get("co_profiler")]
+        if len(mau) < 2 or may.get("co_profiler"):
             continue
-        dem = uoc_tinh_dem(mau, n)
-        tong = sum(dem[k]["uoc_tinh"] for k in CACH_DEM)
-        cc6 = dem["tra_nop_lai_tim"]["uoc_tinh"]
-        tra = cc6 + dem["tra_nop_lai_doc"]["uoc_tinh"]
+        # Dùng số gọi ĐO THẬT ở N đích, gồm cả giao thức; không mã cứng
+        # calls/dòng, nên chạy lại được sau khi ghép PL-9F.
+        tong = may["tong_moi_cong_core"]
+        thuan = may["giay_engine_thuan"]
+        cc6 = may["dem"].get("tra_nop_lai_tim", 0)
+        tra = cc6 + may["dem"].get("tra_nop_lai_doc", 0)
+        cac_n = sorted(mau, key=lambda m: m["so_dong"])
+        khac = [m for m in cac_n if m["so_dong"] != n and "tong_moi_cong_core" in m]
+        if not khac:
+            continue
+        # Hệ số calls bảo thủ: đường thẳng qua điểm đích và từng mẫu khác,
+        # giữ intercept >= 0 và phần dư dương lớn nhất trên tất cả mẫu.
+        a_goi = max(0, max((tong - m["tong_moi_cong_core"]) / (n - m["so_dong"]) for m in khac))
+        b_goi = max(0, max(m["tong_moi_cong_core"] - a_goi * m["so_dong"] for m in mau))
+        # Lấy giây/dòng cao nhất đã đo để không che tăng phi tuyến.
+        giay_dong = max(m["giay_engine_thuan"] / m["so_dong"] for m in mau)
         for tre in (2, 5, 10):
-            giay = may["giay"] + tong * tre / 1000
+            giay = thuan + tong * tre / 1000
             # Dư >=2 lần theo phiếu: chỉ dùng nửa ngân sách 300 giây.
-            a = may["giay"] / n + sum(dem[k]["moi_dong"] for k in CACH_DEM) * tre / 1000
-            b = sum(dem[k]["co_dinh"] + dem[k]["sai_so_toi_da"] for k in CACH_DEM) * tre / 1000
-            an_toan = min(TOI_DA_DONG, max(0, int((may["thoi_han_giay"] / 2 - b) / a)))
+            a = giay_dong + a_goi * tre / 1000
+            b = b_goi * tre / 1000
+            ngoai_suy = min(TOI_DA_DONG, max(0, int((may["thoi_han_giay"] / 2 - b) / a)))
+            an_toan = min(n, ngoai_suy)
             bang.append({"nhan": "ước tính, chưa đo trên Core thật", "ca": ca, "so_dong": n,
                          "tre_ms": tre, "giay_uoc_tinh": round(giay, 3), "tong_goi_uoc_tinh": tong,
+                         "giay_engine_thuan": thuan, "nguon_so_goi": "đo thật tại N đích, gồm giao thức",
                          "cc6_tim_phan_tram": round(100 * cc6 / tong, 2),
                          "tra_nop_lai_phan_tram": round(100 * tra / tong, 2),
                          "trong_300_giay": giay <= may["thoi_han_giay"],
                          "co_lo_an_toan_uoc_tinh_du_2_lan": an_toan,
-                         "ghi_chu": "Cỡ lô nội suy tuyến tính từ giây/dòng; giới hạn bởi trần 50.000, chưa kiểm Core thật."})
+                         "co_lo_ngoai_suy_du_2_lan": ngoai_suy,
+                         "ghi_chu": "Giây/dòng lớn nhất đã đo + đường bao calls; cỡ an toàn chặn ở N lớn nhất đã đo. Cột ngoại suy có thể vượt miền đã đo, chưa kiểm Core thật."})
     return bang
+
+
+def xu_huong(cac_mau):
+    """Một lượt/mốc chỉ là dấu hiệu, không kết luận thống kê; ngưỡng 25%."""
+    ds = sorted(cac_mau, key=lambda m: m["so_dong"])
+    def ti_so(k):
+        xs = [m[k] / m["so_dong"] for m in ds]
+        return max(xs) / min(xs) if min(xs) > 0 else None
+    he_so = ti_so("giay_engine_thuan")
+    return {"ca": ds[0]["ca"], "co_mau": [m["so_dong"] for m in ds],
+            "engine_giay_moi_1000_dong": [round(m["giay_engine_thuan"] * 1000 / m["so_dong"], 4) for m in ds],
+            "ty_so_engine_moi_dong_max_min": he_so,
+            "ty_so_core_gia_moi_dong_max_min": ti_so("giay_core_gia"),
+            "gan_tuyen_tinh_trong_mau": he_so is not None and he_so <= 1.25,
+            "ghi_chu": "Một lượt/mốc, sai khác <=25% coi gần tuyến tính trong mẫu; chưa phải bảo đảm SLA."}
 
 
 def in_json(nut):
@@ -423,22 +598,34 @@ def in_json(nut):
 
 
 def main():
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--pha", choices=("core", "may", "tat_ca"), default="tat_ca")
+    ap.add_argument("--pha", choices=("core", "may", "thuan", "tat_ca"), default="thuan")
     ap.add_argument("--ca", choices=CAC_CA, action="append")
-    ap.add_argument("--co-mau", type=int, action="append", help="Mặc định 1000, 5000, 10000.")
+    ap.add_argument("--co-mau", type=int, action="append", help="Thay các cỡ mẫu mặc định của pha.")
+    ap.add_argument("--bo-nho", action="store_true", help="Đo tracemalloc ở lượt riêng (chậm).")
+    ap.add_argument("--ho-so", action="store_true", help="cProfile riêng mốc lớn nhất mỗi ca.")
+    ap.add_argument("--khong-lam-am", action="store_true", help="Bỏ lượt làm ấm riêng trước mỗi ca.")
     args = ap.parse_args()
     in_json({"python": platform.python_version(), "he_dieu_hanh": platform.platform(),
-             "bat_dau": datetime.now().astimezone().isoformat(), "sdk": "2.2.0",
-             "phuong_phap": __doc__, "ngoai_tru": "Không đo HTTP/Core thật; không gồm setup, gia hạn/tiến độ giao thức.",
+             "bat_dau": datetime.now().astimezone().isoformat(), "sdk": PHIEN_BAN_SDK,
+             "thu_vien": {ten: version(ten) for ten in ("openpyxl", "et_xmlfile", "defusedxml")},
+             "openpyxl_dung_lxml": openpyxl.LXML,
+             "phuong_phap": __doc__, "ngoai_tru": "Không đo HTTP/Core thật; không gồm setup. Có mọi cửa SDK/Core và gia hạn 20 giây.",
+             "cac_cong_core_duoc_boc": cac_cong_core(),
              "bam_runtime": {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
                              for p in sorted((GOI / "e_phan_luong").glob("*.py"))}})
     mau_core, mau_may = [], []
     for pha in ("core", "may"):
-        if args.pha not in (pha, "tat_ca"):
+        if args.pha not in (("may", "thuan", "tat_ca") if pha == "may" else ("core", "tat_ca")):
             continue
         for ca in args.ca or CAC_CA:
-            ns = args.co_mau or [1000, 5000, 10000] if pha == "core" else [5000 if ca.startswith("ghi") else 50000]
+            ns = args.co_mau or ([1000, 5000, 10000] if pha == "core" or ca.startswith("ghi")
+                                 else [10000, 25000, 50000])
+            if pha == "may" and not args.khong_lam_am:
+                in_json({"bat_dau_lam_am": ca, "N": ns[0]})
+                in_json({"lam_am_ngoai_bo_mau": do_mot(ca, ns[0], lop_core=CoreChiMuc)})
             for n in ns:
                 in_json({"bat_dau_ca": ca, "pha": pha, "N": n})
                 dung = threading.Event()
@@ -449,7 +636,7 @@ def main():
                 thread.start()
                 try:
                     kq = do_mot(ca, n, lop_core=CoreDem if pha == "core" else CoreChiMuc,
-                                bo_nho=pha == "may")
+                                bo_nho=args.bo_nho and pha == "may")
                     (mau_core if pha == "core" else mau_may).append(kq)
                     in_json(kq)
                 finally:
@@ -463,9 +650,18 @@ def main():
                      "co_mau_CoreGia": [m["so_dong"] for m in mau], "so_dong": 50000,
                      "dem_core_50000_uoc_tinh": dem,
                      "tong_goi_50000_uoc_tinh": sum(dem[k]["uoc_tinh"] for k in CACH_DEM)})
-    if mau_core and mau_may:
-        for hang in bang_uoc_tinh(mau_core, mau_may):
-            in_json(hang)
+    for ca in args.ca or CAC_CA:
+        mau = [m for m in mau_may if m["ca"] == ca]
+        if mau:
+            lon = max(mau, key=lambda m: m["so_dong"])
+            huong = xu_huong(mau) if len(mau) >= 2 else None
+        if len(mau) >= 2:
+            in_json({"xu_huong": huong})
+            for hang in bang_uoc_tinh(mau, [lon]):
+                in_json(hang)
+        if mau and (args.ho_so or huong is not None and not huong["gan_tuyen_tinh_trong_mau"]):
+            in_json({"bat_dau_ho_so": ca, "N": lon["so_dong"]})
+            in_json({"ho_so_luot_rieng": do_mot(ca, lon["so_dong"], lop_core=CoreChiMuc, ho_so=True)})
     in_json({"ket_thuc": datetime.now().astimezone().isoformat()})
 
 

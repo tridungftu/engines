@@ -13,8 +13,8 @@
     },
     {
       "duong_dan": "README.md",
-      "bytes": 6488,
-      "sha256": "b076d606d7070a3edc576c475aa289c34f6a6a443c664778cfdc69ad230ebf1a"
+      "bytes": 9902,
+      "sha256": "84876dc1ef91de1d08bf4c270f8cf359ba1ffb38173655db745af293a70955a2"
     },
     {
       "duong_dan": "contract/tra_loi_ai.schema.json",
@@ -47,14 +47,19 @@
       "sha256": "920c2964dddcc840b44a69b2ed7ea974ed824a27b1b0a2354e5e8bd97415f504"
     },
     {
+      "duong_dan": "e_phan_luong/chot_ky.py",
+      "bytes": 6728,
+      "sha256": "20922ef51a2f602d1cf230438a77f70738d93dacd46039be0dfe0bdc97814403"
+    },
+    {
       "duong_dan": "e_phan_luong/chuoi_ai.py",
       "bytes": 14150,
       "sha256": "8a5af58e295d22b2243c2a8002cc52b688591c703e82c423f3c3d2fea1f7bef7"
     },
     {
       "duong_dan": "e_phan_luong/co.py",
-      "bytes": 1957,
-      "sha256": "dcb3de4b20263880c5147d5d202425f737ab57af3d86a90b3aeff91e616efb54"
+      "bytes": 2047,
+      "sha256": "bbf46d73c972b6b58311681b8750ede18706ab9685cf88e2d752e6492c45bb45"
     },
     {
       "duong_dan": "e_phan_luong/doc_lo.py",
@@ -63,13 +68,18 @@
     },
     {
       "duong_dan": "e_phan_luong/doi_bac.py",
-      "bytes": 3383,
-      "sha256": "3ef22669e32472a307b7b5aab3a97e568487d4075404cb9fb94d5d068bad7e58"
+      "bytes": 3800,
+      "sha256": "aeebaf6bc4e4e9d622b216ac87c039a9b92eb9bee9f608614fd2d3786e892bae"
+    },
+    {
+      "duong_dan": "e_phan_luong/ho_so.py",
+      "bytes": 8884,
+      "sha256": "c5dc24bfcee041fc4501a96adae4b8ce2a8771041c839ee24dcaf1c7dbfddddd"
     },
     {
       "duong_dan": "e_phan_luong/ket_qua.py",
-      "bytes": 6215,
-      "sha256": "3528794df8b3e256fcc8db4990a4822004a59ec85a7980ee4cd47a6fdf98369a"
+      "bytes": 5753,
+      "sha256": "4c56d8a0b4e208bd92b09514496bbc1c38bfaf194245ce3b8a6f228234a9d8b9"
     },
     {
       "duong_dan": "e_phan_luong/kieu.py",
@@ -83,8 +93,8 @@
     },
     {
       "duong_dan": "e_phan_luong/ngan_chung.py",
-      "bytes": 2234,
-      "sha256": "382d97cb4f1e7c91ccd5e33b76664a4c914d5012713c7d87e37c9f087f90e877"
+      "bytes": 2589,
+      "sha256": "34f8903af3defaa635c13c24e7505d90bfb5be9d9d3142d804157ca5d98cbde1"
     },
     {
       "duong_dan": "e_phan_luong/ngan_chuoi.py",
@@ -92,14 +102,19 @@
       "sha256": "40215d7c26aee0f63983ae3990ebe8f06a106109a5db5e3a802ebe3f1cb95909"
     },
     {
+      "duong_dan": "e_phan_luong/ngan_ho_so.py",
+      "bytes": 3259,
+      "sha256": "f928ccbf3df83ba0411e4f83b3b08043ee646e1f4de668429baced9af9aa5155"
+    },
+    {
       "duong_dan": "e_phan_luong/ngan_ket_qua.py",
-      "bytes": 6935,
-      "sha256": "6af1fa7378671e4e755bc26f6ce46074ee31fc647f22fe102cb983ae61d94fe5"
+      "bytes": 6878,
+      "sha256": "cfab31d0f3ac6c1a9bcf8ebfdd4e38da28acf62a274a414fe371ac061c0d2abc"
     },
     {
       "duong_dan": "e_phan_luong/ngan_luot.py",
-      "bytes": 3285,
-      "sha256": "c92f91a21978d4f99484bc2598f5089d774c64191ef669f0aaae3a9cdc186133"
+      "bytes": 5619,
+      "sha256": "4954f823f5acf0efaeb34d80606882b4c664ebd5ef54f73f888d4c4b01c77cdf"
     },
     {
       "duong_dan": "e_phan_luong/nguong.py",
@@ -118,8 +133,8 @@
     },
     {
       "duong_dan": "e_phan_luong/quy_trinh.py",
-      "bytes": 5768,
-      "sha256": "5a012c6c72f42041e468567a294cbb01a7e870f5196ad36f42b28de9b38bbf47"
+      "bytes": 9543,
+      "sha256": "0694d970c841ef700c849306e3af67f6a4f24e145fe1eb940caf482fa4cbb1da"
     },
     {
       "duong_dan": "e_phan_luong/thong_ke.py",
@@ -138,8 +153,8 @@
     },
     {
       "duong_dan": "e_phan_luong/ty_le.py",
-      "bytes": 7752,
-      "sha256": "899108b15c5fed6bdefa964578bef1a1748da0e6707dd517b4425837e4a5e5b1"
+      "bytes": 8198,
+      "sha256": "a3df601510f7cbff81765bbfe5c338573d0274105899e505d204516c836de958"
     },
     {
       "duong_dan": "e_phan_luong/xuat_json.py",

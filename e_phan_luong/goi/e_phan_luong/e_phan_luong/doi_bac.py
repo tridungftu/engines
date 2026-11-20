@@ -46,6 +46,13 @@ def cap_nhat(
     bac, che_do, mau_sach = tt.bac, tt.che_do, tt.mau_sach_toan_bo
 
     if tt.loai != CHUA_PHAN_LOAI:
+        doi_thang = bac not in cs.bac
+        if doi_thang:
+            cac_bac_tren = [b for b in cs.bac if b >= bac]
+            bac = min(cac_bac_tren) if cac_bac_tren else cs.bac[0]
+            if not cac_bac_tren and che_do != CHE_DO_TOAN_BO:
+                # Thang mới không có bậc đủ cao: giữ mức kiểm thận trọng 100%.
+                che_do, mau_sach = CHE_DO_TOAN_BO, 0
         if sai:
             if kq.muc_sai == MUC_TE:
                 che_do, mau_sach = CHE_DO_TOAN_BO, 0
@@ -59,7 +66,7 @@ def cap_nhat(
             mau_sach += 1
             if mau_sach >= cs.mau_sach_toan_bo:
                 bac, che_do = cs.bac[0], CHE_DO_BAC
-        elif chon:
+        elif chon and not doi_thang:
             i = cs.bac.index(bac)
             if (i < len(cs.bac) - 1 and mau_tu_doi_bac >= cs.mau_toi_thieu[i]
                     and can_tren(loi_tu_doi_bac, mau_tu_doi_bac, cs.do_tin_cay) <= cs.nguong_xuong[i]):

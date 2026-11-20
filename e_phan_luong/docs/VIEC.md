@@ -22,7 +22,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 15 | Excel/CSV theo khuôn cột | PL-6 | Xong — 21/11/2026 | Codex | Sau báo cáo PL-3 | 4 | PR PL-6 (#148). xlsx/csv theo khuôn cột; .xls từ chối; không tự gán VND |
 | 16 | `phan_luong_hoa_don` | PL-7 | Xong — 21/11/2026 | Codex | Sau báo cáo PL-3 | 4 | PR PL-7 (#149). Nối sau hoa_don.doc_xml@2 / doc_zip@1; 5/5 năng lực chạy thật |
 | 17 | Tệp JSON, Excel danh sách Đỏ, màn `ui/bang_ty_le.js` | PL-8 | Chờ Core — 21/11/2026 | Codex | Sau báo cáo PL-3 | 5 | PR PL-8 (#150). ds-can-kiem.xlsx + schema tep_json xong; màn Admin chờ CC-5 (xfail) |
-| 18 | Mô phỏng 12 tháng, test C4/C5, đo hiệu năng, kiểm độc lập, đóng gói, danh mục | PL-9 | Chờ Anh — 21/11/2026 | Codex | Có: gộp main, H1, H2 | 3 | PR PL-9 (mở sau commit này). 9 việc con: 9A mô phỏng 12 tháng, 9B C4/C5 + đếm lần gọi, 9C đóng gói, 9D/9E sửa sau rà soát, 9F/9H/9I bỏ đọc ngăn từng dòng, 9G đo engine thuần. thu ĐẠT; 2640 test; kiểm độc lập 0. 50.000 dòng ≤ 1.130 lần gọi Core, ước tính ≤ 31 giây ở 10 ms/lần (chưa đo Core thật). Thực tế ~6,1 giờ máy Codex cộng dồn (song song) |
+| 18 | Mô phỏng 12 tháng, test C4/C5, đo hiệu năng, kiểm độc lập, đóng gói, danh mục | PL-9 | Chờ Anh — 21/11/2026 | Codex | Có: gộp main, H1, H2 | 3 | PR PL-9 (#151). 9 việc con: 9A mô phỏng 12 tháng, 9B C4/C5 + đếm lần gọi, 9C đóng gói, 9D/9E sửa sau rà soát, 9F/9H/9I bỏ đọc ngăn từng dòng, 9G đo engine thuần. thu ĐẠT; 2640 test; kiểm độc lập 0. 50.000 dòng ≤ 1.130 lần gọi Core, ước tính ≤ 31 giây ở 10 ms/lần (chưa đo Core thật). Thực tế ~6,1 giờ máy Codex cộng dồn (song song) |
 | | **Cộng** | | | | | **48** | Giờ phiếu §9; việc con chia lại trong cùng tổng |
 
 ## Chờ Anh

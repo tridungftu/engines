@@ -2,11 +2,11 @@
 
 *Tệp **sinh tự động** bằng `python _chung/cong-cu/sinh_danh_muc_engine.py` từ `engine.json` của mọi gói; không sửa tay. Muốn đổi ghi chú hay chuỗi mẫu: sửa `GHI_CHU`/`CHUOI` trong script rồi chạy lại. Kiểm tự động trên GitHub báo đỏ khi tệp chưa cập nhật theo `engine.json` hoặc một chuỗi mẫu nối sai.*
 
-*Phiên bản gói lúc sinh: `e_ocr` 1.0.9, `e_hoi_ai` 0.12.0, `e_mask` 1.6.1, `e_trich_xuat` 0.5.0, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.1, `e_doi_chieu` 0.9.0, `e_tra_cuu` 0.2.0.*
+*Phiên bản gói lúc sinh: `e_ocr` 1.0.9, `e_hoi_ai` 0.12.0, `e_mask` 1.6.1, `e_trich_xuat` 0.5.0, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.1, `e_phan_luong` 0.1.0, `e_doi_chieu` 0.9.0, `e_tra_cuu` 0.2.0.*
 
 ## 1. Kết luận
 
-- **8 engine, 38 năng lực.** Tất cả mới **kiểm bằng Core giả (CoreGia)**, chưa nối Core thật, nên chưa engine nào "SẴN SÀNG". Module lập trình và test bằng dữ liệu DEMO.
+- **9 engine, 43 năng lực.** Tất cả mới **kiểm bằng Core giả (CoreGia)**, chưa nối Core thật, nên chưa engine nào "SẴN SÀNG". Module lập trình và test bằng dữ liệu DEMO.
 - **Module không gọi engine.** Module khai **nút** trong phiếu module. Admin tạo **quy trình** (chuỗi bước engine) gắn vào nút trên Core. Kết quả bước cuối về **ngăn** của module.
 - Tải gói: mục **Releases** của repo `tridungftu/engines`; chọn bản có tệp `<engine>-<phiên bản gói>.zip` khớp cột "Gói" dưới đây. Mỗi bản có `SHA256SUMS.txt`, `DANH-SACH-GOI.json`, `HUONG-DAN-CAI-NGHIEM-THU.md` và wheel SDK.
 
@@ -18,6 +18,7 @@
 | `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.0 | 4 | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
 | `e_hoa_don` | Đọc XML hóa đơn | 1.0.0 | 3 | Đọc XML, ZIP hóa đơn điện tử; lập bảng kê XLSX | Chưa có PDF, chưa tải cổng thuế |
 | `e_kiem_excel` | Kiểm và đọc file Excel | 0.1.1 | 2 | Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề | Ô đích, bộ nhóm, khuôn cột do module truyền |
+| `e_phan_luong` | Phân luồng kiểm tra | 0.1.0 | 5 | Phân luồng kiểm tra theo khâu, ngưỡng PM/TE/SAD và chọn mẫu | PL-0 chỉ có khung; cả 5 năng lực trả CHUA_LAM, chưa có DEMO nghiệp vụ |
 | `e_doi_chieu` | Đối chiếu bản ký | 0.9.0 | 7 | So bản Word chuẩn với bản đã ký | Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module |
 | `e_tra_cuu` | Tra cứu tài liệu | 0.2.0 | 8 | Hỏi đáp 3 tầng trên kho tài liệu | Bước đầu nhận **tệp JSON yêu cầu**; cần Kho tài liệu của Core (chưa có) |
 
@@ -78,8 +79,8 @@ Script đã kiểm mọi chuỗi dưới đây nối đúng `nhan`/`tra` trong `
 | Mã | Ý nghĩa | Năng lực tạo ra | Năng lực nhận |
 |---|---|---|---|
 | `van_ban_tai_lieu` | Văn bản có vị trí trang, bảng, nguồn đọc | `ocr.doc_tai_lieu@1`, `trich.doc_docx@1`, `doi_chieu.doc_docx@1` | `ai.hoi_tai_lieu@1`, `mask.chuan_bi_ai_cuc_bo@1`, `mask.che_van_ban@1`, `trich.chuan_bi@1` |
-| `yeu_cau_ai` | Yêu cầu hỏi AI (prompt, tài liệu, khuôn trả lời) | `mask.chuan_bi_tep_ai_cuc_bo@1`, `mask.chuan_bi_ai_cuc_bo@1`, `trich.chuan_bi@1`, `doi_chieu.chuan_bi_ai@1`, `tra_cuu.chuan_bi_ai@1` | `ai.hoi_theo_yeu_cau@1`, `ai.hoi_mask_cuc_bo@1` |
-| `tra_loi_ai` | Trả lời AI có trích dẫn, đã kiểm | `ai.hoi_theo_yeu_cau@1`, `ai.hoi_mask_cuc_bo@1` | `mask.hau_kiem_tep_van_ban@1`, `mask.hau_kiem_tep_giu_dinh_dang@1`, `mask.hau_kiem_ai_cuc_bo@1`, `mask.mo_che_van_ban@1`, `trich.hau_kiem@1`, `doi_chieu.phan_loai_diem_lech@1`, `tra_cuu.phan_loai_tai_lieu@1`, `tra_cuu.phan_tich_cau_hoi@1`, `tra_cuu.xep_hang_lai@1`, `tra_cuu.soan_tra_loi@1` |
+| `yeu_cau_ai` | Yêu cầu hỏi AI (prompt, tài liệu, khuôn trả lời) | `mask.chuan_bi_tep_ai_cuc_bo@1`, `mask.chuan_bi_ai_cuc_bo@1`, `trich.chuan_bi@1`, `audit.chuan_bi_phan_loai@1`, `doi_chieu.chuan_bi_ai@1`, `tra_cuu.chuan_bi_ai@1` | `ai.hoi_theo_yeu_cau@1`, `ai.hoi_mask_cuc_bo@1` |
+| `tra_loi_ai` | Trả lời AI có trích dẫn, đã kiểm | `ai.hoi_theo_yeu_cau@1`, `ai.hoi_mask_cuc_bo@1` | `mask.hau_kiem_tep_van_ban@1`, `mask.hau_kiem_tep_giu_dinh_dang@1`, `mask.hau_kiem_ai_cuc_bo@1`, `mask.mo_che_van_ban@1`, `trich.hau_kiem@1`, `audit.phan_luong_sau_ai@1`, `doi_chieu.phan_loai_diem_lech@1`, `tra_cuu.phan_loai_tai_lieu@1`, `tra_cuu.phan_tich_cau_hoi@1`, `tra_cuu.xep_hang_lai@1`, `tra_cuu.soan_tra_loi@1` |
 | `van_ban_da_che` | Văn bản đã che định danh | `mask.hau_kiem_tep_van_ban@1`, `mask.hau_kiem_ai_cuc_bo@1`, `mask.che_van_ban@1` | — (chưa có) |
 | `bang_trich_xuat` | Bảng tham số đã trích | `trich.hau_kiem@1` | `trich.xuat_ket_qua@1` |
 | `ho_so_doi_chieu` | Hồ sơ đối chiếu giữa các bước | `doi_chieu.nhan_cap@1`, `doi_chieu.so_van_ban@1`, `doi_chieu.phat_hien_sua_tay@1`, `doi_chieu.phan_loai_diem_lech@1` | `doi_chieu.so_van_ban@1`, `doi_chieu.phat_hien_sua_tay@1`, `doi_chieu.chuan_bi_ai@1`, `doi_chieu.xuat_ket_qua@1` |
@@ -430,6 +431,181 @@ Loại dữ liệu riêng: không. Số việc đồng thời: 1.
 | `gia_tri_de_nghi` | Giá trị đề nghị thanh toán kỳ này | số tiền |
 | `tien_te_chua_ro` | Tiền tệ chưa rõ | có/không |
 | `bam_dau_vao` | Mã băm tệp vào | văn bản |
+| `phien_ban_engine` | Phiên bản engine | văn bản |
+
+### e_phan_luong — Phân luồng kiểm tra (gói 0.1.0)
+
+Loại dữ liệu riêng: `yeu_cau_ai`, `tra_loi_ai`. Số việc đồng thời: 1.
+
+#### `audit.phan_luong@1` — Phân luồng kiểm tra
+
+- **Nhận:** `tep` → **Trả:** `truong` (ghép được vào cột ngăn)
+- **Giới hạn:** tệp ≤ 20 MiB; thời hạn 300 giây; hủy được: có
+- **Cài đặt bước:**
+
+| Mã | Tên | Kiểu | Bắt buộc | Mặc định | Lựa chọn / trần |
+|---|---|---|---|---|---|
+| `khau` | Mã khâu duyệt | văn bản | có | trống | ≥ 1 · ≤ 40 ký tự |
+| `ma_module` | Mã module | văn bản | không | trống | ≤ 31 ký tự |
+| `nguong_json` | Ngưỡng PM/TE/SAD (JSON) | văn bản | không | trống | ≤ 4096 ký tự |
+| `danh_muc_loai_json` | Danh mục loại nghiệp vụ (JSON) | văn bản | không | trống | ≤ 16384 ký tự |
+| `truong_phan_loai` | Trường nội dung để phân loại | văn bản | không | trống | ≤ 60 ký tự |
+| `bo_phan_loai_json` | Bộ quy tắc phân loại (JSON) | văn bản | không | trống | ≤ 32768 ký tự |
+| `chinh_sach_json` | Chính sách kiểm tra (JSON) | văn bản | không | trống | ≤ 8192 ký tự |
+| `ty_le_duoi_sad` | Tỷ lệ kiểm dưới SAD | số | không | `0.02` | ≥ 0 · ≤ 1 |
+| `cua_so_chia_nho_ngay` | Cửa sổ chống chia nhỏ (ngày) | số | không | `7` | ≥ 1 |
+| `khuon_cot_json` | Khuôn cột Excel/CSV (JSON) | văn bản | không | trống | ≤ 32768 ký tự |
+| `tien_te` | Mã tiền tệ | văn bản | không | trống | ≤ 3 ký tự |
+
+- **Trường trả ra (ghép vào cột ngăn của module):**
+
+| Mã | Tên | Kiểu |
+|---|---|---|
+| `ma_luot` | Mã lượt phân luồng | văn bản |
+| `luong` | Luồng | văn bản |
+| `can_nguoi_kiem` | Cần người kiểm | có/không |
+| `canh_bao` | Cảnh báo | văn bản |
+| `so_nghiep_vu` | Số nghiệp vụ | số |
+| `so_do` | Số dòng Đỏ | số |
+| `so_do_bat_buoc` | Số dòng Đỏ bắt buộc | số |
+| `so_do_chon_mau` | Số dòng Đỏ chọn mẫu | số |
+| `so_xanh` | Số dòng Xanh | số |
+| `so_chua_phan_loai` | Số dòng chưa phân loại | số |
+| `tong_tien_do` | Tổng tiền luồng Đỏ | số tiền |
+| `tep_json` | Kết quả chi tiết | tệp |
+| `tep_ds_do` | Danh sách cần kiểm (Excel) | tệp |
+| `bam_hat_giong` | Băm hạt giống | văn bản |
+| `bam_dau_vao` | Băm đầu vào | văn bản |
+| `phien_ban_engine` | Phiên bản engine | văn bản |
+
+#### `audit.chuan_bi_phan_loai@1` — Chuẩn bị phân loại bằng Local AI
+
+- **Nhận:** `tep` → **Trả:** `yeu_cau_ai` (chỉ dùng ở giữa chuỗi)
+- **Giới hạn:** tệp ≤ 20 MiB; thời hạn 300 giây; hủy được: có
+- **Cài đặt bước:**
+
+| Mã | Tên | Kiểu | Bắt buộc | Mặc định | Lựa chọn / trần |
+|---|---|---|---|---|---|
+| `khau` | Mã khâu duyệt | văn bản | có | trống | ≥ 1 · ≤ 40 ký tự |
+| `ma_module` | Mã module | văn bản | không | trống | ≤ 31 ký tự |
+| `nguong_json` | Ngưỡng PM/TE/SAD (JSON) | văn bản | không | trống | ≤ 4096 ký tự |
+| `danh_muc_loai_json` | Danh mục loại nghiệp vụ (JSON) | văn bản | không | trống | ≤ 16384 ký tự |
+| `truong_phan_loai` | Trường nội dung để phân loại | văn bản | không | trống | ≤ 60 ký tự |
+| `bo_phan_loai_json` | Bộ quy tắc phân loại (JSON) | văn bản | không | trống | ≤ 32768 ký tự |
+| `chinh_sach_json` | Chính sách kiểm tra (JSON) | văn bản | không | trống | ≤ 8192 ký tự |
+| `ty_le_duoi_sad` | Tỷ lệ kiểm dưới SAD | số | không | `0.02` | ≥ 0 · ≤ 1 |
+| `cua_so_chia_nho_ngay` | Cửa sổ chống chia nhỏ (ngày) | số | không | `7` | ≥ 1 |
+| `khuon_cot_json` | Khuôn cột Excel/CSV (JSON) | văn bản | không | trống | ≤ 32768 ký tự |
+| `tien_te` | Mã tiền tệ | văn bản | không | trống | ≤ 3 ký tự |
+| `ma_prompt` | Mã hướng dẫn của module | văn bản | không | trống | — |
+| `phien_ban_prompt` | Phiên bản hướng dẫn | văn bản | không | trống | — |
+| `prompt` | Hướng dẫn phân loại của module | văn bản | không | trống | — |
+| `model_uu_tien` | Model ưu tiên | văn bản | không | trống | — |
+
+
+#### `audit.phan_luong_sau_ai@1` — Phân luồng sau Local AI
+
+- **Nhận:** `tra_loi_ai` → **Trả:** `truong` (ghép được vào cột ngăn)
+- **Giới hạn:** tệp ≤ 20 MiB; thời hạn 300 giây; hủy được: có
+- **Cài đặt bước:**
+
+| Mã | Tên | Kiểu | Bắt buộc | Mặc định | Lựa chọn / trần |
+|---|---|---|---|---|---|
+| `khau` | Mã khâu duyệt | văn bản | có | trống | ≥ 1 · ≤ 40 ký tự |
+| `ma_module` | Mã module | văn bản | không | trống | ≤ 31 ký tự |
+| `nguong_json` | Ngưỡng PM/TE/SAD (JSON) | văn bản | không | trống | ≤ 4096 ký tự |
+| `danh_muc_loai_json` | Danh mục loại nghiệp vụ (JSON) | văn bản | không | trống | ≤ 16384 ký tự |
+| `truong_phan_loai` | Trường nội dung để phân loại | văn bản | không | trống | ≤ 60 ký tự |
+| `bo_phan_loai_json` | Bộ quy tắc phân loại (JSON) | văn bản | không | trống | ≤ 32768 ký tự |
+| `chinh_sach_json` | Chính sách kiểm tra (JSON) | văn bản | không | trống | ≤ 8192 ký tự |
+| `ty_le_duoi_sad` | Tỷ lệ kiểm dưới SAD | số | không | `0.02` | ≥ 0 · ≤ 1 |
+| `cua_so_chia_nho_ngay` | Cửa sổ chống chia nhỏ (ngày) | số | không | `7` | ≥ 1 |
+| `nguong_tin_cay` | Ngưỡng tin cậy phân loại AI | số | không | `0.7` | ≥ 0 · ≤ 1 |
+
+- **Trường trả ra (ghép vào cột ngăn của module):**
+
+| Mã | Tên | Kiểu |
+|---|---|---|
+| `ma_luot` | Mã lượt phân luồng | văn bản |
+| `luong` | Luồng | văn bản |
+| `can_nguoi_kiem` | Cần người kiểm | có/không |
+| `canh_bao` | Cảnh báo | văn bản |
+| `so_nghiep_vu` | Số nghiệp vụ | số |
+| `so_do` | Số dòng Đỏ | số |
+| `so_do_bat_buoc` | Số dòng Đỏ bắt buộc | số |
+| `so_do_chon_mau` | Số dòng Đỏ chọn mẫu | số |
+| `so_xanh` | Số dòng Xanh | số |
+| `so_chua_phan_loai` | Số dòng chưa phân loại | số |
+| `tong_tien_do` | Tổng tiền luồng Đỏ | số tiền |
+| `tep_json` | Kết quả chi tiết | tệp |
+| `tep_ds_do` | Danh sách cần kiểm (Excel) | tệp |
+| `bam_hat_giong` | Băm hạt giống | văn bản |
+| `bam_dau_vao` | Băm đầu vào | văn bản |
+| `phien_ban_engine` | Phiên bản engine | văn bản |
+
+#### `audit.phan_luong_hoa_don@1` — Phân luồng hóa đơn
+
+- **Nhận:** `truong` → **Trả:** `truong` (ghép được vào cột ngăn)
+- **Giới hạn:** tệp ≤ 20 MiB; thời hạn 300 giây; hủy được: có
+- **Cài đặt bước:**
+
+| Mã | Tên | Kiểu | Bắt buộc | Mặc định | Lựa chọn / trần |
+|---|---|---|---|---|---|
+| `khau` | Mã khâu duyệt | văn bản | có | trống | ≥ 1 · ≤ 40 ký tự |
+| `ma_module` | Mã module | văn bản | không | trống | ≤ 31 ký tự |
+| `nguong_json` | Ngưỡng PM/TE/SAD (JSON) | văn bản | không | trống | ≤ 4096 ký tự |
+| `danh_muc_loai_json` | Danh mục loại nghiệp vụ (JSON) | văn bản | không | trống | ≤ 16384 ký tự |
+| `truong_phan_loai` | Trường nội dung để phân loại | văn bản | không | trống | ≤ 60 ký tự |
+| `bo_phan_loai_json` | Bộ quy tắc phân loại (JSON) | văn bản | không | trống | ≤ 32768 ký tự |
+| `chinh_sach_json` | Chính sách kiểm tra (JSON) | văn bản | không | trống | ≤ 8192 ký tự |
+| `ty_le_duoi_sad` | Tỷ lệ kiểm dưới SAD | số | không | `0.02` | ≥ 0 · ≤ 1 |
+| `cua_so_chia_nho_ngay` | Cửa sổ chống chia nhỏ (ngày) | số | không | `7` | ≥ 1 |
+| `loai_nghiep_vu` | Loại nghiệp vụ hóa đơn | văn bản | không | trống | — |
+
+- **Trường trả ra (ghép vào cột ngăn của module):**
+
+| Mã | Tên | Kiểu |
+|---|---|---|
+| `ma_luot` | Mã lượt phân luồng | văn bản |
+| `luong` | Luồng | văn bản |
+| `can_nguoi_kiem` | Cần người kiểm | có/không |
+| `canh_bao` | Cảnh báo | văn bản |
+| `so_nghiep_vu` | Số nghiệp vụ | số |
+| `so_do` | Số dòng Đỏ | số |
+| `so_do_bat_buoc` | Số dòng Đỏ bắt buộc | số |
+| `so_do_chon_mau` | Số dòng Đỏ chọn mẫu | số |
+| `so_xanh` | Số dòng Xanh | số |
+| `so_chua_phan_loai` | Số dòng chưa phân loại | số |
+| `tong_tien_do` | Tổng tiền luồng Đỏ | số tiền |
+| `tep_json` | Kết quả chi tiết | tệp |
+| `tep_ds_do` | Danh sách cần kiểm (Excel) | tệp |
+| `bam_hat_giong` | Băm hạt giống | văn bản |
+| `bam_dau_vao` | Băm đầu vào | văn bản |
+| `phien_ban_engine` | Phiên bản engine | văn bản |
+
+#### `audit.ghi_ket_qua@1` — Ghi kết quả kiểm
+
+- **Nhận:** `tep` → **Trả:** `truong` (ghép được vào cột ngăn)
+- **Giới hạn:** tệp ≤ 20 MiB; thời hạn 300 giây; hủy được: có
+- **Cài đặt bước:**
+
+| Mã | Tên | Kiểu | Bắt buộc | Mặc định | Lựa chọn / trần |
+|---|---|---|---|---|---|
+| `khau` | Mã khâu duyệt | văn bản | có | trống | ≥ 1 · ≤ 40 ký tự |
+| `ma_module` | Mã module | văn bản | không | trống | ≤ 31 ký tự |
+| `nguong_json` | Ngưỡng PM/TE/SAD (JSON) | văn bản | không | trống | ≤ 4096 ký tự |
+| `danh_muc_loai_json` | Danh mục loại nghiệp vụ (JSON) | văn bản | không | trống | ≤ 16384 ký tự |
+| `chinh_sach_json` | Chính sách kiểm tra (JSON) | văn bản | không | trống | ≤ 8192 ký tự |
+
+- **Trường trả ra (ghép vào cột ngăn của module):**
+
+| Mã | Tên | Kiểu |
+|---|---|---|
+| `so_dong_nhan` | Số dòng nhận | số |
+| `so_trung` | Số dòng trùng | số |
+| `so_ngoai_mau` | Số dòng ngoài mẫu | số |
+| `so_cap_doi_bac` | Số cặp đổi bậc | số |
+| `so_sua_loai` | Số lần sửa loại | số |
 | `phien_ban_engine` | Phiên bản engine | văn bản |
 
 ### e_doi_chieu — Đối chiếu bản ký (gói 0.9.0)

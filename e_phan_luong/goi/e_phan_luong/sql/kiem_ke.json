@@ -1,0 +1,70 @@
+{
+  "phien_ban": "0.1.0",
+  "tep": [
+    {
+      "duong_dan": "CHANGELOG.md",
+      "bytes": 542,
+      "sha256": "67d249ba5ec6f750b991976a4d43a3c6d2a9d5d1c6bc99f9abb8f0d2d386325b"
+    },
+    {
+      "duong_dan": "NGUON.md",
+      "bytes": 2387,
+      "sha256": "3180248d7cd1775a204c060818487ad35e2e9fbd2bbe434db627a5fdd1e5f8ec"
+    },
+    {
+      "duong_dan": "README.md",
+      "bytes": 4450,
+      "sha256": "d22f525c543f808a3d8a3086d90a35905b95f235c89c5108edc74fbbfc26f54d"
+    },
+    {
+      "duong_dan": "contract/tra_loi_ai.schema.json",
+      "bytes": 3956,
+      "sha256": "4c7491e5798f2774965acd49e6834634d26b3b032db8c6f0847fe06e2a0f33ee"
+    },
+    {
+      "duong_dan": "contract/yeu_cau_ai.schema.json",
+      "bytes": 2161,
+      "sha256": "97c909c439defaff1d653d1448c8931495a2f81f14df3e05cf4d915111d11a75"
+    },
+    {
+      "duong_dan": "e_phan_luong/__init__.py",
+      "bytes": 83,
+      "sha256": "04a1785a9b913e193f0dd720745de8d6db435ecd2f73a2c6d4a1c6546ff10e08"
+    },
+    {
+      "duong_dan": "e_phan_luong/chay.py",
+      "bytes": 1307,
+      "sha256": "db28754b6b0ed98b7b8e361af72751c1800431664f5a11a0416156811bd9ba59"
+    },
+    {
+      "duong_dan": "e_phan_luong/kieu.py",
+      "bytes": 5749,
+      "sha256": "1f321c331628deb806b79fbbbfd6ad0d00eacac9bce1159fc96018ac39dc4a59"
+    },
+    {
+      "duong_dan": "e_phan_luong/loi.py",
+      "bytes": 1644,
+      "sha256": "d54d6cbb74d560bc80cedb20a7fb55c9ac2958a8d9fd01f56771c9ea646a35a5"
+    },
+    {
+      "duong_dan": "e_phan_luong/ngan_chung.py",
+      "bytes": 2234,
+      "sha256": "382d97cb4f1e7c91ccd5e33b76664a4c914d5012713c7d87e37c9f087f90e877"
+    },
+    {
+      "duong_dan": "engine.json",
+      "bytes": 27942,
+      "sha256": "0f730d137d74862dc99b0c6cacf2824e90fd0d8f46c86a0d3dddd512e56d7d00"
+    },
+    {
+      "duong_dan": "requirements.lock",
+      "bytes": 631,
+      "sha256": "d82a377d03f0489bbfaccaa739373b000b45dd519b749a585edec90874dc99ec"
+    },
+    {
+      "duong_dan": "sql/001_tao_ngan.sql",
+      "bytes": 13278,
+      "sha256": "f37512cc2458bfe3c3f9ad0f5ae3e44dd93eab4d9a011772ae629cd94284665b"
+    }
+  ]
+}

@@ -1,8 +1,7 @@
 """Chốt tháng qua ngăn Core; gọi ở đầu mỗi năng lực.
 
-Bản chụp được giữ trước khi tính lại cửa sổ 365 ngày do Core lọc hạn.
-SDK chỉ trả da_tao sau khi ghi lô: tạo bản chốt và cập nhật CAS là hai
-lô riêng. Lô cập nhật gộp tỷ lệ và hồ sơ hành vi, đọc lại khi xung đột.
+Bản chụp trước tính lại, tỷ lệ mới và hồ sơ được ghi trong cùng một lô
+nguyên tử. Tranh khóa bản chốt hoặc CAS đều đọc lại trước khi thử lại.
 """
 from __future__ import annotations
 
@@ -81,36 +80,58 @@ def _tinh_lai(viec, tt: TrangThai, cs: ChinhSach) -> TrangThai:
 
 
 def _chot_mot(viec, cs, khoa, kt, ky_moi, lam_moi_ho_so) -> bool:
-    lo_chot = None
-
-    def tao_chot(lo):
-        nonlocal lo_chot
-        # Không gửi cột hệ thống hoặc chi tiết giao dịch vào bản chụp C4.
-        ban = viec.ngan.doc("ty_le", khoa)
-        if ban is None:
-            raise loi("NGAN_BAN")
-        lo.lay_hoac_tao("chot_ky", {"ky": kt, **khoa}, ve_ban_ghi(tu_ban_ghi(ban.gia_tri)))
-        lo_chot = lo
-
-    ngan_chung.ghi_lo_thu_lai(viec, tao_chot)
-    if not lo_chot.ket_qua[0].da_tao:
-        return False
+    khoa_chot = {"ky": kt, **khoa}
+    da_chot = False
 
     def cap_nhat(lo):
-        # Mọi lần thử lại đều đọc lại dữ liệu và row_version của cả hai bảng.
+        nonlocal da_chot
+        da_chot = False
+        # them tranh khóa duy nhất: bên thua đọc lại và dừng, không tính lại.
+        if viec.ngan.doc("chot_ky", khoa_chot) is not None:
+            return
         ban = viec.ngan.doc("ty_le", khoa)
         if ban is None:
             raise loi("NGAN_BAN")
-        tt = _tinh_lai(viec, tu_ban_ghi(ban.gia_tri), cs)
+        cu = tu_ban_ghi(ban.gia_tri)
+        lo.them("chot_ky", {**khoa_chot, **ve_ban_ghi(cu)})
+        tt = _tinh_lai(viec, cu, cs)
         lo.sua("ty_le", khoa, ve_ban_ghi(tt), row_version=ban.row_version)
         if lam_moi_ho_so is not None:
             ho_so = viec.ngan.doc("ho_so_hanh_vi", khoa)
-            if ho_so is not None:
+            if ho_so is not None and ho_so.gia_tri.get("ky_lam_moi") != ky_moi:
                 gia_tri = lam_moi_ho_so(ho_so.gia_tri, ky_moi)
                 lo.sua("ho_so_hanh_vi", khoa, gia_tri, row_version=ho_so.row_version)
+        da_chot = True
 
     ngan_chung.ghi_lo_thu_lai(viec, cap_nhat)
-    return True
+    return da_chot
+
+
+def _lam_moi_mot(viec, khoa, ky_moi, lam_moi_ho_so):
+    """Hồ sơ có thể tồn tại trước kết quả kiểm đầu tiên (chưa có ty_le)."""
+    def cap_nhat(lo):
+        ban = viec.ngan.doc("ho_so_hanh_vi", khoa)
+        if ban is not None and ban.gia_tri.get("ky_lam_moi") != ky_moi:
+            gia_tri = lam_moi_ho_so(ban.gia_tri, ky_moi)
+            lo.sua("ho_so_hanh_vi", khoa, gia_tri, row_version=ban.row_version)
+
+    ngan_chung.ghi_lo_thu_lai(viec, cap_nhat)
+
+
+def _tao_tu_ky(ban_ty_le, ky_moi: str) -> bool:
+    """Không chốt tháng trước cho cặp vừa tạo trong tháng hiện tại.
+
+    Dùng thời điểm hệ thống do Core cấp, không dùng ngày nghiệp vụ hoặc
+    thời điểm đổi bậc. Cặp này sẽ được chốt ở tháng sau.
+    """
+    tao_luc = ban_ty_le.gia_tri.get("tao_luc")
+    if tao_luc is None:
+        return False
+    luc = datetime.fromisoformat(tao_luc)
+    if luc.tzinfo is None:
+        luc = luc.replace(tzinfo=_GIO_VN)
+    luc = luc.astimezone(_GIO_VN)
+    return f"{luc.year:04d}-{luc.month:02d}" >= ky_moi
 
 
 def chot_neu_can(
@@ -122,9 +143,9 @@ def chot_neu_can(
 ) -> int:
     """Chốt tháng trước cho các cặp chưa chốt; trả số cặp vừa tạo bản chốt.
 
-    Chỉ bên nhận da_tao=True mới cập nhật số liệu/hồ sơ. Callback làm mới
-    cần thuần vì có thể được gọi lại khi CAS xung đột. Nếu lô cập nhật
-    thất bại sau khi tạo bản chốt, bản chốt vẫn còn (giới hạn SDK 2.2.0).
+    Bản chốt và cập nhật CAS cùng thành công hoặc cùng không ghi. Callback
+    làm mới cần thuần vì có thể được gọi lại khi CAS/tranh khóa xung đột.
+    Hồ sơ chưa có tỷ lệ cũng được làm mới; không tính vào số cặp chốt.
     """
     ky_moi = ky_hien_tai(luc)
     kt = ky_truoc(ky_moi)
@@ -136,9 +157,16 @@ def chot_neu_can(
     so_chot = 0
     for ban in cac_ty_le:
         viec.kiem_huy()
+        if _tao_tu_ky(ban, ky_moi):
+            continue
         khoa = {"khau": ban.gia_tri["khau"], "loai": ban.gia_tri["loai"]}
         cap = (khoa["khau"], khoa["loai"])
         if cap not in da_chot and _chot_mot(viec, cs, khoa, kt, ky_moi, lam_moi_ho_so):
             so_chot += 1
             da_chot.add(cap)
+    if lam_moi_ho_so is not None:
+        for ban in ngan_chung.tim_tat_ca(viec, "ho_so_hanh_vi", {}):
+            if ban.gia_tri.get("ky_lam_moi") != ky_moi:
+                khoa = {"khau": ban.gia_tri["khau"], "loai": ban.gia_tri["loai"]}
+                _lam_moi_mot(viec, khoa, ky_moi, lam_moi_ho_so)
     return so_chot

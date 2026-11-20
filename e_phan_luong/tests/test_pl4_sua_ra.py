@@ -164,7 +164,9 @@ def test_m1_chay_do_sua_cas_ca_tram_dong_cu_theo_hat_giong_moi(monkeypatch):
         assert any(len(nhom) == 100 and all(c["thao_tac"] == "sua" and c["row_version"] == 1 for c in nhom)
                    for nhom in cac_lo)
         assert all(len(nhom) <= 100 for nhom in cac_lo)
-        assert [c["bang"] for c in cac_lo[-1]] == ["luot"]
+        vi_tri_luot = next(i for i, nhom in enumerate(cac_lo) if any(c["bang"] == "luot" for c in nhom))
+        assert [c["bang"] for c in cac_lo[vi_tri_luot]] == ["luot"]
+        assert all(c["bang"] == "ho_so_hanh_vi" for nhom in cac_lo[vi_tri_luot + 1:] for c in nhom)
 
     assert chay_ngan(core, kiem)["trang_thai"] == "XONG"
 

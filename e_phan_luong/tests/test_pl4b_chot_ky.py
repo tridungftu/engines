@@ -11,7 +11,7 @@ import json
 from threading import Barrier
 
 import pytest
-from kho_tri_thuc_sdk import thu as sdk_thu
+from kho_tri_thuc_sdk import engine as sdk_engine, thu as sdk_thu
 from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu, NganEngine
 from kho_tri_thuc_sdk.thu import CoreGia
 
@@ -34,6 +34,19 @@ CS = ChinhSach()
 KHOA = {"khau": "ktt_duyet_demo", "loai": "chi_phi_demo"}
 MA_NANG_LUC = "demo.chot_ky@1"
 DAU_VAO = {"loai": "van_ban", "van_ban": "DEMO chốt kỳ"}
+
+
+@pytest.fixture(autouse=True)
+def ghim_dong_ho_core_demo(monkeypatch):
+    class DongHoDemo(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            luc = datetime(2026, 11, 20, 12, tzinfo=GIO_VN)
+            return luc.astimezone(tz) if tz is not None else luc.replace(tzinfo=None)
+
+    monkeypatch.setattr(sdk_thu, "datetime", DongHoDemo)
+    # Viec.kiem_huy cũng kiểm hạn giữ bằng đồng hồ SDK, cần ghim cùng Core.
+    monkeypatch.setattr(sdk_engine, "datetime", DongHoDemo)
 
 
 def _app_thu(ham):
@@ -201,7 +214,8 @@ def test_12_thang_dem_dung_nguon_bo_het_han_va_giu_bac(monkeypatch):
     class DongHoCuDemo(datetime):
         @classmethod
         def now(cls, tz=None):
-            return datetime.now(tz) - timedelta(days=366)
+            luc = datetime(2026, 11, 20, 12, tzinfo=GIO_VN) - timedelta(days=366)
+            return luc.astimezone(tz) if tz is not None else luc.replace(tzinfo=None)
 
     def dung(viec):
         truoc.append(_them_ty_le(
@@ -301,7 +315,7 @@ def test_cas_xung_dot_dung_mot_lan_thu_lai_ca_lo(bang_xung_dot, monkeypatch):
 
     monkeypatch.setattr(ngan_chung, "ghi_lo_thu_lai", ghi)
     assert _chot(core, lam_moi_ho_so=lam_moi) == 1
-    assert lan_thu_lai == [0, 1]
+    assert lan_thu_lai == [1]
     assert gia_tri_cu == [(1, "5"), (1, "5")]
     assert _ban(core, "ty_le")["row_version"] == 2
     assert _ban(core, "ty_le")["mau_12t"] == "1"
@@ -334,8 +348,9 @@ def test_cas_het_ba_lan_thu_lai_bao_ngan_ban_khong_sua_nua_lo():
     assert _ban(core, "ty_le")["row_version"] == 1
     assert _ban(core, "ho_so_hanh_vi")["ky_lam_moi"] == "2026-11"
     assert _ban(core, "ho_so_hanh_vi")["row_version"] == 1
-    # Bản chốt đã ghi ở lô trước, không có cơ chế rollback liên lô trong SDK.
-    assert len(core.xem_ngan(app.ma, "chot_ky")) == 1
+    # Bản chốt và hai cập nhật cùng rollback; lượt sau vẫn chốt được.
+    assert core.xem_ngan(app.ma, "chot_ky") == []
+    assert _chot(core, lam_moi_ho_so=_lam_moi) == 1
 
 
 def test_cas_doc_lai_khi_viec_khac_da_ghi_so_lieu_moi(monkeypatch):
@@ -348,7 +363,7 @@ def test_cas_doc_lai_khi_viec_khac_da_ghi_so_lieu_moi(monkeypatch):
         ban = doc_goc(ngan, bang, khoa, **kw)
         if bang == "ty_le":
             cac_phien_ban.append(ban.row_version)
-            if len(cac_phien_ban) == 2:
+            if len(cac_phien_ban) == 1:
                 # Việc khác ghi sau lần đọc CAS đầu: bộ đếm và kết quả
                 # mới phải được giữ khi bên chốt đọc lại row_version.
                 with ngan.lo() as lo:
@@ -361,7 +376,7 @@ def test_cas_doc_lai_khi_viec_khac_da_ghi_so_lieu_moi(monkeypatch):
 
     monkeypatch.setattr(NganEngine, "doc", doc_co_viec_khac)
     assert _chot(core) == 1
-    assert cac_phien_ban == [1, 1, 2]
+    assert cac_phien_ban == [1, 2]
     tt = _ban(core, "ty_le")
     assert tt["row_version"] == 3
     assert tt["mau_tu_doi_bac"] == "42"
@@ -429,7 +444,9 @@ def test_hai_viec_dong_thoi_chi_ben_da_tao_moi_cap_nhat(monkeypatch):
             luot.result(timeout=10)
     assert [core.xem(v)["trang_thai"] for v in cac_viec] == ["XONG", "XONG"]
     assert sorted(so_chot) == [0, 1]
-    assert so_lam_moi == [1]
+    # Callback thuần có thể chạy ở cả hai bên trước khi tranh khóa;
+    # chỉ một lô được ghi, không cộng/làm mới hai lần ở ngăn.
+    assert 1 <= len(so_lam_moi) <= 2
     assert _ban(core, "ty_le")["row_version"] == 2
     assert _ban(core, "ho_so_hanh_vi")["row_version"] == 2
     assert len(core.xem_ngan(app.ma, "chot_ky")) == 1
@@ -468,3 +485,76 @@ def test_chot_khong_doc_cheo_phap_nhan():
     assert _chot(core) == 0
     assert core.xem_ngan(app.ma, "chot_ky") == []
     assert _ban(core, "ty_le")["mau_12t"] == "5"
+
+
+def test_ban_chot_ty_le_ho_so_trong_cung_lo_va_rollback_giua_chung(monkeypatch):
+    from kho_tri_thuc_sdk.engine import NganXungDot
+
+    core = CoreGia()
+
+    def dung(viec):
+        _them_ty_le(viec, mau_12t=7)
+        _them_ho_so(viec)
+        _them_ket_qua(viec, [(MAU_CHON, KQ_DAT, None)])
+
+    _chay_dat(core, dung)
+    core.gay_xung_dot_ngan("ty_le", so_lan=1)
+    ghi_goc = core._ngan_ghi_lo
+    cac_lo = []
+
+    def ghi(ma, instance, lenh, khoa, **kw):
+        cac_lo.append(deepcopy(lenh))
+        assert [(l["thao_tac"], l["bang"]) for l in lenh] == [
+            ("them", "chot_ky"), ("sua", "ty_le"), ("sua", "ho_so_hanh_vi")]
+        try:
+            return ghi_goc(ma, instance, lenh, khoa, **kw)
+        except NganXungDot:
+            # Core đã thử them chot_ky, rồi lỗi ở lệnh ty_le tiếp theo:
+            # không được để lại bản chốt hoặc một cập nhật riêng lẻ.
+            assert core.xem_ngan(app.ma, "chot_ky") == []
+            assert _ban(core, "ty_le")["mau_12t"] == "7"
+            assert _ban(core, "ho_so_hanh_vi")["ky_lam_moi"] == "2026-11"
+            raise
+
+    monkeypatch.setattr(core, "_ngan_ghi_lo", ghi)
+    assert _chot(core, lam_moi_ho_so=_lam_moi) == 1
+    assert len(cac_lo) == 2
+    assert _ban(core, "ty_le")["mau_12t"] == "1"
+    assert _ban(core, "chot_ky", {"ky": "2026-11", **KHOA})["mau_12t"] == "7"
+
+
+def test_tranh_khoa_chot_doc_lai_roi_bo_qua_khong_tinh_lai(monkeypatch):
+    core = CoreGia()
+    _chay_dat(core, lambda v: _them_ty_le(v, mau_12t=7))
+    ghi_goc, tinh_goc = core._ngan_ghi_lo, chot_ky._tinh_lai
+    so_tinh, ben_khac = [], []
+
+    def tinh(*args):
+        so_tinh.append(1)
+        return tinh_goc(*args)
+
+    def ghi(ma, instance, lenh, khoa, **kw):
+        if not ben_khac:
+            ben_khac.append(True)
+            # Việc khác hoàn tất cùng lô sau lúc bên hiện tại đã đọc:
+            # lệnh them của bên hiện tại phải xung đột khóa duy nhất.
+            ghi_goc(ma, instance, lenh, "DEMO-ben-khac-da-chot", **kw)
+        return ghi_goc(ma, instance, lenh, khoa, **kw)
+
+    monkeypatch.setattr(chot_ky, "_tinh_lai", tinh)
+    monkeypatch.setattr(core, "_ngan_ghi_lo", ghi)
+    assert _chot(core) == 0
+    assert so_tinh == [1]  # Không tính lại ở vòng thử lại sau tranh khóa.
+    assert _ban(core, "ty_le")["row_version"] == 2
+    assert len(core.xem_ngan(app.ma, "chot_ky")) == 1
+
+
+def test_cap_vua_tao_cung_thang_khong_chot_nham_sang_thang_truoc():
+    core = CoreGia()
+    _chay_dat(core, lambda v: _them_ty_le(v, mau_12t=7))
+    cu = deepcopy(core.xem_ngan(app.ma, "ty_le"))
+    assert _chot(core, luc=datetime(2026, 11, 20, 13, tzinfo=GIO_VN)) == 0
+    assert core.xem_ngan(app.ma, "ty_le") == cu
+    assert core.xem_ngan(app.ma, "chot_ky") == []
+    assert _chot(core) == 1
+    assert _ban(core, "chot_ky", {"ky": "2026-11", **KHOA})["mau_12t"] == "7"

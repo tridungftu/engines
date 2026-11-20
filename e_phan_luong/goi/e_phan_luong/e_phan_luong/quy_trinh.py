@@ -36,8 +36,14 @@ class CaiDat:
 
 
 def bat_dau(viec) -> int:
-    """Gọi đầu MỌI năng lực. PL-4 nối chốt kỳ tháng tại đây; trả số cặp đã chốt."""
-    return 0
+    """Gọi đầu MỌI năng lực; chốt tháng và làm mới hồ sơ, trả số cặp đã chốt."""
+    from . import chot_ky, ho_so
+
+    return chot_ky.chot_neu_can(
+        viec, doc_chinh_sach_buoc(viec.tham_so),
+        lam_moi_ho_so=lambda cu, ky: ho_so.ve_ban_ghi(
+            ho_so.lam_moi(ho_so.tu_ban_ghi(cu), ky)),
+    )
 
 
 def doc_tep_lo(viec) -> tuple[Lo, bytes]:
@@ -83,6 +89,12 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
     loai_ai: mã nghiệp vụ → loại do Local AI gán (PL-5); chỉ dùng cho dòng chưa có loại
     từ module/quy tắc. canh_bao_them: câu cảnh báo bổ sung (không chứa tỷ lệ, C5).
     """
+    import logging
+    from decimal import localcontext
+
+    from . import chot_ky, ho_so, ngan_ho_so
+    from .phan_luong import bam_doi_tac
+
     ts = viec.tham_so
     if ts.get("ma_module") and ts["ma_module"] != lo.ma_module:
         raise loi("DU_LIEU_KHONG_HOP_LE")
@@ -95,15 +107,37 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
                  else chon_mau.sinh_hat_giong())
     viec.tien_do(10, "Đang kiểm tra lô nghiệp vụ.")
     cd = doc_cai_dat(ts, lo)
+    cac_ho_so = ngan_ho_so.doc_ho_so_khau(viec, ts["khau"])
+    # Chia nhỏ gom theo đối tác + khâu, kể cả lịch sử thuộc loại khác (Q8).
+    tong_ngay = {}
+    with localcontext() as ctx:
+        ctx.prec = 40
+        for hs, _ in cac_ho_so.values():
+            for bam, cac_ngay in hs.tong_ngay.items():
+                ngay_so = tong_ngay.setdefault(bam, {})
+                for ngay, so in cac_ngay.items():
+                    ngay_so[ngay] = ngay_so.get(ngay, Decimal(0)) + so
+
+    def tong_truoc(bam, ngay):
+        return tong_ngay.get(bam, {}).get(ngay.isoformat(), Decimal(0))
+
     ds_lop1 = xet_lop1_lo(lo, ts, nguong=cd.nguong, danh_muc=cd.danh_muc, bo=cd.bo,
-                          truong_phan_loai=ts.get("truong_phan_loai"), loai_ai=loai_ai)
+                          truong_phan_loai=ts.get("truong_phan_loai"), loai_ai=loai_ai,
+                          tong_truoc=tong_truoc)
+    anh_chup = {
+        loai: ho_so.anh_chup(
+            cac_ho_so[loai][0] if loai in cac_ho_so else ho_so.moi(ts["khau"], loai),
+            tien_te_nguong=cd.nguong.tien_te,
+        ) for loai in dict.fromkeys(qd.loai for qd in ds_lop1)
+    }
     thong_tin = {
         "ma_luot": ma_luot, "bam_hat_giong": chon_mau.bam_hat_giong(hat_giong),
         "bam_dau_vao": bam_dau_vao, "phien_ban_engine": __version__,
         "khau": ts["khau"], "ma_module": lo.ma_module,
     }
     viec.tien_do(50, "Đang chọn mẫu kiểm tra.")
-    ds_dong = xet_lop23_lo(viec, lo, ds_lop1, khau=ts["khau"], cs=cd.cs, hat_giong=hat_giong)
+    ds_dong = xet_lop23_lo(viec, lo, ds_lop1, khau=ts["khau"], cs=cd.cs,
+                          hat_giong=hat_giong, ho_so_theo_loai=anh_chup.__getitem__)
     if luot_cu is not None:
         from .kieu import KHONG_CHON, tach_ly_do
         from .ngan_chung import tim_tat_ca
@@ -128,6 +162,25 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
         "ma_luot": ma_luot, "ma_module": lo.ma_module, "khau": ts["khau"],
         "hat_giong": hat_giong.hex(), "bam_dau_vao": bam_dau_vao,
     }, ds_dong)
+    theo_loai = {}
+    for qd in ds_lop1:
+        nv = qd.nv
+        bam = bam_doi_tac(lo.ma_module, nv.doi_tac) if nv.doi_tac is not None else None
+        theo_loai.setdefault(qd.loai, []).append((qd.tien_ss, bam, nv.ngay))
+    ky = chot_ky.ky_hien_tai()
+    cua_so = int(Decimal(str(ts.get("cua_so_chia_nho_ngay", 7))))
+    for loai, ds in theo_loai.items():
+        so_bo = 0
+
+        def cap_nhat(hs):
+            nonlocal so_bo
+            moi, so_bo = ho_so.cong(hs, ds, ky=ky, cua_so_ngay=cua_so)
+            return moi
+
+        ngan_ho_so.ghi_ho_so(viec, ts["khau"], loai, cap_nhat)
+        if so_bo:
+            logging.getLogger(__name__).warning(
+                "Hồ sơ hành vi vượt trần 20.000 đối tác; đã bỏ %d đối tác lâu không gặp.", so_bo)
     return truong
 
 

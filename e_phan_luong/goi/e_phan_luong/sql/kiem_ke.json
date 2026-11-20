@@ -13,8 +13,8 @@
     },
     {
       "duong_dan": "README.md",
-      "bytes": 8182,
-      "sha256": "9309585994b7b004cb5065e40ffa36134ca577e825b6287a038f1013061826d4"
+      "bytes": 9902,
+      "sha256": "84876dc1ef91de1d08bf4c270f8cf359ba1ffb38173655db745af293a70955a2"
     },
     {
       "duong_dan": "contract/tra_loi_ai.schema.json",
@@ -48,13 +48,13 @@
     },
     {
       "duong_dan": "e_phan_luong/chot_ky.py",
-      "bytes": 5519,
-      "sha256": "cd650df5e9f966a64b98bf1e2d37a24b1afea00d8e5583a9328ffe4471c285c4"
+      "bytes": 6728,
+      "sha256": "20922ef51a2f602d1cf230438a77f70738d93dacd46039be0dfe0bdc97814403"
     },
     {
       "duong_dan": "e_phan_luong/co.py",
-      "bytes": 1957,
-      "sha256": "dcb3de4b20263880c5147d5d202425f737ab57af3d86a90b3aeff91e616efb54"
+      "bytes": 2047,
+      "sha256": "bbf46d73c972b6b58311681b8750ede18706ab9685cf88e2d752e6492c45bb45"
     },
     {
       "duong_dan": "e_phan_luong/doc_lo.py",
@@ -92,6 +92,11 @@
       "sha256": "34f8903af3defaa635c13c24e7505d90bfb5be9d9d3142d804157ca5d98cbde1"
     },
     {
+      "duong_dan": "e_phan_luong/ngan_ho_so.py",
+      "bytes": 1913,
+      "sha256": "ad3db62be4e0207f3b609ed0bfee6676d59a0059234eef390836b4de57f3b8d3"
+    },
+    {
       "duong_dan": "e_phan_luong/ngan_ket_qua.py",
       "bytes": 6878,
       "sha256": "cfab31d0f3ac6c1a9bcf8ebfdd4e38da28acf62a274a414fe371ac061c0d2abc"
@@ -118,8 +123,8 @@
     },
     {
       "duong_dan": "e_phan_luong/quy_trinh.py",
-      "bytes": 6707,
-      "sha256": "45d965d1ad0b9157c515cc53ccb3441e191dabaf4d5c45bf6c7808c61a2cc5a4"
+      "bytes": 8814,
+      "sha256": "23ee7eefa414400aa1a2e7a0d243bf7da5cd95ba75c7563ea9b5d2fdbf66208a"
     },
     {
       "duong_dan": "e_phan_luong/thong_ke.py",
@@ -138,8 +143,8 @@
     },
     {
       "duong_dan": "e_phan_luong/ty_le.py",
-      "bytes": 7752,
-      "sha256": "899108b15c5fed6bdefa964578bef1a1748da0e6707dd517b4425837e4a5e5b1"
+      "bytes": 8198,
+      "sha256": "a3df601510f7cbff81765bbfe5c338573d0274105899e505d204516c836de958"
     },
     {
       "duong_dan": "e_phan_luong/xuat_json.py",

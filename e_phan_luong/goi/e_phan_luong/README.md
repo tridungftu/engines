@@ -1,12 +1,35 @@
-# Phân luồng kiểm tra — PL-2
+# Phân luồng kiểm tra — PL-4
 
 Engine chia nghiệp vụ vào luồng Đỏ (người phải kiểm trước khi duyệt)
 hoặc Xanh theo khâu, ngưỡng PM/TE/SAD, loại nghiệp vụ và chọn mẫu tái hiện được.
 **PL-2 đã nối `audit.phan_luong@1` cho JSON**: phân loại module/quy tắc,
 ngưỡng, chống chia nhỏ trong lô, tỷ lệ theo khâu × loại, cờ và chọn mẫu.
-Excel/CSV trả `TEP_KHONG_HO_TRO` tới PL-6. Bốn năng lực còn lại trả
-`CHUA_LAM`: “Năng lực đang được xây dựng.” Hồ sơ hành vi và chốt kỳ
-chờ PL-4; hiện không suy cờ đối tác mới/số tiền bất thường khi chưa có hồ sơ.
+PL-3 đã nối `audit.ghi_ket_qua@1`; PL-4 bổ sung hồ sơ hành vi, chia nhỏ
+qua nhiều lô và chốt kỳ tháng. Excel/CSV chờ PL-6. Ba năng lực chuỗi AI/
+hóa đơn còn trả `CHUA_LAM`: “Năng lực đang được xây dựng.”
+
+Mặc định, lượt đầu tiên của engine mới coi mọi đối tác có mã là **mới**
+ở loại nghiệp vụ đó (`DOI_TAC_MOI`, ×2), kể cả khi hồ sơ còn trống.
+Admin đặt `toi_thieu_ho_so_doi_tac_moi` trong `chinh_sach_json` nếu muốn
+chờ đủ lịch sử, ví dụ `{"toi_thieu_ho_so_doi_tac_moi":50}`. Khóa này là
+số nguyên ≥ 0, mặc định 0; cờ chỉ bật khi số nghiệp vụ trong hồ sơ loại
+đạt mức đã đặt. `SO_TIEN_BAT_THUONG` luôn cần ít nhất 50 nghiệp vụ.
+
+Trước lớp 1 đọc mọi hồ sơ của khâu: tổng chia nhỏ gom theo băm đối tác
+và ngày qua **mọi loại** trong khâu; cùng mã đối tác ở module khác có
+băm khác. Sau khi ghi lượt, cộng tiền so sánh đã lấy trị tuyệt đối, băm
+đối tác và ngày vào hồ sơ từng loại bằng CAS. Không khử trùng riêng các
+dòng nộp lại (Q8). Trần 20.000 đối tác mỗi (khâu, loại): bỏ đối tác lâu
+không gặp nhất và ghi số đã bỏ vào nhật ký kỹ thuật, không ghi mã thô.
+
+Đầu mọi năng lực chốt tháng trước cho cặp đã tồn tại từ tháng trước,
+theo giờ Việt Nam: `them chot_ky`,
+`sua ty_le` bằng CAS và làm mới hồ sơ nằm trong **một lô nguyên tử**.
+Tranh khóa bản chốt thì đọc lại và dừng; xung đột CAS thì đọc lại và áp
+lại phép cập nhật (tối đa 3 lần thử lại). Hồ sơ chưa có kết quả kiểm/
+tỷ lệ cũng được làm mới; chỉ giữ biểu đồ và băm đối tác của 12 tháng
+trước kỳ mới. Các số liệu gộp ở ngăn không chứa mã đối tác thô, mã giao
+dịch hay diễn giải.
 
 | Năng lực | Nhận → trả | Phạm vi |
 |---|---|---|

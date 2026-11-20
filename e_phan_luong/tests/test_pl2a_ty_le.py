@@ -35,7 +35,11 @@ def test_mac_dinh_dung_toan_bo_chinh_sach_anh_duyet(chuoi):
     assert cs.don_vi_so_tron == Decimal(10000000)
     assert cs.ty_le_duoi_sad == Decimal("0.02")
     assert cs.san == Decimal("0.05")
+    # PL-4: khóa đếm (số nguyên) mặc định 0 = đúng phiếu; mọi khóa còn lại là Decimal.
+    assert type(cs.toi_thieu_ho_so_doi_tac_moi) is int and cs.toi_thieu_ho_so_doi_tac_moi == 0
     for f in fields(cs):
+        if f.name == "toi_thieu_ho_so_doi_tac_moi":
+            continue
         gia_tri = getattr(cs, f.name)
         cac_so = gia_tri.values() if isinstance(gia_tri, dict) else gia_tri if isinstance(gia_tri, tuple) else (gia_tri,)
         assert all(isinstance(so, Decimal) for so in cac_so)

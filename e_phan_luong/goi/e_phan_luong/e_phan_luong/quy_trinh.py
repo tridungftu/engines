@@ -36,8 +36,14 @@ class CaiDat:
 
 
 def bat_dau(viec) -> int:
-    """Gọi đầu MỌI năng lực. PL-4 nối chốt kỳ tháng tại đây; trả số cặp đã chốt."""
-    return 0
+    """Gọi đầu MỌI năng lực; chốt tháng và làm mới hồ sơ, trả số cặp đã chốt."""
+    from . import chot_ky, ho_so
+
+    return chot_ky.chot_neu_can(
+        viec, doc_chinh_sach_buoc(viec.tham_so),
+        lam_moi_ho_so=lambda cu, ky: ho_so.ve_ban_ghi(
+            ho_so.lam_moi(ho_so.tu_ban_ghi(cu), ky)),
+    )
 
 
 def doc_tep_lo(viec) -> tuple[Lo, bytes]:
@@ -91,32 +97,109 @@ def chay_phan_luong(viec, lo: Lo, du_lieu: bytes, *,
     loai_ai: mã nghiệp vụ → loại do Local AI gán (PL-5); chỉ dùng cho dòng chưa có loại
     từ module/quy tắc. canh_bao_them: câu cảnh báo bổ sung (không chứa tỷ lệ, C5).
     """
+    import logging
+    from decimal import localcontext
+
+    from . import chot_ky, ho_so, ngan_ho_so
+    from .phan_luong import bam_doi_tac
+
     ts = viec.tham_so
+    if ts.get("ma_module") and ts["ma_module"] != lo.ma_module:
+        raise loi("DU_LIEU_KHONG_HOP_LE")
+    bam_dau_vao = "sha256:" + sha256(du_lieu).hexdigest()
+    ma_luot = ngan_luot.ma_luot_cua_viec(viec, bam_dau_vao)
+    # Ngữ cảnh riêng của việc; giữ nguyên chữ ký lớp 2/3 và các điểm nối PL-5/PL-7.
+    viec._ma_luot_phan_luong = ma_luot
+    luot_cu = viec.ngan.doc("luot", {"ma_luot": ma_luot})
+    hat_giong = (bytes.fromhex(luot_cu.gia_tri["hat_giong"]) if luot_cu is not None
+                 else chon_mau.sinh_hat_giong())
     viec.tien_do(10, "Đang kiểm tra lô nghiệp vụ.")
     cd = doc_cai_dat(ts, lo)
+    cac_ho_so = ngan_ho_so.doc_ho_so_khau(viec, ts["khau"])
+    # Chia nhỏ gom theo đối tác + khâu, kể cả lịch sử thuộc loại khác (Q8).
+    tong_ngay = {}
+    with localcontext() as ctx:
+        ctx.prec = 40
+        for hs, _ in cac_ho_so.values():
+            for bam, cac_ngay in hs.tong_ngay.items():
+                ngay_so = tong_ngay.setdefault(bam, {})
+                for ngay, so in cac_ngay.items():
+                    ngay_so[ngay] = ngay_so.get(ngay, Decimal(0)) + so
+
+    def tong_truoc(bam, ngay):
+        return tong_ngay.get(bam, {}).get(ngay.isoformat(), Decimal(0))
+
     ds_lop1 = xet_lop1_lo(lo, ts, nguong=cd.nguong, danh_muc=cd.danh_muc, bo=cd.bo,
-                          truong_phan_loai=ts.get("truong_phan_loai"), loai_ai=loai_ai)
-    hat_giong = chon_mau.sinh_hat_giong()
-    bam_dau_vao = "sha256:" + sha256(du_lieu).hexdigest()
-    # Hạt giống mới tạo lượt mới; ghim hạt giống + đầu vào tái hiện cả mã lượt.
-    ma_luot = "PL-" + sha256(b"\x1f".join((
-        hat_giong, lo.ma_module.encode("utf-8"), ts["khau"].encode("utf-8"),
-        bam_dau_vao.encode("ascii"),
-    ))).hexdigest()
+                          truong_phan_loai=ts.get("truong_phan_loai"), loai_ai=loai_ai,
+                          tong_truoc=tong_truoc)
+    anh_chup = {
+        loai: ho_so.anh_chup(
+            cac_ho_so[loai][0] if loai in cac_ho_so else ho_so.moi(ts["khau"], loai),
+            tien_te_nguong=cd.nguong.tien_te,
+        ) for loai in dict.fromkeys(qd.loai for qd in ds_lop1)
+    }
     thong_tin = {
         "ma_luot": ma_luot, "bam_hat_giong": chon_mau.bam_hat_giong(hat_giong),
         "bam_dau_vao": bam_dau_vao, "phien_ban_engine": __version__,
         "khau": ts["khau"], "ma_module": lo.ma_module,
     }
     viec.tien_do(50, "Đang chọn mẫu kiểm tra.")
-    ds_dong = xet_lop23_lo(viec, lo, ds_lop1, khau=ts["khau"], cs=cd.cs, hat_giong=hat_giong)
+    ds_dong = xet_lop23_lo(viec, lo, ds_lop1, khau=ts["khau"], cs=cd.cs,
+                          hat_giong=hat_giong, ho_so_theo_loai=anh_chup.__getitem__)
+    if luot_cu is not None:
+        from .kieu import KHONG_CHON, tach_ly_do
+        from .ngan_chung import tim_tat_ca
+
+        # Tỷ lệ/lịch sử có thể đã đổi sau lần chạy đầu; giữ quyết định đã chốt.
+        da_luu = {bg.gia_tri["ma"]: bg.gia_tri for bg in tim_tat_ca(
+            viec, "dong_luot", {"ma_luot": ma_luot})}
+        da_chot = []
+        for dong in ds_dong:
+            if dong.ma not in da_luu:
+                raise loi("NGAN_BAN")
+            gt = da_luu[dong.ma]
+            ly_do = tach_ly_do(gt["ly_do"])
+            da_chot.append(KetQuaDong(
+                dong.ma, "xanh" if ly_do == (KHONG_CHON,) else "do", ly_do,
+                dong.co, gt["loai"], gt["nguon_loai"]))
+        ds_dong = tuple(da_chot)
     truong = xuat_ket_qua(viec, lo, cd.nguong, ds_dong, thong_tin=thong_tin,
                           canh_bao_them=canh_bao_them)
     viec.tien_do(90, "Đang ghi kết quả lượt phân luồng.")
+    theo_loai = {}
+    for qd in ds_lop1:
+        nv = qd.nv
+        bam = bam_doi_tac(lo.ma_module, nv.doi_tac) if nv.doi_tac is not None else None
+        theo_loai.setdefault(qd.loai, []).append((qd.tien_ss, bam, nv.ngay))
+    ky = chot_ky.ky_hien_tai()
+    cua_so = int(Decimal(str(ts.get("cua_so_chia_nho_ngay", 7))))
+    so_bo = {}
+
+    def ham_cong(loai, ds):
+        def cap_nhat(hs):
+            moi, so_bo[loai] = ho_so.cong(hs, ds, ky=ky, cua_so_ngay=cua_so)
+            return moi
+        return cap_nhat
+
+    cap_nhat = {loai: ham_cong(loai, ds) for loai, ds in theo_loai.items()}
+    # Hồ sơ cộng CÙNG lô nguyên tử với dấu luot: Core giao lại việc không cộng hai lần.
+    # Lô ≤ 100 lệnh nên tối đa 99 hồ sơ đi cùng luot; phần dư (chỉ khi lô có
+    # trên 99 loại, danh mục tối đa 100 + chua_phan_loai) ghi trước, không nguyên tử.
+    cac_loai = list(cap_nhat)
+    du, cuoi = cac_loai[:-99], cac_loai[-99:]
+    ngan_ho_so.tao_ho_so_rong(viec, ts["khau"], cac_loai)
+    if luot_cu is None:
+        for loai in du:
+            ngan_ho_so.ghi_ho_so(viec, ts["khau"], loai, cap_nhat[loai])
     ngan_luot.ghi_luot(viec, {
         "ma_luot": ma_luot, "ma_module": lo.ma_module, "khau": ts["khau"],
         "hat_giong": hat_giong.hex(), "bam_dau_vao": bam_dau_vao,
-    }, ds_dong)
+    }, ds_dong, lenh_cuoi=lambda lo_ngan: ngan_ho_so.them_lenh_cap_nhat(
+        viec, lo_ngan, ts["khau"], {loai: cap_nhat[loai] for loai in cuoi}))
+    if sum(so_bo.values()):
+        logging.getLogger(__name__).warning(
+            "Hồ sơ hành vi vượt trần 20.000 đối tác; đã bỏ %d đối tác lâu không gặp.",
+            sum(so_bo.values()))
     return truong
 
 

@@ -17,6 +17,7 @@ from .kieu import (
     Nguong, Tien, tach_ly_do,
 )
 from .loi import loi
+from .tien import doc_so_thap_phan
 
 
 TOI_DA_BYTE = 20 * 1048576
@@ -69,26 +70,13 @@ def _ma_hop_le(gia_tri: object, toi_da: int | None = None) -> bool:
 
 
 def _doc_tien(gia_tri: object) -> Tien:
-    """Tiền kết quả luôn có tiền tệ; không dùng mô-đun tien đang làm song song."""
+    """Tiền kết quả luôn có tiền tệ; dùng chung luật đọc số của mô-đun tien."""
     if not isinstance(gia_tri, dict):
         raise loi("DU_LIEU_KHONG_HOP_LE")
     tien_te = gia_tri.get("tien_te")
     if not isinstance(tien_te, str) or not re.fullmatch(r"[A-Z]{3}", tien_te):
         raise loi("DU_LIEU_KHONG_HOP_LE")
-    so = gia_tri.get("so")
-    if isinstance(so, str):
-        if not re.fullmatch(r"[+-]?[0-9]+(?:\.[0-9]+)?", so):
-            raise loi("DU_LIEU_KHONG_HOP_LE")
-    elif type(so) is not int and not isinstance(so, Decimal):
-        raise loi("DU_LIEU_KHONG_HOP_LE")
-    try:
-        so = Decimal(so)
-    except (InvalidOperation, ValueError):
-        raise loi("DU_LIEU_KHONG_HOP_LE") from None
-    if (not so.is_finite() or so.adjusted() >= 18
-            or so.as_tuple().exponent < -6):
-        raise loi("DU_LIEU_KHONG_HOP_LE")
-    return Tien(so, tien_te)
+    return Tien(doc_so_thap_phan(gia_tri.get("so")), tien_te)
 
 
 def doc_ket_qua_json(du_lieu: bytes) -> KetQuaTep:

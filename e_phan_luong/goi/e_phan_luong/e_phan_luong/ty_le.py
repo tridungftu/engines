@@ -29,6 +29,7 @@ class ChinhSach:
     don_vi_so_tron: Decimal = Decimal(10000000)
     ty_le_duoi_sad: Decimal = Decimal("0.02")
     san: Decimal = Decimal("0.05")
+    toi_thieu_ho_so_doi_tac_moi: int = 0
 
 
 def _so(gia_tri, ma_loi: str) -> Decimal:
@@ -64,6 +65,9 @@ def _hang_so_khong_hop_le(_):
 
 
 def _kiem_chinh_sach(cs: ChinhSach) -> None:
+    if (type(cs.toi_thieu_ho_so_doi_tac_moi) is not int
+            or cs.toi_thieu_ho_so_doi_tac_moi < 0):
+        raise loi("THAM_SO_KHONG_HOP_LE")
     if (not cs.bac or any(not Decimal(0) < b <= Decimal(1) for b in cs.bac)
             or any(a <= b for a, b in zip(cs.bac, cs.bac[1:]))
             or len(cs.nguong_xuong) != len(cs.bac) - 1
@@ -119,6 +123,11 @@ def doc_chinh_sach(
                 cap_nhat[khoa] = {**cs.he_so, **{
                     co: _so_chinh_sach(h) for co, h in gia_tri.items()
                 }}
+            elif khoa == "toi_thieu_ho_so_doi_tac_moi":
+                so = _so_chinh_sach(gia_tri)
+                if so < 0 or so != so.to_integral_value():
+                    raise loi("THAM_SO_KHONG_HOP_LE")
+                cap_nhat[khoa] = int(so)
             else:
                 cap_nhat[khoa] = _so_chinh_sach(gia_tri)
     cs = replace(cs, **cap_nhat)

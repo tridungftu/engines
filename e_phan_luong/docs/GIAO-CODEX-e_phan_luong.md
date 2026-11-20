@@ -513,6 +513,44 @@ Sau khi đổi tệp trong goi/: tính lại kiểm kê (python -B e_phan_luong/
 Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest toàn engine 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
 ```
 
+Sau PL-9B lần 2 (21/11): ước tính 50.000 dòng ở 5 ms/lần vượt 300 giây; lead đo hồ sơ thấy ~45% "thời gian máy" nằm trong Core giả (tính hai lần) và tra_nop_lai gọi tim từng mã kể cả khi ngăn trống. Lead giao thêm PL-9F, PL-9G chạy song song.
+
+#### PL-9F — giảm lần gọi Core của tra_nop_lai, giữ ngữ nghĩa Q5
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md §5 (trần 50.000 dòng/lô), §6 (nộp lại, Q5); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2; e_phan_luong/goi/e_phan_luong/README.md (CC-6); báo cáo PL-9B lần 2 ở D:/Claude/engines-phieu/e_phan_luong-pl-9b.bao-cao.md.
+Nhánh này có đủ PL-0…PL-9E. Một việc con khác (PL-9G) chạy SONG SONG và chỉ sửa tests/do_hieu_nang.py, tests/test_pl9b_hieu_nang.py, tests/test_pl9g_*.py. Bạn KHÔNG sửa các tệp đó; không sửa README/CHANGELOG/NGUON/VIEC.md (lead cập nhật).
+
+LÀM VIỆC CON PL-9F — giảm số lần gọi Core của ngan_luot.tra_nop_lai mà GIỮ ĐÚNG ngữ nghĩa Q5, không cần cửa mới của Core.
+Hiện trạng (PL-9B đo trên CoreGia): tra_nop_lai gọi tim từng mã nghiệp vụ, kể cả khi ngăn chưa có lịch sử nào → ~99% số lần gọi Core; 50.000 dòng ở 5 ms/lần ước tính vượt thoi_han_giay 300.
+Tệp được sửa: e_phan_luong/goi/e_phan_luong/e_phan_luong/ngan_luot.py (chỉ thân tra_nop_lai và hàm phụ riêng mới), ngan_chung.py (chỉ thêm hàm phụ duyệt trang nếu cần, không đổi hàm có sẵn), test mới tests/test_pl9f_*.py; được sửa kỳ vọng test cũ CHỈ ở phần đếm số lần gọi/thứ tự gọi ngăn (ghi rõ từng chỗ), không nới mục đích test. Không đổi chữ ký hàm công khai.
+Cách làm (lead đã chốt):
+1. Dò rẻ: một lần tim dong_luot loc {ma_module, khau}, gioi_han=1. Không có dòng nào → trả frozenset() ngay (ngăn trống chỉ tốn 1 lần gọi thay vì N).
+2. Quét thích ứng: duyệt trang 500 dòng dong_luot loc {ma_module, khau} (sắp theo cột khóa như tim_tat_ca/dem_theo_trang, chống vòng tiep như cũ), vừa duyệt vừa CHỈ GIỮ dòng có ma thuộc tập ds_ma (không gom toàn bộ lịch sử vào bộ nhớ). Ngân sách trang = max(1, ceil(số mã khác nhau / 10)). Hết lịch sử trong ngân sách → dùng kết quả quét. Vượt ngân sách → bỏ kết quả quét, quay về cách tim từng mã như cũ (trường hợp xấu nhất ≤ 1,1 × số lần gọi cũ + 1).
+3. Sau khi có tập dòng ứng viên theo mã: giữ NGUYÊN logic hiện có — bỏ lượt của chính việc (_ma_luot_phan_luong), đọc luot theo ma_luot có bộ nhớ đệm, bỏ dòng của lượt chưa có dấu luot, bỏ luot khác module/khâu, chọn gần nhất theo (tao_luc có múi giờ, ma_luot), kiểm ly_do bắt buộc/chọn mẫu, đọc ket_qua_kiem gom_het_han=True. Không đổi đầu ra cho bất kỳ trạng thái ngăn nào.
+4. Kiểm kê: tính lại (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat).
+Test bắt buộc (tests/test_pl9f_tra_nop_lai.py):
+(a) Tương đương: giữ bản cũ của tra_nop_lai làm hàm tham chiếu NGAY TRONG TEST (chép nguyên thân hiện tại), so kết quả bản mới = bản cũ trên ≥ 200 trạng thái ngăn DEMO sinh ngẫu nhiên có hạt cố định: nhiều lượt, lượt ghi dở không có luot, luot khác module/khâu, hai lượt trùng tao_luc, tao_luc khác múi giờ, chính lượt hiện tại, ket_qua_kiem dat/sai/khác/không có/hết hạn, mã lặp trong ds_ma, ds_ma rỗng. Gồm cả ca lịch sử đúng bằng/vượt ngân sách trang (ép ngân sách nhỏ bằng tham số nội bộ hoặc ds_ma nhỏ, lịch sử lớn).
+(b) Đếm lần gọi trên CoreGia: ngăn trống 10.000 mã → số tim của tra_nop_lai = 1; lịch sử 10.000 dòng, nộp lại 10.000 mã → số tim ≤ 25; lịch sử lớn hơn ngân sách → ≤ 1,1 × N + 1.
+(c) Chống vòng tiep và kiem_huy vẫn giữ.
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest toàn engine 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; nêu số lần gọi trước/sau ở N = 1.000/5.000/10.000 cho hai trạng thái (trống, nộp lại); ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
+#### PL-9G — tách thời gian engine thuần khỏi Core giả, đo lại
+```
+Đọc AGENTS.md; e_phan_luong/goi/e_phan_luong/README.md (CC-6); báo cáo PL-9B lần 2 ở D:/Claude/engines-phieu/e_phan_luong-pl-9b.bao-cao.md; tests/do_hieu_nang.py, tests/test_pl9b_hieu_nang.py.
+Nhánh này có đủ PL-0…PL-9E (PL-9E đã sửa xuat_excel bỏ ws.max_row trong vòng lặp). Một việc con khác (PL-9F) chạy SONG SONG và sửa ngan_luot.tra_nop_lai, ngan_chung.py, tests/test_pl9f_*.py. Bạn KHÔNG sửa các tệp đó, không sửa README/CHANGELOG/NGUON/VIEC.md (lead cập nhật).
+
+LÀM VIỆC CON PL-9G — sửa phương pháp đo của PL-9B để tách thời gian của CHÍNH ENGINE khỏi thời gian của Core giả.
+Lead đã đo hồ sơ (cProfile) ca json_trong N=10.000 trên CoreChiMuc: tổng 16,0 giây, trong đó ~7,2 giây nằm trong lời gọi Core (SDK _goi → CoreGia/CoreChiMuc: _ngan_ghi_lo, _ngan_tim, _gia_tri_ngan, deepcopy...). Trên Core thật phần đó chạy ở máy chủ, đã được tính bằng "số lần gọi × độ trễ", nên bảng PL-9B đang tính hai lần. Thêm nữa 10.000 dòng 16 giây nhưng 50.000 dòng 146,6 giây (không tuyến tính) — chưa rõ do engine hay do ngăn giả.
+Tệp được sửa: tests/do_hieu_nang.py, tests/test_pl9b_hieu_nang.py, test mới tests/test_pl9g_*.py. Được sửa tệp chạy của engine trong e_phan_luong/goi/e_phan_luong/e_phan_luong/ TRỪ ngan_luot.py và ngan_chung.py, CHỈ khi chứng minh được điểm nóng ở engine gây tăng không tuyến tính hoặc chiếm > 20% thời gian engine thuần, và đầu ra giữ giống hệt (so bytes tệp ra và giá trị ngăn trên bộ DEMO); sửa tệp gói thì tính lại kiểm kê (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat). Không sửa SDK.
+Việc:
+1. Đo "thời gian engine thuần" = tổng thời gian chạy − thời gian nằm trong mọi lời gọi từ SDK sang đối tượng Core giả (bọc các phương thức Core giả mà engine.py SDK gọi tới: ngăn doc/tim/ghi lô, tải tệp vào/ra, tiến độ, gia hạn...; đo bằng perf_counter cộng dồn, có khóa luồng). Ghi riêng: thời gian Core giả, thời gian engine thuần, và phần còn lại của SDK phía engine (nếu tách được).
+2. Đo engine thuần + số lần gọi tại N = 10.000, 25.000, 50.000 cho json_trong, json_nop_lai, excel_trong, excel_nop_lai; ghi_ket_qua tại 1.000, 5.000, 10.000. Nêu rõ engine thuần có tuyến tính không; nếu không, tìm nguyên nhân bằng cProfile (ghi 5 hàm nặng nhất của engine) và nói rõ nguyên nhân thuộc engine hay ngăn giả. Nếu thuộc ngăn giả trong test → sửa ngăn giả (chỉ trong test).
+3. Bảng ước tính Core thật mới = engine thuần (đo ở 50.000) + số lần gọi × 2/5/10 ms, ghi "ước tính, chưa đo trên Core thật", so với thoi_han_giay 300; cỡ lô tối đa an toàn (giữ dư 2 lần) theo từng độ trễ. Script phải đọc được mã engine hiện tại để lead chạy lại sau khi gộp PL-9F (không mã cứng số lần gọi).
+4. Giữ chế độ đếm của PL-9B; test nhỏ trong pytest < 60 giây, không có ca lớn trong pytest mặc định.
+Đạt: pytest các tệp test của việc 0 lỗi; nếu sửa tệp gói thì 3 lệnh AGENTS.md §5 đủ (thu [ĐẠT] mã 0; pytest toàn engine 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật và lệnh chạy script; ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
 ## 4. Cần Core / Chờ Anh
 
 **Kiểm 2 điểm "Cần Core" (20/11/2026, lead đọc mã Core `ma-nguon-core-sach` HEAD `a07e061` và CoreGia SDK 2.2.0; chưa chạy trên Core thật):**

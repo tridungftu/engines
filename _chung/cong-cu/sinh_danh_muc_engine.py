@@ -35,6 +35,8 @@ GHI_CHU = {
                   "Chưa có PDF, chưa tải cổng thuế"),
     "e_kiem_excel": ("Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề",
                      "Ô đích, bộ nhóm, khuôn cột do module truyền"),
+    "e_phan_luong": ("Phân luồng kiểm tra theo khâu, ngưỡng PM/TE/SAD và chọn mẫu",
+                     "PL-0 chỉ có khung; cả 5 năng lực trả CHUA_LAM, chưa có DEMO nghiệp vụ"),
     "e_doi_chieu": ("So bản Word chuẩn với bản đã ký",
                     "Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module"),
     "e_tra_cuu": ("Hỏi đáp 3 tầng trên kho tài liệu",

@@ -1,7 +1,7 @@
 """Đọc Excel/CSV trong RAM thành lô theo khuôn cột của module.
 
-Excel chỉ giữ khoảng 15 chữ số có nghĩa: Decimal(repr(x)) giữ giá trị
-openpyxl đọc được, không thể khôi phục chữ số Excel đã làm mất khi lưu.
+Excel chỉ giữ khoảng 15 chữ số có nghĩa: làm tròn float ở biên đọc rồi
+chuyển sang Decimal; không thể khôi phục chữ số Excel đã làm mất khi lưu.
 Kiểm ZIP/XML chép-sửa từ e_kiem_excel/nhan_dien.py; không gọi engine đó.
 """
 from __future__ import annotations
@@ -29,7 +29,8 @@ from .tu_khoa import chuan, doc_json
 
 GIAI_NEN_TOI_DA_BYTE = 128 * 1024 * 1024
 ENTRY_TOI_DA = 2048
-O_TOI_DA = 250_000
+_COT_TOI_DA = 30
+O_TOI_DA = (TOI_DA_DONG + 1) * _COT_TOI_DA  # Kể cả hàng tiêu đề.
 VUNG_TOI_DA = 500_000
 OLE = bytes.fromhex("D0CF11E0A1B11AE1")
 NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
@@ -134,7 +135,8 @@ def _kiem_xlsx(du_lieu):
                             if o_gop + so_o > O_TOI_DA:
                                 raise loi("VUOT_GIOI_HAN")
                             max_dong, max_cot = max(max_dong, d2), max(max_cot, c2)
-                        if la_sheet and tong_vung + max_dong * max_cot > VUNG_TOI_DA:
+                        if (la_sheet and tong_vung + max_dong * max_cot
+                                > max(VUNG_TOI_DA, O_TOI_DA)):
                             raise loi("VUOT_GIOI_HAN")
 
                     bo_doc.StartDoctypeDeclHandler = cam
@@ -153,6 +155,11 @@ def _kiem_xlsx(du_lieu):
                             break
                 if la_sheet:
                     tong_vung += max_dong * max_cot
+                    # Bảng lớn có thể thiếu ô tùy chọn; số ô trống được sinh
+                    # khi duyệt vùng vẫn chịu trần vùng thưa cũ.
+                    if (tong_vung > VUNG_TOI_DA
+                            and tong_vung - so_o >= VUNG_TOI_DA):
+                        raise loi("VUOT_GIOI_HAN")
     except (BadZipFile, expat.ExpatError, zlib.error, OSError, ValueError,
             EOFError, NotImplementedError):
         raise loi("DU_LIEU_KHONG_HOP_LE") from None
@@ -180,7 +187,7 @@ def _doc_khuon(chuoi):
     if (not isinstance(k, dict) or set(k) != {"phien_ban", "sheet", "cot", "dong_dung"}
             or type(k["phien_ban"]) is not int or k["phien_ban"] != 1
             or not (k["sheet"] is None or isinstance(k["sheet"], str) and k["sheet"].strip())
-            or not isinstance(k["cot"], list) or not 1 <= len(k["cot"]) <= 30
+            or not isinstance(k["cot"], list) or not 1 <= len(k["cot"]) <= _COT_TOI_DA
             or not isinstance(k["dong_dung"], list)):
         raise loi("THAM_SO_KHONG_HOP_LE")
     cac_ma, tu = set(), list(k["dong_dung"])
@@ -218,8 +225,10 @@ def _ngay(v):
 
 
 def _so(v):
-    if type(v) in (int, float):
-        v = Decimal(repr(v))
+    if type(v) is float:
+        v = Decimal(format(v, ".15g"))
+    elif type(v) is int:
+        v = Decimal(v)
     return format(doc_so_thap_phan(v), "f")
 
 
@@ -275,6 +284,8 @@ def _doc_cac_dong(cac_dong, khuon, tien_te, *, cot=None):
                 dong[k] = str(v)
         for k, cot_te in (("so_tien", "tien_te"), ("so_tien_quy_doi", "tien_te_quy_doi")):
             if k in gia_tri:
+                if k == "so_tien_quy_doi" and cot_te not in cot:
+                    continue  # Không có tiền tệ quy đổi: xét như JSON thiếu số quy đổi.
                 # Cột có mặt nhưng ô trống nghĩa là chưa rõ; không lấp bằng cài đặt.
                 te = gia_tri.get(cot_te) if cot_te in cot else tien_te
                 dong[k] = {"so": _so(gia_tri[k]), "tien_te": te}

@@ -39,7 +39,7 @@ def _doc_dong(dong: dict, chi_so: int) -> NghiepVu:
     if not isinstance(dong, dict):
         raise loi("DU_LIEU_KHONG_HOP_LE")
     ma = dong.get("ma")
-    if not isinstance(ma, str) or not 1 <= len(ma) <= 120:
+    if not isinstance(ma, str) or not ma.strip() or not 1 <= len(ma) <= 120:
         raise loi("DU_LIEU_KHONG_HOP_LE")
     if any(unicodedata.category(ky_tu) == "Cc" for ky_tu in ma):
         raise loi("DU_LIEU_KHONG_HOP_LE")

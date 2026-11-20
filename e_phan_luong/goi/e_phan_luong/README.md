@@ -144,7 +144,7 @@ Chia nhỏ gom tiền tuyệt đối theo băm đối tác và ngày qua mọi l
 
 Hồ sơ hành vi được cộng trong **CÙNG lô nguyên tử với dấu `luot`**; Core giao lại việc không cộng hai lần. Chỉ khi một lô có **trên 99 loại**, phần dư ghi trước, không nguyên tử; phần dư không có cùng bảo đảm chống cộng lại khi lỗi giữa chừng. `dong_luot` ghi trước theo lô ≤ 100; `luot` ghi sau cùng. Xung đột CAS đọc lại/thử lại tối đa 3 lần, quá mức trả `NGAN_BAN`, cho phép thử lại.
 
-Q9: tối đa **20.000 đối tác mỗi (khâu, loại)**; bỏ đối tác lâu không gặp nhất (hòa kỳ thì theo băm), ghi số đã bỏ vào log kỹ thuật. Cảnh báo trên màn engine còn cần Core/lead nối theo CC-5. Ngăn giữ `luot`, `dong_luot` 400 ngày; kết quả kiểm 365 ngày. Hồ sơ chỉ giữ biểu đồ tiền gộp, băm đối tác, tổng theo băm/ngày cửa sổ gần nhất; không giữ chi tiết giao dịch, diễn giải, mã đối tác thô (C4). Đầu tháng theo giờ Việt Nam chốt tháng trước: bản chụp `chot_ky`, tính lại số 12 tháng, làm mới hồ sơ cùng lô nguyên tử; chỉ chốt một lần.
+Q9: tối đa **20.000 đối tác mỗi (khâu, loại)**; bỏ đối tác lâu không gặp nhất (hòa kỳ thì theo băm), ghi số đã bỏ vào log kỹ thuật và thêm câu cảnh báo vào `canh_bao` của lượt. Lịch sử chống chia nhỏ chỉ cộng khoản < TE và bỏ ngày nghiệp vụ sau ngày xử lý + 1 (giờ Việt Nam). Hồ sơ ghi tiền tệ ngưỡng; lô sau có ngưỡng khác tiền tệ thì bỏ số liệu tiền cũ, giữ tập đối tác, kèm cảnh báo. Ngăn giữ `luot`, `dong_luot` 400 ngày; kết quả kiểm 365 ngày. Hồ sơ chỉ giữ biểu đồ tiền gộp, băm đối tác, tổng theo băm/ngày cửa sổ gần nhất; không giữ chi tiết giao dịch, diễn giải, mã đối tác thô (C4). Đầu tháng theo giờ Việt Nam chốt tháng trước: bản chụp `chot_ky`, tính lại số 12 tháng, làm mới hồ sơ cùng lô nguyên tử; chỉ chốt một lần.
 
 Kiểm toán viên cần hạt giống gốc 32 byte trong `luot` (chỉ Admin), đầu vào, snapshot chính sách và trạng thái ngăn trước lượt do module giữ:
 
@@ -181,6 +181,8 @@ duoc_chon = Fraction(h, 2**256) < Fraction(p)
 - **CC-3:** hạt giống hiện là trường thường chỉ Admin đọc. Muốn mã hóa cần đường giải mã Core phục vụ kiểm toán, chưa tự đổi sang trường bí mật.
 - **CC-4:** vướng CLI với demo rỗng là lịch sử PL-0/PL-1, đã có ví dụ thật từ PL-2; không còn chặn đóng gói hiện hành.
 - **CC-5:** màn Admin bảng tỷ lệ `ui/bang_ty_le.js` chỉ đọc. SDK 2.2.0 từ chối `giao_dien_quan_tri`, chưa có `KttCore.engine(ma)`; màn dừng an toàn. Cần phát hành cơ chế gắn màn/cổng ngăn và lead nối cảnh báo Q9; chưa xác nhận Admin xem được bảng trên Core thật.
+- **CC-7:** engine chỉ hậu kiểm `nha_cung_cap = local` trên `tra_loi_ai`; `yeu_cau_ai` chung chưa có khóa bắt buộc Local để Core từ chối TRƯỚC khi gửi (quy ước `nha_cung_cap_bat_buoc` hiện chỉ có ở hồ sơ Mask). Bước AI của Core cấu hình nhầm Cloud thì diễn giải đã rời máy trước khi engine báo `KHONG_PHAI_LOCAL`. Cần cửa chung ở Core.
+- **Giới hạn đã biết:** Core giao lại việc trong lúc lần đầu còn chạy (quá `thoi_han_giay`) thì hai lần chạy có thể sinh hai hạt giống; `luot` và tệp ra theo lần ghi dấu trước, `dong_luot` có thể theo lần sau. Giao lại SAU khi lượt xong thì luồng và lý do giữ nguyên bản đã lưu; cột `co` tính lại theo hồ sơ mới nên có thể khác lần đầu.
 - **CC-6:** `viec.ngan.tim` chỉ lọc bằng (=), chưa có `ma IN [...]`. Tra nộp lại lô lớn có nguy cơ quá 300 giây; số đo CoreGia thuộc PL-9B, không đại diện Core thật. Cần lọc theo tập mã ở Core.
 
 ## Kiểm và đóng gói

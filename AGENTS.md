@@ -57,6 +57,7 @@ sha256sum docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl 
 11. Không xóa tệp. Không push lên nhánh `main`.
 12. **Engine không lưu gì trên máy** (Anh chốt 15/11): không tệp cấu hình, không sổ, không đệm bền. Dữ liệu cần giữ và cấu hình đi qua ngăn của Core `viec.ngan`/`app.ngan` và `viec.cau_hinh` (SDK 2.2.0); engine chưa chuyển còn dùng cổng tạm `_chung/mau-ma/ngan.py`; tệp tạm của một việc xóa trong `finally`.
 13. Cấu hình thuộc engine: màn cấu hình của engine ở `goi/<ma>/ui/`, nạp như màn module, dùng `KttCore.engine(ma)`; không gọi mạng ngoài, không `eval`/`innerHTML` chưa lọc.
+14. **Mọi cấu hình phải có màn thao tác dễ dùng** (Anh yêu cầu 21/11/2026): engine có `cau_hinh.schema.json` thì phải có màn cấu hình; tham số Cài đặt bước dạng JSON thì phải có trình soạn. Tốt nhất không nhập JSON thô; nếu buộc phải nhập thì ngay tại ô phải có diễn giải cấu trúc (từng trường: tên, kiểu, bắt buộc, ý nghĩa), hướng dẫn điền, mẫu điền sẵn và báo lỗi chỉ rõ trường sai. Theo nguyên tắc `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md` §2 và ảnh mẫu `_chung/docs/mau-ui/`. PR thêm ô cấu hình hoặc tham số JSON mới mà không có màn tương ứng thì **không đạt**.
 
 ## 5. Cách làm một lát
 

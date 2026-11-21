@@ -1,0 +1,25 @@
+{
+  "giao_dien_quan_tri": [
+    {
+      "ma": "cau_hinh",
+      "ten": "Cấu hình và hạn mức OCR",
+      "tep": "ui/cau_hinh.js",
+      "quyen": "admin_core"
+    }
+  ],
+  "thao_tac_quan_tri": [
+    {
+      "ma": "kiem_hot_folder",
+      "ten": "Kiểm tra Hot Folder",
+      "thoi_han_giay": 15,
+      "diem_vao": "e_ocr.quan_tri:kiem_hot_folder"
+    },
+    {
+      "ma": "kiem_tesseract",
+      "ten": "Kiểm tra Tesseract",
+      "thoi_han_giay": 15,
+      "diem_vao": "e_ocr.quan_tri:kiem_tesseract"
+    }
+  ],
+  "ghi_chu": "Khai dự kiến, chưa nạp trong SDK 2.2.0. diem_vao là gợi ý nối hàm cho lead Core, chưa phải hợp đồng SDK. Không thêm khóa vào engine.json. Thao tác nhận dau_vao chứa duy nhất abbyy hoặc tesseract của bản nháp, trả dict dat/ma; không lưu cấu hình. Không có bí mật trong lát UI-OCR."
+}

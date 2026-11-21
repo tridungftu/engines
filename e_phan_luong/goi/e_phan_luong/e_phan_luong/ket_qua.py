@@ -35,6 +35,9 @@ class DongKetQua:
     ket_qua: str
     so_tien_sai: Tien | None
     loai_dung: str | None
+    # PL-10 (H2, Anh chốt 21/11/2026): giải thích của người kiểm khi AI sai; chỉ đi qua RAM
+    # sang tệp bài học, không ghi ngăn (C4). PL-10C đọc từ JSON/Excel, PL-10B bắt buộc khi AI sai.
+    giai_thich: str | None = None
 
 
 @dataclass(frozen=True)

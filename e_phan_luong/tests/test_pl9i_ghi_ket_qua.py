@@ -350,7 +350,11 @@ def test_tuong_duong_240_trang_thai_demo_va_gui_lai_ca_tep(hat):
 
 
 
-@pytest.mark.parametrize("k,n", [(10, 500), (10, 501), (11, 1000), (11, 1001)])
+# Lead: biên 2 trang (11 mã, 1.000/1.001 dòng) lặp lại biên 1 trang ở quy mô lớn hơn
+# (~36 giây trên CoreGia) → kiểm sâu; kiểm nhanh giữ biên 1 trang 500/501 dòng.
+@pytest.mark.parametrize("k,n", [(10, 500), (10, 501),
+                                 pytest.param(11, 1000, marks=pytest.mark.sau),
+                                 pytest.param(11, 1001, marks=pytest.mark.sau)])
 @pytest.mark.parametrize("bang", ["dong_luot", "ket_qua_kiem"])
 def test_ngan_sach_vua_du_va_vuot_khong_dung_ban_quet_do(k, n, bang):
     cores = [_CoreDem(), _CoreDem()]

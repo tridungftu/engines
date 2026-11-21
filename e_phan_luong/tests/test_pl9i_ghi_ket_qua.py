@@ -162,6 +162,7 @@ import random
 import sys
 
 import pytest
+from conftest import trang_thai_so_sanh
 from kho_tri_thuc_sdk.engine import LoiNghiepVu, NganXungDot, ViecDaHuy
 from kho_tri_thuc_sdk.thu import CoreGia
 
@@ -329,7 +330,7 @@ def _trang_thai_ngau_nhien(hat):
     return ds, het_han, da_doc, ts
 
 
-@pytest.mark.parametrize("hat", range(240))
+@pytest.mark.parametrize("hat", trang_thai_so_sanh())
 def test_tuong_duong_240_trang_thai_demo_va_gui_lai_ca_tep(hat):
     ds, het_han, tep, ts = _trang_thai_ngau_nhien(hat)
     cu, moi = CoreGia(), CoreGia()
@@ -349,7 +350,11 @@ def test_tuong_duong_240_trang_thai_demo_va_gui_lai_ca_tep(hat):
 
 
 
-@pytest.mark.parametrize("k,n", [(10, 500), (10, 501), (11, 1000), (11, 1001)])
+# Lead: biên 2 trang (11 mã, 1.000/1.001 dòng) lặp lại biên 1 trang ở quy mô lớn hơn
+# (~36 giây trên CoreGia) → kiểm sâu; kiểm nhanh giữ biên 1 trang 500/501 dòng.
+@pytest.mark.parametrize("k,n", [(10, 500), (10, 501),
+                                 pytest.param(11, 1000, marks=pytest.mark.sau),
+                                 pytest.param(11, 1001, marks=pytest.mark.sau)])
 @pytest.mark.parametrize("bang", ["dong_luot", "ket_qua_kiem"])
 def test_ngan_sach_vua_du_va_vuot_khong_dung_ban_quet_do(k, n, bang):
     cores = [_CoreDem(), _CoreDem()]
@@ -596,34 +601,42 @@ def _nhan_ban_fixture(core, bang, n):
     ]
 
 
-def test_10000_dong_coregia_doc_tim_ngoai_lo_khong_qua_120(monkeypatch):
+@pytest.mark.parametrize("n,toi_da_goi", [
+    (501, 12),
+    pytest.param(10000, 120, marks=pytest.mark.sau),
+])
+def test_so_lan_goi_coregia_doc_tim_ngoai_lo(n, toi_da_goi, monkeypatch):
+    # Ca nhanh vẫn qua hai trang, ghi mới và gửi trùng; giữ ca 10.000 ở kiểm sâu.
     core = CoreGia()  # Không chỉ mục thay thế; đo đúng backend SDK.
     dung_luot(core)
-    _nhan_ban_fixture(core, "dong_luot", 10000)
-    tep = ket_qua.doc_ket_qua_json(ma_hoa(tep_demo([dong_demo(i) for i in range(10000)])))
+    _nhan_ban_fixture(core, "dong_luot", n)
+    tep = ket_qua.doc_ket_qua_json(ma_hoa(tep_demo([dong_demo(i) for i in range(n)])))
     moi, dem_moi = _dem_lan_goi(core, ngan_ket_qua.ghi_ket_qua, tep, monkeypatch)
-    assert moi["dem"]["so_dong_nhan"] == 10000
-    assert dem_moi["ngoai_lo"] <= 120
-    assert len(core.xem_ngan(app.ma, "ket_qua_kiem")) == 10000
+    assert moi["dem"]["so_dong_nhan"] == n
+    assert dem_moi["ngoai_lo"] <= toi_da_goi
+    assert len(core.xem_ngan(app.ma, "ket_qua_kiem")) == n
     truoc = _anh_ngan(core)
     trung, dem_trung = _dem_lan_goi(core, ngan_ket_qua.ghi_ket_qua, tep, monkeypatch)
-    assert (trung["dem"]["so_dong_nhan"], trung["dem"]["so_trung"]) == (0, 10000)
-    assert dem_trung["ngoai_lo"] <= 120
+    assert (trung["dem"]["so_dong_nhan"], trung["dem"]["so_trung"]) == (0, n)
+    assert dem_trung["ngoai_lo"] <= toi_da_goi
     assert _anh_ngan(core) == truoc
     # Báo cả tổng có đọc CAS để ngưỡng "ngoài lô ghi" không che số gọi.
-    print(json.dumps({"N": 10000, "CoreGia_ghi_moi": dem_moi,
+    print(json.dumps({"N": n, "CoreGia_ghi_moi": dem_moi,
                       "CoreGia_ghi_trung": dem_trung}, ensure_ascii=False))
 
 
-@pytest.mark.parametrize("k", [1, 10, 11, 20, 100])
-def test_luot_lon_so_voi_tep_dem_ca_phu_phi_lam_tron_ngan_sach(k, monkeypatch):
+@pytest.mark.parametrize("k,so_dong", [
+    (1, 501), (10, 501), (11, 1001), (20, 1001),
+    *[pytest.param(k, 10001, marks=pytest.mark.sau) for k in (1, 10, 11, 20, 100)],
+])
+def test_luot_lon_so_voi_tep_dem_ca_phu_phi_lam_tron_ngan_sach(k, so_dong, monkeypatch):
     core = CoreGia()
     dung_luot(core)
     tep1 = ket_qua.doc_ket_qua_json(ma_hoa(tep_demo([dong_demo()])))
     assert _chay(core, ghi_ket_qua, tep1)["dem"]["so_dong_nhan"] == 1
     for bang in ("dong_luot", "ket_qua_kiem"):
-        _nhan_ban_fixture(core, bang, 10001)
-    tep = ket_qua.doc_ket_qua_json(ma_hoa(tep_demo([dong_demo(i) for i in range(10001-k, 10001)])))
+        _nhan_ban_fixture(core, bang, so_dong)
+    tep = ket_qua.doc_ket_qua_json(ma_hoa(tep_demo([dong_demo(i) for i in range(so_dong-k, so_dong)])))
     truoc = _anh_ngan(core)
     cu, dem_cu = _dem_lan_goi(core, ghi_ket_qua, tep, monkeypatch)
     moi, dem_moi = _dem_lan_goi(core, ngan_ket_qua.ghi_ket_qua, tep, monkeypatch)

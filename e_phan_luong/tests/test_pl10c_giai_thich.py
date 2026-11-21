@@ -184,9 +184,10 @@ def test_excel_tieu_de_cot_10_sai_bi_tu_choi():
              _excel(sua=lambda ws: setattr(ws["J2"], "value", "DEMO sai tiêu đề")))
 
 
-def test_20000_dong_do_duoi_30_giay_khong_doc_max_row(monkeypatch):
+@pytest.mark.parametrize("n", [3, pytest.param(20_000, marks=pytest.mark.sau)])
+def test_xuat_duoi_30_giay_khong_doc_max_row(n, monkeypatch):
     ds = [kieu.KetQuaDong(f"PC-DEMO-{i:05}", "do", (kieu.CO_DO_CUNG,), (),
-                          "tam_ung", "module") for i in range(20_000)]
+                          "tam_ung", "module") for i in range(n)]
     def cam(ws):
         pytest.fail("Xuất tuyến tính không được đọc ws.max_row.")
     with monkeypatch.context() as m:
@@ -194,13 +195,13 @@ def test_20000_dong_do_duoi_30_giay_khong_doc_max_row(monkeypatch):
         bat_dau = perf_counter()
         raw = xuat_excel.lap_ds_do(ds, **META)
         so_giay = perf_counter() - bat_dau
-    print(f"\nPL-10C: 20.000 dòng Đỏ DEMO: {so_giay:.3f} giây; {len(raw)} byte.")
+    print(f"\nPL-10C: {n} dòng Đỏ DEMO: {so_giay:.3f} giây; {len(raw)} byte.")
     assert so_giay < 30
     wb = openpyxl.load_workbook(BytesIO(raw), read_only=True)
     try:
         ws = wb["Can kiem"]
-        assert (ws.max_row, ws.max_column) == (20_002, 10)
-        assert ws["A20002"].value == ds[-1].ma
-        assert ws["J20002"].value is None
+        assert (ws.max_row, ws.max_column) == (n + 2, 10)
+        assert ws[f"A{n + 2}"].value == ds[-1].ma
+        assert ws[f"J{n + 2}"].value is None
     finally:
         wb.close()

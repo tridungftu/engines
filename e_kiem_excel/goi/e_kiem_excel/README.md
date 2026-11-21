@@ -79,3 +79,112 @@ số nguồn với `tien_te: null` theo §5.2. Không tự gán đơn vị.
 
 Hai ví dụ trong `chay_thu_demo`: bảng giá thành tiêu đề gộp nhiều tầng, bảng báo giá
 đổi vị trí cột và sheet. Nguồn sinh, khuôn và đáp án ngoài gói tại `tests/demo/`.
+
+## Trình soạn Cài đặt bước TS-EX — 21/11/2026
+
+`ui/tham_so.js` xuất thành phần ES module cho cả hai năng lực. Mỗi ý là một
+ô riêng, có nhãn/hướng dẫn/ví dụ; thêm/bỏ từ khóa, nhóm, điều kiện, cột và đổi
+thứ tự trực tiếp. JSON chỉ đọc trong mục Nâng cao. Mẫu gắn nhãn DEMO;
+không chứa bộ nhóm nghiệp vụ riêng của module. Không có cấu hình engine,
+schema cấu hình, dịch vụ ngoài hay bí mật nên không cần nút kiểm kết nối,
+két key hoặc thao tác quản trị Python. Nút Kiểm tra cài đặt chỉ kiểm cấu trúc;
+engine tiếp tục kiểm sheet, bảng và dữ liệu khi xử lý tệp.
+
+- Ô đích: chọn sheet từ danh sách Core cấp và nhập địa chỉ, hoặc để trống cả
+  hai rồi soạn cụm từ tìm. Chưa có tệp mẫu: nhập tên sheet. Có ô đích thì
+  engine ưu tiên ô đó; danh sách nhãn vẫn được giữ để không mất dữ liệu.
+- Bộ nhóm: nhóm đầu tiên khớp được chọn. Mỗi nhóm có nhiều điều kiện (OR).
+  Trong một điều kiện, ghép văn bản các vùng đã chọn, mọi cụm phải khớp (AND);
+  trong từng cụm chỉ cần một từ khóa (OR), và không có từ khóa loại trừ.
+- Khuôn cột: mã cột kết quả, từ khóa tiêu đề, kiểu và công tắc bắt buộc;
+  danh sách nhãn dòng dừng. Cần ít nhất một cột bắt buộc. Chuyển về khuôn
+  xây dựng vẫn giữ bộ cột đã soạn; bộ đó chỉ được dùng với `tong_quat`.
+
+Từ khóa: chuỗi thường = chứa chuỗi; tiền tố `=` = khớp nguyên từ/cụm từ;
+`#` = một hoặc nhiều chữ số. Không phân biệt dấu/hoa thường; ký tự regex
+khác được hiểu nguyên văn. Không cắt ngầm nội dung vượt trần.
+
+### Cấu trúc tham số hiện có (dùng cả khi Core còn hiện ô JSON chung)
+
+| Tham số / trường | Kiểu | Bắt buộc | Ý nghĩa và giá trị cho phép |
+|---|---|---|---|
+| `o_dich` | chuỗi | không | `Sheet!A1`, hỗ trợ `$` và nháy đơn tên sheet; tới XFD1048576, tối đa 512 ký tự; trống thì tìm nhãn |
+| `nhan_o_dich_json` | chuỗi JSON mảng chuỗi | không | Mảng không rỗng nếu đã điền; từng từ khóa không rỗng; tối đa 4 KiB UTF-8; trống không tìm nhãn |
+| `bo_nhom_json` | chuỗi JSON object | không | Trống: Chưa phân nhóm, số ngoài nhóm chưa xác định; tối đa 32 KiB UTF-8 |
+| ↳ `phien_ban` | số nguyên | có | Luôn 1 |
+| ↳ `ten_bo` | chuỗi | có | Tên bộ không rỗng |
+| ↳ `nhom` | mảng object | có | 1–30 nhóm, xét theo thứ tự |
+| ↳ `nhom[].ma` | chuỗi | có | Mã không rỗng, duy nhất trong bộ |
+| ↳ `nhom[].ten` | chuỗi | có | Tên không rỗng, duy nhất; không dùng Chưa phân nhóm hoặc Ngoài nhóm — cần giải thích |
+| ↳ `nhom[].tai_lieu` | chuỗi | có | Tài liệu cần đối chiếu, không rỗng |
+| ↳ `nhom[].khi` | mảng object | có | Ít nhất một điều kiện; OR giữa các điều kiện |
+| ↳ `khi[].vung` | mảng chuỗi | có | Ít nhất một, không trùng: `tieu_de_cot`, `ten_sheet`, `nhan_dong` |
+| ↳ `khi[].tat_ca` | mảng mảng chuỗi | có | Ít nhất một cụm; mỗi cụm ít nhất một từ khóa. AND giữa các cụm, OR trong từng cụm |
+| ↳ `khi[].khong_co` | mảng chuỗi | không | Có thể rỗng; loại trừ nếu gặp bất kỳ từ khóa nào |
+| `kiem_nguon_kl` | boolean | không | Mặc định false; bật kiểm K8 |
+| `khuon` | chuỗi chọn | có, có mặc định | `xay_dung_klgt` hoặc `tong_quat`; mặc định xây dựng |
+| `khuon_cot_json` | chuỗi JSON object | khi tổng quát | Đúng các trường dưới, tối đa 32 KiB UTF-8 |
+| ↳ `phien_ban` | số nguyên | có | Luôn 1 |
+| ↳ `cot` | mảng object | có | 1–30 cột; ít nhất một cột bắt buộc |
+| ↳ `cot[].ma` | chuỗi | có | Duy nhất, bắt đầu a–z, chữ thường/số/gạch dưới; tối đa 64 ký tự |
+| ↳ `cot[].tu_khoa` | mảng chuỗi | có | Không rỗng; tiêu đề khớp ít nhất một từ khóa |
+| ↳ `cot[].kieu` | chuỗi chọn | có | `van_ban`, `so`, `so_tien`, `ngay` |
+| ↳ `cot[].bat_buoc` | boolean | có | true: phải nhận diện được cột |
+| ↳ `dong_dung` | mảng chuỗi | có | Có thể rỗng; trống đọc đến hết bảng |
+| `tien_te` | chuỗi | không | Trống hoặc 3 chữ hoa, ví dụ VND, USD; không tự gán VND |
+
+Mỗi bộ nhóm/khuôn cột có tối đa 200 từ khóa, gồm loại trừ hoặc dòng dừng.
+Tất cả từ khóa phải không rỗng và dấu `=` phải có cụm từ theo sau. Cấu trúc
+object đóng, không thêm khóa ngoài bảng. UI từ chối nguồn sai kiểu/khóa
+trùng/khóa lạ/phiên bản khác; giữ nguồn, khóa lưu, cho tải lại hoặc chèn mẫu
+thay từng phần. Lỗi nhập hiện cạnh trường và phần báo lỗi. Mẫu tối thiểu:
+
+```json
+{
+  "o_dich": "BTH!J39",
+  "nhan_o_dich_json": "[\"=tổng cộng\",\"giá trị đề nghị\"]",
+  "bo_nhom_json": "{\"phien_ban\":1,\"ten_bo\":\"Nhóm DEMO\",\"nhom\":[{\"ma\":\"don_gia\",\"ten\":\"Đơn giá DEMO\",\"tai_lieu\":\"Bảng giá DEMO\",\"khi\":[{\"vung\":[\"tieu_de_cot\"],\"tat_ca\":[[\"đơn giá\"]],\"khong_co\":[\"tạm tính\"]}]}]}",
+  "kiem_nguon_kl": false
+}
+```
+
+```json
+{
+  "khuon": "tong_quat",
+  "khuon_cot_json": "{\"phien_ban\":1,\"cot\":[{\"ma\":\"ma_hang\",\"tu_khoa\":[\"=mã hàng\"],\"bat_buoc\":true,\"kieu\":\"van_ban\"}],\"dong_dung\":[\"=tổng cộng\"]}",
+  "tien_te": "VND"
+}
+```
+
+Nếu điền trực tiếp vào từng ô JSON chung thì chỉ dán nội dung JSON của
+tham số đó, không dán cả object bọc chứa các tham số như hai ví dụ trên.
+Các nút Chèn mẫu DEMO trong trình soạn tự xuất đúng chuỗi, không cần gõ JSON.
+
+### Cửa D2 đang chờ Core
+
+Khai **dự kiến** tại `KHAI-SDK-2.1.json`; không phải API SDK mới đã phát hành.
+Core nạp `default(goc, KttCore, nguCanh)` với `nang_luc` đã ghim và hai callback
+do màn bước của Core sở hữu:
+
+- `doc()` → `{tham_so, phien_ban, ds_sheet?}`. Có thể truyền bản tham số trực
+  tiếp thay callback để nhúng chỉ xuất dữ liệu. Không truyền tệp/đường máy.
+- `luu(tham_so, phien_ban)` → `{phien_ban}` mới: Core kiểm quyền, phiên bản
+  bước (CAS), kiểu/trần và ghi kiểm toán. 409 / `THAM_SO_XUNG_DOT` khóa lưu
+  tới khi tải lại; bản sửa vẫn trên màn. Thiếu callback/phiên bản thì không
+  bật Lưu. Lỗi không có xác nhận phiên bản mới không được báo đã lưu.
+- Thành phần trả `{xuat, kiem, nap, huy}`. `xuat()` trả bản sao mọi tham số,
+  JSON vẫn là chuỗi; lỗi có `{truong,cau}`. Core có thể tự dùng `xuat()` ở
+  nút lưu chung. `huy()` tháo màn khi rời bước.
+
+Không lưu tham số quy trình qua `.cau_hinh`/`.ngan` của engine; không tự mở
+cổng mạng hoặc HTTP. TS-EX không cần gọi API engine nào. Khi các lát khác
+cần API engine thì chỉ dùng `KttCore.engine(ma)`. Cửa D2 phải được lead Core
+thống nhất/nối thật; hiện **đã kiểm bằng Core giả (CoreGia)**, chưa nối Core thật.
+
+Kiểm UI: `node --test e_kiem_excel/tests/ui/tham_so.test.mjs` (Node, không
+mạng, không npm dependency); pytest chạy lại Node và cho 6 bộ tham số do UI
+xuất chạy trên CoreGia. Ảnh DEMO và script chụp nằm ngoài gói tại
+`docs/anh-TS-EX/` và `tests/ui/chup_man.mjs`. Script chụp dùng Edge headless
+trên Windows, hoặc biến `KTT_TRINH_DUYET` trỏ Chromium trên Linux; không dùng
+hồ sơ trình duyệt thật. Node và trình duyệt chỉ là công cụ test, không thêm
+vào dependency runtime Python.

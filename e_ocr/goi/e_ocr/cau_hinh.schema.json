@@ -1,25 +1,133 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Cấu hình OCR do Core quản lý",
+  "title": "Cấu hình OCR",
   "type": "object",
   "additionalProperties": false,
   "properties": {
     "abbyy": {
-      "type": "object", "default": {}, "additionalProperties": false,
+      "type": "object",
+      "default": {},
+      "additionalProperties": false,
       "properties": {
-        "bat": {"type": "boolean", "default": false},
-        "thu_muc_vao": {"type": "string", "maxLength": 4096, "default": ""},
-        "thu_muc_ra": {"type": "string", "maxLength": 4096, "default": ""},
-        "thoi_han_giay": {"type": "integer", "minimum": 1, "maximum": 900, "default": 900},
-        "han_muc_trang_30_ngay": {"type": "integer", "minimum": 0, "maximum": 5000, "default": 5000}
-      }
+        "bat": {
+          "type": "boolean",
+          "default": false,
+          "title": "Bật ABBYY",
+          "description": "Tùy chọn, mặc định false. Chỉ bật khi đã cấu hình thư mục nhận và trả riêng trên máy engine.",
+          "examples": [
+            false
+          ]
+        },
+        "thu_muc_vao": {
+          "type": "string",
+          "maxLength": 4096,
+          "default": "",
+          "title": "Thư mục nhận tài liệu",
+          "description": "Tùy chọn, chuỗi tối đa 4.096 ký tự, mặc định rỗng. Khi bật ABBYY cần đường dẫn tuyệt đối tới thư mục nhận; không nhập tệp hoặc khóa.",
+          "examples": [
+            "C:/DEMO/OCR/nhan"
+          ]
+        },
+        "thu_muc_ra": {
+          "type": "string",
+          "maxLength": 4096,
+          "default": "",
+          "title": "Thư mục trả kết quả",
+          "description": "Tùy chọn, chuỗi tối đa 4.096 ký tự, mặc định rỗng. Khi bật ABBYY cần đường dẫn tuyệt đối tới thư mục trả; phải khác và không lồng với thư mục nhận.",
+          "examples": [
+            "C:/DEMO/OCR/tra"
+          ]
+        },
+        "thoi_han_giay": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 900,
+          "default": 900,
+          "title": "Thời hạn chờ (giây)",
+          "description": "Tùy chọn, số nguyên từ 1 đến 900 giây, mặc định 900. Nguồn đã nhận nhưng chưa trả thì giữ lượt chưa rõ kết quả.",
+          "examples": [
+            900
+          ]
+        },
+        "han_muc_trang_30_ngay": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5000,
+          "default": 5000,
+          "title": "Hạn mức trang trong 30 ngày",
+          "description": "Tùy chọn, số nguyên từ 0 đến 5.000 trang, mặc định 5.000. Đặt 0 để chuyển nguồn dự phòng; không hoàn trang chưa rõ kết quả.",
+          "examples": [
+            5000
+          ]
+        }
+      },
+      "title": "ABBYY Hot Folder",
+      "description": "Nguồn đọc ưu tiên, tùy chọn. Bỏ trống để ABBYY tắt, thời hạn 900 giây và hạn mức 5.000 trang/30 ngày.",
+      "examples": [
+        {
+          "bat": false,
+          "thu_muc_vao": "C:/DEMO/OCR/nhan",
+          "thu_muc_ra": "C:/DEMO/OCR/tra",
+          "thoi_han_giay": 900,
+          "han_muc_trang_30_ngay": 5000
+        }
+      ]
     },
     "tesseract": {
-      "type": "object", "default": {}, "additionalProperties": false,
+      "type": "object",
+      "default": {},
+      "additionalProperties": false,
       "properties": {
-        "duong_dan": {"type": "string", "maxLength": 4096, "default": ""},
-        "ngon_ngu": {"type": "string", "enum": ["vie", "eng", "vie+eng", "eng+vie"], "default": "vie+eng"}
+        "duong_dan": {
+          "type": "string",
+          "maxLength": 4096,
+          "default": "",
+          "title": "Đường dẫn Tesseract",
+          "description": "Tùy chọn, chuỗi tối đa 4.096 ký tự, mặc định rỗng để tự tìm bộ cài. Nếu nhập, chọn đúng chương trình tesseract.exe hoặc tesseract.",
+          "examples": [
+            "C:/DEMO/Tesseract-OCR/tesseract.exe"
+          ]
+        },
+        "ngon_ngu": {
+          "type": "string",
+          "enum": [
+            "vie",
+            "eng",
+            "vie+eng",
+            "eng+vie"
+          ],
+          "default": "vie+eng",
+          "title": "Ngôn ngữ",
+          "description": "Tùy chọn, mặc định vie+eng. vie: tiếng Việt; eng: tiếng Anh; vie+eng hoặc eng+vie: cả hai. Cần cài đủ các bộ ngôn ngữ đã chọn.",
+          "examples": [
+            "vie+eng"
+          ]
+        }
+      },
+      "title": "Tesseract dự phòng",
+      "description": "Nguồn dự phòng, tùy chọn. Bỏ trống để tự tìm bộ cài và dùng tiếng Việt + tiếng Anh.",
+      "examples": [
+        {
+          "duong_dan": "",
+          "ngon_ngu": "vie+eng"
+        }
+      ]
+    }
+  },
+  "description": "Thiết lập nguồn đọc tài liệu; ưu tiên dùng màn Cấu hình OCR. Không nhập khóa bí mật. Mọi trường đều tùy chọn, bỏ trống nhóm để dùng mặc định. Cấu trúc: abbyy (đối tượng, tùy chọn) gồm bat (boolean, mặc định false: tắt ABBYY), thu_muc_vao và thu_muc_ra (chuỗi tối đa 4.096 ký tự, mặc định rỗng: chưa cấu hình; khi bật ABBYY cần hai đường dẫn tuyệt đối khác nhau, không lồng nhau), thoi_han_giay (số nguyên 1–900, mặc định 900), han_muc_trang_30_ngay (số nguyên 0–5.000, mặc định 5.000; 0 để chuyển nguồn dự phòng). tesseract (đối tượng, tùy chọn) gồm duong_dan (chuỗi tối đa 4.096 ký tự, mặc định rỗng để tự tìm) và ngon_ngu (chuỗi vie, eng, vie+eng hoặc eng+vie; mặc định vie+eng). Ví dụ đầy đủ, thay các đường DEMO bằng thư mục đã cấu hình trên máy engine: {\"abbyy\": {\"bat\": false, \"thu_muc_vao\": \"C:/DEMO/OCR/nhan\", \"thu_muc_ra\": \"C:/DEMO/OCR/tra\", \"thoi_han_giay\": 900, \"han_muc_trang_30_ngay\": 5000}, \"tesseract\": {\"duong_dan\": \"\", \"ngon_ngu\": \"vie+eng\"}}.",
+  "examples": [
+    {
+      "abbyy": {
+        "bat": false,
+        "thu_muc_vao": "C:/DEMO/OCR/nhan",
+        "thu_muc_ra": "C:/DEMO/OCR/tra",
+        "thoi_han_giay": 900,
+        "han_muc_trang_30_ngay": 5000
+      },
+      "tesseract": {
+        "duong_dan": "",
+        "ngon_ngu": "vie+eng"
       }
     }
-  }
+  ]
 }

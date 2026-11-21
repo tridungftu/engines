@@ -14,6 +14,7 @@ from types import SimpleNamespace
 import weakref
 
 import pytest
+from conftest import trang_thai_so_sanh
 from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
 from kho_tri_thuc_sdk.thu import CoreGia
 
@@ -135,7 +136,7 @@ def _lich_su_nhieu_dong(core, viec, n):
     return [f"PC-DEMO-{i:05}" for i in range(n)]
 
 
-@pytest.mark.parametrize("chi_so", range(240))
+@pytest.mark.parametrize("chi_so", trang_thai_so_sanh())
 def test_tuong_duong_240_trang_thai_ngau_nhien_demo(chi_so):
     """Hạt cố định; thứ tự mã/thời điểm, trạng thái hoàn tất và kết quả độc lập."""
     rng = Random(202611210349 + chi_so)
@@ -215,8 +216,11 @@ def test_dung_va_vuot_ngan_sach_khong_dung_ket_qua_quet_do_dang(so_ma, so_dong):
 
     _trong_viec(core, kiem)
 
-@pytest.mark.parametrize("n", [1000, 5000, 10000])
-@pytest.mark.parametrize("co_lich_su", [False, True], ids=["trong", "nop_lai"])
+@pytest.mark.parametrize("n,co_lich_su", [
+    pytest.param(n, co, marks=pytest.mark.sau if co and n == 10000 else (),
+                 id=f"{'nop_lai' if co else 'trong'}-{n}")
+    for co in (False, True) for n in (1000, 5000, 10000)
+])
 def test_so_lan_goi_coregia(n, co_lich_su):
     core = _CoreDem()
 

@@ -10,6 +10,7 @@ from copy import deepcopy
 from decimal import Decimal
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -24,6 +25,7 @@ KHAU = "ktt_duyet"
 CONG_TY = "Công ty DEMO Ánh Dương"
 LOAI_SACH = "sach_demo"
 LOAI_SUA = "sua_loai_demo"
+SO_DONG_LUOT_20 = 2000 if os.environ.get("KIEM_SAU") == "1" else 200
 
 
 class ChuoiDemo:
@@ -170,7 +172,8 @@ def chuoi_demo():
             chuoi.cac_mau_sach.append((tep["ma_luot"], ds_chon[0], dem, chuoi.cap(LOAI_SACH)))
         assert len(chuoi.cac_mau_sach) == 30, "DEMO chưa thu được đủ 30 mẫu ngẫu nhiên."
         chuoi.ty_le_truoc_luot20 = chuoi.ty_le()
-        chuoi.lo20 = chuoi.lo_sach(999, 2000)
+        # Giữ đủ 30 lượt hạ bậc; chỉ thu nhỏ lô đọc lại bậc mới ở kiểm nhanh.
+        chuoi.lo20 = chuoi.lo_sach(999, SO_DONG_LUOT_20)
         chuoi.truong20, chuoi.tep20 = chuoi.phan_luong(chuoi.lo20)
         chuoi.ty_le_sau_luot20 = chuoi.ty_le()
     return chuoi
@@ -302,7 +305,7 @@ def test_06_mau_sach_thu_30_xuong_20_luot_ke_tiep_doc_bac_moi(chuoi_demo):
         assert int(cap["mau_tu_doi_bac"]) == (so if so < 30 else 0)
     assert c.ty_le_truoc_luot20 == c.ty_le_sau_luot20
     ds = c.tep20["nghiep_vu"]
-    assert len(ds) == 2000
+    assert len(ds) == SO_DONG_LUOT_20
     assert all(d["loai"] == LOAI_SACH and not d["co"] for d in ds)
     assert all(d["ly_do"] in (["CHON_MAU"], ["KHONG_CHON"]) for d in ds)
     so_chon = sum(d["ly_do"] == ["CHON_MAU"] for d in ds)

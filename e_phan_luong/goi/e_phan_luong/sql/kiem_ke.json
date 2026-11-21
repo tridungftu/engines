@@ -3,8 +3,8 @@
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 3190,
-      "sha256": "385438d567c082739d8ba1d0ffb755df66daaba8db4ee2ab38ebe6caf5050a45"
+      "bytes": 3574,
+      "sha256": "d1900763024113544663968451e06bae5d2469db28324cdbfde9d1f5850556ce"
     },
     {
       "duong_dan": "NGUON.md",
@@ -13,8 +13,8 @@
     },
     {
       "duong_dan": "README.md",
-      "bytes": 22390,
-      "sha256": "87acd58fd8b2074bb11d686ee41e822c9c0b37e0f11dc4f4009a6425a6fb6786"
+      "bytes": 23894,
+      "sha256": "87d8333a157cab68647b23dfaa2fed59cef07f0e529f8f790a49bf5bfed74880"
     },
     {
       "duong_dan": "contract/tra_loi_ai.schema.json",
@@ -43,8 +43,8 @@
     },
     {
       "duong_dan": "e_phan_luong/chay.py",
-      "bytes": 3637,
-      "sha256": "8dce9a7ffdfc42e7020ee0d5181a85785ef9ab526726882c56b17f72dd9d6ad1"
+      "bytes": 4494,
+      "sha256": "db6fefae689769e8fa4387eb9082886fd097137fd7619fa45a32b0d63c22bcb0"
     },
     {
       "duong_dan": "e_phan_luong/chon_mau.py",
@@ -78,8 +78,8 @@
     },
     {
       "duong_dan": "e_phan_luong/doi_bac.py",
-      "bytes": 3800,
-      "sha256": "aeebaf6bc4e4e9d622b216ac87c039a9b92eb9bee9f608614fd2d3786e892bae"
+      "bytes": 4062,
+      "sha256": "425108e9588fc18474194cc54800f204db3a8bb5460f7b469248632b70f13e6a"
     },
     {
       "duong_dan": "e_phan_luong/ho_so.py",
@@ -123,8 +123,8 @@
     },
     {
       "duong_dan": "e_phan_luong/ngan_ket_qua.py",
-      "bytes": 9522,
-      "sha256": "9e00d0b99a37e5b3dcfd9ee3069fe9694799ce4fc67067f5560317aa6b558eed"
+      "bytes": 11625,
+      "sha256": "a5d37fae90ff0c07a3924143940319d2f26ed47d52791f0b5137ffc85b12b51a"
     },
     {
       "duong_dan": "e_phan_luong/ngan_luot.py",
@@ -183,8 +183,8 @@
     },
     {
       "duong_dan": "engine.json",
-      "bytes": 36588,
-      "sha256": "95ee47409b8d6dcf4b76550acc8e1ae299c1e3d5ba7f30fe3346be6c6dcdb242"
+      "bytes": 36824,
+      "sha256": "24f17c92a967fe819b4b5b050231c96e51495188c7a975c4f5580ebb54d05d1d"
     },
     {
       "duong_dan": "requirements.lock",

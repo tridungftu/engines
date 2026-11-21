@@ -179,7 +179,8 @@ def vong():
         ghi = {"phien_ban": 1, "ma_module": lo["ma_module"], "nguong": lo["nguong"], "ket_qua": [
             {"ma_luot": t["ma_luot"], "ma": do["ma"], "khau": KHAU, "ket_qua": "dat", "loai_dung": "tam_ung"},
             {"ma_luot": t["ma_luot"], "ma": xanh["ma"], "khau": KHAU, "ket_qua": "sai",
-             "so_tien_sai": {"so": "1234567.654321", "tien_te": "VND"}},
+             "so_tien_sai": {"so": "1234567.654321", "tien_te": "VND"},
+             "giai_thich": "Công ty DEMO Ánh Dương: cần đối chiếu chứng từ gốc."},
         ]}
         kq_ghi = v.tep("audit.ghi_ket_qua@1", ghi)["truong"]
         assert kq_ghi["so_sua_loai"] == 1 and kq_ghi["so_ngoai_mau"] == 1

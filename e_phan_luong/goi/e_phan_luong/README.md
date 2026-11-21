@@ -51,19 +51,21 @@ Core điều phối chuỗi (b); engine không gọi engine khác. Hai bước a
 
 Giữ **nguyên đối tượng tệp** trong `chuyen_tiep.phan_luong.tep_lo`, cùng `phien_ban: 1`, `bam_tep`, `khau`, `khong_can_ai` trong khối `phan_luong`. Chuyển tiếp mục tiêu ≤ 4 KiB, trần phong bì chung 64 KiB. Core thật đòi đối tượng có khóa `tep_id` và tệp cùng việc; không thay bằng chuỗi ID trơn.
 
-Hóa đơn XML: mã = `mau_so-ky_hieu-so_hoa_don`, ngày = `ngay_lap`, tiền = `tong_thanh_toan`, đối tác = `ma_so_thue_ban` (băm trước khi lưu ngăn), `can_kiem_tra: true` thành Đỏ cứng. ZIP mở `chi_tiet_nguon` qua Core; chỉ bỏ/đếm tệp lỗi hoặc không hỗ trợ và cảnh báo nguồn chưa đủ. Đặt `ma_module`, `nguong_json`, `loai_nghiep_vu` thuộc danh mục.
+Hóa đơn XML: mã = `mau_so-ky_hieu-so_hoa_don-ma_so_thue_ban` (MST người bán nguyên văn để chống trùng giữa người bán; thiếu MST thì mã ba phần — Q12, Anh duyệt 21/11/2026: MST và hóa đơn công khai trên CSDL thuế, ngoại lệ C4 chỉ cột `ma`), ngày = `ngay_lap`, tiền = `tong_thanh_toan`, đối tác = `ma_so_thue_ban` (băm trước khi lưu ngăn), `can_kiem_tra: true` thành Đỏ cứng. ZIP mở `chi_tiet_nguon` qua Core; chỉ bỏ/đếm tệp lỗi hoặc không hỗ trợ và cảnh báo nguồn chưa đủ. Đặt `ma_module`, `nguong_json`, `loai_nghiep_vu` thuộc danh mục.
 
 ### Kết quả kiểm và nộp lại
 
 ```json
 {"phien_ban":1,"ma_module":"demo_thanh_toan","ket_qua":[
  {"ma_luot":"PL-DEMO-…","ma":"PC-DEMO-0001","khau":"ktt_duyet",
-  "ket_qua":"dat","so_tien_sai":{"so":"0","tien_te":"VND"},"loai_dung":null}]}
+  "ket_qua":"dat","so_tien_sai":{"so":"0","tien_te":"VND"},"loai_dung":null,"giai_thich":null}]}
 ```
 
 `ket_qua` nhận `dat`, `sai`, `khong_kiem`. Dòng `sai` bắt buộc có `so_tien_sai` cùng tiền tệ ngưỡng; module quy đổi trước khi gửi (Q7). Gửi kèm `nguong` như lô hoặc đặt `nguong_json` ở bước ghi kết quả (Q1). Loại/nguồn loại đọc từ `dong_luot` (Q2); `loai_dung` nếu sửa phải thuộc danh mục. Kết quả tính cho loại đúng và đếm sai loại theo nguồn để Admin sửa quy tắc/prompt. Người kiểm, ghi chú, chứng từ giữ ở module.
 
-Trả `so_dong_nhan`, `so_trung`, `so_ngoai_mau`, `so_cap_doi_bac`, `so_sua_loai`, `phien_ban_engine`. Trùng (lượt, mã, khâu) bỏ qua và đếm; mã ngoài lượt ghi nguồn ngoài mẫu; lượt không tồn tại bị từ chối. `so_cap_doi_bac` chỉ là số cặp đã đổi, không tiết lộ bậc từng cặp.
+**AI sai (Q13–Q16, Anh chốt 21/11/2026):** AI đã kiểm 100% trước bước này; tỷ lệ của engine là tỷ lệ giao người kiểm lại. Dòng `sai` mà AI chưa gắn cờ (`CO_DO_CUNG`) là **AI bỏ sót** → đổi bậc như phiếu (lên bậc ngay, trần 30% cho lỗi nhỏ, ≥ SAD về 30% + `rui_ro_cao`, ≥ TE 100%). Dòng AI đã gắn cờ mà sai thật là AI đúng → không đổi bậc (vẫn cộng thống kê rủi ro 12 tháng). Hạ bậc Clopper-Pearson giữ nguyên. AI bỏ sót hoặc AI phân loại sai (`loai_dung` khác loại AI gán) bắt buộc có `giai_thich` (≤ 2.000 ký tự; Excel cột "Giải thích"), thiếu → `THIEU_GIAI_THICH`, từ chối cả tệp trước khi ghi. Giải thích không lưu trong ngăn; chỉ đi sang tệp bài học.
+
+Trả `so_dong_nhan`, `so_trung`, `so_ngoai_mau`, `so_cap_doi_bac`, `so_sua_loai`, `so_ai_sai`, `tep_bai_hoc`, `phien_ban_engine`. `tep_bai_hoc` (JSON, schema `tests/schema/tep_bai_hoc.schema.json`) là danh sách AI sai cho Admin: mã, loại, loại đúng, nguồn loại, nguồn mẫu, mức sai, giải thích, `da_ghi_truoc` khi gửi lại; không có AI sai thì `null`. Trùng (lượt, mã, khâu) bỏ qua và đếm; mã ngoài lượt ghi nguồn ngoài mẫu; lượt không tồn tại bị từ chối. `so_cap_doi_bac` chỉ là số cặp đã đổi, không tiết lộ bậc từng cặp.
 
 Q5: xét lần hoàn tất gần nhất của cùng (module, khâu, mã). Đỏ chưa có kết quả `dat`/`sai` giữ Đỏ `NOP_LAI`; `khong_kiem` chưa giải phóng. Đã kiểm hoặc lần trước Xanh thì xét bình thường ở việc mới. Kết quả ẩn sau 365 ngày vẫn được tra để giải phóng trong thời gian lượt còn giữ 400 ngày. Core giao lại cùng việc dùng lại lượt và quyết định.
 
@@ -173,6 +175,7 @@ duoc_chon = Fraction(h, 2**256) < Fraction(p)
 | `LUOT_KHONG_TON_TAI` | Không tìm thấy lượt phân luồng. Vui lòng chạy lại kiểm tra cảnh báo. |
 | `NGAN_BAN` | Dữ liệu thống kê đang được cập nhật. Vui lòng thử lại sau ít phút. |
 | `VUOT_GIOI_HAN` | Tệp vượt giới hạn xử lý. Vui lòng tách lô nhỏ hơn. |
+| `THIEU_GIAI_THICH` | Dòng AI kiểm sai cần ghi giải thích để AI học từ lỗi. Vui lòng điền cột Giải thích rồi gửi lại. |
 
 ## Đang chờ Core
 

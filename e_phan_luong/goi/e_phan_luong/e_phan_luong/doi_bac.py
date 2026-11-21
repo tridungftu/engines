@@ -22,6 +22,7 @@ class MotKetQua:
     nguon_mau: str
     ket_qua: str
     muc_sai: str | None = None
+    ai_da_gan_co: bool = False
 
 
 def cap_nhat(
@@ -45,7 +46,9 @@ def cap_nhat(
     loi_ngoai_mau_12t = tt.loi_ngoai_mau_12t + int(sai and kq.nguon_mau == MAU_NGOAI)
     bac, che_do, mau_sach = tt.bac, tt.che_do, tt.mau_sach_toan_bo
 
-    if tt.loai != CHUA_PHAN_LOAI:
+    # H2: AI đã chỉ đúng lỗi bằng CO_DO_CUNG thì chỉ cộng thống kê rủi ro
+    # nghiệp vụ. Giữ cả chế độ, mốc đổi bậc và bộ đếm sạch khi đang 100%.
+    if tt.loai != CHUA_PHAN_LOAI and not (sai and kq.ai_da_gan_co):
         doi_thang = bac not in cs.bac
         if doi_thang:
             cac_bac_tren = [b for b in cs.bac if b >= bac]

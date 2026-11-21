@@ -93,7 +93,7 @@ def test_xml_mot_hoa_don_co_chi_tiet_xml_van_dung_truong(chi_tiet):
     assert truong["so_nghiep_vu"] == truong["so_do_bat_buoc"] == 1
     assert truong["luong"] == "do" and truong["can_nguoi_kiem"] is True
     assert tep["nghiep_vu"] == [{
-        "ma": "1-C26TAA-0000123", "luong": "do", "ly_do": ["CO_DO_CUNG"],
+        "ma": "1-C26TAA-0000123-0100000001", "luong": "do", "ly_do": ["CO_DO_CUNG"],
         # PL-4: mặc định lượt đầu (hồ sơ trống) coi người bán là đối tác mới.
         "co": ["DOI_TAC_MOI", "CUOI_KY"], "loai": "hoa_don_dau_vao", "nguon_loai": "module",
     }]
@@ -128,7 +128,7 @@ def test_zip_mo_doi_tuong_tep_id_phan_luong_tung_hoa_don_va_canh_bao_bo(monkeypa
     truong, tep = ket_qua(core, chay(core, pb))
     assert da_mo == [pb["truong"]["chi_tiet_nguon"]["tep_id"]]
     assert truong["so_nghiep_vu"] == truong["so_do_bat_buoc"] == 2
-    assert [d["ma"] for d in tep["nghiep_vu"]] == ["1-C26TAA-0000123", "1-C26TAA-0000124"]
+    assert [d["ma"] for d in tep["nghiep_vu"]] == ["1-C26TAA-0000123-0100000001", "1-C26TAA-0000124-0100000001"]
     assert all(d["luong"] == "do" and "CO_DO_CUNG" in d["ly_do"] for d in tep["nghiep_vu"])
     assert "Bỏ 1 hóa đơn không đọc được" in truong["canh_bao"]
     assert truong["bam_dau_vao"] == "sha256:" + sha256(raw).hexdigest()
@@ -246,7 +246,11 @@ def test_c4_mst_ban_va_chi_tiet_khong_xuat_hien_trong_xem_ngan(nguon):
     ket_qua(core, chay(core, pb))
     for bang in app.phieu["ngan_du_lieu"]:
         ds = core.xem_ngan(app.ma, bang["bang"])
-        chu = json.dumps(ds, ensure_ascii=False)
+        # PL-10A (Anh duyệt 21/11/2026): MST người bán chỉ được nằm trong cột ma
+        # của dong_luot/ket_qua_kiem; mọi cột và bảng khác vẫn cấm MST thô.
+        cho_phep_ma = bang["bang"] in ("dong_luot", "ket_qua_kiem")
+        ngoai_ma = [{k: v for k, v in dong.items() if not (cho_phep_ma and k == "ma")} for dong in ds]
+        chu = json.dumps(ngoai_ma, ensure_ascii=False)
         assert "0100000001" not in chu and "0100000002" not in chu
         for dong in ds:
             assert not set(dong) & {"so_tien", "ngay", "doi_tac", "dien_giai", "noi_dung", "ma_so_thue_ban"}

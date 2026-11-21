@@ -1,6 +1,7 @@
 """PL-9B: C4/C5 theo quyết định lead, đã kiểm bằng Core giả (CoreGia).
 
-Ngoại lệ C4 chỉ ở tổng 7 ngày theo phiếu §4.1; ngoại lệ C5 chỉ là hai
+Ngoại lệ C4: tổng 7 ngày theo phiếu §4.1 và MST người bán trong đúng
+cột ma hóa đơn (Anh duyệt 21/11/2026, PL-10A). Ngoại lệ C5 chỉ là hai
 tên trường của hợp đồng, tuyệt đối không miễn kiểm giá trị bên trong.
 """
 from copy import deepcopy
@@ -233,6 +234,30 @@ def dau_cam(vong):
     return tien, chu
 
 
+def mst_trong_ma_hoa_don(vong, bang, duong, o, cam, ma_luot):
+    """Anh duyệt 21/11: chỉ miễn MST bán trong đúng mã của đường hóa đơn.
+
+    Không miễn MST mua, cột khác, mã giao dịch JSON/Excel hay cả hàng.
+    """
+    if bang not in {"dong_luot", "ket_qua_kiem"} or duong != "/ma":
+        return False
+    if not any(nl == "audit.phan_luong_hoa_don@1"
+               and ra.get("truong", {}).get("ma_luot") == ma_luot
+               for nl, ra in vong.ra):
+        return False
+    for pb in vong.dau_vao:
+        if pb.get("loai") != "truong":
+            continue
+        t = pb.get("truong", {})
+        mst = t.get("ma_so_thue_ban")
+        phan = [t.get(k) for k in ("mau_so", "ky_hieu", "so_hoa_don")]
+        if (isinstance(mst, str) and mst.strip() == cam
+                and all(isinstance(p, str) and p for p in phan)
+                and o == "-".join([*phan, mst.strip()])):
+            return True
+    return False
+
+
 @pytest.mark.parametrize("bang", COT)
 def test_c4_khong_o_nao_chua_chi_tiet_nghiep_vu(vong, bang):
     tien, chu = dau_cam(vong)
@@ -257,7 +282,10 @@ def test_c4_khong_o_nao_chua_chi_tiet_nghiep_vu(vong, bang):
                 thoi_diem = (duong.rsplit("/", 1)[-1] in
                               {"tao_luc", "sua_luc", "het_han_luc", "doi_bac_luc"}
                               and re.fullmatch(r"\d{4}-\d{2}-\d{2}T.+", van_ban))
-                if cam in van_ban and not (la_ngay and (thoi_diem or tong_7_ngay)):
+                if cam in van_ban and not (
+                    la_ngay and (thoi_diem or tong_7_ngay)
+                    or mst_trong_ma_hoa_don(vong, bang, duong, o, cam, dong.get("ma_luot"))
+                ):
                     loi.add(f"{bang}[{i}]{duong}: chứa {cam}")
             if bang == "ho_so_hanh_vi" and duong.startswith("/tong_7_ngay"):
                 continue  # Chỉ miễn dò tiền/ngày; đối tác và nội dung vẫn dò ở trên.

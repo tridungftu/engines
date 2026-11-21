@@ -89,6 +89,9 @@ def _doc_giai_thich(gia_tri: object) -> str | None:
     if not isinstance(gia_tri, str):
         raise loi("DU_LIEU_KHONG_HOP_LE")
     gia_tri = unicodedata.normalize("NFC", gia_tri)
+    # Xuống dòng Windows (CRLF) hoặc CR đơn → LF: văn bản dán từ Windows; openpyxl
+    # không lxml (đúng requirements.lock) cũng đọc CR trong ô thành LF.
+    gia_tri = gia_tri.replace("\r\n", "\n").replace("\r", "\n")
     # Kiểm trước strip để ký tự điều khiển ở hai đầu cũng không bị bỏ ngầm.
     if any(unicodedata.category(c) == "Cc" and c not in "\n\t" for c in gia_tri):
         raise loi("DU_LIEU_KHONG_HOP_LE")

@@ -75,6 +75,8 @@ def test_json_khong_co_khoa_giai_thich():
     ("á" * 2000, "á" * 2000),
     (unicodedata.normalize("NFD", "á" * 2000), "á" * 2000),
     ("  " + "á" * 2000 + "  ", "á" * 2000),
+    # Lead: CRLF/CR → LF (văn bản dán từ Windows), không từ chối.
+    ("DEMO\r\nDòng 2", "DEMO\nDòng 2"), ("\rDEMO\r", "DEMO"),
 ])
 def test_json_chuan_hoa_va_bien_2000(gia_tri, chuan):
     assert _doc(_dong(giai_thich=gia_tri)).dong[0].giai_thich == chuan
@@ -83,9 +85,9 @@ def test_json_chuan_hoa_va_bien_2000(gia_tri, chuan):
 @pytest.mark.parametrize("gia_tri", [
     "á" * 2001, unicodedata.normalize("NFD", "á" * 2001),
     123, 1.25, True, [], {},
-    *["DEMO" + chr(i) + "giải thích" for i in (*range(9), 11, 12, *range(13, 32),
+    *["DEMO" + chr(i) + "giải thích" for i in (*range(9), 11, 12, *range(14, 32),
                                                *range(127, 160))],
-    "\rDEMO", "DEMO\r", "\x1c",  # strip không được che mất ký tự điều khiển.
+    "\x1cDEMO", "DEMO\x1c", "\x1c",  # strip không được che mất ký tự điều khiển.
 ])
 def test_json_tu_choi_giai_thich_sai(gia_tri):
     _bat_loi(_doc, _dong(giai_thich=gia_tri))
@@ -151,6 +153,9 @@ def test_excel_10_cot_giu_nguyen_tung_o_9_cot_ban_truoc():
     ("á" * 2000, "á" * 2000), (123, "123"), (12.5, "12.5"), (0, "0"),
     (date(2026, 10, 30), "2026-10-30 00:00:00"),
     (datetime(2026, 10, 30, 12, 34, 56), "2026-10-30 12:34:56"),
+    # Lead: dựng ô CRLF bằng openpyxl không lxml phụ thuộc nền tảng (Windows ghi CR CR LF);
+    # CRLF → LF đã kiểm ở mức JSON, Excel thật lưu xuống dòng ô là LF.
+    ("DEMO\nDòng 2", "DEMO\nDòng 2"),
 ])
 def test_excel_doc_nguoc_qua_json(gia_tri, chuan):
     gui = xuat_excel.doc_ds_do_da_ghi(_excel(gia_tri))
@@ -158,7 +163,7 @@ def test_excel_doc_nguoc_qua_json(gia_tri, chuan):
     assert doc_ket_qua_json(json.dumps(gui, ensure_ascii=False).encode()).dong[0].giai_thich == chuan
 
 
-@pytest.mark.parametrize("gia_tri", ["á" * 2001, "DEMO\r", "DEMO\x7f", "=1+1", "#VALUE!"])
+@pytest.mark.parametrize("gia_tri", ["á" * 2001, "DEMO\x7f", "=1+1", "#VALUE!"])
 def test_excel_tu_choi_giai_thich_sai_va_cong_thuc(gia_tri):
     _bat_loi(xuat_excel.doc_ds_do_da_ghi, _excel(gia_tri))
 

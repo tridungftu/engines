@@ -24,12 +24,14 @@ def _ds_demo():
 
 
 @pytest.mark.parametrize("lua_chon,bam_mau", [
-    ("rong", "2333ed0836a3ca34595c0a725d8d76012e632bd0f924c9f8808c084850ac747f"),
-    ("xanh", "2333ed0836a3ca34595c0a725d8d76012e632bd0f924c9f8808c084850ac747f"),
-    ("hon_hop", "2a0e2f82155f97f6810f975351af6ea2ebedbdcc9eff40194676855ac0b9365e"),
+    ("rong", "3c0260d868f2230aab5f9bca841d040fd920ed79d59689f328ce50c7cec8a953"),
+    ("xanh", "3c0260d868f2230aab5f9bca841d040fd920ed79d59689f328ce50c7cec8a953"),
+    ("hon_hop", "acef57ff27a312ea1c2f60309334267360d72637c89c7c3cac2703fdcb86887c"),
 ])
 def test_bytes_dung_mau_10_cot_pl10c(lua_chon, bam_mau):
     # PL-10C: cập nhật băm do thêm cột Giải thích, bộ lọc A:J và hướng dẫn.
+    # Lead: băm tính trong môi trường chỉ có thư viện requirements.lock (không lxml);
+    # openpyxl có lxml ghi XML khác byte.
     # 9 cột đầu được đối chiếu từng ô với PL-8 trong test_pl10c_giai_thich.py.
     # Bỏ lớp nén ZIP để chạy trên cả Windows/Linux có phiên bản zlib khác nhau.
     ds = {"rong": [], "xanh": _ds_demo()[1:2], "hon_hop": _ds_demo()}[lua_chon]

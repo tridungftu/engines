@@ -42,6 +42,7 @@ def test_bytes_dung_mau_10_cot_pl10c(lua_chon, bam_mau):
     assert bam.hexdigest() == bam_mau
 
 
+@pytest.mark.sau
 def test_20000_dong_do_duoi_30_giay():
     ds = [kieu.KetQuaDong(f"PC-DEMO-{i:05}", "do", (kieu.CO_DO_CUNG,), (),
                           "tam_ung", "module") for i in range(20_000)]

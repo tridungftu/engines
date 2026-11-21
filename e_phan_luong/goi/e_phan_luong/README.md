@@ -197,9 +197,18 @@ Từ gốc repo, đặt `PYTHONDONTWRITEBYTECODE=1`, dùng Python của `.venv`:
 python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat
 python -B -m kho_tri_thuc_sdk.thu e_phan_luong/goi/e_phan_luong
 python -B -m pytest e_phan_luong/tests -q
+KIEM_SAU=1 python -B -m pytest e_phan_luong/tests -q
 python -B e_phan_luong/tests/kiem_doc_lap.py
 sh e_phan_luong/tests/kiem_may_sach.sh <kho-wheel-offline>
 ```
+
+Lệnh pytest mặc định là **kiểm nhanh**, chạy mỗi lần sửa: giữ 20 trạng thái đầu
+cùng hạt giống của PL-9F/9H/9I và mọi ca biên cố định. Các ca đánh dấu `sau`
+tự bỏ qua với lý do "kiểm sâu: đặt KIEM_SAU=1". Lệnh có `KIEM_SAU=1` là
+**kiểm sâu**, chạy đủ 240 trạng thái và các ca quy mô lớn/hiệu năng.
+PowerShell dùng `$env:KIEM_SAU="1"` trước lệnh pytest; trở về kiểm nhanh bằng
+`Remove-Item Env:KIEM_SAU`. CI luôn chạy kiểm sâu; lead chạy kiểm sâu trước khi
+xin gộp main, hoặc yêu cầu chạy khi cần.
 
 Linux CI yêu cầu Python 3.11; Git Bash dùng được khi `PYTHON` trỏ Python 3.11. Windows: Anh tự chạy `e_phan_luong\tests\KIEM-MAY-SACH.cmd <kho-wheel-offline>`. Script tạo venv tạm, cài offline theo hash, chép gói, kiểm dependency/kiểm kê/DEMO/độc lập. Adapter `test_pl9c_dong_goi.py --kiem-ke` gọi `kiem_bam_goi.kiem` có sẵn; không cần kiểm kê ngoài gói thứ hai. Môi trường thử giữ lại cho việc xem bằng chứng, không đưa vào git.
 

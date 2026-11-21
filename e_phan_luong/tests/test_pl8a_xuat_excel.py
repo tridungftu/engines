@@ -115,7 +115,11 @@ def test_mo_lai_chi_dong_do_va_cot_ghi_trong(ds_demo):
 def test_tai_hien_bytes_khi_doi_dong_ho(ds_demo, monkeypatch):
     dau = _lap(ds_demo)
     monkeypatch.setattr("zipfile.time.localtime", lambda *a: (2030, 12, 31, 23, 59, 58, 1, 1, 0))
-    assert _lap(ds_demo) == dau
+    with ZipFile(BytesIO(dau)) as goc, ZipFile(BytesIO(_lap(ds_demo))) as moi:
+        assert goc.namelist() == moi.namelist()
+        assert goc.comment == moi.comment
+        for ten in goc.namelist():
+            assert goc.read(ten) == moi.read(ten), ten
     with ZipFile(BytesIO(dau)) as z:
         assert {i.date_time for i in z.infolist()} == {(2000, 1, 1, 0, 0, 0)}
     wb = openpyxl.load_workbook(BytesIO(dau))

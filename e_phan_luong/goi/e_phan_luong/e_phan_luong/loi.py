@@ -17,6 +17,7 @@ CAU_LOI = {
     "LUOT_KHONG_TON_TAI": "Không tìm thấy lượt phân luồng. Vui lòng chạy lại kiểm tra cảnh báo.",
     "NGAN_BAN": "Dữ liệu thống kê đang được cập nhật. Vui lòng thử lại sau ít phút.",
     "VUOT_GIOI_HAN": "Tệp vượt giới hạn xử lý. Vui lòng tách lô nhỏ hơn.",
+    "THIEU_GIAI_THICH": "Dòng AI kiểm sai cần ghi giải thích để AI học từ lỗi. Vui lòng điền cột Giải thích rồi gửi lại.",
 }
 
 THU_LAI_DUOC = frozenset({"NGAN_BAN"})

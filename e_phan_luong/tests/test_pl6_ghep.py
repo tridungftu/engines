@@ -168,7 +168,12 @@ def test_phieu_mime_va_demo_excel_tai_hien_tu_script():
     raw = BytesIO(sinh_xlsx())
     with ZipFile(raw, "a") as goi:
         goi.comment = b"DEMO - Cong ty DEMO Anh Duong"
-    assert (app.thu_muc_goi / vd["dau_vao"]["tep_demo"]).read_bytes() == raw.getvalue()
+    with ZipFile(app.thu_muc_goi / vd["dau_vao"]["tep_demo"]) as goc, ZipFile(raw) as moi:
+        # ZIP có thể nén khác byte giữa Windows/Linux; nội dung phải giống hệt.
+        assert goc.namelist() == moi.namelist()
+        assert goc.comment == moi.comment
+        for ten in goc.namelist():
+            assert goc.read(ten) == moi.read(ten), ten
     ds = CoreGia().chay_thu_demo(app)
     # Nhánh sau có thể thêm ví dụ của năng lực khác; PL-6 chỉ khẳng định đủ 2 ví dụ phân luồng.
     assert len(ds) == len(phieu["chay_thu_demo"])

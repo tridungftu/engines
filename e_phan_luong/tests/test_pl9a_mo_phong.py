@@ -4,7 +4,7 @@ Chạy báo cáo: python -B -m pytest e_phan_luong/tests/test_pl9a_mo_phong.py -
 Chỉ ghim đồng hồ/hạt giống; không thay thuật toán chọn mẫu, đổi bậc hoặc ngăn.
 Đáp án độc lập: Fraction + công thức CP 0 lỗi; CDF nhị thức chính xác
 tại ngưỡng để xét CP có lỗi. Không gọi thong_ke/doi_bac để tính đáp án.
-Ca lớn có tên riêng, chạy mặc định và không xfail.
+Ca quy mô lớn có tên riêng, chạy khi KIEM_SAU=1 và không xfail.
 """
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from copy import deepcopy
@@ -303,6 +303,7 @@ def test_script_demo_cung_hat_giong_cung_bytes():
         assert du_cp(0, n, q)
 
 
+@pytest.mark.sau
 def test_mo_phong_12_thang_ba_loai_chot_ky_va_doi_bac(cac_ca_nang):
     dap_an, bang = cac_ca_nang["chinh"].result(timeout=120)
     sach = dap_an[demo.LOAI_SACH]
@@ -313,6 +314,7 @@ def test_mo_phong_12_thang_ba_loai_chot_ky_va_doi_bac(cac_ca_nang):
     assert dap_an[demo.LOAI_LOI].sad == 3
 
 
+@pytest.mark.sau
 def test_ca_lon_8_phan_tram_khoang_1000_mau_khong_ap_dat_bac_30(cac_ca_nang):
     """CA QUY MÔ LỚN: quy tắc CP hiện hành; lead đang hỏi Anh về xuống 20%."""
     dap_an, _ = cac_ca_nang["lon"].result(timeout=120)
@@ -368,6 +370,7 @@ def kiem_tan_suat():
     return n
 
 
+@pytest.mark.sau
 def test_tan_suat_10000_dong_bac_20_qua_cong_cong_khai(cac_ca_nang):
     assert 1900 <= cac_ca_nang["tan_suat"].result(timeout=120) <= 2100
 

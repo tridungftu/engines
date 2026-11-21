@@ -1,0 +1,31 @@
+{
+  "ghi_chu": "Đề xuất cửa D2 ngày 21/11/2026, chưa là hợp đồng SDK 2.2.0. Không chép các khóa này vào engine.json khi SDK chưa nhận. Không có cấu hình engine, ngăn, bí mật hoặc thao tác quản trị mới.",
+  "giao_dien_tham_so": [
+    {
+      "nang_luc": "excel.toan_ven@1",
+      "ten": "Soạn ô đích và bộ nhóm",
+      "tep": "ui/tham_so.js",
+      "tham_so": ["o_dich", "nhan_o_dich_json", "bo_nhom_json", "kiem_nguon_kl"],
+      "quyen": "admin_core"
+    },
+    {
+      "nang_luc": "excel.doc_bang@1",
+      "ten": "Soạn khuôn cột",
+      "tep": "ui/tham_so.js",
+      "tham_so": ["khuon", "khuon_cot_json", "tien_te"],
+      "quyen": "admin_core"
+    }
+  ],
+  "hop_dong_nhung_du_kien": {
+    "ham": "default(goc, KttCore, nguCanh)",
+    "nguCanh": {
+      "nang_luc": "Mã một trong hai năng lực ở trên, do Core chọn và ghim.",
+      "doc": "Callback Core: trả Promise<{tham_so, phien_ban, ds_sheet?}>. Tham số thuộc bước quy trình; ds_sheet từ tệp mẫu do Core đọc, không tự phát hiện bằng engine.",
+      "luu": "Callback Core tùy chọn: luu(tham_so, phien_ban) kiểm quyền/CAS và lưu đúng bước. Trả Promise<{phien_ban}> mới. 409 hoặc THAM_SO_XUNG_DOT: giữ bản sửa, khóa lưu tới khi tải lại.",
+      "tham_so": "Có thể truyền trực tiếp thay doc để nhúng cục bộ; thành phần chỉ trả dữ liệu qua xuat().",
+      "phien_ban": "Phiên bản bước dùng CAS; thiếu thì khóa nút Lưu vào bước.",
+      "ds_sheet": "Danh sách tên sheet tùy chọn. Chưa có tệp mẫu thì nhập tên sheet; engine vẫn kiểm tệp lúc chạy."
+    },
+    "tra": "Promise<{xuat(), kiem(), nap(), huy()}>. xuat() trả bản sao tham số, mọi tham số JSON vẫn là chuỗi, giữ tham số ngoài trình soạn; lỗi có danh sách {truong,cau}. Không tự ghi vào cau_hinh/ngan engine."
+  }
+}

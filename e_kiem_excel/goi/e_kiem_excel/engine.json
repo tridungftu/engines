@@ -106,14 +106,16 @@
           "ten": "Nhãn tự tìm ô đích (JSON)",
           "kieu": "van_ban",
           "mac_dinh": "",
-          "toi_da": 4096
+          "toi_da": 4096,
+          "mo_ta": "Chỉ dùng khi o_dich trống. Cấu trúc: mảng chuỗi không rỗng; từng chuỗi là một từ khóa tìm nhãn. Tìm 80 dòng đầu/12 cột đầu của sheet hiện, lấy số đầu trong 6 ô bên phải nhãn. Trống: không tìm nhãn; không có ô đích thì K7 có mục Kiểm soát. Từ khóa chứa chuỗi; tiền tố = khớp nguyên từ/cụm; # khớp một hoặc nhiều chữ số, không regex. Tối đa 4 KiB UTF-8. Mẫu: [\"=tổng cộng\",\"giá trị đề nghị\"]."
         },
         {
           "ma": "bo_nhom_json",
           "ten": "Bộ nhóm dữ liệu gốc (JSON)",
           "kieu": "van_ban",
           "mac_dinh": "",
-          "toi_da": 32768
+          "toi_da": 32768,
+          "mo_ta": "JSON object v1: phien_ban=1, ten_bo (chữ), nhom (mảng). Mỗi nhóm: ma/ten/tai_lieu (chữ), khi (mảng điều kiện: vung,tat_ca; khong_co tùy chọn). Trống: Chưa phân nhóm. Tối đa 30 nhóm/200 từ khóa/32 KiB. Chi tiết từng cấp: README. Mẫu: {\"phien_ban\":1,\"ten_bo\":\"DEMO\",\"nhom\":[{\"ma\":\"gia\",\"ten\":\"Giá DEMO\",\"tai_lieu\":\"Bảng DEMO\",\"khi\":[{\"vung\":[\"tieu_de_cot\"],\"tat_ca\":[[\"đơn giá\"]]}]}]}."
         },
         {
           "ma": "kiem_nguon_kl",
@@ -221,7 +223,7 @@
           "kieu": "van_ban",
           "mac_dinh": "",
           "toi_da": 32768,
-          "mo_ta": "Bắt buộc khi chọn Bảng theo khuôn cột."
+          "mo_ta": "Khi khuon=tong_quat: object v1, phien_ban=1; cot (mảng 1–30 cột), dong_dung (mảng từ khóa, rỗng đọc hết). Mỗi cột: ma (chữ duy nhất), tu_khoa (mảng chữ), kieu (van_ban/so/so_tien/ngay), bat_buoc (boolean). Cần ít nhất 1 cột bắt buộc. Tối đa 200 từ khóa/32 KiB. Chi tiết: README. Mẫu: {\"phien_ban\":1,\"cot\":[{\"ma\":\"ten\",\"tu_khoa\":[\"mô tả\"],\"kieu\":\"van_ban\",\"bat_buoc\":true}],\"dong_dung\":[\"=tổng\"]}."
         },
         {
           "ma": "tien_te",

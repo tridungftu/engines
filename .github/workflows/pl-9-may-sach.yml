@@ -1,0 +1,35 @@
+name: e_phan_luong may sach
+on:
+  push:
+    paths: ["e_phan_luong/**", "docs/goi-gui-engine/sdk-2.2.0/**", ".github/workflows/pl-9-may-sach.yml"]
+  pull_request:
+    paths: ["e_phan_luong/**", "docs/goi-gui-engine/sdk-2.2.0/**", ".github/workflows/pl-9-may-sach.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  may-sach:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Chuẩn bị wheel có SHA-256 trong lock
+        run: |
+          python -m pip download --only-binary=:all: --require-hashes --no-deps -r e_phan_luong/goi/e_phan_luong/requirements.lock -d .venv/banh
+      - name: Cài sạch offline và kiểm bằng CoreGia
+        run: sh e_phan_luong/tests/kiem_may_sach.sh .venv/banh
+      - name: Cài công cụ test (pytest, jsonschema) cho kiểm đầy đủ
+        run: python -m pip install pytest==9.1.1 jsonschema==4.26.0
+      - name: Kiểm đầy đủ ba lệnh trên Python 3.11
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONUTF8: "1"
+        run: |
+          python -m pip install --no-index --no-deps docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl
+          python -m pip install --no-index --find-links .venv/banh --require-hashes --no-deps -r e_phan_luong/goi/e_phan_luong/requirements.lock
+          python -B -m kho_tri_thuc_sdk.thu e_phan_luong/goi/e_phan_luong
+          python -B -m pytest e_phan_luong/tests -q -p no:cacheprovider
+          python -B e_phan_luong/tests/kiem_doc_lap.py

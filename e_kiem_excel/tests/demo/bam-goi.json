@@ -3,8 +3,8 @@
   "bam": "SHA-256 bytes nguyên trạng",
   "tep": {
     "CHANGELOG.md": {
-      "bytes": 3513,
-      "sha256": "b58f09a60c517d454ce51b89f897a240ba0a6a2670e98e09b8a490b9e0ff3029"
+      "bytes": 4199,
+      "sha256": "2db71bcc7524f973d086fd0bf5684aa01d3fe5345a36ec79b061c53937d14e41"
     },
     "demo/bang-kl-DEMO.xlsx": {
       "bytes": 4508,
@@ -71,20 +71,36 @@
       "sha256": "820b34509482de02dde7fe3f2643ad0ee3afa09c17832ee03ddaf3755f19f19f"
     },
     "engine.json": {
-      "bytes": 8885,
-      "sha256": "ccdfe2e252dd94f97425773fdfeab705aa29dce38248674f80f97bb316a410d3"
+      "bytes": 10326,
+      "sha256": "ded89c3c540cf207249953240d8133f056cbe48ac5cdaae355bd2ad558628742"
+    },
+    "KHAI-SDK-2.1.json": {
+      "bytes": 1954,
+      "sha256": "fbcd02cff5f49378d0186a0790c5934bfd0b6bf7a1b41bf516c17116ab323775"
     },
     "NGUON.md": {
-      "bytes": 17191,
-      "sha256": "a9e2e03b1f423071d192ff1f9c3f74b638318d0fd03b5f72bb3cf8d50411f394"
+      "bytes": 18146,
+      "sha256": "0a8a0d7a0fed72aef4ceeadd3859db6a9c75e240059e5a41be3bfe36416a8603"
     },
     "README.md": {
-      "bytes": 5951,
-      "sha256": "1fe66edd93ac09749fca4de59eb57f57461c72c363b86de894ae48e5497258ff"
+      "bytes": 13974,
+      "sha256": "38d6a0935154700cfa3b2b5ec662ac1a85c6bc791558553e1f9e012470cf56fb"
     },
     "requirements.lock": {
       "bytes": 631,
       "sha256": "d82a377d03f0489bbfaccaa739373b000b45dd519b749a585edec90874dc99ec"
+    },
+    "ui/du_lieu.js": {
+      "bytes": 8960,
+      "sha256": "185545b12d803edf4283840bab2f829dee81ca466c28642327dc30ede088ec08"
+    },
+    "ui/kieu_dang.js": {
+      "bytes": 3157,
+      "sha256": "a00bb04527ca52fdbf7ad913c3106353c96196ac9926f583c4f74688f58bbac8"
+    },
+    "ui/tham_so.js": {
+      "bytes": 18615,
+      "sha256": "56875ca51e781c8150d4aaeeed7632fa78c6952174c257fa51d63bf314bd5952"
     }
   }
 }

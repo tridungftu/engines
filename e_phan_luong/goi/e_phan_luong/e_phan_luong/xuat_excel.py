@@ -22,6 +22,7 @@ from openpyxl.writer.excel import ExcelWriter
 
 from . import kieu
 from .kieu import KetQuaDong
+from .ket_qua import _doc_giai_thich
 from .loi import loi
 from .tien import doc_tien, tien_ra
 
@@ -46,7 +47,7 @@ TEN_CO = {
     kieu.NHAP_TAY: "Nhập tay",
 }
 _COT = ("Mã", "Lý do", "Cờ", "Loại", "Nguồn loại", "Kết quả",
-        "Số tiền sai", "Tiền tệ", "Loại đúng")
+        "Số tiền sai", "Tiền tệ", "Loại đúng", "Giải thích")
 _NHAN = ("ma_luot", "khau", "ma_module", "phien_ban_engine")
 _MOC = datetime(2000, 1, 1)
 _NGAY_ZIP = (2000, 1, 1, 0, 0, 0)
@@ -137,8 +138,9 @@ def lap_ds_do(ds: Sequence[KetQuaDong], *, ma_luot, ma_module, khau,
             dong += 1
             for cot, gia_tri in enumerate((nv.ma, ly_do, co, nv.loai, nv.nguon_loai), 1):
                 _ghi_chu(ws, dong, cot, _chu(gia_tri, 32767) if gia_tri else "")
-            for cot in range(6, 10):
+            for cot in range(6, 11):
                 ws.cell(dong, cot).number_format = "@"
+            ws.cell(dong, 10).alignment = Alignment(vertical="top", wrap_text=True)
         dv = DataValidation(type="list", formula1='"dat,sai,khong_kiem"',
                             allow_blank=True)
         dv.showErrorMessage = True
@@ -149,8 +151,8 @@ def lap_ds_do(ds: Sequence[KetQuaDong], *, ma_luot, ma_module, khau,
         if dong >= 3:
             dv.add(f"F3:F{dong}")
         ws.freeze_panes = "F3"
-        ws.auto_filter.ref = f"A2:I{dong}"
-        for cot, rong in enumerate((25, 48, 40, 25, 22, 18, 25, 12, 25), 1):
+        ws.auto_filter.ref = f"A2:J{dong}"
+        for cot, rong in enumerate((25, 48, 40, 25, 22, 18, 25, 12, 25, 60), 1):
             ws.column_dimensions[get_column_letter(cot)].width = rong
         hd = wb.create_sheet("Huong dan")
         for dong, noi_dung in enumerate((
@@ -162,6 +164,7 @@ def lap_ds_do(ds: Sequence[KetQuaDong], *, ma_luot, ma_module, khau,
                 "Nhập tiền bằng chuỗi thập phân, dấu chấm phần lẻ, không phân nhóm.",
                 "Cột Số tiền sai có dạng văn bản để giữ chính xác số đã nhập.",
                 "Loại đúng: điền mã loại trong danh mục nếu cần sửa; còn lại để trống.",
+                "Giải thích: bắt buộc khi AI kiểm sai (Kết quả = sai ở dòng AI chưa gắn cờ, hoặc sửa Loại đúng cho loại AI gán) — ghi vì sao AI sai để AI học.",
                 "Module đọc lại tệp để lập JSON kết quả kiểm và gửi kèm ngưỡng phù hợp.",
         ), 1):
             _ghi_chu(hd, dong, 1, noi_dung)
@@ -183,9 +186,9 @@ def _doc_mau(wb):
     ws = wb["Can kiem"]
     if ws.max_row > _TOI_DA_DONG + 2:
         raise loi("VUOT_GIOI_HAN")
-    if (ws.max_column != 9 or tuple(o.value for o in ws[2]) != _COT
+    if (ws.max_column != 10 or tuple(o.value for o in ws[2]) != _COT
             or tuple(ws.cell(1, c).value for c in (1, 3, 5, 7)) != _NHAN
-            or ws.cell(1, 9).value is not None):
+            or any(ws.cell(1, c).value is not None for c in (9, 10))):
         raise loi("DU_LIEU_KHONG_HOP_LE")
     ma_luot, khau, ma_module, phien_ban = (ws.cell(1, c).value for c in (2, 4, 6, 8))
     if any(o.data_type == "f" for o in ws[1]):
@@ -193,11 +196,13 @@ def _doc_mau(wb):
     _kiem_metadata(ma_luot, khau, ma_module, phien_ban)
     ket_qua = []
     for hang in ws.iter_rows(min_row=3):
-        ma, _, _, _, _, kq, so, tien_te, loai_dung = (o.value for o in hang)
+        ma, _, _, _, _, kq, so, tien_te, loai_dung, giai_thich = (o.value for o in hang)
         if kq is None or kq == "":
             continue
         if kq not in _KET_QUA or any(o.data_type in ("f", "e") for o in hang):
             raise loi("DU_LIEU_KHONG_HOP_LE")
+        # Biên Excel: ô số/ngày được đọc thành chữ như các ô nội dung văn bản.
+        giai_thich = _doc_giai_thich(None if giai_thich is None else str(giai_thich))
         _chu(ma)
         if loai_dung == "":
             loai_dung = None
@@ -215,7 +220,8 @@ def _doc_mau(wb):
                 so = Decimal(repr(so))
             tien = tien_ra(doc_tien({"so": so, "tien_te": tien_te}))
         ket_qua.append({"ma_luot": ma_luot, "ma": ma, "khau": khau,
-                        "ket_qua": kq, "so_tien_sai": tien, "loai_dung": loai_dung})
+                        "ket_qua": kq, "so_tien_sai": tien, "loai_dung": loai_dung,
+                        "giai_thich": giai_thich})
     return {"phien_ban": 1, "ma_module": ma_module, "ket_qua": ket_qua}
 
 

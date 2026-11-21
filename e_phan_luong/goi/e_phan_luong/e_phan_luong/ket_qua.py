@@ -82,6 +82,22 @@ def _doc_tien(gia_tri: object) -> Tien:
     return Tien(doc_so_thap_phan(gia_tri.get("so")), tien_te)
 
 
+def _doc_giai_thich(gia_tri: object) -> str | None:
+    """Chuẩn hóa giải thích người kiểm; chỉ kiểm định dạng, chưa bắt buộc điền."""
+    if gia_tri is None:
+        return None
+    if not isinstance(gia_tri, str):
+        raise loi("DU_LIEU_KHONG_HOP_LE")
+    gia_tri = unicodedata.normalize("NFC", gia_tri)
+    # Kiểm trước strip để ký tự điều khiển ở hai đầu cũng không bị bỏ ngầm.
+    if any(unicodedata.category(c) == "Cc" and c not in "\n\t" for c in gia_tri):
+        raise loi("DU_LIEU_KHONG_HOP_LE")
+    gia_tri = gia_tri.strip()
+    if len(gia_tri) > 2000:
+        raise loi("DU_LIEU_KHONG_HOP_LE")
+    return gia_tri or None
+
+
 def doc_ket_qua_json(du_lieu: bytes) -> KetQuaTep:
     """Đọc UTF-8 có/không BOM; kiểm mọi dòng trước khi bỏ trùng.
 
@@ -136,13 +152,14 @@ def doc_ket_qua_json(du_lieu: bytes) -> KetQuaTep:
                 raise loi("DU_LIEU_KHONG_HOP_LE")
         else:
             so_tien_sai = _doc_tien(so_tien_sai)
+        giai_thich = _doc_giai_thich(muc.get("giai_thich"))
         khoa = (ma_luot, ma, khau)
         if khoa in da_gap:
             so_trung += 1
             continue
         da_gap.add(khoa)
         dong.append(DongKetQua(
-            chi_so, ma_luot, ma, khau, ket_qua, so_tien_sai, loai_dung,
+            chi_so, ma_luot, ma, khau, ket_qua, so_tien_sai, loai_dung, giai_thich,
         ))
     return KetQuaTep(ma_module, nguong, tuple(dong), so_trung)
 

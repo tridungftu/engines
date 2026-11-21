@@ -321,7 +321,11 @@ def _trang_thai_ngau_nhien(hat):
         ts["danh_muc_loai_json"] = "{}"
     da_doc = ket_qua.doc_ket_qua_json(ma_hoa(tep))
     # Đảo vị trí trong tuple để kiểm việc khôi phục đúng thứ tự chi_so.
-    da_doc = replace(da_doc, dong=tuple(reversed(da_doc.dong)))
+    # PL-10B: ranh giới DongKetQua phải có giải thích cho các ca AI sai.
+    # Oracle đọc ngăn PL-9G và 240 trạng thái/ngân sách trang giữ nguyên.
+    da_doc = replace(da_doc, dong=tuple(replace(d,
+        giai_thich="Công ty DEMO Ánh Dương: cần đối chiếu chứng từ gốc.")
+        for d in reversed(da_doc.dong)))
     return ds, het_han, da_doc, ts
 
 

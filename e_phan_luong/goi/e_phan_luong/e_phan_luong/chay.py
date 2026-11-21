@@ -85,15 +85,31 @@ def phan_luong_hoa_don(viec):
 
 @app.nang_luc("audit.ghi_ket_qua@1")
 def ghi_ket_qua(viec):
+    import json
+
     from . import __version__, ket_qua, ngan_ket_qua, quy_trinh
 
-    quy_trinh.bat_dau(viec)
     viec.tien_do(5, "Đang đọc kết quả kiểm.")
     with viec.mo_tep(viec.dau_vao["tep"]["tep_id"]) as tep:
         du_lieu = tep.read(ket_qua.TOI_DA_BYTE + 1)
     noi_dung = ket_qua.doc_ket_qua_json(du_lieu)
-    dem = ngan_ket_qua.ghi_ket_qua(viec, noi_dung)
-    return {"loai": "truong", "truong": {**dem, "phien_ban_engine": __version__}}
+    bai_hoc = []
+    dem = ngan_ket_qua.ghi_ket_qua(
+        viec, noi_dung, bai_hoc=bai_hoc, truoc_ghi=lambda: quy_trinh.bat_dau(viec))
+    tep_bai_hoc = None
+    if bai_hoc:
+        # C4: giải thích chỉ đi từ tệp đầu vào qua RAM sang tệp của Core.
+        # Tải lỗi để SDK báo lỗi thân thiện như phân luồng; gửi lại cả tệp
+        # vẫn lấy đủ bài học mà không cộng thống kê các lô đã ghi lần nữa.
+        du_lieu_bai_hoc = json.dumps({
+            "phien_ban": 1, "ma_module": noi_dung.ma_module,
+            "khau": viec.tham_so["khau"], "phien_ban_engine": __version__, "dong": bai_hoc,
+        }, ensure_ascii=False, allow_nan=False, separators=(",", ":")).encode("utf-8")
+        tep_bai_hoc = viec.tai_tep_ra("bai-hoc-ai.json", du_lieu_bai_hoc, "application/json")
+    return {"loai": "truong", "truong": {
+        **dem, "so_ai_sai": len(bai_hoc), "tep_bai_hoc": tep_bai_hoc,
+        "phien_ban_engine": __version__,
+    }}
 
 
 if __name__ == "__main__":

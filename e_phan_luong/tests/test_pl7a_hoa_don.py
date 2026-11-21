@@ -73,7 +73,7 @@ def test_anh_xa_du_truong_mot_hoa_don_mot_nghiep_vu_khong_sua_nguon():
     assert isinstance(lo, kieu.Lo)
     assert (lo.phien_ban, lo.ma_module, lo.ky, lo.nguong) == (1, "demo_thanh_toan", None, None)
     assert lo.nghiep_vu == (kieu.NghiepVu(
-        chi_so=0, ma="1-C26TAA-0000123", ngay=date(2026, 10, 30),
+        chi_so=0, ma="1-C26TAA-0000123-0100000001", ngay=date(2026, 10, 30),
         so_tien=kieu.Tien(Decimal("1100000"), "VND"),
         doi_tac="0100000001", loai="hoa_don_dau_vao", co_do_cung=True,
     ),)
@@ -149,7 +149,7 @@ def test_zip_hai_hoa_don_va_mot_hong_bo_va_dem(bom):
     raw = (DEMO / "hoa-don-chi-tiet-zip-DEMO.json").read_bytes()
     lo, so_bo = hoa_don.lo_tu_chi_tiet_zip(bom + raw, **THAM_SO)
     assert so_bo == 1
-    assert [nv.ma for nv in lo.nghiep_vu] == ["1-C26TAA-0000123", "1-C26TAA-0000124"]
+    assert [nv.ma for nv in lo.nghiep_vu] == ["1-C26TAA-0000123-0100000001", "1-C26TAA-0000124-0100000001"]
     assert [nv.chi_so for nv in lo.nghiep_vu] == [0, 1]
     assert all(nv.co_do_cung for nv in lo.nghiep_vu)
     assert lo.nghiep_vu[0] == hoa_don.lo_tu_hoa_don(_truong(), **THAM_SO).nghiep_vu[0]

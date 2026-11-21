@@ -198,9 +198,9 @@ class DapAn:
         self.sad += int(sad)
         cu = self.i
         if dong["loai"] != demo.CHUA_PHAN_LOAI:
-            if sai:
+            if sai and "CO_DO_CUNG" not in dong["ly_do"]:
                 self.i = 0 if sad else max(0, self.i - 1)
-            elif chon and self.i < 3 and self.n >= MAU_TOI_THIEU[self.i]:
+            elif not sai and chon and self.i < 3 and self.n >= MAU_TOI_THIEU[self.i]:
                 if du_cp(self.loi, self.n, NGUONG_XUONG[self.i]):
                     self.i += 1
         if self.i != cu:
@@ -244,7 +244,8 @@ def mo_phong(dong_ho, *, ca_lon=False):
                 assert (dong["luong"], dong["ly_do"]) == (
                     ("do", ["CHON_MAU"]) if chon else ("xanh", ["KHONG_CHON"]))
             if dong["luong"] == "do":
-                ds.append({"ma_luot": ra["ma_luot"], **demo.ket_qua_nguoi_kiem(dong)})
+                ds.append({"ma_luot": ra["ma_luot"], **demo.ket_qua_nguoi_kiem(dong),
+                           "giai_thich": "Công ty DEMO Ánh Dương: cần đối chiếu chứng từ gốc."})
         # Tất cả dòng trong lượt dùng bậc TRƯỚC ghi; sau đó người kiểm mới trả kết quả.
         theo_ma = {dong["ma"]: dong for dong in tep["nghiep_vu"]}
         for kq in ds:

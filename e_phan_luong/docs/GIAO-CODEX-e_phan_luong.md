@@ -587,6 +587,57 @@ Test bắt buộc (tests/test_pl9i_ghi_ket_qua.py): (a) tương đương với b
 Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest toàn engine 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; nêu số lần gọi trước/sau ở N = 1.000/5.000/10.000 (ghi mới, ghi trùng); ghi "đã kiểm bằng Core giả (CoreGia)".
 ```
 
+### 3.5 Đợt 7 — lát PL-10 sau nghiệm thu PL-9 (giao 21/11; lưu nguyên bản đã giao)
+
+Sau khi Anh duyệt gộp #146–#151 vào main và chốt H1/H2 (Q12–Q16 ở §4).
+
+#### PL-10A — H1: mã hóa đơn gồm MST người bán
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md §5.4 (nối sau e_hoa_don), §4.1 (C4); e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2, §4; e_phan_luong/goi/e_phan_luong/e_phan_luong/hoa_don.py; tests/test_pl7_*.py; tests/test_pl9b_c4_c5.py.
+Nhánh này là main sau khi gộp PL-0…PL-9 (engine 0.1.0 chưa cài lên Core thật). Không sửa README/CHANGELOG/NGUON/VIEC.md/GIAO-CODEX (lead cập nhật).
+
+LÀM VIỆC CON PL-10A — H1, Anh chốt 21/11/2026: mã nghiệp vụ hóa đơn phải chống trùng giữa các người bán bằng MST NGUYÊN VĂN của người bán (Anh: MST và hóa đơn đã công khai trên cơ sở dữ liệu thuế nên không cần băm).
+Hiện trạng: ma = "mau_so-ky_hieu-so_hoa_don" chỉ duy nhất trong phạm vi một người bán; hai người bán khác nhau có thể trùng → cả lô bị từ chối (mã trùng trong lô) hoặc hóa đơn người bán B bị coi là nộp lại của người bán A.
+Tệp được sửa: e_phan_luong/goi/e_phan_luong/e_phan_luong/hoa_don.py (ánh xạ + docstring), ví dụ chay_thu_demo / dữ liệu DEMO hóa đơn trong gói nếu có mã kỳ vọng, test mới tests/test_pl10a_*.py; được sửa kỳ vọng test cũ chỉ ở phần giá trị mã hóa đơn (ghi rõ từng chỗ) và ngoại lệ C4 ở tests/test_pl9b_c4_c5.py theo mục 3. Không đổi chữ ký hàm công khai.
+1. ma = "mau_so-ky_hieu-so_hoa_don-ma_so_thue_ban": MST lấy nguyên văn sau strip (giữ dạng có hậu tố chi nhánh, ví dụ 0101234567-001). Áp cho cả hoa_don.doc_xml@2 và doc_zip@1 (cùng hàm ánh xạ). Ví dụ DEMO: 1-C26TAA-00000123-0100000001.
+2. Thiếu hoặc rỗng ma_so_thue_ban → giữ mã 3 phần như cũ, không bịa MST; xử lý đối tác thiếu giữ nguyên như hiện tại. Mã vượt trần 120 ký tự → DU_LIEU_KHONG_HOP_LE như trần hiện có. Mã trùng trong lô vẫn từ chối cả lô (giờ chỉ khi trùng cả MST).
+3. C4 — ngoại lệ Anh duyệt 21/11/2026: MST người bán được phép nằm trong cột ma (dong_luot, ket_qua_kiem) và trong tệp ra của năng lực phan_luong_hoa_don. Không được xuất hiện ở bảng/cột khác: ho_so_hanh_vi vẫn chỉ giữ băm đối tác; luot, ty_le, chot_ky không có MST. Sửa test C4 cho đúng ngoại lệ này (chỉ cột ma của đường hóa đơn), ghi lý do trong test.
+4. Kiểm kê: tính lại (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat); nếu đổi engine.json thì chạy _chung/cong-cu/sinh_danh_muc_engine.py.
+Test bắt buộc (tests/test_pl10a_ma_hoa_don.py): hai người bán khác MST, cùng mẫu-ký hiệu-số trong một lô → nhận cả hai, hai mã khác nhau; cùng MST cùng mẫu-ký hiệu-số → vẫn từ chối trùng; khác lô: hóa đơn người bán B không bị coi là nộp lại của người bán A (chạy chuỗi CoreGia hai lượt); thiếu MST → mã 3 phần; MST chi nhánh giữ nguyên dấu gạch; doc_zip@1 cùng quy tắc; ho_so_hanh_vi không chứa MST thô.
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest toàn engine 0 lỗi; kiem_doc_lap mã 0); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
+#### PL-10B — H2: chỉ AI bỏ sót mới tăng tỷ lệ; giải thích bắt buộc; tệp bài học
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md §4.3 (bậc thang, lên bậc), §5.3 (JSON kết quả kiểm), §5.5, §8; e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2, §4 (Q1–Q11); doi_bac.py, ngan_ket_qua.py, ket_qua.py (DongKetQua đã có trường giai_thich do lead thêm), kieu.py (CO_DO_CUNG, nguon_mau, NGUON_AI), loi.py (lead đã thêm THIEU_GIAI_THICH), quy_trinh.py/chay.py phần audit.ghi_ket_qua@1, engine.json.
+Nhánh này là main (PL-0…PL-9) + PL-10A. Một việc con khác (PL-10C) chạy SONG SONG và chỉ sửa ket_qua.py (đọc giai_thich từ JSON), xuat_excel.py (cột Giải thích), tests/test_pl10c_*.py. Bạn KHÔNG sửa các tệp đó; không sửa README/CHANGELOG/NGUON/VIEC.md/GIAO-CODEX/loi.py/kieu.py (lead cập nhật).
+
+LÀM VIỆC CON PL-10B — H2, Anh chốt 21/11/2026. Bối cảnh quy trình: AI đã kiểm 100% nghiệp vụ trước bước này; tỷ lệ của engine là tỷ lệ GIAO NGƯỜI KIỂM LẠI cho chắc chắn. Người kiểm thấy sai ở nghiệp vụ AI cho qua = AI SAI → phải có bài học và tăng tỷ lệ người kiểm ngay. Anh giữ nguyên quy tắc hạ bậc Clopper-Pearson và trần 30% cho lỗi nhỏ.
+Tệp được sửa: e_phan_luong/goi/e_phan_luong/e_phan_luong/{doi_bac.py, ngan_ket_qua.py, quy_trinh.py và/hoặc chay.py (chỉ phần ghi_ket_qua)}, engine.json (chỉ truong_ra của audit.ghi_ket_qua@1), tests/schema/tep_bai_hoc.schema.json (mới), test mới tests/test_pl10b_*.py; được sửa kỳ vọng test cũ khi hành vi đổi đúng các mục dưới (ghi rõ từng chỗ, không nới mục đích test). Không đổi chữ ký hàm công khai (được thêm tham số từ khóa có mặc định / trường dataclass có mặc định).
+1. "AI đã gắn cờ" = dòng dong_luot của kết quả có lý do CO_DO_CUNG. "AI bỏ sót" = ket_qua là sai VÀ (không có dòng dong_luot, hoặc ly_do không có CO_DO_CUNG) — gồm cả lỗi ngoài mẫu. "AI phân loại sai" = có loai_dung khác loại gốc (sua_loai) VÀ nguon_loai của dòng là ai.
+2. Đổi bậc (doi_bac): lỗi ở dòng AI đã gắn cờ KHÔNG đổi bậc/chế độ (không lên bậc, không về 30%, không lên 100%, không đặt lại mốc đếm từ lần đổi bậc), vì AI đã đúng. Lỗi AI bỏ sót giữ nguyên quy tắc hiện có (lên bậc ngay; ≥ SAD về 30% + rui_ro_cao; ≥ TE 100%; ngoài mẫu về 30% + loi_ngoai_mau; Q6). Trần 30% cho lỗi nhỏ giữ nguyên. Hạ bậc Clopper-Pearson giữ nguyên. Số đếm mẫu/lỗi 12 tháng, điểm và nhãn rui_ro_cao: giữ cách đếm hiện có cho mọi lỗi (nhãn là rủi ro nghiệp vụ của loại) — NẾU nhãn hoặc điểm có ảnh hưởng tới tỷ lệ giao người kiểm thì KHÔNG áp cho lỗi AI đã gắn cờ, và ghi rõ trong báo cáo.
+3. Giải thích bắt buộc: dòng AI bỏ sót hoặc AI phân loại sai mà giai_thich rỗng/None → loi("THIEU_GIAI_THICH"), từ chối cả tệp TRƯỚC lệnh ghi đầu tiên (cùng chỗ kiểm toàn tệp ở _chuan_bi). Dòng khác: giai_thich tùy chọn. giai_thich KHÔNG ghi vào ngăn (C4).
+4. Tệp bài học cho Admin: audit.ghi_ket_qua@1 thêm truong_ra so_ai_sai (kieu so) và tep_bai_hoc (kieu tep, "Bài học khi AI sai (JSON)"). Không có dòng AI sai → so_ai_sai 0, tep_bai_hoc null. Có → tải tệp ra JSON UTF-8 qua viec như các năng lực phân luồng đang tải tep_json; nội dung {"phien_ban":1,"ma_module","khau","phien_ban_engine","dong":[{"ma_luot","ma","loai","loai_dung","nguon_loai","nguon_mau","ket_qua","muc_sai","ai_bo_sot":bool,"ai_sai_loai":bool,"da_ghi_truoc":bool,"giai_thich"}]} theo thứ tự chi_so; gồm mọi dòng AI sai của tệp đã có trong ngăn (ghi mới, hoặc đã ghi từ trước → da_ghi_truoc true) để gửi lại sau lỗi giữa chừng không mất bài học. Không có tỷ lệ, xác suất, bậc, hạt giống (C5). Schema đóng (additionalProperties false). Tải tệp lỗi → báo lỗi thân thiện như phân luồng; các lô đã ghi vẫn an toàn khi gửi lại.
+5. Nếu đổi engine.json: chạy python -B _chung/cong-cu/sinh_danh_muc_engine.py; tính lại kiểm kê (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat).
+Test bắt buộc (tests/test_pl10b_ai_sai.py, CoreGia): lỗi ở dòng CO_DO_CUNG không đổi bậc (cả lỗi nhỏ, ≥ SAD, ≥ TE); lỗi ở mẫu ngẫu nhiên/bắt buộc không cờ/ngoài mẫu vẫn đổi bậc như cũ; thiếu giai_thich ở dòng AI sai → THIEU_GIAI_THICH và ngăn không đổi; dòng AI đã gắn cờ sai không cần giai_thich; AI phân loại sai cần giai_thich, quy tắc phân loại sai thì không; tep_bai_hoc đúng schema, đúng thứ tự, gửi lại cả tệp → da_ghi_truoc true và không cộng thống kê lần hai; giai_thich không xuất hiện ở bất kỳ ngăn nào; C5 trên truong và tep_bai_hoc (trừ chuỗi giai_thich do người kiểm nhập — dữ liệu DEMO không chứa từ cấm). Dữ liệu chỉ DEMO "Công ty DEMO Ánh Dương".
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest toàn engine 0 lỗi — nếu lỗi chỉ do phần PL-10C chưa có thì ghi rõ; kiem_doc_lap mã 0); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
+#### PL-10C — H2: ô Giải thích trong JSON và Excel người kiểm
+```
+Đọc AGENTS.md; e_phan_luong/docs/PHIEU-ENGINE-e_phan_luong.md §5.3 (JSON kết quả kiểm), §5.5 (ds-can-kiem.xlsx), §7; e_phan_luong/docs/GIAO-CODEX-e_phan_luong.md §2; ket_qua.py (DongKetQua đã có trường giai_thich mặc định None do lead thêm), xuat_excel.py (lap_ds_do, doc_ds_do_da_ghi), tests/test_pl8*_*.py, tests/test_pl9e_*.py.
+Nhánh này là main (PL-0…PL-9) + PL-10A. Một việc con khác (PL-10B) chạy SONG SONG và sửa doi_bac.py, ngan_ket_qua.py, quy_trinh.py/chay.py phần ghi_ket_qua, engine.json, tests/test_pl10b_*.py. Bạn KHÔNG sửa các tệp đó; không sửa README/CHANGELOG/NGUON/VIEC.md/GIAO-CODEX/loi.py/kieu.py (lead cập nhật).
+
+LÀM VIỆC CON PL-10C — H2, Anh chốt 21/11/2026: "Mỗi khi AI sai cần có ô giải thích được ghi nhận lại để AI học từ lỗi đó." Phần đọc ô giải thích từ JSON và Excel của người kiểm. (Bắt buộc khi nào do PL-10B kiểm ở bước ghi; bạn chỉ đọc và kiểm định dạng.)
+Tệp được sửa: e_phan_luong/goi/e_phan_luong/e_phan_luong/{ket_qua.py, xuat_excel.py}, test mới tests/test_pl10c_*.py; được sửa kỳ vọng test cũ khi hành vi đổi đúng các mục dưới (ghi rõ từng chỗ). Không đổi chữ ký hàm công khai.
+1. JSON kết quả kiểm (doc_ket_qua_json): mỗi dòng nhận khóa tùy chọn "giai_thich": chuỗi hoặc null. Chuẩn hóa NFC, bỏ khoảng trắng đầu/cuối; rỗng sau strip → None. Từ chối (DU_LIEU_KHONG_HOP_LE) khi không phải chuỗi/null, dài > 2.000 ký tự sau chuẩn hóa, hoặc có ký tự điều khiển trừ xuống dòng \n và tab. Giữ nguyên quy tắc trùng khóa trong tệp: dòng trùng bị bỏ như cũ. Gán vào DongKetQua.giai_thich.
+2. Excel ds-can-kiem.xlsx (lap_ds_do): thêm cột thứ 10 "Giải thích" sau "Loại đúng", ô mở cho người kiểm điền, độ rộng hợp lý, ngắt dòng; hướng dẫn trong tệp thêm câu: "Giải thích: bắt buộc khi AI kiểm sai (Kết quả = sai ở dòng AI chưa gắn cờ, hoặc sửa Loại đúng cho loại AI gán) — ghi vì sao AI sai để AI học." Giữ không công thức, không tỷ lệ/xác suất/bậc/hạt giống (C5); giữ xuất tuyến tính của PL-9E (không gọi ws.max_row trong vòng lặp).
+3. doc_ds_do_da_ghi: nhận mẫu 10 cột mới (tiêu đề đúng _COT mới), đọc "Giải thích" theo cùng quy tắc mục 1 (ô số/ngày → chuỗi hiển thị như ô văn bản; công thức bị từ chối như các ô khác), đưa vào JSON kết quả trung gian để doc_ket_qua_json đọc. Tệp mẫu 9 cột cũ (PL-8) → từ chối DU_LIEU_KHONG_HOP_LE như mẫu sai (engine 0.1.0 chưa phát hành, không cần tương thích ngược).
+4. Kiểm kê: tính lại (python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat).
+Test bắt buộc (tests/test_pl10c_giai_thich.py): JSON có/không/null/rỗng/khoảng trắng/NFD/2.000 và 2.001 ký tự/ký tự điều khiển/kiểu số; Excel dựng 10 cột, điền giải thích tiếng Việt có dấu và xuống dòng, đọc ngược đúng; mẫu 9 cột bị từ chối; dựng tệp Excel lô nhỏ giữ nguyên các cột cũ (so từng ô 9 cột đầu với bản trước); 20.000 dòng Đỏ DEMO vẫn < 30 giây. Dữ liệu chỉ DEMO "Công ty DEMO Ánh Dương".
+Đạt: 3 lệnh AGENTS.md §5 (thu mọi ví dụ [ĐẠT] mã 0; pytest toàn engine 0 lỗi — nếu lỗi chỉ do phần PL-10B chưa có thì ghi rõ; kiem_doc_lap mã 0); dán kết quả thật; ghi "đã kiểm bằng Core giả (CoreGia)".
+```
+
 ## 4. Cần Core / Chờ Anh
 
 **Kiểm 2 điểm "Cần Core" (20/11/2026, lead đọc mã Core `ma-nguon-core-sach` HEAD `a07e061` và CoreGia SDK 2.2.0; chưa chạy trên Core thật):**
@@ -611,3 +662,13 @@ Test bắt buộc (tests/test_pl9i_ghi_ket_qua.py): (a) tương đương với b
 | Q9 | Trần tập băm đối tác trong hồ sơ hành vi | 20.000 đối tác mỗi (khâu, loại); vượt thì bỏ đối tác lâu không gặp nhất, cảnh báo ở màn engine |
 | Q10 | Dưới SAD khi cặp đang kiểm 100% | Vẫn 2% × hệ số; 100% chỉ áp vùng chọn mẫu |
 | Q11 | Chưa phân loại, số tiền dưới SAD | 2% × hệ số như mọi loại; 30% cố định chỉ cho vùng chọn mẫu |
+
+**Anh chốt 21/11/2026** (sau nghiệm thu PL-9, câu H1/H2):
+
+| # | Câu | Anh chốt |
+|---|---|---|
+| Q12 (H1) | Mã hóa đơn trùng giữa hai người bán (mẫu-ký hiệu-số) | Chống trùng bằng **MST người bán nguyên văn** nối cuối mã (`mẫu-ký hiệu-số-MST`): "MST và hóa đơn dễ dàng truy cập trên cơ sở dữ liệu của thuế" → ngoại lệ C4 chỉ cột `ma`; hồ sơ hành vi vẫn băm đối tác (PL-10A) |
+| Q13 (H2) | Hạ bậc Clopper-Pearson khi loại có tỷ lệ sai ~8% | Giữ nguyên. Quy trình: AI đã kiểm 100%, tỷ lệ là tỷ lệ giao người kiểm lại cho chắc chắn |
+| Q14 (H2) | Lỗi nào tăng tỷ lệ người kiểm | Chỉ khi **AI bỏ sót** (dòng AI chưa gắn cờ `CO_DO_CUNG`); "Mỗi khi sai cần có ô giải thích được ghi nhận lại để AI học được từ lỗi sai đó" (PL-10B, PL-10C) |
+| Q15 (H2) | Lỗi nhỏ khi đang ở 30% | Giữ trần 30% |
+| Q16 (H2) | Bài học khi AI sai đi đâu | Danh sách cho Admin: `ghi_ket_qua` trả tệp `tep_bai_hoc` (mã, loại, mức sai, giải thích), không lưu giải thích trong ngăn (PL-10B) |

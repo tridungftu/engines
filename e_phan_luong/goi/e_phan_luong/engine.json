@@ -754,6 +754,16 @@
           "kieu": "so"
         },
         {
+          "ma": "so_ai_sai",
+          "ten": "Số dòng AI sai",
+          "kieu": "so"
+        },
+        {
+          "ma": "tep_bai_hoc",
+          "ten": "Bài học khi AI sai (JSON)",
+          "kieu": "tep"
+        },
+        {
           "ma": "phien_ban_engine",
           "ten": "Phiên bản engine",
           "kieu": "van_ban"

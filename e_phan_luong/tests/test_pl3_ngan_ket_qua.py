@@ -43,7 +43,9 @@ def ma_hoa(gia_tri):
 
 def dong_demo(i=0, **thay):
     return {"ma_luot": MA_LUOT, "ma": f"PC-DEMO-{i:04}", "khau": KHAU,
-            "ket_qua": "dat", **thay}
+            "ket_qua": "dat",
+            # PL-10B: các ca nghiệp vụ cũ vẫn hợp lệ khi AI bỏ sót/sai loại.
+            "giai_thich": "Công ty DEMO Ánh Dương: cần đối chiếu chứng từ gốc.", **thay}
 
 
 def tep_demo(dong, **thay):
@@ -174,6 +176,7 @@ def test_ghi_demo_dung_loai_q2_va_khong_lo_ty_le_c5():
     assert truong(kq) == {
         "so_dong_nhan": 1, "so_trung": 0, "so_ngoai_mau": 0,
         "so_cap_doi_bac": 0, "so_sua_loai": 0, "phien_ban_engine": __version__,
+        "so_ai_sai": 0, "tep_bai_hoc": None,
     }
     da_ghi = core.xem_ngan(app.ma, "ket_qua_kiem")[0]
     assert da_ghi["loai"] == LOAI
@@ -193,6 +196,7 @@ def test_trung_trong_tep_va_trung_da_ghi_khong_cong_hai_lan():
     assert truong(chay_ghi(core, tep)) == {
         "so_dong_nhan": 0, "so_trung": 5, "so_ngoai_mau": 0,
         "so_cap_doi_bac": 0, "so_sua_loai": 0, "phien_ban_engine": __version__,
+        "so_ai_sai": 0, "tep_bai_hoc": None,
     }
     assert core.xem_ngan(app.ma, "ty_le") == ban_dau
     assert trang_thai(core).mau_12t == 3
@@ -215,7 +219,8 @@ def test_ket_qua_da_het_han_van_la_dau_chong_trung(monkeypatch):
 def test_tep_rong_khong_tao_thong_ke():
     core = CoreGia()
     dem = truong(chay_ghi(core, tep_demo([], nguong=None)))
-    assert all(v == 0 for k, v in dem.items() if k != "phien_ban_engine")
+    assert all(v == 0 for k, v in dem.items() if k not in {"phien_ban_engine", "tep_bai_hoc"})
+    assert dem["tep_bai_hoc"] is None
     assert core.xem_ngan(app.ma, "ty_le") == []
     assert core.xem_ngan(app.ma, "ket_qua_kiem") == []
 

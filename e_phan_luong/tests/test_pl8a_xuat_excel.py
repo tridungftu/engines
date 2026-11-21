@@ -21,7 +21,7 @@ from e_phan_luong.loi import CAU_LOI, LoiNghiepVu
 META = dict(ma_luot="PL-DEMO-001", ma_module="demo_thanh_toan",
             khau="ktt_duyet", phien_ban_engine="0.1.0")
 COT = ("Mã", "Lý do", "Cờ", "Loại", "Nguồn loại", "Kết quả",
-       "Số tiền sai", "Tiền tệ", "Loại đúng")
+       "Số tiền sai", "Tiền tệ", "Loại đúng", "Giải thích")  # PL-10C: mẫu 10 cột.
 
 
 @pytest.fixture
@@ -88,7 +88,7 @@ def test_mo_lai_chi_dong_do_va_cot_ghi_trong(ds_demo):
         ws = wb["Can kiem"]
         assert tuple(c.value for c in ws[1]) == (
             "ma_luot", META["ma_luot"], "khau", META["khau"],
-            "ma_module", META["ma_module"], "phien_ban_engine", "0.1.0", None)
+            "ma_module", META["ma_module"], "phien_ban_engine", "0.1.0", None, None)
         assert tuple(c.value for c in ws[2]) == COT
         assert [r[0] for r in ws.iter_rows(min_row=3, values_only=True)] == [
             "PC-DEMO-001", "PC-DEMO-002", "PC-DEMO-003", "PC-DEMO-004"]
@@ -143,12 +143,12 @@ def test_khu_hoi_du_ba_ket_qua_bao_toan_tien(ds_demo):
     kq = xuat_excel.doc_ds_do_da_ghi(_sua(_lap(ds_demo), _dien))
     assert kq == {"phien_ban": 1, "ma_module": "demo_thanh_toan", "ket_qua": [
         {"ma_luot": "PL-DEMO-001", "ma": "PC-DEMO-001", "khau": "ktt_duyet",
-         "ket_qua": "dat", "so_tien_sai": None, "loai_dung": None},
+         "ket_qua": "dat", "so_tien_sai": None, "loai_dung": None, "giai_thich": None},
         {"ma_luot": "PL-DEMO-001", "ma": "PC-DEMO-002", "khau": "ktt_duyet",
          "ket_qua": "sai", "so_tien_sai": {"so": "1000000000000.123456", "tien_te": "VND"},
-         "loai_dung": "chi_phi_khac"},
+         "loai_dung": "chi_phi_khac", "giai_thich": None},
         {"ma_luot": "PL-DEMO-001", "ma": "PC-DEMO-003", "khau": "ktt_duyet",
-         "ket_qua": "khong_kiem", "so_tien_sai": None, "loai_dung": None},
+         "ket_qua": "khong_kiem", "so_tien_sai": None, "loai_dung": None, "giai_thich": None},
     ]}
     json.dumps(kq, ensure_ascii=False, allow_nan=False)
 

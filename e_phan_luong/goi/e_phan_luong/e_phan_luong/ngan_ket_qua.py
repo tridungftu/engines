@@ -6,12 +6,13 @@ an toàn nhờ khóa duy nhất của ket_qua_kiem. Không lưu chi tiết giao 
 """
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import re
 
 from . import doi_bac, ket_qua, ngan_chung, nguong, ty_le
-from .kieu import CHUA_PHAN_LOAI, KQ_SAI, MAU_NGOAI
+from .kieu import CHUA_PHAN_LOAI, CO_DO_CUNG, KQ_SAI, MAU_NGOAI, NGUON_AI, tach_ly_do
 from .loi import loi
 from .phan_loai import doc_danh_muc_loai
 
@@ -20,6 +21,9 @@ from .phan_loai import doc_danh_muc_loai
 class _DongGhi:
     gia_tri: dict
     sua_loai: bool
+    ai_da_gan_co: bool = False
+    chi_so: int = 0
+    bai_hoc: dict | None = None  # Chỉ RAM; tuyệt đối không đưa vào gia_tri ghi ngăn.
 
     @property
     def khoa(self) -> dict:
@@ -132,13 +136,29 @@ def _chuan_bi(viec, tep: ket_qua.KetQuaTep) -> dict[tuple[str, str], list[_DongG
         sua_loai = (ban_ghi is not None and dong.loai_dung is not None
                     and dong.loai_dung != loai_goc)
         muc_sai = ket_qua.muc_sai(dong.so_tien_sai, ng) if dong.ket_qua == KQ_SAI else None
+        ai_da_gan_co = CO_DO_CUNG in tach_ly_do(dong_luot.get("ly_do"))
+        ai_bo_sot = dong.ket_qua == KQ_SAI and not ai_da_gan_co
+        ai_sai_loai = sua_loai and dong_luot.get("nguon_loai") == NGUON_AI
+        if ((ai_bo_sot or ai_sai_loai)
+                and (not isinstance(dong.giai_thich, str) or not dong.giai_thich.strip())):
+            raise loi("THIEU_GIAI_THICH")
         gia_tri = {
             "ma_luot": dong.ma_luot, "ma": dong.ma, "khau": dong.khau,
             "ma_module": tep.ma_module, "loai": loai, "ket_qua": dong.ket_qua,
             "muc_sai": muc_sai, "nguon_mau": ket_qua.nguon_mau(dong_luot.get("ly_do")),
             "nguon_loai_sai": dong_luot.get("nguon_loai") if sua_loai else None,
         }
-        nhom.setdefault((dong.khau, loai), []).append(_DongGhi(gia_tri, sua_loai))
+        bai_hoc = None
+        if ai_bo_sot or ai_sai_loai:
+            bai_hoc = {
+                "ma_luot": dong.ma_luot, "ma": dong.ma, "loai": loai_goc,
+                "loai_dung": dong.loai_dung, "nguon_loai": dong_luot.get("nguon_loai"),
+                "nguon_mau": gia_tri["nguon_mau"], "ket_qua": dong.ket_qua,
+                "muc_sai": muc_sai, "ai_bo_sot": ai_bo_sot, "ai_sai_loai": ai_sai_loai,
+                "giai_thich": dong.giai_thich,
+            }
+        nhom.setdefault((dong.khau, loai), []).append(_DongGhi(
+            gia_tri, sua_loai, ai_da_gan_co, dong.chi_so, bai_hoc))
     return nhom
 
 
@@ -159,19 +179,26 @@ def _tao_cap_moi(viec, khoa: dict, dong: list[_DongGhi], cs: ty_le.ChinhSach,
     ngan_chung.ghi_lo_thu_lai(viec, lap_lenh)
 
 
-def ghi_ket_qua(viec, tep: ket_qua.KetQuaTep) -> dict[str, int]:
+def ghi_ket_qua(viec, tep: ket_qua.KetQuaTep, *,
+                bai_hoc: list[dict] | None = None,
+                truoc_ghi: Callable[[], object] | None = None) -> dict[str, int]:
     """Trả số đếm của các lô đã ghi; không trả tỷ lệ hay trạng thái bậc.
 
     Lần đầu dùng dấu chống trùng đọc trước nếu quét hết trong ngân sách.
     Mỗi lần thử lại đọc lại từng khóa và ty_le, tính lại toàn bộ lô.
     Chỉ cộng số đếm sau khi lô được Core xác nhận thành công.
+    bai_hoc nhận mọi dòng AI sai đã ghi (kể cả gửi lại), theo chi_so.
+    truoc_ghi chỉ chạy sau kiểm toàn tệp, để chốt kỳ không ghi khi thiếu giải thích.
     """
     cs = ty_le.doc_chinh_sach(viec.tham_so.get("chinh_sach_json"))
     cac_nhom = _chuan_bi(viec, tep)
+    if truoc_ghi is not None:
+        truoc_ghi()
     da_co = _doc_truoc_da_ghi(viec, tep)
     tong = {"so_dong_nhan": 0, "so_trung": tep.so_trung_trong_tep,
             "so_ngoai_mau": 0, "so_sua_loai": 0}
     cap_da_doi = set()
+    cac_bai_hoc = []
     for cap, dong in cac_nhom.items():
         khoa = dict(zip(("khau", "loai"), cap))
         _tao_cap_moi(viec, khoa, dong, cs, da_co)
@@ -180,19 +207,26 @@ def ghi_ket_qua(viec, tep: ket_qua.KetQuaTep) -> dict[str, int]:
             dem = {}
             da_doi = False
             lan_dau = True
+            bai_hoc_lo = []
 
             def lap_lenh(lo):
-                nonlocal dem, da_doi, lan_dau
+                nonlocal dem, da_doi, lan_dau, bai_hoc_lo
                 ban_doc_truoc = da_co if lan_dau else None
                 lan_dau = False
                 dem = {cot: 0 for cot in tong}
                 da_doi = False
+                bai_hoc_lo = []  # Lô bị xung đột phải tính lại cả dấu đã ghi trước.
                 ban_ghi = viec.ngan.doc("ty_le", khoa)
                 tt = None if ban_ghi is None else ty_le.tu_ban_ghi(ban_ghi.gia_tri)
                 luc = datetime.now(timezone.utc).isoformat()
                 for d in nhom:
                     viec.kiem_huy()
-                    if _da_ghi_lan_dau(viec, d, ban_doc_truoc):
+                    da_ghi_truoc = _da_ghi_lan_dau(viec, d, ban_doc_truoc)
+                    if d.bai_hoc is not None:
+                        bai_hoc_lo.append((d.chi_so, {
+                            **d.bai_hoc, "da_ghi_truoc": da_ghi_truoc,
+                        }))
+                    if da_ghi_truoc:
                         dem["so_trung"] += 1
                         continue
                     # Cặp mới đã tạo bằng lay_hoac_tao, không ghi đè nền cũ.
@@ -200,7 +234,8 @@ def ghi_ket_qua(viec, tep: ket_qua.KetQuaTep) -> dict[str, int]:
                         raise loi("NGAN_BAN")
                     gt = d.gia_tri
                     tt, doi = doi_bac.cap_nhat(tt, doi_bac.MotKetQua(
-                        gt["nguon_mau"], gt["ket_qua"], gt["muc_sai"]), cs, luc=luc)
+                        gt["nguon_mau"], gt["ket_qua"], gt["muc_sai"],
+                        ai_da_gan_co=d.ai_da_gan_co), cs, luc=luc)
                     da_doi = da_doi or doi
                     # them phải xung đột nếu việc khác vừa ghi cùng kết quả.
                     lo.them("ket_qua_kiem", gt)
@@ -211,8 +246,11 @@ def ghi_ket_qua(viec, tep: ket_qua.KetQuaTep) -> dict[str, int]:
                     lo.sua("ty_le", khoa, ty_le.ve_ban_ghi(tt), row_version=ban_ghi.row_version)
 
             ngan_chung.ghi_lo_thu_lai(viec, lap_lenh)
+            cac_bai_hoc.extend(bai_hoc_lo)
             for cot in tong:
                 tong[cot] += dem[cot]
             if da_doi:
                 cap_da_doi.add(cap)
+    if bai_hoc is not None:
+        bai_hoc.extend(d for _, d in sorted(cac_bai_hoc, key=lambda muc: muc[0]))
     return {**tong, "so_cap_doi_bac": len(cap_da_doi)}

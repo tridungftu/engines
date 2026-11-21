@@ -611,6 +611,8 @@ Loại dữ liệu riêng: `yeu_cau_ai`, `tra_loi_ai`. Số việc đồng thờ
 | `so_ngoai_mau` | Số dòng ngoài mẫu | số |
 | `so_cap_doi_bac` | Số cặp đổi bậc | số |
 | `so_sua_loai` | Số lần sửa loại | số |
+| `so_ai_sai` | Số dòng AI sai | số |
+| `tep_bai_hoc` | Bài học khi AI sai (JSON) | tệp |
 | `phien_ban_engine` | Phiên bản engine | văn bản |
 
 ### e_doi_chieu — Đối chiếu bản ký (gói 0.9.0)

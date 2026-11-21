@@ -124,6 +124,8 @@ def test_khu_hoi_nguoi_kiem_dien_excel_gui_json_roi_ghi_ngan():
                          if d["ma"] != loai_cu)
         ws["F3"], ws["F4"], ws["F5"] = "dat", "sai", "khong_kiem"
         ws["G4"], ws["H4"], ws["I4"] = "1000000.123456", "VND", loai_dung
+        # H2: người kiểm giải thích lỗi AI; cột J do PL-10C đọc, vẫn kiểm khứ hồi Excel.
+        ws["J4"] = "Công ty DEMO Ánh Dương: cần đối chiếu chứng từ gốc."
         out = BytesIO()
         wb.save(out)
     finally:

@@ -53,7 +53,8 @@ def test_truong_ra_dung_phieu_va_c5():
         **{t: "so" for t in ("so_nghiep_vu", "so_do", "so_do_bat_buoc", "so_do_chon_mau", "so_xanh", "so_chua_phan_loai")},
         "tong_tien_do": "so_tien", "tep_json": "tep", "tep_ds_do": "tep",
         "bam_hat_giong": "van_ban", "bam_dau_vao": "van_ban", "phien_ban_engine": "van_ban"}
-    truong_ghi = {t: "so" for t in ("so_dong_nhan", "so_trung", "so_ngoai_mau", "so_cap_doi_bac", "so_sua_loai")}
+    truong_ghi = {t: "so" for t in ("so_dong_nhan", "so_trung", "so_ngoai_mau", "so_cap_doi_bac", "so_sua_loai", "so_ai_sai")}
+    truong_ghi["tep_bai_hoc"] = "tep"  # PL-10B: tệp bài học H2, không trả tỷ lệ.
     truong_ghi["phien_ban_engine"] = "van_ban"
     # Phiếu §5.5 bắt buộc so_cap_doi_bac: ngoại lệ số đếm, không trả bậc.
     # Mâu thuẫn với phép grep "bac" tuyệt đối đã ghi rõ trong VIEC.md.

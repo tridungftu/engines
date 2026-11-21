@@ -75,7 +75,7 @@ class ChuoiDemo:
 
     def dong_ket_qua(self, tep, dong, **thay):
         return {"ma_luot": tep["ma_luot"], "ma": dong["ma"], "khau": tep["khau"],
-                "ket_qua": "dat", **thay}
+                "ket_qua": "dat", "giai_thich": CONG_TY + ": cần đối chiếu chứng từ gốc.", **thay}
 
     def ghi(self, tep):
         return self.goi("audit.ghi_ket_qua@1", tep)
@@ -204,7 +204,11 @@ def test_02_ghi_ket_qua_q1_q2_muc_sai_ngoai_mau_va_doi_bac(chuoi_demo):
     assert {d["ma"] for d in ds} == {d["ma"] for d in c.tep1["nghiep_vu"] if d["luong"] == "do"} | {c.dong_xanh["ma"]}
     assert c.dem_ghi == {"so_dong_nhan": len(ds), "so_trung": 0, "so_ngoai_mau": 1,
                          "so_sua_loai": 1, "so_cap_doi_bac": 2,
+                         "so_ai_sai": 4, "tep_bai_hoc": c.dem_ghi["tep_bai_hoc"],
                          "phien_ban_engine": c.truong1["phien_ban_engine"]}
+    bh = json.loads(c.core.doc_tep(c.dem_ghi["tep_bai_hoc"]["tep_id"]))["dong"]
+    assert {d["ma"] for d in bh} == {d["ma"] for d in (c.dong_nho, c.dong_sad, c.dong_te, c.dong_xanh)}
+    assert all(d["ai_bo_sot"] and not d["da_ghi_truoc"] for d in bh)
     # Oracle độc lập: 34 và 39 mẫu sạch rồi lỗi, chỉ hai cặp này đổi bậc.
     so_chon = Counter(d["loai"] for d in c.tep1["nghiep_vu"] if d["ly_do"] == ["CHON_MAU"])
     assert 30 <= so_chon["luong"] - 1 < 90
@@ -234,7 +238,10 @@ def test_03_gui_lai_dung_tep_khong_cong_lai_thong_ke(chuoi_demo):
     c = chuoi_demo
     assert c.dem_trung == {"so_dong_nhan": 0, "so_trung": len(c.tep_ghi["ket_qua"]),
                            "so_ngoai_mau": 0, "so_sua_loai": 0, "so_cap_doi_bac": 0,
+                           "so_ai_sai": 4, "tep_bai_hoc": c.dem_trung["tep_bai_hoc"],
                            "phien_ban_engine": c.truong1["phien_ban_engine"]}
+    bh = json.loads(c.core.doc_tep(c.dem_trung["tep_bai_hoc"]["tep_id"]))["dong"]
+    assert len(bh) == 4 and all(d["da_ghi_truoc"] for d in bh)
     # So cả row_version và dấu thời gian: gửi trùng không có lần sửa ngăn nào.
     assert c.ty_le_sau_trung == c.ty_le_sau_ghi
     assert c.ket_qua_sau_trung == c.ket_qua_sau_ghi

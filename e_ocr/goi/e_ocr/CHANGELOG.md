@@ -1,5 +1,18 @@
 # Thay đổi
 
+## Chưa phát hành — 21/11/2026 — UI-OCR
+
+- Chia màn cấu hình thành ba thẻ ABBYY, Tesseract và Hạn mức, bố cục hai
+  cột trên màn rộng/một cột trên màn hẹp; hướng dẫn, ví dụ và lỗi từng ô.
+- Thêm hai nút kiểm qua cổng quản trị dự kiến; kiểm metadata/quyền Hot
+  Folder, bộ cài/ngôn ngữ Tesseract, không gửi tài liệu hay trừ hạn mức.
+- Giữ CAS, trạng thái và cửa sổ hạn mức 30 ngày; bỏ kết quả kiểm cũ khi
+  sửa bản nháp. Chưa có cổng quản trị thì hiện thông báo chờ Core.
+- Bổ sung mô tả/ví dụ schema mọi cấp và bản khai dự kiến trong
+  `KHAI-SDK-2.1.json`; không đổi engine.json hoặc hành vi xử lý việc OCR.
+- Đã kiểm bằng Core giả (CoreGia), máy giả và KttCore giả. Ảnh DEMO nằm
+  ngoài gói chạy, tại `e_ocr/docs/anh-ui-ocr/`. Chưa nối Core/ABBYY thật.
+
 ## 1.0.9 — 15/11/2026 — OCR-9
 
 - Chuyển sang SDK 2.2.0: dùng `viec.ngan`, `viec.cau_hinh`; trạng thái định

@@ -11,6 +11,7 @@ from types import SimpleNamespace
 import weakref
 
 import pytest
+from conftest import trang_thai_so_sanh
 from kho_tri_thuc_sdk.engine import LoiNghiepVu
 
 from e_phan_luong import ngan_luot
@@ -105,7 +106,7 @@ def _them_ban_phu(core, viec, bang, ma_luot, n):
                     "ma": f"PC-DEMO-PHU-{ma_luot}-{i:06}"} for i in range(1, n))
 
 
-@pytest.mark.parametrize("chi_so", range(240))
+@pytest.mark.parametrize("chi_so", trang_thai_so_sanh())
 def test_tuong_duong_240_trang_thai_ngau_nhien_demo(chi_so):
     rng = Random(202611210438 + chi_so)
     core = _CoreTheoDoi()
@@ -188,8 +189,11 @@ def test_tuong_duong_240_trang_thai_ngau_nhien_demo(chi_so):
     _trong_viec(core, kiem)
 
 
-@pytest.mark.parametrize("n", [1000, 5000, 10000])
-@pytest.mark.parametrize("co_lich_su", [False, True], ids=["trong", "nop_lai"])
+@pytest.mark.parametrize("n,co_lich_su", [
+    pytest.param(n, co, marks=pytest.mark.sau if co and n >= 5000 else (),
+                 id=f"{'nop_lai' if co else 'trong'}-{n}")
+    for co in (False, True) for n in (1000, 5000, 10000)
+])
 def test_so_lan_goi_truoc_sau_coregia(n, co_lich_su):
     core = _CoreTheoDoi()
 
@@ -257,13 +261,16 @@ def test_bien_ngan_sach_bo_ket_qua_do_dang_va_khong_lan_nhom(k, so_dong):
     _trong_viec(core, kiem)
 
 
-@pytest.mark.parametrize("k", [1, 9, 10, 11, 20])
-def test_luot_cu_rat_lon_so_voi_ung_vien_giu_can_phu_phi(k):
+@pytest.mark.parametrize("k,so_dong", [
+    (1, 501), (9, 501), (10, 501), (11, 1001), (20, 1001),
+    *[pytest.param(k, 10001, marks=pytest.mark.sau) for k in (1, 9, 10, 11, 20)],
+])
+def test_luot_cu_rat_lon_so_voi_ung_vien_giu_can_phu_phi(k, so_dong):
     core = _CoreTheoDoi()
 
     def kiem(viec):
-        cac_ma = _lich_su_nhieu_dong(core, viec, 10001)
-        _them_ban_phu(core, viec, "ket_qua_kiem", "PL-DEMO-DEM", 10001)
+        cac_ma = _lich_su_nhieu_dong(core, viec, so_dong)
+        _them_ban_phu(core, viec, "ket_qua_kiem", "PL-DEMO-DEM", so_dong)
         ds_ma = cac_ma[:k]
         core.dat_lai_dem()
         cu = tra_nop_lai_cu(viec, MODULE, KHAU, ds_ma)

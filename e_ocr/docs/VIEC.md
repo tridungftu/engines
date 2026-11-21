@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| UI-OCR | Ba thẻ ABBYY / Tesseract / Hạn mức, hai nút kiểm nguồn và mô tả schema | AGENTS §4.13–14, phiếu UI §4 | Xong 21/11/2026 trong phạm vi CoreGia/KttCore giả | PR: **chờ lead mở**, nhánh `codex/e_ocr-ui-ocr`; không commit/push. Bằng chứng và Cần Core tại mục UI-OCR bên dưới |
 | 0 | Đọc tài liệu cổng và engine; nhận kế hoạch các lát theo `GIAO-CODEX-e_ocr.md` | — | Xong 14/11/2026 | Thực hiện OCR-0 theo phiếu Anh giao; ước tính 2 giờ |
 | OCR-0 | Khung SDK 2.0, cấu hình máy, kho tạm, schema chung và kiểm độc lập | OCR-6 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã đạt tiêu chí riêng của OCR-0; kết quả DEMO chung và giới hạn xem bên dưới |
 | OCR-1 | Đọc lớp chữ PDF và ABBYY Hot Folder cục bộ; hai action đọc dùng chung lõi | OCR-2, 3, 4, 7, 15 | Xong 14/11/2026 | PR: **chờ lead mở**. SDK DEMO 2/2, pytest 119 passed, 0 skipped, kiểm độc lập đạt; đã kiểm bằng Core giả (CoreGia), chi tiết bên dưới |
@@ -20,6 +21,57 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 4 | Bài máy test còn lại ca 1, 6, 8 | OCR-11 | Chờ Core / thiết kế | Ca 3 đã kiểm bằng Core giả ở OCR-5; ca 1 chờ thẻ trạng thái, ca 6 chờ Đối chiếu, ca 8 chờ bí mật/cầu nối có khóa |
 | 5 | Lát 9: ABBYY thật trên máy hiện tại bằng PDF DEMO (Anh đã cho phép mở kết nối tạm) | OCR-12 | Chờ làm | Không chép `in\ out\ jobs\ state\` |
 | 6 | Ghép Core (K1–K6) → nghiệm thu tổng thể | — | Chờ Core |  |
+
+## UI-OCR — 21/11/2026
+
+PR: **chờ lead mở**, nhánh `codex/e_ocr-ui-ocr`. Bắt đầu **21:26 ngày
+21/11/2026** theo lead; phiếu UI §4 ước tính **3 giờ**.
+
+Đã làm: màn ba thẻ theo ảnh mẫu, hai cột/một cột; hướng dẫn và mẫu cho
+từng trường, kiểm khi nhập và lỗi tại ô; giữ CAS, hạn mức 30 ngày và trạng
+thái engine. Nút kiểm dùng bản nháp; chặn bấm trùng, bỏ kết quả đến muộn
+nếu đã sửa cấu hình, không tự lưu hoặc ghi hạn mức. Hai hàm quản trị nằm
+trong `e_ocr/quan_tri.py`, khai dự kiến vào `KHAI-SDK-2.1.json`.
+
+Schema chỉ thêm `title`/`description`/`examples`, gồm cấu trúc và mẫu đầy
+đủ tại gốc; đã so toàn bộ type/default/enum/trần với HEAD và khớp. Giữ
+nguyên bytes `engine.json`, không đổi năng lực/hành vi xử lý việc, không
+cần sinh lại danh mục. Kiểm kê SQL cập nhật bytes/SHA-256 mọi tệp gói.
+
+Đã kiểm bằng Core giả (CoreGia), máy giả và KttCore giả; chưa nối
+Core/ABBYY thật, chưa chạy Linux hoặc cài máy sạch. Môi trường `.venv`
+trong worktree dùng các thư viện đã cài (system-site-packages), SDK 2.2.0
+cài bằng wheel nội bộ `--no-index --no-deps`, SHA-256 khớp SHA256SUMS.
+Không thêm dependency runtime, không dùng mạng. Chromium dùng
+playwright-core có sẵn, chỉ là công cụ chụp/kiểm bên ngoài gói engine.
+
+Ảnh DEMO để lead so với mẫu: [màn rộng](anh-ui-ocr/01-may-rong.png),
+[lỗi nguồn](anh-ui-ocr/02-loi-nguon.png), [CAS](anh-ui-ocr/03-cas.png),
+[màn hẹp](anh-ui-ocr/04-man-hep.png). Tái dựng bằng
+`tests/ui/chup_man.mjs`, màn thật + KttCore giả, chặn mạng hoàn toàn.
+
+Lệch khỏi phiếu / giới hạn: kiểm Hot Folder chỉ metadata/quyền theo hệ
+điều hành, không tạo tệp thử để tránh kích hoạt OCR; không chứng minh
+FineReader đang chạy hoặc quyền ghi ACL thực tế. Không có bí mật trong
+UI-OCR (`bi_mat: []`), nên ca hiện bốn ký tự cuối không áp dụng; đã kiểm
+màn không đọc két và không hiện/gửi trường bí mật ngoài schema.
+
+### Cần Core — UI-OCR
+
+- **Cửa D:** nạp `ui/cau_hinh.js` như màn module cho Admin, API cấu hình
+  có CAS và đọc ngăn. Khi chưa nạp màn, ô JSON chung cần hiện mô tả/ví dụ
+  schema kèm chèn mẫu, định dạng và lỗi tại trường theo phiếu UI §2.1/10.
+- **Cửa E:** chuyển `.thao_tac(ma, dau_vao)` thành việc quản trị có quyền
+  Admin và thời hạn tối đa 15 giây, nối tới hai hàm Python đã khai dự kiến.
+  SDK 2.2.0 chưa có decorator/cổng này. Adapter CoreGia chỉ nằm trong test,
+  không mở năng lực giả trong runtime. `diem_vao` trong bản khai dự kiến
+  là gợi ý nối hàm, chưa coi là hợp đồng SDK. Khi chưa có cổng, màn báo
+  chờ Core; không suy rằng đã kiểm thành công.
+
+Kết quả cuối: SDK DEMO 6/6 ĐẠT; pytest 318 passed, 0 skipped; Node UI 22/22; kiểm độc lập mã 0. Thời gian thực tế 0.47 giờ (21:26:00–21:54:25), ước tính 3 giờ.
+
+Không phát sinh câu Chờ Anh mới. Kết quả kiểm và giờ kết thúc được ghi
+trong [báo cáo UI-OCR](anh-ui-ocr/KIEM-TRA.md).
 
 ## OCR-9 — chuyển SDK 2.2.0, 15/11/2026
 

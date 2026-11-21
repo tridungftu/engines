@@ -3,7 +3,8 @@
 Bảng ánh xạ theo e_hoa_don/engine.json, hoa_don.doc_xml@2:
 
     Trường nguồn                         Trường NghiepVu
-    mau_so, ky_hieu, so_hoa_don           ma = "mau_so-ky_hieu-so_hoa_don"
+    mau_so, ky_hieu, so_hoa_don,          ma = "mau_so-ky_hieu-so_hoa_don-MST"
+    ma_so_thue_ban                        MST nguyên văn sau strip, giữ hậu tố chi nhánh
     ngay_lap                             ngay
     tong_thanh_toan                       so_tien (giữ số nguồn, Decimal)
     tong_thanh_toan.tien_te, don_vi_tien   so_tien.tien_te (không mặc định VND)
@@ -19,8 +20,11 @@ vì không có số để tạo Tien; không suy số tiền từ DTO kỹ thu�
 hoa_don.doc_zip@1: JSON chi_tiet_nguon phiên bản 1, nguon_doc
 zip_xml_strict, danh_sach_tep[].truong_hoa_don dùng cùng ánh xạ trên.
 Chỉ bỏ/đếm trạng thái loi hoặc khong_ho_tro; dòng doc_duoc sai dữ liệu
-và mã trùng làm lỗi cả lô. Không lưu đối tác; bước dùng sẽ băm theo
-GIAO-CODEX §2.4. Không gọi e_hoa_don, Core hay đọc/ghi tệp tại đây.
+và mã trùng làm lỗi cả lô. Thiếu/rỗng MST giữ mã ba phần, không bịa MST.
+Mã vẫn chịu trần 120 ký tự của doc_lo. Anh duyệt 21/11/2026 (PL-10A):
+MST được giữ trong mã hóa đơn ở dong_luot, ket_qua_kiem và tệp ra;
+đối tác trong hồ sơ hành vi vẫn chỉ giữ băm theo GIAO-CODEX §2.4.
+Không gọi e_hoa_don, Core hay đọc/ghi tệp tại đây.
 """
 from __future__ import annotations
 
@@ -48,6 +52,9 @@ def _nghiep_vu(truong: dict, chi_so: int, loai_nghiep_vu: str | None) -> NghiepV
     cac_phan = [truong.get(k) for k in ("mau_so", "ky_hieu", "so_hoa_don")]
     if any(not isinstance(p, str) or not p.strip() for p in cac_phan):
         raise loi("DU_LIEU_KHONG_HOP_LE")
+    mst_ban = truong.get("ma_so_thue_ban")
+    if isinstance(mst_ban, str) and mst_ban.strip():
+        cac_phan.append(mst_ban.strip())
     tong = truong.get("tong_thanh_toan")
     if not isinstance(tong, dict):
         raise loi("DU_LIEU_KHONG_HOP_LE")
@@ -69,7 +76,7 @@ def _nghiep_vu(truong: dict, chi_so: int, loai_nghiep_vu: str | None) -> NghiepV
 def lo_tu_hoa_don(
     truong: dict, *, ma_module: str, loai_nghiep_vu: str | None,
 ) -> Lo:
-    """Một bộ trường XML → một nghiệp vụ; mã nối bằng dấu gạch ngang.
+    """Một bộ trường XML → một nghiệp vụ; mã nối ba phần và MST nếu có.
 
     Nhận phần ``phong_bi['truong']``, không nhận cả phong bì.
     ky và nguong để None, bước ghép lấy ngưỡng từ Cài đặt bước.

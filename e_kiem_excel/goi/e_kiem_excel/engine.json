@@ -3,11 +3,11 @@
   "loai": "engine",
   "ma": "e_kiem_excel",
   "ten": "Kiểm và đọc file Excel",
-  "phien_ban": "0.1.2",
+  "phien_ban": "0.1.3",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
-    "sdk": ">=2.2.0 <3.0.0"
+    "sdk": ">=2.4.0 <3.0.0"
   },
   "che_do_chay": "cuc_bo",
   "diem_vao": {
@@ -18,6 +18,7 @@
     ],
     "thu_muc": "."
   },
+  "phu_thuoc_python": {"lock": "requirements.lock", "wheels": "wheels"},
   "nang_luc": [
     {
       "ma": "excel.toan_ven@1",

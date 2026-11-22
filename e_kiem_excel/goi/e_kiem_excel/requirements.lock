@@ -1,10 +1,7 @@
-# Wheel PyPI thuần Python; SHA-256 đối chiếu metadata PyPI.
-# SDK 2.2.0 cài riêng từ wheel trong repo, không kéo dependency module.
-# EX-6: chỉ ba thư viện runtime. openpyxl đọc/ghi; et_xmlfile ghi báo cáo;
-# defusedxml bắt buộc để openpyxl đọc XML an toàn. pytest chỉ dùng ngoài gói.
-openpyxl==3.1.5 \
-    --hash=sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2
-et_xmlfile==2.0.0 \
-    --hash=sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa
-defusedxml==0.7.1 \
-    --hash=sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61
+# Thu vien chay cua e_kiem_excel; wheel thuan Python kem trong wheels/.
+# Moi dong: ten==phien_ban va SHA-256 cua wheel; du ca phu thuoc gian tiep.
+# Hash them (neu co) la wheel Linux x86_64 cho CI; Core chi cai wheel trong wheels/.
+# SDK do Core cap, khong nam trong tep nay.
+openpyxl==3.1.5 --hash=sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2
+et_xmlfile==2.0.0 --hash=sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa
+defusedxml==0.7.1 --hash=sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61

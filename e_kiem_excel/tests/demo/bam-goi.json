@@ -3,8 +3,8 @@
   "bam": "SHA-256 bytes nguyên trạng",
   "tep": {
     "CHANGELOG.md": {
-      "bytes": 4407,
-      "sha256": "ac9917d474666fe5da0cd8419dfbc61be547c3d30fc65272c6d75044569af350"
+      "bytes": 5427,
+      "sha256": "f0c18b41a2e97500cc0df7a13742301e60c82cac56530704ffcc1abb5966454f"
     },
     "demo/bang-kl-DEMO.xlsx": {
       "bytes": 4508,
@@ -39,8 +39,8 @@
       "sha256": "63ed37b33c4c2663e8aa90d0cd19643bcda3e5ef25cad21ea9b9ebabe22fcd0e"
     },
     "e_kiem_excel/chay.py": {
-      "bytes": 4372,
-      "sha256": "10eeb3c7d53f28f8d2a0b4b877daf2470165072b50ba69d17765decd39c7c9a2"
+      "bytes": 2968,
+      "sha256": "6abc44d461182372fcd62fd4702c77e33f5a3364319b5bf02abddfa3960194a3"
     },
     "e_kiem_excel/chuan_hoa.py": {
       "bytes": 1459,
@@ -71,24 +71,24 @@
       "sha256": "820b34509482de02dde7fe3f2643ad0ee3afa09c17832ee03ddaf3755f19f19f"
     },
     "engine.json": {
-      "bytes": 10326,
-      "sha256": "644c1dff0a2183d87962b8e65bcc86fbb448fedbd494ae0e43bd22f06d1a8e36"
+      "bytes": 10399,
+      "sha256": "272df4d88beb8e2ca9fb05006065e7f6e712030e3727e716840de53f848f019b"
     },
     "KHAI-SDK-2.1.json": {
       "bytes": 1954,
-      "sha256": "fbcd02cff5f49378d0186a0790c5934bfd0b6bf7a1b41bf516c17116ab323775"
+      "sha256": "c13cac36753383fc6ae32abbd674ba3c5a677e1873ffa9bbc7bf2bd18558f096"
     },
     "NGUON.md": {
-      "bytes": 18146,
-      "sha256": "a320aa8a1be9e0b191ea839a63e1f3b7a460ad5c3f83d5cdd66f42394372878e"
+      "bytes": 18959,
+      "sha256": "12273772152ffa6e07d3318a27d726ac715bac6881f184353996b40d02e99f38"
     },
     "README.md": {
-      "bytes": 13974,
-      "sha256": "38d6a0935154700cfa3b2b5ec662ac1a85c6bc791558553e1f9e012470cf56fb"
+      "bytes": 14233,
+      "sha256": "de49c9f35a3914dcbb76008f6e0d6b086077a6145ec5631d80b283a5e242fbc6"
     },
     "requirements.lock": {
-      "bytes": 631,
-      "sha256": "d82a377d03f0489bbfaccaa739373b000b45dd519b749a585edec90874dc99ec"
+      "bytes": 566,
+      "sha256": "199436aeaeb11a9927fe898cdc9c5dfad2ed512fc21880f522093fedd721f460"
     },
     "ui/du_lieu.js": {
       "bytes": 8960,
@@ -101,6 +101,18 @@
     "ui/tham_so.js": {
       "bytes": 18615,
       "sha256": "56875ca51e781c8150d4aaeeed7632fa78c6952174c257fa51d63bf314bd5952"
+    },
+    "wheels/defusedxml-0.7.1-py2.py3-none-any.whl": {
+      "bytes": 25604,
+      "sha256": "a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61"
+    },
+    "wheels/et_xmlfile-2.0.0-py3-none-any.whl": {
+      "bytes": 18059,
+      "sha256": "7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa"
+    },
+    "wheels/openpyxl-3.1.5-py2.py3-none-any.whl": {
+      "bytes": 250910,
+      "sha256": "5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2"
     }
   }
 }

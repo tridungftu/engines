@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'">
+<title>DEMO UI-TC · KttCore giả</title>
+<style>body{margin:0;padding:28px;background:#f4f6fa}body>p{max-width:1040px;margin:0 auto 20px;font:14px 'Segoe UI',sans-serif;color:#65778b}@media(max-width:640px){body{padding:16px}}</style>
+<p>DEMO · KttCore giả · 21/11/2026 · Chưa nối màn Core thật</p>
+<main></main>
+<script type="module">
+  import {mount} from "../../goi/e_tra_cuu/ui/cau_hinh.js";
+  const thamSo = new URLSearchParams(location.search);
+  let cauHinh = {phien_ban:1,quy_tac_nhom:{tep_id:"tep-quy-tac-DEMO",bam:"sha256:"+"a".repeat(64)}};
+  let phien = 1;
+  const cong = {cau_hinh:{
+    async doc() {return structuredClone({gia_tri:cauHinh,phien_ban_cau_hinh:phien});},
+    async luu(v, p) {
+      if (p !== phien) throw {status:409,ma:"CAU_HINH_XUNG_DOT"};
+      cauHinh=structuredClone(v);return {phien_ban_cau_hinh:++phien};
+    }
+  }};
+  const KttCore = {engine(ma) {if(ma!=="e_tra_cuu") throw new Error("Sai engine DEMO");return cong;}};
+  await mount(document.querySelector("main"), {KttCore});
+  if(thamSo.has("nang_cao")) document.querySelector("details").open=true;
+  if(thamSo.has("loi")) {
+    document.querySelector('[name="ngan_sach.so_trang_toi_da"]').value="61";
+    document.querySelector("form").dispatchEvent(new Event("submit",{cancelable:true}));
+  }
+  document.documentElement.dataset.ketQua="da-dung-bang-KttCore-gia";
+</script>
+</html>

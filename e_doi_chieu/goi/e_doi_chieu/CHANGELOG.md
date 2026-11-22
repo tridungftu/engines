@@ -349,3 +349,16 @@ Bản bàn giao trước kiểm độc lập:
 - Ba màn đã có trong KHAI-SDK-2.1.json; không có khai báo hoặc thao tác mới, giữ nguyên engine.json. Cửa D nạp màn và hiển thị hướng dẫn JSON chung vẫn cần Core.
 
 - Điểm chặn nghiệm thu UI-DC: bộ kiểm snapshot trong so_chu.py chưa nhận annotation examples. Pytest chính thức 571 passed, 519 failed, 74 errors; chưa đạt. Diff tương thích nằm ngoài gói tại docs/UI-DC-TUONG-THICH-SCHEMA.patch, chưa áp dụng vì giới hạn phạm vi UI của lead. Không gộp thay đổi schema trước khi xử lý điểm chặn.
+
+## TS-DC — 21/11/2026 · PR: chờ lead mở
+
+- Thêm màn `ui/soan_quy_tac.js`: quy tắc/cặp đổi nghĩa cố định chỉ đọc;
+  trình soạn vùng bảo vệ, định dạng số/tiền/ngày, lỗi cạnh trường và JSON
+  chỉ đọc trong Nâng cao. Không đổi hành vi xử lý việc hoặc engine.json.
+- Xuất nguyên bytes khi chưa sửa và SHA-256 UTF-8 kèm JSON khi áp dụng;
+  cửa D2 host đề nghị có CAS, khóa khi lỗi/mất ACK đến lúc tải lại.
+- Thêm khai dự kiến riêng và hướng dẫn tham số đầy đủ trong README;
+  kiểm Node không mạng, kiểm chéo lõi Python, ảnh màn DEMO CoreGia.
+- Đã kiểm bằng Core giả (CoreGia); chờ Core nạp D2. Phiếu TS-DC cần lead
+  xác nhận phần danh sách cố định: lõi không hỗ trợ thêm/xóa quy tắc/cặp
+  qua JSON. Schema cấu hình và màn cũ thuộc UI-DC song song.

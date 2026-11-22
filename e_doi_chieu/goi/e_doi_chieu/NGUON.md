@@ -150,6 +150,9 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | `.gitattributes` | `36f5046d7b9e6c15c3d77263f4918fa7997bebfbf79f3a4f3b954da607cd4eed` |
 | `cau_hinh.schema.json` | `7d778dcd893cafe594e928eb277a04acf22f8e90132897203202c69b4b5361fc` |
 | `CHANGELOG.md` | `2923ecd17001d01a5b9483114e75caf4927c10111740af6cac27c469db182d8e` |
+
+| `cau_hinh.schema.json` | `e38e7414afacb2b1abc8fa1e01e28c130213686d79ea3f3d71d7873f5ab39b87` |
+| `CHANGELOG.md` | `027a6af6d1168ebed3c1b8754dc0bccf33a4f4d865bda22ffbfb3123fc56789f` |
 | `demo/DEMO-ban-chot.docx` | `e086e49c1dfad0cdfc702ab141a9de6123cbd123e4c7110df975b673e194bcaa` |
 | `demo/README.md` | `c55d1d9bb7381dd821b4a4c1fea1b129af974ae3c7f83acf35de6ef45fac64bf` |
 | `e_doi_chieu/__init__.py` | `a427fe739dab3a98c108b79f40f7a53328d504300979b71ccc900892064948b3` |
@@ -175,8 +178,8 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | `e_doi_chieu/xac_nhan.py` | `f56a2ce8328332c9411ebfd41a7847534fef415c55f7239cafeb14c76120613a` |
 | `engine.json` | `7a08e144ea442c148c38d37663005c0eba397b1f549a156e123fc5b09703d139` |
 | `ho_so_doi_chieu.schema.json` | `9114bf674c4d16189050eb3130453838b7bc1c2c22f6208a05e866df84adf776` |
-| `KHAI-SDK-2.1.json` | `bc9806d3c4feb276f2a629d6ad63caaf57a2360de5225e9ce49555b802b735ca` |
-| `README.md` | `3f6b9d01f66269b04c00d7e9aab760173aa861c51075bf704929ba9592d77d18` |
+| `KHAI-SDK-2.1.json` | `9421d8192968517da889aa259eb49b59c8c01dcab4dd3bd089c59b8214d54cf0` |
+| `README.md` | `e6d9d9fa3cbe8829ac35d737e7dab0334f55494d9a49c1313a4c8dac03585e2f` |
 | `requirements.lock` | `68ddd023dd5f4610cea4f5aa63fbe91a9915c3b0fde10661edecb430e9f4bc4f` |
 | `sql/001_tao_ngan.sql` | `e71934770ec9664fa902782bd849a4a1d375e428602cff959691154ddb5f5f8e` |
 | `sql/002_xac_nhan.sql` | `276c8e0b24218e5396a27d6f2a2a678be5732b7e9e4890cfd5cf3bbb0eb0f540` |
@@ -190,6 +193,11 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | `ui/cau_hinh.js` | `277b4d15699b0d9856dd6d867258926f1520c1e3782427f401f8a2936f2dc4a6` |
 | `ui/ket_qua.js` | `db596791e2e7f96188c3a18684c550792d346a811837333f8e5609868da95d51` |
 | `ui/loi_ocr.js` | `cd1d4e50013c514d0c1c038f23c0455bc3b33e6131ead6e9a12bde2a209dd480` |
+
+| `ui/cau_hinh.js` | `a3afcf83fb4f97ecf8838113776446e170904251d2ad2788d087986304b0bdbc` |
+| `ui/ket_qua.js` | `1c46bacb03091f777e7c7930bb511e160c5e11a9492680d0a87a65f4450030be` |
+| `ui/loi_ocr.js` | `cab2e90b69e256d910039989e794d5584443b03d34a145bb060f471b3192dc7c` |
+| `ui/soan_quy_tac.js` | `0bc4fbb76dbbda87b362393f303e73cc964129d296a87e038f7410a6044f7ba0` |
 | `van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
 | `yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
 <!-- DC-S22-SHA:CUOI -->

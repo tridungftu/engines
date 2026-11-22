@@ -770,3 +770,94 @@ lead review cổng có ngăn/hồ sơ, khôi phục đúng bytes LF của JSON E
 chạy lại kiểm chung. Nền N1/model/cấu hình/biên bản đã ghim chưa thấy
 trong worktree: công cụ thật từ chối khi thiếu, chờ lead/Anh cung cấp;
 chưa chứng nhận sức chứa/chất lượng model hoặc quyền/vòng đời/ACK Core thật.
+
+## TS-TX — 21/11/2026, PR: chờ lead mở
+
+Kết luận: **Chưa đạt điều kiện nghiệm thu chung** — thành phần TS-TX đã
+hoàn thành và **đã kiểm bằng Core giả (CoreGia)**; CLI SDK chuẩn còn 4/5,
+ca hậu kiểm DEMO vướng C-TX-06 đã có từ TX-7. Không đổi xử lý việc để
+làm xanh ca này. Chưa nối Core thật, không AI/OCR thật, 0 Cloud.
+
+Đã làm:
+
+- Màn MỚI `goi/e_trich_xuat/ui/soan_bo_tham_so.js`: nhúng trong module,
+  đọc bộ đã ghim, nhập Excel E1, sửa đủ 10 cột và quy tắc, thêm/xóa dòng,
+  báo lỗi sát ô, kiểm và xuất `bo_tham_so_json` + `bam_bo_tham_so`.
+- Hàm thuần `e_trich_xuat/soan_bo.py`: dùng E1 và cửa nhận bộ hiện hành,
+  kiểm băm bytes UTF-8, giữ băm Excel gốc, tính lại băm nội dung sau sửa;
+  từ chối Excel >2 MiB/giải nén >16 MiB/bộ >64 KiB/>200 dòng đang dùng.
+  Không lưu đĩa, không có kho bộ trong ngăn engine, không gọi engine khác.
+- Module sở hữu bộ và callback lưu có CAS; 409 khóa lưu đến khi tải lại.
+  Chặn gửi lặp, bỏ kết quả kiểm cũ nếu đang sửa, bỏ phản hồi sau tháo màn.
+- Khai dự kiến riêng tại `KHAI-SDK-2.1.json` mục TS-TX, chưa đăng ký thật.
+  Không đổi `engine.json`, không cần sinh lại danh mục. Không sửa
+  `ui/cau_hinh.js` hoặc `cau_hinh.schema.json` của lát UI-TX song song.
+- README/CHANGELOG chỉ thêm mục TS-TX. `NGUON.md` cập nhật đúng SHA của
+  README/CHANGELOG/test_goi đã đổi và thêm nguồn mới. Test cũ được sửa
+  đúng một assertion về việc không có KHAI, để nhận khai UI/thao tác theo
+  phiếu này; không khôi phục khai ngăn/cấu hình tạm đã lưu trữ.
+
+Kết quả thật, Windows / Python 3.13.14 / SDK 2.2.0 / Node 24.18.0:
+
+| Lệnh | Kết quả |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat` | **4/5 ĐẠT, exit 1**; Hậu kiểm độc lập từng ô DEMO → `DANG_CHAY`, log mất quyền giữ việc; C-TX-06 cũ |
+| `.venv/Scripts/python -B -m pytest e_trich_xuat/tests -q --tb=short --basetemp=.pytest-tmp-ts-tx-chot` | **500 passed, 0 failed, 0 skipped**, 164,81 giây, exit 0 |
+| `.venv/Scripts/python -B e_trich_xuat/tests/kiem_doc_lap.py` | **ĐẠT, exit 0**; không import Core/kênh cũ, không bytecode/liên kết |
+| `node --test e_trich_xuat/tests/ui/soan_bo_ts_tx.test.mjs` | **11/11 passed, 0 failed/skipped**, exit 0; KttCore giả gọi hàm Python thật qua stdin, không mạng |
+| `test_nguon_tx6.py` sau bổ sung sổ nguồn | **1 passed**, exit 0 |
+| `git diff --check` | exit 0 |
+
+Các test TS-TX gồm đọc/nhập/sửa/xuất, đối chiếu lại bằng `doc_bo`, quy tắc,
+trần, Unicode, lỗi E1 an toàn, lưu module/CAS, lỗi nút kiểm, gửi lặp, phản
+hồi muộn và tháo màn. Adapter năng lực DEMO cho CoreGia chỉ ở test, không
+thêm năng lực hoặc nhánh runtime. Không có máy ngoài/bí mật ở TS-TX nên
+kiểm kết nối và che 4 ký tự cuối không áp dụng; màn không gọi `.bi_mat`.
+
+Ảnh dựng bằng KttCore giả, đã xem trực quan:
+
+- [Màn rộng 1240 px](anh-ts-tx/TS-TX-rong.png).
+- [Màn hẹp 420 px](anh-ts-tx/TS-TX-hep.png), bảng chuyển một cột.
+- [Trang DEMO tự chứa](anh-ts-tx/DEMO-ts-tx.html), CSP chặn mạng.
+
+Playwright QA chặn HTTP/HTTPS, báo 0 lỗi JavaScript; chiều rộng trang bằng
+viewport ở cả hai kích thước. Tái dựng: `tests/ui/dung_anh_ts_tx.py`, rồi
+`tests/ui/chup_anh_ts_tx.cjs` (Playwright sẵn có của môi trường công cụ,
+không là dependency runtime). Node unit test không cần Playwright.
+
+Môi trường: venv trong worktree, SDK cài offline từ wheel SHA-256
+`0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`,
+khớp SHA256SUMS. Venv dùng system-site-packages; đã kiểm toàn bộ phiên bản
+dependency trùng hai lock hiện hành, không tải mạng/thêm thư viện runtime.
+Lượt kiểm đầu 499 passed/1 failed do SHA sổ nguồn cũ đã được sửa, sau đó
+chạy lại toàn bộ 500 passed. CLI lỗi encoding console lúc đầu đã chạy lại
+với `PYTHONIOENCODING=utf-8`; kết quả nghiệp vụ thực là 4/5 ở bảng trên.
+
+### Cần Core — TS-TX
+
+- D2: host nạp màn nhúng vào quản lý bộ của module, truyền tham số/định
+  danh cùng phiên bản bản ghi, nhận đúng hai chuỗi xuất; giữ tham số bước
+  khác và không định dạng lại JSON sau tính băm.
+- E: nối `soan_bo_tham_so` tới `ham_thao_tac`, kiểm quyền Admin phù hợp
+  với module; chuyển bytes Excel qua payload base64 có trần 2 MiB tệp
+  (khoảng 2,8 MiB base64), thời hạn dự kiến 30 giây. SDK 2.2.0 chưa có
+  decorator quản trị, không khai khóa chưa hỗ trợ vào manifest.
+- Module cung cấp đọc/lưu CAS nguyên tử và phân quyền cho bộ của mình;
+  trả phiên bản mới hoặc lỗi 409. Không lưu bộ vào ngăn engine.
+- Giữ C-TX-06 hiện có để CLI chuẩn đạt 5/5; chưa yêu cầu Anh quyết định
+  nghiệp vụ mới. Linux/Core thật chưa kiểm.
+
+Lệch khỏi phiếu / quyết định tạm: không nới cổng; schema cấu hình do lát
+UI-TX xử lý theo phân chia file của lead. Hợp đồng nhúng và thao tác là
+**dự kiến**, đã ghi README/KHAI; không nhận là API Core hiện hành.
+Không xóa tệp, không commit/push; lead gộp và mở PR.
+
+Thời gian thực tế TS-TX: **21/11/2026 21:42–22:17 (UTC+07), khoảng 0,58 giờ**; phiếu **4 giờ ước tính**. Mốc chốt kiểm và hồ sơ: 22:17.
+
+## UI-TX — 21/11/2026, PR: chờ lead mở
+
+- Hoàn thiện màn ngân sách token, thông báo lỗi tại ô, lưu CAS và mô tả schema; khai màn dự kiến trong `KHAI-SDK-2.1.json`. Ảnh dựng bằng KttCore giả: `UI-TX-DEMO.png`. Không thay xử lý việc.
+- Kiểm UI Node: 7/7 đạt; kiểm độc lập gói đạt. **Đã kiểm bằng Core giả (CoreGia)**, chưa nối Core thật.
+- SDK 2.2.0 `thu`: 4/5 đạt, exit 1; ví dụ hậu kiểm trả `DANG_CHAY` do thiếu hồ sơ tham chiếu, thuộc C-TX-06 đã ghi nhận. Kiểm chung chưa đạt.
+- Không có nút kiểm máy ngoài hoặc bí mật trong phạm vi UI-TX.
+- Cần Core: hỗ trợ nạp màn engine và hiển thị mô tả schema trong ô cấu hình chung (cửa D); xử lý C-TX-06 cho ví dụ hậu kiểm.

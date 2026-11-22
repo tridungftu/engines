@@ -1,0 +1,23 @@
+[
+  {
+    "anh": "toan-ven-desktop.png",
+    "rong": 1180,
+    "noiDung": 1165,
+    "loi": 0,
+    "cao": 2796
+  },
+  {
+    "anh": "khuon-cot-desktop.png",
+    "rong": 1180,
+    "noiDung": 1165,
+    "loi": 0,
+    "cao": 2058
+  },
+  {
+    "anh": "toan-ven-mobile.png",
+    "rong": 390,
+    "noiDung": 390,
+    "loi": 0,
+    "cao": 3493
+  }
+]

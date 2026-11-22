@@ -2,6 +2,8 @@
 
 ## 0.1.0 — 21/11/2026
 
+- **TS-PL:** trình soạn dùng chung năm năng lực cho danh mục, quy tắc theo thứ tự, PM/TE/SAD chính xác, chính sách và khuôn cột; lỗi cạnh ô, trần UTF-8, nút kiểm, callback lưu/CAS dự kiến cửa D2. Bổ sung diễn giải/mẫu của năm tham số JSON; không đổi hàm xử lý việc. Đã kiểm bằng Core giả (CoreGia); chưa nối màn bước Core thật.
+
 - **PL-0:** khung SDK 2.2.0, năm năng lực, sáu bảng ngăn theo pháp nhân, migration SQL và kiểm kê SHA-256; thử lại CAS, kiểm độc lập.
 - **PL-0B:** bộ DEMO 500 nghiệp vụ, đáp án lớp 1 và phong bì AI giả, sinh lại tất định.
 - **PL-1:** đọc JSON/Decimal, kiểm dữ liệu và ngưỡng PM/TE/SAD; phân loại module/quy tắc, chống chia nhỏ trong lô, xử lý thiếu tiền tệ.

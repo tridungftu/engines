@@ -5,7 +5,12 @@
   "properties": {
     "phien_ban": {
       "type": "integer",
-      "const": 1
+      "const": 1,
+      "title": "Phiên bản cấu hình",
+      "description": "Bắt buộc khi lưu; số nguyên cố định là 1.",
+      "examples": [
+        1
+      ]
     },
     "quy_tac_nhom": {
       "type": "object",
@@ -19,13 +24,31 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 200,
-          "pattern": "^[^\\s/\\\\:]+$"
+          "pattern": "^[^\\s/\\\\:]+$",
+          "title": "Tham chiếu bộ quy tắc tại Core",
+          "description": "Bắt buộc trong quy_tac_nhom; chuỗi 1–200 ký tự, không có khoảng trắng, /, \\ hoặc dấu hai chấm; không nhập đường dẫn máy.",
+          "examples": [
+            "tep-quy-tac-DEMO"
+          ]
         },
         "bam": {
           "type": "string",
-          "pattern": "^sha256:[0-9a-f]{64}$"
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Băm xác nhận bộ quy tắc",
+          "description": "Bắt buộc trong quy_tac_nhom; sha256: và đúng 64 ký tự 0–9 hoặc a–f, phải khớp tệp quy tắc.",
+          "examples": [
+            "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
         }
-      }
+      },
+      "title": "Bộ quy tắc nhóm",
+      "description": "Bắt buộc khi lưu; gồm tham chiếu tep_id và băm bam do Core cấp.",
+      "examples": [
+        {
+          "tep_id": "tep-quy-tac-DEMO",
+          "bam": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ]
     },
     "phan_loai": {
       "type": "object",
@@ -38,18 +61,40 @@
             "chua_do",
             "da_do"
           ],
-          "default": "chua_do"
+          "default": "chua_do",
+          "title": "Trạng thái đo phân loại",
+          "description": "Tùy chọn; chua_do = chưa đo (mặc định), da_do = đã đo. Khi chua_do phải bỏ nguong và bam_bo_do.",
+          "examples": [
+            "chua_do"
+          ]
         },
         "nguong": {
           "type": "number",
           "minimum": 0,
-          "maximum": 1
+          "maximum": 1,
+          "title": "Ngưỡng phân loại đã đo",
+          "description": "Bắt buộc khi da_do; số từ 0 đến 1 (0.91 = 91%). Không điền khi chua_do. Mẫu DEMO không phải phê duyệt thật.",
+          "examples": [
+            0.91
+          ]
         },
         "bam_bo_do": {
           "type": "string",
-          "pattern": "^sha256:[0-9a-f]{64}$"
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Băm bộ dữ liệu đo",
+          "description": "Bắt buộc khi da_do; sha256: và 64 ký tự 0–9 hoặc a–f. Không điền khi chua_do.",
+          "examples": [
+            "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
         }
-      }
+      },
+      "title": "Kết quả đo phân loại",
+      "description": "Tùy chọn; mặc định chưa đo. Chỉ hiển thị ngưỡng, không kích hoạt hoặc tự đặt ngưỡng.",
+      "examples": [
+        {
+          "trang_thai": "chua_do"
+        }
+      ]
     },
     "cat_doan": {
       "type": "object",
@@ -60,21 +105,45 @@
           "type": "integer",
           "minimum": 200,
           "maximum": 8000,
-          "default": 2000
+          "default": 2000,
+          "title": "Độ dài mục tiêu mỗi đoạn",
+          "description": "Tùy chọn; số nguyên từ 200 đến 8000 ký tự; mặc định 2000 ký tự. Vượt trần sẽ từ chối.",
+          "examples": [
+            2000
+          ]
         },
         "ky_tu_don_vi_toi_da": {
           "type": "integer",
           "minimum": 200,
           "maximum": 8000,
-          "default": 8000
+          "default": 8000,
+          "title": "Trần ký tự mỗi đơn vị",
+          "description": "Tùy chọn; số nguyên từ 200 đến 8000 ký tự; mặc định 8000 ký tự. Vượt trần sẽ từ chối.",
+          "examples": [
+            8000
+          ]
         },
         "so_doan_toi_da": {
           "type": "integer",
           "minimum": 1,
           "maximum": 5000,
-          "default": 5000
+          "default": 5000,
+          "title": "Trần số đoạn",
+          "description": "Tùy chọn; số nguyên từ 1 đến 5000 đoạn; mặc định 5000 đoạn. Vượt trần sẽ từ chối.",
+          "examples": [
+            5000
+          ]
         }
-      }
+      },
+      "title": "Cắt đoạn tài liệu",
+      "description": "Tùy chọn; bỏ trống dùng mặc định từng trường. do_dai_muc_tieu không vượt ky_tu_don_vi_toi_da.",
+      "examples": [
+        {
+          "do_dai_muc_tieu": 2000,
+          "ky_tu_don_vi_toi_da": 8000,
+          "so_doan_toi_da": 5000
+        }
+      ]
     },
     "ngan_sach": {
       "type": "object",
@@ -85,82 +154,200 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 1048576,
-          "default": 1048576
+          "default": 1048576,
+          "title": "Trần byte yêu cầu JSON",
+          "description": "Tùy chọn; số nguyên từ 1 đến 1048576 byte; mặc định 1048576 byte. Vượt trần sẽ từ chối.",
+          "examples": [
+            1048576
+          ]
         },
         "tep_toi_da_byte": {
           "type": "integer",
           "minimum": 1,
           "maximum": 20971520,
-          "default": 20971520
+          "default": 20971520,
+          "title": "Trần byte mỗi tệp",
+          "description": "Tùy chọn; số nguyên từ 1 đến 20971520 byte; mặc định 20971520 byte. Vượt trần sẽ từ chối.",
+          "examples": [
+            20971520
+          ]
         },
         "tong_doc_toi_da_byte": {
           "type": "integer",
           "minimum": 1,
           "maximum": 67108864,
-          "default": 67108864
+          "default": 67108864,
+          "title": "Trần tổng byte đọc",
+          "description": "Tùy chọn; số nguyên từ 1 đến 67108864 byte; mặc định 67108864 byte. Vượt trần sẽ từ chối.",
+          "examples": [
+            67108864
+          ]
         },
         "van_ban_toi_da_ky_tu": {
           "type": "integer",
           "minimum": 1,
           "maximum": 500000,
-          "default": 500000
+          "default": 500000,
+          "title": "Trần ký tự văn bản",
+          "description": "Tùy chọn; số nguyên từ 1 đến 500000 ký tự; mặc định 500000 ký tự. Vượt trần sẽ từ chối.",
+          "examples": [
+            500000
+          ]
         },
         "so_trang_toi_da": {
           "type": "integer",
           "minimum": 1,
           "maximum": 60,
-          "default": 60
+          "default": 60,
+          "title": "Trần số trang",
+          "description": "Tùy chọn; số nguyên từ 1 đến 60 trang; mặc định 60 trang. Vượt trần sẽ từ chối.",
+          "examples": [
+            60
+          ]
         },
         "cau_hoi_toi_da_ky_tu": {
           "type": "integer",
           "minimum": 1,
           "maximum": 4000,
-          "default": 4000
+          "default": 4000,
+          "title": "Trần ký tự câu hỏi",
+          "description": "Tùy chọn; số nguyên từ 1 đến 4000 ký tự; mặc định 4000 ký tự. Vượt trần sẽ từ chối.",
+          "examples": [
+            4000
+          ]
         },
         "so_ham_toi_da": {
           "type": "integer",
           "minimum": 1,
           "maximum": 100,
-          "default": 100
+          "default": 100,
+          "title": "Trần số hàm",
+          "description": "Tùy chọn; số nguyên từ 1 đến 100 mục; mặc định 100 mục. Vượt trần sẽ từ chối.",
+          "examples": [
+            100
+          ]
         },
         "so_muc_danh_muc_toi_da": {
           "type": "integer",
           "minimum": 1,
           "maximum": 1000,
-          "default": 1000
+          "default": 1000,
+          "title": "Trần số mục danh mục",
+          "description": "Tùy chọn; số nguyên từ 1 đến 1000 mục; mặc định 1000 mục. Vượt trần sẽ từ chối.",
+          "examples": [
+            1000
+          ]
         },
         "so_ung_vien_toi_da": {
           "type": "integer",
           "minimum": 1,
           "maximum": 50,
-          "default": 50
+          "default": 50,
+          "title": "Trần số ứng viên",
+          "description": "Tùy chọn; số nguyên từ 1 đến 50 mục; mặc định 50 mục. Vượt trần sẽ từ chối.",
+          "examples": [
+            50
+          ]
         },
         "ai_toi_da_ky_tu": {
           "type": "integer",
           "minimum": 1,
           "maximum": 100000,
-          "default": 100000
+          "default": 100000,
+          "title": "Trần ký tự ngữ cảnh AI",
+          "description": "Tùy chọn; số nguyên từ 1 đến 100000 ký tự; mặc định 100000 ký tự. Vượt trần sẽ từ chối.",
+          "examples": [
+            100000
+          ]
         },
         "khuon_toi_da_byte": {
           "type": "integer",
           "minimum": 1,
           "maximum": 32768,
-          "default": 32768
+          "default": 32768,
+          "title": "Trần byte khuôn AI",
+          "description": "Tùy chọn; số nguyên từ 1 đến 32768 byte; mặc định 32768 byte. Vượt trần sẽ từ chối.",
+          "examples": [
+            32768
+          ]
         },
         "chuyen_tiep_toi_da_byte": {
           "type": "integer",
           "minimum": 1,
           "maximum": 65536,
-          "default": 65536
+          "default": 65536,
+          "title": "Trần byte chuyển tiếp",
+          "description": "Tùy chọn; số nguyên từ 1 đến 65536 byte; mặc định 65536 byte. Vượt trần sẽ từ chối.",
+          "examples": [
+            65536
+          ]
         },
         "ho_so_toi_da_byte": {
           "type": "integer",
           "minimum": 1,
           "maximum": 65536,
-          "default": 65536
+          "default": 65536,
+          "title": "Trần byte phong bì hồ sơ",
+          "description": "Tùy chọn; số nguyên từ 1 đến 65536 byte; mặc định 65536 byte. Vượt trần sẽ từ chối.",
+          "examples": [
+            65536
+          ]
         }
-      }
+      },
+      "title": "Ngân sách xử lý",
+      "description": "Tùy chọn; bỏ trống dùng mặc định từng trường. Vượt trần sẽ từ chối, không cắt ngầm dữ liệu.",
+      "examples": [
+        {
+          "json_chinh_toi_da_byte": 1048576,
+          "tep_toi_da_byte": 20971520,
+          "tong_doc_toi_da_byte": 67108864,
+          "van_ban_toi_da_ky_tu": 500000,
+          "so_trang_toi_da": 60,
+          "cau_hoi_toi_da_ky_tu": 4000,
+          "so_ham_toi_da": 100,
+          "so_muc_danh_muc_toi_da": 1000,
+          "so_ung_vien_toi_da": 50,
+          "ai_toi_da_ky_tu": 100000,
+          "khuon_toi_da_byte": 32768,
+          "chuyen_tiep_toi_da_byte": 65536,
+          "ho_so_toi_da_byte": 65536
+        }
+      ]
     }
   },
-  "description": "Chưa khai đủ phien_ban và quy_tac_nhom thì engine khởi động được; việc cần cấu hình trả CHUA_CAU_HINH."
+  "description": "Cấu hình Tra cứu tài liệu. Ưu tiên màn Cơ bản/Nâng cao. Nếu nhập JSON tại Core, dùng cấu trúc từng trường bên dưới. Cần tham chiếu và băm bộ quy tắc do Core cấp; chưa có cấu hình hợp lệ thì việc cần cấu hình bị từ chối. Không tự tạo cấu hình trên máy. Mẫu DEMO chỉ minh họa, không phải số đo hoặc phê duyệt thật.\n\nphien_ban (integer): Phiên bản cấu hình. Bắt buộc khi lưu; số nguyên cố định là 1.\nquy_tac_nhom (object): Bộ quy tắc nhóm. Bắt buộc khi lưu; gồm tham chiếu tep_id và băm bam do Core cấp.\nquy_tac_nhom.tep_id (string): Tham chiếu bộ quy tắc tại Core. Bắt buộc trong quy_tac_nhom; chuỗi 1–200 ký tự, không có khoảng trắng, /, \\ hoặc dấu hai chấm; không nhập đường dẫn máy.\nquy_tac_nhom.bam (string): Băm xác nhận bộ quy tắc. Bắt buộc trong quy_tac_nhom; sha256: và đúng 64 ký tự 0–9 hoặc a–f, phải khớp tệp quy tắc.\nphan_loai (object): Kết quả đo phân loại. Tùy chọn; mặc định chưa đo. Chỉ hiển thị ngưỡng, không kích hoạt hoặc tự đặt ngưỡng.\nphan_loai.trang_thai (string): Trạng thái đo phân loại. Tùy chọn; chua_do = chưa đo (mặc định), da_do = đã đo. Khi chua_do phải bỏ nguong và bam_bo_do.\nphan_loai.nguong (number): Ngưỡng phân loại đã đo. Bắt buộc khi da_do; số từ 0 đến 1 (0.91 = 91%). Không điền khi chua_do. Mẫu DEMO không phải phê duyệt thật.\nphan_loai.bam_bo_do (string): Băm bộ dữ liệu đo. Bắt buộc khi da_do; sha256: và 64 ký tự 0–9 hoặc a–f. Không điền khi chua_do.\ncat_doan (object): Cắt đoạn tài liệu. Tùy chọn; bỏ trống dùng mặc định từng trường. do_dai_muc_tieu không vượt ky_tu_don_vi_toi_da.\ncat_doan.do_dai_muc_tieu (integer): Độ dài mục tiêu mỗi đoạn. Tùy chọn; số nguyên từ 200 đến 8000 ký tự; mặc định 2000 ký tự. Vượt trần sẽ từ chối.\ncat_doan.ky_tu_don_vi_toi_da (integer): Trần ký tự mỗi đơn vị. Tùy chọn; số nguyên từ 200 đến 8000 ký tự; mặc định 8000 ký tự. Vượt trần sẽ từ chối.\ncat_doan.so_doan_toi_da (integer): Trần số đoạn. Tùy chọn; số nguyên từ 1 đến 5000 đoạn; mặc định 5000 đoạn. Vượt trần sẽ từ chối.\nngan_sach (object): Ngân sách xử lý. Tùy chọn; bỏ trống dùng mặc định từng trường. Vượt trần sẽ từ chối, không cắt ngầm dữ liệu.\nngan_sach.json_chinh_toi_da_byte (integer): Trần byte yêu cầu JSON. Tùy chọn; số nguyên từ 1 đến 1048576 byte; mặc định 1048576 byte. Vượt trần sẽ từ chối.\nngan_sach.tep_toi_da_byte (integer): Trần byte mỗi tệp. Tùy chọn; số nguyên từ 1 đến 20971520 byte; mặc định 20971520 byte. Vượt trần sẽ từ chối.\nngan_sach.tong_doc_toi_da_byte (integer): Trần tổng byte đọc. Tùy chọn; số nguyên từ 1 đến 67108864 byte; mặc định 67108864 byte. Vượt trần sẽ từ chối.\nngan_sach.van_ban_toi_da_ky_tu (integer): Trần ký tự văn bản. Tùy chọn; số nguyên từ 1 đến 500000 ký tự; mặc định 500000 ký tự. Vượt trần sẽ từ chối.\nngan_sach.so_trang_toi_da (integer): Trần số trang. Tùy chọn; số nguyên từ 1 đến 60 trang; mặc định 60 trang. Vượt trần sẽ từ chối.\nngan_sach.cau_hoi_toi_da_ky_tu (integer): Trần ký tự câu hỏi. Tùy chọn; số nguyên từ 1 đến 4000 ký tự; mặc định 4000 ký tự. Vượt trần sẽ từ chối.\nngan_sach.so_ham_toi_da (integer): Trần số hàm. Tùy chọn; số nguyên từ 1 đến 100 mục; mặc định 100 mục. Vượt trần sẽ từ chối.\nngan_sach.so_muc_danh_muc_toi_da (integer): Trần số mục danh mục. Tùy chọn; số nguyên từ 1 đến 1000 mục; mặc định 1000 mục. Vượt trần sẽ từ chối.\nngan_sach.so_ung_vien_toi_da (integer): Trần số ứng viên. Tùy chọn; số nguyên từ 1 đến 50 mục; mặc định 50 mục. Vượt trần sẽ từ chối.\nngan_sach.ai_toi_da_ky_tu (integer): Trần ký tự ngữ cảnh AI. Tùy chọn; số nguyên từ 1 đến 100000 ký tự; mặc định 100000 ký tự. Vượt trần sẽ từ chối.\nngan_sach.khuon_toi_da_byte (integer): Trần byte khuôn AI. Tùy chọn; số nguyên từ 1 đến 32768 byte; mặc định 32768 byte. Vượt trần sẽ từ chối.\nngan_sach.chuyen_tiep_toi_da_byte (integer): Trần byte chuyển tiếp. Tùy chọn; số nguyên từ 1 đến 65536 byte; mặc định 65536 byte. Vượt trần sẽ từ chối.\nngan_sach.ho_so_toi_da_byte (integer): Trần byte phong bì hồ sơ. Tùy chọn; số nguyên từ 1 đến 65536 byte; mặc định 65536 byte. Vượt trần sẽ từ chối.\n\nMẫu điền DEMO đầy đủ:\n{\n  \"phien_ban\": 1,\n  \"quy_tac_nhom\": {\n    \"tep_id\": \"tep-quy-tac-DEMO\",\n    \"bam\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n  },\n  \"phan_loai\": {\n    \"trang_thai\": \"da_do\",\n    \"nguong\": 0.91,\n    \"bam_bo_do\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n  },\n  \"cat_doan\": {\n    \"do_dai_muc_tieu\": 2000,\n    \"ky_tu_don_vi_toi_da\": 8000,\n    \"so_doan_toi_da\": 5000\n  },\n  \"ngan_sach\": {\n    \"json_chinh_toi_da_byte\": 1048576,\n    \"tep_toi_da_byte\": 20971520,\n    \"tong_doc_toi_da_byte\": 67108864,\n    \"van_ban_toi_da_ky_tu\": 500000,\n    \"so_trang_toi_da\": 60,\n    \"cau_hoi_toi_da_ky_tu\": 4000,\n    \"so_ham_toi_da\": 100,\n    \"so_muc_danh_muc_toi_da\": 1000,\n    \"so_ung_vien_toi_da\": 50,\n    \"ai_toi_da_ky_tu\": 100000,\n    \"khuon_toi_da_byte\": 32768,\n    \"chuyen_tiep_toi_da_byte\": 65536,\n    \"ho_so_toi_da_byte\": 65536\n  }\n}",
+  "examples": [
+    {
+      "phien_ban": 1,
+      "quy_tac_nhom": {
+        "tep_id": "tep-quy-tac-DEMO",
+        "bam": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "phan_loai": {
+        "trang_thai": "da_do",
+        "nguong": 0.91,
+        "bam_bo_do": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "cat_doan": {
+        "do_dai_muc_tieu": 2000,
+        "ky_tu_don_vi_toi_da": 8000,
+        "so_doan_toi_da": 5000
+      },
+      "ngan_sach": {
+        "json_chinh_toi_da_byte": 1048576,
+        "tep_toi_da_byte": 20971520,
+        "tong_doc_toi_da_byte": 67108864,
+        "van_ban_toi_da_ky_tu": 500000,
+        "so_trang_toi_da": 60,
+        "cau_hoi_toi_da_ky_tu": 4000,
+        "so_ham_toi_da": 100,
+        "so_muc_danh_muc_toi_da": 1000,
+        "so_ung_vien_toi_da": 50,
+        "ai_toi_da_ky_tu": 100000,
+        "khuon_toi_da_byte": 32768,
+        "chuyen_tiep_toi_da_byte": 65536,
+        "ho_so_toi_da_byte": 65536
+      }
+    }
+  ]
 }

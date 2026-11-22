@@ -27,7 +27,11 @@ def test_phieu_22_va_khai_21_da_luu_tru():
     assert phieu["cau_hinh"] == {"schema": "cau_hinh.schema.json"}
     assert "ngan_du_lieu" not in phieu and "du_lieu" not in phieu
     assert "giao_dien_quan_tri" not in phieu  # SDK 2.2.0 chưa nhận khóa này.
-    assert not (GOI / "KHAI-SDK-2.1.json").exists()
+    khai = json.loads((GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))
+    assert khai["giao_dien_quan_tri"][0]["tep"] == "ui/cau_hinh.js"
+    # TS-TX khai dự kiến màn/thao tác; không khôi phục ngăn/cấu hình tạm TX-7.
+    assert "TS-TX" in khai and "ngan_du_lieu" not in khai
+    assert khai["TS-TX"]["giao_dien_tham_so"][0]["tep"] == "ui/soan_bo_tham_so.js"
     assert (GOC / "e_trich_xuat/LUU-TRU/TX-7/KHAI-SDK-2.1.json").is_file()
 
 

@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import ast
 from pathlib import Path
-import re
 import sys
 
+from kiem_thu_vien import doc_lock, ten_chuan
 
 THU_MUC_GOI = Path(__file__).resolve().parents[1] / "goi" / "e_ocr"
 _TEN_CAM = {"kenh_engine", "SDKEngine", "Bootstrap", "engine_legacy"}
-_THU_VIEN_NGOAI = {"pdfplumber": "pdfplumber", "PIL": "Pillow", "pypdfium2": "pypdfium2"}
+_THU_VIEN_NGOAI = {"pdfplumber": "pdfplumber", "PIL": "Pillow", "pdfminer": "pdfminer.six",
+                    "pypdfium2": "pypdfium2", "charset_normalizer": "charset-normalizer",
+                    "cryptography": "cryptography", "cffi": "cffi", "_cffi_backend": "cffi",
+                    "pycparser": "pycparser"}
 
 
 def _import_cam(ten):
@@ -23,9 +26,13 @@ def kiem_doc_lap(thu_muc_goi=THU_MUC_GOI):
     if not goc.is_dir() or goc.is_symlink():
         return ["Không tìm thấy thư mục gói độc lập hợp lệ."]
     lock = goc / "requirements.lock"
-    cac_pin = set(re.findall(r"^([A-Za-z0-9_.-]+)==[^\s]+(?:\s+\\)?$", lock.read_text(encoding="utf-8"), re.M)) if lock.is_file() else set()
+    try:
+        cac_pin = set(doc_lock(lock)) if lock.is_file() else set()
+    except (OSError, ValueError):
+        loi.append("requirements.lock: khuôn khóa thư viện không hợp lệ.")
+        cac_pin = set()
     duoc_import = sys.stdlib_module_names | {"e_ocr", "kho_tri_thuc_sdk"} | {
-        ten for ten, goi in _THU_VIEN_NGOAI.items() if goi in cac_pin
+        ten for ten, goi in _THU_VIEN_NGOAI.items() if ten_chuan(goi) in cac_pin
     }
     for tep in sorted(goc.rglob("*")):
         ten = tep.relative_to(goc).as_posix()

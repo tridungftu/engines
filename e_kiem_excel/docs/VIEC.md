@@ -13,13 +13,80 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 6 | Khuôn `tong_quat` | EX-5 | Xong — 18/11/2026 | 4 | PR: chờ lead mở. CLI 5/5 ĐẠT; pytest 144 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia) |
 | 7 | Ghim nguồn, cài máy sạch, đo thời gian/bộ nhớ trên bản hoàn chỉnh, chốt `thoi_han_giay` | EX-6 | Xong — 19/11/2026 (mã + kiểm cục bộ) | 3 | PR: chờ lead mở. CLI 5/5; pytest 240 passed; độc lập mã 0; cài sạch offline đạt. CI Linux 3.11 và Windows CMD chờ chạy; chi tiết cuối sổ |
 | 8 | Trình soạn ô đích, bộ nhóm và khuôn cột cho Cài đặt bước | TS-EX | Xong — 21/11/2026 (mã + kiểm CoreGia) | 4 | PR: chờ lead mở. CLI 5/5; pytest 241 passed, 0 skipped; độc lập mã 0; UI 12/12; 3 ảnh DEMO. Core nạp màn qua cửa D2 còn chờ; chi tiết cuối sổ |
-| | **Tổng** | | | **33** | |
+| 9 | Chạy bằng SDK Core cấp, kiểm lock/wheels, bỏ phụ thuộc SDK nội bộ | SDK25 | Xong — 22/11/2026 (mã + kiểm CoreGia) | 2–4 | PR: chờ lead mở. CLI 5/5; pytest 263 passed, 0 skipped; độc lập mã 0; UI 12/12; cài sạch Windows offline đạt. MIME chờ Core; chi tiết SDK25 bên dưới |
+| | **Tổng** | | | **35–37** | |
+
+## SDK25 — thực hiện 22/11/2026, PR: chờ lead mở
+
+**Kết luận: Đạt kiểm trên SDK 2.5.0. Đã kiểm bằng Core giả (CoreGia); chưa nối
+Core thật.** Python 3.13.14 win_amd64; giữ gói 0.1.3 và toàn bộ lock/wheel lead
+đã chuẩn bị. Không commit/push.
+
+Đã làm:
+
+- Dùng trực tiếp `Engine.tu_khai_bao`, bỏ lớp con ghi đè nhật ký/xử lý việc và
+  đối tượng bọc đường truyền. Không gọi/kiểm chữ ký/monkeypatch nội bộ SDK.
+  Test lỗi bất ngờ qua CoreGia xác nhận câu lỗi chuẩn, không lộ nội dung exception.
+- Kiểm import AST và tiến trình cô lập lấy thư viện/bản ghim từ lock mới, không
+  khóa cứng phiên bản SDK. Công cụ đo hiệu năng đọc phiên bản SDK thực được cài.
+- Thêm 20 ca SDK25: lock ASCII, không BOM/coding/nối dòng/chú thích giữa dòng,
+  không namespace Core/SDK hoặc tên trùng; đủ đúng một wheel/thư viện cùng bản
+  và SHA-256, không wheel thừa/sdist/thư mục con; cho hash Linux cùng dòng.
+- Script máy sạch dùng SDK 2.5.0 có đối chiếu SHA-256 và wheel đi kèm gói, cài
+  offline với hash/binary/no-deps. CMD giữ ASCII/CRLF, ưu tiên Python `.venv`.
+  Workflow Linux dùng wheel gói cho Python 3.11 và 3.13; không tải lại runtime.
+- README, NGUON, CHANGELOG và ghi chú D2 cập nhật; dùng
+  `tests/kiem_bam_goi.py --cap-nhat` sau các chỉnh sửa trong gói.
+
+Kết quả kiểm thật (mọi mã thoát 0):
+
+```text
+.venv\Scripts\python -X utf8 -m kho_tri_thuc_sdk.thu e_kiem_excel/goi/e_kiem_excel
+  5/5 [ĐẠT]; engine 0.1.3, mọi ví dụ chạy thử DEMO đều đạt.
+.venv\Scripts\python -X utf8 -m pytest e_kiem_excel/tests -q
+  263 passed in 43.70s; 0 skipped.
+.venv\Scripts\python -X utf8 e_kiem_excel/tests/kiem_doc_lap.py
+  [ĐẠT] AST, cây gói, import cô lập; CoreGia: 5/5 DEMO XONG.
+node --test e_kiem_excel/tests/ui/tham_so.test.mjs
+  12 pass, 0 fail, 0 skipped.
+cmd.exe /d /c e_kiem_excel\tests\KIEM-MAY-SACH.cmd
+  Cài mới SDK 2.5.0 + ba thư viện offline; băm 28/28; dependency/DEFUSEDXML đạt;
+  CLI 5/5 DEMO; kiểm độc lập đạt.
+sh -n e_kiem_excel/tests/kiem_may_sach.sh
+  Không lỗi cú pháp. Chưa chạy CI Linux trên máy này.
+```
+
+`git grep` không còn ghim SDK cũ ở mã/công cụ đang chạy; các mục còn SDK cũ
+trong docs là lịch sử. `tests/demo/so-do-hieu-nang-EX6.json` là tài liệu số đo
+thực ngày 19/11/2026, giữ nguyên metadata SDK cũ, không gắn nhãn thành số đo
+SDK25. Không còn tham chiếu nội bộ SDK trong mã gói; `git diff --check` đạt.
+
+Thời gian thực tế: **18:29–19:01 ngày 22/11/2026, 32 phút (~0,53 giờ)**;
+ước tính phiếu: **2–4 giờ**.
+
+Lệch khỏi phiếu / quyết định tạm: không đổi xử lý nghiệp vụ, phiên bản thư
+viện hoặc manifest lead đã chuẩn bị; không thêm thư viện/tải mạng. Chấp nhận
+bộ kiểm MIME và câu lỗi chuẩn SDK như phiếu SDK25 cho phép. CI Linux đã cập
+nhật, chờ lead chạy trên GitHub; lượt cài máy sạch Windows đã đạt tại đây.
+
+Cần Core / Chờ Anh mới phát sinh: Core chuẩn hóa MIME `.xlsm` trước SDK hoặc
+SDK nhận MIME không phân biệt hoa/thường. Chi tiết ở mục Cần Core; không có
+câu chặn mới cần Anh trả lời.
 
 ## Chờ Anh
 - Không có câu chặn. Q1–Q3 đã áp đề xuất (16/11/2026).
 - Phụ lục A, hai chỗ lệch nhỏ so với mã gốc (nhóm 6 xét cả nhãn dòng; `dai|rong|cao` khớp chứa chuỗi): EX-2 báo kết quả đo, Anh duyệt nếu muốn chặt hơn.
 
 ## Cần Core
+- **SDK25 (22/11/2026) — MIME, thay ghi nhận EX0-SDK-02:** SDK 2.5.0 vẫn
+  từ chối MIME `.xlsm` chứa `macroEnabled.12` do CoreGia tự gán, trả
+  `DAU_VAO_KHONG_HOP_LE`; dạng `macroenabled.12` được nhận. Đã kiểm bằng Core
+  giả (CoreGia), cả đầu vào gửi kèm và tải riêng. Đã bỏ lớp bọc SDK nội bộ;
+  cần Core chuẩn hóa MIME trước khi giao việc hoặc SDK nhận MIME không phân
+  biệt hoa/thường. Chưa xác nhận thuật toán gán MIME trên Core thật.
+- **SDK25 — câu lỗi/log:** dùng nguyên câu lỗi chuẩn và log đã lọc của SDK
+  2.5.0; không có cửa công khai trong hướng dẫn engine để đổi câu/định dạng log.
+  Nếu cần tùy biến, đề nghị SDK cấp cửa công khai; engine không ghi đè nội bộ.
 - **TS-EX (21/11/2026) — cửa D2:** nạp `ui/tham_so.js` theo khai dự kiến
   `KHAI-SDK-2.1.json` vào Cài đặt bước cho hai năng lực; Core cấp bản tham số,
   danh sách sheet từ tệp mẫu (nếu có), quyền và phiên bản bước. Callback
@@ -44,7 +111,9 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 - **EX-1 (18/11):** không phát sinh yêu cầu Core/SDK. Hai DEMO `excel.toan_ven@1` đã XONG qua CLI chuẩn; mục EX0-SDK-01 bên dưới hiện chỉ còn ví dụ `excel.doc_bang@1` của EX-4. Giữ nguyên ví dụ này, không thay kỳ vọng CLI thành đạt; lead chạy lại cả gói sau khi ghép EX-4. MIME vẫn theo EX0-SDK-02.
 - **Cần Core xác nhận** MIME khi tải `.xlsx`/`.xlsm` lên Core thật. `API-ENGINE-v1.md` chỉ quy định trường `mime`, không cam kết thuật toán gán MIME. SDK `thu.py`, `CoreGia.them_tep` → `_mime` trả `.xlsx`: `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`; `.xlsm`: `application/vnd.ms-excel.sheet.macroEnabled.12`. HTTP tải byte của `MayChuGia` dùng `application/octet-stream`, khác metadata trong phong bì. Chưa có bằng chứng Core thật; manifest tạm nhận thêm `application/octet-stream`, vẫn kiểm đuôi/chữ ký/ZIP/XML.
 - **EX0-SDK-01 — CLI và hàm tạm mâu thuẫn:** SDK 2.2.0 `thu.main()` chỉ cho `[ĐẠT]` khi `trang_thai == "XONG"`, không có cách khai lỗi kỳ vọng trong `chay_thu_demo`. Yêu cầu EX-0 giữ `LoiNghiepVu("CHUA_LAM", …)` làm ba ví dụ đều kết thúc `LOI`. Giữ nguyên API/SDK và yêu cầu hàm tạm; không đổi lỗi thành thành công hay bỏ DEMO. Cần lead thống nhất nghiệm thu EX-0 theo test lỗi kỳ vọng, hoặc SDK bổ sung cơ chế kiểm lỗi kỳ vọng. CLI chuẩn vẫn mã 1 ở bản này; không tuyên bố đạt ba lệnh.
-- **EX0-SDK-02 — chữ hoa/thường MIME:** manifest và bộ kiểm phong bì của SDK 2.2.0 chỉ nhận MIME viết thường, nhưng CoreGia tự trả `.xlsm` có `macroEnabled.12`; phong bì này bị lỗi `DAU_VAO_KHONG_HOP_LE` trước khi tới engine. Manifest dùng `macroenabled.12`; lớp bọc tạm `CongKiemExcel._lam` chuẩn hóa bản sao MIME của đầu vào gửi kèm/tải riêng, giữ nguyên các kiểm tra và vòng lease/nộp/kết thúc của SDK. Hai ca CoreGia đã kiểm lớp bọc. Cần Core/SDK xử lý MIME không phân biệt hoa/thường để bỏ lớp bọc.
+- **EX0-SDK-02 — lịch sử 18/11:** lớp bọc MIME đã bỏ trong SDK25; trạng thái
+  hiện hành xem mục SDK25/MIME ở trên. Các kết quả cũ bên dưới chỉ ghi nhận
+  lượt kiểm trước khi bỏ lớp bọc.
 
 ## EX-0 — thực hiện 18/11/2026, PR: chờ lead mở
 

@@ -199,7 +199,7 @@ class KhoaThuVienTests(unittest.TestCase):
                 self.assertNotIn(key, entries, 'Khai báo lặp: ' + name)
                 entries[key] = _ten_goi(target)
                 continue
-            pin = re.fullmatch(r'([A-Za-z0-9][A-Za-z0-9._-]*)==([0-9][A-Za-z0-9.!+_-]*)', line)
+            pin = re.fullmatch(r'([A-Za-z0-9][A-Za-z0-9._-]*)==([0-9][A-Za-z0-9.!+_-]*)(?: --hash=sha256:[a-f0-9]{64})*', line)
             self.assertIsNotNone(pin, 'Chỉ chấp nhận exact pin: ' + line)
             name, version = pin.groups()
             name = _ten_goi(name)

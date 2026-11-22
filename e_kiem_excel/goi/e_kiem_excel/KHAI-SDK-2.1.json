@@ -1,5 +1,5 @@
 {
-  "ghi_chu": "Đề xuất cửa D2 ngày 21/11/2026, chưa là hợp đồng SDK 2.2.0. Không chép các khóa này vào engine.json khi SDK chưa nhận. Không có cấu hình engine, ngăn, bí mật hoặc thao tác quản trị mới.",
+  "ghi_chu": "Đề xuất cửa D2 ngày 21/11/2026, chưa là hợp đồng SDK 2.5.0. Không chép các khóa này vào engine.json khi SDK chưa nhận. Không có cấu hình engine, ngăn, bí mật hoặc thao tác quản trị mới.",
   "giao_dien_tham_so": [
     {
       "nang_luc": "excel.toan_ven@1",

@@ -10,5 +10,7 @@ tests/**/*.xlsx binary
 tests/**/*.xlsm binary
 tests/demo/*.json text eol=lf
 tests/** text eol=lf
+tests/*.cmd text eol=crlf
 tests/**/*.xlsx binary
 tests/**/*.xlsm binary
+goi/**/*.whl binary

@@ -344,7 +344,7 @@ def test_trang_thai_chay_dinh_ky_va_dung_luong(monkeypatch):
 
 def test_khai_22_trong_manifest_va_luu_tru_cong_tam():
     phieu = json.loads((GOI / "engine.json").read_text(encoding="utf-8"))
-    assert phieu["tuong_thich"]["sdk"] == ">=2.2.0 <3.0.0"
+    assert phieu["tuong_thich"]["sdk"] == ">=2.4.0 <3.0.0"
     ds = {b["bang"]: b for b in phieu["ngan_du_lieu"]}
     assert "cau_hinh" not in ds
     assert ["phap_nhan_id", "bam_noi_dung"] in ds["luot_abbyy"]["duy_nhat"]

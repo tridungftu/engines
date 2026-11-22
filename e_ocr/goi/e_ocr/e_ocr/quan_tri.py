@@ -1,6 +1,6 @@
 """Kiểm nguồn OCR, không gửi tài liệu, không ghi cấu hình hoặc hạn mức.
 
-SDK 2.2.0 chưa có cổng quản trị. Core nối các hàm trong THAO_TAC theo
+SDK 2.5.0 chưa có cổng quản trị. Core nối các hàm trong THAO_TAC theo
 KHAI-SDK-2.1.json khi mở cổng chung; không đăng ký thành năng lực OCR.
 """
 

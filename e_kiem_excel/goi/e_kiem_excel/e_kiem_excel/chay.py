@@ -1,6 +1,5 @@
 """Cổng SDK kiểm an toàn tệp; kiểm toàn vẹn K1–K8 và báo cáo trong RAM."""
 
-from copy import deepcopy
 from hashlib import sha256
 
 from kho_tri_thuc_sdk.engine import Engine, LoiDuongTruyen, LoiNghiepVu
@@ -11,47 +10,7 @@ from .kiem_tra import KiemTra, ma_hoa_json
 from .bao_cao import ghi
 
 
-if not all(callable(getattr(Engine, ten, None)) for ten in ("_ghi", "_lam")):
-    raise RuntimeError("SDK không có hook nhật ký cần thiết; không thể khởi động an toàn.")
-
-
-def _chuan_mime(dau_vao):
-    """MIME không phân biệt hoa/thường; SDK 2.2.0 hiện chỉ nhận chữ thường."""
-    pb = deepcopy(dau_vao)
-    if isinstance(pb, dict) and pb.get('loai') == 'tep' and isinstance(pb.get('tep'), dict):
-        mime = pb['tep'].get('mime')
-        if isinstance(mime, str):
-            pb['tep']['mime'] = mime.lower()
-    return pb
-
-
-class _DuongChuanMime:
-    """Chỉ bọc đầu vào tải riêng; các lệnh lease/nộp/kết thúc giữ nguyên."""
-
-    def __init__(self, duong):
-        self._duong = duong
-
-    def __getattr__(self, ten):
-        return getattr(self._duong, ten)
-
-    def doc_dau_vao(self, viec_id):
-        return _chuan_mime(self._duong.doc_dau_vao(viec_id))
-
-
-class CongKiemExcel(Engine):
-    """Theo CongHoaDon: chỉ ghi mã cố định, tránh traceback/nội dung exception."""
-
-    def _ghi(self, cau):
-        super()._ghi("EX_SDK_THONG_BAO")
-
-    def _lam(self, dt, viec, du_lieu, cfg):
-        du_lieu = dict(du_lieu)
-        if du_lieu.get('dau_vao') is not None:
-            du_lieu['dau_vao'] = _chuan_mime(du_lieu['dau_vao'])
-        return super()._lam(_DuongChuanMime(dt), viec, du_lieu, cfg)
-
-
-app = CongKiemExcel.tu_khai_bao("engine.json")
+app = Engine.tu_khai_bao("engine.json")
 
 
 def _doc_va_kiem(viec):

@@ -1,5 +1,11 @@
 # Thay đổi
 
+## 1.0.11 — 22/11/2026
+
+- SDK25: chuyển kiểm độc lập, fixture và script máy sạch sang SDK 2.5.0, đọc lock một dòng có hash; kiểm đủ wheel/tên/phiên bản/băm và từ chối SDK/sdist/wheel thừa. Kiểm máy sạch cài thư viện ngoại tuyến vào thư mục riêng theo Core, không sửa cây gói. Không đổi nghiệp vụ hoặc phiên bản thư viện.
+
+- Kèm thư viện để Core tự cài ngoại tuyến (phiếu lead Core 21/11, CĐ-50 mục 6): khai `phu_thuoc_python`, `requirements.lock` mỗi dòng một thư viện có SHA-256, đủ phụ thuộc gián tiếp, không còn dòng SDK; thư mục `wheels/` có đúng một wheel CPython 3.13 win_amd64 hoặc thuần Python cho mỗi dòng. Khoảng SDK nâng lên `>=2.4.0 <3.0.0` vì khóa này có từ SDK 2.4.0. Không đổi xử lý việc.
+
 ## 1.0.10 — 22/11/2026
 
 - UI-OCR: thẻ ABBYY/Tesseract/Hạn mức, nút kiểm Hot Folder và Tesseract. Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.

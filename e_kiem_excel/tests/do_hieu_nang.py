@@ -6,6 +6,7 @@ bytes vào/ra, workbook và báo cáo; không gồm tiến trình sinh DEMO.
 
 import argparse
 from datetime import datetime
+from importlib.metadata import version
 from io import BytesIO
 import hashlib
 import json
@@ -101,7 +102,8 @@ def main():
               phien_ban_engine=json.loads((goi/'engine.json').read_text(encoding='utf-8'))['phien_ban'],
               bam_runtime={p.name: hashlib.sha256(p.read_bytes()).hexdigest()
                            for p in sorted((goi/'e_kiem_excel').glob('*.py'))},
-              sdk='2.2.0', openpyxl='3.1.5', lap=args.lap,
+              sdk=version('kho_tri_thuc_sdk'),
+              openpyxl='3.1.5', lap=args.lap,
               phuong_phap='RSS đỉnh tiến trình; perf_counter quanh CoreGia.chay_thu; không tracemalloc; sinh/nạp module ngoài đồng hồ', do=[])
     with tempfile.TemporaryDirectory(prefix='EX6-DEMO-') as tmp:
         for profile in (1, 5, 10, 20, 'mat_do', 'giai_nen'):

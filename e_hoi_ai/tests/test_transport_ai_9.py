@@ -27,9 +27,12 @@ def goi_handler(local, loai):
 
 @pytest.mark.parametrize("loai", ["tai_lieu", "yeu_cau", "mask"])
 @pytest.mark.parametrize("tinh_huong", ["timeout_sau_post", "202", "mat_ket_noi", "cat_than"])
-def test_sau_post_chua_ro_khong_retry_fallback_hoac_rong(local, loai, tinh_huong):
-    nap_cau_hinh(local.url, thoi_han=0.03)
+def test_sau_post_chua_ro_khong_retry_fallback_hoac_rong(local, loai, tinh_huong, monkeypatch):
+    # Metadata/connect không thuộc lỗi đang kiểm. Timeout 0,03 giây cho toàn
+    # lượt có thể dừng tại GET khi máy bận, chưa hề kiểm được nhánh sau POST.
+    nap_cau_hinh(local.url, thoi_han=2)
     cho = threading.Event()
+    da_nhan_post = threading.Event()
     if tinh_huong == "202":
         local.ma_http = 202
     elif tinh_huong == "mat_ket_noi":
@@ -38,8 +41,27 @@ def test_sau_post_chua_ro_khong_retry_fallback_hoac_rong(local, loai, tinh_huong
     elif tinh_huong == "cat_than":
         local.cat_than_sau_post = True
     else:
-        local.khi_nhan = lambda m, p: cho.wait(0.1) if m == "POST" else None
-    kq = goi_handler(local, loai)
+        doc_phan_hoi = ai_cuc_bo._KetNoiIP.getresponse
+
+        def cho_phan_hoi_post(ket_noi, *args, **kwargs):
+            if ket_noi._method == "POST":
+                assert da_nhan_post.wait(5), "Máy giả chưa xác nhận đã nhận POST."
+                ket_noi.sock.settimeout(0.03)
+            return doc_phan_hoi(ket_noi, *args, **kwargs)
+
+        monkeypatch.setattr(ai_cuc_bo._KetNoiIP, "getresponse", cho_phan_hoi_post)
+        # Giữ phản hồi cho đến khi lời gọi kết thúc; không phụ thuộc scheduler
+        # có đánh thức tiến trình kiểm thử trước khi hết một sleep ngắn hay không.
+        def giu_phan_hoi(m, p):
+            if m == "POST":
+                da_nhan_post.set()
+                cho.wait(10)
+
+        local.khi_nhan = giu_phan_hoi
+    try:
+        kq = goi_handler(local, loai)
+    finally:
+        cho.set()
     assert kq["trang_thai"] == "CHUA_RO" and kq["ket_qua"] is None, kq
     assert kq["ma_tuong_quan"].startswith("local-")
     assert "DEMO-mask" not in kq["ma_tuong_quan"] and local.so_luot_hoi == 1

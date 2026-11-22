@@ -1,0 +1,19 @@
+{
+  "ghi_chu": "Dự kiến cho cửa D/E; SDK 2.2.0 chưa nhận. Không ghép vào engine.json trước khi Core/SDK hỗ trợ. Ngăn và cấu hình đã khai thật ở engine.json.",
+  "giao_dien_quan_tri": [
+    {"ma": "cau_hinh", "ten": "Máy AI", "tep": "ui/cau_hinh.js", "quyen": "admin_core"}
+  ],
+  "thao_tac_quan_tri": [
+    {"ma": "kiem_ket_noi", "ten": "Kiểm tra kết nối", "thoi_han_giay": 30, "ham": "e_hoi_ai.quan_tri:kiem_ket_noi"},
+    {"ma": "tim_may_ai", "ten": "Tự tìm máy AI", "thoi_han_giay": 30, "ham": "e_hoi_ai.quan_tri:tim_may_ai"},
+    {"ma": "lay_danh_sach_model", "ten": "Cập nhật model", "thoi_han_giay": 30, "ham": "e_hoi_ai.quan_tri:lay_danh_sach_model"}
+  ],
+  "hop_dong_du_kien": {
+    "dau_vao_kiem": {"url": "http://127.0.0.1:11434", "timeout_giay": 2},
+    "dau_ra_kiem": {"url": "http://127.0.0.1:11434", "ket_noi": true, "models": [{"id_model": "model-demo", "kha_dung": true}], "kiem_luc": "2026-11-21T14:25:00+00:00", "thong_diep": "Kết nối được"},
+    "dau_vao_tim": {"danh_sach_url": ["http://127.0.0.1:11434"]},
+    "dau_ra_tim": {"danh_sach": [], "so_da_kiem": 2},
+    "gioi_han_tim": "Tối đa 16 IP/cổng duy nhất: đầu vào, cấu hình, catalog Core, loopback 11434/1234; 4 luồng, mỗi GET 1 giây, tối đa 4 API mỗi đích. Không quét subnet hoặc DNS. Tìm không ghi catalog; kiểm máy đã chọn mới ghi.",
+    "bi_mat": "UI-AI-1 không yêu cầu bí mật hoặc gọi .bi_mat; màn Cloud/API key thuộc UI-AI-2."
+  }
+}

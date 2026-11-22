@@ -2,14 +2,29 @@
   "phien_ban": "0.2.0",
   "tep": [
     {
-      "duong_dan": "cau_hinh.schema.json",
-      "bytes": 3978,
-      "sha256": "d5f29134e9abc7a5641eab5ea61d4b16f8a3ab85fc639d362fbc6b7367f2f6b3"
+      "duong_dan": "CHANGELOG.md",
+      "bytes": 21442,
+      "sha256": "3cd7d8f944d6b7b466564eef16ecb9010bdc10013678c73cf6b34ada6d15eec4"
     },
     {
-      "duong_dan": "CHANGELOG.md",
-      "bytes": 20536,
-      "sha256": "eebbbf7186f4438d46c73b6ffd3772632d848224a155f8995e75efbbd193335a"
+      "duong_dan": "KHAI-SDK-2.1.json",
+      "bytes": 509,
+      "sha256": "9696edce282dd440d7237ef76056c4c5f24e51c8b7400a422dc1e47f52a11ebd"
+    },
+    {
+      "duong_dan": "NGUON.md",
+      "bytes": 27412,
+      "sha256": "37e4efed18db3d2fcba267aa7d49a35c03acb35caa8bd9a9d32a3ee5f814b77c"
+    },
+    {
+      "duong_dan": "README.md",
+      "bytes": 17834,
+      "sha256": "d9271644088d33265f854e0398995a4c1337168a1deeb216ca6b5c8e4afdb3bd"
+    },
+    {
+      "duong_dan": "cau_hinh.schema.json",
+      "bytes": 18117,
+      "sha256": "10d80fab13e59b58f1d3e2b5808e08ffd4dda5461461972c1adbba5eba3072e2"
     },
     {
       "duong_dan": "contract/ho_so_tra_cuu.schema.json",
@@ -40,6 +55,106 @@
       "duong_dan": "demo/nguon-DEMO.txt",
       "bytes": 96,
       "sha256": "c04d57101fd906afef0cbbce1c806168662d41fadeb7191a74410f696ba21778"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-ban_dien_doc_lap-DEMO.txt",
+      "bytes": 154,
+      "sha256": "e6381d2074ad049f2f2f5cc39e60c6cf4fbc316dee05df2834a954151ec4b3cb"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-ban_nha-DEMO.txt",
+      "bytes": 152,
+      "sha256": "7778b533c0cfb95b867ef27ad913d973891ae76a5ebd1103b11ffb6326b08d27"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-ban_nhua-DEMO.txt",
+      "bytes": 140,
+      "sha256": "7082d3ed1ad2b037073741a6674943e3e5f94e59c1cfcb7fc0f84b74e47a08e5"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-cong_trinh-DEMO.txt",
+      "bytes": 146,
+      "sha256": "07763b687e2b0d4bd5712b18ea51409c052a3adccf56000e6956e61366cd4333"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-cp-DEMO.txt",
+      "bytes": 161,
+      "sha256": "c59d275c130e11a0cc8f9cf8558e5572bb6ec8e8e09084c639c035bda16a56a6"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-kcn-DEMO.txt",
+      "bytes": 166,
+      "sha256": "6f7b1b848d3cf647e16607059aa19965474d73b6f7e47ee72beec70c4e8c63f5"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-mua_hang-DEMO.txt",
+      "bytes": 156,
+      "sha256": "eea3014d5def9d516b17fc595181ebac60bec5b60919d11d13d4c4b0b387af44"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-nhan_su-DEMO.txt",
+      "bytes": 154,
+      "sha256": "7d400ec9f189750c31ecb8e3a019acd8dd2f0883c26e06d4e7754c074f95f569"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-phap_ly_du_an-DEMO.txt",
+      "bytes": 153,
+      "sha256": "7b873e1efa9344f47144cd56d6deaac02fd629c8c8e09d45b278949b8240a495"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-quy_che_khac-DEMO.txt",
+      "bytes": 148,
+      "sha256": "97450648150a253c9b49456521b1d2fc6bb010235f1b3226d0708b93072503a9"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-quy_che_lao_dong-DEMO.txt",
+      "bytes": 176,
+      "sha256": "b6dc30e053db5620cb1f1fb3a97da06974e07beda84d0794434fe5199d3cd1c6"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-sua-chua-thieu-cong-trinh-DEMO.txt",
+      "bytes": 101,
+      "sha256": "2903964eebd52ea50c5c500f9ed3c836226a8252362132ba166e0370e6889089"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-sua_chua_bao_tri-DEMO.txt",
+      "bytes": 152,
+      "sha256": "ac3265f35b99df50d14cf61e0b415f4c31ee835c3d957bcb59c4132ad0e0bbe6"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-thiet_bi_lap_dat-DEMO.txt",
+      "bytes": 159,
+      "sha256": "d7169c120757f4515bd4e67f29532df4e1aea5e5d4d85d40d6778e3033484d88"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-thue_may-DEMO.txt",
+      "bytes": 149,
+      "sha256": "9e45b6a7a9901558c8c0fd8ab768b1d5f33c42a6295a827e3b94d480f7e55604"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-tnhh-DEMO.txt",
+      "bytes": 172,
+      "sha256": "63a531ca3917d1504de2bab083c49c3f288bb56b79dd62a22c67ccf50a420bb2"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-vat-tu-thieu-cong-trinh-DEMO.txt",
+      "bytes": 110,
+      "sha256": "7f6c932e20b307eed18844e3253f6f5cde09fa21a7965d19e52249dbb9626641"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-vat_tu_cdt_cap-DEMO.txt",
+      "bytes": 161,
+      "sha256": "c8f53f67fe0b06fa4ef28694cc85d4575b4bb483ef505429ae0918751090bd2e"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-vay-DEMO.txt",
+      "bytes": 154,
+      "sha256": "23e3eedb1648fb850745bf197be6f3998b650aaedebac06e7dd3db3bbde976e4"
+    },
+    {
+      "duong_dan": "demo/tc-10/PL-vay-chua-do-DEMO.txt",
+      "bytes": 154,
+      "sha256": "23e3eedb1648fb850745bf197be6f3998b650aaedebac06e7dd3db3bbde976e4"
     },
     {
       "duong_dan": "demo/tc-10/bam-DEMO.json",
@@ -447,106 +562,6 @@
       "sha256": "4f2656525d6a252f1a21e3ce4ae993064d6992d5370b20b2373976316801641c"
     },
     {
-      "duong_dan": "demo/tc-10/PL-ban_dien_doc_lap-DEMO.txt",
-      "bytes": 154,
-      "sha256": "e6381d2074ad049f2f2f5cc39e60c6cf4fbc316dee05df2834a954151ec4b3cb"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-ban_nha-DEMO.txt",
-      "bytes": 152,
-      "sha256": "7778b533c0cfb95b867ef27ad913d973891ae76a5ebd1103b11ffb6326b08d27"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-ban_nhua-DEMO.txt",
-      "bytes": 140,
-      "sha256": "7082d3ed1ad2b037073741a6674943e3e5f94e59c1cfcb7fc0f84b74e47a08e5"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-cong_trinh-DEMO.txt",
-      "bytes": 146,
-      "sha256": "07763b687e2b0d4bd5712b18ea51409c052a3adccf56000e6956e61366cd4333"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-cp-DEMO.txt",
-      "bytes": 161,
-      "sha256": "c59d275c130e11a0cc8f9cf8558e5572bb6ec8e8e09084c639c035bda16a56a6"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-kcn-DEMO.txt",
-      "bytes": 166,
-      "sha256": "6f7b1b848d3cf647e16607059aa19965474d73b6f7e47ee72beec70c4e8c63f5"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-mua_hang-DEMO.txt",
-      "bytes": 156,
-      "sha256": "eea3014d5def9d516b17fc595181ebac60bec5b60919d11d13d4c4b0b387af44"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-nhan_su-DEMO.txt",
-      "bytes": 154,
-      "sha256": "7d400ec9f189750c31ecb8e3a019acd8dd2f0883c26e06d4e7754c074f95f569"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-phap_ly_du_an-DEMO.txt",
-      "bytes": 153,
-      "sha256": "7b873e1efa9344f47144cd56d6deaac02fd629c8c8e09d45b278949b8240a495"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-quy_che_khac-DEMO.txt",
-      "bytes": 148,
-      "sha256": "97450648150a253c9b49456521b1d2fc6bb010235f1b3226d0708b93072503a9"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-quy_che_lao_dong-DEMO.txt",
-      "bytes": 176,
-      "sha256": "b6dc30e053db5620cb1f1fb3a97da06974e07beda84d0794434fe5199d3cd1c6"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-sua-chua-thieu-cong-trinh-DEMO.txt",
-      "bytes": 101,
-      "sha256": "2903964eebd52ea50c5c500f9ed3c836226a8252362132ba166e0370e6889089"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-sua_chua_bao_tri-DEMO.txt",
-      "bytes": 152,
-      "sha256": "ac3265f35b99df50d14cf61e0b415f4c31ee835c3d957bcb59c4132ad0e0bbe6"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-thiet_bi_lap_dat-DEMO.txt",
-      "bytes": 159,
-      "sha256": "d7169c120757f4515bd4e67f29532df4e1aea5e5d4d85d40d6778e3033484d88"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-thue_may-DEMO.txt",
-      "bytes": 149,
-      "sha256": "9e45b6a7a9901558c8c0fd8ab768b1d5f33c42a6295a827e3b94d480f7e55604"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-tnhh-DEMO.txt",
-      "bytes": 172,
-      "sha256": "63a531ca3917d1504de2bab083c49c3f288bb56b79dd62a22c67ccf50a420bb2"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-vat-tu-thieu-cong-trinh-DEMO.txt",
-      "bytes": 110,
-      "sha256": "7f6c932e20b307eed18844e3253f6f5cde09fa21a7965d19e52249dbb9626641"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-vat_tu_cdt_cap-DEMO.txt",
-      "bytes": 161,
-      "sha256": "c8f53f67fe0b06fa4ef28694cc85d4575b4bb483ef505429ae0918751090bd2e"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-vay-chua-do-DEMO.txt",
-      "bytes": 154,
-      "sha256": "23e3eedb1648fb850745bf197be6f3998b650aaedebac06e7dd3db3bbde976e4"
-    },
-    {
-      "duong_dan": "demo/tc-10/PL-vay-DEMO.txt",
-      "bytes": 154,
-      "sha256": "23e3eedb1648fb850745bf197be6f3998b650aaedebac06e7dd3db3bbde976e4"
-    },
-    {
       "duong_dan": "demo/tc-10/vay-DEMO.txt",
       "bytes": 218,
       "sha256": "1878679b0e9b22d11b08272bb8f4bf8d8990463c9de71bad840e9f98c84af9cf"
@@ -677,16 +692,6 @@
       "sha256": "4d331affbdd91e532a2b5a3881b35cc8d09d12a2ee4d78951de12be47ca172ae"
     },
     {
-      "duong_dan": "NGUON.md",
-      "bytes": 27412,
-      "sha256": "37e4efed18db3d2fcba267aa7d49a35c03acb35caa8bd9a9d32a3ee5f814b77c"
-    },
-    {
-      "duong_dan": "README.md",
-      "bytes": 16348,
-      "sha256": "58ef26eb822f914ed1d0b3933dd98f01e83c3db0d46b8c23d6ae864dbc215e6e"
-    },
-    {
       "duong_dan": "requirements.lock",
       "bytes": 103,
       "sha256": "8fa45c1a5222efe4d18008b137604cb5be7c68bc1d4a54c7c130dcc839fba03f"
@@ -698,13 +703,13 @@
     },
     {
       "duong_dan": "ui/cau_hinh.js",
-      "bytes": 8844,
-      "sha256": "f3c202e73d765c9be132cfc5f48a7bb1e256949f69b73c368600a5b0c7d36d73"
+      "bytes": 16722,
+      "sha256": "771ebc820d9d91a395fdfa174f7cf185879f83e77cffc0fb29dd2fff4ddf6871"
     },
     {
       "duong_dan": "ui/trang_thai.js",
-      "bytes": 6852,
-      "sha256": "07e42802468bd9f47ef985f88245500057a0c14d6bfdeca462da774cff1b0678"
+      "bytes": 6844,
+      "sha256": "f358f21c7e2e0d0e6d4fae9a55233381460fcb659b9674fd179f8abf50d65bcd"
     }
   ]
 }

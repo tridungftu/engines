@@ -117,7 +117,7 @@ test("Quét tĩnh UI: không mạng/mã thực thi động/HTML, quyền manifes
     assert.doesNotMatch(text, /\b(?:fetch|eval|XMLHttpRequest|WebSocket)\s*\(|\binnerHTML\s*=|\bnew\s+Function\b/);
     assert.match(text, /KttCore\.engine\("e_tra_cuu"\)/);
   }
-  const khai = JSON.parse(await readFile(new URL("../../LUU-TRU/TC-S22/KHAI-SDK-2.1.json", import.meta.url)));
+  const khai = JSON.parse(await readFile(new URL("../../goi/e_tra_cuu/KHAI-SDK-2.1.json", import.meta.url)));
   assert.equal(khai.giao_dien_quan_tri.find(m => m.ma === "cau_hinh").quyen, "admin_core");
   assert.equal(khai.giao_dien_quan_tri.find(m => m.ma === "trang_thai").quyen, "xem_dot_kiem_theo_phap_nhan");
   const phieu = JSON.parse(await readFile(new URL("../../goi/e_tra_cuu/engine.json", import.meta.url)));

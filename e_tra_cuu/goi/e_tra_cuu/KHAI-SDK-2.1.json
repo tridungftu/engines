@@ -1,0 +1,10 @@
+{
+  "ma_engine": "e_tra_cuu",
+  "ghi_chu": "Chỉ khai dự kiến màn và quyền. Ngăn/cấu hình đã khai qua SDK 2.2.0; Core chưa nạp màn engine. Đã kiểm bằng Core giả (CoreGia)/KttCore giả.",
+  "giao_dien_quan_tri": [
+    {"ma": "cau_hinh", "ten": "Cấu hình", "tep": "ui/cau_hinh.js", "quyen": "admin_core"},
+    {"ma": "trang_thai", "ten": "Trạng thái bài đo", "tep": "ui/trang_thai.js", "quyen": "xem_dot_kiem_theo_phap_nhan"}
+  ],
+  "thao_tac_quan_tri": [],
+  "bi_mat": []
+}

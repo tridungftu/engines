@@ -1,3 +1,15 @@
+# UI-TC — 21/11/2026: cấu hình Cơ bản/Nâng cao
+
+- Bố cục thẻ theo ảnh mẫu, hai cột desktop/một cột mobile; ngưỡng chỉ đọc,
+  độ dài đoạn ở Cơ bản; bộ quy tắc và 15 trần hiện hữu ở Nâng cao thu gọn.
+- Hướng dẫn/mẫu và lỗi cạnh từng ô; giữ CAS, khóa sửa/lưu lặp khi đang lưu;
+  bỏ xưng hô ở cả màn cấu hình và trạng thái, bỏ thông báo ngăn RAM cũ.
+- Bổ sung metadata tiếng Việt cho đủ 26 trường schema và mẫu/cấu trúc gốc;
+  không đổi ràng buộc schema, Python runtime, mặc định hoặc engine.json.
+- Khai dự kiến hai màn trong KHAI-SDK-2.1.json; không khôi phục ngăn cũ.
+  Đã kiểm bằng Core giả (CoreGia)/KttCore giả; ảnh desktop/mobile kèm tài liệu.
+  Chờ Core nạp màn; CLI chuẩn còn thiếu cấu hình/cửa quyền và nguồn.
+
 # TC-11 — 15/11/2026: công cụ thử DEMO ngoài runtime
 
 - Thêm công cụ ngoài gói và .cmd ASCII, chạy khô kiểm băm mặc định không

@@ -1,7 +1,8 @@
 {
-  "ghi_chu": "Dự kiến cho cửa D/E; SDK 2.2.0 chưa nhận. Không ghép vào engine.json trước khi Core/SDK hỗ trợ. Ngăn và cấu hình đã khai thật ở engine.json.",
+  "ghi_chu": "Dự kiến cho cửa D/E/F; SDK 2.2.0 chưa nhận. Không ghép vào engine.json trước khi Core/SDK hỗ trợ. Ngăn và cấu hình Local đã khai thật ở engine.json. Cloud luôn tạm khóa ở bản 1, không đăng ký thao tác kiểm/gọi Cloud.",
   "giao_dien_quan_tri": [
-    {"ma": "cau_hinh", "ten": "Máy AI", "tep": "ui/cau_hinh.js", "quyen": "admin_core"}
+    {"ma": "cau_hinh", "ten": "Máy AI", "tep": "ui/cau_hinh.js", "quyen": "admin_core"},
+    {"ma": "cloud", "ten": "Cổng Cloud AI", "tep": "ui/cloud.js", "quyen": "admin_core"}
   ],
   "thao_tac_quan_tri": [
     {"ma": "kiem_ket_noi", "ten": "Kiểm tra kết nối", "thoi_han_giay": 30, "ham": "e_hoi_ai.quan_tri:kiem_ket_noi"},
@@ -14,6 +15,19 @@
     "dau_vao_tim": {"danh_sach_url": ["http://127.0.0.1:11434"]},
     "dau_ra_tim": {"danh_sach": [], "so_da_kiem": 2},
     "gioi_han_tim": "Tối đa 16 IP/cổng duy nhất: đầu vào, cấu hình, catalog Core, loopback 11434/1234; 4 luồng, mỗi GET 1 giây, tối đa 4 API mỗi đích. Không quét subnet hoặc DNS. Tìm không ghi catalog; kiểm máy đã chọn mới ghi.",
-    "bi_mat": "UI-AI-1 không yêu cầu bí mật hoặc gọi .bi_mat; màn Cloud/API key thuộc UI-AI-2."
-  }
+    "bi_mat": "Máy AI không gọi két; Cổng Cloud AI chỉ nhận metadata, ghi/xóa qua két Core. Không gọi Cloud."
+  },
+  "bi_mat": ["khoa_api_anthropic"],
+  "ket_bi_mat_du_kien": {
+    "quyen": "admin_core; Core kiểm quyền, phạm vi engine và ghi kiểm toán; không trả bản rõ cho trình duyệt",
+    "trang_thai": "KttCore.engine('e_hoi_ai').bi_mat.trang_thai(ten)",
+    "luu": "KttCore.engine('e_hoi_ai').bi_mat.luu(ten, gia_tri, phien_ban)",
+    "xoa": "KttCore.engine('e_hoi_ai').bi_mat.xoa(ten, phien_ban)",
+    "dau_ra": {"da_luu": true, "bon_ky_tu_cuoi": "8QAA", "phien_ban": 7},
+    "dau_ra_chua_luu": {"da_luu": false, "bon_ky_tu_cuoi": null, "phien_ban": 8},
+    "cas": "Phiên bản két riêng, số nguyên không âm; tăng đơn điệu cả khi xóa, không đặt lại để tránh ABA. Ghi/xóa sai phiên bản trả 409 BI_MAT_XUNG_DOT. Không gửi lại mù khi mất phản hồi.",
+    "gioi_han": "Key từ 8 đến 4096 ký tự không khoảng trắng. Không trả bản rõ, kể cả lỗi. UI không có nút hiện key. Chỉ Core lưu và kiểm toán; engine không lưu tệp.",
+    "trang_thai_hien_tai": "Chỉ kiểm bằng KttCore giả. Thiếu cửa F thì khóa thao tác két; không giả thành công."
+  },
+  "nhat_ky_cloud_du_kien": "Chưa có cửa nhật ký chung của Core: nút xem bị khóa, không đọc bảng ngăn chưa khai và không dựng lịch sử rỗng giả. Khi có cửa cần lọc quyền/pháp nhân, phân trang; chỉ metadata ngày, nhà cung cấp, model, kết quả và chi phí kèm mã tiền; không prompt/tài liệu/key."
 }

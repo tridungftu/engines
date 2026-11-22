@@ -4,6 +4,11 @@ Quy ước SHA-256: chuẩn hóa CRLF và CR thành LF trước khi băm; đư�
 
 Gói chạy dùng thư viện chuẩn Python ≥ 3.11 và SDK `kho_tri_thuc_sdk` 2.2.0 từ wheel trong repo. Không thêm thư viện bên ngoài. Ghim đầy đủ và cài máy sạch thuộc AI-5.
 
+## UI-AI-2 — 22/11/2026
+
+- `ui/cloud.js`: viết mới theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md` §2/§4 và ảnh mẫu `cloud-ai.png`; DOM textContent, CSS nội bộ, không thư viện hoặc mạng ngoài. Bố cục thẻ/kích thước theo `ui/cau_hinh.js` của UI-AI-1. Không chép mã Core, không thay Python xử lý việc.
+- Két bí mật là đề xuất cửa F ở `KHAI-SDK-2.1.json`, chỉ kiểm trong RAM bằng KttCore giả. Không coi API dự kiến là đã được SDK phát hành hỗ trợ. Không có bí mật trong gói.
+
 ## Nguồn khung AI-0 đã dùng lại
 
 - Mẫu khung: `docs/goi-gui-engine/sdk-2.0.0/engine-demo/e_demo_dem_tu/` trong repo; chép `engine.json`, `README.md`, `demo/mau.txt`, `e_demo_dem_tu/__init__.py`, `e_demo_dem_tu/chay.py` vào vị trí tương ứng của gói `e_hoi_ai`, rồi sửa tên và nội dung. Đã bỏ nhánh import Core của mẫu; gói chỉ dùng SDK.
@@ -99,7 +104,7 @@ Các đường dẫn dưới đây tính từ thư mục `e_hoi_ai/` trong repo 
 
 ```text
 876cd3641befa9641ab9bc0deabc39419dfca2a31abc3eda4c2f0a382c667695  cau_hinh.schema.json
-9cb90edb066ddebf47f2332089ba048ccda27c705d4c0524f1fba845e93b8adb  CHANGELOG.md
+2033e0a785849c73894e6f9e3b20ba5cb56bef4d19f70b359d7774fe287c6e9f  CHANGELOG.md
 e42b1dee5af2da90583ee94eeac4df0404935de27da7b14a88f79f3f3a27e69c  contract/cau_hinh_may.schema.json
 5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f  contract/tra_loi_ai.schema.json
 81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977  contract/van_ban_tai_lieu.schema.json
@@ -121,9 +126,10 @@ a9b105e6da5680cbdacda179d17357d0b91a8579cdefc7f862db17565803ef14  e_hoi_ai/nha_c
 5f3e0aad0bc0aa11d550137a1aa8468af40a2f78f0058aac2261575758402a42  e_hoi_ai/quan_tri.py
 ba15948dd9254e5daea0596ad46aeb40d84e054ed1e10accc8b6b0bb4385626b  e_hoi_ai/vai_tro_khuon.py
 cb5073b0e4423cddee82d9c7ef78b1c6fc0a2b518246cae46bb66cf533d1343f  engine.json
-e80032d2ed06d8156bb5316eb528bbd9a7c22bc15528b4406efe763cd99140fb  KHAI-SDK-2.1.json
-3eab8b905bf6b568bbfaf0e136d32cf63fba28c63ca00b7315dd78deab2b60ab  README.md
+35bf222e35e0ecf2b2994614d750da66e8efa6cc17b79e37ea13f7f16ef3098f  KHAI-SDK-2.1.json
+09e716765b8116a1ef08925482e98d9707e5e9b03b4b50cae547338ed63a4f5c  README.md
 2042fa331b34afc8df48dcfa2d46909276abd557f828865360618b07b64de5a9  requirements.lock
 2a803c6521dd0a2c50b41e644d7977aaf9318617c8a85afccba214708167cdae  sql/001_tao_model_phat_hien.sql
-03676cc297f317593d7f581be87af438d85a5eb3cac46814eab6def81457a5e9  ui/cau_hinh.js
+cf71c5ae8645149e8a10677350b18f57b994bf3c6625b3188eda7d3c95d6efef  ui/cau_hinh.js
+872534951239e559d075bb29eb704d45a1ae4590d24e62deb54ae62434e06135  ui/cloud.js
 ```

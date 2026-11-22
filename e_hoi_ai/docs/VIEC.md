@@ -29,7 +29,64 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | AI-9 | Nhận diện thực thể theo span chỉ Local, profile MASK-2c và transport theo trạng thái gửi | Sau AI-8; profile lead duyệt 15/11 | Xong phạm vi giả lập — 15/11/2026 | Đã kiểm bằng Core giả (CoreGia); 560 passed, 0 skipped; DEMO 3/3 cũ + 1/1 AI-9; SDK CLI độc lập 0/3 do thiếu cấu hình. Chưa đo model/Core thật. PR: **chờ lead mở** |
 
+| UI-AI-2 | Cổng Cloud AI Tạm khóa; két metadata/CAS; nhật ký chờ Core | Phiếu UI §4 | Chờ Core — 22/11/2026; phần UI đã kiểm bằng Core giả (CoreGia) | PR: **chờ lead mở**. Không commit/push; chi tiết bàn giao ngay dưới. CLI chuẩn vẫn lỗi thiếu cấu hình DEMO có từ AI-11. |
+
+### Bàn giao UI-AI-2 — 22/11/2026
+
+**Kết luận:** Phần UI đã kiểm bằng Core giả (CoreGia); chưa đạt đầy đủ AGENTS.md §5 vì CLI SDK độc lập còn lỗi cấu hình DEMO từ AI-11. PR: **chờ lead mở**; nhánh `codex/e_hoi_ai-ui-ai-2`, không commit/push.
+
+**Đã làm:** màn `ui/cloud.js` theo ảnh mẫu, Tạm khóa; provider/model/tỷ lệ kiểm/nút kiểm Cloud bị khóa. Két chỉ qua `.bi_mat` của `KttCore.engine('e_hoi_ai')`: đọc metadata, nhập password, lưu/xóa dùng CAS riêng tăng cả khi xóa; chỉ hiện bốn ký tự cuối. Xóa ô key ngay trước gửi; lỗi hoặc phản hồi chưa xác nhận đều khóa ghi đến tải lại. Không có nút hiện key, không lưu key vào cấu hình/ngăn/tệp/log. Thiếu cổng Core thì khóa két, không báo đã lưu giả.
+
+Cho phép chuẩn bị key trong két nếu Core hỗ trợ, trong khi mọi đường gửi/kiểm Cloud vẫn khóa. Không cần thao tác Python quản trị Cloud. Nhật ký chưa có cửa Core nên khóa nút xem và nêu chưa xác minh lịch sử; không dựng số lượt hay danh sách rỗng giả. Không đổi `engine.json`, Python xử lý việc hoặc schema. Schema Local đã đủ title/description/examples mọi cấp từ UI-AI-1; thêm kiểm đệ quy bảo toàn. Vì manifest không đổi nên không cần sinh lại danh mục engine.
+
+21 ca Node mới, tổng 45 ca Máy AI + Cloud: đọc/lưu/xóa, lỗi nhập/rỗng/quá trần, CAS lưu/xóa, lỗi đọc/ghi/thiếu API, metadata sai, chặn thao tác song song, không lộ bản rõ. Các nút kiểm thành công/thất bại của Máy AI giữ hồi quy; nút kiểm Cloud bị khóa, không giả lập thành công một lượt gửi Cloud.
+
+Ảnh chụp Chrome headless dựng chính màn gói với KttCore giả, CSP chặn mạng: `docs/anh-ui-ai-2/cloud-ai-rong.png` (1160×1480), `cloud-ai-hep.png` (390×2100), `cloud-ai-loi.png`, `cloud-ai-cas.png`. Đã xem cả bốn ảnh; không tràn ngang. HTML DEMO tự chứa và kịch bản dựng/chụp ngoài gói, dựng lại bằng `node e_hoi_ai/tests/ui/chup_anh_cloud_demo.mjs`.
+
+CHANGELOG/README/NGUON và kiểm kê 30 tệp được cập nhật. SDK 2.2.0 wheel offline có SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp SHA256SUMS. Phụ thuộc pytest đúng `tests/requirements.lock` được sao offline từ bản cùng phiên bản đã cài trên máy vào `.venv`; không thêm dependency chạy.
+
+**Kết quả kiểm thực tế:** đã kiểm bằng Core giả (CoreGia), KttCore giả và Local HTTP giả; chưa kiểm Core thật/Cloud thật/model thật hoặc thực thi lại trên Linux. Trên PowerShell dùng `$env:PYTHONUTF8='1'` để in tiếng Việt và cờ `-B` giữ gói không có bytecode.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+[LỖI] Hỏi số tiền và ngày thanh toán DEMO: Engine chưa được cấu hình.
+[LỖI] Hỏi người bảo lãnh không có trong tài liệu DEMO: Engine chưa được cấu hình.
+[LỖI] Trích tiền và ngày theo khuôn DEMO: Engine chưa được cấu hình.
+=> 0/3 ĐẠT; CHUA_CAU_HINH; exit 1.
+
+.venv/Scripts/python -B -m pytest e_hoi_ai/tests -q
+=> 663 passed, 0 skipped in 184.51s (0:03:04); exit 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+=> exit 0.
+
+node --test e_hoi_ai/tests/ui/cau_hinh.test.mjs e_hoi_ai/tests/ui/cloud.test.mjs
+=> 45 passed, 0 failed, 0 skipped; exit 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/chay_demo_voi_local_gia.py
+=> 3/3 DEMO + 1/1 AI-9 ĐẠT; exit 0 (bổ sung, không thay CLI chuẩn).
+
+node e_hoi_ai/tests/ui/chup_anh_cloud_demo.mjs
+=> 4/4 ảnh rộng/hẹp/lỗi/CAS ĐẠT kiểm DOM, không tràn ngang; exit 0.
+
+git diff --check
+=> exit 0.
+```
+
+Lượt pytest đầu có 661 passed, 2 lỗi băm do tài liệu gói cập nhật khi đang kiểm; đã sinh lại NGUON/kiểm kê và chạy lại toàn bộ trên gói chốt. Không thêm skip.
+
+**Lệch khỏi phiếu / quyết định tạm:** cửa F chưa có chữ ký SDK phát hành, hợp đồng metadata/CAS đề xuất trong KHAI chỉ kiểm bằng giả. Nhật ký chờ Core; không thêm bảng ngăn/route riêng hoặc máy giả vào runtime để làm xanh CLI. Schema đã đủ hướng dẫn nên không sửa dư thừa. Không phát sinh thao tác quản trị Python cho lát này.
+
+**Cần Core / Chờ Anh mới phát sinh:** xem ba mục UI-AI-2 ngay dưới; không có câu hỏi mới chặn Anh. CLI thiếu cấu hình DEMO là nợ cũ.
+
+**Thời gian thực tế:** 22/11/2026 07:02–07:20 (Asia/Saigon), khoảng 0,30 giờ; ước tính phiếu UI §4: 3 giờ.
+
 ## Cần Core (chuyển lead Core qua Anh)
+
+- **UI-AI-2 — 22/11/2026:** cửa D nạp `ui/cloud.js` cho Admin Core; cửa F két theo tên `khoa_api_anthropic`, chỉ trả metadata và bốn ký tự cuối. Hợp đồng đề xuất `.bi_mat.trang_thai/.luu/.xoa`, CAS phiên bản riêng tăng cả khi xóa, lỗi 409 `BI_MAT_XUNG_DOT`, kiểm quyền/phạm vi engine và kiểm toán: xem `KHAI-SDK-2.1.json`. SDK 2.2.0 chưa cấp, không thêm vào engine.json. Thiếu cửa thì màn khóa thao tác, không báo đã lưu giả.
+- **UI-AI-2 — nhật ký:** cần cửa đọc nhật ký gửi ra ngoài chung có quyền/pháp nhân, phân trang; chỉ metadata ngày, provider/model, kết quả/chi phí có đơn vị, không nội dung/key. Hiện khóa nút xem và báo chưa xác minh lịch sử, không tạo bảng riêng hoặc tự ghi sổ engine. Không phát sinh thao tác quản trị Python Cloud, không bật gọi Cloud.
+- **UI-AI-2 — cổng kiểm chung:** CLI `python -m kho_tri_thuc_sdk.thu` vẫn tạo CoreGia mới không cấu hình Local DEMO, trả `CHUA_CAU_HINH` 0/3 như AI-11/UI-AI-1. Cần cửa cấu hình DEMO/Local giả được SDK hỗ trợ; không đổi SDK, handler hoặc manifest để báo xanh giả. Bộ `chay_demo_voi_local_gia.py` chỉ là bằng chứng bổ sung.
 
 - **AI-9 — 15/11/2026:** cần cửa chung chứng thực nguồn `ai.hoi_mask_cuc_bo@1`/Local của từng phản hồi gắn đúng người/module/tài liệu/pháp nhân, yêu cầu và snapshot; không tin `nha_cung_cap`/băm caller tự khai. Core giữ bytes JSON chuẩn toàn yêu cầu để Mask kiểm `bam_dau_vao`; băm snapshot/profile/bản che phải đối chiếu bytes thật có quyền. AI-9 chỉ tái tính được prompt/khuôn/đoạn và gốc khi một đoạn; không tự tạo chứng cứ thay Core.
 - **AI-9 — điều phối:** Core lập/ghim/lặp kế hoạch đoạn, overlap/đủ phủ, giữ mọi yêu cầu/phản hồi, ghép tập cuối và chứng thực phần thêm `tap_phan_hoi`; có deadline toàn chuỗi/hủy/mất lease/ChuaRo, không tự giao lại POST chưa rõ. Cần kho snapshot/tệp con với quyền mở xuyên bước và vòng đời tới khi hậu kiểm/chốt xong, cơ chế bền chống lặp/ACK qua SDK 2.1. Không viết route Core riêng hoặc coi CoreGia là nghiệm thu các quyền này.

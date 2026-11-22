@@ -1,0 +1,174 @@
+<!doctype html><html lang="vi"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'">
+<title>DEMO Cổng Cloud AI — KttCore giả</title>
+<style>body{margin:0;background:#f4f6fa;padding:22px;font-family:'Segoe UI',sans-serif}.demo{max-width:1100px;margin:0 auto 16px;color:#657a90;font-size:13px}main{margin:auto}@media(max-width:640px){body{padding:12px}}</style>
+<p class="demo">DEMO · KttCore giả · 22/11/2026 · Chưa nối Core hoặc Cloud thật</p><main></main>
+<script type="module">
+const assert={equal(a,b){if(a!==b)throw Error('Sai hợp đồng DEMO');}};
+
+function taoKet(opts = {}) {
+  const state = {da_luu:true,bon_ky_tu_cuoi:'8QAA',phien_ban:7,...opts};
+  const calls = [];
+  function meta() { return {da_luu:state.da_luu,bon_ky_tu_cuoi:state.bon_ky_tu_cuoi,phien_ban:state.phien_ban}; }
+  const core = {engine(ma) {
+    assert.equal(ma,'e_hoi_ai');
+    return {bi_mat:{
+      async trang_thai(ten) {
+        assert.equal(ten,'khoa_api_anthropic'); calls.push({ma:'doc'});
+        if (state.loiDoc) throw Error('DEMO-LOI-BI-MAT-KHONG-HIEN');
+        return state.metaSai || meta();
+      },
+      async luu(ten,gt,rv) { return ghi('luu',ten,rv,gt); },
+      async xoa(ten,rv) { return ghi('xoa',ten,rv); },
+    }};
+  }};
+  async function ghi(ma,ten,rv,gt) {
+    assert.equal(ten,'khoa_api_anthropic'); calls.push({ma,rv});
+    if (state.cho) await state.cho;
+    if (rv !== state.phien_ban || state.xungDot) throw {status:409,ma:'BI_MAT_XUNG_DOT',message:'DEMO-LOI-BI-MAT-KHONG-HIEN'};
+    if (state.loiGhi) throw Error('DEMO-LOI-BI-MAT-KHONG-HIEN');
+    state.phien_ban++; state.da_luu = ma === 'luu';
+    state.bon_ky_tu_cuoi = ma === 'luu' ? gt.slice(-4) : null;
+    return state.metaGhiSai || meta();
+  }
+  return {core,state,calls};
+}
+
+// Cổng Cloud bản 1: không có đường bật/gọi Cloud; két chỉ trao đổi với Core.
+async function congCloud(goc, KttCore = globalThis.KttCore) {
+  const api = KttCore.engine('e_hoi_ai'), doc = goc.ownerDocument;
+  function tao(the, chu, cha = goc, lop) {
+    const el = doc.createElement(the);
+    if (chu !== undefined) el.textContent = chu;
+    if (lop) el.classList.add(lop);
+    cha.appendChild(el); return el;
+  }
+  function nut(cha, chu, fn) {
+    const el = tao('button', chu, cha); el.type = 'button';
+    if (fn) el.addEventListener('click', fn); return el;
+  }
+  function o(cha, ten, huongDan, mau, kieu = 'text') {
+    const khung = tao('div', undefined, cha), nhan = tao('label', undefined, khung);
+    tao('span', ten, nhan);
+    const el = tao(kieu === 'select' ? 'select' : 'input', undefined, nhan);
+    if (kieu !== 'select') el.type = kieu;
+    el.setAttribute('aria-label', ten); el.placeholder = mau;
+    tao('small', huongDan, khung);
+    return el;
+  }
+  goc.replaceChildren(); goc.classList.add('ktt-cloud-ai');
+  tao('style').textContent = `.ktt-cloud-ai{font:16px/1.5 "Segoe UI",sans-serif;color:#20384f;max-width:1100px}
+    .ktt-cloud-ai *{box-sizing:border-box}.ktt-cloud-ai .the{background:white;border:1px solid #d9e2ef;border-radius:12px;overflow:hidden}
+    .ktt-cloud-ai .dau{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:26px 30px;border-bottom:1px solid #d9e2ef}
+    .ktt-cloud-ai h2{font-size:22px;margin:0;font-weight:600}.ktt-cloud-ai h3{font-size:18px;margin:24px 0 10px}
+    .ktt-cloud-ai .than{padding:28px 30px}.ktt-cloud-ai .canh-bao{background:#fff7e6;color:#925600;border:1px solid #f1d69d;border-radius:8px;padding:20px 24px;margin-bottom:24px}
+    .ktt-cloud-ai p{max-width:80ch;margin:10px 0 22px;color:#657a90}.ktt-cloud-ai .canh-bao p{color:inherit;margin:0}
+    .ktt-cloud-ai .luoi{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;margin:24px 0}
+    .ktt-cloud-ai label{display:flex;flex-direction:column;gap:10px;font-weight:500}
+    .ktt-cloud-ai input,.ktt-cloud-ai select{font:inherit;color:inherit;width:100%;min-width:0;padding:13px 16px;background:white;border:1px solid #cbd8eb;border-radius:7px}
+    .ktt-cloud-ai small{display:block;font-size:14px;color:#657a90;margin-top:8px;overflow-wrap:anywhere}
+    .ktt-cloud-ai :disabled{color:#748295;background:#f8f9fb;cursor:default}.ktt-cloud-ai button{font:inherit;border:1px solid #cbd8eb;background:white;color:#245b91;border-radius:7px;padding:11px 16px;cursor:pointer}
+    .ktt-cloud-ai button:disabled{color:#748295;cursor:default}.ktt-cloud-ai .hang-nut{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:14px 0}
+    .ktt-cloud-ai .trang-thai{display:flex;gap:10px;align-items:center;white-space:nowrap;color:#748295}.ktt-cloud-ai .cong-tac{display:block;width:44px;height:25px;background:#dfe5ed;border-radius:20px;padding:3px}.ktt-cloud-ai .cong-tac::before{content:'';display:block;width:19px;height:19px;border-radius:50%;background:white}
+    .ktt-cloud-ai [role=alert]{color:#a62727}.ktt-cloud-ai [aria-invalid=true]{border-color:#a62727}.ktt-cloud-ai [role=status]{color:#426078}
+    .ktt-cloud-ai :is(input,select,button,summary):focus-visible{outline:3px solid #307db1;outline-offset:3px}
+    .ktt-cloud-ai details{border-top:1px solid #d9e2ef;margin-top:24px;padding-top:18px}.ktt-cloud-ai summary{cursor:pointer;font-weight:600}
+    @media(max-width:640px){.ktt-cloud-ai .luoi{grid-template-columns:minmax(0,1fr)}.ktt-cloud-ai .dau,.ktt-cloud-ai .than{padding:18px}.ktt-cloud-ai .dau{align-items:flex-start}.ktt-cloud-ai h2{font-size:20px}.ktt-cloud-ai .canh-bao{padding:16px}}`;
+  const the = tao('section', undefined, goc, 'the'), dau = tao('header', undefined, the, 'dau');
+  tao('h2', '☁  Cổng Cloud AI', dau);
+  const trangThai = tao('span', undefined, dau, 'trang-thai');
+  const congTac = tao('span', undefined, trangThai, 'cong-tac');
+  congTac.setAttribute('role', 'switch'); congTac.setAttribute('aria-checked', 'false');
+  congTac.setAttribute('aria-disabled', 'true'); congTac.setAttribute('aria-label', 'Bật Cloud AI');
+  tao('span', 'Tạm khóa', trangThai);
+  const than = tao('div', undefined, the, 'than'), canhBao = tao('div', undefined, than, 'canh-bao');
+  tao('strong', 'Tạm khóa — chờ nối qua Mask và két bí mật của Core.', canhBao);
+  tao('p', 'Bản 1 chỉ dùng Local AI. Kiểm tra chéo Cloud chưa áp dụng; Local AI chạy bình thường.', canhBao);
+  tao('p', 'Chỉ nội dung đã qua Mask mới được gửi Cloud khi bản sau được phê duyệt. Mặc định tắt theo module; M9 và nhóm 07-Nhân sự luôn chỉ Local.', than);
+  const luoi = tao('div', undefined, than, 'luoi');
+  const nhaCungCap = o(luoi, 'Nhà cung cấp', 'Dự kiến Anthropic (Claude); chưa áp dụng ở bản 1.', 'Anthropic (Claude)', 'select');
+  tao('option', 'Anthropic (Claude)', nhaCungCap).value = 'anthropic'; nhaCungCap.disabled = true;
+  const model = o(luoi, 'Model', 'Chọn model sau khi mở cổng Cloud. Chưa cấu hình model mặc định.', 'Ví dụ: model-cloud-demo'); model.disabled = true;
+  const form = tao('form', undefined, than); form.noValidate = true;
+  const key = o(form, 'API key Anthropic', 'Lưu vào két Core; không lưu trong cấu hình engine. Sau khi lưu chỉ hiện 4 ký tự cuối.', 'Nhập key mới để thay thế', 'password');
+  key.autocomplete = 'new-password'; key.spellcheck = false; key.maxLength = 4096; key.disabled = true;
+  const loiKey = tao('small', '', form); loiKey.setAttribute('role', 'alert');
+  const meta = tao('small', 'Chưa đọc trạng thái key.', form); meta.setAttribute('role', 'status');
+  const hang = tao('div', undefined, form, 'hang-nut');
+  const luu = tao('button', 'Lưu key', hang); luu.type = 'submit';
+  const xoa = nut(hang, 'Xóa key', () => ghiKey(true));
+  const taiLai = nut(hang, 'Tải lại trạng thái key', docKey);
+  const thongBao = tao('p', '', form); thongBao.setAttribute('role', 'status'); thongBao.setAttribute('aria-live', 'polite');
+  tao('small', 'Lưu hoặc xóa key chỉ thay đổi két bí mật; Cloud vẫn tạm khóa.', form);
+  const cuoi = tao('div', undefined, than, 'luoi');
+  const tyLe = o(cuoi, 'Tỷ lệ kiểm ngẫu nhiên (%)', 'Bản 1 tắt Cloud. Chính sách 20% → 10% → 5% chỉ áp dụng khi mở bản sau.', '0', 'number');
+  tyLe.value = '0'; tyLe.disabled = true;
+  const nhomKiem = tao('div', undefined, cuoi);
+  nut(nhomKiem, 'Kiểm tra kết nối Cloud').disabled = true;
+  tao('small', 'Tạm khóa; không gửi yêu cầu tới nhà cung cấp.', nhomKiem);
+  tao('h3', 'Nhật ký gửi ra ngoài', than);
+  tao('p', 'Bản 1 không có đường gọi Cloud. Chưa có cửa đọc nhật ký gửi ra ngoài từ Core; chưa thể xác minh lịch sử gửi.', than);
+  nut(than, 'Xem nhật ký gửi ra ngoài').disabled = true;
+  const nangCao = tao('details', undefined, than); tao('summary', 'Nâng cao', nangCao);
+  tao('small', 'Tên bí mật dự kiến: khoa_api_anthropic. Cổng két và nhật ký chờ Core hỗ trợ. Không có bí mật trong cấu hình Local AI.', nangCao);
+  let phienBan = null, daLuu = false, khoa = true, dangCho = false;
+  function bao(chu, loi = false) { thongBao.textContent = chu; thongBao.setAttribute('role', loi ? 'alert' : 'status'); }
+  function nutTrangThai() {
+    key.disabled = khoa || dangCho; luu.disabled = khoa || dangCho;
+    xoa.disabled = khoa || dangCho || !daLuu; taiLai.disabled = dangCho;
+  }
+  // Chỉ chấp nhận metadata đúng hợp đồng; không đưa phản hồi thô lên DOM.
+  function nhanMeta(kq) {
+    if (!kq || typeof kq.da_luu !== 'boolean' || !Number.isSafeInteger(kq.phien_ban) || kq.phien_ban < 0 ||
+        (kq.da_luu && (typeof kq.bon_ky_tu_cuoi !== 'string' || [...kq.bon_ky_tu_cuoi].length !== 4))) throw Error('Metadata không hợp lệ');
+    phienBan = kq.phien_ban; daLuu = kq.da_luu;
+    meta.textContent = daLuu ? `Đã lưu · •••• ${kq.bon_ky_tu_cuoi}` : 'Chưa lưu key.';
+  }
+  async function docKey() {
+    if (dangCho) return;
+    khoa = true; dangCho = true; key.value = ''; loiKey.textContent = ''; nutTrangThai();
+    bao('Đang đọc trạng thái key…'); meta.textContent = 'Chưa đọc trạng thái key.';
+    try {
+      nhanMeta(await api.bi_mat.trang_thai('khoa_api_anthropic'));
+      khoa = false; bao('');
+    } catch { bao('Chưa đọc được két bí mật. Kiểm tra quyền và hỗ trợ của Core rồi tải lại trạng thái key.', true); }
+    finally { dangCho = false; nutTrangThai(); }
+  }
+  key.addEventListener('input', () => { loiKey.textContent = ''; key.setAttribute('aria-invalid', 'false'); });
+  async function ghiKey(laXoa) {
+    if (khoa || dangCho || (laXoa && !daLuu)) return;
+    let giaTri = key.value;
+    if (!laXoa && (giaTri.length < 8 || giaTri.length > 4096 || /\s/.test(giaTri))) {
+      loiKey.textContent = 'API key: nhập từ 8 đến 4096 ký tự, không có khoảng trắng.';
+      key.setAttribute('aria-invalid', 'true'); key.value = ''; return;
+    }
+    key.value = ''; loiKey.textContent = ''; dangCho = true; nutTrangThai(); bao('Đang cập nhật két bí mật…');
+    try {
+      const kq = laXoa ? await api.bi_mat.xoa('khoa_api_anthropic', phienBan) : await api.bi_mat.luu('khoa_api_anthropic', giaTri, phienBan);
+      if (!kq || kq.da_luu !== !laXoa || !(kq.phien_ban > phienBan)) throw Error('Chưa xác nhận thay đổi két');
+      nhanMeta(kq); bao(laXoa ? 'Đã xóa key. Cloud vẫn tạm khóa.' : 'Đã lưu key trong két Core. Cloud vẫn tạm khóa.');
+    } catch (loi) {
+      // Kể cả mất phản hồi cũng phải đọc lại trước lần ghi kế tiếp.
+      khoa = true; meta.textContent = 'Cần tải lại để xác nhận trạng thái key.';
+      const cas = loi?.status === 409 || ['BI_MAT_XUNG_DOT', 'NGAN_XUNG_DOT'].includes(loi?.ma || loi?.code);
+      bao(cas ? 'Key đã được người khác sửa, tải lại trạng thái trước khi lưu hoặc xóa.' : 'Chưa xác nhận được cập nhật key. Tải lại trạng thái trước khi thử lại.', true);
+    } finally { giaTri = ''; dangCho = false; nutTrangThai(); }
+  }
+  form.addEventListener('submit', async ev => { ev.preventDefault(); await ghiKey(false); });
+  await docKey();
+}
+
+const ctx=taoKet({loiDoc:location.hash==='#loi'});
+await congCloud(document.querySelector('main'),ctx.core);
+if(location.hash==='#cas'){
+  ctx.state.phien_ban=10;
+  const key=document.querySelector('input[type=password]');key.value='DEMO-KEY-THAY-7XBB';
+  document.querySelector('form').dispatchEvent(new Event('submit',{cancelable:true}));
+  await new Promise(r=>setTimeout(r,0));
+  if(!document.body.textContent.includes('Key đã được người khác sửa'))throw Error('Thiếu lỗi CAS');
+}
+if(document.documentElement.scrollWidth>innerWidth)throw Error('Màn bị tràn ngang');
+if(document.querySelector('input[type=password]').value)throw Error('Ô key chưa được xóa');
+document.body.dataset.kiem='dat';
+</script></html>

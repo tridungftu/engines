@@ -1,4 +1,4 @@
-"""Cổng SDK 2.2.0: ngăn và cấu hình do Core quản lý."""
+"""Cổng SDK 2.5.0: ngăn và cấu hình do Core quản lý."""
 
 from datetime import datetime, timezone
 from threading import Event, Thread

@@ -3,7 +3,7 @@ on:
   pull_request:
     paths:
       - 'e_ocr/**'
-      - 'docs/goi-gui-engine/sdk-2.0.0/**'
+      - 'docs/goi-gui-engine/sdk-2.5.0/**'
       - '.github/workflows/ocr-6-may-sach.yml'
   workflow_dispatch:
 jobs:
@@ -14,4 +14,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - run: bash e_ocr/tests/kiem_may_sach.sh
+      - name: Chuan bi wheel Linux dung lock va hash
+        run: python -m pip download --require-hashes --only-binary=:all: --no-deps -r e_ocr/goi/e_ocr/requirements.lock -d "${{ runner.temp }}/e-ocr-wheels"
+      - name: Cai va kiem ngoai tuyen tren may sach
+        run: bash e_ocr/tests/kiem_may_sach.sh
+        env:
+          WHEELHOUSE: ${{ runner.temp }}/e-ocr-wheels

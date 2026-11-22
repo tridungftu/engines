@@ -1,4 +1,4 @@
-"""Fixture dùng CoreGia SDK 2.2.0; mọi view ngăn thuộc một việc còn lease.
+"""Fixture dùng CoreGia SDK 2.5.0; mọi view ngăn thuộc một việc còn lease.
 
 Không cài đặt lại ngữ nghĩa ngăn. Việc thử giữ sống bằng Engine/SDK thật,
 được kết thúc khi fixture đóng. Dữ liệu bền của mọi App mới ở cùng CoreGia.

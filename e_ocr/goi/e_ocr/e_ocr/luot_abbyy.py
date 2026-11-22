@@ -32,7 +32,7 @@ def doc_so_nguyen(gia_tri):
 
 
 def ghi_map(gia_tri):
-    """Map nhỏ dùng van_ban vì SDK 2.2.0 chưa nhận kiểu json cho ngăn."""
+    """Map nhỏ dùng van_ban vì SDK 2.5.0 chưa nhận kiểu json cho ngăn."""
     raw = json.dumps(gia_tri, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
     if len(raw.encode("utf-8")) > 64 * 1024:
         raise LoiNghiepVu("NGAN_DU_LIEU_QUA_LON", "Sổ OCR vượt giới hạn lưu trữ. Hãy liên hệ quản trị viên.")

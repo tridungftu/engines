@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "dot_demo",
+    "viec_id",
+    "trang_thai",
+    "so_dong",
+    "so_tu",
+    "dong_dau",
+    "thong_diep",
+    "ma_loi"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "dot_demo": {
+      "enum": [
+        "DEMO-01",
+        "DEMO-02",
+        "DEMO-03"
+      ]
+    },
+    "viec_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "trang_thai": {
+      "enum": [
+        "DA_GUI",
+        "XONG",
+        "LOI"
+      ]
+    },
+    "so_dong": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "so_tu": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "dong_dau": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "thong_diep": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ma_loi": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tep_ket_qua": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 64,
+      "description": "Mã tệp kết quả do quy trình tạo"
+    }
+  }
+}

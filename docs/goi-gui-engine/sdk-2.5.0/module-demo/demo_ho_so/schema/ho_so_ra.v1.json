@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Một hồ sơ DEMO",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "ten_ho_so", "noi_dung", "so_tu", "so_dong", "tep_goc", "tao_luc", "sua_luc"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 64},
+    "ten_ho_so": {"type": ["string", "null"], "maxLength": 500},
+    "noi_dung": {"type": ["string", "null"], "maxLength": 1048576},
+    "so_tu": {"type": ["integer", "null"], "minimum": 0},
+    "so_dong": {"type": ["integer", "null"], "minimum": 0},
+    "tep_goc": {"type": ["string", "null"], "maxLength": 64},
+    "tao_luc": {"type": "string", "minLength": 1, "maxLength": 40},
+    "sua_luc": {"type": ["string", "null"], "maxLength": 40}
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "ma": "demo_ho_so_ho_so",
+  "phien_ban": "1.0.0",
+  "module_so_huu": "demo_ho_so",
+  "schema": "contract/ho_so.schema.json",
+  "vi_du": "contract/ho_so.vi_du.json",
+  "muc_dich": "Một dòng của ngăn Hồ sơ DEMO: tên, số từ, số dòng và mã tệp gốc. Chỉ dữ liệu DEMO.",
+  "module_duoc_doc": [],
+  "truong": [
+    {"ten": "id", "nghia": "Mã hồ sơ do Core cấp", "bat_buoc": true, "don_vi": "không", "nguon": "Core"},
+    {"ten": "ten_ho_so", "nghia": "Tên hồ sơ, mặc định là tên tệp người dùng tải ở nút", "bat_buoc": true, "don_vi": "không", "nguon": "module"},
+    {"ten": "so_tu", "nghia": "Số từ của nội dung đã đọc", "bat_buoc": true, "don_vi": "từ", "nguon": "quy trình gắn nút"},
+    {"ten": "so_dong", "nghia": "Số dòng của nội dung đã đọc", "bat_buoc": true, "don_vi": "dòng", "nguon": "quy trình gắn nút"},
+    {"ten": "tep_goc", "nghia": "Mã tệp gốc trong kho tệp Core", "bat_buoc": true, "don_vi": "không", "nguon": "Core"},
+    {"ten": "tao_luc", "nghia": "Thời điểm tạo hồ sơ (ISO 8601, +07:00)", "bat_buoc": true, "don_vi": "thời điểm", "nguon": "Core"}
+  ]
+}

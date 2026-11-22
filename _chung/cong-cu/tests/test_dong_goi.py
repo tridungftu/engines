@@ -221,3 +221,41 @@ def test_tham_so_sai_bao_tieng_viet(capsys):
         dg.main(["--engine", "khong_co"])
     assert loi.value.code == 2
     assert "Tham số chưa hợp lệ" in capsys.readouterr().err
+
+
+def them_thu_vien(repo, lock=None, wheel=b"DEMO whl", khai=True):
+    p = duong_goi(repo)
+    (p / "wheels").mkdir(exist_ok=True)
+    (p / "wheels/demo_lib-1.0.0-py3-none-any.whl").write_bytes(wheel)
+    if lock is None:
+        lock = f"# DEMO\ndemo-lib==1.0.0 --hash=sha256:{dg.sha256(b'DEMO whl')}\n".encode()
+    (p / "requirements.lock").write_bytes(lock)
+    m = json.loads((p / "engine.json").read_bytes())
+    if khai:
+        m["phu_thuoc_python"] = {"lock": "requirements.lock", "wheels": "wheels"}
+        m["tuong_thich"]["sdk"] = ">=2.4.0 <3.0.0"
+    (p / "engine.json").write_text(json.dumps(m), encoding="utf-8")
+    tao_moc(repo)
+
+
+def test_thu_vien_dung_vao_zip(repo, tmp_path):
+    them_thu_vien(repo)
+    xuat(repo, tmp_path / "ra")
+    with zipfile.ZipFile(tmp_path / "ra" / f"{MA}-1.0.0.zip") as z:
+        assert z.read(f"{MA}/wheels/demo_lib-1.0.0-py3-none-any.whl") == b"DEMO whl"
+
+
+@pytest.mark.parametrize("kieu", ["sai_bam", "thieu_khai", "co_sdk", "noi_dong", "thieu_wheel"])
+def test_thu_vien_sai_dung_truoc_khi_ghi(repo, tmp_path, kieu):
+    bam = dg.sha256(b"DEMO whl")
+    tham = {
+        "sai_bam": dict(wheel=b"khac"),
+        "thieu_khai": dict(khai=False),
+        "co_sdk": dict(lock=f"kho_tri_thuc_sdk==2.5.0 --hash=sha256:{bam}\ndemo-lib==1.0.0 --hash=sha256:{bam}\n".encode()),
+        "noi_dong": dict(lock=f"demo-lib==1.0.0 \\\n    --hash=sha256:{bam}\n".encode()),
+        "thieu_wheel": dict(lock=f"demo-lib==1.0.0 --hash=sha256:{bam}\nkhac==2.0 --hash=sha256:{bam}\n".encode()),
+    }[kieu]
+    them_thu_vien(repo, **tham)
+    with pytest.raises(dg.LoiDongGoi):
+        xuat(repo, tmp_path / "ra")
+    assert not (tmp_path / "ra").exists()

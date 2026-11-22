@@ -1,0 +1,70 @@
+{
+ "phien_ban": "1.0.2",
+ "tep": [
+  {
+   "duong_dan": "README.md",
+   "bytes": 4697,
+   "sha256": "d4660bd74b7808ac229afa02cf03cb19e97c9cf24d7b50fdda709c772fd1a0c0"
+  },
+  {
+   "duong_dan": "backend/__init__.py",
+   "bytes": 49,
+   "sha256": "9d418fb8ab739a8601b296ddc969aad14b995fcdbbc1d599c5ae0a6c75f4e7ef"
+  },
+  {
+   "duong_dan": "backend/chay.py",
+   "bytes": 317,
+   "sha256": "807bc20ede35ea0a9dbc22bac5638400f47fb7886addf462602f03792776aeb2"
+  },
+  {
+   "duong_dan": "backend/xu_ly.py",
+   "bytes": 5548,
+   "sha256": "7420db66360d487efdb1f6eacec9c66fdd7c554297752e29fc6b7e5667d34522"
+  },
+  {
+   "duong_dan": "contract/ket_qua.mo_ta.json",
+   "bytes": 1886,
+   "sha256": "d242be355d59682fffea28a9fcf0fb935a313f70a3729c0090e652792a1b2820"
+  },
+  {
+   "duong_dan": "contract/ket_qua.schema.json",
+   "bytes": 1445,
+   "sha256": "8ac2d71e2c3b36664ab472a053dd843a196d1982552e8f77c46ffc88bc6e002a"
+  },
+  {
+   "duong_dan": "contract/ket_qua.vi_du.json",
+   "bytes": 349,
+   "sha256": "39498073dd07e1da00ffb333ad0dae2c694315197ad175a6a408078d176768c8"
+  },
+  {
+   "duong_dan": "frontend/chinh.css",
+   "bytes": 1455,
+   "sha256": "7ecd672cb278cf34fc01debbd75535a4901760232c481f32eb40bb5859b5ec6f"
+  },
+  {
+   "duong_dan": "frontend/chinh.js",
+   "bytes": 6102,
+   "sha256": "9f3b5e5f37d2bdaf37f4fae62f2655bd622454aff13c217305b182b5d7673564"
+  },
+  {
+   "duong_dan": "module.json",
+   "bytes": 5344,
+   "sha256": "51e94dc1c83bb88026602e93252526b749a9006cc1193ebad2dae04ad512fc83"
+  },
+  {
+   "duong_dan": "schema/danh_sach.json",
+   "bytes": 2186,
+   "sha256": "62de24964e82ca600523f395a0a9396c2ad4093c11ee7abe84da88f4d943fe19"
+  },
+  {
+   "duong_dan": "schema/ghi_viec.json",
+   "bytes": 388,
+   "sha256": "66cdf2a6816f057de958dfa2a0881f44a8bc8b269e15dacd5ca32e635628f1d5"
+  },
+  {
+   "duong_dan": "schema/ket_qua.json",
+   "bytes": 1337,
+   "sha256": "485f7d4312eafaf73b9d844805b7179712e7d15c21cb72c75200215ccb9729b2"
+  }
+ ]
+}

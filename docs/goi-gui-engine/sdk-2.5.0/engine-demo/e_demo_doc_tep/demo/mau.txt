@@ -1,0 +1,4 @@
+Đây là tệp văn bản DEMO.
+Dòng thứ hai của tệp DEMO.
+
+Dòng thứ tư sau một dòng trống.

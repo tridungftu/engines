@@ -1,0 +1,15 @@
+.demo-ket-qua-nut { max-width: 1100px; margin: 0 auto; padding: 24px; color: #203544; }
+.demo-ket-qua-nut h2 { margin-top: 0; }
+.demo-ket-qua-nut form { display: flex; flex-wrap: wrap; align-items: end; gap: 16px; padding: 20px; background: #f3f7f8; border: 1px solid #d5e0e5; border-radius: 8px; }
+.demo-ket-qua-nut label { display: grid; gap: 8px; font-weight: 600; }
+.demo-ket-qua-nut input, .demo-ket-qua-nut select, .demo-ket-qua-nut button { font: inherit; min-height: 40px; max-width: 100%; }
+.demo-ket-qua-nut button { padding: 8px 16px; cursor: pointer; border: 1px solid #436d7c; border-radius: 5px; background: white; color: #203544; }
+.demo-ket-qua-nut button[type=submit] { background: #255f70; color: white; }
+.demo-ket-qua-nut button:disabled { opacity: .55; cursor: wait; }
+.demo-ket-qua-nut :focus-visible { outline: 3px solid #c78330; outline-offset: 3px; }
+.demo-ket-qua-nut table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.demo-ket-qua-nut th, .demo-ket-qua-nut td { text-align: left; vertical-align: top; border-bottom: 1px solid #d5e0e5; padding: 12px 8px; overflow-wrap: anywhere; }
+.demo-ket-qua-nut th { background: #f3f7f8; }
+.demo-ket-qua-nut details { font-size: .875em; margin-top: 8px; }
+.demo-ket-qua-nut summary { cursor: pointer; }
+@media (max-width: 650px) { .demo-ket-qua-nut { padding: 12px; } .demo-ket-qua-nut > div:last-child { overflow-x: auto; } .demo-ket-qua-nut table { min-width: 650px; } }

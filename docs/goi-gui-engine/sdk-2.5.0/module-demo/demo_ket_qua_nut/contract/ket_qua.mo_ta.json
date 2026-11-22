@@ -1,0 +1,81 @@
+{
+  "ma": "demo_ket_qua_nut_ket_qua",
+  "phien_ban": "1.0.1",
+  "module_so_huu": "demo_ket_qua_nut",
+  "schema": "contract/ket_qua.schema.json",
+  "vi_du": "contract/ket_qua.vi_du.json",
+  "muc_dich": "Kết quả từng lần gửi của đợt DEMO, đọc từ tệp do quy trình tạo.",
+  "module_duoc_doc": [],
+  "truong": [
+    {
+      "ten": "id",
+      "nghia": "Mã dòng do Core cấp",
+      "bat_buoc": true,
+      "don_vi": "không",
+      "nguon": "Core"
+    },
+    {
+      "ten": "dot_demo",
+      "nghia": "Đợt DEMO",
+      "bat_buoc": true,
+      "don_vi": "không",
+      "nguon": "module"
+    },
+    {
+      "ten": "viec_id",
+      "nghia": "Việc đã gửi",
+      "bat_buoc": true,
+      "don_vi": "không",
+      "nguon": "module"
+    },
+    {
+      "ten": "trang_thai",
+      "nghia": "Trạng thái",
+      "bat_buoc": true,
+      "don_vi": "không",
+      "nguon": "module"
+    },
+    {
+      "ten": "so_dong",
+      "nghia": "Số dòng",
+      "bat_buoc": true,
+      "don_vi": "dòng",
+      "nguon": "module"
+    },
+    {
+      "ten": "so_tu",
+      "nghia": "Số từ",
+      "bat_buoc": true,
+      "don_vi": "từ",
+      "nguon": "module"
+    },
+    {
+      "ten": "dong_dau",
+      "nghia": "Dòng đầu",
+      "bat_buoc": true,
+      "don_vi": "không",
+      "nguon": "module"
+    },
+    {
+      "ten": "thong_diep",
+      "nghia": "Thông báo",
+      "bat_buoc": true,
+      "don_vi": "không",
+      "nguon": "module"
+    },
+    {
+      "ten": "ma_loi",
+      "nghia": "Chi tiết hỗ trợ",
+      "bat_buoc": true,
+      "don_vi": "không",
+      "nguon": "module"
+    },
+    {
+      "ten": "tep_ket_qua",
+      "nghia": "Mã tệp kết quả do quy trình tạo",
+      "bat_buoc": false,
+      "don_vi": "không",
+      "nguon": "module"
+    }
+  ]
+}

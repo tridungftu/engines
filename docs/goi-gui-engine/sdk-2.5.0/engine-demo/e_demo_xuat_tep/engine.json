@@ -1,0 +1,25 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_demo_xuat_tep",
+  "ten": "Xuất thống kê văn bản (DEMO)",
+  "phien_ban": "1.0.1",
+  "tuong_thich": {"core": ">=2.0.0 <3.0.0", "api": "v1", "sdk": ">=2.0.0 <3.0.0"},
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {"lenh": ["{python}", "-m", "e_demo_xuat_tep.chay"], "thu_muc": "."},
+  "nang_luc": [{
+    "ma": "tep.xuat_thong_ke@1",
+    "ten": "Xuất thống kê thành tệp JSON",
+    "nhan": ["tep"], "tra": "tep",
+    "gioi_han": {"tep_toi_da_mib": 5, "mime": ["text/plain"], "thoi_han_giay": 60},
+    "huy_duoc": true, "tham_so": []
+  }],
+  "loai_du_lieu_rieng": [],
+  "tai_nguyen": {"so_viec_dong_thoi": 1},
+  "readiness": {"thoi_han_giay": 30},
+  "chay_thu_demo": [{
+    "nang_luc": "tep.xuat_thong_ke@1", "ten": "Xuất tệp thống kê DEMO",
+    "dau_vao": {"loai": "tep", "tep_demo": "demo/mau.txt"}, "tham_so": {}
+  }],
+  "bi_mat": [], "webhook": null
+}

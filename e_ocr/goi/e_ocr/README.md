@@ -1,6 +1,6 @@
-# Engine nhận dạng văn bản — OCR-9
+# Engine nhận dạng văn bản — SDK25
 
-Gói độc lập theo SDK 2.2.0, phiên bản engine 1.0.9. Ba năng lực
+Gói độc lập theo SDK 2.5.0, phiên bản engine 1.0.11. Ba năng lực
 `ocr.doc_tai_lieu@1`, `ocr.doc_van_ban@1` và `ocr.xuat_word@1` dùng chung
 lõi đọc lớp chữ PDF hoặc ABBYY Hot Folder cục bộ, dự phòng Tesseract.
 Xuất Word dựng DOCX và gửi qua `viec.tai_tep_ra`. **Đã kiểm bằng Core giả
@@ -16,16 +16,24 @@ từ `_chung/contract/van_ban_tai_lieu.schema.json`, so băm sau chuẩn hóa LF
 
 ## Cài và kiểm
 
-Python >= 3.11. Dùng SDK 2.2.0, pdfplumber, Pillow và dependency đã ghim
-trong `requirements.lock`; tất cả phiên bản thư viện ngoài SDK giữ như
-lock cũ. Bộ render là pypdfium2 đã ghim; vendor mask_ocr chỉ giữ phần cần
-dùng, không thêm PyMuPDF, defusedxml, numpy hoặc model. Môi
-trường OCR-9 dùng venv mới, SDK cài offline từ wheel repo với
-`--no-index --no-deps`, đối chiếu `SHA256SUMS.txt`. Thư viện đúng pin được
-cài offline bằng các tệp distribution đã có trên máy, kiểm từng hash trong
-`RECORD`; không dùng system-site-packages. Chưa kiểm lại archive wheel
-phụ thuộc trên máy sạch; lock giữ các hash wheel Windows/Linux đã ghim.
+Core chạy CPython 3.13 win_amd64 và tự cấp SDK 2.5.x; khoảng khai báo
+`>=2.4.0 <3.0.0` vì `phu_thuoc_python` có từ SDK 2.4.0. Engine chỉ dùng
+cửa công khai. Thư viện ngoài SDK giữ nguyên phiên bản trong
+`requirements.lock` ASCII: mỗi dòng một pin và các hash Windows/Linux.
+`wheels/` kèm đúng một wheel Windows/thuần Python cho mỗi pin, không kèm SDK.
+Core tự cài ngoại tuyến bằng `--require-hashes --only-binary :all: --no-deps`
+vào thư mục `.thu-vien` riêng cạnh gói. Không cài thư viện vào cây gói đã băm.
 Nguồn/băm xem `NGUON.md`.
+
+Phát triển dùng `.venv` đã cài wheel SDK 2.5.0 từ
+`docs/goi-gui-engine/sdk-2.5.0/`, đối chiếu `SHA256SUMS.txt`.
+Kiểm máy sạch trên Windows: chạy `e_ocr\tests\KIEM-MAY-SACH.cmd` hoặc
+`.venv\Scripts\python -B -X utf8 e_ocr/tests/kiem_may_sach.py`.
+Công cụ tạo venv mới, cài SDK từ repo và wheel của gói vào thư mục riêng,
+rồi kiểm lock, tính độc lập và sáu DEMO bằng Core giả (CoreGia) + Tesseract giả.
+Trên Linux: đặt `WHEELHOUSE` tới wheelhouse đã chuẩn bị theo hash Linux
+trong cùng lock rồi chạy `tests/kiem_may_sach.sh`; bước cài luôn ngoại tuyến.
+Workflow Linux chuẩn bị wheelhouse từ lock trước khi gọi công cụ này.
 
 Trong thư mục gốc repo, sau khi cài SDK vào `.venv`:
 
@@ -47,7 +55,7 @@ thật với `vie+eng`. Máy thiếu bộ đọc chạy công cụ test từ rep
 `.venv\Scripts\python e_ocr/tests/chay_demo.py`; công cụ tự dùng Tesseract
 giả và ghi rõ khi thiếu executable/ngôn ngữ. `--gia` ép dùng giả cho CI.
 Nguồn giả chỉ ở ngoài gói, không tự thay nguồn trong engine. Công cụ cách
-ly cấu hình và dữ liệu DEMO bằng CoreGia SDK 2.2.0 riêng, dùng `dat_cau_hinh`.
+ly cấu hình và dữ liệu DEMO bằng CoreGia SDK 2.5.0 riêng, dùng `dat_cau_hinh`.
 CLI chuẩn nhận cấu hình mặc định từ schema qua SDK, đủ chạy Tesseract;
 không có nhánh thay thế cổng ngăn/cấu hình trong engine.
 
@@ -231,7 +239,7 @@ của mọi tệp gói trừ chính kiểm kê; `.gitattributes` giữ LF qua ch
 `KHAI-SDK-2.1.json`, `ngan.py`, `cau_hinh.py` được chuyển nguyên bản sang
 `e_ocr/LUU-TRU/OCR-9/`; bỏ hai test so băm cổng tạm.
 
-SDK 2.2.0 chưa nhận kiểu `json` trong ngăn: `da_nhan`, `dang_giu`,
+SDK 2.5.0 chưa nhận kiểu `json` trong ngăn: `da_nhan`, `dang_giu`,
 `theo_ngay` được tuần tự hóa JSON text ≤64 KiB qua trường `van_ban`,
 quá trần từ chối cả lô. Các trường `so` từ Core là chuỗi numeric, engine
 chuyển sang số nguyên có kiểm, không cắt phần lẻ. SDK chưa nhận
@@ -276,7 +284,7 @@ nhận khác mã, thiếu trường, báo đã tiêu trang hoặc xung đột v�
 này **chưa kiểm ABBYY thật**, cần xác nhận khi nối nguồn ở OCR-7; không có
 biên nhận xác nhận thì tiếp tục giữ hạn mức.
 
-Ngăn SDK 2.2.0 do Core giữ bền; các kiểm tra hiện tại dùng CoreGia,
+Ngăn SDK 2.5.0 do Core giữ bền; các kiểm tra hiện tại dùng CoreGia,
 chưa chứng minh lưu qua khởi động lại Core thật hoặc phân quyền CSDL thật.
 Không dùng hàm `ocr_*_luot` hoặc cổng riêng cũ.
 
@@ -306,7 +314,7 @@ Nếu Core cung cấp `tac.kiem_huy` thì Tesseract kiểm hủy trong lúc ch�
 Màn chỉ hiển thị câu tiếng Việt cố định theo mã kết quả, không hiện lỗi
 thô, stdout/stderr hoặc thông tin bí mật. Lát OCR không có bí mật/API key.
 
-SDK 2.2.0 chưa nạp màn hoặc đăng ký thao tác quản trị. Khai dự kiến ở
+SDK 2.5.0 chưa nạp màn hoặc đăng ký thao tác quản trị. Khai dự kiến ở
 `KHAI-SDK-2.1.json`; `diem_vao` trong tệp này chỉ là gợi ý nối hàm cho
 lead Core, chưa phải khóa SDK. Không thêm các khóa đó vào `engine.json`
 và không đăng ký nút kiểm thành năng lực xử lý việc OCR. Core cần mở cổng

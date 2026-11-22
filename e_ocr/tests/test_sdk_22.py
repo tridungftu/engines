@@ -1,4 +1,4 @@
-"""OCR-9: hợp đồng SDK 2.2.0, ngăn bền và gói migration; chỉ DEMO."""
+"""OCR-9: hợp đồng SDK 2.5.0, ngăn bền và gói migration; chỉ DEMO."""
 
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256

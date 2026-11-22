@@ -3,11 +3,11 @@
   "loai": "engine",
   "ma": "e_ocr",
   "ten": "Nhận dạng văn bản",
-  "phien_ban": "1.0.10",
+  "phien_ban": "1.0.11",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
-    "sdk": ">=2.2.0 <3.0.0"
+    "sdk": ">=2.4.0 <3.0.0"
   },
   "che_do_chay": "cuc_bo",
   "diem_vao": {
@@ -18,6 +18,7 @@
     ],
     "thu_muc": "."
   },
+  "phu_thuoc_python": {"lock": "requirements.lock", "wheels": "wheels"},
   "nang_luc": [
     {
       "ma": "ocr.doc_tai_lieu@1",

@@ -15,7 +15,7 @@ from ngan_demo import GOI, KHAI
 
 
 def chay_quan_tri(ma, dau_vao):
-    # Adapter chỉ trong test: SDK 2.2.0 chưa có thao_tac_quan_tri.
+    # Adapter chỉ trong test: SDK 2.5.0 chưa có thao_tac_quan_tri.
     # Không thêm năng lực vào engine.json hoặc runtime xử lý việc OCR.
     phieu = deepcopy(KHAI)
     phieu["nang_luc"] = [{

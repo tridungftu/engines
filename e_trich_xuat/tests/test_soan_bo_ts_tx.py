@@ -94,7 +94,7 @@ def test_loi_e1_khong_chen_gia_tri_nhap():
 
 
 def test_thao_tac_bang_core_gia_khong_dang_ky_vao_engine_that():
-    # SDK 2.2.0 chưa có decorator quản trị; adapter này CHỈ tồn tại trong test.
+    # SDK 2.5.0 chưa có decorator quản trị; adapter này CHỈ tồn tại trong test.
     phieu = json.loads((Path(__file__).parents[1]/"goi/e_trich_xuat/engine.json").read_text(encoding="utf-8"))
     phieu["chay_thu_demo"] = []
     phieu.pop("cau_hinh", None)

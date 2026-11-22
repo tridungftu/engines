@@ -1,4 +1,4 @@
-"""Hành vi cấu hình/ngăn đã có, chuyển sang CoreGia SDK 2.2.0.
+"""Hành vi cấu hình/ngăn đã có, chuyển sang CoreGia SDK 2.5.0.
 
 Bảng demo chỉ thuộc phiếu test; gói TX không còn bảng ngăn sau bỏ cấu hình.
 Các ca xóa/RAM cũ kiểm quy tắc không xóa và vòng đời do Core giữ tương ứng.
@@ -14,6 +14,7 @@ from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu, LoiDuongTruyen, NganXun
 from kho_tri_thuc_sdk.thu import CoreGia
 from e_trich_xuat.chay import CAU_CHUA_CAU_HINH, GOC_GOI, ghim_cau_hinh, tao_app
 from e_trich_xuat.tham_so import bam_bytes, json_bytes
+from e_trich_xuat import chay as chay_engine, docx
 
 KHAI = [{"bang": "demo", "ten": "Ngăn DEMO", "pham_vi": "phap_nhan",
          "khoa": ["ma_tuong_quan"], "duy_nhat": [["phap_nhan_id", "bam_noi_dung"]],
@@ -55,13 +56,13 @@ def them(ngan, ma="DEMO-1", bam="a"):
     return ngan.doc("demo", {"ma_tuong_quan": ma})
 
 
-def test_mac_dinh_chi_dien_cho_ban_ghi_da_co_khong_ghi_nguoc():
+def test_mac_dinh_chi_dien_cho_ban_ghi_da_co_khong_ghi_nguoc(monkeypatch):
     core, app = moi()
     assert app.cau_hinh == {}
-    def lam(viec):
+    def lam(viec, **kw):
         assert viec.cau_hinh == {"ngan_sach_token_vao_toi_da": 16000}
         return {"loai": "van_ban_tai_lieu", "van_ban_tai_lieu": {}}
-    app._ham["trich.doc_docx@1"] = lam
+    monkeypatch.setattr(docx, "doc_docx", lam)
     tep = core.them_tep("DEMO.docx", b"DEMO", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     assert core.chay_thu(app, "trich.doc_docx@1", {"loai": "tep", "tep": tep})["trang_thai"] == "XONG"
     assert core.xem_ngan(app.ma, "cau_hinh") == []
@@ -265,17 +266,17 @@ def test_snapshot_sdk_duoc_sao_chep_va_kiem_schema():
         assert e.value.ma == "CHUA_CAU_HINH"
 
 
-def test_buoc_can_cau_hinh_tra_loi_nghiep_vu_bang_core_gia():
+def test_buoc_can_cau_hinh_tra_loi_nghiep_vu_bang_core_gia(monkeypatch):
     core, app = moi()
-    ham = app._ham["trich.chuan_bi@1"]
+    ghim = chay_engine.ghim_cau_hinh
     def lam(viec):
         viec.cau_hinh = {}  # Mô phỏng snapshot bị thiếu; không bỏ kiểm Core.
-        return ham(viec)
-    app._ham["trich.chuan_bi@1"] = lam
+        return ghim(viec)
+    monkeypatch.setattr(chay_engine, "ghim_cau_hinh", lam)
     vd = next(v for v in app.phieu["chay_thu_demo"] if v["nang_luc"] == "trich.chuan_bi@1")
     kq = core.chay_thu(app, vd["nang_luc"], vd["dau_vao"], vd["tham_so"])
     assert kq["loi"]["ma"] == "CHUA_CAU_HINH" and kq["loi"]["thong_diep"] == CAU_CHUA_CAU_HINH
-    app._ham[vd["nang_luc"]] = ham
+    monkeypatch.setattr(chay_engine, "ghim_cau_hinh", ghim)
     core.dat_cau_hinh(app.ma, {"ngan_sach_token_vao_toi_da":16000})
     assert core.chay_thu(app, vd["nang_luc"], vd["dau_vao"], vd["tham_so"])["trang_thai"] == "XONG"
     with pytest.raises(LoiDuongTruyen):

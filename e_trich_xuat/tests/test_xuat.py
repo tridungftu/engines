@@ -193,12 +193,14 @@ def test_xuat_huy_khong_xong_thieu_tep_va_ram_dong(monkeypatch, moc):
             super().__init__()
             bo_nho.append(self)
     monkeypatch.setattr(xuat, "BytesIO", BoNho)
-    bao = core._tien_do
-    def huy(ma, viec, pt, cau):
+    from cong_sdk_cong_khai import duong_truyen_thu
+    dt = duong_truyen_thu(core, monkeypatch)
+    bao = dt.tien_do
+    def huy(viec, pt, cau):
         if pt == moc:
             core.huy(viec)
-        return bao(ma, viec, pt, cau)
-    monkeypatch.setattr(core, "_tien_do", huy)
+        return bao(viec, pt, cau)
+    monkeypatch.setattr(dt, "tien_do", huy)
     truoc = core.so_lan_ghi["ket_qua"]
     kq, _ = xuat_demo(pb, core, app)
     assert kq["trang_thai"] == "HUY" and kq["ket_qua"] is None
@@ -209,14 +211,16 @@ def test_xuat_huy_khong_xong_thieu_tep_va_ram_dong(monkeypatch, moc):
 @pytest.mark.parametrize("lan_loi", [1, 2])
 def test_loi_tai_mot_trong_hai_tep_khong_xong_khong_lo_du_lieu(monkeypatch, capsys, lan_loi):
     core, app, pb = bang_demo()
-    tai = core._tai_tep_ra
+    from cong_sdk_cong_khai import duong_truyen_thu
+    dt = duong_truyen_thu(core, monkeypatch)
+    tai = dt.tai_tep_ra
     da_goi = []
     def hong(*a, **k):
         da_goi.append(1)
         if len(da_goi) == lan_loi:
             raise RuntimeError("DEMO-BI-MAT và đường máy DEMO")
         return tai(*a, **k)
-    monkeypatch.setattr(core, "_tai_tep_ra", hong)
+    monkeypatch.setattr(dt, "tai_tep_ra", hong)
     kq, _ = xuat_demo(pb, core, app)
     loi(kq, "XUAT_KET_QUA_LOI")
     assert "DEMO-BI-MAT" not in capsys.readouterr().err + str(kq)
@@ -347,11 +351,13 @@ def test_xuat_huy_giua_writer_dong_ram_va_khong_tai(monkeypatch):
 
 def test_xuat_core_khong_tra_du_metadata_khong_xong(monkeypatch):
     core, app, pb = bang_demo()
-    tai = core._tai_tep_ra
+    from cong_sdk_cong_khai import duong_truyen_thu
+    dt = duong_truyen_thu(core, monkeypatch)
+    tai = dt.tai_tep_ra
     def sai(*a, **k):
         tai(*a, **k)
         return {}
-    monkeypatch.setattr(core, "_tai_tep_ra", sai)
+    monkeypatch.setattr(dt, "tai_tep_ra", sai)
     loi(xuat_demo(pb, core, app)[0], "XUAT_KET_QUA_LOI")
 
 

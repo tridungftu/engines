@@ -3,11 +3,11 @@
   "loai": "engine",
   "ma": "e_trich_xuat",
   "ten": "Trích thông tin hợp đồng",
-  "phien_ban": "0.5.1",
+  "phien_ban": "0.5.2",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
-    "sdk": ">=2.2.0 <3.0.0"
+    "sdk": ">=2.4.0 <3.0.0"
   },
   "che_do_chay": "cuc_bo",
   "diem_vao": {
@@ -19,6 +19,7 @@
     ],
     "thu_muc": "."
   },
+  "phu_thuoc_python": {"lock": "requirements.lock", "wheels": "wheels"},
   "nang_luc": [
     {
       "ma": "trich.doc_docx@1",
@@ -319,7 +320,7 @@
           "bam_tep_goc": null,
           "ma_prompt": "crm_demo.trich_hd",
           "phien_ban_prompt": "DEMO-1",
-          "phien_ban_engine": "e_trich_xuat 0.5.1",
+          "phien_ban_engine": "e_trich_xuat 0.5.2",
           "ma_truong_can_trich": [
             "TT-01",
             "TT-02"

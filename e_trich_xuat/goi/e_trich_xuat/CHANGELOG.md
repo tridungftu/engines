@@ -1,5 +1,13 @@
 # Thay đổi
 
+## 0.5.2 — 22/11/2026
+
+- Kèm thư viện để Core tự cài ngoại tuyến (phiếu lead Core 21/11, CĐ-50 mục 6): khai `phu_thuoc_python`, `requirements.lock` mỗi dòng một thư viện có SHA-256, đủ phụ thuộc gián tiếp, không còn dòng SDK; thư mục `wheels/` có đúng một wheel CPython 3.13 win_amd64 hoặc thuần Python cho mỗi dòng. Khoảng SDK nâng lên `>=2.4.0 <3.0.0` vì khóa này có từ SDK 2.4.0. Không đổi xử lý việc.
+
+- SDK25: bỏ khóa phiên bản/chữ ký và lớp ghi đè nội bộ SDK; dùng `Engine.tu_khai_bao` công khai, giữ câu lỗi chuẩn và cơ chế lọc log của SDK 2.5.0 (C-TX-05).
+- Chuyển test/công cụ sang SDK 2.5.0; mô phỏng qua `DuongTruyen` công khai. Kiểm venv mới cài SDK riêng và thư viện bằng lock có hash vào khu `.thu-vien`, chạy với `-I`.
+- Thêm tự kiểm lock ASCII và wheel: không SDK, không nối dòng/chú thích giữa dòng, đủ đúng wheel và băm, không sdist. Giữ C-TX-06 về tệp phụ của DEMO; không đổi nghiệp vụ hoặc bộ wheel lead cấp.
+
 ## 0.5.1 — 22/11/2026
 
 - UI-TX, TS-TX: màn ngân sách token và thành phần soạn bộ tham số. Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.

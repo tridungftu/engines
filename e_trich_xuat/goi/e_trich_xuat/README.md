@@ -1,6 +1,6 @@
-# Trích thông tin hợp đồng — TX-7, bản 0.5.0 (SDK 2.2.0)
+# Trích thông tin hợp đồng — SDK25, bản 0.5.2 (Core cấp SDK 2.5.x)
 
-TX-7 chuyển cấu hình/ngăn sang SDK 2.2.0, giữ năng lực và nghiệp vụ TX-6. Xem [`../../cong-cu/README.md`](../../cong-cu/README.md) và
+SDK25 dùng cửa công khai của SDK do Core cấp, giữ năng lực và nghiệp vụ hiện có. Xem [`../../cong-cu/README.md`](../../cong-cu/README.md) và
 [`../../docs/TX-6-KET-QUA.md`](../../docs/TX-6-KET-QUA.md).
 Chỉ **đã kiểm bằng Core giả (CoreGia)**; T3/N1 máy thật chưa đo/chưa kiểm.
 
@@ -71,7 +71,7 @@ của bytes tệp thực; không có bộ/toàn văn và không gửi phần nà
 Không tạo tệp tạm hoặc lưu hồ sơ/bộ trên máy engine.
 
 **Hash không chứng minh quyền.** C-TX-01 cần Core xác nhận quyền module/
-pháp nhân, ghim bộ/prompt/cấu hình theo việc; SDK 2.2.0 cấp bản chụp cấu hình cho việc; quyền ghim bộ/prompt
+pháp nhân, ghim bộ/prompt/cấu hình theo việc; SDK 2.5.0 cấp bản chụp cấu hình cho việc; quyền ghim bộ/prompt
 và phạm vi module vẫn cần Core xác nhận. C-TX-02 cần quyền/vòng đời đọc tệp xuyên bước trong
 cùng chuỗi tới module lưu/đóng, gồm ACL và ACK lặp. Test CoreGia đọc hồ sơ
 cũ bằng `mo_tep` qua bước AI giả không chứng nhận quyền/vòng đời Core thật.
@@ -106,10 +106,10 @@ dùng Word, không OCR/AI hoặc gọi engine khác. Số lượt Cloud: **0**.
 Các DOCX hiếm có `vMerge continue` chứa chữ, `w:tr` không có `w:tc`, hoặc
 lệch `gridSpan` bị từ chối **cả tài liệu**, không bỏ riêng dòng/ô lỗi.
 
-## Cấu hình và kiểm SDK 2.2.0
+## Cấu hình và kiểm SDK 2.5.0
 
 `engine.json` khai `cau_hinh.schema: "cau_hinh.schema.json"`, yêu cầu SDK
-`>=2.2.0 <3.0.0`. Core kiểm schema và điền mặc định ngân sách **16.000**;
+`>=2.4.0 <3.0.0`. Core kiểm schema và điền mặc định ngân sách **16.000**;
 handler đọc đúng `viec.cau_hinh`, sao chép vào hồ sơ để thay đổi sau đó
 không ảnh hưởng việc cũ. Thiếu trường bắt buộc vẫn trả `CHUA_CAU_HINH`.
 Không có cache cấu hình nên không cần `@app.khi_doi_cau_hinh`.
@@ -120,7 +120,7 @@ Không còn bảng `cau_hinh` hoặc bảng ngăn TX khác; vì vậy không kha
 được giữ nguyên tại `../../LUU-TRU/TX-7/`, không nằm trên đường chạy.
 Màn `ui/cau_hinh.js` tiếp tục dùng
 `KttCore.engine("e_trich_xuat").cau_hinh.doc()/luu(gia_tri, phien_ban)`.
-SDK 2.2.0 chưa nhận khóa `giao_dien_quan_tri`; lead Core cần nối/review
+SDK 2.5.0 chưa nhận khóa `giao_dien_quan_tri`; lead Core cần nối/review
 màn theo cổng chung (C-TX-08), không thêm khóa ngoài schema manifest.
 
 **Giới hạn SDK còn mở:**
@@ -133,36 +133,37 @@ màn theo cổng chung (C-TX-08), không thêm khóa ngoài schema manifest.
   `phien_ban_cau_hinh: null` và `bam_cau_hinh` trên canonical JSON UTF-8
   của bản chụp. Hậu kiểm bắt buộc băm đúng; vẫn đọc hồ sơ cũ có phiên bản
   nguyên dương. Băm chỉ kiểm toàn vẹn, không chứng minh quyền/phiên bản Core.
-- C-TX-05: chưa có hook công khai đổi câu lỗi trước handler. Hai hook
-  `_ket_thuc`/`_ghi` đã kiểm lại trên 2.2.0; giữ khóa đúng phiên bản và
-  chữ ký để dừng khi SDK thay đổi. SDK 2.2.0 đã ẩn nội dung exception
-  khỏi log. Wrapper giữ câu lỗi DOCX/chuẩn bị đã cam kết.
+- C-TX-05: SDK 2.5.0 chưa có hook công khai đổi câu lỗi trước handler.
+  Engine dùng nguyên `Engine.tu_khai_bao`, nhận mã/câu lỗi MIME và kích
+  thước chuẩn SDK; log lỗi do SDK lọc. Không khóa phiên bản hoặc ghi đè
+  thành phần nội bộ. Cần Core bổ sung cửa công khai nếu muốn tùy biến câu.
 
 Từ gốc repo, tạo `.venv` mới, cài wheel nội bộ rồi phụ thuộc đã ghim từ
 kho wheel offline đã chuẩn bị cho nền tảng đang chạy:
 
 ```text
 python -m venv .venv
-.venv/Scripts/python -m pip install --no-index --no-deps docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl
-.venv/Scripts/python -m pip install --no-index --no-deps --find-links KHO_WHEEL -r e_trich_xuat/goi/e_trich_xuat/requirements.lock -r e_trich_xuat/tests/requirements.lock
-python -B -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat
-python -B -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp
-python -B e_trich_xuat/tests/kiem_doc_lap.py
+.venv/Scripts/python -m pip install --no-index --no-deps docs/goi-gui-engine/sdk-2.5.0/kho_tri_thuc_sdk-2.5.0-py3-none-any.whl
+.venv/Scripts/python -I -X utf8 -m pip install --isolated --no-index --find-links e_trich_xuat/goi/e_trich_xuat/wheels --require-hashes --only-binary :all: --no-deps -r e_trich_xuat/goi/e_trich_xuat/requirements.lock
+.venv/Scripts/python -m pip install --no-index --no-deps --find-links KHO_WHEEL_TEST -r e_trich_xuat/tests/requirements.lock
+.venv/Scripts/python -B -X utf8 -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat
+.venv/Scripts/python -B -X utf8 -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp
+.venv/Scripts/python -B -X utf8 e_trich_xuat/tests/kiem_doc_lap.py
 ```
 
 Ba lệnh cuối dùng Python trong `.venv` (`Scripts/python` trên Windows,
 `bin/python` trên Linux). Dùng `-B` hoặc `PYTHONDONTWRITEBYTECODE=1` để giữ
-gói sạch bytecode. Phiên TX-7 dùng venv Python 3.13.14 mới, SDK 2.2.0,
-phụ thuộc offline; `pip check` đạt. Nguồn phụ thuộc/lock ở `NGUON.md`.
+gói sạch bytecode. SDK25 kiểm với Python 3.13.14, SDK 2.5.0 và phụ thuộc
+offline. SDK do Core cấp, không có trong lock. Nguồn phụ thuộc/lock ở `NGUON.md`.
 
-Các test dùng ngăn/cấu hình của `CoreGia` 2.2.0, `dat_cau_hinh`,
+Các test dùng ngăn/cấu hình của `CoreGia` 2.5.0, `dat_cau_hinh`,
 `gay_xung_dot_ngan`, `xem_ngan`, không dùng ngăn RAM tự viết. Giữ các ca
 hành vi cũ; ca xóa/RAM đổi sang cấm xóa/trạng thái và Core giữ dữ liệu qua
 app mới. Các ca trần byte của lõi dùng phiếu test riêng để đi tới handler,
 vì SDK mới đã chặn mọi chuỗi metadata dài trước handler; trần gói thật
 không đổi. Helper nạp hồ sơ DEMO chỉ phục vụ unit fixture, không có cổng
 CLI thay thế. **đã kiểm bằng Core giả (CoreGia)**; Linux/Core thật chưa kiểm.
-Pytest **486 passed, 0 skipped**, kiểm độc lập exit 0.
+Kết quả SDK25 và giới hạn CLI chuẩn được ghi tại `../../docs/VIEC.md`.
 TX-7 **chưa đạt nghiệm thu** vì C-TX-06; kết quả cuối tại `../../docs/VIEC.md`.
 
 
@@ -190,11 +191,11 @@ Không ghi kết quả/bộ/lịch sử lên máy engine. E6/N1/Core thật chư
 Giữ hai chuỗi DOCX lõi thật hoặc PDF/OCR giả → chuẩn bị → Local AI giả →
 hậu kiểm → xuất `truong`, kiểm tệp JSON/Excel và snapshot sau đổi cấu hình.
 Node kiểm UI bằng KttCore giả; MayChuGia kiểm HTTP loopback, stdin, hủy,
-ACK lặp. Công cụ TX-6 chuyển cách nạp cấu hình sang CoreGia 2.2.0;
+ACK lặp. Công cụ TX-6 chuyển cách nạp cấu hình sang CoreGia 2.5.0;
 không gọi model thật, không phát sinh lượt Cloud. T3/N1 máy thật chưa đo.
-`tests/kiem_may_sach.py --tao-venv --kho-wheel KHO_WHEEL` cài runtime mới
+`tests/kiem_may_sach.py --tao-venv` cài SDK vào venv mới và thư viện từ lock vào khu riêng. Tham số `--kho-wheel KHO_WHEEL` chọn kho CI ngoại tuyến
 bằng kho offline; trả lỗi nếu CLI chuẩn chưa đạt, không quy đổi thành đạt.
-Linux dùng `TX7_KHO_WHEEL` với `tests/kiem_may_sach.sh`.
+Linux dùng `TX25_KHO_WHEEL` với `tests/kiem_may_sach.sh`.
 
 ## TS-TX — trình soạn bộ tham số nhúng trong module, 21/11/2026
 
@@ -285,7 +286,7 @@ Mẫu bộ tối thiểu (dùng màn để tính băm sau khi sửa):
 
 Khai dự kiến tại `KHAI-SDK-2.1.json` mục TS-TX; không đổi `engine.json`.
 Core cần D2 + thao tác E có kiểm quyền; module cần host nhúng và callback
-CAS. Chưa có decorator quản trị ở SDK 2.2.0 nên không đăng ký giả vào runtime.
+CAS. Chưa có decorator quản trị ở SDK 2.5.0 nên không đăng ký giả vào runtime.
 Adapter CoreGia chỉ trong test. **đã kiểm bằng Core giả (CoreGia)**.
 Ảnh dựng bằng KttCore giả: `../../docs/anh-ts-tx/`; tái dựng trang bằng
 `python -B e_trich_xuat/tests/ui/dung_anh_ts_tx.py`. Không có máy ngoài hoặc

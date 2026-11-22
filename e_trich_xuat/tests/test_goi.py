@@ -12,21 +12,22 @@ import pytest
 from kho_tri_thuc_sdk.engine import kiem_phieu
 
 from kiem_doc_lap import kiem_tra
+from phu_thuoc_python import cac_module_da_ghim
 
 
 GOC = Path(__file__).resolve().parents[2]
 GOI = GOC / "e_trich_xuat/goi/e_trich_xuat"
 
 
-def test_phieu_22_va_khai_21_da_luu_tru():
+def test_phieu_sdk25_va_khai_man_du_kien():
     phieu = json.loads((GOI / "engine.json").read_text(encoding="utf-8"))
     assert kiem_phieu(phieu, GOI) == []
     assert [n["ma"] for n in phieu["nang_luc"]] == [
         "trich.doc_docx@1", "trich.chuan_bi@1", "trich.hau_kiem@1", "trich.xuat_ket_qua@1"]
-    assert phieu["tuong_thich"]["sdk"] == ">=2.2.0 <3.0.0"
+    assert phieu["tuong_thich"]["sdk"] == ">=2.4.0 <3.0.0"
     assert phieu["cau_hinh"] == {"schema": "cau_hinh.schema.json"}
     assert "ngan_du_lieu" not in phieu and "du_lieu" not in phieu
-    assert "giao_dien_quan_tri" not in phieu  # SDK 2.2.0 chưa nhận khóa này.
+    assert "giao_dien_quan_tri" not in phieu  # SDK chưa nhận khóa này.
     khai = json.loads((GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))
     assert khai["giao_dien_quan_tri"][0]["tep"] == "ui/cau_hinh.js"
     # TS-TX khai dự kiến màn/thao tác; không khôi phục ngăn/cấu hình tạm TX-7.
@@ -50,8 +51,9 @@ def test_cong_tam_da_luu_tru_khong_con_duong_chay(ten):
         assert ("from ." + ten[:-3] + " import") not in p.read_text(encoding="utf-8")
 
 
-def test_goi_doc_lap_va_import_chi_sdk_thu_vien_chuan():
+def test_goi_doc_lap_va_import_chi_sdk_thu_vien_da_ghim():
     assert kiem_tra(GOI.parent) == []
+    thu_vien = cac_module_da_ghim(GOI)
     for p in (GOI / "e_trich_xuat").glob("*.py"):
         cay = ast.parse(p.read_text(encoding="utf-8"))
         for n in ast.walk(cay):
@@ -61,7 +63,7 @@ def test_goi_doc_lap_va_import_chi_sdk_thu_vien_chuan():
                 ten = [n.module.split(".")[0]]
             else:
                 continue
-            assert all(t in sys.stdlib_module_names or t == "kho_tri_thuc_sdk" for t in ten)
+            assert all(t in sys.stdlib_module_names or t == "kho_tri_thuc_sdk" or t in thu_vien for t in ten)
 
 
 def test_quet_phat_hien_core_kenh_cu_bytecode_va_symlink(tmp_path):

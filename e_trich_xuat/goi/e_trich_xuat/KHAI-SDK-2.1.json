@@ -44,7 +44,7 @@
           "kiem_bo"
         ],
         "ghi_du_lieu": false,
-        "ghi_chu": "Core phải nhận và phân quyền thao tác; SDK 2.2.0 chưa có decorator quản trị. Không đăng ký năng lực mới vào engine.json."
+        "ghi_chu": "Core phải nhận và phân quyền thao tác; SDK 2.5.0 chưa có decorator quản trị. Không đăng ký năng lực mới vào engine.json."
       }
     ]
   }

@@ -2,8 +2,18 @@
 
 Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ Core / Xong** (ghi ngày và bằng chứng).
 
+## Cần Core — UI-MASK, 21/11/2026
+
+- **C-UI-MASK-01 (cửa D):** SDK/Core nhận khai báo màn engine, nạp `ui/cau_hinh.js` và stylesheet tương đối như màn module, chỉ admin_core. Xác nhận API trình duyệt `.cau_hinh.doc()` trả `{gia_tri, phien_ban_cau_hinh}`, `.luu(gia_tri, phien_ban_cau_hinh)` trả phiên mới, kiểm schema/CAS và trả lỗi tranh chấp. Bản khai dự kiến tại `goi/e_mask/KHAI-SDK-2.1.json`; không thêm khóa vào engine.json.
+- **Kế thừa C-P4-06:** màn duyệt vẫn chỉ metadata, xem/duyệt qua cửa Core tin cậy kiểm quyền/vé/CAS. Không thêm backend giả vào runtime hoặc ghi ngăn từ UI. Không có nhu cầu máy ngoài/bí mật mới.
+- **Kế thừa C-MS22-01:** CLI chuẩn của SDK thiếu phiên/quyền tin cậy, hai DEMO tiếp tục bị chặn. Không hạ kiểm quyền để làm xanh CLI.
+- **Hiệu năng cần lead xử lý riêng:** lượt full cuối còn 3 lỗi (hai subtest văn bản 500.000 ký tự: 5,508/6,154 giây so với trần 5; một ca dò alias: 2,170 giây so với trần 2). Chưa phân lập nguyên nhân tải máy/baseline; không sửa runtime hoặc nới ngưỡng trong UI-MASK.
+- **Cần quyền công cụ, không phải sửa Core:** Computer Use từ chối Edge/Chrome vì chưa được phê duyệt; CUA timeout, headless không tạo được PNG. Fixture DEMO đã dựng để chụp sau khi có quyền; tiêu chí ảnh và so bố cục browser thật còn thiếu.
+
+
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| UI-MASK | Cấu hình thời hạn RAM, thẻ tiền tố/từ điển, gộp màn duyệt | Phiếu UI §4, 21/11/2026; 2 giờ ƯỚC TÍNH | Xong mã/kiểm UI; Chờ Core, quyền browser và xử lý hiệu năng — 21/11/2026; chưa đạt nghiệm thu chung | UI Node **61 passed**; full cuối **4.660 passed, 3 failed hiệu năng, 4 xfailed cũ, 188 subtests passed**, mã 1, 0 skipped; độc lập mã 0, kiểm kê **63/63**; CLI chuẩn **0/2** nợ quyền Core cũ. Đã kiểm bằng Core giả (CoreGia); chưa kiểm browser thật/chưa có ảnh. [Báo cáo](BAO-CAO-UI-MASK.md), [fixture/ảnh](anh-ui-mask/README.md). PR: **chờ lead mở**; không commit/push. |
 | MASK-B11 | Danh sách đóng nhãn kế toán sau marker (lượt 4), giữ siết lượt 3 | Quyết định lead 17/11/2026; lượt 4: 1–2 giờ ƯỚC TÍNH | Xong mã và hồi quy lượt 4 — 17/11/2026 / Chờ Core cũ và Anh đo thật | Full **4.659 passed, 4 xfailed cũ, 190 subtests passed**, 0 failed/skip; B11 **550 passed**, giữ đủ 156 regression lượt 3. B10 **19/19 chặn đúng, 0 lọt, 12/12 hợp lệ phát hành và mở che đủ**. Độc lập mã 0; kiểm kê 60/60 LF, 1.6.0; CLI nợ quyền Core cũ 0/2. PR: **chờ lead mở**. Chi tiết lượt 4 cuối sổ; lượt 1/2/3 giữ làm lịch sử. |
 | MASK-B10 | Công cụ nghiệm thu DEMO tệp, biên và vòng đời RAM P4 | Sau B1…B9/R1…R7, MASK-2c/AI-9; phiếu B10 6–8 giờ ƯỚC TÍNH, kho | Xong công cụ/kiểm giả / Chờ lead, Core và Anh — 16/11/2026; chưa đạt nghiệm thu chung | Đúng ba tệp ngoài gói + cập nhật sổ này; 31 tệp ứng viên (12 hỗ trợ, 19 phải chặn), không runtime/dependency/Cloud. 12/12 chặn sai, 19/19 chặn đúng, phát hành 0; không kết luận 0 lọt. Đối chứng cơ học 26/26; chi tiết kiểm/giờ/Cần Core ở mục B10 cuối sổ. PR: **chờ lead mở**. |
 

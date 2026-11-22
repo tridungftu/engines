@@ -3,8 +3,13 @@
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 61516,
-      "sha256": "b6cdd97b1b94c4460db325fbba7c66afab9bbf8533d211c5e04c5e27f483f364"
+      "bytes": 62323,
+      "sha256": "0fd689b90665f5f7c12618b867d4f949ddd3196800e1b2c8b81c6444b0c8cdc1"
+    },
+    {
+      "duong_dan": "KHAI-SDK-2.1.json",
+      "bytes": 815,
+      "sha256": "f796997fb5770b7db6e18dc751059223fff13b34f54d711c4e3092730c957838"
     },
     {
       "duong_dan": "NGUON.md",
@@ -13,13 +18,13 @@
     },
     {
       "duong_dan": "README.md",
-      "bytes": 10364,
-      "sha256": "cb113e196ee4b941a524c2d7bc720dd22c508852aa2caa7c5b5560ba70dab213"
+      "bytes": 12919,
+      "sha256": "4314ae8968374915744014a0665a3b39c56a07e024e37d8fc615a288bbcc7962"
     },
     {
       "duong_dan": "cau_hinh.schema.json",
-      "bytes": 657,
-      "sha256": "181f1664e6b3a8dcb9243bb4978aa49bb02421f60b794f86b2ed06a8a9aee7ff"
+      "bytes": 1166,
+      "sha256": "a9706879be46b7ff552b59a05142776f9d573197a6264b25f6741457df18f241"
     },
     {
       "duong_dan": "demo/README.md",
@@ -297,9 +302,19 @@
       "sha256": "b6a6f87025809fd914b44c9ddf90d643012d34a8c797012132af618b7f9b510c"
     },
     {
+      "duong_dan": "ui/cau_hinh.css",
+      "bytes": 3231,
+      "sha256": "c4b36cb058a773fa01f054f18ea93939d3f006741b8aecdb2726ab605f7484a0"
+    },
+    {
+      "duong_dan": "ui/cau_hinh.js",
+      "bytes": 8642,
+      "sha256": "565ca83e64236b4c6aaa84d70d51c31c08b8bdab6b3a150838c3399620fe1c8f"
+    },
+    {
       "duong_dan": "ui/duyet_dinh_danh.js",
-      "bytes": 7272,
-      "sha256": "c066412eb8fb39aaa021b6160a6c27a9e4ef3945899f0882c457eb65ffd84f08"
+      "bytes": 7689,
+      "sha256": "58d29eaaf2bb6b3deac54cd4f192034c42b407da58f1ab44c126f5548d33ed47"
     }
   ]
 }

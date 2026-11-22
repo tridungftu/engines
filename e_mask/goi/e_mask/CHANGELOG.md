@@ -1,3 +1,9 @@
+## Chưa phát hành — 21/11/2026, UI-MASK
+
+- Thêm màn cấu hình thời hạn ánh xạ RAM 60–900 giây, mặc định 600; hướng dẫn, ví dụ, lỗi ngay tại ô, đọc/lưu qua KttCore với CAS và khóa lưu sau tranh chấp hoặc mất xác nhận.
+- Hai thẻ chỉ đọc: bộ tiền tố cố định và bốn từ điển sạch trong gói; gộp màn duyệt theo thẻ. Bỏ xưng hô, đưa ID/tên tệp kỹ thuật vào Nâng cao, giữ kiểm vé/quyền/CAS và không ghi ngăn từ UI.
+- Bổ sung mô tả và ví dụ schema, khai dự kiến màn tại KHAI-SDK-2.1.json; không đổi engine.json, xử lý việc hoặc dependency. Kiểm kê gói được sinh lại. Đã kiểm bằng Core giả (CoreGia); chưa nạp trong Core thật. PR: chờ lead mở.
+
 ## 1.6.1 — 17/11/2026 (MASK-B11: giảm chặn nhầm tệp Word/Excel; bản trước 1.6.0 đã phát hành 16/11)
 
 ### MASK-B11 lượt 4

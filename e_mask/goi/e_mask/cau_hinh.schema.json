@@ -1,13 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Cấu hình Che định danh",
-  "description": "Thời hạn ánh xạ chỉ trong RAM cùng chu kỳ. Prompt và model Local thuộc cấu hình module/quy trình do Core cấp.",
+  "description": "Cấu trúc: thoi_han_anh_xa_giay là số nguyên tùy chọn từ 60 đến 900, thời hạn giữ ánh xạ chỉ trong RAM cùng chu kỳ; bỏ trống dùng 600 giây. Không gia hạn theo truy cập; hết hạn hoặc mất RAM phải chạy lại toàn chuỗi. Thay đổi áp dụng cho chuỗi mới. Mẫu đầy đủ: {\"thoi_han_anh_xa_giay\": 600}. Prompt và model Local thuộc cấu hình module/quy trình do Core cấp.",
+  "examples": [{"thoi_han_anh_xa_giay": 600}],
   "type": "object",
   "properties": {
     "thoi_han_anh_xa_giay": {
       "type": "integer",
       "title": "Thời hạn ánh xạ trong RAM (giây)",
-      "description": "Chụp lúc bắt đầu chuỗi; hết hạn phải chạy lại toàn chuỗi. Không gia hạn theo truy cập.",
+      "description": "Số nguyên từ 60 đến 900 giây, không bắt buộc; bỏ trống dùng 600 giây (10 phút). Ví dụ: 600. Chụp lúc bắt đầu chuỗi; hết hạn phải chạy lại toàn chuỗi. Không gia hạn theo truy cập.",
+      "examples": [600, 60, 900],
       "minimum": 60,
       "maximum": 900,
       "default": 600

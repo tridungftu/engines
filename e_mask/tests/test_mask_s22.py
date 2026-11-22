@@ -22,7 +22,10 @@ def test_phieu_cau_hinh_sdk_va_kho_ram_van_tach_kho_core_r1():
     assert app.phieu['du_lieu']['goi_migration']['thu_muc'] == 'sql'
     goi = Path(app.thu_muc_goi)
     assert (goi / 'sql/kiem_ke.json').is_file()
-    assert not (goi / 'KHAI-SDK-2.1.json').exists()
+    # UI-MASK chỉ khai dự kiến cửa màn chưa được SDK 2.2.0 nhận.
+    khai_ui = json.loads((goi / 'KHAI-SDK-2.1.json').read_text('utf-8'))
+    assert set(khai_ui) == {'ghi_chu', 'giao_dien_quan_tri', 'can_core'}
+    assert khai_ui['giao_dien_quan_tri'][0]['tep'] == 'ui/cau_hinh.js'
     assert not (goi / 'e_mask/cau_hinh.py').exists()
     schema = json.loads((goi / 'cau_hinh.schema.json').read_text('utf-8'))
     assert all('default' in truong for truong in schema['properties'].values())

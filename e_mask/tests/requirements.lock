@@ -5,3 +5,9 @@ pluggy==1.6.0
 pygments==2.21.0
 iniconfig==2.3.0
 colorama==0.4.6
+# Dependency SDK dùng kiểm JSON Schema đầy đủ trong CoreGia; không import từ engine.
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+referencing==0.37.0
+rpds-py==2026.6.3
+attrs==26.1.0

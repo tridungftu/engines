@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DEMO · Cấu hình Che định danh · KttCore giả</title>
+<style>body{margin:0;background:#f4f6f9}.demo{font:14px "Segoe UI",sans-serif;color:#62768d;max-width:1180px;margin:18px auto 0;padding:0 24px}</style>
+<p class="demo">DEMO · Đã kiểm bằng Core giả (CoreGia) · 21/11/2026</p>
+<main id="goc"></main>
+<script type="module">
+import { taoMan } from '../../goi/e_mask/ui/cau_hinh.js';
+let gia_tri={thoi_han_anh_xa_giay:600},phien=1;
+const ID='a'.repeat(32),VE='c'.repeat(32);
+let trangThai='CHO_DUYET';
+const engine={
+  cau_hinh:{
+    async doc(){return {gia_tri:{...gia_tri},phien_ban_cau_hinh:phien};},
+    async luu(v,p){if(p!==phien)throw {ma:'CAU_HINH_XUNG_DOT'};gia_tri={...v};return {phien_ban_cau_hinh:++phien};}
+  },
+  ngan:{async tim(){return {danh_sach:trangThai==='CHO_DUYET'?[{row_version:1,gia_tri:{
+    id_dinh_danh:ID,vung_du_lieu:'DEMO',nhom:'CONG_TY',trang_thai:trangThai,so_gap:2,
+    gia_tri_goc:null,gia_tri_chuan:null,gia_tri_goc_da_ma_hoa:true,gia_tri_chuan_da_ma_hoa:true
+  }}]:[],tiep:null};}},
+  async thao_tac(ma,dl){
+    if(ma==='xem_du_lieu')return {id_dinh_danh:ID,row_version:1,bien_nhan:VE};
+    trangThai=dl.quyet_dinh==='DUYET'?'CHINH_THUC':'TU_CHOI';
+    return {id_dinh_danh:ID,trang_thai:trangThai,bi_danh:trangThai==='CHINH_THUC'?'[[KH-DEMO-001]]':null};
+  }
+};
+const KttCore={engine(ma){if(ma!=='e_mask')throw Error('Sai engine');return engine;}};
+await taoMan({KttCore,goc:document.getElementById('goc')}).nap();
+document.title='Đã dựng DEMO UI-MASK';
+</script>
+</html>

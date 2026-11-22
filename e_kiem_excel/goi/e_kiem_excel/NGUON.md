@@ -196,7 +196,7 @@ Kiểm kê sau đây đã sinh lại cho toàn bộ gói, gồm các tệp TS-EX
 
 | Tệp trong gói | Bytes | SHA-256 |
 |---|---:|---|
-| `CHANGELOG.md` | 4199 | `2db71bcc7524f973d086fd0bf5684aa01d3fe5345a36ec79b061c53937d14e41` |
+| `CHANGELOG.md` | 4407 | `ac9917d474666fe5da0cd8419dfbc61be547c3d30fc65272c6d75044569af350` |
 | `demo/bang-kl-DEMO.xlsx` | 4508 | `9e14f6142c32faedf1ca60a01f64a43cd3004b237cea27373ea2383d2f66d0ab` |
 | `demo/bao-gia-DEMO.xlsx` | 2048 | `ac25a7b8e36cd0fa0e5c9e67f04d23c19afbde654c21d029beb83f66ec9cffb2` |
 | `demo/gia-thanh-DEMO.xlsx` | 1811 | `010ffccbb70784a09fab3247a39e5c23425d335e9421fd50305216c16d6226bf` |
@@ -213,7 +213,7 @@ Kiểm kê sau đây đã sinh lại cho toàn bộ gói, gồm các tệp TS-EX
 | `e_kiem_excel/nhan_dien.py` | 6696 | `9365db7e0b5094b7defa4761a00d621fe119a53c0db5a90d2f69d201c2abb6a7` |
 | `e_kiem_excel/so_do.py` | 4802 | `5be9894b22ff44c1ac3b55f8230b0aaf2f0e25f8d5381839c504fe7a801ba25b` |
 | `e_kiem_excel/tham_chieu.py` | 3712 | `820b34509482de02dde7fe3f2643ad0ee3afa09c17832ee03ddaf3755f19f19f` |
-| `engine.json` | 10326 | `ded89c3c540cf207249953240d8133f056cbe48ac5cdaae355bd2ad558628742` |
+| `engine.json` | 10326 | `644c1dff0a2183d87962b8e65bcc86fbb448fedbd494ae0e43bd22f06d1a8e36` |
 | `KHAI-SDK-2.1.json` | 1954 | `fbcd02cff5f49378d0186a0790c5934bfd0b6bf7a1b41bf516c17116ab323775` |
 | `README.md` | 13974 | `38d6a0935154700cfa3b2b5ec662ac1a85c6bc791558553e1f9e012470cf56fb` |
 | `requirements.lock` | 631 | `d82a377d03f0489bbfaccaa739373b000b45dd519b749a585edec90874dc99ec` |

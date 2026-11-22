@@ -475,7 +475,7 @@
         "mime": "application/json",
         "kich_thuoc": 2229
       },
-      "bam": "sha256:4772f8182296f1dd051049672c950d0124fea2e174cff5533da9c4c3ee95cf13",
+      "bam": "sha256:6dd7e0094fe928ac3578bc753c1548cb15466c331693209a681fff74ba303518",
       "duong_dan": "demo/tc-10/cong-chuan/phan-loai/tep-15.json"
     }
   ],

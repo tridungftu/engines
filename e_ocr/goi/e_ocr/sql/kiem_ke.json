@@ -1,5 +1,5 @@
 {
-  "phien_ban": "1.0.9",
+  "phien_ban": "1.0.10",
   "tep": [
     {
       "duong_dan": ".gitattributes",
@@ -8,8 +8,8 @@
     },
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 11703,
-      "sha256": "8b62014884aa3b051a452b0243fe6bf7f6df45f4ef3a25243f6e0f425b0d949b"
+      "bytes": 11951,
+      "sha256": "e132dab918d65995ba6ef5f39af8d686029b1e2ba35b57d17b7d459a8a8b6bc7"
     },
     {
       "duong_dan": "KHAI-SDK-2.1.json",
@@ -108,8 +108,8 @@
     },
     {
       "duong_dan": "e_ocr/__init__.py",
-      "bytes": 107,
-      "sha256": "356375742597928c19940cf1e016dc55bcc3e83f03901f77131418652a31f3ed"
+      "bytes": 108,
+      "sha256": "5f9943b538cebe4109c8ce537856c5a3f7bb576100b15e679a5d9602fcd53c20"
     },
     {
       "duong_dan": "e_ocr/abbyy.py",
@@ -208,8 +208,8 @@
     },
     {
       "duong_dan": "engine.json",
-      "bytes": 8106,
-      "sha256": "17204ed1c2edeb41e294997ddbd9e5590dd56a05317e9f149fafad97fd63c773"
+      "bytes": 8107,
+      "sha256": "6625672910667214877c5e53a78a6eab4e7dd85d33c17ebbc305ecb6b740472f"
     },
     {
       "duong_dan": "requirements.lock",

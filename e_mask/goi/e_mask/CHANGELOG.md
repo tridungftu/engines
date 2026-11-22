@@ -1,3 +1,7 @@
+## 1.6.2 — 22/11/2026
+
+- UI-MASK: màn cấu hình và thẻ từ điển chỉ đọc. Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.
+
 ## Chưa phát hành — 21/11/2026, UI-MASK
 
 - Thêm màn cấu hình thời hạn ánh xạ RAM 60–900 giây, mặc định 600; hướng dẫn, ví dụ, lỗi ngay tại ô, đọc/lưu qua KttCore với CAS và khóa lưu sau tranh chấp hoặc mất xác nhận.

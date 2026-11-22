@@ -1,10 +1,10 @@
 {
-  "phien_ban": "0.2.0",
+  "phien_ban": "0.2.1",
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 21442,
-      "sha256": "3cd7d8f944d6b7b466564eef16ecb9010bdc10013678c73cf6b34ada6d15eec4"
+      "bytes": 21657,
+      "sha256": "a56bd3878b2d264215870cc4f5e233ebfe45ec2f31d3fccbf73e883106cbc0c2"
     },
     {
       "duong_dan": "KHAI-SDK-2.1.json",
@@ -169,12 +169,12 @@
     {
       "duong_dan": "demo/tc-10/cong-chuan/bam-DEMO.json",
       "bytes": 7925,
-      "sha256": "c90a17fdd1e0e366ea942440dbb02e5ac93873ff6df3c2eda46e96c3a7f9c322"
+      "sha256": "823441a84026056fd1825a3b37ae1c94f15d66893db630313f8fbfd991e1705d"
     },
     {
       "duong_dan": "demo/tc-10/cong-chuan/cat-doan/fixture-DEMO.json",
       "bytes": 6336,
-      "sha256": "8e4d9bdc3ece0eb8d8b7899b8e84c40bf0727ec5face8c67dbd4d48d7784c982"
+      "sha256": "c1c8ea525bb91b943fbe3af8fd8b622c95e423745db77b4e9d1db8df7b69fc20"
     },
     {
       "duong_dan": "demo/tc-10/cong-chuan/cat-doan/tep-1.txt",
@@ -209,7 +209,7 @@
     {
       "duong_dan": "demo/tc-10/cong-chuan/chuan-bi-ai/fixture-DEMO.json",
       "bytes": 6595,
-      "sha256": "6cd7c495d3af2aa4bc912d5ba80a53f226e5452154b5b79809325e62b1b3c3ce"
+      "sha256": "7b4ce9b265845310fdae84f93598636770a0597c0c57304edeb51bf050efae6d"
     },
     {
       "duong_dan": "demo/tc-10/cong-chuan/chuan-bi-ai/tep-1.txt",
@@ -244,7 +244,7 @@
     {
       "duong_dan": "demo/tc-10/cong-chuan/phan-loai/fixture-DEMO.json",
       "bytes": 19052,
-      "sha256": "3ee1b86936a85397014ba922666585acd087c59c5354d5a593ba0ddb54caee95"
+      "sha256": "99d3da3b048904eba9ecc2a2f969868214c16e30cfb9c5ada60aab8d8d3fa808"
     },
     {
       "duong_dan": "demo/tc-10/cong-chuan/phan-loai/tep-1.txt",
@@ -279,7 +279,7 @@
     {
       "duong_dan": "demo/tc-10/cong-chuan/phan-loai/tep-15.json",
       "bytes": 2229,
-      "sha256": "4772f8182296f1dd051049672c950d0124fea2e174cff5533da9c4c3ee95cf13"
+      "sha256": "6dd7e0094fe928ac3578bc753c1548cb15466c331693209a681fff74ba303518"
     },
     {
       "duong_dan": "demo/tc-10/cong-chuan/phan-loai/tep-2.json",
@@ -369,7 +369,7 @@
     {
       "duong_dan": "demo/tc-10/cong-chuan/soan-tra-loi/fixture-DEMO.json",
       "bytes": 15906,
-      "sha256": "7a09e541e2a1ee0328ca48e1b3dafe182be58fa627333ac85f27ec3cbd3fbbfa"
+      "sha256": "f0b1b27e4641929182a64be5d94450999ba356d6b269d744f057545eb50d9a21"
     },
     {
       "duong_dan": "demo/tc-10/cong-chuan/soan-tra-loi/tep-1.txt",
@@ -394,7 +394,7 @@
     {
       "duong_dan": "demo/tc-10/cong-chuan/soan-tra-loi/tep-13.json",
       "bytes": 5583,
-      "sha256": "01c50c62df45d0ba76e74342345b3ccf9a75d40abb2b4fcd03f2ca2340cb860b"
+      "sha256": "bda527d944b36549e622d80edecc7923db330e779956d553856eae0a59499c14"
     },
     {
       "duong_dan": "demo/tc-10/cong-chuan/soan-tra-loi/tep-2.json",
@@ -484,7 +484,7 @@
     {
       "duong_dan": "demo/tc-10/cong-chuan/xuat-ket-qua/fixture-DEMO.json",
       "bytes": 8504,
-      "sha256": "2876d944d07347e08ea849ec454f22147d6d760e30491d9a1bb85dc01add3d9f"
+      "sha256": "f7b8e202f1133ffb9117e2a1ef25696eb5b20aef26952b573dfe5ed36e460a91"
     },
     {
       "duong_dan": "demo/tc-10/cong-chuan/xuat-ket-qua/tep-1.txt",
@@ -509,7 +509,7 @@
     {
       "duong_dan": "demo/tc-10/cong-chuan/xuat-ket-qua/tep-13.json",
       "bytes": 5583,
-      "sha256": "01c50c62df45d0ba76e74342345b3ccf9a75d40abb2b4fcd03f2ca2340cb860b"
+      "sha256": "bda527d944b36549e622d80edecc7923db330e779956d553856eae0a59499c14"
     },
     {
       "duong_dan": "demo/tc-10/cong-chuan/xuat-ket-qua/tep-2.json",
@@ -689,7 +689,7 @@
     {
       "duong_dan": "engine.json",
       "bytes": 23390,
-      "sha256": "4d331affbdd91e532a2b5a3881b35cc8d09d12a2ee4d78951de12be47ca172ae"
+      "sha256": "e21102223692db19e6d0413e1e0954e8eaa13d153067dcd2885fb3fec91b63d1"
     },
     {
       "duong_dan": "requirements.lock",

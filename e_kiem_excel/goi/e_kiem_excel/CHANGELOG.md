@@ -1,5 +1,9 @@
 # Thay đổi
 
+## 0.1.2 — 22/11/2026
+
+- TS-EX: trình soạn Cài đặt bước. Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.
+
 ## TS-EX — 21/11/2026
 - Thêm trình soạn ô đích, nhãn tìm, bộ nhóm và khuôn cột bằng trường/danh sách;
   giữ nguyên cấu trúc JSON v1, ngữ nghĩa điều kiện, thứ tự nhóm và trần hiện có.

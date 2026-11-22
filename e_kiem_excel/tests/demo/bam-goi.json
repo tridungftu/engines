@@ -3,8 +3,8 @@
   "bam": "SHA-256 bytes nguyên trạng",
   "tep": {
     "CHANGELOG.md": {
-      "bytes": 4199,
-      "sha256": "2db71bcc7524f973d086fd0bf5684aa01d3fe5345a36ec79b061c53937d14e41"
+      "bytes": 4407,
+      "sha256": "ac9917d474666fe5da0cd8419dfbc61be547c3d30fc65272c6d75044569af350"
     },
     "demo/bang-kl-DEMO.xlsx": {
       "bytes": 4508,
@@ -72,7 +72,7 @@
     },
     "engine.json": {
       "bytes": 10326,
-      "sha256": "ded89c3c540cf207249953240d8133f056cbe48ac5cdaae355bd2ad558628742"
+      "sha256": "644c1dff0a2183d87962b8e65bcc86fbb448fedbd494ae0e43bd22f06d1a8e36"
     },
     "KHAI-SDK-2.1.json": {
       "bytes": 1954,
@@ -80,7 +80,7 @@
     },
     "NGUON.md": {
       "bytes": 18146,
-      "sha256": "0a8a0d7a0fed72aef4ceeadd3859db6a9c75e240059e5a41be3bfe36416a8603"
+      "sha256": "a320aa8a1be9e0b191ea839a63e1f3b7a460ad5c3f83d5cdd66f42394372878e"
     },
     "README.md": {
       "bytes": 13974,

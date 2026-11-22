@@ -1,5 +1,9 @@
 # Thay đổi
 
+## 1.0.10 — 22/11/2026
+
+- UI-OCR: thẻ ABBYY/Tesseract/Hạn mức, nút kiểm Hot Folder và Tesseract. Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.
+
 ## Chưa phát hành — 21/11/2026 — UI-OCR
 
 - Chia màn cấu hình thành ba thẻ ABBYY, Tesseract và Hạn mức, bố cục hai

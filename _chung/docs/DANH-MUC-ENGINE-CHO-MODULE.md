@@ -2,7 +2,7 @@
 
 *Tệp **sinh tự động** bằng `python _chung/cong-cu/sinh_danh_muc_engine.py` từ `engine.json` của mọi gói; không sửa tay. Muốn đổi ghi chú hay chuỗi mẫu: sửa `GHI_CHU`/`CHUOI` trong script rồi chạy lại. Kiểm tự động trên GitHub báo đỏ khi tệp chưa cập nhật theo `engine.json` hoặc một chuỗi mẫu nối sai.*
 
-*Phiên bản gói lúc sinh: `e_ocr` 1.0.9, `e_hoi_ai` 0.12.0, `e_mask` 1.6.1, `e_trich_xuat` 0.5.0, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.1, `e_phan_luong` 0.1.0, `e_doi_chieu` 0.9.0, `e_tra_cuu` 0.2.0.*
+*Phiên bản gói lúc sinh: `e_ocr` 1.0.10, `e_hoi_ai` 0.12.1, `e_mask` 1.6.2, `e_trich_xuat` 0.5.1, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.2, `e_phan_luong` 0.1.0, `e_doi_chieu` 0.9.1, `e_tra_cuu` 0.2.1.*
 
 ## 1. Kết luận
 
@@ -12,15 +12,15 @@
 
 | Engine | Tên | Gói | Số năng lực | Dùng khi | Lưu ý cho module |
 |---|---|---|---:|---|---|
-| `e_ocr` | Nhận dạng văn bản | 1.0.9 | 3 | PDF scan, ảnh → chữ có vị trí, văn bản thuần, Word giữ bảng | ABBYY trước, Tesseract dự phòng; ABBYY thật chưa chạy thử |
-| `e_hoi_ai` | Hỏi AI | 0.12.0 | 3 | Hỏi AI về tài liệu có trích dẫn; bước AI giữa chuỗi của engine khác | **Chỉ Local AI**; chưa có năng lực Cloud; prompt thuộc module |
-| `e_mask` | Che định danh | 1.6.1 | 8 | Che/mở che tên, MST, địa chỉ… trước khi đưa ra ngoài | Kho bí danh tạm giữ trong bộ nhớ (mất khi khởi động lại); mở che cần `ma_yeu_cau` |
-| `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.0 | 4 | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
+| `e_ocr` | Nhận dạng văn bản | 1.0.10 | 3 | PDF scan, ảnh → chữ có vị trí, văn bản thuần, Word giữ bảng | ABBYY trước, Tesseract dự phòng; ABBYY thật chưa chạy thử |
+| `e_hoi_ai` | Hỏi AI | 0.12.1 | 3 | Hỏi AI về tài liệu có trích dẫn; bước AI giữa chuỗi của engine khác | **Chỉ Local AI**; chưa có năng lực Cloud; prompt thuộc module |
+| `e_mask` | Che định danh | 1.6.2 | 8 | Che/mở che tên, MST, địa chỉ… trước khi đưa ra ngoài | Kho bí danh tạm giữ trong bộ nhớ (mất khi khởi động lại); mở che cần `ma_yeu_cau` |
+| `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.1 | 4 | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
 | `e_hoa_don` | Đọc XML hóa đơn | 1.0.0 | 3 | Đọc XML, ZIP hóa đơn điện tử; lập bảng kê XLSX | Chưa có PDF, chưa tải cổng thuế |
-| `e_kiem_excel` | Kiểm và đọc file Excel | 0.1.1 | 2 | Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề | Ô đích, bộ nhóm, khuôn cột do module truyền |
+| `e_kiem_excel` | Kiểm và đọc file Excel | 0.1.2 | 2 | Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề | Ô đích, bộ nhóm, khuôn cột do module truyền |
 | `e_phan_luong` | Phân luồng kiểm tra | 0.1.0 | 5 | Phân luồng kiểm tra theo khâu, ngưỡng PM/TE/SAD và chọn mẫu | Nhận JSON, Excel/CSV theo khuôn cột, chuỗi Local AI và XML/ZIP hóa đơn; ghi kết quả kiểm; trả danh sách Đỏ Excel. Màn Admin bảng tỷ lệ chờ Core (CC-5) |
-| `e_doi_chieu` | Đối chiếu bản ký | 0.9.0 | 7 | So bản Word chuẩn với bản đã ký | Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module |
-| `e_tra_cuu` | Tra cứu tài liệu | 0.2.0 | 8 | Hỏi đáp 3 tầng trên kho tài liệu | Bước đầu nhận **tệp JSON yêu cầu**; cần Kho tài liệu của Core (chưa có) |
+| `e_doi_chieu` | Đối chiếu bản ký | 0.9.1 | 7 | So bản Word chuẩn với bản đã ký | Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module |
+| `e_tra_cuu` | Tra cứu tài liệu | 0.2.1 | 8 | Hỏi đáp 3 tầng trên kho tài liệu | Bước đầu nhận **tệp JSON yêu cầu**; cần Kho tài liệu của Core (chưa có) |
 
 ## 2. Quy tắc module phải theo
 
@@ -93,7 +93,7 @@ Module **không đọc** các loại này: chúng chỉ đi giữa các bước.
 
 ## 5. Chi tiết từng năng lực (sinh từ `engine.json`)
 
-### e_ocr — Nhận dạng văn bản (gói 1.0.9)
+### e_ocr — Nhận dạng văn bản (gói 1.0.10)
 
 Loại dữ liệu riêng: `van_ban_tai_lieu`. Số việc đồng thời: 1.
 
@@ -130,7 +130,7 @@ Loại dữ liệu riêng: `van_ban_tai_lieu`. Số việc đồng thời: 1.
 | `nguon` | Nguồn đọc | chọn | không | `"tu_dong"` | `tu_dong` (Tự động), `chi_abbyy` (Chỉ ABBYY), `chi_tesseract` (Chỉ Tesseract) |
 
 
-### e_hoi_ai — Hỏi AI (gói 0.12.0)
+### e_hoi_ai — Hỏi AI (gói 0.12.1)
 
 Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`. Số việc đồng thời: 1.
 
@@ -167,7 +167,7 @@ Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`. Số 
 - **Nhận:** `yeu_cau_ai` → **Trả:** `tra_loi_ai` (chỉ dùng ở giữa chuỗi)
 - **Giới hạn:** ≤ 500.000 ký tự; thời hạn 600 giây; hủy được: có
 
-### e_mask — Che định danh (gói 1.6.1)
+### e_mask — Che định danh (gói 1.6.2)
 
 Loại dữ liệu riêng: `yeu_cau_ai`, `van_ban_tai_lieu`, `tra_loi_ai`, `van_ban_da_che`. Số việc đồng thời: 1.
 
@@ -255,7 +255,7 @@ Loại dữ liệu riêng: `yeu_cau_ai`, `van_ban_tai_lieu`, `tra_loi_ai`, `van_
 | `trang_thai_ma_yeu_cau` | Trạng thái yêu cầu | văn bản |
 | `tra_loi_ai_da_mo_json` | Trả lời AI đã mở JSON | văn bản |
 
-### e_trich_xuat — Trích thông tin hợp đồng (gói 0.5.0)
+### e_trich_xuat — Trích thông tin hợp đồng (gói 0.5.1)
 
 Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`, `bang_trich_xuat`. Số việc đồng thời: 1.
 
@@ -375,7 +375,7 @@ Loại dữ liệu riêng: không. Số việc đồng thời: 1.
 | `bam_dau_vao` | Băm JSON đầu vào | văn bản |
 | `phien_ban_engine` | Phiên bản engine | văn bản |
 
-### e_kiem_excel — Kiểm và đọc file Excel (gói 0.1.1)
+### e_kiem_excel — Kiểm và đọc file Excel (gói 0.1.2)
 
 Loại dữ liệu riêng: không. Số việc đồng thời: 1.
 
@@ -615,7 +615,7 @@ Loại dữ liệu riêng: `yeu_cau_ai`, `tra_loi_ai`. Số việc đồng thờ
 | `tep_bai_hoc` | Bài học khi AI sai (JSON) | tệp |
 | `phien_ban_engine` | Phiên bản engine | văn bản |
 
-### e_doi_chieu — Đối chiếu bản ký (gói 0.9.0)
+### e_doi_chieu — Đối chiếu bản ký (gói 0.9.1)
 
 Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`, `ho_so_doi_chieu`. Số việc đồng thời: 1.
 
@@ -698,7 +698,7 @@ Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`, `ho_s
 | `tep_json` | Báo cáo JSON | tệp |
 | `tep_pdf` | Báo cáo PDF | tệp |
 
-### e_tra_cuu — Tra cứu tài liệu (gói 0.2.0)
+### e_tra_cuu — Tra cứu tài liệu (gói 0.2.1)
 
 Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`, `ho_so_tra_cuu`. Số việc đồng thời: 1.
 

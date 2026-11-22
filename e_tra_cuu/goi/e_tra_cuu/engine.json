@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_tra_cuu",
   "ten": "Tra cứu tài liệu",
-  "phien_ban": "0.2.0",
+  "phien_ban": "0.2.1",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -378,7 +378,7 @@
           "bam_ho_so": "sha256:3c83d66338e75e3ff8a42e47ff21801179a36df7900c25b20a70473e2d041c37",
           "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
           "bam_danh_muc": null,
-          "phien_ban_engine": "e_tra_cuu 0.2.0",
+          "phien_ban_engine": "e_tra_cuu 0.2.1",
           "tom_tat": {
             "trang_thai": null,
             "so_doan": null,
@@ -415,7 +415,7 @@
           "bam_ho_so": "sha256:e957bd3ba0ad6c126fc22ccdc5379a98d211306873143cb6db086b1e6e06b6b9",
           "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
           "bam_danh_muc": "sha256:f9d4e2e697ff78b3d90f221ecb1363f06d552950abbbdc0aad18a9a832865735",
-          "phien_ban_engine": "e_tra_cuu 0.2.0",
+          "phien_ban_engine": "e_tra_cuu 0.2.1",
           "tom_tat": {
             "trang_thai": null,
             "so_doan": null,
@@ -733,7 +733,7 @@
           "bam_ho_so": "sha256:48b90bd2e7a27d319e4016ba5e9ecf636ae8a8235b461ed11eba4af559e59b23",
           "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
           "bam_danh_muc": null,
-          "phien_ban_engine": "e_tra_cuu 0.2.0",
+          "phien_ban_engine": "e_tra_cuu 0.2.1",
           "tom_tat": {
             "trang_thai": "co_can_cu",
             "so_doan": null,

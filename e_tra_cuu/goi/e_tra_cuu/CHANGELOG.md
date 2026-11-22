@@ -1,5 +1,9 @@
 # UI-TC — 21/11/2026: cấu hình Cơ bản/Nâng cao
 
+## 0.2.1 — 22/11/2026
+
+- UI-TC: màn Cơ bản/Nâng cao, bỏ xưng hô. Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.
+
 - Bố cục thẻ theo ảnh mẫu, hai cột desktop/một cột mobile; ngưỡng chỉ đọc,
   độ dài đoạn ở Cơ bản; bộ quy tắc và 15 trần hiện hữu ở Nâng cao thu gọn.
 - Hướng dẫn/mẫu và lỗi cạnh từng ô; giữ CAS, khóa sửa/lưu lặp khi đang lưu;

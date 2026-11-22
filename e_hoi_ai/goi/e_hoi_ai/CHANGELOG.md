@@ -1,3 +1,7 @@
+## 0.12.1 — 22/11/2026
+
+- UI-AI-1, UI-AI-2: màn Máy AI và màn Cổng Cloud AI (Tạm khóa). Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.
+
 ## UI-AI-2 — 22/11/2026 (PR: chờ lead mở; giữ manifest 0.12.0)
 
 - Thêm màn Cổng Cloud AI theo ảnh mẫu, luôn Tạm khóa: nhà cung cấp/model/tỷ lệ kiểm/nút kiểm Cloud bị khóa; không có đường bật/gọi Cloud hoặc thao tác Python mới.

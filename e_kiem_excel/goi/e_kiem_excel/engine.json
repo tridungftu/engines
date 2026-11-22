@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_kiem_excel",
   "ten": "Kiểm và đọc file Excel",
-  "phien_ban": "0.1.1",
+  "phien_ban": "0.1.2",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",

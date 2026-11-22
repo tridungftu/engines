@@ -483,7 +483,7 @@
         "mime": "application/json",
         "kich_thuoc": 5583
       },
-      "bam": "sha256:01c50c62df45d0ba76e74342345b3ccf9a75d40abb2b4fcd03f2ca2340cb860b",
+      "bam": "sha256:bda527d944b36549e622d80edecc7923db330e779956d553856eae0a59499c14",
       "duong_dan": "demo/tc-10/cong-chuan/soan-tra-loi/tep-13.json"
     }
   ],

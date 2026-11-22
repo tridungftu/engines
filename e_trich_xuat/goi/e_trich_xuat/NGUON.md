@@ -110,7 +110,6 @@ Hai tệp mẫu ngăn trong gói không được sửa, kể cả để đổi x
 
 | Tệp | SHA-256 |
 |---|---|
-| `cau_hinh.schema.json` | `291d3ff81ffe0c12e31b1dd6e982b6339c3fa0992f6ec4797f33727ff06f1567` |
 | `CHANGELOG.md` | `87a01e890e4417c7abac1e1b052e98961140bdf1fd2a6722bc771534bf47bf66` |
 
 | `cau_hinh.schema.json` | `d169a619f7968469ddc25422e793b9e4b5ec83caa420b4a8f8fdc4eb1e6ba9de` |
@@ -292,7 +291,6 @@ Chi tiết review tại `../../docs/TX-3-REVIEW.md`; bằng chứng/lệnh/giờ
 | `docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl` | `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` |
 | `e_trich_xuat/cong-cu/README.md` | `48369604533e24aedafae18b16266622a370ca94bc297ffd6f3d1fd301fd6370` |
 | `e_trich_xuat/docs/CHANGELOG.md` | `d8e674d57e63b9af547b2b6fcea6aec1786e4fbd972ec5fa03610e4e4cf125a3` |
-| `cau_hinh.schema.json` | `291d3ff81ffe0c12e31b1dd6e982b6339c3fa0992f6ec4797f33727ff06f1567` |
 | `CHANGELOG.md` | `87a01e890e4417c7abac1e1b052e98961140bdf1fd2a6722bc771534bf47bf66` |
 
 | `cau_hinh.schema.json` | `d169a619f7968469ddc25422e793b9e4b5ec83caa420b4a8f8fdc4eb1e6ba9de` |

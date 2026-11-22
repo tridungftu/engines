@@ -1,0 +1,10 @@
+{
+  "giao_dien_quan_tri": [
+    {
+      "ma": "cau_hinh",
+      "ten": "C\u1ea5u h\u00ecnh tr\u00edch xu\u1ea5t",
+      "tep": "ui/cau_hinh.js",
+      "quyen": "admin_core"
+    }
+  ]
+}

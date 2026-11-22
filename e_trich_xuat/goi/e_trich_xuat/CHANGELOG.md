@@ -128,3 +128,7 @@
 ## TX-5 — 15/11/2026
 
 Bàn giao ngoài runtime helper chuyển E1 thành snapshot cùng hướng dẫn U1a/U1b cho module; không thay engine runtime hoặc đăng ký năng lực. Kiểm chi tiết và giới hạn CLI/Core tại `docs/VIEC.md`.
+
+## UI-TX — 21/11/2026
+
+Hoàn thiện màn ngân sách token, hướng dẫn và kiểm lỗi tại ô; bổ sung mô tả schema và khai báo màn dự kiến. Đã kiểm bằng Core giả (CoreGia); chưa nối Core thật.

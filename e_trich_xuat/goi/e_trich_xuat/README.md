@@ -195,3 +195,98 @@ không gọi model thật, không phát sinh lượt Cloud. T3/N1 máy thật ch
 `tests/kiem_may_sach.py --tao-venv --kho-wheel KHO_WHEEL` cài runtime mới
 bằng kho offline; trả lỗi nếu CLI chuẩn chưa đạt, không quy đổi thành đạt.
 Linux dùng `TX7_KHO_WHEEL` với `tests/kiem_may_sach.sh`.
+
+## TS-TX — trình soạn bộ tham số nhúng trong module, 21/11/2026
+
+Màn `ui/soan_bo_tham_so.js` dùng trong phần quản lý bộ tham số của từng
+module theo quyết định 07/11. Nhập Excel E1, sửa đủ 10 cột, thêm/xóa dòng
+và quy tắc, kiểm lỗi tại ô, tính băm rồi xuất đúng hai chuỗi Cài đặt bước.
+Bộ/lịch sử/kích hoạt và phân quyền thuộc module. Màn không lưu trên máy,
+không có kho bộ riêng trong ngăn engine, không gọi AI hoặc mạng ngoài.
+
+Hợp đồng nhúng dự kiến (chưa có trong SDK/Core thật):
+
+```javascript
+const man = await nap({
+  goc, KttCore,
+  tham_so: {bo_tham_so_json, bam_bo_tham_so}, // bỏ khi tạo bộ mới
+  dinh_danh: {module: "module_demo", loai_hop_dong: "DEMO", phien_ban_bo: "demo-1"},
+  phien_ban: 7, // CAS của bản ghi MODULE, không phải phiên bản nội dung bộ
+  luu: async (thamSo, phienBan) => {
+    // Module kiểm quyền và CAS; trả {phien_ban: phiên bản mới}.
+    // Nếu tranh chấp, ném lỗi status=409; không tự ghi đè/thử lại.
+    return luuBoCuaModule(thamSo, phienBan);
+  }
+});
+const thamSo = await man.xuat(); // hai chuỗi, hoặc null nếu lỗi/đang bận
+man.dong(); // hủy listener, bỏ phản hồi muộn
+```
+
+Không truyền `luu`: nút Xuất chỉ trả tham số qua `man.xuat()` và hiển thị
+bản chỉ đọc trong Nâng cao, không báo đã lưu. Có `luu`: module chịu trách
+nhiệm đọc bộ ban đầu cùng phiên bản CAS và kiểm CAS nguyên tử phía server;
+409 khóa lưu đến khi host nạp lại màn với bản mới. Các tham số khác của
+bước (prompt, chọn trường...) do host giữ và ghép cùng hai trường xuất.
+
+Màn chỉ gọi `KttCore.engine("e_trich_xuat").thao_tac("soan_bo_tham_so", dauVao)`.
+Hàm thuần dự kiến `e_trich_xuat.soan_bo.ham_thao_tac(tac)` nhận `tac.dau_vao`:
+
+| Lệnh | Dữ liệu bắt buộc | Ý nghĩa |
+|---|---|---|
+| `doc_bo` | `tham_so`: object gồm hai chuỗi | Kiểm băm và cấu trúc bộ đang ghim |
+| `nhap_excel` | `bo`: định danh; `tep_base64`: chuỗi base64 bytes .xlsx | E1 đọc Excel ≤2 MiB, giải nén ≤16 MiB; giữ quy tắc và băm tệp gốc |
+| `kiem_bo` | `bo`: object theo bảng dưới | E1 kiểm bảng đã sửa, chuẩn hóa, tính băm và kiểm bằng cửa nhận việc |
+
+Trả `{dat, bo, tham_so, loi, canh_bao}`; khi lỗi không trả `tham_so`.
+`loi[]` gồm `truong` (ví dụ `cac_dong.0.ma`) và `thong_bao` tiếng Việt.
+Excel sai không thay bảng hiện tại. Nhập Excel thay toàn bộ dòng/quy tắc;
+sửa bảng giữ `bam_tep_goc` để truy nguyên, tính lại `ma_bam_noi_dung` và
+băm snapshot. Mã/nội dung băm chỉ hiển thị trong Nâng cao. Màn giữ cờ
+`luon_cloud` của E1; cờ này không cấp quyền bật hoặc gọi Cloud.
+
+`bo_tham_so_json` là chuỗi JSON UTF-8 của object, không được bỏ trống.
+`bam_bo_tham_so` là chuỗi `sha256:` + 64 số hex, băm **đúng bytes UTF-8
+của chuỗi đã xuất**, không băm JSON được host định dạng lại. Trần 64 KiB
+cho cả bộ, tối đa 200 dòng đang dùng; vượt thì từ chối, không cắt ngầm.
+Nhập khi tạo/kích hoạt bộ của module; không có bộ hợp lệ thì engine từ chối,
+không chọn bộ mặc định.
+
+| Trường object bộ | Kiểu / bắt buộc | Ý nghĩa và giá trị cho phép |
+|---|---|---|
+| `phien_ban` | integer / có | Luôn là `1` |
+| `module`, `loai_hop_dong`, `phien_ban_bo` | string / có | Mã `[A-Za-z0-9_.:-]{1,200}`; định danh module, loại, bản nội dung |
+| `cac_dong` | array object / có | Giữ thứ tự, gồm cả dòng ngừng dùng; ít nhất một dòng Dùng |
+| `quy_tac` | array object / có | `[]` nếu không hậu kiểm theo quy tắc |
+| `ma_bam_noi_dung` | string / không | Băm nội dung dòng do E1 tính; luôn tính lại sau sửa |
+| `bam_tep_goc` | string / không | `sha256:` + 64 hex của tệp nhập gốc |
+
+| Trường mỗi dòng | Kiểu / bắt buộc | Ý nghĩa và mẫu |
+|---|---|---|
+| `ma` | string / có | 2–3 chữ in hoa, dấu -, 2–3 chữ số; `TT-01`; không trùng |
+| `nhom` | string / có | Tên nhóm không rỗng; `Thông tin chung` |
+| `mo_ta` | string / có | Mô tả cho AI không rỗng, ≤1.000 ký tự |
+| `tk`, `bk` | string / có | Từ khóa tiêu đề/nội dung; phân cách `;`, mỗi từ ≤60 ký tự; chỉ `tk` dùng `@mo_dau`; rỗng nếu không dùng |
+| `dung` | boolean / có | Có đưa vào trích xuất; ví dụ `true` |
+| `muc` | integer / có | Mức quan trọng 0–3; ví dụ `1` |
+| `bat_buoc`, `loai_tru` | string / có | Từ khóa bắt buộc/loại trừ, cùng trần như trên; rỗng nếu không dùng |
+| `luon_cloud` | boolean / có | Cờ E1, mặc định `false`; không bật dịch vụ Cloud |
+
+Mỗi quy tắc có đủ `kieu` (string), `ma_tham_so` (array string, mã có trong
+bảng, không lặp), `dieu_kien` (string), `doi_chieu` (string).
+`Tổng tỷ lệ`: một hoặc nhiều mã, điều kiện `=`/`<=`, đối chiếu `100`.
+`Ngày không sau`: một mã, `<=`, đối chiếu một mã khác.
+`Có thì phải có`: một mã, điều kiện rỗng, đối chiếu một mã khác.
+
+Mẫu bộ tối thiểu (dùng màn để tính băm sau khi sửa):
+
+```json
+{"phien_ban":1,"module":"module_demo","loai_hop_dong":"DEMO","phien_ban_bo":"demo-1","quy_tac":[],"cac_dong":[{"ma":"TT-01","nhom":"Thông tin chung","mo_ta":"Trích tên hợp đồng DEMO","tk":"tên","bk":"","dung":true,"muc":1,"bat_buoc":"","loai_tru":"","luon_cloud":false}]}
+```
+
+Khai dự kiến tại `KHAI-SDK-2.1.json` mục TS-TX; không đổi `engine.json`.
+Core cần D2 + thao tác E có kiểm quyền; module cần host nhúng và callback
+CAS. Chưa có decorator quản trị ở SDK 2.2.0 nên không đăng ký giả vào runtime.
+Adapter CoreGia chỉ trong test. **đã kiểm bằng Core giả (CoreGia)**.
+Ảnh dựng bằng KttCore giả: `../../docs/anh-ts-tx/`; tái dựng trang bằng
+`python -B e_trich_xuat/tests/ui/dung_anh_ts_tx.py`. Không có máy ngoài hoặc
+bí mật trong lát này; ca kết nối/mask 4 ký tự cuối không áp dụng cho TS-TX.

@@ -282,3 +282,40 @@ Không dùng hàm `ocr_*_luot` hoặc cổng riêng cũ.
 
 `demo/van_ban_tai_lieu.demo.json` chỉ minh họa hợp đồng bằng dữ liệu giả có
 nhãn DEMO, gồm vị trí, ô trống và ô gộp; băm toàn số 0 là băm minh họa.
+# UI-OCR — màn cấu hình ngày 21/11/2026
+
+Màn `ui/cau_hinh.js` chia ba thẻ ABBYY Hot Folder, Tesseract dự phòng và
+Hạn mức. Mỗi trường có hướng dẫn, giá trị mẫu và lỗi ngay tại ô. Lưu
+qua `KttCore.engine("e_ocr").cau_hinh` kèm phiên CAS; gặp tranh chấp thì
+giữ bản nháp, khóa Lưu cho tới khi Tải lại cấu hình.
+
+Nút kiểm dùng cấu hình **đang nhập**, không tự lưu:
+
+- **Kiểm tra Hot Folder:** kiểm đường dẫn thư mục nhận/trả riêng, tồn tại
+  và quyền truy cập theo hệ điều hành; không liệt kê/đọc hồ sơ, không tạo
+  tệp thử. Kết quả không chứng minh FineReader đang chạy hoặc quyền ghi
+  ACL thực tế. Chỉ nghiệm thu với ABBYY thật mới xác nhận được toàn luồng.
+- **Kiểm tra Tesseract:** tự tìm bộ cài nếu bỏ trống đường dẫn, gọi
+  `--list-langs` trong tối đa 10 giây và kiểm đủ bộ ngôn ngữ đã chọn;
+  không nhận dạng ảnh, không gửi tài liệu và không trừ hạn mức ABBYY.
+
+Các hàm `e_ocr.quan_tri.kiem_hot_folder(tac)` và
+`e_ocr.quan_tri.kiem_tesseract(tac)` nhận `tac.dau_vao` là đối tượng chứa
+duy nhất nhóm `abbyy` hoặc `tesseract`; trả `{dat: boolean, ma: string}`.
+Nếu Core cung cấp `tac.kiem_huy` thì Tesseract kiểm hủy trong lúc chờ.
+Màn chỉ hiển thị câu tiếng Việt cố định theo mã kết quả, không hiện lỗi
+thô, stdout/stderr hoặc thông tin bí mật. Lát OCR không có bí mật/API key.
+
+SDK 2.2.0 chưa nạp màn hoặc đăng ký thao tác quản trị. Khai dự kiến ở
+`KHAI-SDK-2.1.json`; `diem_vao` trong tệp này chỉ là gợi ý nối hàm cho
+lead Core, chưa phải khóa SDK. Không thêm các khóa đó vào `engine.json`
+và không đăng ký nút kiểm thành năng lực xử lý việc OCR. Core cần mở cổng
+chung D (nạp màn + cấu hình/CAS) và E (việc quản trị, quyền Admin, thời hạn
+15 giây). Khi cổng chưa có, màn báo chờ hỗ trợ; không báo đã kiểm thành công.
+
+Đã kiểm bằng Core giả (CoreGia) qua adapter **chỉ trong test**, máy giả
+và KttCore giả. Kiểm Node: `node e_ocr/tests/ui/test_cau_hinh.mjs` từ gốc
+repo. Script `e_ocr/tests/ui/chup_man.mjs` dựng Chromium với KttCore giả,
+chặn toàn bộ mạng và chụp bốn ảnh DEMO tại `e_ocr/docs/anh-ui-ocr/`.
+Chạy bằng Node, truyền thư mục `playwright-core` đã cài làm đối số đầu
+tiên (hoặc dùng module có sẵn); không thêm dependency vào gói engine.

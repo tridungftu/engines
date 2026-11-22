@@ -62,7 +62,7 @@ export default async function ketQua(goc, KttCore = globalThis.KttCore, luaChon 
         if (!cua || typeof cua.hien_tep !== "function") throw Error();
         // Core kiểm quyền và tự dựng phần xem tệp. Không gán src/href từ nội dung.
         await cua.hien_tep(structuredClone(ref), vung);
-      } catch {tao("p", "Chưa mở được tệp hoặc quyền xem đã thay đổi. Anh tải lại kết quả.", vung);}
+      } catch {tao("p", "Chưa mở được tệp hoặc quyền xem đã thay đổi. Tải lại kết quả.", vung);}
       finally {nut.disabled = false;}
     });
   }
@@ -75,7 +75,7 @@ export default async function ketQua(goc, KttCore = globalThis.KttCore, luaChon 
     if (!["nghiem_trong", "can_xem"].includes(d.muc)) return;
     if (d.muc === "nghiem_trong") tao("p", "Thay đổi đã thống nhất cần hai người khác nhau, trong đó có người duyệt có thẩm quyền.", cha);
     if (view.quyen?.xac_nhan !== true || !view.quyen.diem_duoc_xac_nhan?.includes(d.ma_diem) || typeof cua?.xac_nhan !== "function") {
-      tao("p", "Anh chỉ có thể xem. Chưa có cổng xác nhận hoặc chưa được giao quyền xác nhận điểm này.", cha); return;
+      tao("p", "Chỉ có quyền xem. Chưa có cổng xác nhận hoặc chưa được giao quyền xác nhận điểm này.", cha); return;
     }
     const form = tao("form", undefined, cha), nhan = tao("label", "Lựa chọn xác nhận", form);
     const chon = tao("select", undefined, nhan);
@@ -95,7 +95,7 @@ export default async function ketQua(goc, KttCore = globalThis.KttCore, luaChon 
         if (!Object.hasOwn(LUA_CHON, chon.value) || !form.reportValidity() ||
             chon.value === "thay_doi_da_thong_nhat" && !dung.value.trim() ||
             chon.value === "khong_anh_huong" && !lyDo.value.trim() || dung.value.length > 4000 || lyDo.value.length > 4000) {
-          trangThai.textContent = "Anh nhập nội dung đúng hoặc lý do bắt buộc trước khi xác nhận."; return;
+          trangThai.textContent = "Nhập nội dung đúng hoặc lý do bắt buộc trước khi xác nhận."; return;
         }
         yeuCau = {ma_luot: view.ma_luot, row_version: view.row_version, ma_diem: d.ma_diem,
           ma_yeu_cau: globalThis.crypto.randomUUID(), lua_chon: chon.value, noi_dung_dung: dung.value.trim(), ly_do: lyDo.value.trim()};
@@ -104,16 +104,16 @@ export default async function ketQua(goc, KttCore = globalThis.KttCore, luaChon 
       try {
         const ack = await cua.xac_nhan(structuredClone(yeuCau));
         if (ack?.da_luu !== true || ack.ma_yeu_cau !== yeuCau.ma_yeu_cau) throw Error();
-        choTaiLai = true; trangThai.textContent = "Đã lưu xác nhận. Anh tải lại để xem trạng thái mới. Hiệu lực do module quyết định.";
+        choTaiLai = true; trangThai.textContent = "Đã lưu xác nhận. Tải lại để xem trạng thái mới. Hiệu lực do module quyết định.";
       } catch (loi) {
         trangThai.setAttribute("role", "alert");
         const ma = loi?.ma || loi?.code;
         if (loi?.status === 409 || ["DC_XUNG_DOT", "NGAN_XUNG_DOT", "DC_DA_XAC_NHAN", "DC_TRUNG_YEU_CAU"].includes(ma)) {
-          choTaiLai = true; trangThai.textContent = "Kết quả vừa thay đổi. Anh tải lại trước khi xác nhận.";
+          choTaiLai = true; trangThai.textContent = "Kết quả vừa thay đổi. Tải lại trước khi xác nhận.";
         } else if (["DC_KHONG_CO_QUYEN", "DC_CHUA_CO_CONG_XAC_NHAN"].includes(ma)) {
-          choTaiLai = true; trangThai.textContent = "Chưa có cổng xác nhận hoặc Anh chưa được giao quyền. Anh tải lại kết quả.";
+          choTaiLai = true; trangThai.textContent = "Chưa có cổng xác nhận hoặc chưa được giao quyền. Tải lại kết quả.";
         } else {
-          trangThai.textContent = "Chưa xác nhận được việc lưu. Anh gửi lại để kiểm tra cùng yêu cầu.";
+          trangThai.textContent = "Chưa xác nhận được việc lưu. Gửi lại để kiểm tra cùng yêu cầu.";
         }
       } finally {dangGui = false; nut.disabled = choTaiLai; tai.disabled = false;}
     });
@@ -150,7 +150,7 @@ export default async function ketQua(goc, KttCore = globalThis.KttCore, luaChon 
       for (const [ben, ten] of [["word", "Bản Word đã chốt"], ["ban_ky", "Bản ký và chữ OCR"]]) {
         const cot = tao("section", undefined, haiBen); tao("h4", ten, cot);
         const p = tao("p", undefined, cot); p.classList.add("dc-nguyen-van");
-        tao("mark", d[ben]?.nguyen_van ?? (d.la_vung ? "Máy chưa đọc chữ tay; Anh xem ảnh để xác nhận." : "Không có đoạn tương ứng."), p);
+        tao("mark", d[ben]?.nguyen_van ?? (d.la_vung ? "Máy chưa đọc chữ tay; xem ảnh để xác nhận." : "Không có đoạn tương ứng."), p);
         const viTri = d[ben]?.vi_tri;
         const viTriChu = [];
         if (viTri?.so_trang || d.la_vung) viTriChu.push(`Trang ${viTri?.so_trang || d.so_trang}`);
@@ -166,7 +166,7 @@ export default async function ketQua(goc, KttCore = globalThis.KttCore, luaChon 
           else await hienTep(null, cot, "Xem ảnh");
         }
       }
-      tao("p", d.ly_do_ai || (d.quy_tac_trung?.length ? "Khác biệt thuộc quy tắc bắt buộc." : "Anh kiểm tra bằng chứng hai phía."), khoi);
+      tao("p", d.ly_do_ai || (d.quy_tac_trung?.length ? "Khác biệt thuộc quy tắc bắt buộc." : "Kiểm tra bằng chứng hai phía."), khoi);
       xacNhan(d, khoi); cacKhoi.push([khoi, d.muc]);
     }
     function locLai() {
@@ -184,7 +184,7 @@ export default async function ketQua(goc, KttCore = globalThis.KttCore, luaChon 
           const ack = await cua.gui_yeu_cau_module({ma_luot: view.ma_luot});
           if (ack?.da_nhan !== true) throw Error();
           thongBao.textContent = "Module đã nhận yêu cầu kiểm tra. Hiệu lực do module quyết định.";
-        } catch {baoLoi("Chưa xác nhận được module nhận yêu cầu. Anh tải lại để kiểm tra; hiệu lực chưa được cập nhật tại màn này.");}
+        } catch {baoLoi("Chưa xác nhận được module nhận yêu cầu. Tải lại để kiểm tra; hiệu lực chưa được cập nhật tại màn này.");}
         finally {gui.disabled = false;}
       });
     }
@@ -198,7 +198,7 @@ export default async function ketQua(goc, KttCore = globalThis.KttCore, luaChon 
       view = await cua.doc_ket_qua({ma_luot: luaChon.ma_luot, row_version: b.row_version});
       if (view.ma_luot !== luaChon.ma_luot || view.row_version !== b.row_version) throw Error();
       await ve(); thongBao.setAttribute("role", "status"); thongBao.textContent = "Đã đọc kết quả theo quyền Core cấp.";
-    } catch {noiDung.replaceChildren(); baoLoi("Chưa đọc được kết quả có quyền từ Core. Anh tải lại; hiện chưa thể lưu xác nhận.");}
+    } catch {noiDung.replaceChildren(); baoLoi("Chưa đọc được kết quả có quyền từ Core. Tải lại; hiện chưa thể lưu xác nhận.");}
     finally {dangTai = false; tai.disabled = false;}
   }
   tai.addEventListener("click", taiLai);

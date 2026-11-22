@@ -52,7 +52,7 @@ export default async function loiOCR(goc, KttCore = globalThis.KttCore, luaChon 
     } catch {
       noiDung.replaceChildren(); cursor = null;
       thongBao.setAttribute("role", "alert");
-      thongBao.textContent = "Chưa đọc được danh mục có quyền. Anh chọn pháp nhân trong Core và tải lại.";
+      thongBao.textContent = "Chưa đọc được danh mục có quyền. Chọn pháp nhân trong Core và tải lại.";
     } finally {dangTai = false; tai.disabled = tiep.disabled = false;}
   }
   tai.addEventListener("click", () => docTrang(true));

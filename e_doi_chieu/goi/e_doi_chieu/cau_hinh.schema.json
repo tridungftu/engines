@@ -5,103 +5,196 @@
   "properties": {
     "phien_ban_cau_hinh": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "title": "Phiên bản cấu hình",
+      "description": "Cần cho việc đối chiếu; chuỗi không rỗng. Core cấp theo cấu hình đã duyệt, chỉ đọc trong Nâng cao.",
+      "examples": [
+        "DEMO-1"
+      ]
     },
     "ma_bo_chuan_hoa": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "title": "Bộ chuẩn hóa",
+      "description": "Cần cho việc đối chiếu; chuỗi không rỗng. Mã bộ chuẩn hóa đã duyệt do Core cấp, không tự đặt mã mới.",
+      "examples": [
+        "DEMO-chuan-hoa"
+      ]
     },
     "bam_bo_chuan_hoa": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "title": "Băm bộ chuẩn hóa",
+      "description": "Cần cho việc đối chiếu; chuỗi không rỗng. Băm của bộ chuẩn hóa được Core cấp, không sửa bằng tay.",
+      "examples": [
+        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ]
     },
     "ma_tu_dien": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "title": "Từ điển đã duyệt",
+      "description": "Cần cho việc đối chiếu; chuỗi không rỗng. Mã từ điển đã duyệt do Core cấp.",
+      "examples": [
+        "DEMO-tu-dien"
+      ]
     },
     "bam_tu_dien": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "title": "Băm từ điển",
+      "description": "Cần cho việc đối chiếu; chuỗi không rỗng. Băm từ điển đã duyệt do Core cấp, không sửa bằng tay.",
+      "examples": [
+        "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ]
     },
     "phuong_phap_detector": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "title": "Phương pháp phát hiện sửa tay",
+      "description": "Cần cho việc đối chiếu; chuỗi không rỗng. Tên phương pháp do Core cấp; có mã không chứng minh detector đã đo đạt.",
+      "examples": [
+        "DEMO-phat-hien"
+      ]
     },
     "phien_ban_detector": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "title": "Phiên bản bộ phát hiện",
+      "description": "Cần cho việc đối chiếu; chuỗi không rỗng. Phiên bản phương pháp do Core cấp, chỉ đọc trong Nâng cao.",
+      "examples": [
+        "DEMO-1"
+      ]
     },
     "thoi_han_chiem_luot_giay": {
       "type": "integer",
       "minimum": 1,
-      "description": "Thời hạn chiếm lượt trong ngăn; bỏ trống thì dùng thời hạn bước nhận cặp cộng 60 giây."
+      "description": "Không bắt buộc; số nguyên >=1 giây. Bỏ trống dùng thời hạn bước nhận cặp cộng 60 giây.",
+      "title": "Thời hạn giữ lượt",
+      "examples": [
+        180
+      ]
     },
     "nguong_ocr_kem": {
       "enum": [
         null
       ],
       "default": null,
-      "description": "Chưa đo; chưa được dùng để kết luận sạch."
+      "description": "Không bắt buộc; chỉ nhận null, mặc định null. Chưa đo nên không tự đặt ngưỡng và không dùng để kết luận sạch.",
+      "title": "Ngưỡng trang OCR kém",
+      "examples": [
+        null
+      ]
     },
     "so_trang_toi_da": {
       "type": "integer",
       "minimum": 1,
       "maximum": 60,
-      "default": 60
+      "default": 60,
+      "title": "Số trang bản ký tối đa",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 60 trang, bỏ trống dùng 60. Áp dụng cho bản ký, không bỏ trang. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        60
+      ]
     },
     "ky_tu_moi_tai_lieu": {
       "type": "integer",
       "minimum": 1,
       "maximum": 500000,
-      "default": 500000
+      "default": 500000,
+      "title": "Độ dài mỗi tài liệu",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 500000 ký tự, bỏ trống dùng 500000. Đếm riêng từng bản Word và bản ký. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        500000
+      ]
     },
     "ky_tu_hai_tai_lieu": {
       "type": "integer",
       "minimum": 1,
       "maximum": 1000000,
-      "default": 1000000
+      "default": 1000000,
+      "title": "Độ dài hai tài liệu",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 1000000 ký tự, bỏ trống dùng 1000000. Tổng độ dài cả bản Word và bản ký. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        1000000
+      ]
     },
     "diem_lech_toi_da": {
       "type": "integer",
       "minimum": 1,
       "maximum": 10000,
-      "default": 10000
+      "default": 10000,
+      "title": "Số điểm lệch tối đa",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 10000 điểm, bỏ trống dùng 10000. Không lược bỏ điểm khác biệt. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        10000
+      ]
     },
     "ho_so_mib": {
       "type": "integer",
       "minimum": 1,
       "maximum": 20,
-      "default": 20
+      "default": 20,
+      "title": "Dung lượng hồ sơ",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 20 MiB, bỏ trống dùng 20. Trần một hồ sơ JSON. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        20
+      ]
     },
     "tep_mib": {
       "type": "integer",
       "minimum": 1,
       "maximum": 20,
-      "default": 20
+      "default": 20,
+      "title": "Dung lượng mỗi tệp",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 20 MiB, bỏ trống dùng 20. Áp dụng từng tệp gốc hoặc ảnh. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        20
+      ]
     },
     "pixel_anh": {
       "type": "integer",
       "minimum": 1,
       "maximum": 20000000,
-      "default": 20000000
+      "default": 20000000,
+      "title": "Kích thước mỗi ảnh",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 20000000 pixel, bỏ trống dùng 20000000. Chiều rộng nhân chiều cao một ảnh. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        20000000
+      ]
     },
     "tong_byte_tep_con": {
       "type": "integer",
       "minimum": 1,
       "maximum": 134217728,
-      "default": 134217728
+      "default": 134217728,
+      "title": "Tổng dữ liệu đọc mỗi việc",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 134217728 byte, bỏ trống dùng 134217728. Tổng byte tệp con đọc trong một việc. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        134217728
+      ]
     },
     "docx_giai_nen_mib": {
       "type": "integer",
       "minimum": 1,
       "maximum": 100,
-      "default": 100
+      "default": 100,
+      "title": "Dung lượng Word sau giải nén",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 100 MiB, bỏ trống dùng 100. Tổng dung lượng các phần sau giải nén Word. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        100
+      ]
     },
     "docx_so_muc": {
       "type": "integer",
       "minimum": 1,
       "maximum": 2000,
-      "default": 2000
+      "default": 2000,
+      "title": "Số phần trong tệp Word",
+      "description": "Không bắt buộc; số nguyên từ 1 đến 2000 phần, bỏ trống dùng 2000. Trần số mục ZIP trong tệp Word. Vượt trần thì từ chối, không cắt ngầm.",
+      "examples": [
+        2000
+      ]
     },
     "hoc_loi_ocr": {
       "type": "object",
@@ -115,27 +208,85 @@
       "properties": {
         "so_lan": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 1,
+          "title": "Số lần có căn cứ",
+          "description": "Bắt buộc khi khai học lỗi OCR. Số nguyên >=1 lần; ngưỡng phải qua đo và phê duyệt, không tự đặt.",
+          "examples": [
+            3
+          ]
         },
         "phien_ban": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 1000
+          "maxLength": 1000,
+          "title": "Phiên bản ngưỡng học",
+          "description": "Bắt buộc khi khai học lỗi OCR. Chuỗi 1–1000 ký tự do Core cấp.",
+          "examples": [
+            "DEMO-1"
+          ]
         },
         "nguon_do": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 1000
+          "maxLength": 1000,
+          "title": "Nguồn đo ngưỡng học",
+          "description": "Bắt buộc khi khai học lỗi OCR. Chuỗi 1–1000 ký tự chỉ nguồn đo đã kiểm.",
+          "examples": [
+            "DEMO-do-gia"
+          ]
         },
         "ma_phe_duyet": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 1000
+          "maxLength": 1000,
+          "title": "Mã phê duyệt ngưỡng học",
+          "description": "Bắt buộc khi khai học lỗi OCR. Chuỗi 1–1000 ký tự do Core cấp sau phê duyệt.",
+          "examples": [
+            "DEMO-duyet-gia"
+          ]
         }
       },
-      "description": "Ngưỡng đề xuất sau đo và phê duyệt; không có mặc định, thiếu thì không học hoặc duyệt."
+      "description": "Đối tượng không bắt buộc; thiếu thì không học hoặc duyệt. Nếu có phải đủ so_lan (số nguyên >=1), phien_ban, nguon_do, ma_phe_duyet (chuỗi 1–1000 ký tự). Core cấp sau đo và duyệt; chỉ đọc.",
+      "title": "Học lỗi OCR đã duyệt",
+      "examples": [
+        {
+          "so_lan": 3,
+          "phien_ban": "DEMO-1",
+          "nguon_do": "DEMO-do-gia",
+          "ma_phe_duyet": "DEMO-duyet-gia"
+        }
+      ]
     }
   },
   "additionalProperties": false,
-  "description": "Cho phép chưa cấu hình khi khởi động; việc cần đủ bảy mã/phiên bản bắt buộc, thiếu trả CHUA_CAU_HINH."
+  "description": "Cấu hình Đối chiếu bản ký. Khởi động cho phép đối tượng rỗng; việc đối chiếu cần đủ bảy mã/phiên bản bộ đã duyệt, thiếu thì từ chối và yêu cầu cấu hình. Không tự tạo bộ hoặc băm từ mẫu DEMO. Các giới hạn không bắt buộc dùng mặc định nếu có; vượt trần thì từ chối, không cắt ngầm. Không chứa bí mật.\nCấu trúc (tên trường, kiểu, bắt buộc, ý nghĩa và giá trị cho phép):\n- phien_ban_cau_hinh: Cần cho việc đối chiếu; chuỗi không rỗng. Core cấp theo cấu hình đã duyệt, chỉ đọc trong Nâng cao. Ví dụ: \"DEMO-1\".\n- ma_bo_chuan_hoa: Cần cho việc đối chiếu; chuỗi không rỗng. Mã bộ chuẩn hóa đã duyệt do Core cấp, không tự đặt mã mới. Ví dụ: \"DEMO-chuan-hoa\".\n- bam_bo_chuan_hoa: Cần cho việc đối chiếu; chuỗi không rỗng. Băm của bộ chuẩn hóa được Core cấp, không sửa bằng tay. Ví dụ: \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\".\n- ma_tu_dien: Cần cho việc đối chiếu; chuỗi không rỗng. Mã từ điển đã duyệt do Core cấp. Ví dụ: \"DEMO-tu-dien\".\n- bam_tu_dien: Cần cho việc đối chiếu; chuỗi không rỗng. Băm từ điển đã duyệt do Core cấp, không sửa bằng tay. Ví dụ: \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\".\n- phuong_phap_detector: Cần cho việc đối chiếu; chuỗi không rỗng. Tên phương pháp do Core cấp; có mã không chứng minh detector đã đo đạt. Ví dụ: \"DEMO-phat-hien\".\n- phien_ban_detector: Cần cho việc đối chiếu; chuỗi không rỗng. Phiên bản phương pháp do Core cấp, chỉ đọc trong Nâng cao. Ví dụ: \"DEMO-1\".\n- thoi_han_chiem_luot_giay: Không bắt buộc; số nguyên >=1 giây. Bỏ trống dùng thời hạn bước nhận cặp cộng 60 giây. Ví dụ: 180.\n- nguong_ocr_kem: Không bắt buộc; chỉ nhận null, mặc định null. Chưa đo nên không tự đặt ngưỡng và không dùng để kết luận sạch. Ví dụ: null.\n- so_trang_toi_da: Không bắt buộc; số nguyên từ 1 đến 60 trang, bỏ trống dùng 60. Áp dụng cho bản ký, không bỏ trang. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 60.\n- ky_tu_moi_tai_lieu: Không bắt buộc; số nguyên từ 1 đến 500000 ký tự, bỏ trống dùng 500000. Đếm riêng từng bản Word và bản ký. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 500000.\n- ky_tu_hai_tai_lieu: Không bắt buộc; số nguyên từ 1 đến 1000000 ký tự, bỏ trống dùng 1000000. Tổng độ dài cả bản Word và bản ký. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 1000000.\n- diem_lech_toi_da: Không bắt buộc; số nguyên từ 1 đến 10000 điểm, bỏ trống dùng 10000. Không lược bỏ điểm khác biệt. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 10000.\n- ho_so_mib: Không bắt buộc; số nguyên từ 1 đến 20 MiB, bỏ trống dùng 20. Trần một hồ sơ JSON. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 20.\n- tep_mib: Không bắt buộc; số nguyên từ 1 đến 20 MiB, bỏ trống dùng 20. Áp dụng từng tệp gốc hoặc ảnh. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 20.\n- pixel_anh: Không bắt buộc; số nguyên từ 1 đến 20000000 pixel, bỏ trống dùng 20000000. Chiều rộng nhân chiều cao một ảnh. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 20000000.\n- tong_byte_tep_con: Không bắt buộc; số nguyên từ 1 đến 134217728 byte, bỏ trống dùng 134217728. Tổng byte tệp con đọc trong một việc. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 134217728.\n- docx_giai_nen_mib: Không bắt buộc; số nguyên từ 1 đến 100 MiB, bỏ trống dùng 100. Tổng dung lượng các phần sau giải nén Word. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 100.\n- docx_so_muc: Không bắt buộc; số nguyên từ 1 đến 2000 phần, bỏ trống dùng 2000. Trần số mục ZIP trong tệp Word. Vượt trần thì từ chối, không cắt ngầm. Ví dụ: 2000.\n- hoc_loi_ocr: Đối tượng không bắt buộc; thiếu thì không học hoặc duyệt. Nếu có phải đủ so_lan (số nguyên >=1), phien_ban, nguon_do, ma_phe_duyet (chuỗi 1–1000 ký tự). Core cấp sau đo và duyệt; chỉ đọc. Ví dụ: {\"so_lan\": 3, \"phien_ban\": \"DEMO-1\", \"nguon_do\": \"DEMO-do-gia\", \"ma_phe_duyet\": \"DEMO-duyet-gia\"}.\n- hoc_loi_ocr.so_lan: Bắt buộc khi khai học lỗi OCR. Số nguyên >=1 lần; ngưỡng phải qua đo và phê duyệt, không tự đặt.\n- hoc_loi_ocr.phien_ban: Bắt buộc khi khai học lỗi OCR. Chuỗi 1–1000 ký tự do Core cấp.\n- hoc_loi_ocr.nguon_do: Bắt buộc khi khai học lỗi OCR. Chuỗi 1–1000 ký tự chỉ nguồn đo đã kiểm.\n- hoc_loi_ocr.ma_phe_duyet: Bắt buộc khi khai học lỗi OCR. Chuỗi 1–1000 ký tự do Core cấp sau phê duyệt.\nMẫu đầy đủ chỉ minh họa cấu trúc DEMO, không thay cho bộ được duyệt:\n{\n  \"phien_ban_cau_hinh\": \"DEMO-1\",\n  \"ma_bo_chuan_hoa\": \"DEMO-chuan-hoa\",\n  \"bam_bo_chuan_hoa\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"ma_tu_dien\": \"DEMO-tu-dien\",\n  \"bam_tu_dien\": \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\n  \"phuong_phap_detector\": \"DEMO-phat-hien\",\n  \"phien_ban_detector\": \"DEMO-1\",\n  \"thoi_han_chiem_luot_giay\": 180,\n  \"nguong_ocr_kem\": null,\n  \"so_trang_toi_da\": 60,\n  \"ky_tu_moi_tai_lieu\": 500000,\n  \"ky_tu_hai_tai_lieu\": 1000000,\n  \"diem_lech_toi_da\": 10000,\n  \"ho_so_mib\": 20,\n  \"tep_mib\": 20,\n  \"pixel_anh\": 20000000,\n  \"tong_byte_tep_con\": 134217728,\n  \"docx_giai_nen_mib\": 100,\n  \"docx_so_muc\": 2000,\n  \"hoc_loi_ocr\": {\n    \"so_lan\": 3,\n    \"phien_ban\": \"DEMO-1\",\n    \"nguon_do\": \"DEMO-do-gia\",\n    \"ma_phe_duyet\": \"DEMO-duyet-gia\"\n  }\n}",
+  "examples": [
+    {
+      "phien_ban_cau_hinh": "DEMO-1",
+      "ma_bo_chuan_hoa": "DEMO-chuan-hoa",
+      "bam_bo_chuan_hoa": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ma_tu_dien": "DEMO-tu-dien",
+      "bam_tu_dien": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "phuong_phap_detector": "DEMO-phat-hien",
+      "phien_ban_detector": "DEMO-1",
+      "thoi_han_chiem_luot_giay": 180,
+      "nguong_ocr_kem": null,
+      "so_trang_toi_da": 60,
+      "ky_tu_moi_tai_lieu": 500000,
+      "ky_tu_hai_tai_lieu": 1000000,
+      "diem_lech_toi_da": 10000,
+      "ho_so_mib": 20,
+      "tep_mib": 20,
+      "pixel_anh": 20000000,
+      "tong_byte_tep_con": 134217728,
+      "docx_giai_nen_mib": 100,
+      "docx_so_muc": 2000,
+      "hoc_loi_ocr": {
+        "so_lan": 3,
+        "phien_ban": "DEMO-1",
+        "nguon_do": "DEMO-do-gia",
+        "ma_phe_duyet": "DEMO-duyet-gia"
+      }
+    }
+  ]
 }

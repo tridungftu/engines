@@ -3,8 +3,13 @@
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 3574,
-      "sha256": "d1900763024113544663968451e06bae5d2469db28324cdbfde9d1f5850556ce"
+      "bytes": 3984,
+      "sha256": "5b8bc8408995263105678f3f610b05a671a01258f983e685ef63c6b70917c838"
+    },
+    {
+      "duong_dan": "KHAI-SDK-2.1.json",
+      "bytes": 3426,
+      "sha256": "a2fc83272bf52a973e37349346709f86f649515a4f52d283b11cc8857e1f3e89"
     },
     {
       "duong_dan": "NGUON.md",
@@ -13,8 +18,8 @@
     },
     {
       "duong_dan": "README.md",
-      "bytes": 23894,
-      "sha256": "87d8333a157cab68647b23dfaa2fed59cef07f0e529f8f790a49bf5bfed74880"
+      "bytes": 31683,
+      "sha256": "03a0493dcdf0622a5ac6b50dd1c2d6480f1479949a7b72ad410d7c96aa40ea76"
     },
     {
       "duong_dan": "contract/tra_loi_ai.schema.json",
@@ -183,8 +188,8 @@
     },
     {
       "duong_dan": "engine.json",
-      "bytes": 36824,
-      "sha256": "24f17c92a967fe819b4b5b050231c96e51495188c7a975c4f5580ebb54d05d1d"
+      "bytes": 47371,
+      "sha256": "636c2a5628f0bcae7fa399983e5f355d5aacd4a88a0c960d31b0f8c23b8d0a0b"
     },
     {
       "duong_dan": "requirements.lock",
@@ -200,6 +205,21 @@
       "duong_dan": "ui/bang_ty_le.js",
       "bytes": 12257,
       "sha256": "61891b6a33131a9d177c3a51821ab7f90e746a5c64410a975595b9acb33647aa"
+    },
+    {
+      "duong_dan": "ui/du_lieu_tham_so.js",
+      "bytes": 17532,
+      "sha256": "9ebbf4d50ad9513fbe0182c28eb8c1c657316b9cc6f8aea25344dfaa199668b8"
+    },
+    {
+      "duong_dan": "ui/tham_so.css",
+      "bytes": 4570,
+      "sha256": "655f41b9cde9e5a168da2310e3ad13a57394f6dd549ac24ca673565fffe828b2"
+    },
+    {
+      "duong_dan": "ui/tham_so.js",
+      "bytes": 25821,
+      "sha256": "5c75c9f87e94d9542a9ff99098de43b99c5c5ad4008d7b38a75b6e49b61107a2"
     }
   ]
 }

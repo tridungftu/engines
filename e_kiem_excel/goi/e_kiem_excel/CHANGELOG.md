@@ -1,5 +1,14 @@
 # Thay đổi
 
+## TS-EX — 21/11/2026
+- Thêm trình soạn ô đích, nhãn tìm, bộ nhóm và khuôn cột bằng trường/danh sách;
+  giữ nguyên cấu trúc JSON v1, ngữ nghĩa điều kiện, thứ tự nhóm và trần hiện có.
+- Thêm khai dự kiến D2 trong KHAI-SDK-2.1.json. Core quản lý đọc/lưu/CAS của
+  bước quy trình; chưa khai khóa mới vào engine.json, không cất tham số vào engine.
+- Bổ sung mô tả cấu trúc/mẫu cho ba tham số JSON trong manifest và README.
+  Không sửa mã Python xử lý việc, dependency hoặc dữ liệu DEMO runtime.
+- Đã kiểm bằng Core giả (CoreGia); màn chưa được nạp trong Core thật.
+
 ## 0.1.1 — 19/11/2026
 - EX-6: rà đúng ba dependency runtime, tổng hợp nguồn/dòng cũ → tệp mới và SHA-256.
 - Ghi cả XML worksheet trong RAM: wb.save(BytesIO) của openpyxl vẫn tạo tệp tạm;

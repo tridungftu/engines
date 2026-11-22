@@ -29,6 +29,25 @@
     "de_xuat_loi_ocr",
     "duyet_loi_ocr"
   ],
+  "giao_dien_tham_so": [
+    {
+      "ma": "soan_quy_tac_ts_dc",
+      "ten": "Soạn bộ quy tắc đối chiếu",
+      "nang_luc": "doi_chieu.so_van_ban@1",
+      "tham_so": ["bo_quy_tac_json", "bam_bo_quy_tac"],
+      "tep": "ui/soan_quy_tac.js",
+      "quyen": "admin_core",
+      "trang_thai": "de_nghi_D2_chua_tich_hop",
+      "hop_dong_de_nghi": {
+        "diem_vao": "default(goc, KttCore, {cua})",
+        "doc": "cua.doc() -> {tham_so: {bo_quy_tac_json, bam_bo_quy_tac}, phien_ban}",
+        "luu": "cua.luu({tham_so: {bo_quy_tac_json, bam_bo_quy_tac}, phien_ban}) -> {da_luu: true, phien_ban: phien_ban_moi}",
+        "tra_gia_tri": "doc_gia_tri() -> chuỗi bo_quy_tac_json, giữ nguyên bytes nếu chưa sửa",
+        "trach_nhiem_core": "Xác thực admin, chọn đúng bước, CAS, gộp nguyên tử hai tham số và giữ tham số khác; kiểm trần/kiểu, nhật ký không nội dung, đồng bộ bộ đã duyệt tại bước nhận cặp. Đây chưa phải API SDK thật."
+      },
+      "gioi_han_nghiep_vu": "8 quy tắc cứng và 6 cặp đổi nghĩa chỉ đọc theo lõi Python; không tạo khóa bật/tắt hoặc danh sách cặp mà engine không xử lý."
+    }
+  ],
   "hop_dong_chua_tich_hop": [
     "C-DC-01",
     "C-DC-03",

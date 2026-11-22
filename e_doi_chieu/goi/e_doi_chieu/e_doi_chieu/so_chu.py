@@ -17,7 +17,17 @@ from .chuan_hoa import chuan_hoa, kiem_bo
 from kho_tri_thuc_sdk.engine import NganXungDot
 from .vi_tri import loi
 
+def _bo_vi_du_schema(schema):
+    """Bỏ annotation ví dụ UI trên bản schema nội bộ; giữ mọi ràng buộc."""
+    return {
+        k: {ma: _bo_vi_du_schema(con) for ma, con in v.items()}
+        if k == "properties" else v
+        for k, v in schema.items() if k != "examples"
+    }
+
+
 _SCHEMA_CH = json.loads((Path(__file__).resolve().parent.parent / "cau_hinh.schema.json").read_text(encoding="utf-8"))
+_SCHEMA_CH = _bo_vi_du_schema(_SCHEMA_CH)
 # Snapshot đã điền mặc định ở DC-3; bộ kiểm hồ sơ không nhận từ khóa default.
 _SCHEMA_CH["properties"] = {k: {x: y for x, y in s.items() if x != "default"}
                             for k, s in _SCHEMA_CH["properties"].items()}

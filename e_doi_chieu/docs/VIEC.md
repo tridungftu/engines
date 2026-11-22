@@ -1581,3 +1581,57 @@ Nguồn lead cần cấp L-DC-01: mẫu ngăn, từ điển/font/detector có ng
 - Lead/Core quy?t ??nh c?ch nghi?m thu khung c? `chay_thu_demo: []`: SDK 2.0 tr? m? 1 khi kh?ng c? v? d?, trong khi ?i?u ki?n chung ??i m? 0.
 - SDK 2.1/Core c?n c?p ng?n b?n, c?u h?nh v? n?p m?n theo C-DC-01; RAM m?t khi d?ng. `KHAI-SDK-2.1.json` ch? l? d? ki?n, c?c m?n ch?a t?n t?i ??n DC-10/DC-11; quy?n xem k?t qu? c?n Core x?c ??nh.
 - M?u NGAN-0 quy ??nh b?ng c?u h?nh kh?a `{}`, thay cho kh?a `ma` trong b?ng d? ki?n DC-P ?2.4; d?ng API m?u ?? g?p. Ng??ng OCR k?m gi? null v? ch?a ?o.
+## UI-DC — 21/11/2026 · PR: chờ lead mở
+
+**Chưa đạt kiểm chung — chờ mở rộng phạm vi một tệp tương thích schema.**
+Đã kiểm bằng Core giả (CoreGia), KttCore giả; chưa nối Core thật.
+
+- Cấu hình chia Cơ bản (bốn trần trang/ký tự/điểm lệch) và Nâng cao thu gọn.
+  Mã/băm/bộ phát hiện và ngưỡng học OCR chỉ đọc; trần kỹ thuật có nhãn, hướng dẫn,
+  mẫu và lỗi chỉ rõ ô. Hai cột trên màn rộng, một cột ở 390 px.
+- Lưu CAS, khóa thao tác khi đọc/lưu; tranh chấp hoặc thiếu phản hồi thì yêu cầu
+  tải lại. Bỏ xưng hô ở cả ba màn, giữ nguyên cổng/quyền kết quả và danh mục OCR.
+- Schema có title/description/examples tiếng Việt mọi cấp, diễn giải cấu trúc
+  và mẫu đầy đủ ở gốc. Đã đối chiếu với HEAD: mọi ràng buộc kiểm dữ liệu giữ nguyên.
+- Ba màn đã khai trong KHAI-SDK-2.1.json; không có màn/thao tác mới nên không sửa
+  bản khai hoặc engine.json. Không sửa Python runtime, không sửa lát TS-DC.
+- Node UI: **52 passed, 0 failed, 0 skipped**, mã 0. UI-DC không có máy ngoài hoặc
+  bí mật; không áp dụng ca kiểm kết nối/API key. Test cấm gọi mạng, `.thao_tac`
+  và `.bi_mat` trên màn cấu hình.
+- Tám ảnh DEMO và số đo layout: `docs/ui-dc/README.md`; đã xem lại desktop,
+  Nâng cao, mobile và CAS, tám trạng thái không tràn ngang. Công cụ tái dựng/chụp
+  nằm trong tests/ui; trang có CSP chặn mạng, không nằm trong gói engine.
+- `.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu`:
+  **1/1 ĐẠT**, mã 0.
+- `.venv/Scripts/python -m pytest e_doi_chieu/tests -q`:
+  **571 passed, 519 failed, 74 errors**, 0 skipped, mã 1; **494,10 giây**.
+  Bước so văn bản từ chối snapshot với DC_SAI_NGUON do bộ kiểm nội bộ
+  `so_chu._SCHEMA_CH` không nhận annotation `examples` được phiếu UI yêu cầu.
+- `.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py`:
+  **ĐẠT: kiểm độc lập**, mã 0.
+- Môi trường không mạng: SDK 2.2.0 từ wheel nội bộ, SHA khớp SHA256SUMS;
+  venv dùng system-site-packages để dùng pytest 9.1.1 và Pillow 12.3.0 đã có.
+  Không thêm dependency vào gói. Kiểm kê bytes/SHA gói được cập nhật bằng
+  công cụ hiện có. Không commit/push.
+
+### Cần lead / phạm vi — UI-DC
+
+Ghi chú lead giới hạn UI-* chỉ sửa màn/schema/test UI, nên chưa sửa `so_chu.py`.
+Diff `docs/UI-DC-TUONG-THICH-SCHEMA.patch` chỉ bỏ annotation `examples` khỏi
+bản schema nội bộ (kể cả trường lồng), không bỏ hoặc thay ràng buộc.
+`git apply --check` đã đạt. Đã gửi câu hỏi mở rộng phạm vi; **chưa áp dụng diff**.
+Không gộp thay đổi schema hiện tại trước khi giải quyết tương thích này.
+
+### Cần Core — UI-DC
+
+- Cửa D/C-DC-01: nạp ba màn đã khai trong KHAI-SDK-2.1.json qua KttCore.engine,
+  thực thi quyền của màn và CAS cấu hình. SDK 2.2.0 chưa nhận khai màn trong
+  engine.json; không thêm khóa ngoài hợp đồng.
+- Ô JSON chung cần hiển thị description/examples của schema, hướng dẫn cấu trúc,
+  mẫu điền, kiểm lỗi theo trường, nút chèn mẫu và định dạng theo phiếu UI §2.
+- Các cửa quyền/xác nhận hồ sơ C-DC-03/04 hiện có vẫn giữ nguyên; không ghi ngăn
+  trực tiếp để thay thế cửa thiếu. Không phát sinh thao tác quản trị hay két bí mật.
+
+**Bổ sung kiểm cuối UI-DC:** kiểm kê bytes/SHA sau thay đổi câu chữ cuối: 1 passed; Node UI 52 passed, 0 failed, 0 skipped; kiểm độc lập ĐẠT. Diff tương thích qua git apply --check, chưa áp dụng. Chạy chẩn đoán bỏ examples trong RAM đã dừng khi chưa hoàn tất (12%); không tính là nghiệm thu và không thay kết quả pytest chính thức.
+
+**Thời gian thực tế UI-DC:** 21:42–22:21 ngày 21/11/2026 (UTC+7), khoảng 0.65 giờ; phiếu UI ước tính 3 giờ. Trạng thái: Chờ Anh mở rộng phạm vi tương thích schema; PR: chờ lead mở. Không commit/push.

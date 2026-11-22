@@ -148,8 +148,8 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | Tệp hiện hành | SHA-256 LF |
 |---|---|
 | `.gitattributes` | `36f5046d7b9e6c15c3d77263f4918fa7997bebfbf79f3a4f3b954da607cd4eed` |
-| `cau_hinh.schema.json` | `e38e7414afacb2b1abc8fa1e01e28c130213686d79ea3f3d71d7873f5ab39b87` |
-| `CHANGELOG.md` | `e6945a48fe4d3c7d847e20f68210a9a0d7d858f89c563539e7716a761942d993` |
+| `cau_hinh.schema.json` | `7d778dcd893cafe594e928eb277a04acf22f8e90132897203202c69b4b5361fc` |
+| `CHANGELOG.md` | `2923ecd17001d01a5b9483114e75caf4927c10111740af6cac27c469db182d8e` |
 | `demo/DEMO-ban-chot.docx` | `e086e49c1dfad0cdfc702ab141a9de6123cbd123e4c7110df975b673e194bcaa` |
 | `demo/README.md` | `c55d1d9bb7381dd821b4a4c1fea1b129af974ae3c7f83acf35de6ef45fac64bf` |
 | `e_doi_chieu/__init__.py` | `a427fe739dab3a98c108b79f40f7a53328d504300979b71ccc900892064948b3` |
@@ -187,9 +187,9 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | `tham_chieu_ngan_0/cau_hinh.py` | `7fa55d80426ddfe67359009b1a8cde02ef2a85984ad0bad9658442cec75e2252` |
 | `tham_chieu_ngan_0/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
 | `tra_loi_ai.schema.json` | `5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f` |
-| `ui/cau_hinh.js` | `a3afcf83fb4f97ecf8838113776446e170904251d2ad2788d087986304b0bdbc` |
-| `ui/ket_qua.js` | `1c46bacb03091f777e7c7930bb511e160c5e11a9492680d0a87a65f4450030be` |
-| `ui/loi_ocr.js` | `cab2e90b69e256d910039989e794d5584443b03d34a145bb060f471b3192dc7c` |
+| `ui/cau_hinh.js` | `277b4d15699b0d9856dd6d867258926f1520c1e3782427f401f8a2936f2dc4a6` |
+| `ui/ket_qua.js` | `db596791e2e7f96188c3a18684c550792d346a811837333f8e5609868da95d51` |
+| `ui/loi_ocr.js` | `cd1d4e50013c514d0c1c038f23c0455bc3b33e6131ead6e9a12bde2a209dd480` |
 | `van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
 | `yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
 <!-- DC-S22-SHA:CUOI -->

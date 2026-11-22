@@ -1,5 +1,27 @@
 # Tra cứu tài liệu — SDK 2.2.0
 
+## UI-TC — 21/11/2026
+
+Màn `ui/cau_hinh.js` chia **Cơ bản** (ngưỡng phân loại chỉ đọc, độ dài mục
+tiêu mỗi đoạn) và **Nâng cao** thu gọn (bộ quy tắc và toàn bộ trần hiện có).
+Ngưỡng chưa đo hiện “Chưa đo”, không tự điền số hoặc kích hoạt ngưỡng.
+Mỗi ô có nhãn, hướng dẫn, mẫu và lỗi cạnh ô; mở Nâng cao khi lưu sai.
+Lưu dùng CAS, tranh chấp đọc lại bản mới để kiểm tra trước khi lưu lại.
+
+Schema có `title`, `description`, `examples` đủ từng cấp; mô tả gốc liệt kê
+cấu trúc, điều kiện bắt buộc, giá trị cho phép, mặc định và mẫu DEMO đầy đủ
+cho ô JSON chung khi Core chưa nạp màn. Không thay đổi ràng buộc hoặc xử lý
+việc. Theo schema thực tế có **13 trần ngân sách + 2 trần cắt đoạn**; tất cả
+đặt trong Nâng cao, không bỏ trường để khớp con số 14 trong phiếu UI.
+
+`KHAI-SDK-2.1.json` chỉ khai dự kiến hai màn/quyền; SDK 2.2.0 chưa nhận khóa
+màn trong manifest. Hai màn chỉ gọi `KttCore.engine("e_tra_cuu")`; không
+có thao tác kiểm máy/dịch vụ, không có API key hoặc cổng bí mật ở UI-TC.
+Đã kiểm bằng Core giả (CoreGia)/KttCore giả; chưa nạp trong Core thật.
+Ảnh và cách dựng DEMO: `../../docs/ui-tc/README.md`.
+
+Kiểm UI không mạng: `node --test e_tra_cuu/tests/ui/*.test.js` tại gốc repo.
+
 ## TC-10 — DEMO toàn tuyến, 15/11/2026
 
 **Chưa đạt cổng nghiệm thu chung:** CLI chuẩn **0/12, mã 1**: năm ca nhận

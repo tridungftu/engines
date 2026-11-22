@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from hashlib import sha256
 from pathlib import Path
+import json
 from types import SimpleNamespace
 
 import pytest
@@ -68,7 +69,9 @@ def test_phieu_khung_va_khai_sdk_rieng():
     assert chay.app.phieu["tuong_thich"]["sdk"] == ">=2.2.0 <3.0.0"
     assert [b["bang"] for b in chay.app.phieu["ngan_du_lieu"]] == ["dot_kiem"]
     assert chay.app.phieu["cau_hinh"]["schema"] == "cau_hinh.schema.json"
-    assert not (GOI / "KHAI-SDK-2.1.json").exists()
+    khai_ui = json.loads((GOI / "KHAI-SDK-2.1.json").read_text(encoding="utf-8"))
+    assert set(khai_ui) == {"ma_engine", "ghi_chu", "giao_dien_quan_tri", "thao_tac_quan_tri", "bi_mat"}
+    assert "ngan_du_lieu" not in khai_ui and "cau_hinh" not in khai_ui
     assert not (REPO / "e_tra_cuu/ma-nguon").exists()
 
 def test_stub_core_gia_khong_thanh_cong_gia():

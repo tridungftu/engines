@@ -717,3 +717,76 @@ Thời gian thực tế: bắt đầu **15/11/2026 17:08** theo lead; bộ kiể
 Lệch khỏi phiếu / quyết định tạm đã dùng: quy ước annotation tùy chọn và adapter schema nội bộ theo đề xuất AI-12 §8, chờ lead duyệt; không yêu cầu producer đổi payload. Không thay cổng nghiệm thu CLI bằng harness. Dữ liệu/shape fixture được chép độc lập, không phải nghiệm thu toàn pipeline TC/DC hoặc model thật.
 
 Cần Core / Chờ Anh mới phát sinh: không có nợ kỹ thuật Core mới ngoài cửa CLI của AI-11; cần lead duyệt đề xuất §8 và nối lại TC/DC với nguồn/quyền Core thật. Không có câu hỏi nghiệp vụ mới cho Anh.
+
+## UI-AI-1 — 21/11/2026 — Màn Máy AI
+
+Kết luận: **Chưa đạt toàn bộ điều kiện nghiệm thu** — triển khai/pytest/UI đạt bằng bộ giả; CLI SDK chuẩn còn 0/3 do nợ cửa cấu hình DEMO/Local giả từ AI-11. PR: **chờ lead mở**. Nhánh `codex/e_hoi_ai-ui-ai-1`; tiêu đề đề nghị `[e_hoi_ai] UI-AI-1 — Màn Máy AI và thao tác quản trị`. Không commit/push. **Đã kiểm bằng Core giả (CoreGia)**; chưa nối Core hoặc model thật, chưa chạy Linux thực tế.
+
+Đã làm:
+
+- Màn `goi/e_hoi_ai/ui/cau_hinh.js` bám ảnh mẫu Máy AI: IP/cổng riêng, trạng thái ở đầu thẻ, ba nút Kiểm tra kết nối / Tự tìm máy AI / Cập nhật model. Bố cục hai cột trên màn rộng, một cột cả bảng quy tắc trên màn hẹp. Nhãn/hướng dẫn/mẫu và lỗi cạnh ô; không xưng hô, thời điểm kiểm dạng dd/mm/yyyy.
+- Bảng quy tắc và dự phòng có chọn model, thêm/bỏ/sắp thứ tự; giữ ID cũ khi chưa khả dụng. Mẫu * dùng cho mọi prompt theo thứ tự quy tắc hiện có. Thời hạn/đường dẫn API ở Nâng cao; giữ URL/path, IPv6 và cổng 80. Lưu CAS, giữ nội dung đang sửa và khóa Lưu sau tranh chấp đến khi tải lại. Bỏ phản hồi kiểm máy cũ nếu IP/cổng/path đã đổi.
+- `quan_tri.py` có `kiem_ket_noi`, `tim_may_ai`, `lay_danh_sach_model`, chỉ GET metadata qua discovery/bảo vệ mạng đã có; không gửi prompt/tài liệu hoặc gọi Cloud, không lưu tệp. Hai thao tác kiểm cập nhật catalog qua ngăn SDK/CAS; lỗi ngăn vẫn là lỗi. Tìm máy không ghi catalog trước khi chọn.
+- `KHAI-SDK-2.1.json` khai D/E dự kiến, tên hàm, hợp đồng vào/ra, quyền Admin và hạn tác vụ. Không sửa `engine.json`, `chay.py`, xử lý việc hoặc danh mục engine; không thêm dependency. Bốn tệp triển khai (UI, Python, schema, bản khai), ngoài test/tài liệu/kiểm kê tự sinh.
+- Schema bổ sung title/description/examples tiếng Việt ở mọi cấp, diễn giải và mẫu JSON đầy đủ tại gốc; URL chỉ HTTP phù hợp runtime. README/CHANGELOG/NGUON và kiểm kê được cập nhật.
+- 26 test Python mới: CoreGia + Local HTTP giả cho cả bốn API, model rỗng/remote, lỗi máy/đầu vào/ngăn, tìm máy theo cấu hình/catalog, vượt trần từ chối. Adapter quản trị chỉ nằm trong test; gói không khai năng lực giả để SDK 2.2.0 chấp nhận.
+- 24 test Node/KttCore giả, không mạng: đọc/phân trang, lưu/CAS/tải lại, lỗi nhập từng ô/dòng, thứ tự quy tắc/dự phòng, kiểm/cập nhật model/tìm máy thành công và thất bại, phản hồi cũ, lỗi đọc/lưu và DOM an toàn. UI-AI-1 không có API key hoặc gọi `.bi_mat`; test chặn truy cập két và xác nhận không có ô bí mật. Kiểm chỉ hiện 4 ký tự cuối thuộc UI-AI-2, không thêm màn Cloud ngoài phạm vi.
+
+Ảnh PR (DEMO, dựng từ chính mã UI với KttCore giả; đã xem lại):
+
+- [Màn rộng 1160×1340](anh-ui-ai-1/may-ai-rong.png).
+- [Màn hẹp 390×2100](anh-ui-ai-1/may-ai-hep.png).
+- [Mất kết nối 1160×1340](anh-ui-ai-1/may-ai-loi.png).
+- [HTML DEMO có CSP chặn mạng ngoài](anh-ui-ai-1/may-ai-demo.html). Tái dựng: `node e_hoi_ai/tests/ui/chup_anh_demo.mjs`; Chrome headless/CDP chỉ trên loopback, không dịch vụ ngoài, kiểm đúng viewport và không tràn ngang trước khi chụp. Node test của UI hoàn toàn trong RAM; công cụ chụp chạy riêng.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng:
+
+- Tự tìm giới hạn địa chỉ đã biết: đầu vào, cấu hình, catalog của Core, loopback 11434/1234; tối đa 16 URL duy nhất, 4 luồng, mỗi đích tối đa 4 GET × 1 giây. Vượt trần thì từ chối, không cắt ngầm. Không quét toàn mạng hoặc gọi DNS; màn nói rõ máy LAN mới cần nhập IP. Đây là lựa chọn triển khai có giới hạn, không khẳng định tìm được mọi máy LAN/Tailscale.
+- Không thêm model mặc định hoặc tùy chọn rà hợp đồng như ảnh mẫu vì schema/runtime hiện không có các trường này; giữ đúng yêu cầu không đổi hành vi xử lý việc. Cổng Cloud vẫn giữ nội dung cũ, UI-AI-2 làm riêng.
+- Lượt kiểm đầu: 660 passed, 3 failed trong 335,11 giây. Hai lỗi kiểm kê do sửa layout mobile khi pytest đang chạy; đã tái sinh băm sau khi khóa mã. Một test timeout có sẵn lỗi tại metadata trước POST. Lượt thứ hai khi không chụp Chrome: 658 passed, 5 failed trong 312,29 giây; cả năm thuộc cùng nhóm test sau POST nhưng bị timeout metadata trước POST.
+- Sửa riêng fixture `test_transport_ai_9.py`: cấu hình metadata/connect 2 giây; ca timeout chờ máy giả xác nhận đã nhận POST bằng Event rồi đặt socket 0,03 giây khi chờ phản hồi. Máy giả giữ phản hồi bằng Event đến khi lời gọi kết thúc rồi giải phóng trong finally. Giữ toàn bộ assertion CHUA_RO, không retry/fallback, chỉ một POST; không thay xử lý việc hoặc transport runtime. Đây là sửa kiểm thử cần thiết để kiểm đúng giai đoạn sau POST và tránh đếm lượt trước khi server được scheduler cho chạy, không nới điều kiện thành công.
+
+### Cần Core — UI-AI-1
+
+- Cửa D: nạp `ui/cau_hinh.js`, quyền `admin_core`, `.cau_hinh.doc/luu` đúng CAS và hiển thị title/description/examples + Chèn mẫu ở ô JSON chung trong lúc chưa nạp màn.
+- Cửa E: dispatch ba thao tác quản trị theo bản khai dự kiến (việc ưu tiên, snapshot cấu hình/ngăn, hạn 30 giây, lỗi an toàn). SDK 2.2.0 chưa có decorator/cửa này; các hàm chưa được nối trong runtime. Không cần route riêng cho Hỏi AI.
+- Giữ nợ AI-11: CLI SDK chuẩn thiếu cửa cấp cấu hình DEMO + máy Local giả, hiện 0/3 CHUA_CAU_HINH; không thay cổng nghiệm thu bằng harness.
+- Nếu cần tự tìm toàn LAN/Tailscale: cần nguồn danh sách IP ứng viên qua cửa chung hoặc thống nhất phạm vi quét/hạn thời gian. Hiện không có nguồn này trong hợp đồng; không phải chặn phần tìm hữu hạn đã kiểm.
+- Không có câu hỏi nghiệp vụ mới chờ Anh; không yêu cầu cửa F/bí mật trong UI-AI-1.
+
+### Kết quả kiểm cuối UI-AI-1
+
+Windows x64, Python 3.13.14, Node 24.18.0, venv `.venv` trong worktree. Cài SDK 2.2.0 offline `--no-index --no-deps`; SHA-256 wheel `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp SHA256SUMS.txt. Phụ thuộc test sao offline từ distribution đã cài, theo tests/requirements.lock; không thêm dependency. Đặt PYTHONUTF8=1, PYTHONDONTWRITEBYTECODE=1, PYTEST_DISABLE_PLUGIN_AUTOLOAD=1.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+0/3 ĐẠT: cả ba ví dụ CHUA_CAU_HINH; mã thoát 1.
+Engine e_hoi_ai 0.12.0: có ví dụ chạy thử DEMO chưa đạt.
+
+.venv/Scripts/python -B -m pytest e_hoi_ai/tests -q --basetemp=.pytest-tmp-ui-ai-1-ban-giao --tb=short
+663 passed in 465.66s (0:07:45); 0 skipped; mã thoát 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết.
+Mã thoát 0.
+
+node --test e_hoi_ai/tests/ui/cau_hinh.test.mjs
+24 tests, 24 pass, 0 fail, 0 skipped; mã thoát 0.
+Đồng thời được gọi trong test_ui_ai_8.py của lượt pytest toàn bộ.
+
+.venv/Scripts/python -B e_hoi_ai/tests/chay_demo_voi_local_gia.py
+3/3 DEMO ĐẠT, 3 lượt Local HTTP giả; AI-9 1/1 ĐẠT, 1 lượt Local HTTP giả.
+Mã thoát 0; bằng chứng bổ sung, không thay CLI SDK chuẩn.
+
+node e_hoi_ai/tests/ui/chup_anh_demo.mjs
+Ảnh rộng 1160×1340, hẹp 390×2100, mất kết nối 1160×1340.
+Đúng viewport, DOM không tràn ngang, KttCore giả; mã thoát 0.
+
+Kiểm kê 29/29 tệp: bytes/SHA-256 khớp (được kiểm trong pytest toàn bộ).
+git diff --check: mã thoát 0.
+engine.json giữ SHA-256 cb5073b0e4423cddee82d9c7ef78b1c6fc0a2b518246cae46bb66cf533d1343f.
+```
+
+**Đã kiểm bằng Core giả (CoreGia)** và máy Local HTTP giả; không chứng nhận Core thật/model thật/Linux hoặc tự tìm toàn LAN. Không skip bài kiểm nào, không sửa SDK hoặc tạo nhánh DEMO runtime. Không commit/push; PR **chờ lead mở**.
+
+Thời gian thực tế: **21/11/2026 21:25–21/11/2026 22:13:48 (+07), 0.81 giờ**; ước tính phiếu UI §4: **3 giờ**. Giờ bắt đầu theo lead; giờ kết thúc là lúc hoàn tất ghi báo cáo kiểm cuối.

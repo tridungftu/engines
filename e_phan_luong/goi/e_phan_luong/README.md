@@ -2,6 +2,82 @@
 
 Engine SDK 2.2.0 chia từng nghiệp vụ theo khâu vào Đỏ (cần người kiểm trước khi duyệt) hoặc Xanh, kèm lý do. Năm năng lực đã chạy thật trong bộ kiểm DEMO; đã kiểm bằng Core giả (CoreGia), chưa kiểm tích hợp Core thật.
 
+## Trình soạn Cài đặt bước TS-PL — 21/11/2026
+
+`ui/tham_so.js` dùng chung cho cả năm năng lực: danh mục loại, bộ phân loại,
+ngưỡng PM/TE/SAD, chính sách và khuôn cột. Chỉ hiện ô được khai cho năng lực:
+hóa đơn không có khuôn cột; ghi kết quả không có bộ phân loại/khuôn cột.
+Mỗi ý là ô riêng, có hướng dẫn và mẫu; JSON trong Nâng cao chỉ đọc.
+Nút **Chèn mẫu DEMO** chỉ điền thẻ đang chọn; **Bỏ thiết lập** xuất chuỗi rỗng,
+giữ nguyên ý nghĩa mặc định của engine. **Kiểm tra cài đặt** không chạy nghiệp vụ,
+không gọi máy/dịch vụ. TS-PL không có cấu hình engine hoặc bí mật để nhập.
+
+Các cấu trúc JSON hiện hành (có mô tả ngắn và mẫu ở `mo_ta` trong
+`engine.json`, dành cho ô văn bản chung khi Core chưa nạp được màn):
+
+SDK 2.2.0 giới hạn `mo_ta` ở 500 ký tự, nên phần diễn giải đầy đủ từng cấp
+được giữ trong bảng dưới và phần chính sách Admin. Core cần cửa D2 để hiển thị
+biểu mẫu/hướng dẫn đầy đủ ngay nơi sửa bước; mô tả rút gọn chưa thay được cửa này.
+
+| Tham số | Cấu trúc, bắt buộc, hướng dẫn và nghĩa khi trống |
+|---|---|
+| `danh_muc_loai_json` | Danh sách ≤ 100 đối tượng, mỗi dòng đủ `ma` (chuỗi chữ thường/số/gạch dưới, bắt đầu bằng chữ, ≤ 40, duy nhất, không dùng `chua_phan_loai`), `ten` (chuỗi không trống), `mo_ta` (chuỗi, cho rỗng). Trống tham số = danh mục rỗng. |
+| `bo_phan_loai_json` | Đối tượng đủ `phien_ban: 1` (số nguyên), `quy_tac: []`. Mỗi quy tắc đủ `loai` (mã có trong danh mục), `khi` (danh sách ≥ 1 điều kiện nối HOẶC). Điều kiện có `tat_ca` (≥ 1 nhóm, mỗi nhóm ≥ 1 chuỗi từ khóa, HOẶC trong nhóm, VÀ giữa nhóm), `khong_co` (danh sách chuỗi loại trừ, tùy chọn = []). `=từ` khớp nguyên từ; `#` khớp ≥ 1 chữ số; không regex. Tối đa 200 từ mỗi quy tắc. Quy tắc xét từ trên xuống, khớp đầu tiên thắng. Trống = không có quy tắc. |
+| `nguong_json` | Đối tượng có `pm`, `te`, `sad`; mỗi khối bắt buộc có `so` (số hoặc chuỗi thập phân dương, ≤ 18 chữ số nguyên, ≤ 6 chữ số lẻ), `tien_te` (3 chữ hoa). Cùng tiền tệ, `0 < SAD < TE ≤ PM`. Tệp có ngưỡng thì tệp thắng; trống tham số thì tệp phải gửi đủ ngưỡng. Màn giữ chính xác từng chữ số tiền, không chuyển tiền qua JavaScript Number. |
+| `chinh_sach_json` | Đối tượng ghi đè từng khóa, tất cả tùy chọn; chỉ dùng số JSON, không chuỗi/boolean. Trống hoặc `{}` = mặc định. Các khóa, kiểu, điều kiện và mặc định ở bảng chính sách Admin bên dưới; `he_so` ghi đè từng cờ. Khi sửa thang bậc phải sửa đồng thời ngưỡng xuống và số mẫu. |
+| `khuon_cot_json` | Đối tượng đủ `phien_ban: 1` (nguyên), `sheet` (chuỗi tên hoặc null = tự dò), `cot` (1–30 dòng), `dong_dung` (danh sách chuỗi, có thể []). Mỗi cột đủ `ma` (trường, không trùng), `tu_khoa` (danh sách tiêu đề không rỗng), `bat_buoc` (boolean). Phải có `ma`, `ngay`, `so_tien` và bật bắt buộc. Trường được phép ở bảng khuôn cột bên dưới; `thuoc_tinh.<khóa>` thêm thuộc tính. Tối đa 200 từ khóa cả dòng dừng; khớp ô có nội dung đầu tiên của dòng thì dừng. Trống chỉ dùng được cho JSON; Excel/CSV cần khuôn. |
+
+Mẫu DEMO đủ năm ô (điền riêng giá trị từng khóa, không nhập cả đối tượng vào một ô):
+
+```json
+{
+  "danh_muc_loai_json": [{"ma":"thanh_toan_demo","ten":"Thanh toán DEMO","mo_ta":"Thanh toán nhà cung cấp DEMO"}],
+  "bo_phan_loai_json": {"phien_ban":1,"quy_tac":[{"loai":"thanh_toan_demo","khi":[{"tat_ca":[["thanh toán","=chi"],["đợt #"]],"khong_co":["hủy"]}]}]},
+  "nguong_json": {"pm":{"so":"5000000000","tien_te":"VND"},"te":{"so":"3000000000","tien_te":"VND"},"sad":{"so":"250000000","tien_te":"VND"}},
+  "chinh_sach_json": {"ty_le_duoi_sad":0.02,"mau_sach_toan_bo":30,"he_so":{"NGAY_NGHI":1.5}},
+  "khuon_cot_json": {"phien_ban":1,"sheet":null,"cot":[{"ma":"ma","tu_khoa":["Mã"],"bat_buoc":true},{"ma":"ngay","tu_khoa":["Ngày"],"bat_buoc":true},{"ma":"so_tien","tu_khoa":["Số tiền"],"bat_buoc":true},{"ma":"tien_te","tu_khoa":["Tiền tệ"],"bat_buoc":false}],"dong_dung":["Tổng cộng"]}
+}
+```
+
+Khi gửi việc, giá trị của mỗi khóa trên là **chuỗi JSON**, như hợp đồng cũ.
+Giới hạn ký tự/byte được kiểm ngay trên màn, không cắt nội dung. Chuỗi chưa sửa
+được giữ nguyên từng byte; các khóa ngoài năm ô này cũng được giữ nguyên.
+Sửa/xóa mã loại không tự đổi quy tắc: màn đánh dấu tham chiếu cần sửa.
+
+### Nhúng vào màn bước Core (cửa D2, hợp đồng dự kiến)
+
+Khai dự kiến ở `KHAI-SDK-2.1.json`; SDK 2.2.0 chưa nhận
+`giao_dien_tham_so`, vì vậy không đưa khóa này vào `engine.json`.
+Core nạp `ui/tham_so.css`, import ES module rồi gọi:
+
+```js
+const man = await mount(goc, {
+  KttCore,
+  nang_luc: "audit.phan_luong@1",
+  tham_so,                       // snapshot ban đầu, cả các ô khác của bước
+  phien_ban_tham_so,             // số nguyên không âm, CAS của bước/quy trình
+  doc_tham_so,                   // () => Promise<{tham_so, phien_ban_tham_so}>
+  luu_tham_so                    // (tham_so, phien_cu) => Promise<{phien_ban_tham_so}>
+});
+const giaTri = man.getValue();   // ném lỗi có danh sách trường sai nếu chưa hợp lệ
+man.validate();                 // [{truong, duong_dan, thong_diep}]
+man.destroy();                  // rời màn: xóa DOM, bỏ phản hồi muộn
+```
+
+`doc_tham_so`/`luu_tham_so` là callback **đề nghị** của màn bước, chưa phải API
+SDK đã phát hành. Core kiểm quyền Admin, giới hạn/kiểu và CAS khi ghi bước;
+trả phiên bản mới lớn hơn phiên cũ, 409 hoặc `NGAN_XUNG_DOT`/`THAM_SO_XUNG_DOT`
+khi tranh chấp. Màn giữ nháp, khóa Lưu và yêu cầu Tải lại. Lỗi đọc/lưu không
+đưa thông điệp kỹ thuật ra màn; không nhận phiên mới thì không báo đã lưu.
+Thiếu callback, phiên CAS hoặc `KttCore.engine` thì chỉ soạn/kiểm, khóa Lưu.
+Không dùng `cau_hinh.luu`/`ngan.ghi_lo` để lưu tham số của từng bước vào engine.
+Màn không gọi mạng, không tạo API riêng; chỉ nhận cổng của chính engine.
+
+Đã kiểm bằng Core giả (CoreGia), chưa kiểm tích hợp Core thật. Bộ Node chạy
+`node --test e_phan_luong/tests/ui/tham_so.test.mjs`; pytest gọi lại bộ Node và
+đối chiếu JSON với các bộ đọc Python hiện hành. Ảnh DEMO và cách dựng ở
+`e_phan_luong/tests/ui/README.md` (ngoài gói).
+
 ## Dành cho người viết module
 
 | Năng lực | Nhận → trả | Cách dùng |
@@ -197,9 +273,18 @@ Từ gốc repo, đặt `PYTHONDONTWRITEBYTECODE=1`, dùng Python của `.venv`:
 python -B e_phan_luong/tests/kiem_bam_goi.py --cap-nhat
 python -B -m kho_tri_thuc_sdk.thu e_phan_luong/goi/e_phan_luong
 python -B -m pytest e_phan_luong/tests -q
+KIEM_SAU=1 python -B -m pytest e_phan_luong/tests -q
 python -B e_phan_luong/tests/kiem_doc_lap.py
 sh e_phan_luong/tests/kiem_may_sach.sh <kho-wheel-offline>
 ```
+
+Lệnh pytest mặc định là **kiểm nhanh**, chạy mỗi lần sửa: giữ 20 trạng thái đầu
+cùng hạt giống của PL-9F/9H/9I và mọi ca biên cố định. Các ca đánh dấu `sau`
+tự bỏ qua với lý do "kiểm sâu: đặt KIEM_SAU=1". Lệnh có `KIEM_SAU=1` là
+**kiểm sâu**, chạy đủ 240 trạng thái và các ca quy mô lớn/hiệu năng.
+PowerShell dùng `$env:KIEM_SAU="1"` trước lệnh pytest; trở về kiểm nhanh bằng
+`Remove-Item Env:KIEM_SAU`. CI luôn chạy kiểm sâu; lead chạy kiểm sâu trước khi
+xin gộp main, hoặc yêu cầu chạy khi cần.
 
 Linux CI yêu cầu Python 3.11; Git Bash dùng được khi `PYTHON` trỏ Python 3.11. Windows: Anh tự chạy `e_phan_luong\tests\KIEM-MAY-SACH.cmd <kho-wheel-offline>`. Script tạo venv tạm, cài offline theo hash, chép gói, kiểm dependency/kiểm kê/DEMO/độc lập. Adapter `test_pl9c_dong_goi.py --kiem-ke` gọi `kiem_bam_goi.kiem` có sẵn; không cần kiểm kê ngoài gói thứ hai. Môi trường thử giữ lại cho việc xem bằng chứng, không đưa vào git.
 

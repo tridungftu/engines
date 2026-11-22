@@ -58,14 +58,16 @@
           "ten": "Ngưỡng PM/TE/SAD (JSON)",
           "kieu": "van_ban",
           "toi_da": 4096,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "pm, te, sad bắt buộc; mỗi khối có so (số/chuỗi thập phân dương, ≤18 chữ số nguyên, ≤6 lẻ), tien_te (3 chữ hoa). Cùng tiền tệ, 0<SAD<TE≤PM. Tệp có ngưỡng thì thắng; tham số trống thì tệp phải gửi đủ. Mẫu DEMO: {\"pm\":{\"so\":\"5000000000\",\"tien_te\":\"VND\"},\"te\":{\"so\":\"3000000000\",\"tien_te\":\"VND\"},\"sad\":{\"so\":\"250000000\",\"tien_te\":\"VND\"}}"
         },
         {
           "ma": "danh_muc_loai_json",
           "ten": "Danh mục loại nghiệp vụ (JSON)",
           "kieu": "van_ban",
           "toi_da": 16384,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Danh sách ≤100 loại; mỗi dòng đủ ma (chuỗi, chữ thường/số/_, bắt đầu bằng chữ, ≤40, duy nhất, không dùng chua_phan_loai), ten (chuỗi không trống), mo_ta (chuỗi, có thể rỗng). Tham số trống = danh mục rỗng. Mẫu DEMO: [{\"ma\":\"thanh_toan_demo\",\"ten\":\"Thanh toán DEMO\",\"mo_ta\":\"Thanh toán nhà cung cấp DEMO\"}]"
         },
         {
           "ma": "truong_phan_loai",
@@ -79,14 +81,16 @@
           "ten": "Bộ quy tắc phân loại (JSON)",
           "kieu": "van_ban",
           "toi_da": 32768,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "phien_ban: nguyên=1; quy_tac: danh sách theo thứ tự, khớp đầu tiên thắng. loai: mã trong danh mục; khi: điều kiện HOẶC. tat_ca: nhóm VÀ, từ trong nhóm HOẶC; khong_co: chuỗi loại trừ (tùy chọn=[]). = nguyên từ, # chữ số; ≤200 từ/quy tắc. Để trống = không quy tắc. Mẫu DEMO: {\"phien_ban\":1,\"quy_tac\":[{\"loai\":\"thanh_toan_demo\",\"khi\":[{\"tat_ca\":[[\"thanh toán\",\"=chi\"],[\"đợt #\"]],\"khong_co\":[\"hủy\"]}]}]}"
         },
         {
           "ma": "chinh_sach_json",
           "ten": "Chính sách kiểm tra (JSON)",
           "kieu": "van_ban",
           "toi_da": 8192,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Admin: object, mọi khóa tùy chọn; trống/{}=mặc định. bac, nguong_xuong, mau_toi_thieu: danh sách số; he_so: cờ→số≥1. Các khóa số: ty_le_chua_phan_loai, mau_sach_toan_bo, nguong_diem_rui_ro, do_tin_cay, don_vi_so_tron, ty_le_duoi_sad, san, toi_thieu_ho_so_doi_tac_moi. Không khóa lạ/trùng; xem README mục chính sách để có đủ kiểu, ràng buộc, mặc định từng cấp. Mẫu DEMO: {\"ty_le_duoi_sad\":0.02,\"he_so\":{\"NGAY_NGHI\":1.5}}"
         },
         {
           "ma": "ty_le_duoi_sad",
@@ -108,7 +112,8 @@
           "ten": "Khuôn cột Excel/CSV (JSON)",
           "kieu": "van_ban",
           "toi_da": 32768,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Đủ phien_ban (nguyên=1), sheet (chuỗi/null=tự dò), cot (1–30), dong_dung (chuỗi[]). Cột: ma duy nhất, tu_khoa chuỗi[] không rỗng, bat_buoc boolean. Bắt buộc ma/ngay/so_tien. ≤200 từ cả dòng dừng. Trống khi chỉ nhận JSON. Trường khác: xem README. Mẫu DEMO: {\"phien_ban\":1,\"sheet\":null,\"cot\":[{\"ma\":\"ma\",\"tu_khoa\":[\"Mã\"],\"bat_buoc\":true},{\"ma\":\"ngay\",\"tu_khoa\":[\"Ngày\"],\"bat_buoc\":true},{\"ma\":\"so_tien\",\"tu_khoa\":[\"Số tiền\"],\"bat_buoc\":true}],\"dong_dung\":[]}"
         },
         {
           "ma": "tien_te",
@@ -240,14 +245,16 @@
           "ten": "Ngưỡng PM/TE/SAD (JSON)",
           "kieu": "van_ban",
           "toi_da": 4096,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "pm, te, sad bắt buộc; mỗi khối có so (số/chuỗi thập phân dương, ≤18 chữ số nguyên, ≤6 lẻ), tien_te (3 chữ hoa). Cùng tiền tệ, 0<SAD<TE≤PM. Tệp có ngưỡng thì thắng; tham số trống thì tệp phải gửi đủ. Mẫu DEMO: {\"pm\":{\"so\":\"5000000000\",\"tien_te\":\"VND\"},\"te\":{\"so\":\"3000000000\",\"tien_te\":\"VND\"},\"sad\":{\"so\":\"250000000\",\"tien_te\":\"VND\"}}"
         },
         {
           "ma": "danh_muc_loai_json",
           "ten": "Danh mục loại nghiệp vụ (JSON)",
           "kieu": "van_ban",
           "toi_da": 16384,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Danh sách ≤100 loại; mỗi dòng đủ ma (chuỗi, chữ thường/số/_, bắt đầu bằng chữ, ≤40, duy nhất, không dùng chua_phan_loai), ten (chuỗi không trống), mo_ta (chuỗi, có thể rỗng). Tham số trống = danh mục rỗng. Mẫu DEMO: [{\"ma\":\"thanh_toan_demo\",\"ten\":\"Thanh toán DEMO\",\"mo_ta\":\"Thanh toán nhà cung cấp DEMO\"}]"
         },
         {
           "ma": "truong_phan_loai",
@@ -261,14 +268,16 @@
           "ten": "Bộ quy tắc phân loại (JSON)",
           "kieu": "van_ban",
           "toi_da": 32768,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "phien_ban: nguyên=1; quy_tac: danh sách theo thứ tự, khớp đầu tiên thắng. loai: mã trong danh mục; khi: điều kiện HOẶC. tat_ca: nhóm VÀ, từ trong nhóm HOẶC; khong_co: chuỗi loại trừ (tùy chọn=[]). = nguyên từ, # chữ số; ≤200 từ/quy tắc. Để trống = không quy tắc. Mẫu DEMO: {\"phien_ban\":1,\"quy_tac\":[{\"loai\":\"thanh_toan_demo\",\"khi\":[{\"tat_ca\":[[\"thanh toán\",\"=chi\"],[\"đợt #\"]],\"khong_co\":[\"hủy\"]}]}]}"
         },
         {
           "ma": "chinh_sach_json",
           "ten": "Chính sách kiểm tra (JSON)",
           "kieu": "van_ban",
           "toi_da": 8192,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Admin: object, mọi khóa tùy chọn; trống/{}=mặc định. bac, nguong_xuong, mau_toi_thieu: danh sách số; he_so: cờ→số≥1. Các khóa số: ty_le_chua_phan_loai, mau_sach_toan_bo, nguong_diem_rui_ro, do_tin_cay, don_vi_so_tron, ty_le_duoi_sad, san, toi_thieu_ho_so_doi_tac_moi. Không khóa lạ/trùng; xem README mục chính sách để có đủ kiểu, ràng buộc, mặc định từng cấp. Mẫu DEMO: {\"ty_le_duoi_sad\":0.02,\"he_so\":{\"NGAY_NGHI\":1.5}}"
         },
         {
           "ma": "ty_le_duoi_sad",
@@ -290,7 +299,8 @@
           "ten": "Khuôn cột Excel/CSV (JSON)",
           "kieu": "van_ban",
           "toi_da": 32768,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Đủ phien_ban (nguyên=1), sheet (chuỗi/null=tự dò), cot (1–30), dong_dung (chuỗi[]). Cột: ma duy nhất, tu_khoa chuỗi[] không rỗng, bat_buoc boolean. Bắt buộc ma/ngay/so_tien. ≤200 từ cả dòng dừng. Trống khi chỉ nhận JSON. Trường khác: xem README. Mẫu DEMO: {\"phien_ban\":1,\"sheet\":null,\"cot\":[{\"ma\":\"ma\",\"tu_khoa\":[\"Mã\"],\"bat_buoc\":true},{\"ma\":\"ngay\",\"tu_khoa\":[\"Ngày\"],\"bat_buoc\":true},{\"ma\":\"so_tien\",\"tu_khoa\":[\"Số tiền\"],\"bat_buoc\":true}],\"dong_dung\":[]}"
         },
         {
           "ma": "tien_te",
@@ -358,14 +368,16 @@
           "ten": "Ngưỡng PM/TE/SAD (JSON)",
           "kieu": "van_ban",
           "toi_da": 4096,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "pm, te, sad bắt buộc; mỗi khối có so (số/chuỗi thập phân dương, ≤18 chữ số nguyên, ≤6 lẻ), tien_te (3 chữ hoa). Cùng tiền tệ, 0<SAD<TE≤PM. Tệp có ngưỡng thì thắng; tham số trống thì tệp phải gửi đủ. Mẫu DEMO: {\"pm\":{\"so\":\"5000000000\",\"tien_te\":\"VND\"},\"te\":{\"so\":\"3000000000\",\"tien_te\":\"VND\"},\"sad\":{\"so\":\"250000000\",\"tien_te\":\"VND\"}}"
         },
         {
           "ma": "danh_muc_loai_json",
           "ten": "Danh mục loại nghiệp vụ (JSON)",
           "kieu": "van_ban",
           "toi_da": 16384,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Danh sách ≤100 loại; mỗi dòng đủ ma (chuỗi, chữ thường/số/_, bắt đầu bằng chữ, ≤40, duy nhất, không dùng chua_phan_loai), ten (chuỗi không trống), mo_ta (chuỗi, có thể rỗng). Tham số trống = danh mục rỗng. Mẫu DEMO: [{\"ma\":\"thanh_toan_demo\",\"ten\":\"Thanh toán DEMO\",\"mo_ta\":\"Thanh toán nhà cung cấp DEMO\"}]"
         },
         {
           "ma": "truong_phan_loai",
@@ -379,14 +391,16 @@
           "ten": "Bộ quy tắc phân loại (JSON)",
           "kieu": "van_ban",
           "toi_da": 32768,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "phien_ban: nguyên=1; quy_tac: danh sách theo thứ tự, khớp đầu tiên thắng. loai: mã trong danh mục; khi: điều kiện HOẶC. tat_ca: nhóm VÀ, từ trong nhóm HOẶC; khong_co: chuỗi loại trừ (tùy chọn=[]). = nguyên từ, # chữ số; ≤200 từ/quy tắc. Để trống = không quy tắc. Mẫu DEMO: {\"phien_ban\":1,\"quy_tac\":[{\"loai\":\"thanh_toan_demo\",\"khi\":[{\"tat_ca\":[[\"thanh toán\",\"=chi\"],[\"đợt #\"]],\"khong_co\":[\"hủy\"]}]}]}"
         },
         {
           "ma": "chinh_sach_json",
           "ten": "Chính sách kiểm tra (JSON)",
           "kieu": "van_ban",
           "toi_da": 8192,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Admin: object, mọi khóa tùy chọn; trống/{}=mặc định. bac, nguong_xuong, mau_toi_thieu: danh sách số; he_so: cờ→số≥1. Các khóa số: ty_le_chua_phan_loai, mau_sach_toan_bo, nguong_diem_rui_ro, do_tin_cay, don_vi_so_tron, ty_le_duoi_sad, san, toi_thieu_ho_so_doi_tac_moi. Không khóa lạ/trùng; xem README mục chính sách để có đủ kiểu, ràng buộc, mặc định từng cấp. Mẫu DEMO: {\"ty_le_duoi_sad\":0.02,\"he_so\":{\"NGAY_NGHI\":1.5}}"
         },
         {
           "ma": "ty_le_duoi_sad",
@@ -416,7 +430,8 @@
           "ten": "Khuôn cột Excel/CSV (JSON)",
           "kieu": "van_ban",
           "toi_da": 32768,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Đủ phien_ban (nguyên=1), sheet (chuỗi/null=tự dò), cot (1–30), dong_dung (chuỗi[]). Cột: ma duy nhất, tu_khoa chuỗi[] không rỗng, bat_buoc boolean. Bắt buộc ma/ngay/so_tien. ≤200 từ cả dòng dừng. Trống khi chỉ nhận JSON. Trường khác: xem README. Mẫu DEMO: {\"phien_ban\":1,\"sheet\":null,\"cot\":[{\"ma\":\"ma\",\"tu_khoa\":[\"Mã\"],\"bat_buoc\":true},{\"ma\":\"ngay\",\"tu_khoa\":[\"Ngày\"],\"bat_buoc\":true},{\"ma\":\"so_tien\",\"tu_khoa\":[\"Số tiền\"],\"bat_buoc\":true}],\"dong_dung\":[]}"
         },
         {
           "ma": "tien_te",
@@ -542,14 +557,16 @@
           "ten": "Ngưỡng PM/TE/SAD (JSON)",
           "kieu": "van_ban",
           "toi_da": 4096,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "pm, te, sad bắt buộc; mỗi khối có so (số/chuỗi thập phân dương, ≤18 chữ số nguyên, ≤6 lẻ), tien_te (3 chữ hoa). Cùng tiền tệ, 0<SAD<TE≤PM. Tệp có ngưỡng thì thắng; tham số trống thì tệp phải gửi đủ. Mẫu DEMO: {\"pm\":{\"so\":\"5000000000\",\"tien_te\":\"VND\"},\"te\":{\"so\":\"3000000000\",\"tien_te\":\"VND\"},\"sad\":{\"so\":\"250000000\",\"tien_te\":\"VND\"}}"
         },
         {
           "ma": "danh_muc_loai_json",
           "ten": "Danh mục loại nghiệp vụ (JSON)",
           "kieu": "van_ban",
           "toi_da": 16384,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Danh sách ≤100 loại; mỗi dòng đủ ma (chuỗi, chữ thường/số/_, bắt đầu bằng chữ, ≤40, duy nhất, không dùng chua_phan_loai), ten (chuỗi không trống), mo_ta (chuỗi, có thể rỗng). Tham số trống = danh mục rỗng. Mẫu DEMO: [{\"ma\":\"thanh_toan_demo\",\"ten\":\"Thanh toán DEMO\",\"mo_ta\":\"Thanh toán nhà cung cấp DEMO\"}]"
         },
         {
           "ma": "truong_phan_loai",
@@ -563,14 +580,16 @@
           "ten": "Bộ quy tắc phân loại (JSON)",
           "kieu": "van_ban",
           "toi_da": 32768,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "phien_ban: nguyên=1; quy_tac: danh sách theo thứ tự, khớp đầu tiên thắng. loai: mã trong danh mục; khi: điều kiện HOẶC. tat_ca: nhóm VÀ, từ trong nhóm HOẶC; khong_co: chuỗi loại trừ (tùy chọn=[]). = nguyên từ, # chữ số; ≤200 từ/quy tắc. Để trống = không quy tắc. Mẫu DEMO: {\"phien_ban\":1,\"quy_tac\":[{\"loai\":\"thanh_toan_demo\",\"khi\":[{\"tat_ca\":[[\"thanh toán\",\"=chi\"],[\"đợt #\"]],\"khong_co\":[\"hủy\"]}]}]}"
         },
         {
           "ma": "chinh_sach_json",
           "ten": "Chính sách kiểm tra (JSON)",
           "kieu": "van_ban",
           "toi_da": 8192,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Admin: object, mọi khóa tùy chọn; trống/{}=mặc định. bac, nguong_xuong, mau_toi_thieu: danh sách số; he_so: cờ→số≥1. Các khóa số: ty_le_chua_phan_loai, mau_sach_toan_bo, nguong_diem_rui_ro, do_tin_cay, don_vi_so_tron, ty_le_duoi_sad, san, toi_thieu_ho_so_doi_tac_moi. Không khóa lạ/trùng; xem README mục chính sách để có đủ kiểu, ràng buộc, mặc định từng cấp. Mẫu DEMO: {\"ty_le_duoi_sad\":0.02,\"he_so\":{\"NGAY_NGHI\":1.5}}"
         },
         {
           "ma": "ty_le_duoi_sad",
@@ -710,21 +729,24 @@
           "ten": "Ngưỡng PM/TE/SAD (JSON)",
           "kieu": "van_ban",
           "toi_da": 4096,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "pm, te, sad bắt buộc; mỗi khối có so (số/chuỗi thập phân dương, ≤18 chữ số nguyên, ≤6 lẻ), tien_te (3 chữ hoa). Cùng tiền tệ, 0<SAD<TE≤PM. Tệp có ngưỡng thì thắng; tham số trống thì tệp phải gửi đủ. Mẫu DEMO: {\"pm\":{\"so\":\"5000000000\",\"tien_te\":\"VND\"},\"te\":{\"so\":\"3000000000\",\"tien_te\":\"VND\"},\"sad\":{\"so\":\"250000000\",\"tien_te\":\"VND\"}}"
         },
         {
           "ma": "danh_muc_loai_json",
           "ten": "Danh mục loại nghiệp vụ (JSON)",
           "kieu": "van_ban",
           "toi_da": 16384,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Danh sách ≤100 loại; mỗi dòng đủ ma (chuỗi, chữ thường/số/_, bắt đầu bằng chữ, ≤40, duy nhất, không dùng chua_phan_loai), ten (chuỗi không trống), mo_ta (chuỗi, có thể rỗng). Tham số trống = danh mục rỗng. Mẫu DEMO: [{\"ma\":\"thanh_toan_demo\",\"ten\":\"Thanh toán DEMO\",\"mo_ta\":\"Thanh toán nhà cung cấp DEMO\"}]"
         },
         {
           "ma": "chinh_sach_json",
           "ten": "Chính sách kiểm tra (JSON)",
           "kieu": "van_ban",
           "toi_da": 8192,
-          "mac_dinh": ""
+          "mac_dinh": "",
+          "mo_ta": "Admin: object, mọi khóa tùy chọn; trống/{}=mặc định. bac, nguong_xuong, mau_toi_thieu: danh sách số; he_so: cờ→số≥1. Các khóa số: ty_le_chua_phan_loai, mau_sach_toan_bo, nguong_diem_rui_ro, do_tin_cay, don_vi_so_tron, ty_le_duoi_sad, san, toi_thieu_ho_so_doi_tac_moi. Không khóa lạ/trùng; xem README mục chính sách để có đủ kiểu, ràng buộc, mặc định từng cấp. Mẫu DEMO: {\"ty_le_duoi_sad\":0.02,\"he_so\":{\"NGAY_NGHI\":1.5}}"
         }
       ],
       "truong_ra": [
@@ -1092,11 +1114,11 @@
           "ma": "ky_lam_moi",
           "ten": "Kỳ làm mới hồ sơ",
           "kieu": "van_ban"
-          },
-          {
-            "ma": "tien_te",
-            "ten": "Mã tiền tệ ISO ba chữ cái của số liệu tiền gộp",
-            "kieu": "van_ban"
+        },
+        {
+          "ma": "tien_te",
+          "ten": "Mã tiền tệ ISO ba chữ cái của số liệu tiền gộp",
+          "kieu": "van_ban"
         }
       ]
     },

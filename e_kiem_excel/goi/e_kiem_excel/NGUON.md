@@ -183,11 +183,20 @@ phát hành bằng CLI `python -B _chung/cong-cu/dong_goi.py --engine e_kiem_exc
 --ref HEAD --nhan EX-6 --ra <thu_muc_moi_ngoai_repo>`; CLI chỉ đọc bytes đã
 commit nên **không dùng CLI tại HEAD cũ để gọi đó là gói EX-6**.
 
+### TS-EX — 21/11/2026
+
+Mã mới tự viết: `ui/tham_so.js` (thành phần nhúng bước), `ui/du_lieu.js`
+(kiểm cấu trúc và xuất chuỗi), `ui/kieu_dang.js` (bố cục theo ảnh mẫu).
+Không chép thư viện UI, không nguồn ngoài hoặc dependency mới. Cấu trúc/trần
+đối chiếu trực tiếp `bo_nhom.py`, `doc_tong_quat.py`, `kiem_tra.py` trong gói;
+không đổi các tệp Python đó. `KHAI-SDK-2.1.json` ghi hợp đồng D2 dự kiến.
+Kiểm kê sau đây đã sinh lại cho toàn bộ gói, gồm các tệp TS-EX.
+
 <!-- BAT-DAU-SHA256-EX6 -->
 
 | Tệp trong gói | Bytes | SHA-256 |
 |---|---:|---|
-| `CHANGELOG.md` | 3513 | `b58f09a60c517d454ce51b89f897a240ba0a6a2670e98e09b8a490b9e0ff3029` |
+| `CHANGELOG.md` | 4199 | `2db71bcc7524f973d086fd0bf5684aa01d3fe5345a36ec79b061c53937d14e41` |
 | `demo/bang-kl-DEMO.xlsx` | 4508 | `9e14f6142c32faedf1ca60a01f64a43cd3004b237cea27373ea2383d2f66d0ab` |
 | `demo/bao-gia-DEMO.xlsx` | 2048 | `ac25a7b8e36cd0fa0e5c9e67f04d23c19afbde654c21d029beb83f66ec9cffb2` |
 | `demo/gia-thanh-DEMO.xlsx` | 1811 | `010ffccbb70784a09fab3247a39e5c23425d335e9421fd50305216c16d6226bf` |
@@ -204,8 +213,12 @@ commit nên **không dùng CLI tại HEAD cũ để gọi đó là gói EX-6**.
 | `e_kiem_excel/nhan_dien.py` | 6696 | `9365db7e0b5094b7defa4761a00d621fe119a53c0db5a90d2f69d201c2abb6a7` |
 | `e_kiem_excel/so_do.py` | 4802 | `5be9894b22ff44c1ac3b55f8230b0aaf2f0e25f8d5381839c504fe7a801ba25b` |
 | `e_kiem_excel/tham_chieu.py` | 3712 | `820b34509482de02dde7fe3f2643ad0ee3afa09c17832ee03ddaf3755f19f19f` |
-| `engine.json` | 8885 | `ccdfe2e252dd94f97425773fdfeab705aa29dce38248674f80f97bb316a410d3` |
-| `README.md` | 5951 | `1fe66edd93ac09749fca4de59eb57f57461c72c363b86de894ae48e5497258ff` |
+| `engine.json` | 10326 | `ded89c3c540cf207249953240d8133f056cbe48ac5cdaae355bd2ad558628742` |
+| `KHAI-SDK-2.1.json` | 1954 | `fbcd02cff5f49378d0186a0790c5934bfd0b6bf7a1b41bf516c17116ab323775` |
+| `README.md` | 13974 | `38d6a0935154700cfa3b2b5ec662ac1a85c6bc791558553e1f9e012470cf56fb` |
 | `requirements.lock` | 631 | `d82a377d03f0489bbfaccaa739373b000b45dd519b749a585edec90874dc99ec` |
+| `ui/du_lieu.js` | 8960 | `185545b12d803edf4283840bab2f829dee81ca466c28642327dc30ede088ec08` |
+| `ui/kieu_dang.js` | 3157 | `a00bb04527ca52fdbf7ad913c3106353c96196ac9926f583c4f74688f58bbac8` |
+| `ui/tham_so.js` | 18615 | `56875ca51e781c8150d4aaeeed7632fa78c6952174c257fa51d63bf314bd5952` |
 
 <!-- KET-THUC-SHA256-EX6 -->

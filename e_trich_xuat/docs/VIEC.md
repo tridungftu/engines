@@ -853,3 +853,11 @@ UI-TX xử lý theo phân chia file của lead. Hợp đồng nhúng và thao t�
 Không xóa tệp, không commit/push; lead gộp và mở PR.
 
 Thời gian thực tế TS-TX: **21/11/2026 21:42–22:17 (UTC+07), khoảng 0,58 giờ**; phiếu **4 giờ ước tính**. Mốc chốt kiểm và hồ sơ: 22:17.
+
+## UI-TX — 21/11/2026, PR: chờ lead mở
+
+- Hoàn thiện màn ngân sách token, thông báo lỗi tại ô, lưu CAS và mô tả schema; khai màn dự kiến trong `KHAI-SDK-2.1.json`. Ảnh dựng bằng KttCore giả: `UI-TX-DEMO.png`. Không thay xử lý việc.
+- Kiểm UI Node: 7/7 đạt; kiểm độc lập gói đạt. **Đã kiểm bằng Core giả (CoreGia)**, chưa nối Core thật.
+- SDK 2.2.0 `thu`: 4/5 đạt, exit 1; ví dụ hậu kiểm trả `DANG_CHAY` do thiếu hồ sơ tham chiếu, thuộc C-TX-06 đã ghi nhận. Kiểm chung chưa đạt.
+- Không có nút kiểm máy ngoài hoặc bí mật trong phạm vi UI-TX.
+- Cần Core: hỗ trợ nạp màn engine và hiển thị mô tả schema trong ô cấu hình chung (cửa D); xử lý C-TX-06 cho ví dụ hậu kiểm.

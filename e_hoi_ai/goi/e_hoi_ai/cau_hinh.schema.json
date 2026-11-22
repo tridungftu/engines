@@ -1,24 +1,31 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:ktt:e_hoi_ai:cau_hinh:1",
-  "title": "Cấu hình Hỏi AI do Core quản — không chứa bí mật",
+  "title": "Cấu hình Máy AI",
+  "description": "Cấu hình thuộc engine Hỏi AI, Core cất hộ; không chứa bí mật. Ưu tiên dùng màn Máy AI. Khi dùng ô JSON chung: local_ai (đối tượng, tùy chọn; thiếu thì việc cần AI bị từ chối): url (chuỗi, bắt buộc khi có local_ai; HTTP IP nội bộ/loopback/Tailscale kèm cổng 1–65535, không tài khoản/query/fragment; đường dẫn gốc, /v1 hoặc /v1/chat/completions), timeout_giay (số, bắt buộc, trên 0 đến 600 giây). quy_tac_model (mảng đối tượng, tùy chọn, mặc định []): mỗi dòng bắt buộc mau_ma_prompt (chuỗi không trắng, mẫu phân biệt hoa/thường, * và ?), uu_tien (chuỗi không trắng, ID model trên máy), du_phong (mảng chuỗi ID model không trắng, có thể []). Xét quy tắc và dự phòng từ trên xuống; không quy tắc phù hợp thì dùng model khả dụng đầu tiên. Chỉ điền khi cần Local AI; không khai local_ai vẫn khởi động được. Mẫu đầy đủ: {\"local_ai\":{\"url\":\"http://127.0.0.1:11434\",\"timeout_giay\":60},\"quy_tac_model\":[{\"mau_ma_prompt\":\"demo.*\",\"uu_tien\":\"model-demo\",\"du_phong\":[\"model-demo-b\"]}]}. Core cần hiển thị hướng dẫn và nút Chèn mẫu; engine không lưu tệp cấu hình.",
+  "examples": [{"local_ai":{"url":"http://127.0.0.1:11434","timeout_giay":60},"quy_tac_model":[{"mau_ma_prompt":"demo.*","uu_tien":"model-demo","du_phong":["model-demo-b"]}]}],
   "type": "object",
   "additionalProperties": false,
   "properties": {
     "local_ai": {
+      "title": "Máy Local AI",
+      "description": "Địa chỉ dịch vụ và thời hạn chờ. Tùy chọn; bỏ cả mục thì việc cần AI báo chưa cấu hình. Khi khai phải có đủ URL và thời hạn.",
+      "examples": [{"url":"http://127.0.0.1:11434","timeout_giay":60}],
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "url",
-        "timeout_giay"
-      ],
+      "required": ["url", "timeout_giay"],
       "properties": {
         "url": {
+          "title": "Địa chỉ Local AI",
           "type": "string",
-          "pattern": "^https?://\\S+$",
-          "description": "Địa chỉ Local AI; không chứa tài khoản, truy vấn hay fragment. Kiểm mạng nội bộ ở AI-1."
+          "pattern": "^http://(?:localhost|[0-9]+(?:\\.[0-9]+){3}|\\[[0-9A-Fa-f:]+\\]):[0-9]{1,5}(?:/|/v1/?|/v1/chat/completions)?$",
+          "description": "Bắt buộc khi khai Máy Local AI. Chỉ HTTP với IP nội bộ, loopback hoặc Tailscale và cổng 1–65535; không HTTPS, tên miền, tài khoản, query, fragment. Địa chỉ gốc, /v1 hoặc /v1/chat/completions. Engine kiểm phạm vi IP và cổng trước kết nối.",
+          "examples": ["http://127.0.0.1:11434", "http://[::1]:1234/v1"]
         },
         "timeout_giay": {
+          "title": "Thời hạn chờ (giây)",
+          "description": "Bắt buộc khi khai Máy Local AI. Số giây dương, tối đa 600; ví dụ 60. Không khai local_ai thì không cần trường này.",
+          "examples": [60],
           "type": "number",
           "exclusiveMinimum": 0,
           "maximum": 600
@@ -26,39 +33,45 @@
       }
     },
     "quy_tac_model": {
+      "title": "Quy tắc chọn model",
       "type": "array",
-      "description": "Không khai tương đương chưa đặt quy tắc chọn model.",
+      "description": "Tùy chọn, mặc định []; mỗi dòng gồm mẫu mã prompt, model ưu tiên và danh sách dự phòng. Xét dòng và dự phòng theo thứ tự; mẫu * áp dụng cho mọi prompt. Không có model phù hợp thì chọn model khả dụng đầu tiên.",
+      "examples": [[{"mau_ma_prompt":"demo.*","uu_tien":"model-demo","du_phong":["model-demo-b"]}], []],
+      "default": [],
       "items": {
+        "title": "Một quy tắc chọn model",
+        "description": "Bắt buộc đủ ba trường: mẫu mã prompt, model ưu tiên và mảng dự phòng. Model lấy ID từ máy AI, không đánh giá chất lượng qua tên.",
+        "examples": [{"mau_ma_prompt":"demo.*","uu_tien":"model-demo","du_phong":["model-demo-b"]}],
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "mau_ma_prompt",
-          "uu_tien",
-          "du_phong"
-        ],
+        "required": ["mau_ma_prompt", "uu_tien", "du_phong"],
         "properties": {
           "mau_ma_prompt": {
-            "type": "string",
-            "minLength": 1,
-            "pattern": "\\S"
+            "title": "Mẫu mã prompt",
+            "description": "Bắt buộc; chuỗi không trắng. Khớp phân biệt hoa/thường theo fnmatch; * khớp nhiều ký tự, ? khớp một ký tự. Ví dụ demo.*; * áp dụng mọi prompt.",
+            "examples": ["demo.*", "*"],
+            "type": "string", "minLength": 1, "pattern": "\\S"
           },
           "uu_tien": {
-            "type": "string",
-            "minLength": 1,
-            "pattern": "\\S"
+            "title": "Model ưu tiên",
+            "description": "Bắt buộc; ID model không trắng từ máy AI. Thử trước các model dự phòng của dòng.",
+            "examples": ["model-demo"],
+            "type": "string", "minLength": 1, "pattern": "\\S"
           },
           "du_phong": {
+            "title": "Model dự phòng",
+            "description": "Bắt buộc là mảng ID model. Dùng [] nếu không có dự phòng; xét theo thứ tự đã nhập.",
+            "examples": [["model-demo-b"], []],
             "type": "array",
             "items": {
-              "type": "string",
-              "minLength": 1,
-              "pattern": "\\S"
+              "title": "Một model dự phòng",
+              "description": "ID model không trắng từ danh sách máy AI; thử khi model trước không khả dụng.",
+              "examples": ["model-demo-b"],
+              "type": "string", "minLength": 1, "pattern": "\\S"
             }
           }
         }
-      },
-      "default": []
+      }
     }
-  },
-  "description": "Chưa khai local_ai thì engine vẫn khởi động; việc cần Local AI trả CHUA_CAU_HINH."
+  }
 }

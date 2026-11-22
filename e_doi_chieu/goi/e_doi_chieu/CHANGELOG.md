@@ -339,6 +339,17 @@ Bản bàn giao trước kiểm độc lập:
 
 - DC-0: khung SDK 2.0, khai b?o d? ki?n SDK 2.1, ng?n RAM v? c?u h?nh; ??c Word tr? CHUA_LAM. ?? ki?m b?ng Core gi? (CoreGia); ch?a ki?m nghi?p v?.
 
+
+## UI-DC — 21/11/2026 · PR: chờ lead mở
+
+- Màn cấu hình có Cơ bản (bốn trần trang/ký tự/điểm lệch) và Nâng cao thu gọn; mã/băm/detector/ngưỡng học OCR chỉ đọc. Trần kỹ thuật có hướng dẫn và mẫu ngay tại ô.
+- Lỗi chỉ rõ ô sai khi nhập; lưu bằng CAS, khóa thao tác trùng và yêu cầu tải lại khi xung đột hoặc chưa xác nhận được phản hồi.
+- Bỏ xưng hô ở ba màn; bổ sung title/description/examples tiếng Việt mọi cấp schema và mẫu cấu trúc đầy đủ. Chỉ thêm annotation, không đổi ràng buộc schema hoặc hành vi xử lý việc.
+- Đã kiểm bằng Core giả (CoreGia), KttCore giả trong Node và trang DEMO để chụp ảnh. UI-DC không có máy ngoài hoặc bí mật nên không có nút kiểm kết nối/API key.
+- Ba màn đã có trong KHAI-SDK-2.1.json; không có khai báo hoặc thao tác mới, giữ nguyên engine.json. Cửa D nạp màn và hiển thị hướng dẫn JSON chung vẫn cần Core.
+
+- Điểm chặn nghiệm thu UI-DC: bộ kiểm snapshot trong so_chu.py chưa nhận annotation examples. Pytest chính thức 571 passed, 519 failed, 74 errors; chưa đạt. Diff tương thích nằm ngoài gói tại docs/UI-DC-TUONG-THICH-SCHEMA.patch, chưa áp dụng vì giới hạn phạm vi UI của lead. Không gộp thay đổi schema trước khi xử lý điểm chặn.
+
 ## TS-DC — 21/11/2026 · PR: chờ lead mở
 
 - Thêm màn `ui/soan_quy_tac.js`: quy tắc/cặp đổi nghĩa cố định chỉ đọc;

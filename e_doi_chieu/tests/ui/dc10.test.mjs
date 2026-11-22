@@ -112,14 +112,15 @@ test("Cấu hình đọc/lưu CAS, giữ nguyên bộ ghim và ẩn thông tin k
   await tim(root, "form").goi("submit");
   assert.equal(luu.length, 1); assert.equal(luu[0].r, 7); assert.equal(luu[0].v.so_trang_toi_da, 30);
   assert.equal(luu[0].v.ma_bo_chuan_hoa, CH.ma_bo_chuan_hoa); assert.equal(luu[0].v.nguong_ocr_kem, null);
-  assert.doesNotMatch(chu(root), /sha256|DEMO-pb-an|DEMO-bo-an/);
+  assert.doesNotMatch(chu(tim(root, "section")), /sha256|DEMO-pb-an|DEMO-bo-an/);
+  assert.match(chu(tim(root, "details")), /sha256/); // Chỉ có trong Nâng cao thu gọn.
   await tim(root, "form").goi("submit"); assert.equal(luu[1].r, 8);
 });
-test("CAS cấu hình xung đột khóa lưu, chỉ đọc lại khi Anh bấm tải lại", async () => {
+test("CAS cấu hình xung đột khóa lưu, chỉ đọc lại khi bấm tải lại", async () => {
   const {root, luu, doc} = await dungCH({xungDot: true});
   await tim(root, "form").goi("submit"); await tim(root, "form").goi("submit");
   assert.equal(luu.length, 1); assert.equal(doc.length, 1);
-  assert.match(chu(root), /người khác thay đổi. Anh tải lại/); assert.doesNotMatch(chu(root), /DEMO-khong-lo/);
+  assert.match(chu(root), /người khác sửa, tải lại/); assert.doesNotMatch(chu(root), /DEMO-khong-lo/);
   assert.equal(nut(root, "Lưu cấu hình").disabled, true);
   await nut(root, "Tải lại cấu hình").goi("click"); assert.equal(doc.length, 2);
 });
@@ -165,7 +166,7 @@ for (const lc of ["thay_doi_da_thong_nhat", "khong_anh_huong"]) test(`Thiếu n�
 test("Xung đột xác nhận không tự ghi đè hoặc thử lại, cần tải lại", async () => {
   const {root, daLuu} = await dungKQ({xungDot: true}); const form = tim(root, "form");
   await form.goi("submit"); await form.goi("submit"); assert.equal(daLuu.length, 1);
-  assert.match(chu(form), /Kết quả vừa thay đổi. Anh tải lại/); assert.doesNotMatch(chu(form), /Đã lưu|DEMO-khong-lo/);
+  assert.match(chu(form), /Kết quả vừa thay đổi. Tải lại/); assert.doesNotMatch(chu(form), /Đã lưu|DEMO-khong-lo/);
 });
 test("Mất ACK gửi lại cùng mã yêu cầu và cùng nội dung", async () => {
   const {root, daLuu} = await dungKQ({matAck: true}); const form = tim(root, "form");

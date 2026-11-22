@@ -2,14 +2,29 @@
   "phien_ban": "0.12.0",
   "tep": [
     {
-      "duong_dan": "cau_hinh.schema.json",
-      "bytes": 1750,
-      "sha256": "0298691f5437c83d749781c4bf9c08d2d5fe925192c71fbc1b442e97ae94d452"
+      "duong_dan": "CHANGELOG.md",
+      "bytes": 10697,
+      "sha256": "9cb90edb066ddebf47f2332089ba048ccda27c705d4c0524f1fba845e93b8adb"
     },
     {
-      "duong_dan": "CHANGELOG.md",
-      "bytes": 9656,
-      "sha256": "14990317dcd3e136bd296e0a73077af8d0ad5e3c1d3db38d2a50046a5fd62401"
+      "duong_dan": "KHAI-SDK-2.1.json",
+      "bytes": 1521,
+      "sha256": "e80032d2ed06d8156bb5316eb528bbd9a7c22bc15528b4406efe763cd99140fb"
+    },
+    {
+      "duong_dan": "NGUON.md",
+      "bytes": 15891,
+      "sha256": "094ffc2c662e39616a9c36f844dd3f84aaa5700684364abe5e9238637b71017c"
+    },
+    {
+      "duong_dan": "README.md",
+      "bytes": 28078,
+      "sha256": "3eab8b905bf6b568bbfaf0e136d32cf63fba28c63ca00b7315dd78deab2b60ab"
+    },
+    {
+      "duong_dan": "cau_hinh.schema.json",
+      "bytes": 5511,
+      "sha256": "876cd3641befa9641ab9bc0deabc39419dfca2a31abc3eda4c2f0a382c667695"
     },
     {
       "duong_dan": "contract/cau_hinh_may.schema.json",
@@ -102,6 +117,11 @@
       "sha256": "a9b105e6da5680cbdacda179d17357d0b91a8579cdefc7f862db17565803ef14"
     },
     {
+      "duong_dan": "e_hoi_ai/quan_tri.py",
+      "bytes": 3943,
+      "sha256": "5f3e0aad0bc0aa11d550137a1aa8468af40a2f78f0058aac2261575758402a42"
+    },
+    {
       "duong_dan": "e_hoi_ai/vai_tro_khuon.py",
       "bytes": 10797,
       "sha256": "ba15948dd9254e5daea0596ad46aeb40d84e054ed1e10accc8b6b0bb4385626b"
@@ -110,16 +130,6 @@
       "duong_dan": "engine.json",
       "bytes": 7063,
       "sha256": "cb5073b0e4423cddee82d9c7ef78b1c6fc0a2b518246cae46bb66cf533d1343f"
-    },
-    {
-      "duong_dan": "NGUON.md",
-      "bytes": 14951,
-      "sha256": "b3b823ce7421dcdd47fa9e1ebbd96fe6490d2617f0151c1d4d6766fe59d9f9cb"
-    },
-    {
-      "duong_dan": "README.md",
-      "bytes": 24989,
-      "sha256": "89a04590a772e27f698a0d5eed5c02b4775a5de12039cee97b8b545eaf65cc9c"
     },
     {
       "duong_dan": "requirements.lock",
@@ -133,8 +143,8 @@
     },
     {
       "duong_dan": "ui/cau_hinh.js",
-      "bytes": 7357,
-      "sha256": "2cd65eb7647c5fa9a1d904cd6972e2e135bf6f3e81682819de110113cc011e00"
+      "bytes": 16392,
+      "sha256": "03676cc297f317593d7f581be87af438d85a5eb3cac46814eab6def81457a5e9"
     }
   ]
 }

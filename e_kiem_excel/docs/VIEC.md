@@ -12,13 +12,25 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 5 | `excel.doc_bang@1` khuôn `xay_dung_klgt` | EX-4 | Đang làm — 18/11/2026 | 4 | Mã EX-4 xong, chờ gộp các lát toàn vẹn để CLI chung đạt 3/3. PR: chờ lead mở |
 | 6 | Khuôn `tong_quat` | EX-5 | Xong — 18/11/2026 | 4 | PR: chờ lead mở. CLI 5/5 ĐẠT; pytest 144 passed, 0 skipped; kiểm độc lập mã 0. Đã kiểm bằng Core giả (CoreGia) |
 | 7 | Ghim nguồn, cài máy sạch, đo thời gian/bộ nhớ trên bản hoàn chỉnh, chốt `thoi_han_giay` | EX-6 | Xong — 19/11/2026 (mã + kiểm cục bộ) | 3 | PR: chờ lead mở. CLI 5/5; pytest 240 passed; độc lập mã 0; cài sạch offline đạt. CI Linux 3.11 và Windows CMD chờ chạy; chi tiết cuối sổ |
-| | **Tổng** | | | **29** | |
+| 8 | Trình soạn ô đích, bộ nhóm và khuôn cột cho Cài đặt bước | TS-EX | Xong — 21/11/2026 (mã + kiểm CoreGia) | 4 | PR: chờ lead mở. CLI 5/5; pytest 241 passed, 0 skipped; độc lập mã 0; UI 12/12; 3 ảnh DEMO. Core nạp màn qua cửa D2 còn chờ; chi tiết cuối sổ |
+| | **Tổng** | | | **33** | |
 
 ## Chờ Anh
 - Không có câu chặn. Q1–Q3 đã áp đề xuất (16/11/2026).
 - Phụ lục A, hai chỗ lệch nhỏ so với mã gốc (nhóm 6 xét cả nhãn dòng; `dai|rong|cao` khớp chứa chuỗi): EX-2 báo kết quả đo, Anh duyệt nếu muốn chặt hơn.
 
 ## Cần Core
+- **TS-EX (21/11/2026) — cửa D2:** nạp `ui/tham_so.js` theo khai dự kiến
+  `KHAI-SDK-2.1.json` vào Cài đặt bước cho hai năng lực; Core cấp bản tham số,
+  danh sách sheet từ tệp mẫu (nếu có), quyền và phiên bản bước. Callback
+  đọc/lưu thuộc màn bước Core, kiểm CAS/kiểu/trần và trả phiên bản mới; đây
+  **chưa là hợp đồng SDK đã phát hành**. Không dùng `.cau_hinh`/`.ngan` engine
+  để cất tham số quy trình. Lỗi 409 giữ nội dung sửa và buộc tải lại. Đã kiểm
+  bằng Core giả (CoreGia), chưa kiểm quyền/CAS trên Core thật.
+- **TS-EX — hướng dẫn ô JSON chung:** SDK 2.2.0 giới hạn `mo_ta` 500 ký tự;
+  đã đưa mô tả rút gọn + mẫu vào ba tham số, bảng từng trường/từng cấp và mẫu
+  đầy đủ trong README gói. Cần Core hiển thị mô tả và cho mở hướng dẫn đầy đủ
+  (cửa D2/D của phiếu UI) cho tới khi nạp được trình soạn. Không nới schema SDK.
 - **EX-6 (19/11):** không phát sinh cửa mới. Đã kiểm bằng Core giả (CoreGia): CLI 5/5, pytest 240 passed, kiểm độc lập mã 0; cài sạch offline từ ZIP thử đạt. EX0-SDK-01 là lịch sử, không còn chặn. Giữ EX0-SDK-02/MIME Core thật. CI Linux 3.11, CMD Windows và gói phát hành từ commit chờ lead/Anh.
 - Không có cửa mới cho engine.
 - **EX-3 (19/11):** không phát sinh yêu cầu Core/SDK; báo cáo Excel và JSON qua `viec.tai_tep_ra`. Giữ EX0-SDK-02 về MIME/Core thật; chưa kiểm với Core thật.
@@ -655,3 +667,32 @@ phát hành từ commit; Anh chạy `e_kiem_excel/tests/KIEM-MAY-SACH.cmd`.
 
 Thời gian thực tế: **0.31 giờ**, từ **19/11/2026 14:48:00 đến 15:06:39**
 (giờ Việt Nam); ước tính trong phiếu **3 giờ**. PR: **chờ lead mở**.
+
+## TS-EX — nghiệm thu 21/11/2026, PR: chờ lead mở
+
+Kết luận: **Đạt phần mã và kiểm TS-EX**; đã kiểm bằng Core giả (CoreGia).
+Core nạp màn và lưu/CAS bước thật qua cửa D2 còn chờ, không phải kết quả
+đã nối Core thật. Không sửa mã Python xử lý việc.
+
+- CLI chuẩn: **5/5 ĐẠT**, mã 0.
+- Pytest toàn engine: **241 passed in 74.31s**, **0 skipped**, mã 0;
+  gồm Node UI và 6 bộ tham số UI xuất chạy qua parser gốc/CoreGia đều XONG.
+- Kiểm độc lập: AST, cây gói, import cô lập, **5/5 DEMO XONG**, mã 0.
+- Node UI riêng: **12/12 pass**, 0 fail/skip; đọc/lưu/lỗi nhập, kiểm đạt/lỗi,
+  tranh chấp hai màn, giữ bản sửa, chống gửi hai lần, round-trip và an toàn.
+- SHA-256 nguyên trạng **25/25** tệp gói khớp; không bytecode trong gói.
+- Ba ảnh DEMO desktop/mobile đã dựng bằng KttCore giả và xem lại; kiểm DOM
+  thật, không tràn ngang tại 1180/390 px. [Ảnh và lệnh tái lập](anh-TS-EX/README.md).
+- Đã chạy công cụ sinh danh mục; nội dung danh mục không đổi do chỉ thêm
+  mô tả tham số. git diff --check mã 0. Không commit/push.
+
+Chỉ 5 tệp mã/khai báo runtime: 3 JS UI, KHAI-SDK-2.1.json và engine.json
+(chỉ bổ sung mo_ta). Không có schema cấu hình, API key, dịch vụ ngoài
+hoặc thao tác quản trị mới; các đường kiểm tương ứng không áp dụng.
+Lệch/tạm: mo_ta bị SDK giới hạn 500 ký tự nên bảng cấu trúc đầy đủ ở README;
+callback D2 là đề xuất chưa phải SDK phát hành. Mục Cần Core đã ghi hai cửa.
+Chưa chạy Linux trong lượt này.
+
+[Báo cáo theo mẫu và kết quả lệnh thật](BAO-CAO-TS-EX.md).
+
+Thời gian thực tế: **0.68 giờ, từ 21/11/2026 21:40:00 đến 21/11/2026 22:21:02 (UTC+7); ước tính trong phiếu: 4 giờ**. PR: **chờ lead mở**.

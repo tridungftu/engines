@@ -1,3 +1,9 @@
+## UI-AI-1 — 21/11/2026 (PR: chờ lead mở; giữ manifest 0.12.0)
+
+- Màn Máy AI theo ảnh mẫu: IP/cổng, trạng thái kiểm, nút kiểm/tìm/cập nhật model; bảng sửa và sắp quy tắc/model dự phòng, Nâng cao, lưu CAS và tải lại khi tranh chấp. Không thêm tùy chọn làm đổi xử lý việc; Cloud giữ trạng thái cũ.
+- Thêm ba hàm quản trị Python độc lập dùng discovery/bảo vệ mạng hiện có; chỉ GET metadata, cập nhật catalog trong Core. Tự tìm tối đa 16 địa chỉ đã biết, không quét subnet, không ghi catalog khi chưa chọn máy. Khai D/E dự kiến tại KHAI-SDK-2.1.json; chưa đăng ký vào manifest/SDK.
+- Schema có nhãn, diễn giải và mẫu tiếng Việt ở mọi cấp; URL chỉ HTTP khớp runtime. Kiểm bằng Node/KttCore giả, CoreGia + Local HTTP giả; ảnh DEMO rộng/hẹp/lỗi kèm tài liệu. Đã kiểm bằng Core giả (CoreGia); CLI chuẩn vẫn có nợ cửa cấu hình DEMO/Local giả từ AI-11.
+
 ## 0.12.0 — 15/11/2026 — AI-12 (PR: chờ lead mở)
 
 - Tương thích nguyên khuôn bốn tác vụ Tra cứu và DC-6: metadata/phân loại/nhãn/điểm/cờ kiểm theo schema; giá trị trích vẫn kiểm bằng chứng, câu trích đúng offset, tiền cùng số và mã tiền. Không import/gọi engine khác.

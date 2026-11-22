@@ -1,10 +1,10 @@
 {
-  "phien_ban": "1.6.1",
+  "phien_ban": "1.6.2",
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 62323,
-      "sha256": "0fd689b90665f5f7c12618b867d4f949ddd3196800e1b2c8b81c6444b0c8cdc1"
+      "bytes": 62552,
+      "sha256": "db0365d984f61e26ddd680935881b79c567086586dc418900ec55d2325542ccc"
     },
     {
       "duong_dan": "KHAI-SDK-2.1.json",
@@ -289,7 +289,7 @@
     {
       "duong_dan": "engine.json",
       "bytes": 9740,
-      "sha256": "06d3f12a488a45b8135ddb5028e8425d32ff773b93a5a23d7c03549eb50ae3ec"
+      "sha256": "d9065a617e8608d45f2bfa4c1898bb29b7cc599dbb7e13029e4b93e2980c4929"
     },
     {
       "duong_dan": "requirements.lock",

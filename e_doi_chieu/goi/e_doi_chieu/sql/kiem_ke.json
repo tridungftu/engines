@@ -1,5 +1,5 @@
 {
-  "phien_ban": "0.9.0",
+  "phien_ban": "0.9.1",
   "tep": [
     {
       "duong_dan": ".gitattributes",
@@ -8,8 +8,8 @@
     },
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 28464,
-      "sha256": "9591b5cc3a79e246d3850636d3660c48329bf63ef5bfd5f37c548c0d6d48bf1f"
+      "bytes": 28716,
+      "sha256": "41a17d385bd0f77aa468194a2001ba591ab067cb9180e381bdd08bbd932dff4f"
     },
     {
       "duong_dan": "KHAI-SDK-2.1.json",
@@ -149,7 +149,7 @@
     {
       "duong_dan": "engine.json",
       "bytes": 9968,
-      "sha256": "7a08e144ea442c148c38d37663005c0eba397b1f549a156e123fc5b09703d139"
+      "sha256": "b162ee47f38a67d581b6c60d4896ddb0ad5a846e9112fad75ab5c432187b6045"
     },
     {
       "duong_dan": "ho_so_doi_chieu.schema.json",

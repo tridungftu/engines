@@ -1,10 +1,10 @@
 {
-  "phien_ban": "0.12.0",
+  "phien_ban": "0.12.1",
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 11809,
-      "sha256": "2033e0a785849c73894e6f9e3b20ba5cb56bef4d19f70b359d7774fe287c6e9f"
+      "bytes": 12047,
+      "sha256": "c20a40b465636858542202478e92411ce04c4076e6f30b04036bc6adaa3b7b44"
     },
     {
       "duong_dan": "KHAI-SDK-2.1.json",
@@ -14,7 +14,7 @@
     {
       "duong_dan": "NGUON.md",
       "bytes": 16532,
-      "sha256": "590aadd71a470500cf06e204dcc70e2f99310461f37d37cf18c3fc88d269154f"
+      "sha256": "2afd7234fea669f98f3f27c7659b041569f6fcfea098c2c933a719d874e51db6"
     },
     {
       "duong_dan": "README.md",
@@ -129,7 +129,7 @@
     {
       "duong_dan": "engine.json",
       "bytes": 7063,
-      "sha256": "cb5073b0e4423cddee82d9c7ef78b1c6fc0a2b518246cae46bb66cf533d1343f"
+      "sha256": "f808e9ca604935a505838701fe56374623506a993efdcff15fda7d740377358f"
     },
     {
       "duong_dan": "requirements.lock",

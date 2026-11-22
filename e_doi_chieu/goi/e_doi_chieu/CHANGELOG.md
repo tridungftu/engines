@@ -1,5 +1,9 @@
 # Thay đổi
 
+## 0.9.1 — 22/11/2026
+
+- UI-DC, TS-DC: màn Cơ bản/Nâng cao, bỏ xưng hô, trình soạn bộ quy tắc. Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.
+
 ## DC-13 — 15/11/2026 · công cụ ngoài runtime, 0.9.0 chưa phát hành
 
 - Công cụ đo DEMO và wrapper CMD ASCII ngoài gói, chạy khô mặc định;

@@ -1,5 +1,9 @@
 # Thay đổi
 
+## 0.5.1 — 22/11/2026
+
+- UI-TX, TS-TX: màn ngân sách token và thành phần soạn bộ tham số. Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.
+
 ## 0.5.0 — 15/11/2026, TX-7; PR: chờ lead mở
 
 - Chuyển SDK 2.2.0, khai schema cấu hình trong manifest; bỏ bảng cấu hình

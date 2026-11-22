@@ -110,10 +110,10 @@ Hai tệp mẫu ngăn trong gói không được sửa, kể cả để đổi x
 
 | Tệp | SHA-256 |
 |---|---|
-| `CHANGELOG.md` | `4b50a6fed8e77fc9b89e914d3390444419c7118c0cfc4465dffa5f289a323388` |
+| `CHANGELOG.md` | `4bf29d813f9d3e0d1e17b077f86996367397faada9e94d194543b98c673f62ad` |
 
 | `cau_hinh.schema.json` | `d169a619f7968469ddc25422e793b9e4b5ec83caa420b4a8f8fdc4eb1e6ba9de` |
-| `CHANGELOG.md` | `4b50a6fed8e77fc9b89e914d3390444419c7118c0cfc4465dffa5f289a323388` |
+| `CHANGELOG.md` | `4bf29d813f9d3e0d1e17b077f86996367397faada9e94d194543b98c673f62ad` |
 | `contract/van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
 | `contract/yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
 | `demo/DEMO-hop-dong.docx` | `22030fe7fa1a65384e696b3fdfdd9506cca22fac7f268000d579d208cb8ec471` |
@@ -127,7 +127,7 @@ Hai tệp mẫu ngăn trong gói không được sửa, kể cả để đổi x
 | `e_trich_xuat/LUU-TRU/TX-7/ngan.py` | `2a2d7468e034717c93e15385833209026c56e59b6007e23c538d4a31125947e0` |
 | `e_trich_xuat/tham_so.py` | `2106cece109ca86272e94717abd6b6e6e0489e95c0ac49f33c0f71fa617cbc12` |
 | `e_trich_xuat/tich_hop.py` | `26fa7299a3a2d992bfdeb44536031a367b06f1ad20b6575818332edbb2463d1a` |
-| `engine.json` | `328a94823368333bbd651a45fbd780632fc0c36efff1fe39856935778349afeb` |
+| `engine.json` | `3b7cd8b28479399512a6b268e8e3f2eae9d2d0e66b73f91fa84b71775d91f219` |
 | `e_trich_xuat/LUU-TRU/TX-7/KHAI-SDK-2.1.json` | `9dc34efb03293ab8f314d4b7610c60bff5dc231835cb733c4add06bbc4741619` |
 | `README.md` | `ac78369cad8096f77b0e6f2990d2ba70bc0a206c8d0f461301cb2fc4c1d14bf7` |
 | `requirements.lock` | `87980b816a4c5fb46594b23da7ffb2b6a68c7a028b640850f0c659ba7fca42a4` |
@@ -291,10 +291,10 @@ Chi tiết review tại `../../docs/TX-3-REVIEW.md`; bằng chứng/lệnh/giờ
 | `docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl` | `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` |
 | `e_trich_xuat/cong-cu/README.md` | `48369604533e24aedafae18b16266622a370ca94bc297ffd6f3d1fd301fd6370` |
 | `e_trich_xuat/docs/CHANGELOG.md` | `d8e674d57e63b9af547b2b6fcea6aec1786e4fbd972ec5fa03610e4e4cf125a3` |
-| `CHANGELOG.md` | `4b50a6fed8e77fc9b89e914d3390444419c7118c0cfc4465dffa5f289a323388` |
+| `CHANGELOG.md` | `4bf29d813f9d3e0d1e17b077f86996367397faada9e94d194543b98c673f62ad` |
 
 | `cau_hinh.schema.json` | `d169a619f7968469ddc25422e793b9e4b5ec83caa420b4a8f8fdc4eb1e6ba9de` |
-| `CHANGELOG.md` | `4b50a6fed8e77fc9b89e914d3390444419c7118c0cfc4465dffa5f289a323388` |
+| `CHANGELOG.md` | `4bf29d813f9d3e0d1e17b077f86996367397faada9e94d194543b98c673f62ad` |
 | `contract/bang_trich_xuat.schema.json` | `f36314d7e3958281966a5c4c24ca3cd9a01df507d7a07d0b96a0aebafe4ea82f` |
 | `contract/tra_loi_ai.schema.json` | `5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f` |
 | `contract/van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
@@ -315,7 +315,7 @@ Chi tiết review tại `../../docs/TX-3-REVIEW.md`; bằng chứng/lệnh/giờ
 | `e_trich_xuat/tich_hop.py` | `26fa7299a3a2d992bfdeb44536031a367b06f1ad20b6575818332edbb2463d1a` |
 | `e_trich_xuat/xlsx_mini.py` | `b139d90d6adb186d658ad00f7970f7647f351178a035459b0913cf4298edc5e3` |
 | `e_trich_xuat/xuat.py` | `a4cc1ff456b1235ff01ecd010f588eb89e04ce2dd6eefa7b6fc856e8dc0f431c` |
-| `engine.json` | `328a94823368333bbd651a45fbd780632fc0c36efff1fe39856935778349afeb` |
+| `engine.json` | `3b7cd8b28479399512a6b268e8e3f2eae9d2d0e66b73f91fa84b71775d91f219` |
 | `README.md` | `ac78369cad8096f77b0e6f2990d2ba70bc0a206c8d0f461301cb2fc4c1d14bf7` |
 | `requirements.lock` | `87980b816a4c5fb46594b23da7ffb2b6a68c7a028b640850f0c659ba7fca42a4` |
 | `ui/cau_hinh.js` | `dc89c9368b82cadf5753474689a8084004b584cee49cc9e61e9ecb60614d0ca5` |

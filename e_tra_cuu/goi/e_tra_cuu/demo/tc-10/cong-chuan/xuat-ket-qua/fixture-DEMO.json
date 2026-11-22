@@ -19,7 +19,7 @@
         "bam_ho_so": "sha256:48b90bd2e7a27d319e4016ba5e9ecf636ae8a8235b461ed11eba4af559e59b23",
         "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
         "bam_danh_muc": null,
-        "phien_ban_engine": "e_tra_cuu 0.2.0",
+        "phien_ban_engine": "e_tra_cuu 0.2.1",
         "tom_tat": {
           "trang_thai": "co_can_cu",
           "so_doan": null,
@@ -61,7 +61,7 @@
         "bam_ho_so": "sha256:48b90bd2e7a27d319e4016ba5e9ecf636ae8a8235b461ed11eba4af559e59b23",
         "bam_cau_hinh": "sha256:34a31a99f66842c404825bf39bf2d02fd531ca22eaf9b404d40258fb2bff1eaa",
         "bam_danh_muc": null,
-        "phien_ban_engine": "e_tra_cuu 0.2.0",
+        "phien_ban_engine": "e_tra_cuu 0.2.1",
         "tom_tat": {
           "trang_thai": "co_can_cu",
           "so_doan": null,
@@ -270,7 +270,7 @@
         "mime": "application/json",
         "kich_thuoc": 5583
       },
-      "bam": "sha256:01c50c62df45d0ba76e74342345b3ccf9a75d40abb2b4fcd03f2ca2340cb860b",
+      "bam": "sha256:bda527d944b36549e622d80edecc7923db330e779956d553856eae0a59499c14",
       "duong_dan": "demo/tc-10/cong-chuan/xuat-ket-qua/tep-13.json"
     }
   ],

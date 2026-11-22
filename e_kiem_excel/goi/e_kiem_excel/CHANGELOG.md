@@ -1,5 +1,15 @@
 # Thay đổi
 
+## 0.1.3 — 22/11/2026
+
+- SDK25: dùng cửa công khai SDK, bỏ lớp bọc nhật ký/MIME; chấp nhận câu lỗi
+  chuẩn đã lọc của SDK. SDK 2.5.0 vẫn yêu cầu MIME `.xlsm` viết thường;
+  ghi Cần Core chuẩn hóa trước khi giao việc. Không đổi nghiệp vụ.
+- Công cụ kiểm độc lập đọc dependency từ lock mới; cài sạch và CI dùng SDK
+  2.5.0 cùng wheel đi kèm. Thêm tự kiểm ASCII/khuôn lock, tên SDK bị cấm,
+  đủ wheel đúng bản/SHA-256; giữ ba phiên bản thư viện đã ghim.
+- Kèm thư viện để Core tự cài ngoại tuyến (phiếu lead Core 21/11, CĐ-50 mục 6): khai `phu_thuoc_python`, `requirements.lock` mỗi dòng một thư viện có SHA-256, đủ phụ thuộc gián tiếp, không còn dòng SDK; thư mục `wheels/` có đúng một wheel CPython 3.13 win_amd64 hoặc thuần Python cho mỗi dòng. Khoảng SDK nâng lên `>=2.4.0 <3.0.0` vì khóa này có từ SDK 2.4.0. Không đổi xử lý việc.
+
 ## 0.1.2 — 22/11/2026
 
 - TS-EX: trình soạn Cài đặt bước. Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.

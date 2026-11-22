@@ -6,14 +6,17 @@ from pathlib import Path
 import subprocess
 import sys
 
+from kiem_bam_goi import doc_lock
+
 GOI = Path(__file__).resolve().parents[1] / 'goi' / 'e_kiem_excel'
-CHO_PHEP = {'e_kiem_excel','kho_tri_thuc_sdk','openpyxl','et_xmlfile','defusedxml'}
 TEN_CAM = {'SDKEngine','Bootstrap','kenh_engine','__import__','eval','exec','compile','import_module'}
 MODULE_CAM = {'importlib','pickle','subprocess','socket','sqlite3','urllib','sys','builtins','runpy','site'}
 
 
 def kiem_doc_lap(goi=GOI):
     loi=[]
+    cho_phep = {'e_kiem_excel', 'kho_tri_thuc_sdk'} | {
+        ten.replace('-', '_') for ten in doc_lock(goi)}
     for tep in Path(goi).rglob('*'):
         ten=tep.relative_to(goi).as_posix()
         if tep.is_symlink() or (hasattr(tep,'is_junction') and tep.is_junction()):
@@ -38,7 +41,7 @@ def kiem_doc_lap(goi=GOI):
                 modules=[nut.module or '']
             for module in modules:
                 goc=module.split('.')[0]
-                if goc in MODULE_CAM or goc not in sys.stdlib_module_names|CHO_PHEP:
+                if goc in MODULE_CAM or goc not in sys.stdlib_module_names|cho_phep:
                     loi.append(f'{ten}:{nut.lineno}: import bị cấm hoặc chưa ghim.')
             # re.compile biên dịch mẫu regex cố định của mã gốc, không chạy mã Python.
             la_regex = (isinstance(nut,ast.Attribute) and nut.attr=='compile'
@@ -53,7 +56,8 @@ def kiem_doc_lap(goi=GOI):
 
 
 def kiem_tien_trinh_sach(goi=GOI):
-    modules=['kho_tri_thuc_sdk','openpyxl','et_xmlfile','defusedxml']
+    ghim = {ten: ban for ten, (ban, _) in doc_lock(goi).items()}
+    modules=['kho_tri_thuc_sdk', *sorted(ten.replace('-', '_') for ten in ghim)]
     origins=[]
     for ten in modules:
         spec=importlib.util.find_spec(ten)
@@ -64,7 +68,8 @@ def kiem_tien_trinh_sach(goi=GOI):
 import sys
 sys.dont_write_bytecode=True
 sys.path[:0]=sys.argv[1:]
-allowed=sys.stdlib_module_names|{'e_kiem_excel','kho_tri_thuc_sdk','openpyxl','et_xmlfile','defusedxml'}
+ghim=GHIM_THU_VIEN
+allowed=sys.stdlib_module_names|{'e_kiem_excel','kho_tri_thuc_sdk'}|{ten.replace('-','_') for ten in ghim}
 def audit(event,args):
     if event=='import' and args[0].split('.')[0] not in allowed:
         raise ModuleNotFoundError('Import ngoài danh sách cho phép.',name=args[0])
@@ -72,9 +77,8 @@ def audit(event,args):
         raise RuntimeError('Cấm mạng/tiến trình ngoài trong engine.')
 sys.addaudithook(audit)
 import kho_tri_thuc_sdk, openpyxl, defusedxml, et_xmlfile
-assert kho_tri_thuc_sdk.__version__=='2.2.0'
-assert openpyxl.__version__=='3.1.5'
-assert defusedxml.__version__=='0.7.1'
+from importlib.metadata import version
+assert all(version(ten)==ban for ten,ban in ghim.items())
 from openpyxl.xml import DEFUSEDXML
 assert DEFUSEDXML
 from e_kiem_excel.chay import app
@@ -86,7 +90,7 @@ assert kq[2]['ket_qua']['truong']['so_dong']==30
 assert all(k['ket_qua']['truong']['tep_bao_cao']['mime'].endswith('spreadsheetml.sheet') for k in kq[:2])
 assert not any(n=='kho_tri_thuc' or n.startswith('kho_tri_thuc.') for n in sys.modules)
 print('EX_DOC_LAP_DAT')
-'''
+'''.replace('GHIM_THU_VIEN', repr(ghim))
     try:
         run=subprocess.run([sys.executable,'-I','-B','-S','-c',code,str(Path(goi).resolve()),*sorted(set(origins))],
                            capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=30,cwd=goi)

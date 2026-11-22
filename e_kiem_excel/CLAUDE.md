@@ -11,7 +11,7 @@ Người đặt yêu cầu: **Anh Dũng** (CFO).
 Bộ nhóm dữ liệu gốc và khuôn cột do module truyền qua Cài đặt bước. Engine không ngăn, không cấu hình, không mạng, không lưu gì trên máy.
 
 ## 0. Đọc trước khi làm
-1. `..\AGENTS.md`: quy tắc cứng, môi trường SDK 2.2.0, điều kiện đạt từng lát.
+1. `..\AGENTS.md`: quy tắc cứng, điều kiện đạt từng lát; lát SDK25 kiểm bằng SDK 2.5.0, khi chạy SDK do Core cấp.
 2. `docs\PHIEU-ENGINE-e_kiem_excel.md`: phiếu engine (đã duyệt tiến hành 16/11/2026).
 3. `docs\GIAO-CODEX-e_kiem_excel.md`: lát và lệnh giao.
 4. `docs\VIEC.md`: danh sách việc duy nhất.

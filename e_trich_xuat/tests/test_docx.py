@@ -16,6 +16,7 @@ from kho_tri_thuc_sdk.thu import CoreGia
 
 from e_trich_xuat import docx
 from e_trich_xuat.chay import tao_app
+from cong_sdk_cong_khai import duong_truyen_thu
 from mau_docx import CT, NUM, REL, W_NS, bang_demo, goi_docx, mau_thuong, mau_track, o, p, so
 
 
@@ -193,7 +194,8 @@ def test_dtd_va_entity_bi_chan(encoding):
 
 def test_sai_mime_va_sai_duoi_khong_duoc_doc_nham():
     kq, _ = chay(mau_thuong(), mime="application/pdf")
-    assert kq["loi"] == {"ma": "TEP_KHONG_HO_TRO", "thong_diep": "Chỉ nhận tệp Word định dạng DOCX.", "thu_lai_duoc": False}
+    assert kq["loi"] == {"ma": "LOAI_TEP_KHONG_NHAN", "thong_diep":
+        "Loại tệp này không được bước này nhận (chỉ nhận: " + docx.MIME_DOCX + ").", "thu_lai_duoc": False}
     # MIME là nguồn quyết định, tên tệp không được dùng để suy đoán dữ liệu.
     assert chay(mau_thuong(), sua_tep={"ten": "DEMO.pdf"})[0]["trang_thai"] == "XONG"
 
@@ -209,7 +211,9 @@ def test_tran_20_mib_va_kich_thuoc_thuc(loai):
     kq, _ = chay(raw, sua_tep=sua)
     ma = "DOCX_KHONG_HOP_LE" if loai == "khai_bao_thieu" else "VUOT_GIOI_HAN"
     assert kq["loi"]["ma"] == ma
-    assert kq["loi"]["thong_diep"] == (docx.CAU_DOCX_LOI if ma == "DOCX_KHONG_HOP_LE" else docx.CAU_GIOI_HAN)
+    cau = ("Tệp lớn hơn 20 MiB, bước này không nhận." if loai == "khai_bao"
+           else docx.CAU_DOCX_LOI if ma == "DOCX_KHONG_HOP_LE" else "Tệp lớn hơn giới hạn bước này nhận.")
+    assert kq["loi"]["thong_diep"] == cau
 
 
 def test_xml_zip_vuot_tran_bi_tu_choi_truoc_mo_xml(monkeypatch):
@@ -235,14 +239,15 @@ def test_moi_tran_deu_tu_choi_khong_cat_ngam(monkeypatch, gioi_han, gia_tri):
 def test_huy_giua_doc_xml_va_cac_chang_khong_nop_ket_qua(monkeypatch):
     for moc in [5, 25, 45, 65, 100]:
         core = CoreGia()
-        goc = core._tien_do
+        dt = duong_truyen_thu(core, monkeypatch)
+        goc = dt.tien_do
 
-        def bao(ma, viec, phan_tram, cau):
+        def bao(viec, phan_tram, cau):
             if phan_tram == moc:
                 core.huy(viec)
-            return goc(ma, viec, phan_tram, cau)
+            return goc(viec, phan_tram, cau)
 
-        monkeypatch.setattr(core, "_tien_do", bao)
+        monkeypatch.setattr(dt, "tien_do", bao)
         kq, _ = chay(mau_thuong(), core=core)
         assert kq["trang_thai"] == "HUY"
         assert core.so_lan_ghi["ket_qua"] == 0
@@ -294,10 +299,13 @@ def test_canh_bao_vung_khong_doc_va_khong_gia_ocr():
     assert kq["trang"] == []
 
 
-def test_log_sdk_khong_lo_traceback_noi_dung_ho_so(capsys):
-    app = tao_app()
+def test_log_sdk_khong_lo_traceback_noi_dung_ho_so(monkeypatch, capsys):
+    bi_mat = "DEMO nội dung tài liệu không được ghi log"
+    def hong(*a, **k):
+        raise RuntimeError(bi_mat)
+    monkeypatch.setattr(docx, "doc_docx", hong)
     capsys.readouterr()
-    app._ghi("Lỗi khi xử lý việc DEMO:\nTraceback (most recent call last):\nDEMO nội dung tài liệu")
+    kq, _ = chay(mau_thuong())
     err = capsys.readouterr().err
-    assert "nội dung tài liệu" not in err
-    assert "ENGINE_LOI_XU_LY" in err
+    assert bi_mat not in err + str(kq) and "Traceback" not in err
+    assert kq["loi"]["ma"] == "ENGINE_LOI_XU_LY" and "RuntimeError" in err

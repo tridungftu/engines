@@ -1,6 +1,89 @@
 # VIỆC — danh sách việc duy nhất của project `e_trich_xuat`
 
-## TX-7 — chuyển SDK 2.2.0 (15/11/2026)
+## SDK25 — chạy bằng SDK Core cấp và wheel ngoại tuyến (22/11/2026)
+
+**Trạng thái: đã sửa và kiểm xong phần engine; chưa đạt toàn bộ do C-TX-06. PR: chờ lead mở.**
+Thời gian thực tế: **18:29–19:08:59 ngày 22/11/2026** (UTC+07),
+khoảng **0.67 giờ**; ước tính phiếu **2–4 giờ**.
+Bản gói lead chuẩn bị: **0.5.2**, khoảng SDK **>=2.4.0 <3.0.0**;
+không đổi manifest, lock hoặc wheel so với phần lead đã staged.
+
+- Bỏ hoàn toàn khóa phiên bản/chữ ký và lớp ghi đè nội bộ SDK; dùng
+  `Engine.tu_khai_bao`. Không monkeypatch hoặc bọc nội bộ khi chạy engine.
+  Cấu hình vẫn lấy bản chụp `viec.cau_hinh`, nghiệp vụ giữ nguyên.
+- Test log/lỗi dùng vòng CoreGia thật; test hủy/mất ACK/lỗi tệp chuyển sang
+  `DuongTruyen` công khai. Những ca đo trần byte dùng phiếu test riêng,
+  không sửa cấu trúc nội bộ app. Kiểm import lấy thư viện đã ghim từ lock/wheel.
+- Tự kiểm gói bằng `tests/phu_thuoc_python.py` và `test_phu_thuoc_python.py`:
+  ASCII, không nối dòng/chú thích giữa dòng/SDK, đủ đúng một wheel mỗi thư viện,
+  khớp tên/bản/băm/metadata, không wheel thừa, sdist hoặc thư mục con.
+- Công cụ venv mới cài SDK 2.5.0 đã kiểm SHA riêng; cài đủ 9 thư viện bằng
+  pip `--isolated --no-index --find-links ... --require-hashes --only-binary :all: --no-deps --target ...`
+  vào khu `.thu-vien`, chạy con bằng `-I -B -X utf8`, không pytest/user-site/PYTHONPATH.
+  `.cmd` giữ ASCII/CRLF; `.sh` dùng cùng công cụ Python, có kho Linux tùy chọn.
+- Không có workflow CI riêng của Trích xuất trong `.github/workflows/`.
+  Không sửa workflow engine khác hoặc `_chung/**`. Không tải mạng, thêm thư viện,
+  sửa nguồn cũ, nghiệp vụ, SDK/Core; không commit/push.
+
+### Cần Core — SDK25
+
+- **C-TX-05:** SDK 2.5.0 đã lọc log nhưng chưa có hook công khai đổi lỗi trước
+  handler. Chấp nhận `LOAI_TEP_KHONG_NHAN` và câu lỗi MIME/kích thước/ký tự chuẩn
+  SDK; lỗi do lõi engine phát ra vẫn giữ câu nghiệp vụ. Muốn tùy biến cần cửa
+  công khai từ SDK. Wrapper và chặn phiên bản ở TX-7 lịch sử đã bỏ.
+- **C-TX-06 tiếp tục chặn nghiệm thu:** đã đối chiếu `CoreGia.chay_thu_demo`
+  SDK 2.5.0 và chạy CLI trong cả venv kiểm lẫn venv cô lập. SDK chỉ nạp
+  `tep_demo` ở đầu vào loại `tep`, không nạp hồ sơ phụ tham chiếu trong
+  `tra_loi_ai`. Mẫu hậu kiểm vẫn `DANG_CHAY` sau 404/mất lease; CLI **4/5**, exit **1**.
+  Cần Core/SDK bổ sung cơ chế chung khai tệp phụ và ánh xạ tham chiếu/băm
+  hoặc DEMO theo chuỗi. Giữ đủ 5 mẫu, không đổi ID theo thứ tự hoặc thêm
+  nhánh giả trong handler. Không sửa SDK/Core vì ngoài phạm vi được giao.
+- C-TX-07/08 và quyền/ghim/vòng đời tệp C-TX-01/02/03 giữ giới hạn đã ghi trước.
+
+### Kiểm SDK25 — đã kiểm bằng Core giả (CoreGia)
+
+- Lượt đầu: 11 lỗi thu thập do chặn SDK; sau sửa: 515 passed/2 failed
+  (hai câu lỗi chuẩn SDK), đã sửa và kiểm lại nhóm liên quan: **5 passed**.
+- Venv cô lập Windows x64/Python 3.13.14: SDK 2.5.0 và đủ **9/9** thư viện
+  cài offline vào khu riêng; kiểm phiên bản/vị trí cài, không pytest/system-site-packages đạt.
+  Kiểm độc lập và T3/N1 chạy khô exit 0. CLI trong tiến trình `-I` khởi động
+  bình thường, **4/5 ĐẠT, exit 1**, vì C-TX-06.
+- Lượt cuối, tất cả dùng `.venv` Python **3.13.14**, SDK **2.5.0**; Node **24.18.0**:
+
+```text
+.venv/Scripts/python -B -X utf8 -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat
+→ 4/5 ĐẠT, 1 LỖI (hậu kiểm: DANG_CHAY); exit 1, C-TX-06.
+.venv/Scripts/python -B -X utf8 -m pytest e_trich_xuat/tests -q --basetemp=.venv/pytest-sdk25-final
+→ 518 passed, 0 skipped trong 71,00 giây; exit 0.
+.venv/Scripts/python -B -X utf8 e_trich_xuat/tests/kiem_doc_lap.py
+→ [ĐẠT] Gói độc lập; exit 0.
+Node --test hai tệp tests/ui/*.test.mjs (PYTHON trỏ .venv, khởi chạy qua Python .venv)
+→ 18 passed, 0 skipped; exit 0.
+.venv/Scripts/python -B -X utf8 e_trich_xuat/tests/kiem_may_sach.py --tao-venv
+→ cài SDK 2.5.0 + 9/9 thư viện offline vào khu riêng đạt;
+  độc lập/T3/N1 chạy khô đạt; CLI 4/5 và exit 1 do C-TX-06.
+bash -n e_trich_xuat/tests/kiem_may_sach.sh
+→ exit 0 (chỉ cú pháp shell, chưa chạy Linux).
+```
+
+- Chẩn đoán riêng trong chính venv cô lập, chỉ SDK + thư mục cài lock:
+  nạp hồ sơ bằng `CoreGia.them_tep` qua helper fixture công khai rồi chạy
+  `chay_thu_demo` → **5/5 XONG**. Đây là kiểm fixture để khoanh C-TX-06,
+  **không thay kết quả CLI chuẩn 4/5**.
+- `git diff --check` đạt; `.cmd` ASCII/CRLF; không còn gọi nội bộ SDK
+  trong `goi/` hoặc test. `git grep 2.2.0` chỉ còn CHANGELOG/tài liệu lịch sử.
+  Manifest/lock/wheels không đổi so với phần lead đã staged.
+- Bảng băm NGUON cập nhật sau cùng theo đúng bộ kiểm `test_nguon_tx6.py`
+  (văn bản CRLF→LF, nhị phân nguyên byte). Không có SQL/kiem_ke hoặc bam-goi.json
+  ở engine này. Không thay băm nguồn cũ để làm đạt.
+- Linux/CI/Core thật/máy OS sạch chưa kiểm; không gọi Local AI thật, **0 Cloud**.
+  Lock được giao hiện chỉ có hash Windows cho cffi/cryptography/rpds-py;
+  chưa được cấp kho wheel/hash Linux tương ứng trong gói giao. Không tải hoặc tự đổi bộ wheel/lock.
+
+---
+
+
+## Lịch sử TX-7 — chuyển SDK 2.2.0 (15/11/2026)
 
 **Trạng thái: đã chuyển mã, chưa đạt nghiệm thu do C-TX-06. PR: chờ lead mở.**
 Đây là lát chuyển SDK theo `_chung/docs/CHUYEN-SDK-2.2.md` §2/§4,

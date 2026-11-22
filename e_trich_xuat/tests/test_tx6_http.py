@@ -23,11 +23,7 @@ def test_app_chay_stdin_http_loopback(ca, monkeypatch):
         core.gay_mat_xac_nhan("ket_qua")
         core.gay_mat_xac_nhan("ket_thuc")
     else:
-        bao = core._tien_do
-        def huy(ma, viec_id, pt, cau):
-            core.huy(viec_id)
-            return bao(ma, viec_id, pt, cau)
-        monkeypatch.setattr(core, "_tien_do", huy)
+        core.huy(viec)  # Cờ hủy công khai đi qua HTTP; hủy giữa chặng kiểm riêng qua DuongTruyen.
     khoa = secrets.token_hex(24)  # Khóa giả mỗi phiên, không nằm trong mã/artifact.
     with MayChuGia(core, {"e_trich_xuat": khoa}) as may:
         env = {k: v for k, v in os.environ.items() if not k.startswith("KTT_")}

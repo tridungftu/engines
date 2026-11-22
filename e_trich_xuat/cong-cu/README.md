@@ -1,6 +1,6 @@
-> TX-7 (15/11/2026): công cụ dùng SDK 2.2.0 và `CoreGia.dat_cau_hinh`.
-> `.cmd` cài đủ lock runtime offline; đặt `TX7_KHO_WHEEL` tới kho wheel
-> phù hợp nền tảng (mặc định `.venv/offline-wheels` nếu đã chuẩn bị).
+> SDK25 (22/11/2026): công cụ dùng SDK 2.5.0 và `CoreGia.dat_cau_hinh`.
+> Hai `.cmd` cài wheel SDK nội bộ và thư viện từ `goi/e_trich_xuat/wheels/`
+> theo lock có SHA-256, hoàn toàn offline. Không tải hoặc đổi phiên bản thư viện.
 > Các biên bản TX-6 cũ bên dưới là lịch sử; không chứng nhận máy/model thật.
 
 # Công cụ TX-6 — T3 và N1, ngoài runtime engine
@@ -20,9 +20,9 @@ e_trich_xuat\cong-cu\DO-SUC-CHUA-MODEL.cmd
 e_trich_xuat\cong-cu\CHAY-N1-MOT-LAN.cmd
 ```
 
-Hai `.cmd` ASCII tự tạo `.venv` nếu thiếu, cài wheel SDK 2.2.0 offline bằng
+Hai `.cmd` ASCII tự tạo `.venv` nếu thiếu, cài wheel SDK 2.5.0 offline bằng
 `--no-index --no-deps`. Nếu venv đã có nhưng thiếu SDK thì cài wheel theo
-AGENTS.md trước. Không cần thư viện runtime ngoài SDK/thư viện chuẩn.
+hướng dẫn SDK25 trước. Thư viện ngoài cài từ wheel và lock của gói, có `--require-hashes --only-binary :all: --no-deps`.
 Trên Linux gọi cùng hai tệp `.py` bằng Python trong venv, với `-B`.
 
 Thêm `--dau-ra <artifact.json>` để xuất biên bản; không ghi đè tệp đã có.
@@ -144,12 +144,13 @@ chỉ chứng minh đường ống giả, không chứng nhận quyền/lưu gi�
 ## Kiểm môi trường
 
 `tests/kiem_may_sach.cmd` hoặc `sh tests/kiem_may_sach.sh` tạo venv mới,
-không `--system-site-packages`, cài SDK offline, kiểm băm wheel/schema/mẫu
-ngăn, độc lập, DEMO có ngăn và hai công cụ khô. Chạy CLI chuẩn riêng và giữ
-đúng lỗi C-TX-04/C-TX-06; kiểm chuẩn chưa đạt không được đổi tên thành đạt.
-Không cài pytest/jsonschema vào venv runtime này. Bộ pytest/UI chạy riêng
+không `--system-site-packages`, cài SDK 2.5.0 đã kiểm SHA vào venv. Thư viện
+được cài bằng lệnh offline của Core vào khu `.thu-vien` riêng qua lock có hash,
+không có SDK trong lock. Tiến trình kiểm dùng `-I` để loại PYTHONPATH/user-site;
+kiểm độc lập, hai công cụ khô và CLI chuẩn. CLI thiếu hồ sơ phụ vẫn trả
+exit 1 (C-TX-06); cấu hình mặc định đã có từ SDK. Không cài pytest vào venv runtime. Bộ pytest/UI chạy riêng
 trong venv kiểm theo `tests/requirements.lock`. Kiểm venv mới không đồng
-nghĩa máy Windows OS sạch. Linux/CI phải có lần chạy thật mới ghi đã kiểm.
+nghĩa máy Windows OS sạch. Linux/CI dùng `TX25_KHO_WHEEL` hoặc `--kho-wheel` với kho wheel Linux và hash tương ứng trong lock; chỉ ghi đã kiểm sau lần chạy thật.
 
 Exit: 0 cho chạy khô hoàn tất hoặc phạm vi thật đủ điều kiện; 1 cho đo/kiểm
 không đạt; 2 cho thiếu số/nguồn/cấu hình/biên bản/chưa rõ. Artifact giữ trạng

@@ -1,4 +1,4 @@
-"""TX-3 hậu kiểm: chỉ DEMO, CoreGia SDK 2.2.0, 0 Cloud/model thật."""
+"""TX-3 hậu kiểm: chỉ DEMO, CoreGia SDK 2.5.0, 0 Cloud/model thật."""
 
 from copy import deepcopy
 import hashlib
@@ -287,12 +287,14 @@ def test_doi_bo_dang_kich_hoat_khong_anh_huong_ho_so_cu():
 @pytest.mark.parametrize("moc", [20, 100])
 def test_hau_kiem_huy_va_mat_ack(monkeypatch, moc):
     core, app, req = chuan_bi_demo()
-    bao = core._tien_do
-    def huy(ma, viec, pt, cau):
+    from cong_sdk_cong_khai import duong_truyen_thu
+    dt = duong_truyen_thu(core, monkeypatch)
+    bao = dt.tien_do
+    def huy(viec, pt, cau):
         if pt == moc:
             core.huy(viec)
-        return bao(ma, viec, pt, cau)
-    monkeypatch.setattr(core, "_tien_do", huy)
+        return bao(viec, pt, cau)
+    monkeypatch.setattr(dt, "tien_do", huy)
     truoc = core.so_lan_ghi["ket_qua"]
     kq = core.chay_thu(app, "trich.hau_kiem@1", ai_demo(req))
     assert kq["trang_thai"] == "HUY" and kq["ket_qua"] is None

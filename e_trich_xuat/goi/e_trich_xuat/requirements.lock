@@ -1,11 +1,13 @@
-# Python >= 3.11; SDK và phụ thuộc runtime, cài offline --no-index --no-deps.
-kho_tri_thuc_sdk==2.2.0
-cryptography==49.0.0
-cffi==2.0.0
-pycparser==3.0
-jsonschema==4.26.0
-attrs==26.1.0
-jsonschema-specifications==2025.9.1
-referencing==0.37.0
-rpds-py==2026.6.3
-typing_extensions==4.15.0
+# Thu vien chay cua e_trich_xuat (gom phu thuoc cua SDK); CPython 3.13 win_amd64.
+# Moi dong: ten==phien_ban va SHA-256 cua wheel; du ca phu thuoc gian tiep.
+# Hash them (neu co) la wheel Linux x86_64 cho CI; Core chi cai wheel trong wheels/.
+# SDK do Core cap, khong nam trong tep nay.
+cryptography==49.0.0 --hash=sha256:e5dfc1e64de5677cec922ffa8da89c546d0415bf6efdf081842e5d44c84e1f0e
+cffi==2.0.0 --hash=sha256:19f705ada2530c1167abacb171925dd886168931e0a7b78f5bffcae5c6b5be75
+pycparser==3.0 --hash=sha256:b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992
+jsonschema==4.26.0 --hash=sha256:d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce
+attrs==26.1.0 --hash=sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309
+jsonschema-specifications==2025.9.1 --hash=sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe
+referencing==0.37.0 --hash=sha256:381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231
+rpds-py==2026.6.3 --hash=sha256:9250a9a0a6fd4648b3f868da8d91a4c52b5811a62df58e753d50ae4454a36f80
+typing_extensions==4.15.0 --hash=sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548

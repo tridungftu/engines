@@ -1,50 +1,49 @@
-"""Khóa SDK 2.2.0 và kiểm log an toàn qua đầy đủ vòng CoreGia."""
-
-from inspect import signature
+"""Kiểm cửa công khai và log an toàn qua đầy đủ vòng CoreGia."""
 
 import pytest
-import kho_tri_thuc_sdk
-from kho_tri_thuc_sdk.engine import Engine
+from kho_tri_thuc_sdk.engine import Engine, LoiNghiepVu
 from kho_tri_thuc_sdk.thu import CoreGia
 
-from e_trich_xuat.chay import tao_app
+from e_trich_xuat.chay import GOC_GOI, tao_app
 
 
-def test_chot_sdk_va_chu_ky_hai_hook_noi_bo():
-    assert kho_tri_thuc_sdk.__version__ == "2.2.0"
-    assert str(signature(Engine._ghi)) == "(self, cau)"
-    assert str(signature(Engine._ket_thuc)) == (
-        "(self, dt, viec, cfg, trang_thai, *, loi=None, ma_tuong_quan=None)")
+def test_khoi_dong_bang_engine_cong_khai():
+    app = tao_app()
+    assert type(app) is Engine
+    core = CoreGia()
+    tep = core.them_tep("DEMO.docx", (GOC_GOI / "demo/DEMO-hop-dong.docx").read_bytes(),
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    assert core.chay_thu(app, "trich.doc_docx@1", {"loai": "tep", "tep": tep})["trang_thai"] == "XONG"
 
 
-@pytest.mark.parametrize("doi", ["phien_ban", "ghi", "ket_thuc"])
-def test_sdk_doi_thi_khong_khoi_dong(monkeypatch, doi):
-    if doi == "phien_ban":
-        monkeypatch.setattr(kho_tri_thuc_sdk, "__version__", "2.2.1")
-    else:
-        monkeypatch.setattr(Engine, "_ghi" if doi == "ghi" else "_ket_thuc", lambda self: None)
-    with pytest.raises(RuntimeError, match="SDK đã thay đổi"):
-        tao_app()
+def app_loi(ham):
+    phieu = tao_app().phieu
+    phieu.update(nang_luc=[{"ma": "demo.loi@1", "ten": "Lỗi DEMO",
+        "nhan": ["van_ban"], "tra": "van_ban", "gioi_han": {"thoi_han_giay": 10}}],
+        chay_thu_demo=[])
+    app = Engine(phieu, thu_muc_goi=GOC_GOI)
+    app.nang_luc("demo.loi@1")(ham)
+    return app
 
 
-def test_runtimeerror_bi_mat_demo_qua_coregia_khong_lo_stderr(capsys):
-    app, core = tao_app(), CoreGia()
+@pytest.mark.parametrize("loai_loi", [RuntimeError, ValueError, OSError])
+def test_loi_bat_ngo_demo_qua_coregia_khong_lo_stderr(capsys, loai_loi):
+    core = CoreGia()
     bi_mat = "DEMO_BI_MAT_KHONG_DUOC_XUAT_HIEN"
     def handler(viec):
-        raise RuntimeError(bi_mat)
-    app._ham["trich.doc_docx@1"] = handler
-    tep = core.them_tep("DEMO.docx", b"DEMO", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        raise loai_loi(bi_mat)
+    app = app_loi(handler)
     capsys.readouterr()
-    kq = core.chay_thu(app, "trich.doc_docx@1", {"loai": "tep", "tep": tep})
+    kq = core.chay_thu(app, "demo.loi@1", {"loai": "van_ban", "van_ban": "DEMO"})
     err = capsys.readouterr().err
     assert kq["trang_thai"] == "LOI" and kq["loi"]["ma"] == "ENGINE_LOI_XU_LY"
-    assert bi_mat not in err and "Traceback" not in err and "RuntimeError" in err
+    assert bi_mat not in err and "Traceback" not in err and loai_loi.__name__ in err
     assert bi_mat not in str(kq)
 
 
-def test_log_sdk_chi_co_ma_loi_van_giu_chan_doan(capsys):
-    app = tao_app()
-    capsys.readouterr()
-    cau = "Lỗi trao đổi với Core khi làm việc viec-DEMO: MAT_PHAN_HOI."
-    app._ghi(cau)
-    assert capsys.readouterr().err == f"[engine e_trich_xuat] {cau}\n"
+def test_loi_nghiep_vu_giu_ma_va_cau_cong_khai():
+    def handler(viec):
+        raise LoiNghiepVu("DEMO_TU_CHOI", "Tệp DEMO không hợp lệ.")
+    kq = CoreGia().chay_thu(app_loi(handler), "demo.loi@1", {"loai": "van_ban", "van_ban": "DEMO"})
+    assert kq["trang_thai"] == "LOI" and kq["ket_qua"] is None
+    assert kq["loi"] == {"ma": "DEMO_TU_CHOI", "thong_diep": "Tệp DEMO không hợp lệ.", "thu_lai_duoc": False}

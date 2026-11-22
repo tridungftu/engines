@@ -6,7 +6,7 @@ bản gói 0.9.0 giữ nguyên. Không phát hiện lỗi lớn cần mở lát 
 
 ## Cách chạy và phạm vi bằng chứng
 
-Chạy tại gốc repo, bằng venv Python 3.11 trở lên có SDK 2.2.0/Pillow
+Chạy tại gốc repo, bằng venv Python 3.11 trở lên có SDK 2.5.0/Pillow
 12.3.0 và công cụ test đã ghim. Đặt `PYTHONDONTWRITEBYTECODE=1`,
 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8` trước khi chạy:
 
@@ -32,7 +32,7 @@ Không sửa snapshot để giả kết quả của đường toàn chuỗi.
 CoreGia điều phối 7 lượt Local giả trong 10 ca. Ca chỉ có quy tắc quyết
 định thì dùng nhánh không AI, không tạo trả lời giả để ghép chuỗi. OCR
 và metadata ảnh/tọa độ là fixture tổng hợp, không phải nguồn máy thật.
-Ngăn trên chuỗi là `viec.ngan` SDK 2.2.0; mẫu `NganBoNho` nguyên bản
+Ngăn trên chuỗi là `viec.ngan` SDK 2.5.0; mẫu `NganBoNho` nguyên bản
 chỉ được nạp/kiểm riêng trong harness, không thay cổng runtime.
 
 | Nhóm kiểm | Bằng chứng / giới hạn |
@@ -85,22 +85,24 @@ e_doi_chieu\cong-cu\KIEM-MAY-SACH.cmd
 sh e_doi_chieu/cong-cu/kiem-may-sach.sh
 ```
 
-Hai wrapper là ASCII, mặc định chạy khô. Truyền `--wheelhouse <thư mục
-wheel đã cấp>`; `--cai` chỉ tạo venv mới khi đủ wheel đúng phiên bản,
-SHA-256 và tag nền tảng. Không ghi đè venv có sẵn. Venv sạch không dùng
-system-site-packages; pip `--isolated --no-index --no-deps --no-compile`.
-SDK luôn lấy wheel repo riêng, so `SHA256SUMS.txt` và runtime lock. Không
-tải mạng hoặc dò nguồn máy thật. Sau cài chạy CLI DEMO, pytest, harness,
-Node và kiểm độc lập. `--chi-runtime` chỉ cài/kiểm runtime, không tính
-pytest/UI/harness là đạt.
+Hai wrapper là ASCII; `.cmd` giữ CRLF, mặc định chạy khô. SDK25
+(22/11/2026): SDK 2.5.0 lấy từ `docs/goi-gui-engine/sdk-2.5.0/`, so
+`SHA256SUMS.txt` riêng; SDK không nằm trong runtime lock. Mặc định dùng
+`goi/e_doi_chieu/wheels/`; Linux truyền `--wheelhouse <kho offline>` có
+wheel khớp hash Linux đã cấp trong lock. Không tải mạng.
 
-**Kết quả hiện tại: chưa kiểm máy sạch.** Wheel SDK có sẵn và băm đúng.
-Repo không có wheel Pillow 12.3.0 đúng hai hash đã được phép (Windows x64
-CPython 3.13 / Linux x86_64 CPython 3.13); 12 gói test/QA đã ghim phiên
-bản nhưng chưa có wheel/hash được cấp. Công cụ từ chối mã 2, không tạo
-venv hay tự tải. Cần lead cấp wheel/hash đúng phiên bản đang khóa; không
-suy hash wheel từ bản đã cài. Nguồn/giấy phép/băm metadata bản đã cài ở
-NGUON.md chỉ phục vụ kiểm kê, không thay hash wheel để cài máy sạch.
+`--cai --chi-runtime --venv <thư mục mới trong worktree>` tạo venv sạch,
+cài SDK riêng rồi cài runtime từ lock ASCII bằng pip `--isolated
+--no-index --find-links --require-hashes --only-binary :all: --no-deps`.
+Kiểm CLI DEMO và độc lập; không tính pytest/UI/harness là đã chạy trong
+venv runtime. Không ghi đè venv có sẵn. Test tự kiểm gói từ chối lock sai,
+SDK trong lock, wheel thiếu/thừa/sai băm/tag, sdist và thư mục con.
+
+Chế độ đầy đủ cần wheel/hash offline của `tests/requirements.lock`.
+Repo chưa có bộ này: công cụ từ chối mã 2 trước khi tạo venv, không tự tải.
+Phiên bản công cụ test giữ nguyên; cần lead cấp wheel/hash. Kết quả cài
+runtime sạch SDK25 và các kiểm pytest/UI bằng `.venv` ghi tại VIEC.md.
+Đoạn dưới là **lịch sử môi trường DC-12 ngày 15/11**, không phải SDK25.
 
 Môi trường chạy kiểm lần này: Windows x64, Python 3.13.14, venv riêng
 `--system-site-packages` để dùng đúng Pillow 12.3.0/pytest 9.1.1 có sẵn,

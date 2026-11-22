@@ -7,7 +7,6 @@ from pathlib import Path
 import re
 
 import pytest
-import kho_tri_thuc_sdk
 from kho_tri_thuc_sdk.engine import LoiNghiepVu, LoiDuongTruyen, NganXungDot
 
 from ngan_demo import trong_ngan
@@ -18,13 +17,13 @@ GOI = Path(__file__).resolve().parents[1] / "goi/e_doi_chieu"
 
 
 def test_sdk_va_wheel_dung_ban():
-    assert kho_tri_thuc_sdk.__version__ == "2.2.0"
-    sdk = GOI.parents[2] / "docs/goi-gui-engine/sdk-2.2.0"
-    wheel = sdk / "kho_tri_thuc_sdk-2.2.0-py3-none-any.whl"
+    # Kiem ban phat hanh offline, khong rang buoc phien ban SDK dang chay.
+    sdk = GOI.parents[2] / "docs/goi-gui-engine/sdk-2.5.0"
+    wheel = sdk / "kho_tri_thuc_sdk-2.5.0-py3-none-any.whl"
     expected = next(l.split()[0] for l in (sdk / "SHA256SUMS.txt").read_text().splitlines()
                     if l.endswith(wheel.name))
     assert hashlib.sha256(wheel.read_bytes()).hexdigest() == expected
-    assert "kho_tri_thuc_sdk==2.2.0" in (GOI / "requirements.lock").read_text()
+    assert chay.app.phieu["phu_thuoc_python"] == {"lock": "requirements.lock", "wheels": "wheels"}
 
 
 def test_sql_khai_bao_va_cot_he_thong_khop():

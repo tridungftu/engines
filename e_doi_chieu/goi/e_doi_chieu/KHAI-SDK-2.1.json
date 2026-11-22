@@ -1,6 +1,6 @@
 {
   "ma_engine": "e_doi_chieu",
-  "ghi_chu": "Bản khai màn/quyền đề nghị C-DC-01/03/04, chưa đăng ký thật. Ngăn và cấu hình đã khai thật bằng SDK 2.2.0; không thêm khóa màn vào manifest 2.0.",
+  "ghi_chu": "Bản khai màn/quyền đề nghị C-DC-01/03/04, chưa đăng ký thật. Ngăn và cấu hình đã khai thật bằng SDK 2.5.0; không thêm khóa màn vào manifest 2.0.",
   "giao_dien_quan_tri": [
     {
       "ma": "cau_hinh",

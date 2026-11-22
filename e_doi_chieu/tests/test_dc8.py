@@ -312,11 +312,22 @@ def test_anh_qua_lon_chan_truoc_load(monkeypatch):
 
 
 def test_lock_pillow_nguyen_version_hash():
+    import re
+    from hashlib import sha256
+    from pip._vendor.packaging.utils import parse_wheel_filename
     root = Path(__file__).resolve().parents[2]
     def dong(path):
-        text = path.read_text(encoding="utf-8")
-        return text[text.index("Pillow=="):].splitlines()[:3]
-    assert dong(root/"e_doi_chieu/goi/e_doi_chieu/requirements.lock") == dong(root/"e_ocr/goi/e_ocr/requirements.lock")
+        # OCR con khuon cu: chi doi chieu pin va hash, khong so dinh dang.
+        text = path.read_text(encoding="ascii").replace("\\\n", " ")
+        line = next(l for l in text.splitlines() if l.lower().startswith("pillow=="))
+        return line.split()[0].lower(), set(re.findall(r"--hash=sha256:([0-9a-f]{64})", line))
+    goi = root / "e_doi_chieu/goi/e_doi_chieu"
+    pin, hashes = dong(goi / "requirements.lock")
+    ocr_pin, ocr_hashes = dong(root / "e_ocr/goi/e_ocr/requirements.lock")
+    assert pin == ocr_pin == "pillow==12.3.0"
+    wheel, = (goi / "wheels").glob("pillow-*.whl")
+    assert any(t.platform == "win_amd64" for t in parse_wheel_filename(wheel.name)[3])
+    assert sha256(wheel.read_bytes()).hexdigest() in hashes & ocr_hashes
 
 
 @pytest.mark.parametrize("sai", ["bam", "kich_thuoc", "quyen"])

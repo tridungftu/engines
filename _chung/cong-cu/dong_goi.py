@@ -15,6 +15,8 @@ import zipfile
 SDK = "2.2.0"
 WHEEL = f"kho_tri_thuc_sdk-{SDK}-py3-none-any.whl"
 THU_MUC_SDK = f"docs/goi-gui-engine/sdk-{SDK}"
+# Bản SDK được kèm theo đợt phát hành; gói khai >=2.4.0 phải đi với SDK 2.5.0.
+CAC_SDK = ("2.2.0", "2.5.0")
 CAC_ENGINE = ("e_hoa_don", "e_hoi_ai", "e_ocr", "e_trich_xuat", "e_doi_chieu", "e_tra_cuu", "e_mask", "e_kiem_excel", "e_phan_luong")
 TEP_GOC = {"engine.json", "README.md", "CHANGELOG.md", "NGUON.md",
            "requirements.lock", "cau_hinh.schema.json", ".gitattributes"}
@@ -201,7 +203,7 @@ def tao_zip(ma, cac_tep):
     return bo_nho.getvalue()
 
 
-def dong_goi(repo, engines, ra, nhan, ref="HEAD"):
+def dong_goi(repo, engines, ra, nhan, ref="HEAD", sdk=SDK):
     repo, ra = Path(repo).resolve(), Path(ra).resolve()
     if ra.is_relative_to(repo) and ra != repo / ".dong-goi-thu":
         raise LoiDongGoi("Thư mục đầu ra phải ngoài repo; ngoại lệ thử là .dong-goi-thu ở gốc repo.")
@@ -211,14 +213,17 @@ def dong_goi(repo, engines, ra, nhan, ref="HEAD"):
         raise LoiDongGoi("Chỉ nhận bốn mã engine của DONG-GOI-1.")
     if ra.exists() and (not ra.is_dir() or any(ra.iterdir())):
         raise LoiDongGoi("Cần thư mục đầu ra mới hoặc rỗng để tránh trộn bản phát hành.")
+    if sdk not in CAC_SDK:
+        raise LoiDongGoi("Bản SDK kèm phát hành không được hỗ trợ.")
+    wheel_ten, thu_muc_sdk = f"kho_tri_thuc_sdk-{sdk}-py3-none-any.whl", f"docs/goi-gui-engine/sdk-{sdk}"
     commit = git(repo, "rev-parse", "--verify", "--end-of-options", f"{ref}^{{commit}}").decode().strip()
-    wheel = git(repo, "show", f"{commit}:{THU_MUC_SDK}/{WHEEL}")
-    sums = git(repo, "show", f"{commit}:{THU_MUC_SDK}/SHA256SUMS.txt").decode("utf-8")
+    wheel = git(repo, "show", f"{commit}:{thu_muc_sdk}/{wheel_ten}")
+    sums = git(repo, "show", f"{commit}:{thu_muc_sdk}/SHA256SUMS.txt").decode("utf-8")
     bam_goc = [dong.split()[0] for dong in sums.splitlines()
-               if len(dong.split()) == 2 and dong.split()[1] == WHEEL]
+               if len(dong.split()) == 2 and dong.split()[1] == wheel_ten]
     if bam_goc != [sha256(wheel)]:
-        raise LoiDongGoi("Wheel SDK 2.2.0 không khớp SHA256SUMS.txt tại mốc git.")
-    dau_ra, danh_sach = {WHEEL: wheel}, []
+        raise LoiDongGoi(f"Wheel SDK {sdk} không khớp SHA256SUMS.txt tại mốc git.")
+    dau_ra, danh_sach = {wheel_ten: wheel}, []
     for ma in sorted(set(engines)):
         cac_tep = doc_goi_git(repo, commit, ma)
         phieu = doc_json(cac_tep["engine.json"])
@@ -226,6 +231,8 @@ def dong_goi(repo, engines, ra, nhan, ref="HEAD"):
                 or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", str(phieu.get("phien_ban", "")))
                 or phieu.get("tuong_thich", {}).get("sdk") not in KHOANG_SDK):
             raise LoiDongGoi("Phiếu sai mã, phiên bản hoặc khoảng SDK.")
+        if phieu["tuong_thich"]["sdk"] == ">=2.4.0 <3.0.0" and sdk == "2.2.0":
+            raise LoiDongGoi("Gói kèm thư viện cần SDK 2.4.0 trở lên; đóng gói với --sdk 2.5.0.")
         kiem_ke_sql(cac_tep, phieu)
         kiem_thu_vien(cac_tep, phieu)
         ten_zip = f"{ma}-{phieu['phien_ban']}.zip"
@@ -242,8 +249,8 @@ def dong_goi(repo, engines, ra, nhan, ref="HEAD"):
     bang_bam = "".join(f"{sha256(noi_dung)}  {ten}\n" for ten, noi_dung in sorted(dau_ra.items()))
     dau_ra["SHA256SUMS.txt"] = bang_bam.encode("utf-8")
     dau_ra["DANH-SACH-GOI.json"] = (json.dumps({
-        "nhan": nhan, "commit_git": commit, "sdk": SDK,
-        "wheel_sdk": {"tep": WHEEL, "sha256": sha256(wheel)}, "goi": danh_sach,
+        "nhan": nhan, "commit_git": commit, "sdk": sdk,
+        "wheel_sdk": {"tep": wheel_ten, "sha256": sha256(wheel)}, "goi": danh_sach,
     }, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
     ra.mkdir(parents=True, exist_ok=True)
     for ten, noi_dung in sorted(dau_ra.items()):
@@ -259,10 +266,11 @@ def main(argv=None):
     parser.add_argument("--ra", required=True, type=Path, help="Thư mục mới/rỗng ngoài repo.")
     parser.add_argument("--nhan", required=True, help="Nhãn mốc phát hành, ví dụ thu (không phải git ref).")
     parser.add_argument("--ref", default="HEAD", help="Git commit/tag/nhánh nguồn; mặc định HEAD.")
+    parser.add_argument("--sdk", default=SDK, choices=CAC_SDK, help="Bản SDK kèm phát hành; mặc định 2.2.0.")
     args = parser.parse_args(argv)
     repo = Path(__file__).resolve().parents[2]
     try:
-        ds = dong_goi(repo, args.engine, args.ra, args.nhan, args.ref)
+        ds = dong_goi(repo, args.engine, args.ra, args.nhan, args.ref, args.sdk)
     except (LoiDongGoi, OSError, KeyError, TypeError, UnicodeError) as loi:
         thong_diep = str(loi) if isinstance(loi, LoiDongGoi) else "Không hoàn tất đóng gói; kiểm quyền ghi và cấu trúc gói."
         print(f"[LỖI] {thong_diep}", file=sys.stderr)

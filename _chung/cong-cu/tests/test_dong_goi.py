@@ -53,8 +53,15 @@ def repo(tmp_path):
     (sdk / dg.WHEEL).write_bytes(b"DEMO wheel\r\n")
     (sdk / "SHA256SUMS.txt").write_bytes(
         f"{dg.sha256(b'DEMO wheel' + bytes([13, 10]))}  {dg.WHEEL}\n".encode())
+    sdk25 = r / "docs/goi-gui-engine/sdk-2.5.0"
+    sdk25.mkdir(parents=True)
+    (sdk25 / W25).write_bytes(b"DEMO wheel 2.5")
+    (sdk25 / "SHA256SUMS.txt").write_bytes(f"{dg.sha256(b'DEMO wheel 2.5')}  {W25}\n".encode())
     tao_moc(r)
     return r
+
+
+W25 = "kho_tri_thuc_sdk-2.5.0-py3-none-any.whl"
 
 
 def duong_goi(repo):
@@ -240,9 +247,25 @@ def them_thu_vien(repo, lock=None, wheel=b"DEMO whl", khai=True):
 
 def test_thu_vien_dung_vao_zip(repo, tmp_path):
     them_thu_vien(repo)
-    xuat(repo, tmp_path / "ra")
+    xuat(repo, tmp_path / "ra", sdk="2.5.0")
     with zipfile.ZipFile(tmp_path / "ra" / f"{MA}-1.0.0.zip") as z:
         assert z.read(f"{MA}/wheels/demo_lib-1.0.0-py3-none-any.whl") == b"DEMO whl"
+    assert (tmp_path / "ra" / W25).read_bytes() == b"DEMO wheel 2.5"
+    assert not (tmp_path / "ra" / dg.WHEEL).exists()
+    ds = json.loads((tmp_path / "ra" / "DANH-SACH-GOI.json").read_bytes())
+    assert ds["sdk"] == "2.5.0" and ds["wheel_sdk"]["tep"] == W25
+
+
+def test_goi_kem_thu_vien_khong_di_voi_sdk_22(repo, tmp_path):
+    them_thu_vien(repo)
+    with pytest.raises(dg.LoiDongGoi, match="--sdk 2.5.0"):
+        xuat(repo, tmp_path / "ra")
+    assert not (tmp_path / "ra").exists()
+
+
+def test_sdk_la_bi_tu_choi(repo, tmp_path):
+    with pytest.raises(dg.LoiDongGoi):
+        xuat(repo, tmp_path / "ra", sdk="9.9.9")
 
 
 @pytest.mark.parametrize("kieu", ["sai_bam", "thieu_khai", "co_sdk", "noi_dong", "thieu_wheel"])
@@ -257,5 +280,5 @@ def test_thu_vien_sai_dung_truoc_khi_ghi(repo, tmp_path, kieu):
     }[kieu]
     them_thu_vien(repo, **tham)
     with pytest.raises(dg.LoiDongGoi):
-        xuat(repo, tmp_path / "ra")
+        xuat(repo, tmp_path / "ra", sdk="2.5.0")
     assert not (tmp_path / "ra").exists()

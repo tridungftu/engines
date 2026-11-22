@@ -630,3 +630,116 @@ Core/module giữ quyền, vòng đời tệp, xác nhận người dùng và hi
 tế. Engine không phát sự kiện riêng hoặc chốt xác nhận. Các kiểm tra hiện
 tại **đã kiểm bằng Core giả (CoreGia)**; không chứng nhận Core/Linux thật,
 nguồn từ điển/ngưỡng OCR hoặc chất lượng detector DC-13.
+
+## TS-DC — Trình soạn Cài đặt bước (21/11/2026)
+
+Màn mới `ui/soan_quy_tac.js` dành riêng cho `doi_chieu.so_van_ban@1`.
+Không dùng màn cấu hình engine để cất tham số bước. Cửa nạp **D2 chưa có
+trong SDK 2.2.0**; bản khai dự kiến ở `KHAI-SDK-2.1.json`, không sửa
+`engine.json`. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core thật.
+
+**Giới hạn theo hợp đồng hiện có:** tám quy tắc cứng trong `quy_tac.py`
+và sáu cặp đổi nghĩa trong `tu_dien.py` luôn được bảo vệ, chỉ đọc trên
+màn. Lõi không nhận danh sách bật/tắt quy tắc hoặc danh sách cặp đổi nghĩa
+trong `bo_quy_tac_json`. TS-DC không tạo trường JSON mà lõi bỏ qua. Phần
+soạn được là danh sách vùng bảo vệ bổ sung và các giá trị định dạng
+số/tiền/ngày có sẵn của bộ đã duyệt. Nếu yêu cầu thêm/xóa quy tắc hoặc
+cặp đổi nghĩa tùy ý thì cần lead làm rõ một lát nghiệp vụ riêng.
+
+### Hướng dẫn tham số bước
+
+- Chọn **toàn bộ bộ đã duyệt** từ Core, gồm cả chuẩn hóa. Không nhập
+  riêng `quy_tac_cung` thay cho bộ. Không có bộ nới lỏng mặc định.
+- `bo_quy_tac_json`: chuỗi JSON bắt buộc, tối đa 65.536 ký tự **và**
+  65.536 byte UTF-8; không khóa trùng, số vô hạn, surrogate lẻ, cây quá
+  64 cấp. Trình soạn từ chối số nguyên vượt độ chính xác JavaScript để
+  tránh làm tròn phần dữ liệu được giữ lại khi sửa.
+- `bam_bo_quy_tac`: bắt buộc, `sha256:` + 64 ký tự hex; băm **nguyên
+  bytes UTF-8** của chuỗi trên. Màn xuất đồng thời hai tham số; không
+  sửa định dạng hoặc ngắt dòng sau khi băm. Không sửa gì thì giữ nguyên
+  bytes bộ đọc vào.
+- Sau sửa, Core/module phải duyệt và ghim **cùng bytes** bộ tại bước
+  nhận cặp; băm mới không tự chứng minh đã được duyệt. Chỉ sửa Cài đặt
+  bước so mà không đổi bộ ghim ở bước nhận cặp sẽ bị engine từ chối.
+- Danh sách vùng rỗng không tắt quy tắc tự động. Bộ cũ chưa khai
+  `quy_tac_cung` được giữ nguyên; màn không tự thêm phần này.
+
+| Trường | Kiểu, bắt buộc | Ý nghĩa và giá trị cho phép |
+|---|---|---|
+| `phien_ban` | Số nguyên, có | `1` |
+| `phien_ban_bo` | Chuỗi, có | Phiên bản bộ đã ghim, ví dụ `DEMO-1` |
+| `ma_bo_chuan_hoa` | Chuỗi, có | Mã bộ khớp cấu hình, ví dụ `DEMO-NFC-1` |
+| `chuan_hoa` | Đối tượng, có | Giữ nguyên phần bộ đã duyệt; cấu trúc bên dưới |
+| `chuan_hoa.unicode` | Chuỗi, có | `NFC`, giữ dấu tiếng Việt |
+| `chuan_hoa.khoang_trang` | Chuỗi, có | `gop` hoặc `giu_nguyen` |
+| `chuan_hoa.dau_nhay` | Chuỗi, có | `thang` hoặc `giu_nguyen` |
+| `chuan_hoa.gach_noi` | Chuỗi, có | `thong_nhat` hoặc `giu_nguyen` |
+| `chuan_hoa.ngat_dong` | Chuỗi, có | `noi_trong_doan` hoặc `giu_nguyen` |
+| `chuan_hoa.ngat_tu_cuoi_dong` | Chuỗi, có | `chi_gach_noi_mem` hoặc `giu_nguyen` |
+| `chuan_hoa.dau_chan_trang` | Mảng chuỗi, có | Tối đa 100 chuỗi được duyệt, mỗi chuỗi 1–1.000 ký tự; ví dụ `[]` |
+| `chuan_hoa.bo_so_trang` | Boolean, có | `true` chỉ bỏ số trang đã xác minh; ví dụ `false` |
+| `quy_tac_cung` | Đối tượng, tùy chọn cho bộ cũ | Không tự thêm khi thiếu; có thì đủ năm trường dưới |
+| `quy_tac_cung.phien_ban` | Số nguyên, có | `1` |
+| `quy_tac_cung.dinh_dang_so` | Mảng đối tượng, có | Tối đa 10 mục `{nghin, thap_phan}`; ví dụ `[{"nghin":".","thap_phan":","}]` |
+| `dinh_dang_so[].nghin` | Chuỗi hoặc null, có | `null`, dấu chấm, dấu phẩy, khoảng trắng |
+| `dinh_dang_so[].thap_phan` | Chuỗi hoặc null, có | `null`, dấu chấm hoặc dấu phẩy; khác dấu hàng nghìn nếu có |
+| `quy_tac_cung.don_vi_tien` | Đối tượng, có | Tối đa 100 tên → mã tiền tệ; tên không rỗng, ≤100 ký tự, không trùng sau chuẩn hóa; mã 3 chữ hoa. `đồng`/`vnđ` phải là `VND`, mã tiền tệ tường minh không đổi sang mã khác |
+| `quy_tac_cung.dinh_dang_ngay` | Mảng chuỗi, có | 1–3 mục trong `YYYY-MM-DD`, `DD/MM/YYYY`, `MM/DD/YYYY`; đây là định dạng nguồn, màn hiển thị ngày/tháng/năm |
+| `quy_tac_cung.vung_bao_ve` | Mảng đối tượng, có | 0–1.000 vùng bổ sung; `[]` vẫn giữ bảo vệ tự động |
+| `vung_bao_ve[].ben` | Chuỗi, có | `word` hoặc `ban_ky` |
+| `vung_bao_ve[].loai` | Chuỗi, có | `ben_ky`, `nguoi_dai_dien`, `chuc_vu`, `mst`, `stk`, `dia_chi`, `so_hop_dong` |
+| `vung_bao_ve[].bat_dau` | Số nguyên, có | Vị trí Unicode code point 0-based, không phải UTF-16/byte |
+| `vung_bao_ve[].ket_thuc` | Số nguyên, có | Cuối không tính; `0 ≤ bat_dau < ket_thuc ≤ 500000` |
+| `vung_bao_ve[].nguyen_van` | Chuỗi, có | Không rỗng, phải khớp đúng lát nguồn; ví dụ `Công ty DEMO Ánh Dương` |
+| `vung_bao_ve[].bam_van_ban` | Chuỗi, có | SHA-256 toàn văn nguồn với tiền tố `sha256:`, không dùng băm tệp |
+| Các phần khác của bộ đã ghim | Giữ nguyên | Ví dụ `lech_dau` chứa tham chiếu từ điển/ngưỡng; TS-DC không soạn hay tự phê duyệt phần đó |
+
+Mẫu **DEMO** đầy đủ để minh họa, không phải bộ đã được cấp cho vận hành:
+
+```json
+{
+  "phien_ban": 1,
+  "phien_ban_bo": "DEMO-1",
+  "ma_bo_chuan_hoa": "DEMO-NFC-1",
+  "chuan_hoa": {
+    "unicode": "NFC", "khoang_trang": "gop", "dau_nhay": "thang",
+    "gach_noi": "thong_nhat", "ngat_dong": "noi_trong_doan",
+    "ngat_tu_cuoi_dong": "chi_gach_noi_mem",
+    "dau_chan_trang": [], "bo_so_trang": false
+  },
+  "quy_tac_cung": {
+    "phien_ban": 1,
+    "dinh_dang_so": [{"nghin": ".", "thap_phan": ","}],
+    "don_vi_tien": {"VND": "VND", "đồng": "VND"},
+    "dinh_dang_ngay": ["YYYY-MM-DD"],
+    "vung_bao_ve": []
+  }
+}
+```
+
+### Cửa nhúng D2 đề nghị — chưa phải API SDK
+
+Core nạp `default(goc, KttCore, {cua})`; màn chỉ chọn engine qua
+`KttCore.engine("e_doi_chieu")`, không gọi mạng/ngăn/cấu hình/bí mật.
+`cua` là adapter host Cài đặt bước đang thiếu, tương tự cửa host của
+màn kết quả; không thêm phương thức giả vào `KttCore`:
+
+- `cua.doc()` → `{tham_so: {bo_quy_tac_json, bam_bo_quy_tac}, phien_ban}`.
+- `cua.luu({tham_so: {bo_quy_tac_json, bam_bo_quy_tac}, phien_ban})`
+  → `{da_luu: true, phien_ban}` mới. Core xác thực admin, CAS và gộp
+  nguyên tử hai tham số vào đúng bước, giữ mọi tham số khác.
+- Kết quả mount có `doc_gia_tri()` trả đúng chuỗi giá trị tham số.
+  Thiếu cửa, lỗi đọc, sai băm, thiếu phiên bản thì khóa xuất/áp dụng.
+  Xung đột hoặc chưa xác nhận lưu thì khóa tới khi tải lại; không tự
+  thử lại ghi. Màn kiểm cấu trúc; engine vẫn kiểm nguồn/băm/duyệt thật.
+
+Không có máy/dịch vụ ngoài hay bí mật trong TS-DC: nút kiểm chỉ kiểm bộ
+cục bộ, không có nút kết nối/API key và không thêm thao tác Python.
+Schema cấu hình và ba màn cũ thuộc lát UI-DC song song, không sửa ở đây.
+Ảnh DEMO, cách dựng và phần cần Core: `../../docs/anh-ts-dc/` và mục
+TS-DC trong `../../docs/VIEC.md`.
+
+```powershell
+node --test e_doi_chieu/tests/ui/ts_dc.test.mjs
+node e_doi_chieu/tests/ui/dung_anh_ts_dc.mjs
+```

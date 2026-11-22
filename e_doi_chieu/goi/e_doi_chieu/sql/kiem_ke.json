@@ -7,14 +7,29 @@
       "sha256": "36f5046d7b9e6c15c3d77263f4918fa7997bebfbf79f3a4f3b954da607cd4eed"
     },
     {
+      "duong_dan": "CHANGELOG.md",
+      "bytes": 27016,
+      "sha256": "027a6af6d1168ebed3c1b8754dc0bccf33a4f4d865bda22ffbfb3123fc56789f"
+    },
+    {
+      "duong_dan": "KHAI-SDK-2.1.json",
+      "bytes": 2149,
+      "sha256": "9421d8192968517da889aa259eb49b59c8c01dcab4dd3bd089c59b8214d54cf0"
+    },
+    {
+      "duong_dan": "NGUON.md",
+      "bytes": 35747,
+      "sha256": "bf54d89dd28c9e87cbe4c5c9a263f548381ffd5cddc49ababf48a29592a96a25"
+    },
+    {
+      "duong_dan": "README.md",
+      "bytes": 51220,
+      "sha256": "e6d9d9fa3cbe8829ac35d737e7dab0334f55494d9a49c1313a4c8dac03585e2f"
+    },
+    {
       "duong_dan": "cau_hinh.schema.json",
       "bytes": 3311,
       "sha256": "e38e7414afacb2b1abc8fa1e01e28c130213686d79ea3f3d71d7873f5ab39b87"
-    },
-    {
-      "duong_dan": "CHANGELOG.md",
-      "bytes": 26090,
-      "sha256": "e6945a48fe4d3c7d847e20f68210a9a0d7d858f89c563539e7716a761942d993"
     },
     {
       "duong_dan": "demo/DEMO-ban-chot.docx",
@@ -142,21 +157,6 @@
       "sha256": "9114bf674c4d16189050eb3130453838b7bc1c2c22f6208a05e866df84adf776"
     },
     {
-      "duong_dan": "KHAI-SDK-2.1.json",
-      "bytes": 927,
-      "sha256": "bc9806d3c4feb276f2a629d6ad63caaf57a2360de5225e9ce49555b802b735ca"
-    },
-    {
-      "duong_dan": "NGUON.md",
-      "bytes": 35653,
-      "sha256": "55b6284709a08414d765b25e2f6a410639eb2b1c6b40fc6080755d09a4d28269"
-    },
-    {
-      "duong_dan": "README.md",
-      "bytes": 43583,
-      "sha256": "3f6b9d01f66269b04c00d7e9aab760173aa861c51075bf704929ba9592d77d18"
-    },
-    {
       "duong_dan": "requirements.lock",
       "bytes": 440,
       "sha256": "68ddd023dd5f4610cea4f5aa63fbe91a9915c3b0fde10661edecb430e9f4bc4f"
@@ -220,6 +220,11 @@
       "duong_dan": "ui/loi_ocr.js",
       "bytes": 4158,
       "sha256": "cab2e90b69e256d910039989e794d5584443b03d34a145bb060f471b3192dc7c"
+    },
+    {
+      "duong_dan": "ui/soan_quy_tac.js",
+      "bytes": 21739,
+      "sha256": "0bc4fbb76dbbda87b362393f303e73cc964129d296a87e038f7410a6044f7ba0"
     },
     {
       "duong_dan": "van_ban_tai_lieu.schema.json",

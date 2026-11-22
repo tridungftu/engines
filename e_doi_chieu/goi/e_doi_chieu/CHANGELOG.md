@@ -338,3 +338,16 @@ Bản bàn giao trước kiểm độc lập:
 ## 0.1.0 ? 15/11/2026
 
 - DC-0: khung SDK 2.0, khai b?o d? ki?n SDK 2.1, ng?n RAM v? c?u h?nh; ??c Word tr? CHUA_LAM. ?? ki?m b?ng Core gi? (CoreGia); ch?a ki?m nghi?p v?.
+
+## TS-DC — 21/11/2026 · PR: chờ lead mở
+
+- Thêm màn `ui/soan_quy_tac.js`: quy tắc/cặp đổi nghĩa cố định chỉ đọc;
+  trình soạn vùng bảo vệ, định dạng số/tiền/ngày, lỗi cạnh trường và JSON
+  chỉ đọc trong Nâng cao. Không đổi hành vi xử lý việc hoặc engine.json.
+- Xuất nguyên bytes khi chưa sửa và SHA-256 UTF-8 kèm JSON khi áp dụng;
+  cửa D2 host đề nghị có CAS, khóa khi lỗi/mất ACK đến lúc tải lại.
+- Thêm khai dự kiến riêng và hướng dẫn tham số đầy đủ trong README;
+  kiểm Node không mạng, kiểm chéo lõi Python, ảnh màn DEMO CoreGia.
+- Đã kiểm bằng Core giả (CoreGia); chờ Core nạp D2. Phiếu TS-DC cần lead
+  xác nhận phần danh sách cố định: lõi không hỗ trợ thêm/xóa quy tắc/cặp
+  qua JSON. Schema cấu hình và màn cũ thuộc UI-DC song song.

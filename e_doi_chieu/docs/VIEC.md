@@ -1581,3 +1581,84 @@ Nguồn lead cần cấp L-DC-01: mẫu ngăn, từ điển/font/detector có ng
 - Lead/Core quy?t ??nh c?ch nghi?m thu khung c? `chay_thu_demo: []`: SDK 2.0 tr? m? 1 khi kh?ng c? v? d?, trong khi ?i?u ki?n chung ??i m? 0.
 - SDK 2.1/Core c?n c?p ng?n b?n, c?u h?nh v? n?p m?n theo C-DC-01; RAM m?t khi d?ng. `KHAI-SDK-2.1.json` ch? l? d? ki?n, c?c m?n ch?a t?n t?i ??n DC-10/DC-11; quy?n xem k?t qu? c?n Core x?c ??nh.
 - M?u NGAN-0 quy ??nh b?ng c?u h?nh kh?a `{}`, thay cho kh?a `ma` trong b?ng d? ki?n DC-P ?2.4; d?ng API m?u ?? g?p. Ng??ng OCR k?m gi? null v? ch?a ?o.
+
+## TS-DC — 21/11/2026 · PR: chờ lead mở
+
+**Trạng thái: kiểm kỹ thuật đạt; chờ lead xác nhận phạm vi danh sách cố
+định trước khi nghiệm thu trọn phiếu TS-DC.** Đã kiểm bằng Core giả
+(CoreGia), chưa tích hợp Core thật. Bắt đầu theo mốc lead giao **21:43**
+ngày 21/11/2026 (UTC+7); thời gian kết thúc ghi ở mục kết quả bên dưới.
+Ước tính trong phiếu: **3 giờ**.
+
+### Đã làm — TS-DC
+
+- Chỉ thêm màn mới `ui/soan_quy_tac.js`; không sửa ba màn cũ hoặc
+  `cau_hinh.schema.json` thuộc UI-DC song song; không đổi xử lý việc,
+  `engine.json`, API/SDK hoặc mã Core.
+- Danh sách 8 quy tắc cứng/6 cặp đổi nghĩa đối chiếu tự động với hằng
+  Python, chỉ đọc. Soạn thêm/xóa vùng bảo vệ, sửa định dạng số/tiền/ngày
+  đang có trong bộ, kỹ thuật thu gọn; JSON chỉ đọc, lỗi ngay cạnh ô.
+- Giữ nguyên bytes bộ khi chưa sửa; khi sửa giữ các phần khác của bộ,
+  xuất JSON và SHA-256 cùng nhau. Từ chối khóa trùng/số không hữu hạn/
+  surrogate lẻ/cây quá sâu/trần ký tự-byte và số nguyên vượt độ chính
+  xác JavaScript, không cắt ngầm hoặc làm tròn số nguyên lớn.
+- Cửa D2 đề nghị có đọc/lưu CAS, lưu nguyên tử cặp tham số, khóa khi
+  tranh chấp hoặc mất ACK, không tự ghi lại. Thiếu cửa/băm/phiên bản thì
+  khóa. Không mượn ngăn/cấu hình engine để lưu tham số bước; không mạng,
+  HTML động, bộ nhớ bền hoặc bí mật trong màn.
+- Chỉ thêm mục mới trong KHAI/README/CHANGELOG/VIEC. Cập nhật tự sinh
+  NGUON và `sql/kiem_ke.json` vì kiểm kê bao trùm mọi tệp gói. Không đổi
+  `engine.json` nên không phải sinh lại danh mục engine cho module.
+- Hồ sơ ảnh thật từ màn chạy KttCore giả: `docs/anh-ts-dc/` gồm desktop,
+  màn hẹp, lỗi nhập, CAS và 4 HTML DEMO tự chứa. Node không mạng 13 test
+  TS-DC; 2 pytest kiểm chéo dữ liệu/hằng với Python. Không thêm dependency.
+
+### Kết quả kiểm thật — TS-DC
+
+SDK 2.2.0 cài từ wheel repo bằng `--no-index --no-deps` trong `.venv`
+riêng, system-site-packages nhận đúng pytest 9.1.1/Pillow 12.3.0 có sẵn.
+SHA wheel `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`
+khớp SHA256SUMS. Có `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`.
+
+```text
+.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu
+[ĐẠT] Đọc bản Word DEMO đã chốt, có bảng ô gộp và ô trống
+Engine e_doi_chieu 0.9.0: mọi ví dụ chạy thử DEMO đều đạt.
+1/1 ĐẠT; mã thoát 0.
+
+.venv/Scripts/python -m pytest e_doi_chieu/tests -q --basetemp=.pytest-tmp-ts-dc
+1166 passed in 722.75s (0:12:02); 0 skipped; mã thoát 0.
+
+.venv/Scripts/python e_doi_chieu/tests/kiem_doc_lap.py
+ĐẠT: kiểm độc lập; mã thoát 0.
+
+node --test e_doi_chieu/tests/ui/dc10.test.mjs e_doi_chieu/tests/ui/dc11.test.mjs e_doi_chieu/tests/ui/ts_dc.test.mjs
+42 tests, 42 pass, 0 fail, 0 skipped; mã thoát 0.
+```
+
+Đã kiểm bằng Core giả (CoreGia); chưa chạy Linux, Core/browser SDK thật,
+ACL/CAS bền/đồng bộ bộ duyệt của Core. Không có máy/dịch vụ ngoài hoặc
+bí mật trong TS-DC nên không có ca kết nối/API key; nút kiểm cục bộ có
+đủ ca thành công/thất bại. Không commit/push; lead mở PR.
+
+### Cần Core / lead — TS-DC
+
+- **D2:** Core cần nạp màn `giao_dien_tham_so` theo năng lực/tham số.
+  Hợp đồng adapter host đề nghị tại KHAI/README: `cua.doc()` trả tham số
+  và phiên bản; `cua.luu()` xác thực admin, CAS, gộp nguyên tử JSON/băm
+  vào đúng bước, giữ các tham số khác và trả ACK/phiên bản mới. Không
+  phải phương thức SDK thật; thiếu cửa màn khóa, không giả thành công.
+- Core/module cần ghim cùng bytes bộ đã duyệt ở bước nhận cặp trước khi
+  chạy so. Băm do trình soạn tính không thay quyền duyệt; engine giữ
+  kiểm băm/nguồn/snapshot hiện hành, không đổi để nhận bộ mới tùy ý.
+- **Lệch phiếu cần lead xác nhận:** phiếu ghi “danh sách quy tắc cứng,
+  cặp đổi nghĩa”, nhưng lõi hiện tại không có trường cho phép thêm/xóa
+  chúng trong `bo_quy_tac_json`; quy tắc bắt buộc luôn bật, cặp bảo vệ
+  cố định trong Python. Đã hỏi phạm vi trong phiên, chưa nhận trả lời.
+  TS-DC trình bày chúng chỉ đọc và soạn các trường thật được hỗ trợ.
+  Nếu mục tiêu là danh sách tùy biến thì cần lát hợp đồng/nghiệp vụ
+  riêng; không đưa khóa JSON bị engine bỏ qua hoặc sửa runtime ở lát UI.
+
+### Mốc chốt bàn giao — TS-DC
+
+Thời gian thực tế: 21:43–22:17 ngày 21/11/2026 (UTC+7), khoảng **0.58 giờ**, so với **3 giờ ước tính**. Kết luận: **chưa nghiệm thu trọn phiếu** vì cần lead xác nhận phạm vi danh sách quy tắc/cặp cố định; mọi kiểm kỹ thuật nêu trên đã đạt. PR: **chờ lead mở**; không commit/push.

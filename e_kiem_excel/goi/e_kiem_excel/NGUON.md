@@ -1,6 +1,6 @@
-# Nguồn và giấy phép — EX-6, 19/11/2026
+# Nguồn và giấy phép — SDK25, 22/11/2026
 
-Trạng thái hiện hành: đủ EX-0…EX-6; các mục EX-0…EX-5 dưới đây là lịch sử
+Trạng thái hiện hành: SDK25 trên SDK 2.5.0, đủ EX-0…EX-6; các mục EX-0…EX-5 dưới đây là lịch sử
 chuyển mã theo từng lát. Bảng tổng hợp và SHA-256 hiện hành ở cuối tệp.
 
 Chỉ dùng dữ liệu DEMO giả. EX-1 chuyển thuật toán từ nguồn đã ghim dưới đây;
@@ -11,24 +11,23 @@ không sửa nguồn tham chiếu và không thêm dependency runtime.
 | [openpyxl trên PyPI](https://pypi.org/project/openpyxl/3.1.5/) | 3.1.5 / MIT | Nạp hai workbook công thức/giá trị trong RAM; `5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2` |
 | [et_xmlfile trên PyPI](https://pypi.org/project/et-xmlfile/2.0.0/) | 2.0.0 / MIT | Dependency openpyxl; `7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa` |
 | [defusedxml trên PyPI](https://pypi.org/project/defusedxml/0.7.1/) | 0.7.1 / PSF License | openpyxl tự chọn bộ phân tích chống thực thể; `a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61` |
-| SDK trong `docs/goi-gui-engine/sdk-2.2.0/` | 2.2.0 / nội bộ | `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` |
+| SDK kiểm trong `docs/goi-gui-engine/sdk-2.5.0/`; khi chạy Core cấp | 2.5.0 / nội bộ | `b235b513deb557f65f5a90c81e1d81e9b51799093fdaefb3bb5c5e1e954d2b55` |
 
 Tên wheel: `openpyxl-3.1.5-py2.py3-none-any.whl`,
 `et_xmlfile-2.0.0-py3-none-any.whl`, `defusedxml-0.7.1-py2.py3-none-any.whl`.
 Metadata nguồn lấy từ API JSON PyPI theo đúng phiên bản; wheel tải qua mirror
 `https://mirrors.aliyun.com/pypi/` vì máy không tải được từ files.pythonhosted.org.
 Mỗi wheel đã đối chiếu SHA-256 với metadata PyPI trước khi cài offline.
-Wheel dùng cho test nằm ngoài gói, trong `.venv/banh/`, không đưa vào git.
+Ba wheel thuần Python nay nằm trong `wheels/` của gói, đúng bản và băm ở trên.
+SDK không nằm trong lock/wheels của engine.
 
 Khung tham khảo trong repo engines, commit `0e759eff098979891720c8a057c6a5fd03b25ddb`
 được phiếu engine ghim (nội bộ):
 
-- `docs/goi-gui-engine/sdk-2.2.0/engine-demo/e_demo_doc_tep/`: bố cục, cổng nhận `tep`;
+- Mẫu SDK `engine-demo/e_demo_doc_tep/` ghi trong phiếu EX-0 lịch sử: bố cục, cổng nhận `tep`;
   bỏ hoàn toàn nhánh import Core trong mẫu.
-- `e_hoa_don/goi/e_hoa_don/e_hoa_don/chay.py`: mẫu `_ghi()` chỉ ghi mã cố định,
-  bọc lỗi giới hạn và đọc tệp có trần.
-- `kho_tri_thuc_sdk/engine.py` trong wheel đã ghim: đối chiếu `_lam()` để bọc
-  chuẩn hóa MIME tại cổng; không chép lại vòng xử lý và không sửa SDK.
+- `e_hoa_don/goi/e_hoa_don/e_hoa_don/chay.py`: mẫu bọc lỗi giới hạn và đọc tệp
+  có trần. SDK25 bỏ lớp bọc nhật ký và MIME cũ, chỉ dùng cửa công khai SDK.
 - `e_hoa_don/tests/`: ý tưởng AST/import độc lập, CoreGia, cách ly test, cài sạch.
 - `e_ocr/goi/e_ocr/requirements.lock`: cú pháp ghim wheel có hash.
 
@@ -149,7 +148,7 @@ SHA nguồn ở đầu tệp tính với LF đúng git; test chỉ đổi CRLF�
 | `master_hd.py` 1–42, 74–627, 767–1234 | Không chuyển | Import/AI/hợp đồng/master/CLI cũ không thuộc engine |
 | Phiếu §4.1.1 | `e_kiem_excel/bo_nhom.py` | Mã mới: kiểm bộ nhóm và matcher chung |
 | Phiếu §4.2 | `e_kiem_excel/doc_tong_quat.py` | Mã mới: khuôn tổng quát, dùng chung matcher |
-| API v1/SDK 2.2.0 và mẫu Hóa đơn đã ghim | `e_kiem_excel/chay.py`, `e_kiem_excel/__init__.py` | Mã nối SDK, kiểm hủy, trả tệp và bọc MIME |
+| API v1, cửa công khai SDK (kiểm 2.5.0) và mẫu Hóa đơn đã ghim | `e_kiem_excel/chay.py`, `e_kiem_excel/__init__.py` | Mã nối SDK, kiểm hủy và trả tệp |
 | Phiếu §6 và thư viện chuẩn Python | `e_kiem_excel/nhan_dien.py` | Mã mới: chặn ZIP/XML/ô/vùng trước openpyxl |
 | Phiếu/SDK và công cụ DEMO nội bộ | `engine.json`, `README.md`, `CHANGELOG.md`, `requirements.lock`, `NGUON.md`, `demo/*.xlsx` | Metadata, hướng dẫn, dependency và dữ liệu giả |
 
@@ -196,7 +195,7 @@ Kiểm kê sau đây đã sinh lại cho toàn bộ gói, gồm các tệp TS-EX
 
 | Tệp trong gói | Bytes | SHA-256 |
 |---|---:|---|
-| `CHANGELOG.md` | 4407 | `ac9917d474666fe5da0cd8419dfbc61be547c3d30fc65272c6d75044569af350` |
+| `CHANGELOG.md` | 5427 | `f0c18b41a2e97500cc0df7a13742301e60c82cac56530704ffcc1abb5966454f` |
 | `demo/bang-kl-DEMO.xlsx` | 4508 | `9e14f6142c32faedf1ca60a01f64a43cd3004b237cea27373ea2383d2f66d0ab` |
 | `demo/bao-gia-DEMO.xlsx` | 2048 | `ac25a7b8e36cd0fa0e5c9e67f04d23c19afbde654c21d029beb83f66ec9cffb2` |
 | `demo/gia-thanh-DEMO.xlsx` | 1811 | `010ffccbb70784a09fab3247a39e5c23425d335e9421fd50305216c16d6226bf` |
@@ -205,7 +204,7 @@ Kiểm kê sau đây đã sinh lại cho toàn bộ gói, gồm các tệp TS-EX
 | `e_kiem_excel/__init__.py` | 73 | `263ee64fdff5df021cfd6a2fcf0788675b784c3aa86cc7982914690a1d51c4b1` |
 | `e_kiem_excel/bao_cao.py` | 12602 | `735ae0dafabace05c7aab838de0c4d21e907d85185524b9870a222fab4c422e6` |
 | `e_kiem_excel/bo_nhom.py` | 5910 | `63ed37b33c4c2663e8aa90d0cd19643bcda3e5ef25cad21ea9b9ebabe22fcd0e` |
-| `e_kiem_excel/chay.py` | 4372 | `10eeb3c7d53f28f8d2a0b4b877daf2470165072b50ba69d17765decd39c7c9a2` |
+| `e_kiem_excel/chay.py` | 2968 | `6abc44d461182372fcd62fd4702c77e33f5a3364319b5bf02abddfa3960194a3` |
 | `e_kiem_excel/chuan_hoa.py` | 1459 | `808cf278993e87c6b019567bb77907bf45b642b2ff717144aadb26b0529b0bf8` |
 | `e_kiem_excel/doc_bang.py` | 13973 | `040db8dcf22494b52f897f0ef833fae735d6c7545d487b533be21f98cb7f64f2` |
 | `e_kiem_excel/doc_tong_quat.py` | 8997 | `3375d048ed6be7662f91157c44de28111e8ca58324dd6816be4bd801a94b1ca1` |
@@ -213,12 +212,19 @@ Kiểm kê sau đây đã sinh lại cho toàn bộ gói, gồm các tệp TS-EX
 | `e_kiem_excel/nhan_dien.py` | 6696 | `9365db7e0b5094b7defa4761a00d621fe119a53c0db5a90d2f69d201c2abb6a7` |
 | `e_kiem_excel/so_do.py` | 4802 | `5be9894b22ff44c1ac3b55f8230b0aaf2f0e25f8d5381839c504fe7a801ba25b` |
 | `e_kiem_excel/tham_chieu.py` | 3712 | `820b34509482de02dde7fe3f2643ad0ee3afa09c17832ee03ddaf3755f19f19f` |
-| `engine.json` | 10326 | `644c1dff0a2183d87962b8e65bcc86fbb448fedbd494ae0e43bd22f06d1a8e36` |
-| `KHAI-SDK-2.1.json` | 1954 | `fbcd02cff5f49378d0186a0790c5934bfd0b6bf7a1b41bf516c17116ab323775` |
-| `README.md` | 13974 | `38d6a0935154700cfa3b2b5ec662ac1a85c6bc791558553e1f9e012470cf56fb` |
-| `requirements.lock` | 631 | `d82a377d03f0489bbfaccaa739373b000b45dd519b749a585edec90874dc99ec` |
+| `engine.json` | 10399 | `272df4d88beb8e2ca9fb05006065e7f6e712030e3727e716840de53f848f019b` |
+| `KHAI-SDK-2.1.json` | 1954 | `c13cac36753383fc6ae32abbd674ba3c5a677e1873ffa9bbc7bf2bd18558f096` |
+| `README.md` | 14233 | `de49c9f35a3914dcbb76008f6e0d6b086077a6145ec5631d80b283a5e242fbc6` |
+| `requirements.lock` | 566 | `199436aeaeb11a9927fe898cdc9c5dfad2ed512fc21880f522093fedd721f460` |
 | `ui/du_lieu.js` | 8960 | `185545b12d803edf4283840bab2f829dee81ca466c28642327dc30ede088ec08` |
 | `ui/kieu_dang.js` | 3157 | `a00bb04527ca52fdbf7ad913c3106353c96196ac9926f583c4f74688f58bbac8` |
 | `ui/tham_so.js` | 18615 | `56875ca51e781c8150d4aaeeed7632fa78c6952174c257fa51d63bf314bd5952` |
+| `wheels/defusedxml-0.7.1-py2.py3-none-any.whl` | 25604 | `a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61` |
+| `wheels/et_xmlfile-2.0.0-py3-none-any.whl` | 18059 | `7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa` |
+| `wheels/openpyxl-3.1.5-py2.py3-none-any.whl` | 250910 | `5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2` |
 
 <!-- KET-THUC-SHA256-EX6 -->
+
+## Wheel kèm gói (22/11/2026)
+
+Thư mục `wheels/` chứa wheel tải từ PyPI (pypi.org) đúng phiên bản và SHA-256 ghi ở `requirements.lock`; đã đối chiếu với băm PyPI ghim từ trước. Cả ba wheel thuần Python, dùng được cho CPython 3.13 win_amd64 và Linux CI. Giấy phép của từng thư viện nằm trong `*.dist-info` của wheel. SDK25 không tải mạng và không sửa wheel.

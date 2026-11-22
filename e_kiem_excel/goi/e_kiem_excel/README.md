@@ -1,6 +1,6 @@
-# Kiểm và đọc Excel — 0.1.1 (EX-6)
+# Kiểm và đọc Excel — 0.1.3 (SDK25)
 
-Khung SDK 2.2.0 cho `excel.toan_ven@1` và `excel.doc_bang@1`.
+Đã kiểm với SDK 2.5.0 cho `excel.toan_ven@1` và `excel.doc_bang@1`.
 Kiểm đuôi, chữ ký, ZIP/XML, trần ô trước khi nạp workbook. `excel.toan_ven@1`
 chạy K1–K8, tải JSON và báo cáo Excel qua Core; số trong JSON là chuỗi thập phân.
 K8 chỉ chạy khi bật `kiem_nguon_kl`. `excel.doc_bang@1` đọc được
@@ -23,8 +23,10 @@ Mã dùng chung cho EX-5: `bo_nhom.kiem_tu_khoa(tu)`,
 
 Không mạng ngoài Core, không CSDL, không ngăn/cấu hình, không lưu dữ liệu trên máy.
 DEMO hoàn toàn giả: Công ty DEMO Ánh Dương. Script sinh ở `tests/demo/sinh_demo.py`
-ngoài gói. Cài thư viện bằng `requirements.lock` với `--require-hashes --no-deps`;
-SDK cài riêng từ wheel 2.2.0 trong repo. Bật `PYTHONDONTWRITEBYTECODE=1` khi kiểm.
+ngoài gói. Core cấp SDK và tự cài thư viện offline từ `requirements.lock` và
+`wheels/` với `--require-hashes --only-binary :all: --no-deps`, vào thư mục riêng
+cạnh gói. Khi phát triển, cài SDK riêng từ wheel 2.5.0 trong repo.
+Bật `PYTHONDONTWRITEBYTECODE=1` khi kiểm.
 
 Trần đề xuất cuối EX-6: tệp 20 MiB; giải nén 128 MiB; 2.048 entry; 250.000 ô thực,
 500.000 ô trong tổng hình chữ nhật các sheet; thời hạn Core 120 giây.
@@ -32,16 +34,18 @@ Số đo và giới hạn phép kiểm ghi trong `docs/VIEC.md` ngoài gói.
 K7 giữ trần 14 tầng/12 mẫu mỗi dải của nguồn nhưng từ chối khi vượt,
 không cắt ngầm; thêm trần 100.000 nút, 250.000 ô/dải, 500.000 lượt đọc ô.
 
-SDK 2.2.0 kiểm MIME bằng chữ thường trong khi CoreGia trả MIME `.xlsm` có chữ
-hoa. Cổng tạm chuẩn hóa MIME trước bộ kiểm, cho cả đầu vào gửi kèm và tải riêng;
-không sửa phong bì gốc. Đợi Core/SDK sửa để bỏ lớp bọc này.
+SDK 2.5.0 vẫn từ chối MIME `.xlsm` có `macroEnabled.12` do CoreGia tự gán;
+MIME `application/vnd.ms-excel.sheet.macroenabled.12` được nhận. Engine dùng
+nguyên cửa công khai của SDK; cần Core chuẩn hóa MIME trước khi giao việc.
+Câu lỗi và log dùng chuẩn đã lọc của SDK.
 
 Đã kiểm bằng Core giả (CoreGia); chưa nối Core thật.
 
 Kiểm kê SHA-256: `NGUON.md` và `tests/demo/bam-goi.json` ngoài gói (gồm cả
-băm của NGUON.md). Cài sạch offline: `sh e_kiem_excel/tests/kiem_may_sach.sh
-<thu_muc_wheel>` trên Linux Python 3.11; Windows dùng `tests/KIEM-MAY-SACH.cmd`
-do Anh chạy. CI chuẩn bị wheel theo lock có hash rồi script cài hoàn toàn offline.
+băm của NGUON.md). Cài sạch offline: `sh e_kiem_excel/tests/kiem_may_sach.sh`
+trên Linux Python từ 3.11; Windows dùng `tests/KIEM-MAY-SACH.cmd`.
+Hai script mặc định dùng `wheels/` của gói, có thể truyền thư mục wheel qua
+đối số 1. CI kiểm Python 3.11/3.13 bằng wheel đi kèm, không tải lại thư viện runtime.
 
 ## Khuôn tổng quát (EX-5)
 

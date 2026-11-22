@@ -9,12 +9,67 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import re
 
 TESTS = Path(__file__).resolve().parent
 GOI = TESTS.parent / 'goi' / 'e_kiem_excel'
 KIEM_KE = TESTS / 'demo' / 'bam-goi.json'
 BAT_DAU = '<!-- BAT-DAU-SHA256-EX6 -->'
 KET_THUC = '<!-- KET-THUC-SHA256-EX6 -->'
+
+
+def chuan_ten(ten):
+    return re.sub(r'[-_.]+', '-', ten).lower()
+
+
+def doc_lock(goi=GOI):
+    """Đọc lock ASCII một dòng/thư viện; SDK do Core cấp riêng."""
+    try:
+        noi_dung = (Path(goi)/'requirements.lock').read_bytes().decode('ascii')
+    except UnicodeDecodeError:
+        raise ValueError('Lock phải là ASCII, không BOM.') from None
+    ghim = {}
+    for dong in noi_dung.splitlines():
+        if '\\' in dong or re.search(r'coding\s*[:=]', dong):
+            raise ValueError('Lock không được nối dòng hoặc khai coding.')
+        dong = dong.strip()
+        if not dong or dong.startswith('#'):
+            continue
+        mau = re.fullmatch(r'([A-Za-z0-9][A-Za-z0-9._-]*)=='
+                           r'([A-Za-z0-9][A-Za-z0-9.!+_-]*)'
+                           r'((?:[ \t]+--hash=sha256:[0-9a-f]{64})+)', dong)
+        if not mau:
+            raise ValueError('Lock cần ten==ban và SHA-256 trên cùng một dòng.')
+        ten = chuan_ten(mau[1])
+        if ten.startswith('kho-tri-thuc') or ten in ghim:
+            raise ValueError('Lock có tên dành riêng cho Core/SDK hoặc thư viện trùng.')
+        ghim[ten] = (mau[2], set(re.findall(r'sha256:([0-9a-f]{64})', mau[3])))
+    if not ghim:
+        raise ValueError('Lock phải có thư viện đã ghim.')
+    return ghim
+
+
+def kiem_wheel(goi=GOI):
+    ghim = doc_lock(goi)
+    da_co = set()
+    for tep in (Path(goi)/'wheels').iterdir():
+        if not tep.is_file() or tep.is_symlink() or tep.suffix != '.whl':
+            raise ValueError('Chỉ nhận wheel, không sdist hoặc thư mục con.')
+        phan = tep.stem.split('-')
+        if len(phan) not in {5, 6}:
+            raise ValueError('Tên wheel không hợp lệ.')
+        ten, ban = chuan_ten(phan[0]), phan[1]
+        if ten not in ghim or ten in da_co or ban != ghim[ten][0]:
+            raise ValueError('Mỗi thư viện trong lock phải có đúng một wheel cùng bản.')
+        if hashlib.sha256(tep.read_bytes()).hexdigest() not in ghim[ten][1]:
+            raise ValueError('SHA-256 wheel không khớp lock.')
+        python, abi, nen = phan[-3:]
+        if not ((nen == 'any' and abi == 'none' and 'py3' in python.split('.'))
+                or (python == 'cp313' and abi == 'cp313' and nen == 'win_amd64')):
+            raise ValueError('Wheel phải thuần Python hoặc cp313 win_amd64.')
+        da_co.add(ten)
+    if da_co != set(ghim):
+        raise ValueError('Thiếu wheel của thư viện trong lock.')
 
 
 def cac_tep(goi):
@@ -61,21 +116,22 @@ def kiem(goi, kiem_ke):
     print(f'[ĐẠT] SHA-256 nguyên trạng {len(thuc)}/{len(thuc)} tệp, gồm NGUON.md.')
 
 
-def kiem_phu_thuoc():
+def kiem_phu_thuoc(goi=GOI):
     """SDK chỉ dùng phần engine theo hướng dẫn --no-deps của bộ phát hành."""
     from importlib.metadata import version
     import subprocess
     import sys
     from openpyxl.xml import DEFUSEDXML
-    for ten, ban in {'kho_tri_thuc_sdk':'2.2.0', 'openpyxl':'3.1.5',
-                     'et_xmlfile':'2.0.0', 'defusedxml':'0.7.1'}.items():
+    kiem_wheel(goi)
+    for ten, (ban, _) in doc_lock(goi).items():
         assert version(ten) == ban, 'Thư viện không đúng bản ghim.'
     assert DEFUSEDXML, 'Chưa bật bộ phân tích XML an toàn.'
     run = subprocess.run([sys.executable, '-B', '-m', 'pip', 'check'],
                          capture_output=True, text=True, check=False)
     # Chỉ hai dependency phần MODULE của wheel SDK được phép không cài.
-    cho_phep = {'kho-tri-thuc-sdk 2.2.0 requires cryptography, which is not installed.',
-                'kho-tri-thuc-sdk 2.2.0 requires jsonschema, which is not installed.'}
+    ban_sdk = version('kho_tri_thuc_sdk')
+    cho_phep = {f'kho-tri-thuc-sdk {ban_sdk} requires {ten}, which is not installed.'
+                for ten in ('cryptography', 'jsonschema')}
     loi = set(run.stdout.splitlines())
     if run.returncode and (run.returncode != 1 or not loi or not loi <= cho_phep or run.stderr):
         raise ValueError('Dependency thiếu/xung đột ngoài phần module SDK được loại trừ.')
@@ -128,7 +184,7 @@ def main():
         cap_nhat(args.goi, args.kiem_ke)
     kiem(args.goi, args.kiem_ke)
     if args.phu_thuoc:
-        kiem_phu_thuoc()
+        kiem_phu_thuoc(args.goi)
     if args.dong_goi_thu:
         dong_thu(args.goi)
 

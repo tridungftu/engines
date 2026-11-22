@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cấu hình đếm lượt gọi DEMO",
+  "type": "object",
+  "properties": {
+    "tien_to": {"type": "string", "title": "Tiền tố bí danh", "default": "DEMO"}
+  },
+  "additionalProperties": false
+}

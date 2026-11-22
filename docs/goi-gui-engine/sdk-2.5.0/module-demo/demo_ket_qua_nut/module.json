@@ -1,0 +1,214 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "module",
+  "ma": "demo_ket_qua_nut",
+  "ten": "Kết quả theo đợt DEMO",
+  "phien_ban": "1.0.2",
+  "nha_phat_trien": {
+    "ten": "Nhóm phát triển Core (gói DEMO)",
+    "lien_he": "Lead dự án Core",
+    "mo_ta": "Gói DEMO kiểm tra cổng module chung."
+  },
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "sdk": ">=2.5.0 <3.0.0"
+  },
+  "goi": {
+    "tep_kiem_ke": "KIEM-KE.json",
+    "thuat_toan_ma_bam": "sha256",
+    "phu_thuoc_module": []
+  },
+  "backend": {
+    "diem_vao": "backend.chay"
+  },
+  "tien_trinh": {
+    "cong": {
+      "nguon": "core_cap",
+      "pham_vi": "loopback"
+    },
+    "nhan_listener": "socket.fromshare",
+    "readiness": "kenh_dieu_khien",
+    "thu_hoi": "drain_va_xac_nhan",
+    "bi_mat": "stdin_hoac_handle",
+    "che_do_mac_dinh": "tu_kich_hoat_tu_dong",
+    "ranh_giay_de_xuat": 300
+  },
+  "giao_dien": {
+    "diem_vao": "frontend/chinh.js",
+    "tai_nguyen": [
+      "frontend/chinh.js",
+      "frontend/chinh.css"
+    ],
+    "icon": "folder",
+    "trang_dau": "tong_quan",
+    "phan": [
+      {
+        "ma": "tong_quan",
+        "ten": "Kết quả theo đợt",
+        "icon": "home",
+        "thu_tu": 1,
+        "quyen_xem": "dot_demo.xem"
+      }
+    ]
+  },
+  "quyen": [
+    {
+      "ma": "dot_demo.xem",
+      "ten": "Xem kết quả theo đợt"
+    },
+    {
+      "ma": "dot_demo.lap",
+      "ten": "Gửi tệp cho đợt DEMO"
+    }
+  ],
+  "hanh_dong": [
+    {
+      "ma": "danh_sach",
+      "ten": "Danh sách đợt và kết quả",
+      "phuong_thuc": "GET",
+      "duong_dan": "/dot-demo",
+      "quyen": "dot_demo.xem",
+      "dau_ra": "schema/danh_sach.json",
+      "kieu": "dong_bo",
+      "chong_trung": false,
+      "sdk_dung": [
+        "ngan.doc"
+      ]
+    },
+    {
+      "ma": "ghi_viec",
+      "ten": "Lưu việc của đợt đã chọn",
+      "phuong_thuc": "POST",
+      "duong_dan": "/dot-demo/viec",
+      "quyen": "dot_demo.lap",
+      "dau_vao": "schema/ghi_viec.json",
+      "dau_ra": "schema/ket_qua.json",
+      "kieu": "dong_bo",
+      "chong_trung": true,
+      "sdk_dung": [
+        "ngan.doc",
+        "ngan.them",
+        "ngan.sua",
+        "quy_trinh.ds_tep_ket_qua",
+        "quy_trinh.doc_tep_ket_qua"
+      ]
+    }
+  ],
+  "ma_loi": [
+    {
+      "ma": "DOT_KHONG_HOP_LE",
+      "http": 400,
+      "thong_diep": "Hãy chọn một đợt DEMO trong danh sách."
+    },
+    {
+      "ma": "VIEC_KHONG_HOP_LE",
+      "http": 400,
+      "thong_diep": "Chưa nhận được mã việc hợp lệ. Hãy gửi lại tệp."
+    },
+    {
+      "ma": "VIEC_DA_GAN",
+      "http": 409,
+      "thong_diep": "Việc này đã được gắn với một đợt khác."
+    },
+    {
+      "ma": "VIEC_CHUA_GAN",
+      "http": 409,
+      "thong_diep": "Chưa lưu được liên kết với đợt đã chọn."
+    }
+  ],
+  "du_lieu": {
+    "ngan": [
+      {
+        "ma": "ket_qua",
+        "ten": "Kết quả theo đợt",
+        "mo_ta": "Mỗi dòng là một lần gửi, liên kết đợt DEMO và việc đã gửi.",
+        "cot": [
+          {
+            "ma": "dot_demo",
+            "ten": "Đợt DEMO",
+            "kieu": "van_ban"
+          },
+          {
+            "ma": "viec_id",
+            "ten": "Việc đã gửi",
+            "kieu": "van_ban"
+          },
+          {
+            "ma": "trang_thai",
+            "ten": "Trạng thái",
+            "kieu": "van_ban"
+          },
+          {
+            "ma": "so_dong",
+            "ten": "Số dòng",
+            "kieu": "so"
+          },
+          {
+            "ma": "so_tu",
+            "ten": "Số từ",
+            "kieu": "so"
+          },
+          {
+            "ma": "dong_dau",
+            "ten": "Dòng đầu",
+            "kieu": "van_ban"
+          },
+          {
+            "ma": "thong_diep",
+            "ten": "Thông báo",
+            "kieu": "van_ban"
+          },
+          {
+            "ma": "ma_loi",
+            "ten": "Chi tiết hỗ trợ",
+            "kieu": "van_ban"
+          },
+          {
+            "ma": "tep_ket_qua",
+            "ten": "Tệp kết quả",
+            "kieu": "tep",
+            "bat_buoc": false
+          }
+        ]
+      }
+    ],
+    "goi_migration": null
+  },
+  "contract": {
+    "cong_bo": [
+      {
+        "ma": "demo_ket_qua_nut_ket_qua",
+        "phien_ban": "1.0.1",
+        "module_so_huu": "demo_ket_qua_nut",
+        "tep_mo_ta": "contract/ket_qua.mo_ta.json",
+        "schema": "contract/ket_qua.schema.json",
+        "vi_du": "contract/ket_qua.vi_du.json",
+        "quyen_doc": "dot_demo.xem",
+        "ngan": "ket_qua"
+      }
+    ]
+  },
+  "nut": [
+    {
+      "ma": "xuat_thong_ke",
+      "ten": "Gửi tệp của đợt",
+      "phan": "tong_quan",
+      "thao_tac_dau": "tai_tep",
+      "nhan_tep": {
+        "mime": [
+          "text/plain"
+        ],
+        "toi_da_mib": 5
+      },
+      "ngan_ket_qua": "ket_qua",
+      "quyen": "dot_demo.lap",
+      "sdk_dung": [
+        "quy_trinh.ket_qua",
+        "ngan.doc",
+        "ngan.sua",
+        "quy_trinh.ds_tep_ket_qua",
+        "quy_trinh.doc_tep_ket_qua"
+      ]
+    }
+  ]
+}

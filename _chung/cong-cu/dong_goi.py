@@ -19,6 +19,8 @@ CAC_ENGINE = ("e_hoa_don", "e_hoi_ai", "e_ocr", "e_trich_xuat", "e_doi_chieu", "
 TEP_GOC = {"engine.json", "README.md", "CHANGELOG.md", "NGUON.md",
            "requirements.lock", "cau_hinh.schema.json", ".gitattributes"}
 TEN_CAM = {".venv", "__pycache__", ".pytest-tmp", ".pytest_cache", "luu-tru"}
+# Gói kèm thư viện (phu_thuoc_python) cần SDK 2.4.0 trở lên phía Core.
+KHOANG_SDK = (">=2.2.0 <3.0.0", ">=2.4.0 <3.0.0")
 THOI_GIAN = (1980, 1, 1, 0, 0, 0)
 
 
@@ -83,6 +85,7 @@ def kiem_ten(ten, ma):
         (p.parts[0] == ma and (duoi == ".py" or p.name == "LICENSE"))
         or (len(p.parts) == 3 and p.parts[0] == ma and p.parts[1] == "schemas" and p.name.endswith(".schema.json"))
         or (len(p.parts) == 3 and p.parts[0] == ma and p.parts[1] == "tu_dien" and duoi in {".txt", ".json"})
+        or (len(p.parts) == 2 and p.parts[0] == "wheels" and duoi == ".whl")
         or (p.parts[0] == "contract" and duoi == ".json")
         or (p.parts[0] == "demo" and duoi in
             {".txt", ".json", ".xml", ".pdf", ".png", ".jpg", ".jpeg", ".docx", ".xlsx", ".zip", ".md"})
@@ -151,6 +154,40 @@ def kiem_ke_sql(cac_tep, phieu):
         raise LoiDongGoi("Kiểm kê SQL chưa bao gồm đúng toàn bộ gói.")
 
 
+def kiem_thu_vien(cac_tep, phieu):
+    """Lock một dòng/thư viện, mỗi dòng đúng một wheel khớp băm; không wheel thừa (phiếu Core CĐ-50 mục 6)."""
+    wheels = {ten for ten in cac_tep if ten.startswith("wheels/")}
+    khai = phieu.get("phu_thuoc_python")
+    if khai is None:
+        if wheels:
+            raise LoiDongGoi("Gói có wheels/ nhưng phiếu chưa khai phu_thuoc_python.")
+        return
+    if (khai != {"lock": "requirements.lock", "wheels": "wheels"}
+            or phieu["tuong_thich"]["sdk"] != ">=2.4.0 <3.0.0"):
+        raise LoiDongGoi("Khai báo thư viện phải là lock requirements.lock, wheels wheels, SDK >=2.4.0.")
+    raw = cac_tep["requirements.lock"]
+    if any(b not in (10, 13) and not 32 <= b <= 126 for b in raw):
+        raise LoiDongGoi("requirements.lock chỉ được dùng ASCII.")
+    chuan = lambda t: re.sub(r"[-_.]+", "-", t).lower()
+    lock = {}
+    for dong in raw.decode("ascii").splitlines():
+        if not dong.strip() or dong.startswith("#"):
+            continue
+        m = re.fullmatch(r"([A-Za-z0-9][A-Za-z0-9._-]*)==([0-9][A-Za-z0-9.!+_]*)((?: --hash=sha256:[0-9a-f]{64})+)", dong)
+        if not m or chuan(m[1]).startswith("kho-tri-thuc") or chuan(m[1]) in lock:
+            raise LoiDongGoi("requirements.lock có dòng sai khuôn, trùng hoặc chứa SDK: " + dong[:60])
+        lock[chuan(m[1])] = (m[2], set(re.findall(r"[0-9a-f]{64}", m[3])))
+    gap = {}
+    for ten in sorted(wheels):
+        phan = ten[len("wheels/"):].split("-")
+        ma = chuan(phan[0])
+        if ma not in lock or ma in gap or phan[1] != lock[ma][0] or sha256(cac_tep[ten]) not in lock[ma][1]:
+            raise LoiDongGoi("Wheel thừa, trùng, sai phiên bản hoặc sai băm: " + ten)
+        gap[ma] = ten
+    if set(gap) != set(lock):
+        raise LoiDongGoi("Thiếu wheel cho: " + ", ".join(sorted(set(lock) - set(gap))))
+
+
 def tao_zip(ma, cac_tep):
     bo_nho = io.BytesIO()
     # ZIP_STORED tránh phụ thuộc phiên bản zlib; đổi kích thước lấy tính tất định.
@@ -187,9 +224,10 @@ def dong_goi(repo, engines, ra, nhan, ref="HEAD"):
         phieu = doc_json(cac_tep["engine.json"])
         if (not isinstance(phieu, dict) or phieu.get("ma") != ma
                 or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", str(phieu.get("phien_ban", "")))
-                or phieu.get("tuong_thich", {}).get("sdk") != ">=2.2.0 <3.0.0"):
-            raise LoiDongGoi("Phiếu sai mã, phiên bản hoặc khoảng SDK 2.2.0.")
+                or phieu.get("tuong_thich", {}).get("sdk") not in KHOANG_SDK):
+            raise LoiDongGoi("Phiếu sai mã, phiên bản hoặc khoảng SDK.")
         kiem_ke_sql(cac_tep, phieu)
+        kiem_thu_vien(cac_tep, phieu)
         ten_zip = f"{ma}-{phieu['phien_ban']}.zip"
         dau_ra[ten_zip] = tao_zip(ma, cac_tep)
         danh_sach.append({

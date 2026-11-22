@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ktt:contract:demo_ho_so_ho_so.v1",
+  "title": "Hồ sơ DEMO công bố",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "ten_ho_so", "so_tu", "so_dong", "tep_goc", "tao_luc"],
+  "properties": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 64},
+    "ten_ho_so": {"type": ["string", "null"], "maxLength": 500},
+    "so_tu": {"type": ["integer", "null"], "minimum": 0},
+    "so_dong": {"type": ["integer", "null"], "minimum": 0},
+    "tep_goc": {"type": ["string", "null"], "maxLength": 64},
+    "tao_luc": {"type": "string", "minLength": 1, "maxLength": 40}
+  }
+}

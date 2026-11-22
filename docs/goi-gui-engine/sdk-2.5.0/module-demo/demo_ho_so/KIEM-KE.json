@@ -1,0 +1,75 @@
+{
+ "phien_ban": "1.0.0",
+ "tep": [
+  {
+   "duong_dan": "README.md",
+   "bytes": 3734,
+   "sha256": "81ec45642acf1fb95ccaca1ed415a3f5bbd0150f4e961bac3b7f5dad3b2bc6b2"
+  },
+  {
+   "duong_dan": "backend/__init__.py",
+   "bytes": 89,
+   "sha256": "e6b17db9af329361a4b54eed0ce1e132a376c506a6628b908ead754cc96969c8"
+  },
+  {
+   "duong_dan": "backend/bo_chay.py",
+   "bytes": 14082,
+   "sha256": "c37b6cf01b6897aaefd63604e0421fcc6dad989243fd8154bd4512f3741a4e27"
+  },
+  {
+   "duong_dan": "backend/chay.py",
+   "bytes": 980,
+   "sha256": "ea443611416939459d5c21b2b683e13ee2bf2444f13bad103310a6948f6cfcd6"
+  },
+  {
+   "duong_dan": "backend/xu_ly.py",
+   "bytes": 4522,
+   "sha256": "582b7eb883bd638967b79c999adc992a9f660a51b43c9f2600e87d84384e5bc3"
+  },
+  {
+   "duong_dan": "contract/ho_so.mo_ta.json",
+   "bytes": 1190,
+   "sha256": "2fa840ce02bc62ddf28adc905f179bf84629285544734f4f372a24e87f940743"
+  },
+  {
+   "duong_dan": "contract/ho_so.schema.json",
+   "bytes": 680,
+   "sha256": "21a125ca16022e9a7e98a939933163515d2e4b02b8a08048c6dd784482a66866"
+  },
+  {
+   "duong_dan": "contract/ho_so.vi_du.json",
+   "bytes": 209,
+   "sha256": "73ddda3b64b544e0b7948aef72d670c41d516b02e7be64ea5c1ca76b15d33c5e"
+  },
+  {
+   "duong_dan": "demo/ho_so_mau.txt",
+   "bytes": 126,
+   "sha256": "7077b227cb667853a033eba40b9fb8086f700f9983051b243532a1c0fff988c2"
+  },
+  {
+   "duong_dan": "frontend/chinh.css",
+   "bytes": 220,
+   "sha256": "e8c116b4f30b999afd6452baecde15e979736eecf224f3d5dfe5b812a76d7515"
+  },
+  {
+   "duong_dan": "frontend/chinh.js",
+   "bytes": 2188,
+   "sha256": "ccde32399b25af0e4b2799129dbb6c048691f2c1bb83efe42f1f19039a2bdd79"
+  },
+  {
+   "duong_dan": "module.json",
+   "bytes": 3466,
+   "sha256": "8396501cf1f57e065bd3f90b609fd9c774578ed95d2d30276a81c7119e6edf08"
+  },
+  {
+   "duong_dan": "schema/danh_sach_ho_so_ra.v1.json",
+   "bytes": 897,
+   "sha256": "395e2ed1e82bdeb529df0e61a3bdea65a8f049ef5f055f7287162d67875b668c"
+  },
+  {
+   "duong_dan": "schema/ho_so_ra.v1.json",
+   "bytes": 779,
+   "sha256": "31bd49257b88a3792d21b16e2730858bd7d28faf015afc43b57f46080a2305a3"
+  }
+ ]
+}

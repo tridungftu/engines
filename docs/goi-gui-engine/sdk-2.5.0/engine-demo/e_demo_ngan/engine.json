@@ -1,0 +1,138 @@
+{
+  "phien_ban_manifest": 2,
+  "loai": "engine",
+  "ma": "e_demo_ngan",
+  "ten": "Đếm lượt gọi theo ngày (DEMO)",
+  "phien_ban": "1.1.0",
+  "tuong_thich": {
+    "core": ">=2.0.0 <3.0.0",
+    "api": "v1",
+    "sdk": ">=2.2.0 <3.0.0"
+  },
+  "che_do_chay": "cuc_bo",
+  "diem_vao": {
+    "lenh": [
+      "{python}",
+      "-m",
+      "e_demo_ngan.chay"
+    ],
+    "thu_muc": "."
+  },
+  "nang_luc": [
+    {
+      "ma": "dem.goi@1",
+      "ten": "Đếm lượt gọi",
+      "nhan": [
+        "van_ban"
+      ],
+      "tra": "truong",
+      "truong_ra": [
+        {
+          "ma": "so_lan",
+          "ten": "Số lần gọi trong ngày",
+          "kieu": "so"
+        }
+      ],
+      "gioi_han": {
+        "ky_tu_toi_da": 10000,
+        "thoi_han_giay": 60
+      },
+      "huy_duoc": true,
+      "tham_so": []
+    }
+  ],
+  "ngan_du_lieu": [
+    {
+      "bang": "dem_goi",
+      "ten": "Đếm lượt gọi",
+      "pham_vi": "phap_nhan",
+      "khoa": [
+        "ngay"
+      ],
+      "duy_nhat": [
+        [
+          "phap_nhan_id",
+          "ngay"
+        ]
+      ],
+      "truong": [
+        {
+          "ma": "ngay",
+          "kieu": "ngay",
+          "bat_buoc": true
+        },
+        {
+          "ma": "so_lan",
+          "kieu": "so",
+          "bat_buoc": true
+        },
+        {
+          "ma": "ghi_chu",
+          "ten": "Ghi chú",
+          "kieu": "van_ban"
+        }
+      ],
+      "giu_toi_da_ngay": 90
+    },
+    {
+      "bang": "dinh_danh",
+      "ten": "Định danh DEMO",
+      "pham_vi": "engine",
+      "khoa": [
+        "gia_tri"
+      ],
+      "truong": [
+        {
+          "ma": "gia_tri",
+          "kieu": "van_ban",
+          "bi_mat": true,
+          "bat_buoc": true
+        },
+        {
+          "ma": "bi_danh",
+          "kieu": "van_ban"
+        }
+      ]
+    }
+  ],
+  "cau_hinh": {
+    "schema": "cau_hinh.schema.json"
+  },
+  "du_lieu": {
+    "goi_migration": {
+      "ma": "e_demo_ngan",
+      "thu_muc": "sql",
+      "tep_kiem_ke": "sql/kiem_ke.json",
+      "phien_ban_du_lieu": 2
+    }
+  },
+  "loai_du_lieu_rieng": [],
+  "tai_nguyen": {
+    "so_viec_dong_thoi": 1
+  },
+  "readiness": {
+    "thoi_han_giay": 30
+  },
+  "chay_thu_demo": [
+    {
+      "nang_luc": "dem.goi@1",
+      "ten": "Tăng lượt gọi DEMO",
+      "dau_vao": {
+        "loai": "van_ban",
+        "van_ban": "Xin chào DEMO"
+      },
+      "tham_so": {}
+    },
+    {
+      "nang_luc": "dem.goi@1",
+      "ten": "Ghi định danh DEMO",
+      "dau_vao": {
+        "loai": "van_ban",
+        "van_ban": "DD:CAN-CUOC-DEMO-001"
+      },
+      "tham_so": {}
+    }
+  ],
+  "bi_mat": [],
+  "webhook": null
+}

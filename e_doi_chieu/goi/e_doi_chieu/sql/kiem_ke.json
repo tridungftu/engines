@@ -8,8 +8,8 @@
     },
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 27016,
-      "sha256": "027a6af6d1168ebed3c1b8754dc0bccf33a4f4d865bda22ffbfb3123fc56789f"
+      "bytes": 28464,
+      "sha256": "9591b5cc3a79e246d3850636d3660c48329bf63ef5bfd5f37c548c0d6d48bf1f"
     },
     {
       "duong_dan": "KHAI-SDK-2.1.json",
@@ -18,8 +18,8 @@
     },
     {
       "duong_dan": "NGUON.md",
-      "bytes": 35747,
-      "sha256": "bf54d89dd28c9e87cbe4c5c9a263f548381ffd5cddc49ababf48a29592a96a25"
+      "bytes": 36201,
+      "sha256": "1aff62f847185d454bb8b3a30a2c46e16980eed302e343b5687c00185049101e"
     },
     {
       "duong_dan": "README.md",
@@ -28,8 +28,8 @@
     },
     {
       "duong_dan": "cau_hinh.schema.json",
-      "bytes": 3311,
-      "sha256": "e38e7414afacb2b1abc8fa1e01e28c130213686d79ea3f3d71d7873f5ab39b87"
+      "bytes": 16854,
+      "sha256": "7d778dcd893cafe594e928eb277a04acf22f8e90132897203202c69b4b5361fc"
     },
     {
       "duong_dan": "demo/DEMO-ban-chot.docx",
@@ -113,8 +113,8 @@
     },
     {
       "duong_dan": "e_doi_chieu/so_chu.py",
-      "bytes": 21347,
-      "sha256": "f6045c6494422bb842c638d90f378e8e95d66ad3d0996fff9d365814779f5038"
+      "bytes": 21689,
+      "sha256": "0f30caca818992c0dcb030c7e48c4198bfeb22fade93d7fddd1eea385d5ee06e"
     },
     {
       "duong_dan": "e_doi_chieu/sua_tay.py",
@@ -208,18 +208,18 @@
     },
     {
       "duong_dan": "ui/cau_hinh.js",
-      "bytes": 6812,
-      "sha256": "a3afcf83fb4f97ecf8838113776446e170904251d2ad2788d087986304b0bdbc"
+      "bytes": 13220,
+      "sha256": "277b4d15699b0d9856dd6d867258926f1520c1e3782427f401f8a2936f2dc4a6"
     },
     {
       "duong_dan": "ui/ket_qua.js",
-      "bytes": 15043,
-      "sha256": "1c46bacb03091f777e7c7930bb511e160c5e11a9492680d0a87a65f4450030be"
+      "bytes": 14997,
+      "sha256": "db596791e2e7f96188c3a18684c550792d346a811837333f8e5609868da95d51"
     },
     {
       "duong_dan": "ui/loi_ocr.js",
-      "bytes": 4158,
-      "sha256": "cab2e90b69e256d910039989e794d5584443b03d34a145bb060f471b3192dc7c"
+      "bytes": 4154,
+      "sha256": "cd1d4e50013c514d0c1c038f23c0455bc3b33e6131ead6e9a12bde2a209dd480"
     },
     {
       "duong_dan": "ui/soan_quy_tac.js",

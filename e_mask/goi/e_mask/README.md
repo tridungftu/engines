@@ -1,5 +1,19 @@
 # e_mask — Che định danh văn bản
 
+## UI-MASK — 21/11/2026
+
+Màn `ui/cau_hinh.js` nạp như màn module bằng `nap({goc, KttCore})` (trả hàm dọn màn); stylesheet tương đối `ui/cau_hinh.css`. Bản khai dự kiến tại `KHAI-SDK-2.1.json` chỉ chứa cửa màn chưa được SDK 2.2.0 nhận. Không thêm khóa vào engine.json. Đã kiểm bằng Core giả (CoreGia), chưa nạp trong Core thật.
+
+- Thời hạn ánh xạ: ô số nguyên 60–900 giây, ví dụ/mặc định 600 giây. Cấu trúc cấu hình: `{"thoi_han_anh_xa_giay":600}`; trường tùy chọn, bỏ trống trong dữ liệu dùng mặc định. Màn bắt buộc điền số hợp lệ trước khi lưu. Áp dụng cho chuỗi mới; ánh xạ chỉ trong RAM, hết hạn/mất RAM phải chạy lại toàn chuỗi, không gia hạn theo truy cập.
+- Đọc bằng `KttCore.engine("e_mask").cau_hinh.doc()` trả `{gia_tri, phien_ban_cau_hinh}`; lưu bằng `.luu(gia_tri, phien_ban_cau_hinh)` trả `{phien_ban_cau_hinh}` mới. Lưu dùng đúng phiên đã đọc; tranh chấp hoặc mất ACK thì tải lại trước khi lưu tiếp. Đây là hợp đồng cửa trình duyệt đề nghị, chờ Core xác nhận; không tự bổ sung vào SDK Python.
+- Bộ tiền tố và từ điển chỉ đọc, thể hiện tài nguyên cố định của gói, không phải kết quả kiểm sức khỏe tiến trình. Từ điển được runtime kiểm SHA lúc nạp; test đối chiếu thẻ với danh mục Python và SHA thật. Prompt/model Local thuộc module/quy trình.
+- Màn duyệt chỉ nhận metadata, tên gốc không đi vào DOM. ID nằm trong Nâng cao; xem/duyệt vẫn cần C-P4-06 xác minh tại Core. Thiếu cửa thì giữ chờ, không có đường ghi ngăn thay thế.
+- Lát này không có máy/dịch vụ ngoài, nút kiểm kết nối hoặc API key (`bi_mat: []`), nên các ca kiểm máy/bốn ký tự cuối không áp dụng. UI không gọi cửa bí mật.
+
+Kiểm offline: `node --test e_mask/tests/ui/cau_hinh.test.mjs e_mask/tests/ui/duyet_dinh_danh.test.mjs`. Dựng ảnh DEMO bằng `python -B -m http.server 8766 --bind 127.0.0.1 --directory .`, rồi mở `/e_mask/tests/ui/xem_thu.html`. Fixture KttCore chỉ trong tests, không gửi trong gói chạy. Ảnh và báo cáo ở `e_mask/docs/anh-ui-mask/` và `e_mask/docs/BAO-CAO-UI-MASK.md`.
+
+Các mục bên dưới ghi lịch sử theo từng lát; cấu hình hiện hành là thời hạn ánh xạ nêu trên, không còn cấu hình rỗng của MASK-S22.
+
 MASK-S22, 15/11/2026: bản gói 1.3.0, SDK 2.2.0. Đã kiểm bằng Core giả (CoreGia). Cấu hình khai bằng `cau_hinh.schema.json`, đọc bản chụp `viec.cau_hinh`; hiện chưa có trường cấu hình engine, giá trị hợp lệ là `{}`. Prompt/model Local thuộc module/quy trình và vẫn do cổng Core tin cậy cấp. Không đưa chúng vào cấu hình Mask hoặc tự cấp quyền từ cấu hình. Không cần callback đổi cấu hình vì engine chưa có đệm phụ thuộc cấu hình.
 
 Theo chỉ dẫn Lead riêng MASK-S22 và CĐ-36, kho bí danh giữ RAM qua cổng hiện tại (`app.kho_bi_danh_ram`), tách khỏi `app.ngan`/`viec.ngan` của SDK. Khởi động lại mất dữ liệu. Chưa chuyển kho bí danh sang Core; thiết kế mở che theo CĐ-36 thuộc MASK-P3, không có đường giải mã mới. Không khai bảng ngăn hoặc migration cho kho này. Màn duyệt giữ nguyên để kiểm hồi quy với KttCore giả; chưa nối ngăn Core thật. Cloud giữ tắt.

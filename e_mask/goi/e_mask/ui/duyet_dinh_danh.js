@@ -8,13 +8,16 @@ export function taoMan({ KttCore, goc, document = globalThis.document }) {
   const thongBao = document.createElement("p");
   const bang = document.createElement("table");
   const tao = (ten, chu) => { const e = document.createElement(ten); e.textContent = chu; return e; };
-  noi.append(tao("h2", "Duyệt danh sách chờ"), thongBao, bang);
+  const khungBang = tao("div", ""); khungBang.className = "mask-duyet-bang";
+  khungBang.append(bang);
+  thongBao.setAttribute("role", "status");
+  noi.append(tao("h3", "Danh sách chờ duyệt"), thongBao, khungBang);
   goc.append(noi);
   const nhom = { CONG_TY: "Công ty", CA_NHAN: "Cá nhân", DIA_CHI: "Địa chỉ",
     MA_SO_THUE: "Mã số thuế", TAI_KHOAN: "Tài khoản", KHAC: "Khác" };
   const idDung = (v) => typeof v === "string" && /^(?:[0-9a-f]{32}|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(v);
   const phienDung = (v) => Number.isSafeInteger(v) && v > 0;
-  const cho = "Chưa xác minh được tại Core. Anh hãy tải lại danh sách và xem lại tại Core.";
+  const cho = "Chưa xác minh được tại Core. Tải lại danh sách và xem lại tại Core.";
   let ds = [], tiep = null, dangChay = false, luot = 0;
   const veXem = new Map();
   function metadata(r) {
@@ -51,7 +54,7 @@ export function taoMan({ KttCore, goc, document = globalThis.document }) {
     catch (loi) {
       veXem.clear();
       thongBao.textContent = ["NGAN_XUNG_DOT", "MASK_XUNG_DOT"].includes(loi?.ma)
-        ? "Danh sách vừa thay đổi. Anh hãy tải lại và xem lại tại Core." : cho;
+        ? "Danh sách vừa thay đổi. Tải lại và xem lại tại Core." : cho;
       return false;
     } finally { dangChay = false; ve(); }
   }
@@ -98,14 +101,18 @@ export function taoMan({ KttCore, goc, document = globalThis.document }) {
   function ve() {
     bang.replaceChildren();
     const dau = document.createElement("tr");
-    for (const t of ["ID tham chiếu", "Bí danh", "Nhóm", "Trạng thái", "Số gặp", "Mã đối tác (nếu có)", "Thao tác"]) dau.append(tao("th", t));
+    for (const t of ["Tham chiếu", "Bí danh", "Nhóm", "Trạng thái", "Số gặp", "Mã đối tác (nếu có)", "Thao tác"]) dau.append(tao("th", t));
     bang.append(dau);
     for (const m of ds) {
       const hang = document.createElement("tr");
-      hang.append(tao("td", m.id_dinh_danh), tao("td", m.bi_danh || "Chưa cấp"),
+      const thamChieu = tao("td", ""), nangCao = tao("details", "");
+      nangCao.append(tao("summary", "Nâng cao"), tao("span", m.id_dinh_danh));
+      thamChieu.append(nangCao);
+      hang.append(thamChieu, tao("td", m.bi_danh || "Chưa cấp"),
         tao("td", nhom[m.nhom]), tao("td", "Chờ duyệt"), tao("td", String(m.so_gap)));
       const cot = document.createElement("td"), o = document.createElement("input");
-      o.setAttribute("aria-label", "Mã đối tác"); cot.append(o); hang.append(cot);
+      o.setAttribute("aria-label", "Mã đối tác"); o.placeholder = "KH-DEMO-001";
+      cot.append(o, tao("small", "Không bắt buộc; để trống để cấp bí danh tự sinh.")); hang.append(cot);
       const tac = document.createElement("td"), chuaXem = !veXem.has(m.id_dinh_danh);
       tac.append(nut("Xem tại Core", () => xem(m), typeof engine.thao_tac !== "function"),
         nut("Duyệt", () => duyet(m, o.value.trim()), chuaXem),

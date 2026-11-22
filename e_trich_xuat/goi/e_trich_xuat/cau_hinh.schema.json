@@ -3,14 +3,26 @@
   "title": "Cấu hình Trích thông tin hợp đồng",
   "type": "object",
   "additionalProperties": false,
-  "required": ["ngan_sach_token_vao_toi_da"],
+  "required": [
+    "ngan_sach_token_vao_toi_da"
+  ],
   "properties": {
     "ngan_sach_token_vao_toi_da": {
       "type": "integer",
       "title": "Trần ngân sách đầu vào AI (token ước lượng)",
       "minimum": 1024,
       "maximum": 100000,
-      "default": 16000
+      "default": 16000,
+      "description": "Số nguyên bắt buộc từ 1.024 đến 100.000; giới hạn token đầu vào AI cho mỗi lần xử lý. Giá trị đề xuất: 16.000 token.",
+      "examples": [
+        16000
+      ]
     }
-  }
+  },
+  "description": "Cấu hình gồm ngan_sach_token_vao_toi_da (số nguyên, bắt buộc, 1.024–100.000): trần token đầu vào AI cho mỗi lần xử lý. Giá trị đề xuất là 16000. Mẫu đầy đủ: {\"ngan_sach_token_vao_toi_da\": 16000}.",
+  "examples": [
+    {
+      "ngan_sach_token_vao_toi_da": 16000
+    }
+  ]
 }

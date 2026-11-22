@@ -26,7 +26,7 @@ test("Đọc/lưu CAS; default trên bản sao, không tự lưu khi mount", asy
   assert.equal(fake.luu[0].v.cat_doan.do_dai_muc_tieu, 3000);
   assert.match(root.textContent, /Đã lưu cấu hình/);
   assert.match(root.textContent, /Chưa đo/);
-  assert.doesNotMatch(root.textContent, /0%/);
+  assert.equal(root.all().find(n => n.id === "tc-nguong").value, "Chưa đo");
   assert.deepEqual(fake.engines, ["e_tra_cuu"]);
 });
 test("Thiếu cấu hình: chỉ lưu khi người dùng điền hợp lệ, CAS tạo null", async () => {
@@ -60,7 +60,7 @@ test("CAS xung đột đọc lại bản mới, không âm thầm ghi đè; lầ
   const form = root.all().find(n => n.tagName === "form");
   await form.fire("submit");
   assert.equal(fake.luu.length, 1);
-  assert.match(root.textContent, /đã thay đổi.*thử lưu lại/);
+  assert.match(root.textContent, /đã được người khác sửa.*thử lưu lại/);
   assert.equal(root.ten("cat_doan.do_dai_muc_tieu").value, "4000");
   await form.fire("submit");
   assert.equal(fake.luu[1].ver, 2);

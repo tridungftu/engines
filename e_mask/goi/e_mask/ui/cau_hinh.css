@@ -1,0 +1,39 @@
+.mask-ui { color:#19334f; background:#f4f6f9; padding:24px; font:16px/1.55 "Segoe UI",Arial,sans-serif; max-width:1180px; margin:auto; box-sizing:border-box }
+.mask-ui * { box-sizing:border-box }
+.mask-ui h1 { font-size:26px; margin:0 0 4px; font-weight:650 }
+.mask-ui h2 { display:flex; align-items:center; gap:12px; font-size:20px; margin:0; font-weight:650 }
+.mask-ui p { margin:0 0 12px }
+.mask-mo-ta,.mask-goi-y { color:#62768d }
+.mask-the { background:#fff; border:1px solid #dbe3ed; border-radius:12px; margin-top:20px; min-width:0; overflow:hidden }
+.mask-dau { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:24px 28px; border-bottom:1px solid #dbe3ed }
+.mask-bieu-tuong { font-size:26px; line-height:1 }
+.mask-nhan { font-size:14px; border:1px solid #dbe3ed; border-radius:6px; background:#f5f8fb; padding:5px 10px; white-space:nowrap }
+.mask-than { padding:24px 28px }
+.mask-luoi { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px }
+.mask-danh-muc { align-items:start }
+.mask-ui label { display:block; font-weight:600; margin-bottom:10px }
+.mask-ui input { width:100%; font:inherit; color:inherit; border:1px solid #cbd8e8; border-radius:7px; padding:13px 16px; background:#fff }
+.mask-ui input[aria-invalid=true] { border-color:#b33030 }
+.mask-ui button { font:inherit; color:#234564; background:white; border:1px solid #cbd8e8; padding:10px 18px; border-radius:7px; cursor:pointer }
+.mask-ui .mask-chinh { color:white; background:#193b5b; border-color:#193b5b }
+.mask-ui button:disabled,.mask-ui input:disabled { opacity:.55; cursor:default }
+.mask-ui :focus-visible { outline:3px solid #538dca; outline-offset:3px }
+.mask-tac { grid-column:1/-1; display:flex; gap:12px; flex-wrap:wrap }
+.mask-goi-y { font-size:14px; margin-top:9px!important }
+.mask-ghi-chu { background:#f5f8fb; padding:18px 20px; border-radius:8px; font-size:14px }
+.mask-ghi-chu strong { display:block; margin-bottom:8px }
+.mask-loi { color:#a42626; font-size:14px; margin-top:8px!important }
+.mask-thong-bao:not(:empty) { margin-top:16px; margin-bottom:0 }
+.mask-tien-to { display:grid; grid-template-columns:1fr auto; margin:20px 0 0; gap:9px 20px }
+.mask-tien-to dd { margin:0; font-weight:600 }
+.mask-tu-dien { border-bottom:1px solid #e6ecf3; padding:12px 0 }
+.mask-tu-dien p { font-size:14px; color:#62768d; margin:4px 0 0 }
+.mask-ui details { margin-top:18px; font-size:14px; overflow-wrap:anywhere }
+.mask-ui summary { cursor:pointer; font-weight:600; margin-bottom:10px }
+.mask-canh-bao { border:1px solid #f0d29b; background:#fff8e8; color:#8a580c; padding:16px 18px; border-radius:7px }
+.mask-duyet-bang { overflow-x:auto }
+.mask-ui table { width:100%; border-collapse:collapse; margin:18px 0 }
+.mask-ui th,.mask-ui td { padding:10px; border-bottom:1px solid #dbe3ed; text-align:left; vertical-align:top; font-size:14px }
+.mask-ui td:first-child { overflow-wrap:anywhere; max-width:130px }
+.mask-ui td button { font-size:13px; padding:7px 10px; margin:0 4px 6px 0 }
+@media(max-width:720px) { .mask-ui{padding:16px} .mask-luoi{grid-template-columns:1fr;gap:18px} .mask-dau,.mask-than{padding:18px} .mask-dau{align-items:flex-start;flex-wrap:wrap} .mask-ui h2{font-size:18px} }

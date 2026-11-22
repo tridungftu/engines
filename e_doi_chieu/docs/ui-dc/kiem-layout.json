@@ -1,0 +1,74 @@
+[
+  {
+    "anh": "co-ban.png",
+    "mode": "co-ban",
+    "viewport": 1200,
+    "rong": 1200,
+    "khongTran": true,
+    "cot": "515px 515px",
+    "nangCaoMo": false
+  },
+  {
+    "anh": "nang-cao.png",
+    "mode": "nang-cao",
+    "viewport": 1200,
+    "rong": 1200,
+    "khongTran": true,
+    "cot": "515px 515px",
+    "nangCaoMo": true
+  },
+  {
+    "anh": "mobile.png",
+    "mode": "co-ban",
+    "viewport": 390,
+    "rong": 390,
+    "khongTran": true,
+    "cot": "325.625px",
+    "nangCaoMo": false
+  },
+  {
+    "anh": "loi-nhap.png",
+    "mode": "loi-nhap",
+    "viewport": 1200,
+    "rong": 1200,
+    "khongTran": true,
+    "cot": "515px 515px",
+    "nangCaoMo": false
+  },
+  {
+    "anh": "cas.png",
+    "mode": "cas",
+    "viewport": 1200,
+    "rong": 1200,
+    "khongTran": true,
+    "cot": "515px 515px",
+    "nangCaoMo": false
+  },
+  {
+    "anh": "thieu-bo.png",
+    "mode": "thieu-bo",
+    "viewport": 1200,
+    "rong": 1200,
+    "khongTran": true,
+    "cot": "515px 515px",
+    "nangCaoMo": false
+  },
+  {
+    "anh": "ket-qua.png",
+    "mode": "ket-qua",
+    "viewport": 1200,
+    "rong": 1200,
+    "khongTran": true,
+    "cot": null,
+    "nangCaoMo": null
+  },
+  {
+    "anh": "loi-ocr.png",
+    "mode": "loi-ocr",
+    "viewport": 1200,
+    "rong": 1200,
+    "khongTran": true,
+    "cot": null,
+    "nangCaoMo": null
+  }
+]

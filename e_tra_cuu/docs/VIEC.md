@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| UI-TC | Màn Cơ bản/Nâng cao, hướng dẫn schema và bỏ xưng hô | Phiếu UI §2/§4; lead giao 21/11/2026, 21:43; 3 giờ ƯỚC TÍNH | Chờ Core — 21/11/2026 | Pytest 1431 passed, UI 37/37, CoreGia 55/55, độc lập mã 0, kiểm kê 142/142; 4 ảnh tại `docs/ui-tc/`. CLI chuẩn 0/12/mã 1; chờ cửa D nạp màn và cửa cấu hình/nguồn DEMO. Xem biên bản UI-TC cuối tệp. PR: **chờ lead mở**. |
 | TC-11 | Công cụ thử DEMO ngoài runtime, báo cáo số đo thiếu và chốt cửa thật | Lead giao 15/11/2026, 19:53; sau TC-10; 4 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | Công cụ Python + .cmd ASCII, mặc định chạy khô không mạng/ghi bền; adapter giả kiểm bốn tỷ lệ từng model và các chốt an toàn. Cửa thật còn khóa C-TC-06, không có adapter HTTP thực thi đo thật; phép đo thật **CHỜ ANH TỰ CHẠY** sau khi Core công bố đủ cửa. Kết quả kiểm xem biên bản TC-11 cuối tệp. PR: **chờ lead mở**. |
 | TC-10 | DEMO toàn tuyến, đáp án/bốn chỉ số, adapter Core, máy sạch offline | Lead giao 15/11/2026, 18:45; sau TC-3…9 và TC-S22; 4 giờ ƯỚC TÍNH | Chờ Core — 15/11/2026 | 38 ca có đáp án riêng chưa duyệt nghiệp vụ; bốn chỉ số DEMO 12/12, 12/12, 6/6, 20/20; pytest 1330 passed, 0 skipped; harness 55/55, Node 30/30; độc lập mã 0, kiểm kê 141/141 tệp. CLI chuẩn 0/12/mã 1 (5 CHUA_CAU_HINH, 7 TC_CHUA_CO_CUA_CORE); chưa đạt cổng chung. Đã kiểm bằng Core giả (CoreGia), chưa Core/RLS/Linux/model thật; không kích hoạt nhóm. PR: **chờ lead mở**. |
 | TC-S22 | Chuyển SDK 2.2.0, ngăn/cấu hình/SQL/CoreGia và vai trò AI-12 | Lead giao 15/11/2026, 17:51; xếp trên TC-9; phiếu chưa ghi giờ ước tính TC-S22 | Chờ Core — 15/11/2026 | Đã chuyển runtime/gói/test; pytest 1268 passed, 0 skipped; UI 29/29, hồi quy DEMO 43/43; độc lập mã 0, kiểm kê 38 tệp khớp. CLI chuẩn 0/5 CHUA_CAU_HINH/mã 1 do giới hạn wheel; không cổng thay thế. Xem Cần Core TC-S22 và biên bản cuối tệp. PR: **chờ lead mở**. |
@@ -38,6 +39,20 @@ là nơi theo dõi; các dòng “chưa duyệt” trong biên bản TC-P/TC-0 d
 **Kiểm TC-P:** theo ngoại lệ riêng của lát chỉ tài liệu, không áp dụng ba lệnh engine AGENTS.md §5 khi chưa có gói/tests. Kiểm 12/12 khối lệnh §4 bằng regex Anh yêu cầu (fence mở ``` trơn), đủ TC-0…TC-11, không trùng, tổng giờ bảng = 45; `git diff --check` không lỗi. SDK 2.0.0 cài offline trong `.venv`, SHA-256 wheel khớp SHA256SUMS.txt. Chỉ kiểm tài liệu và đọc mã SDK, **chưa chạy engine/CoreGia**. Không commit/push; không tạo `goi/`, không sửa nguồn cũ.
 
 ## Cần Core (chuyển lead Core qua Anh)
+
+### Cập nhật UI-TC — 21/11/2026
+
+- **Cửa D / C-TC-01:** nạp hai màn theo `goi/e_tra_cuu/KHAI-SDK-2.1.json`,
+  kiểm quyền `admin_core` và `xem_dot_kiem_theo_phap_nhan` tại Core. Khai này
+  chỉ còn dự kiến màn/quyền; không khôi phục ngăn RAM hoặc schema ngăn cũ.
+  SDK 2.2.0 chưa nhận khóa màn nên không đổi `engine.json`.
+- Ô JSON chung của Core cần hiện `title`/`description`/`examples` (kể cả
+  trường lồng nhau), mẫu đầy đủ và cấu trúc gốc đã bổ sung. Core phụ trách
+  kiểm ngay khi nhập/chèn mẫu/định dạng lại khi chưa nạp được màn engine.
+- Tiếp tục **C-TC-01/02/05**: CLI chuẩn cần cửa chính thức nạp cấu hình DEMO,
+  quyền và tệp con; không tự tạo cấu hình hoặc nới kiểm quyền trong runtime.
+- UI-TC không cần thao tác quản trị, kiểm kết nối hoặc bí mật; cửa E/F
+  không phát sinh cho lát này. Không có yêu cầu mới chờ Anh.
 
 ### Cập nhật TC-11 — 15/11/2026
 
@@ -1526,3 +1541,86 @@ có hợp đồng; Anh tự chạy công cụ trên môi trường thật khi đ
 Tại kiểm cuối: HEAD `e17bf86`, origin/main `e84e83f` tiến thêm 4 commit chỉ
 ở e_mask; chưa đổi mã TC/Hỏi AI. Các số kiểm trên HEAD hiện tại; lead đồng
 bộ main trước mở PR. Codex không merge/commit/push hoặc sửa tệp ngoài phạm vi.
+
+## Biên bản UI-TC — 21/11/2026 — PR: chờ lead mở
+
+**Kết luận: Chưa đạt cổng nghiệm thu chung** — màn UI-TC và kiểm hồi quy
+đã đạt bằng môi trường giả, CLI chuẩn còn thiếu cửa Core đã biết.
+
+**Đã làm:** hai màn bỏ xưng hô; màn cấu hình chia Cơ bản/Nâng cao theo ảnh
+mẫu, hai cột desktop/một cột mobile. Cơ bản giữ ngưỡng chỉ đọc và độ dài
+mục tiêu mỗi đoạn; Nâng cao thu gọn chứa bộ quy tắc và toàn bộ trần hiện có.
+Mỗi ô có nhãn, hướng dẫn, mẫu; lỗi cạnh ô và tự mở phần chứa lỗi khi lưu.
+Giữ CAS, đọc lại bản mới khi tranh chấp; khóa sửa/đọc lại/lưu lặp trong
+lúc lưu. Bỏ cảnh báo ngăn RAM lỗi thời sau chuyển SDK 2.2.0.
+
+Bổ sung title/description/examples tiếng Việt cho đủ **26 trường**, kể cả
+trường đối tượng/lồng nhau; mô tả gốc có cấu trúc/kiểu/điều kiện bắt buộc/
+giá trị cho phép/mặc định và mẫu DEMO đầy đủ. Đối chiếu với HEAD: **mọi
+ràng buộc schema giữ nguyên**; mẫu qua JSON Schema và kiểm nghiệp vụ JS.
+Không sửa Python runtime, engine.json, mặc định hoặc hành vi xử lý việc.
+
+`KHAI-SDK-2.1.json` chỉ khai dự kiến hai màn/quyền, danh sách thao tác/bí mật
+rỗng; không phục hồi ngăn RAM/schema ngăn cũ. Cập nhật kiểm kê SHA-256 và
+byte count **142/142 tệp** (không tính chính kiểm kê), giữ LF theo
+`.gitattributes` để không lệch băm khi checkout. Phạm vi kỹ thuật: hai tệp
+JS, schema, khai màn và kiểm kê; không thêm dependency runtime.
+
+**Kết quả kiểm thực chạy** bằng `.venv/Scripts/python`, Python 3.13.14,
+SDK **2.2.0** cài wheel offline. SHA-256 wheel
+`0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`
+khớp `SHA256SUMS.txt`. Dependency test chép offline đúng lock hiện có.
+Đặt `PYTHONUTF8=1` để xuất báo cáo tiếng Việt trên Windows.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_tra_cuu/goi/e_tra_cuu
+0/12 ĐẠT; mã thoát 1.
+5 CHUA_CAU_HINH: Engine chưa được cấu hình.
+7 TC_CHUA_CO_CUA_CORE: Core chưa cấp đủ cửa nguồn và quyền tra cứu.
+Không thay CLI bằng harness hoặc tạo cấu hình DEMO trong runtime.
+
+.venv/Scripts/python -B -m pytest e_tra_cuu/tests -q
+1431 passed in 695.74s (0:11:35)
+0 failed, 0 skipped; mã thoát 0.
+
+.venv/Scripts/python -B e_tra_cuu/tests/kiem_doc_lap.py
+[ĐẠT] Gói độc lập; không import cấm, bytecode hoặc liên kết.
+Mã thoát 0.
+
+node --test e_tra_cuu/tests/ui/*.test.js
+37 passed, 0 failed, 0 skipped; mã thoát 0.
+
+.venv/Scripts/python -B e_tra_cuu/tests/chay_demo_voi_core_gia.py
+55/55 DEMO ĐẠT; mạng ngoài/provider thật/Cloud=0; mã thoát 0.
+TC-10: 38/38 ca theo đáp án DEMO, 31 lượt Local giả.
+
+Kiểm kê: 142/142 khớp bytes/SHA-256; bytecode trong goi/=0.
+git diff --check: mã thoát 0.
+```
+
+Lượt pytest ban đầu phát hiện kiểm kê gói chưa cập nhật; đã cập nhật đủ
+tệp/băm và chạy lại toàn bộ, không bỏ hoặc skip ca kiểm.
+
+**Đã kiểm bằng Core giả (CoreGia)** cho nghiệp vụ, KttCore giả cho UI.
+Các đường UI: đọc/lưu, nhập sai, CAS, thu quyền, phản hồi chậm/unmount,
+chống lưu lặp, ngưỡng chỉ đọc và XSS/cấm mạng. UI-TC không có máy/dịch vụ
+hoặc bí mật: nút kiểm kết nối/bốn ký tự cuối không áp dụng; test xác nhận
+không chạm cổng thao_tac/bi_mat, không thêm ô API key. Chưa kiểm Linux,
+khung Core thật hoặc chất lượng model thật.
+
+**Ảnh bàn giao:** `docs/ui-tc/README.md` liên kết 4 ảnh thật của mã màn với
+KttCore giả: Cơ bản desktop/mobile, Nâng cao và lỗi nhập trần số trang.
+Đã xem và rà bố cục; không dùng ảnh dựng thay cho kiểm trình duyệt Core.
+
+**Thời gian thực tế:** bắt đầu **21/11/2026 21:43**, kết thúc **22:20
+(UTC+07:00)**, khoảng **0,62 giờ**, so với **3 giờ ƯỚC TÍNH** trong phiếu.
+
+**Lệch khỏi phiếu / quyết định tạm đã dùng:** schema thực tế có **13 trần
+ngân sách + 2 trần cắt đoạn**, không phải 14; chuyển đủ 15 vào Nâng cao,
+không bỏ trường/nới trần. Ngưỡng giữ chỉ đọc theo quyết định engine TC-9,
+không tự đo hoặc kích hoạt. Không đổi engine.json nên không sinh lại danh
+mục; không commit/push. PR: **chờ lead mở**.
+
+**Cần Core / Chờ Anh mới phát sinh:** cửa D nạp màn/kiểm quyền và hiển thị
+hướng dẫn schema; tiếp tục C-TC-01/02/05 cho CLI cấu hình/quyền/tệp DEMO.
+Không phát sinh câu hỏi mới chờ Anh; chi tiết ở mục Cần Core — UI-TC.

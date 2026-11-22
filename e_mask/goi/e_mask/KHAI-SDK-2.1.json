@@ -1,0 +1,10 @@
+{
+  "ghi_chu": "UI-MASK 21/11/2026: chỉ khai dự kiến các cửa chưa được SDK 2.2.0 nhận. Ngăn và cấu hình đã khai thật trong engine.json. Đã kiểm bằng Core giả (CoreGia); chưa nạp trong Core thật.",
+  "giao_dien_quan_tri": [
+    {"ma": "cau_hinh", "ten": "Cấu hình và duyệt định danh", "tep": "ui/cau_hinh.js", "quyen": "admin_core"}
+  ],
+  "can_core": [
+    "Cửa D nạp màn engine và stylesheet tương đối như màn module; API cấu hình doc trả gia_tri và phien_ban_cau_hinh, luu trả phien_ban_cau_hinh mới, kiểm schema và CAS.",
+    "C-P4-06: cửa tin cậy xem_du_lieu/quyet_dinh_duyet đã đề nghị ở MASK-R7; kiểm quyền, vé xem, CAS và xác nhận. Không đăng ký giả thành thao tác Python khi SDK chưa hỗ trợ."
+  ]
+}

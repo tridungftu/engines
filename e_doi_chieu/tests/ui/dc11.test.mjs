@@ -77,5 +77,6 @@ test("màn cấu hình giữ nguyên ngưỡng đã đo duyệt khi lưu giới 
     async luu(v,rv){assert.equal(rv,7);saved.push(v);return {phien_ban_cau_hinh:8};}}};}});
   await all(r).find(e=>e.the==="form").goi("submit");
   assert.equal(saved.length,1);assert.deepEqual(saved[0].hoc_loi_ocr,n);
-  assert.doesNotMatch(chu(r),/DEMO-duyet-gia/);
+  assert.doesNotMatch(chu(all(r).find(e=>e.the==="section")),/DEMO-duyet-gia/);
+  assert.match(chu(all(r).find(e=>e.the==="details")),/DEMO-duyet-gia/);
 });

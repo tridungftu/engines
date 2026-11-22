@@ -10,6 +10,7 @@ import io
 import json
 from pathlib import Path
 import threading
+import time
 
 import pytest
 from PIL import Image
@@ -53,9 +54,8 @@ class ABBYYGia(AbstractContextManager):
                     self.da_thay.set()
                     if not self.nhan:
                         continue
-                    raw = tep.read_bytes()
+                    raw = self._nhan_tep(tep)
                     self.cac_tep.append((tep.name, raw))
-                    tep.unlink()
                     self.da_nhan.set()
                     if not self.tra:
                         continue
@@ -72,6 +72,19 @@ class ABBYYGia(AbstractContextManager):
         except BaseException as exc:
             self.loi.append(exc)
 
+    def _nhan_tep(self, tep):
+        # Windows có thể còn giữ handle ngay sau công bố tệp. Nguồn giả chỉ
+        # xác nhận đã nhận khi đọc và rút tệp thành công; lỗi kéo dài vẫn lỗi.
+        han = time.monotonic() + 0.5
+        while True:
+            try:
+                raw = tep.read_bytes()
+                tep.unlink()
+                return raw
+            except PermissionError:
+                if time.monotonic() >= han or self.dung.wait(0.005):
+                    raise
+
     def __enter__(self):
         self.luong.start()
         return self
@@ -82,6 +95,29 @@ class ABBYYGia(AbstractContextManager):
         self.luong.join(3)
         assert not self.luong.is_alive(), "ABBYY giả chưa dừng."
         assert not self.loi, self.loi
+
+
+@pytest.mark.parametrize("thao_tac", ["read_bytes", "unlink"])
+def test_abbyy_gia_thu_lai_khoa_tep_tam(tmp_path, monkeypatch, thao_tac):
+    vao, ra = tmp_path / "nhan-DEMO", tmp_path / "tra-DEMO"
+    vao.mkdir()
+    ra.mkdir()
+    tep = vao / "DEMO.pdf"
+    tep.write_bytes(b"DEMO vao")
+    ham_goc, so_lan = getattr(Path, thao_tac), []
+
+    def khoa_tam(path, *args, **kwargs):
+        if path == tep:
+            so_lan.append(1)
+            if len(so_lan) == 1:
+                raise PermissionError("Tệp DEMO đang được giữ tạm.")
+        return ham_goc(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, thao_tac, khoa_tam)
+    with ABBYYGia(vao, ra, b"DEMO tra") as gia:
+        assert gia.da_nhan.wait(3)
+    assert len(so_lan) == 2 and gia.cac_tep == [("DEMO.pdf", b"DEMO vao")]
+    assert not tep.exists() and (ra / "DEMO.pdf").read_bytes() == b"DEMO tra"
 
 
 @pytest.fixture

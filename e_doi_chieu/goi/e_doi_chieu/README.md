@@ -1,4 +1,8 @@
-# Đối chiếu bản ký — SDK 2.2.0, DC-11, phiên bản 0.9.0 chưa phát hành
+# Đối chiếu bản ký — SDK 2.5.0, DC-11, phiên bản 0.9.2 chưa phát hành
+
+Core cấp SDK 2.5.x khi chạy. Dependency Pillow giữ nguyên phiên bản/băm,
+Core cài offline từ `requirements.lock` và `wheels/`; SDK không nằm trong lock.
+Kiểm SDK25 bằng Python 3.13, SDK 2.5.0 và Core giả (CoreGia); chưa nối Core thật.
 
 ## Học lỗi OCR có duyệt — DC-11
 
@@ -52,7 +56,7 @@ node --test e_doi_chieu/tests/ui/dc10.test.mjs
 
 ## Ngăn và cấu hình — DC-S22
 
-Gói dùng trực tiếp SDK 2.2.0. Mọi bảng pháp nhân đi qua `viec.ngan`;
+Gói dùng trực tiếp SDK 2.5.0. Mọi bảng pháp nhân đi qua `viec.ngan`;
 Core lấy pháp nhân từ việc, không nhận `phap_nhan_id` trong khóa/lọc.
 Bốn bảng khai trong `engine.json`, SQL chỉ tạo bảng tại `eng_e_doi_chieu`;
 `sql/kiem_ke.json` ghi bytes/SHA-256 của mọi tệp gói trừ chính kiểm kê.
@@ -64,7 +68,7 @@ Cấu hình là bản chụp `viec.cau_hinh`, đã kiểm schema/điền mặc �
 Core. Cho phép chưa cấu hình lúc khởi động; việc cần cấu hình thiếu một
 trong bảy trường mã/phiên bản bắt buộc vẫn trả `CHUA_CAU_HINH`. Không có
 bảng `cau_hinh`, đệm cấu hình hay tệp cấu hình trên máy engine.
-`phong_bi` chỉ giữ chuỗi JSON nhỏ ≤64 KiB vì SDK 2.2.0 chưa có cột `json`;
+`phong_bi` chỉ giữ chuỗi JSON nhỏ ≤64 KiB vì SDK 2.5.0 chưa có cột `json`;
 snapshot/toàn văn/ảnh giữ tại kho tệp Core. Các bản `ngan.py`, `cau_hinh.py`
 và `KHAI-SDK-2.1.json` đã chuyển nguyên bytes vào `../../LUU-TRU/DC-S22/`.
 
@@ -80,11 +84,12 @@ hình. Bản khai cũ giữ lịch sử; DC-10 phía trên đã có hai màn, m�
 mục OCR còn DC-11. Quyền tệp con/provenance OCR vùng, xác nhận chỉ-thêm
 và mapping chặn hiệu lực tiếp tục cần Core.
 
-Kiểm bằng `.venv/Scripts/python` mới, wheel nội bộ 2.2.0 cài
+Kiểm bằng `.venv/Scripts/python` mới, wheel nội bộ 2.5.0 cài
 `--no-index --no-deps`, SHA đối chiếu `SHA256SUMS.txt`. Dependency ghim
 trong `requirements.lock`; test ghim riêng `../../tests/requirements.lock`.
-Môi trường máy này dùng `system-site-packages` để nhận dependency offline
-đã có đúng phiên bản, SDK nằm riêng trong `.venv`; chưa chạy Linux.
+SDK25 dùng `.venv` có sẵn của worktree. Đã cài/kiểm runtime trong venv
+sạch không dùng `system-site-packages`; pytest/UI dùng môi trường phát triển
+đã được lead cấp. Chưa chạy Linux hoặc Core thật.
 
 ```powershell
 $env:PYTHONDONTWRITEBYTECODE='1'
@@ -198,7 +203,7 @@ Tham số bắt buộc nghiệp vụ: `module`, `ma_prompt`, `phien_ban_prompt`,
 `prompt`; `model_uu_tien` tùy chọn, chỉ là ưu tiên Local. Không có prompt
 mặc định. Thiếu/rỗng → `THIEU_PROMPT`; thiếu cấu hình việc → `CHUA_CAU_HINH`.
 Manifest giữ engine kiểm bắt buộc và ghi rõ trên nhãn/mô tả để bảo toàn
-hành vi DC-6. SDK 2.2.0 có `ma_loi_khi_thieu`; lát này không đổi ô bước. Mã module/
+hành vi DC-6. SDK 2.5.0 có `ma_loi_khi_thieu`; lát này không đổi ô bước. Mã module/
 prompt ≤200, phiên bản ≤100, prompt module ≤16.000 ký tự. Nội dung module
 giữ nguyên, nối thêm chỉ dẫn cố định về dữ liệu nguồn/khuôn/offset.
 
@@ -392,7 +397,7 @@ Quy ước nguyên văn và vị trí (không chuẩn hóa NFC/strip ở bước
 - Chưa render Word: `so_trang=0`, `trang=[]`, cảnh báo chưa phân trang;
   không có trang/hộp giả. `bam_dau_vao` băm SHA-256 bytes DOCX thật.
 
-SDK 2.2.0 cung cấp ngăn Core. Các màn trong bản khai cũ vẫn là dự kiến,
+SDK 2.5.0 cung cấp ngăn Core. Các màn trong bản khai cũ vẫn là dự kiến,
 chưa có tệp UI. Cấu hình qua `viec.cau_hinh`, dữ liệu cần giữ qua
 `viec.ngan`; snapshot/ảnh do kho Core giữ, không lưu bền trên engine.
 
@@ -525,7 +530,7 @@ ghim trước quét. Không suy phép đổi `pt`↔`px`, DPI hoặc xoay từ m
 khai; giữ tọa độ nguồn và kích thước ảnh riêng. DC-3 không đánh dấu đã quét.
 
 `thu` tiếp tục kiểm DEMO Word 1/1; nhận cặp được kiểm end-to-end trong
-pytest với CoreGia 2.2.0/adapter tệp con, không thêm DEMO thành công
+pytest với CoreGia 2.5.0/adapter tệp con, không thêm DEMO thành công
 giả vào runtime thiếu quyền/cấu hình. Lớp bọc handler đổi lỗi bất ngờ thành
 câu cố định để không in nội dung ngoại lệ; không sửa SDK và chưa
 khép nợ log lỗi ngoài handler của SDK.
@@ -635,7 +640,7 @@ nguồn từ điển/ngưỡng OCR hoặc chất lượng detector DC-13.
 
 Màn mới `ui/soan_quy_tac.js` dành riêng cho `doi_chieu.so_van_ban@1`.
 Không dùng màn cấu hình engine để cất tham số bước. Cửa nạp **D2 chưa có
-trong SDK 2.2.0**; bản khai dự kiến ở `KHAI-SDK-2.1.json`, không sửa
+trong SDK 2.5.0**; bản khai dự kiến ở `KHAI-SDK-2.1.json`, không sửa
 `engine.json`. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core thật.
 
 **Giới hạn theo hợp đồng hiện có:** tám quy tắc cứng trong `quy_tac.py`

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| SDK25 | Chạy bằng SDK 2.5.x Core cấp; lock/wheels offline, test và kiểm máy sạch | CĐ-50 §6; phiếu SDK25 | Xong mã/kiểm CoreGia; máy sạch đầy đủ chờ lead — 22/11/2026 | PR: **chờ lead mở**. SDK 2.5.0: pytest **1188 passed, 0 skipped**; DEMO **1/1 ĐẠT**; độc lập mã 0; Node **65/65**. Cài runtime sạch offline ĐẠT; thiếu wheel/hash 12 gói test/QA cho chế độ đầy đủ. Kiểm kê 48 tệp khớp. Không đổi nghiệp vụ/pin; không commit/push. |
 | DC-13 (phiếu mới) | Công cụ đo DEMO ngoài runtime và CMD ASCII; Anh tự thử trên Core thật | DC-n; DC-12; C-DC-08 | Xong công cụ/kiểm giả; phép đo thật Chờ Anh — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): CLI **1/1 ĐẠT**, pytest **1164 passed, 0 skipped**, kiểm độc lập **ĐẠT**; riêng DC-13 kiểm lại **74/74**. Chạy khô mặc định, 0 Cloud; số đo thật **CHỜ ANH TỰ CHẠY**. Không commit/push. |
 | DC-12 (phiếu mới) | DEMO toàn tuyến, đáp án độc lập, kiểm gói/nguồn/lock và công cụ offline | DC-n; DC-9…11 | Xong phạm vi CoreGia; còn kiểm máy sạch/thật — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): CLI **1/1 ĐẠT**; pytest **1090 passed, 0 skipped** (33 ca DC-12); Node **29/29**; harness **10/10** + **4/4** lỗi nguồn; kiểm độc lập ĐẠT. Bắt **5/5** Nghiêm trọng, **0/8** sửa thật bị ẩn; giữ 12 điểm máy. Thiếu wheel/hash offline; chưa Linux/Core thật. Không sửa runtime, không commit/push. |
 | DC-11 (phiếu mới) | Học lỗi OCR có duyệt, bộ phiên bản mới trong ngăn và màn chỉ đọc | DC-m; Q14; C-DC-03 | Xong phạm vi CoreGia; chờ cổng thật — 15/11/2026 | PR: **chờ lead mở**. Đã kiểm bằng Core giả (CoreGia): DEMO 1/1 ĐẠT; pytest **1057 passed, 0 skipped** (68 ca DC-11); Node **29/29**; kiểm độc lập ĐẠT; kiểm kê 46 tệp. DC-11-CH tách schema/giữ ngưỡng đã duyệt. Q14 và C-DC-03 bắt buộc trước vận hành thật; không commit/push. |
@@ -1717,3 +1718,67 @@ bí mật trong TS-DC nên không có ca kết nối/API key; nút kiểm cục 
 ### Mốc chốt bàn giao — TS-DC
 
 Thời gian thực tế: 21:43–22:17 ngày 21/11/2026 (UTC+7), khoảng **0.58 giờ**, so với **3 giờ ước tính**. Kết luận: **chưa nghiệm thu trọn phiếu** vì cần lead xác nhận phạm vi danh sách quy tắc/cặp cố định; mọi kiểm kỹ thuật nêu trên đã đạt. PR: **chờ lead mở**; không commit/push.
+
+
+## SDK25 — 22/11/2026 · PR: chờ lead mở
+
+Bắt đầu 18:29 (Asia/Saigon), ước tính trong phiếu 2–4 giờ. Không
+commit/push; chỉ sửa engine Đối chiếu, giữ nguyên wheel/thư viện và xử lý
+nghiệp vụ. Đã kiểm bằng Core giả (CoreGia), chưa nối Core thật.
+
+- Test SDK chuyển sang kiểm wheel phát hành 2.5.0 bằng SHA256SUMS; bỏ
+  khẳng định phiên bản SDK đang chạy và bỏ yêu cầu SDK trong runtime lock.
+- DC-8 so pin Pillow và hash wheel Windows với OCR theo giá trị; OCR còn
+  lock cũ được đọc chỉ để đối chiếu, không sửa engine OCR.
+- Máy sạch đọc lock ASCII mới, kiểm mỗi pin đúng một wheel Windows/thuần
+  Python, hash/tag/tên/phiên bản, không wheel thừa/sdist/thư mục con. Mặc
+  định lấy wheels trong gói; Linux có thể chỉ định kho offline có hash
+  Linux đã cấp. SDK cài riêng; pip runtime dùng lock và --require-hashes.
+- Runtime không ghi đè hoặc gọi API nội bộ SDK; không cần sửa nghiệp vụ.
+  Thêm test ngăn hồi quy tham chiếu SDK nội bộ trong runtime.
+- Wrapper CMD giữ ASCII/CRLF. Repo không có workflow CI riêng Đối chiếu.
+
+Kết quả cuối bằng `.venv/Scripts/python`, Python 3.13.14, SDK 2.5.0;
+đã kiểm bằng Core giả (CoreGia):
+
+| Lệnh / phép kiểm | Kết quả thật |
+|---|---|
+| `.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_doi_chieu/goi/e_doi_chieu` | 1/1 ĐẠT, mã 0 |
+| `.venv/Scripts/python -B -m pytest e_doi_chieu/tests -q --tb=short` | 1188 passed, 0 skipped, 1034,06 giây; mã 0 |
+| `.venv/Scripts/python -B e_doi_chieu/tests/kiem_doc_lap.py` | ĐẠT, mã 0; không pycache/pyc trong gói |
+| `node --test e_doi_chieu/tests/ui/*.test.mjs` (mở rộng danh sách tệp bằng PowerShell) | 65 passed, 0 failed, 0 skipped; mã 0 |
+| `tests/chay_demo_voi_core_gia.py` | 10 ca chuỗi; bắt 5/5 Nghiêm trọng, 0/8 sửa thật bị ẩn; 4/4 lỗi nguồn; mã 0 |
+| `cong-cu/kiem_may_sach.py --chi-runtime --cai --venv .venv-sdk25-runtime` | Cài mới SDK 2.5.0 + Pillow 12.3.0 offline, không system-site-packages; CLI và độc lập đạt, mã 0 |
+| Kiểm lock/wheels/API SDK runtime mới | 22/22 test SDK25 đạt; đã nằm trong tổng pytest |
+| `tests/cap_nhat_kiem_ke.py` và đối chiếu lại bytes/SHA-256 | 48 tệp khớp; kiểm kê làm sau cùng trong gói |
+| `git diff --check` | Mã 0 |
+
+Chế độ máy sạch đầy đủ chạy khô trả mã 2 vì thiếu hash/wheel của 12 gói
+test/QA, dừng trước tạo venv. Kết quả này không được tính là đã kiểm máy
+sạch đầy đủ. Môi trường `.venv` đã được lead cấp đủ công cụ để chạy toàn
+bộ pytest/UI. Chưa có bằng chứng chạy Linux hoặc Core thật.
+
+Lượt đầu còn lộ test CLI phụ thuộc encoding Windows; conftest đặt UTF-8
+cho subprocess. Ca CLI kiểm riêng đạt, lượt pytest cuối dùng cùng môi
+trường UTF-8 đạt toàn bộ. Ngưỡng hiệu năng giữ nguyên; ca gần trần đạt
+trong lượt cuối. Không sửa runtime/SDK để làm test qua.
+
+### Cần Core / lead — SDK25
+
+- Để chạy chế độ máy sạch đầy đủ (pytest/UI/harness), lead cần cấp
+  wheel/hash offline cho 12 gói đã ghim trong tests/requirements.lock.
+  Repo hiện chỉ có wheel SDK và Pillow. Công cụ từ chối trước tạo venv
+  khi thiếu, không tải mạng; cài runtime sạch đã đạt. Không suy hash wheel
+  từ metadata của thư viện đã cài.
+- Chưa kiểm Linux hoặc tích hợp Core thật; các mục Cần Core nghiệp vụ
+  trước đây giữ nguyên. Không phát sinh yêu cầu đổi API Core cho SDK25.
+
+
+Báo cáo bàn giao SDK25:
+
+- Kết luận: Chưa đạt toàn bộ phiếu — SDK25 và cài runtime sạch đạt; máy sạch đầy đủ còn chờ wheel/hash test/QA.
+- Đã làm: test/công cụ theo SDK 2.5.0 và lock mới, tự kiểm gói, UTF-8 subprocess, tài liệu/băm; giữ nguyên nghiệp vụ và phiên bản thư viện.
+- Kết quả kiểm: DEMO 1/1 ĐẠT; pytest 1188 passed, 0 skipped; Node 65/65; độc lập ĐẠT; runtime sạch ĐẠT. Đã kiểm bằng Core giả (CoreGia).
+- Thời gian thực tế: 18:29–19:03 ngày 22/11/2026 (Asia/Saigon), khoảng 0.57 giờ; ước tính phiếu 2–4 giờ.
+- Lệch khỏi phiếu / phương án tạm: chưa chạy máy sạch đầy đủ vì thiếu tài nguyên offline; không đổi pin, không tải mạng, không commit/push.
+- Cần Core / Chờ Anh mới phát sinh: lead cấp wheel/hash 12 gói test/QA đã ghim; không phát sinh API Core mới. PR: **chờ lead mở**.

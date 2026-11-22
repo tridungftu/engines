@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| SDK25 | SDK 2.5.0 do Core cấp; lock/wheel, máy sạch và cửa SDK công khai | Phiếu SDK25 22/11/2026 | Xong 22/11/2026 trong phạm vi Windows/CoreGia | PR: **chờ lead mở**, nhánh `codex/e_ocr-sdk25`; không commit/push; bằng chứng bên dưới |
 | UI-OCR | Ba thẻ ABBYY / Tesseract / Hạn mức, hai nút kiểm nguồn và mô tả schema | AGENTS §4.13–14, phiếu UI §4 | Xong 21/11/2026 trong phạm vi CoreGia/KttCore giả | PR: **chờ lead mở**, nhánh `codex/e_ocr-ui-ocr`; không commit/push. Bằng chứng và Cần Core tại mục UI-OCR bên dưới |
 | 0 | Đọc tài liệu cổng và engine; nhận kế hoạch các lát theo `GIAO-CODEX-e_ocr.md` | — | Xong 14/11/2026 | Thực hiện OCR-0 theo phiếu Anh giao; ước tính 2 giờ |
 | OCR-0 | Khung SDK 2.0, cấu hình máy, kho tạm, schema chung và kiểm độc lập | OCR-6 | Xong 14/11/2026 | PR: **chờ lead mở**. Đã đạt tiêu chí riêng của OCR-0; kết quả DEMO chung và giới hạn xem bên dưới |
@@ -21,6 +22,67 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 4 | Bài máy test còn lại ca 1, 6, 8 | OCR-11 | Chờ Core / thiết kế | Ca 3 đã kiểm bằng Core giả ở OCR-5; ca 1 chờ thẻ trạng thái, ca 6 chờ Đối chiếu, ca 8 chờ bí mật/cầu nối có khóa |
 | 5 | Lát 9: ABBYY thật trên máy hiện tại bằng PDF DEMO (Anh đã cho phép mở kết nối tạm) | OCR-12 | Chờ làm | Không chép `in\ out\ jobs\ state\` |
 | 6 | Ghép Core (K1–K6) → nghiệm thu tổng thể | — | Chờ Core |  |
+
+## SDK25 — 22/11/2026
+
+Kết luận: **Đạt** — đã kiểm bằng Core giả (CoreGia), SDK 2.5.0,
+Python 3.13.14 Windows x64. PR: **chờ lead mở**, nhánh `codex/e_ocr-sdk25`.
+
+Đã làm:
+- Đọc tài liệu SDK 2.5.0; giữ nguyên manifest, lock, phiên bản và tám wheel
+  lead đã chuẩn bị. Không đổi nghiệp vụ, Core/SDK, `_chung` hay engine khác.
+- Bộ kiểm độc lập đọc lock ASCII một dòng có hash, chuẩn hóa tên và ánh xạ
+  import: Pillow→PIL, pdfminer.six→pdfminer, pypdfium2, pdfplumber và dependency.
+  Bộ đọc trong `ma-nguon/tests/test_doc_lap.py` chỉ nhận thêm hash sau exact
+  pin theo chỉ dẫn riêng của lead; mã cũ không đổi.
+- Thêm tự kiểm lock/wheel và ca âm: ASCII/BOM/coding, nối dòng, chú thích giữa
+  dòng, SDK/tên lặp, wheel thiếu/thừa/lặp, sdist/thư mục, sai hash/bản/tag nền,
+  METADATA; kiểm đủ bảng băm và không tham chiếu SDK nội bộ trong runtime.
+- Fixture giao lại dùng payload `DuongTruyen.nhan_viec` công khai và quan sát
+  việc tại hàm năng lực; bỏ sửa `CoreGia._viec` và móc constructor SDK.
+  Không ghi đè hàm nội bộ hoặc khóa `__version__` trong runtime.
+- Máy sạch tạo venv mới; kiểm hash/cài SDK 2.5.0 từ repo, pip isolated/offline
+  require-hashes/only-binary/no-deps/target tới thư mục riêng như Core.
+  Windows dùng wheel kèm gói. Linux nhận WHEELHOUSE theo hash Linux trong lock;
+  CI chuẩn bị wheelhouse từ đúng lock trước bước cài offline. Không tải mạng
+  trong lượt này. `.cmd` ASCII/CRLF; script shell qua `bash -n`.
+- Hai ca từng lỗi do ABBYY giả gặp PermissionError trên Windows: fixture
+  retry tối đa 0,5 giây khi đọc/rút tệp; chỉ xác nhận sau khi rút thành công,
+  lỗi kéo dài vẫn lỗi. Thêm hai test khóa tạm; runtime giữ nguyên.
+- Cập nhật README/CHANGELOG/NGUON và `tests/cap_nhat_bam.py`: 52 hash nguồn
+  theo LF, **sql/kiem_ke.json tính sau cùng** với 53 tệp theo bytes thực.
+  Gói không có bytecode; tham chiếu `2.2.0` chỉ còn ở tài liệu lịch sử/CHANGELOG.
+
+Kết quả ba lệnh bắt buộc bằng `.venv\Scripts\python` (SDK 2.5.0):
+
+```text
+> .venv\Scripts\python -B -X utf8 -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+6/6 [ĐẠT]; Engine e_ocr 1.0.11: mọi ví dụ chạy thử DEMO đều đạt. Mã thoát 0.
+Core giả (CoreGia), Tesseract thật vie+eng, chỉ dữ liệu DEMO.
+
+> .venv\Scripts\python -B -X utf8 -m pytest e_ocr/tests -q
+349 passed in 148.98s (0:02:28). 0 skipped, mã thoát 0.
+
+> .venv\Scripts\python -B -X utf8 e_ocr/tests/kiem_doc_lap.py
+[ĐẠT] Gói e_ocr độc lập; không import Core/kênh cũ, không có tệp biên dịch sẵn.
+Mã thoát 0.
+```
+
+Kiểm thêm: `node --test e_ocr/tests/ui/test_cau_hinh.mjs` → **22/22**, 0 skip,
+mã thoát 0. Cả `.venv\Scripts\python -B -X utf8 e_ocr/tests/kiem_may_sach.py`
+và `e_ocr\tests\KIEM-MAY-SACH.cmd` → mã 0: SDK và đủ 8 thư viện cài offline
+vào thư mục riêng, lock/độc lập đạt, 6/6 DEMO CoreGia + Tesseract giả đạt.
+Kết quả mới thay bằng chứng chưa kiểm máy sạch OCR-6/OCR-9 trong phạm vi Windows.
+
+Lệch khỏi phiếu / quyết định tạm: sửa thêm fixture khóa tệp tạm nêu trên;
+không đổi nghiệp vụ. **Chưa chạy Linux CI hoặc ABBYY/Core thật** trong lượt này.
+
+Cần Core / Chờ Anh mới phát sinh: **không**. Các việc nối màn, migration,
+quyền và lưu bền trên Core thật đã ghi từ trước vẫn thuộc nghiệm thu Core.
+Không commit/push; lead commit và mở PR.
+
+Thời gian thực tế: **0.57 giờ**, **22/11/2026 18:29:00–19:03:28**
+(giờ Việt Nam), so với **2–4 giờ ước tính** trong phiếu.
 
 ## UI-OCR — 21/11/2026
 

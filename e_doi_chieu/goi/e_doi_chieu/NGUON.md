@@ -1,6 +1,16 @@
 # Nguồn của gói Đối chiếu
 
-## DC-12 — nguồn và lock offline, 15/11/2026
+## SDK25 — nguồn hiện hành, 22/11/2026
+
+SDK 2.5.x do Core cấp, không nằm trong lock/wheels của engine. Môi trường
+kiểm cài SDK 2.5.0 từ wheel trong repo, SHA-256
+`b235b513deb557f65f5a90c81e1d81e9b51799093fdaefb3bb5c5e1e954d2b55`
+khớp `sdk-2.5.0/SHA256SUMS.txt`. Metadata SDK trong bảng dưới đã cập nhật
+từ wheel này. Giữ nguyên Pillow 12.3.0 và hai hash đã được cấp; wheel
+Windows CPython 3.13 nằm trong `wheels/`. Không thêm thư viện, không tải mạng.
+Các ghi nhận DC-12/DC-S22 bên dưới là lịch sử của các lát trước.
+
+## DC-12 — lịch sử nguồn và lock offline, 15/11/2026
 
 Không thêm dependency, không tải mạng. Runtime lock giữ nguyên pin/hash
 được cấp: SDK 2.2.0 cài wheel repo riêng, Pillow 12.3.0 theo lock OCR;
@@ -28,7 +38,7 @@ quyền phân phối, không suy thành giấy phép nguồn mở.
 <!-- DC-12-METADATA:DAU -->
 | Dependency | Nguồn khai trong metadata | Giấy phép | SHA-256 METADATA đã cài |
 |---|---|---|---|
-| `kho_tri_thuc_sdk==2.2.0` | wheel nội bộ trong repo | Nội bộ; chưa khai SPDX | `6a8ea42619a68c4750b0f17aa1e4b1a2d80270b2ceb6eb7d24fd2f142cea3040` |
+| `kho_tri_thuc_sdk==2.5.0` | wheel nội bộ trong repo | Nội bộ; chưa khai SPDX | `e2555310e7ec6a3069551b025599980806ae23304aca37eaa909ee138400be53` |
 | `Pillow==12.3.0` | https://python-pillow.github.io | MIT-CMU | `2c4378001803cfac65809a50722d46e0da4ce8061e717f103e5d52734bab30f5` |
 | `pytest==9.1.1` | https://docs.pytest.org/en/latest/ | MIT | `c5d032518012789cabc870d46589aca3aeda36cf9fa4399ee88bda3d10438451` |
 | `packaging==26.3` | https://github.com/pypa/packaging | Apache-2.0 OR BSD-2-Clause | `70fdb89fc4d4a9a043bf7372b8972bcc883fddff34ab55e9cf80d73875384763` |
@@ -147,12 +157,9 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 <!-- DC-S22-SHA:DAU -->
 | Tệp hiện hành | SHA-256 LF |
 |---|---|
-| `.gitattributes` | `36f5046d7b9e6c15c3d77263f4918fa7997bebfbf79f3a4f3b954da607cd4eed` |
+| `.gitattributes` | `ad36c2053c730c976bf6646750d57a0cbc0bb0d627c85bd3efd83887924186d6` |
 | `cau_hinh.schema.json` | `7d778dcd893cafe594e928eb277a04acf22f8e90132897203202c69b4b5361fc` |
-| `CHANGELOG.md` | `2923ecd17001d01a5b9483114e75caf4927c10111740af6cac27c469db182d8e` |
-
-| `cau_hinh.schema.json` | `e38e7414afacb2b1abc8fa1e01e28c130213686d79ea3f3d71d7873f5ab39b87` |
-| `CHANGELOG.md` | `027a6af6d1168ebed3c1b8754dc0bccf33a4f4d865bda22ffbfb3123fc56789f` |
+| `CHANGELOG.md` | `314644722d3e1d173c8c65d2a0811f2956b6feb836e8fd05ce16d45074e44c1d` |
 | `demo/DEMO-ban-chot.docx` | `e086e49c1dfad0cdfc702ab141a9de6123cbd123e4c7110df975b673e194bcaa` |
 | `demo/README.md` | `c55d1d9bb7381dd821b4a4c1fea1b129af974ae3c7f83acf35de6ef45fac64bf` |
 | `e_doi_chieu/__init__.py` | `a427fe739dab3a98c108b79f40f7a53328d504300979b71ccc900892064948b3` |
@@ -169,18 +176,18 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | `e_doi_chieu/lech_dau.py` | `6c82cf3d41622ca038a0ea9ab5df12edb2b93224a1e99b7c07a37a32e81ec26f` |
 | `e_doi_chieu/loi_ocr.py` | `0febad2a5274f63853827cfbf05596d7f280a28ea4124b62913788ee96b87e43` |
 | `e_doi_chieu/quy_tac.py` | `e937c98d97a31a9f6f8e8e79e68a0c76efdda5fb5c0880a19418e81e08138a76` |
-| `e_doi_chieu/so_chu.py` | `f6045c6494422bb842c638d90f378e8e95d66ad3d0996fff9d365814779f5038` |
+| `e_doi_chieu/so_chu.py` | `0f30caca818992c0dcb030c7e48c4198bfeb22fade93d7fddd1eea385d5ee06e` |
 | `e_doi_chieu/sua_tay.py` | `29a63bdfa9306c748a6a6bc4808f85206dfc69e9f94d816c52c6a22d369528d0` |
 | `e_doi_chieu/tien_chu.py` | `d0aba9de44269b62fe1a1506780b3a3459c1a462a9fc9988b502ad6a8d48224d` |
 | `e_doi_chieu/tong_hop.py` | `c619b98e82b4db5887ad06d0058877425d2132edcff1428c9533fc855f71cfd0` |
 | `e_doi_chieu/tu_dien.py` | `4ac5ec887ae9a732f2a69675ae69b9b28801a583b4310cb5986830e8ca874481` |
 | `e_doi_chieu/vi_tri.py` | `0efdfb41d3cc56e857ab74e49c8f8cbaa7f0d075267581f60ffb33232d148a97` |
 | `e_doi_chieu/xac_nhan.py` | `f56a2ce8328332c9411ebfd41a7847534fef415c55f7239cafeb14c76120613a` |
-| `engine.json` | `7a08e144ea442c148c38d37663005c0eba397b1f549a156e123fc5b09703d139` |
+| `engine.json` | `07a5db8d2a89f418cc7642b9eb2f84464061e9708ee7a26d2d57f4a3360515ad` |
 | `ho_so_doi_chieu.schema.json` | `9114bf674c4d16189050eb3130453838b7bc1c2c22f6208a05e866df84adf776` |
-| `KHAI-SDK-2.1.json` | `9421d8192968517da889aa259eb49b59c8c01dcab4dd3bd089c59b8214d54cf0` |
-| `README.md` | `e6d9d9fa3cbe8829ac35d737e7dab0334f55494d9a49c1313a4c8dac03585e2f` |
-| `requirements.lock` | `68ddd023dd5f4610cea4f5aa63fbe91a9915c3b0fde10661edecb430e9f4bc4f` |
+| `KHAI-SDK-2.1.json` | `b75e655661fe9928dfe028a45b87e1b59224220c620a9a0f8b9ff1032b6e9142` |
+| `README.md` | `aa0e9861651d94192f9ac0e5f8200f9ceb9731b8d9c400aa3958ad86af853123` |
+| `requirements.lock` | `92b91342b1e77058fcaf93e69ef214c93f2453bd441b21e7a9207ab09f28e798` |
 | `sql/001_tao_ngan.sql` | `e71934770ec9664fa902782bd849a4a1d375e428602cff959691154ddb5f5f8e` |
 | `sql/002_xac_nhan.sql` | `276c8e0b24218e5396a27d6f2a2a678be5732b7e9e4890cfd5cf3bbb0eb0f540` |
 | `sql/003_hoc_loi_ocr.sql` | `20ed90ae25b46186083335537607afe2dc75e80e0cbd074432f247c3b7fe7efa` |
@@ -193,12 +200,9 @@ trừ chính kiểm kê. Tệp Word DEMO giữ nguyên bytes, không chuẩn hó
 | `ui/cau_hinh.js` | `277b4d15699b0d9856dd6d867258926f1520c1e3782427f401f8a2936f2dc4a6` |
 | `ui/ket_qua.js` | `db596791e2e7f96188c3a18684c550792d346a811837333f8e5609868da95d51` |
 | `ui/loi_ocr.js` | `cd1d4e50013c514d0c1c038f23c0455bc3b33e6131ead6e9a12bde2a209dd480` |
-
-| `ui/cau_hinh.js` | `a3afcf83fb4f97ecf8838113776446e170904251d2ad2788d087986304b0bdbc` |
-| `ui/ket_qua.js` | `1c46bacb03091f777e7c7930bb511e160c5e11a9492680d0a87a65f4450030be` |
-| `ui/loi_ocr.js` | `cab2e90b69e256d910039989e794d5584443b03d34a145bb060f471b3192dc7c` |
 | `ui/soan_quy_tac.js` | `0bc4fbb76dbbda87b362393f303e73cc964129d296a87e038f7410a6044f7ba0` |
 | `van_ban_tai_lieu.schema.json` | `81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977` |
+| `wheels/pillow-12.3.0-cp313-cp313-win_amd64.whl` | `1cca606cd25738df4ed873d5ad46bbdb3d83b5cbca291f6b4ff13a4df6b0bbe8` |
 | `yeu_cau_ai.schema.json` | `36933e5ec293ff8eed64350a47df37e719f1fadd615e67b37b5a3891b7756d4d` |
 <!-- DC-S22-SHA:CUOI -->
 
@@ -494,3 +498,7 @@ dung khác; đường dẫn tương đối từ thư mục gói, trừ dòng tes
 | `cau_hinh.schema.json` | `e9febae882011886023f8d5efb3d7465b4b22dcb15bcc543ae8238f11015916a` |
 | `KHAI-SDK-2.1.json` | `bacf0508ef7fef6c4ce7565dddc7535df9b5604da86bddba2c98a592949a333e` |
 | Repo: `e_doi_chieu/tests/test_dc3.py` | `55618c6e0cd46695719a71ca31e34d633213750e5e8a485157bfb60bc411e6ab` |
+
+## Wheel kèm gói (22/11/2026)
+
+Thư mục `wheels/` chứa wheel tải từ PyPI (pypi.org) đúng phiên bản và SHA-256 ghi ở `requirements.lock`; đã đối chiếu với băm PyPI ghim từ trước nếu có. Nền CPython 3.13 win_amd64 hoặc thuần Python; `cryptography` chỉ phát hành dạng `cp311-abi3`, đã thử cài và chạy trên Python 3.13.14 sạch. Giấy phép của từng thư viện nằm trong `*.dist-info` của wheel. Không sửa wheel.

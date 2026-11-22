@@ -10,6 +10,7 @@ import threading
 import time
 import os
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -29,21 +30,36 @@ PDF = pdf_demo(DONG_DEMO)
 WORD = "ocr.xuat_word@1"
 
 
-def app_moi():
+def app_moi(khi_nhan=None):
     app = Engine.tu_khai_bao(str(GOI / "engine.json"))
     for ma, ham in [(DOC, cong.doc_tai_lieu), (VAN_BAN, cong.doc_van_ban), (WORD, cong.xuat_word)]:
-        app.nang_luc(ma)(ham)
+        def xu_ly(viec, ham=ham):
+            if khi_nhan is not None:
+                khi_nhan(viec)
+            return ham(viec)
+        app.nang_luc(ma)(xu_ly)
     assert app is not cong.app
     return app
 
 
-def chay_moi(*, pn="pn-demo", lan_thu=1, nang_luc=DOC, nguon="tu_dong"):
+def chay_moi(*, pn="pn-demo", lan_thu=1, nang_luc=DOC, nguon="tu_dong", khi_nhan=None):
     core = core_demo()
     tep = core.them_tep("DEMO.pdf", RAW, "application/pdf")
     ma = core.giao_viec(nang_luc, {"loai": "tep", "tep": tep}, {"nguon": nguon}, phap_nhan_id=pn)
-    # CoreGia tự tăng lan_thu lúc lấy việc, giống Core thật giao lại sau mất lease.
-    core._viec[ma]["lan_thu"] = lan_thu - 1
-    core.chay(app_moi())
+    app = app_moi(khi_nhan)
+    kenh = core.duong_truyen(app.ma)
+    nhan_goc = kenh.nhan_viec
+
+    def nhan(cho_toi_da_giay):
+        viec = nhan_goc(cho_toi_da_giay)
+        if viec is not None and viec["id"] == ma:
+            viec["lan_thu"] = lan_thu
+        return viec
+
+    # Chỉ giả payload qua cửa công khai DuongTruyen.nhan_viec trong test.
+    # Không sửa kho việc nội bộ hay ghi đè vòng xử lý của SDK.
+    with patch.object(kenh, "nhan_viec", nhan):
+        app.chay(kenh, dung_khi_het_viec=True, khoang_gia_han=0.01, cho_gui_lai_giay=0)
     # Worker khác có thể đã nhận việc này trong cùng CoreGia. Chờ đúng việc,
     # thay vì coi worker vừa hết hàng là việc của nó đã kết thúc.
     han = time.monotonic() + 10
@@ -97,21 +113,15 @@ def test_ghi_luot_va_giu_trang_nguyen_tu_truoc_cong_bo(hot_folder, monkeypatch):
 
 
 @pytest.mark.parametrize("nang_luc", [DOC, VAN_BAN, WORD])
-def test_app_moi_giao_lai_va_tra_muon_cung_ma_khong_gui_lai(hot_folder, tess_gia, nang_luc, monkeypatch):
+def test_app_moi_giao_lai_va_tra_muon_cung_ma_khong_gui_lai(hot_folder, tess_gia, nang_luc):
     vao, ra, _ = hot_folder
     with ABBYYGia(vao, ra, b"", tra=False) as gia:
         core, dau = chay_moi(nang_luc=nang_luc)
         kiem_chua_ro(core, dau)
         ma = dau["ma_tuong_quan"]
         cac_lan = []
-        khoi_tao = Viec.__init__
-
-        def viec_moi(viec, *args, **kwargs):
-            khoi_tao(viec, *args, **kwargs)
-            cac_lan.append(viec.lan_thu)
-
-        monkeypatch.setattr(Viec, "__init__", viec_moi)
-        core, lap = chay_moi(lan_thu=2, nang_luc=nang_luc)
+        core, lap = chay_moi(lan_thu=2, nang_luc=nang_luc,
+                             khi_nhan=lambda viec: cac_lan.append(viec.lan_thu))
         kiem_chua_ro(core, lap, ma)
         assert cac_lan == [2]
         (ra / f"{ma}.pdf").write_bytes(PDF)

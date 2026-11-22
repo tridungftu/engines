@@ -164,16 +164,21 @@ def test_core_gia_kiem_truoc_openpyxl(demo,monkeypatch,nl,ten,ma):
 
 
 @pytest.mark.parametrize('gui_kem',[True,False])
-def test_mime_xlsm_sdk(demo,gui_kem):
+@pytest.mark.parametrize('mime,trang_thai',[
+    (None, 'LOI'), ('application/vnd.ms-excel.sheet.macroenabled.12', 'XONG')])
+def test_mime_xlsm_sdk(demo,gui_kem,mime,trang_thai):
     core=CoreGia()
-    tep=core.them_tep('DEMO.xlsm',(demo/'sach-DEMO.xlsx').read_bytes())
-    assert tep['mime']=='application/vnd.ms-excel.sheet.macroEnabled.12'
+    tep=core.them_tep('DEMO.xlsm',(demo/'sach-DEMO.xlsx').read_bytes(),mime)
+    mime_goc=tep['mime']
+    assert mime_goc==(mime or 'application/vnd.ms-excel.sheet.macroEnabled.12')
     pb={'loai':'tep','tep':tep}
     viec_id=core.giao_viec('excel.toan_ven@1',pb,gui_kem_dau_vao=gui_kem)
     core.chay(app)
     k=core.xem(viec_id)
-    assert k['trang_thai']=='XONG'
-    assert tep['mime'].endswith('macroEnabled.12')  # không sửa phong bì của caller
+    assert k['trang_thai']==trang_thai
+    if trang_thai=='LOI':
+        assert k['loi']['ma']=='DAU_VAO_KHONG_HOP_LE' and k['ket_qua'] is None
+    assert tep['mime']==mime_goc
 
 
 def test_huy(demo):
@@ -211,11 +216,19 @@ def test_o_khong_ghi_toa_do():
     assert k['so_o']==2 and k['so_o_vung']==2
 
 
-def test_nhat_ky_an_toan(capsys):
-    app._ghi('NOI_DUNG_BI_MAT_DEMO')
+def test_nhat_ky_an_toan(demo,monkeypatch,capsys):
+    def hong(*args,**kwargs):
+        raise RuntimeError('NOI_DUNG_BI_MAT_DEMO')
+    monkeypatch.setattr('e_kiem_excel.chay.SoDo',hong)
+    core=CoreGia()
+    tep=core.them_tep('DEMO.xlsx',(demo/'sach-DEMO.xlsx').read_bytes())
+    kq=core.chay_thu(app,'excel.toan_ven@1',{'loai':'tep','tep':tep})
     out=capsys.readouterr()
-    assert 'NOI_DUNG_BI_MAT_DEMO' not in out.err+out.out
-    assert 'EX_SDK_THONG_BAO' in out.err
+    assert kq['trang_thai']=='LOI' and kq['ket_qua'] is None
+    assert kq['loi']=={'ma':'ENGINE_LOI_XU_LY',
+                      'thong_diep':'Engine gặp lỗi khi xử lý việc này.', 'thu_lai_duoc':False}
+    assert 'NOI_DUNG_BI_MAT_DEMO' not in out.err+out.out+str(kq)
+    assert 'RuntimeError' in out.err
 
 
 def test_dau_hieu_k1_k8_bang_ma_goc(demo,monkeypatch):

@@ -1,4 +1,4 @@
-# Dependency kiểm thử có sẵn offline; không thuộc gói chạy engine.
+# Dependency kiem thu co san offline; khong thuoc goi chay engine.
 pytest==9.1.1
 packaging==26.3
 pluggy==1.6.0
@@ -11,5 +11,5 @@ jsonschema-specifications==2025.9.1
 referencing==0.37.0
 rpds-py==2026.6.3
 
-# Chỉ công cụ kiểm render PDF thủ công, không thuộc runtime/pytest bắt buộc.
+# Chi cong cu kiem render PDF thu cong, khong thuoc runtime/pytest bat buoc.
 pypdfium2==5.13.0

@@ -238,8 +238,8 @@ def test_may_sach_thieu_wheel_khong_tao_venv_hoac_tai_mang(tmp_path, monkeypatch
 def test_may_sach_kiem_hash_va_tag_truoc_cai(tmp_path):
     tool = cong_cu_sach()
     from pip._vendor.packaging.tags import sys_tags
-    sdk = GOI.parents[2] / "docs/goi-gui-engine/sdk-2.2.0/kho_tri_thuc_sdk-2.2.0-py3-none-any.whl"
-    row = {"ten": "kho_tri_thuc_sdk", "phien_ban": "2.2.0", "hash": [sha256(sdk.read_bytes()).hexdigest()]}
+    sdk = GOI.parents[2] / "docs/goi-gui-engine/sdk-2.5.0/kho_tri_thuc_sdk-2.5.0-py3-none-any.whl"
+    row = {"ten": "kho_tri_thuc_sdk", "phien_ban": "2.5.0", "hash": [sha256(sdk.read_bytes()).hexdigest()]}
     p = tmp_path / sdk.name
     p.write_bytes(sdk.read_bytes())
     kiem = tool["kiem_wheel"]
@@ -256,3 +256,6 @@ def test_hai_wrapper_ascii_va_khong_goi_mang():
         text = raw.decode("ascii")
         assert "kiem_may_sach.py" in text and "PYTHONDONTWRITEBYTECODE" in text
         assert "curl" not in text and "wget" not in text and "pip install" not in text
+
+        if name.endswith(".cmd"):
+            assert b"\r\n" in raw and b"\n" not in raw.replace(b"\r\n", b"")

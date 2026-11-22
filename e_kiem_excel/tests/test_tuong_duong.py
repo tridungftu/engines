@@ -294,6 +294,8 @@ def test_ham_tham_chieu_giu_nguyen_thuat_toan(goc, cong_thuc):
 
 def test_kiem_doc_lap_cho_regex_nhung_chan_chay_ma(tmp_path):
     from kiem_doc_lap import kiem_doc_lap
+    (tmp_path/'requirements.lock').write_bytes(
+        (TESTS.parent/'goi/e_kiem_excel/requirements.lock').read_bytes())
     tep = tmp_path / 'DEMO.py'
     tep.write_text('import re\nre.compile("DEMO")\n', encoding='utf-8')
     assert kiem_doc_lap(tmp_path) == []

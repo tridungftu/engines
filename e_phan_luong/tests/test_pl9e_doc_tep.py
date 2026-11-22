@@ -102,13 +102,14 @@ def test_chuoi_tien_khong_duoc_lam_tron(kieu):
              ["ma", "ngay", "so_tien"], kieu)
 
 
-def test_xlsx_du_50000_dong_va_30_cot():
+@pytest.mark.parametrize("n", [3, pytest.param(50_000, marks=pytest.mark.sau)])
+def test_xlsx_du_dong_va_30_cot(n):
     cac_ma = ["ma", "ngay", "so_tien"] + [f"thuoc_tinh.demo_{i}" for i in range(27)]
     hang = [[f"PC-DEMO-{i:05}", "2026-10-30", 1] + ["DEMO"] * 24 + [None] * 3
-            for i in range(doc_lo.TOI_DA_DONG)]
+            for i in range(n)]
     lo = _doc(hang, cac_ma)
-    assert len(lo.nghiep_vu) == doc_lo.TOI_DA_DONG
-    assert lo.nghiep_vu[-1].ma == "PC-DEMO-49999"
+    assert len(lo.nghiep_vu) == n
+    assert lo.nghiep_vu[-1].ma == f"PC-DEMO-{n - 1:05}"
     assert len(lo.nghiep_vu[-1].noi_dung) == 24
 
 

@@ -58,7 +58,7 @@ test("xung đột CAS hiện câu tiếng Việt, giữ phiên bản cũ và kh�
   const m = await man({ luu() { throw { ma: "NGAN_XUNG_DOT", message: "DEMO nội dung kỹ thuật không được hiện" }; } });
   m.o.value = "20000";
   await m.form.submit();
-  assert.equal(m.bao.textContent, "Cấu hình đã được người khác thay đổi. Hãy mở lại màn hình rồi lưu.");
+  assert.equal(m.bao.textContent, "Cấu hình đã được người khác sửa, tải lại trước khi lưu.");
   assert.equal(m.daLuu.length, 1);
   assert.equal(m.o.value, "20000");
   await m.form.submit();
@@ -99,3 +99,14 @@ test("màn chỉ có một ô, một nút và dùng cổng KttCore", async () =>
   assert.equal(m.form.children.filter((e) => e.ten === "button").length, 1);
   assert.doesNotMatch(ma, /\bfetch\s*\(|XMLHttpRequest|WebSocket|\beval\s*\(|innerHTML|https?:\/\//);
 });
+
+ test("hướng dẫn và lỗi hiển thị ngay cạnh ô", async () => {
+  const m = await man();
+  assert.match(m.form.children[4].textContent, /16.000 token/);
+  m.o.value = "123";
+  m.o.listeners.get("input")();
+  assert.match(m.bao.textContent, /1\.024 đến 100\.000/);
+  m.o.value = "16000";
+  m.o.listeners.get("input")();
+  assert.equal(m.bao.textContent, "");
+ });

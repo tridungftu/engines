@@ -1,148 +1,169 @@
-// Màn module: Core truyền phần tử gốc và SDK trình duyệt khi nạp.
+// Màn module; mọi dữ liệu qua cổng engine của Core, DOM dùng textContent.
 export default async function cauHinh(goc, KttCore = globalThis.KttCore) {
-  const api = KttCore.engine("e_hoi_ai");
-  const doc = goc.ownerDocument;
-  function tao(the, chu, cha = goc) {
-    const el = doc.createElement(the);
-    if (chu !== undefined) el.textContent = chu;
-    cha.appendChild(el);
-    return el;
+  const api = KttCore.engine('e_hoi_ai'), doc = goc.ownerDocument;
+  function tao(the, chu, cha = goc, lop) {
+    const el = doc.createElement(the); if (chu !== undefined) el.textContent = chu;
+    if (lop) el.classList.add(lop); cha.appendChild(el); return el;
   }
-  function oNhap(cha, ten, kieu = "text") {
-    const nhan = tao("label", ten, cha);
-    const o = tao("input", undefined, nhan);
-    o.type = kieu;
-    return o;
+  function nut(cha, chu, fn) { const el = tao('button', chu, cha); el.type = 'button'; el.addEventListener('click', fn); return el; }
+  function o(cha, ten, goiY, mau, kieu = 'text') {
+    const khung = tao('div', undefined, cha), nhan = tao('label', undefined, khung);
+    tao('span', ten, nhan);
+    const el = tao(kieu === 'select' ? 'select' : 'input', undefined, nhan);
+    if (kieu !== 'select') el.type = kieu;
+    el.placeholder = mau; el.setAttribute('aria-label', ten);
+    tao('small', goiY + (kieu === 'select' ? ` Ví dụ: ${mau}.` : ''), khung);
+    const loi = tao('small', '', khung, 'loi-o'); loi.setAttribute('role', 'alert');
+    return {el, loi};
   }
-  goc.replaceChildren();
-  goc.classList.add("ktt-hoi-ai-cau-hinh");
-  const css = tao("style");
-  css.textContent = `.ktt-hoi-ai-cau-hinh{font-family:inherit;color:#20384a;max-width:72rem}
-    .ktt-hoi-ai-cau-hinh fieldset{border:1px solid #b6c8d4;padding:1.25rem;margin:0 0 1.5rem}
-    .ktt-hoi-ai-cau-hinh legend{font-size:1.25rem;font-weight:600;padding:0 .5rem}
-    .ktt-hoi-ai-cau-hinh label{display:flex;flex-direction:column;gap:.4rem;margin:.75rem 0;flex:1;min-width:12rem}
-    .ktt-hoi-ai-cau-hinh input,.ktt-hoi-ai-cau-hinh select{font:inherit;padding:.55rem;border:1px solid #7995a8;border-radius:3px;max-width:100%;box-sizing:border-box}
-    .ktt-hoi-ai-cau-hinh button{font:inherit;padding:.55rem .9rem;margin:.4rem .5rem .4rem 0;cursor:pointer}
-    .ktt-hoi-ai-cau-hinh button:focus-visible,.ktt-hoi-ai-cau-hinh input:focus-visible,.ktt-hoi-ai-cau-hinh select:focus-visible{outline:3px solid #1673aa;outline-offset:2px}
-    .ktt-hoi-ai-cau-hinh .quy-tac{display:flex;gap:1rem;flex-wrap:wrap;border-top:1px solid #d3dee6;padding-top:.5rem}
-    .ktt-hoi-ai-cau-hinh [role=alert]{color:#9b2323}
-    .ktt-hoi-ai-cau-hinh p{max-width:75ch;line-height:1.5}`;
-  const form = tao("form");
-  const local = tao("fieldset", undefined, form);
-  tao("legend", "Cổng Local AI", local);
-  const url = oNhap(local, "Địa chỉ máy Local AI", "url");
-  url.required = true;
-  url.placeholder = "http://127.0.0.1:12345";
-  const timeout = oNhap(local, "Thời hạn chờ (giây)", "number");
-  timeout.required = true;
-  timeout.min = "0.01";
-  timeout.max = "600";
-  timeout.step = "any";
-  const trangThai = tao("p", "Đang tải trạng thái…", local);
-  tao("h3", "Model đã phát hiện", local);
-  const dsModel = tao("ul", undefined, local);
-  tao("h3", "Model cho từng mẫu mã prompt", local);
-  tao("p", "Xét theo thứ tự từ trên xuống. Có thể dùng * để khớp nhiều mã prompt.", local);
-  const dsQuyTac = tao("div", undefined, local);
-  const them = tao("button", "Thêm quy tắc", local);
-  them.type = "button";
-  const luu = tao("button", "Lưu", local);
-  luu.type = "submit";
-  luu.disabled = true;
-  const thongBao = tao("p", "", local);
-  thongBao.setAttribute("role", "status");
-  thongBao.setAttribute("aria-live", "polite");
-  const cloud = tao("fieldset", undefined, form);
-  tao("legend", "Cổng Cloud AI", cloud);
-  tao("p", "Chưa áp dụng ở bản 1", cloud);
-  let phienBan = null;
-  let models = [];
-  let cacQuyTac = [];
-  function themQuyTac(q = {}) {
-    const hang = tao("div", undefined, dsQuyTac);
-    hang.classList.add("quy-tac");
-    const mau = oNhap(hang, "Mẫu mã prompt");
-    mau.required = true;
-    mau.value = q.mau_ma_prompt || "";
-    const nhan = tao("label", "Model ưu tiên", hang);
-    const model = tao("select", undefined, nhan);
-    model.required = true;
-    const trong = tao("option", "Chọn model", model);
-    trong.value = "";
-    const ids = [...new Set([...models.map(m => m.id_model), ...(q.uu_tien ? [q.uu_tien] : [])])];
-    for (const id of ids) {
-      const opt = tao("option", id, model);
-      opt.value = id;
+  function bao(oNhap, chu = '') { oNhap.loi.textContent = chu; oNhap.el.setAttribute('aria-invalid', chu ? 'true' : 'false'); return !chu; }
+  goc.replaceChildren(); goc.classList.add('ktt-may-ai');
+  tao('style').textContent = `.ktt-may-ai{font-family:"Segoe UI",sans-serif;color:#20384f;max-width:1100px;font-size:16px;line-height:1.5}
+    .ktt-may-ai *{box-sizing:border-box}.ktt-may-ai .the{background:white;border:1px solid #d9e2ef;border-radius:12px;margin-bottom:20px;overflow:hidden}
+    .ktt-may-ai .dau{display:flex;align-items:center;justify-content:space-between;padding:25px 30px;border-bottom:1px solid #d9e2ef;gap:16px}
+    .ktt-may-ai h2{font-size:22px;margin:0;font-weight:600}.ktt-may-ai h3{font-size:18px;margin:22px 0 8px}.ktt-may-ai .than{padding:26px 30px}
+    .ktt-may-ai .luoi{display:grid;grid-template-columns:1fr 1fr;gap:24px}.ktt-may-ai label{display:flex;flex-direction:column;gap:10px;font-weight:500}
+    .ktt-may-ai input,.ktt-may-ai select{font:inherit;color:inherit;width:100%;min-width:0;padding:13px 15px;border:1px solid #cbd8eb;border-radius:7px;background:white}
+    .ktt-may-ai small{display:block;color:#657a90;margin-top:8px;font-size:14px}.ktt-may-ai .loi-o{color:#a62727}
+    .ktt-may-ai .nhan{padding:7px 12px;border-radius:6px;background:#f0f3f7;color:#596d80;font-size:14px}.ktt-may-ai .nhan[data-dat=true]{background:#edf8f0;color:#08736f}
+    .ktt-may-ai .hang-nut{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0 12px;align-items:center}
+    .ktt-may-ai button{font:inherit;border:1px solid #cbd8eb;background:white;color:#245b91;border-radius:7px;padding:11px 16px;cursor:pointer}
+    .ktt-may-ai button[type=submit]{background:#203f5e;color:white;border-color:#203f5e}.ktt-may-ai button:disabled{opacity:.55;cursor:default}
+    .ktt-may-ai :is(input,select,button,summary):focus-visible{outline:3px solid #307db1;outline-offset:3px}.ktt-may-ai [aria-invalid=true]{border-color:#a62727}
+    .ktt-may-ai p{margin:10px 0;color:#657a90;max-width:80ch}.ktt-may-ai [role=alert]{color:#a62727}.ktt-may-ai .bang{overflow-x:auto;margin:20px 0}
+    .ktt-may-ai table{border-collapse:collapse;width:100%;min-width:680px}.ktt-may-ai th,.ktt-may-ai td{text-align:left;padding:14px 10px;border-bottom:1px solid #e0e7f0;vertical-align:top}
+    .ktt-may-ai th{font-size:14px;font-weight:600;background:#f5f7fa}.ktt-may-ai td:first-child{width:24%}.ktt-may-ai td:nth-child(2){width:26%}
+    .ktt-may-ai td button{padding:5px 9px;margin:5px 4px 0 0;font-size:14px}.ktt-may-ai details{border-top:1px solid #e0e7f0;margin-top:24px;padding-top:18px}
+    .ktt-may-ai summary{cursor:pointer;font-weight:600;margin-bottom:15px}
+    @media(max-width:640px){.ktt-may-ai .luoi{grid-template-columns:minmax(0,1fr)}.ktt-may-ai .than,.ktt-may-ai .dau{padding:18px}.ktt-may-ai .dau{align-items:flex-start}.ktt-may-ai h2{font-size:20px}.ktt-may-ai table,.ktt-may-ai tbody{display:block;width:100%;min-width:0}.ktt-may-ai thead{display:none}.ktt-may-ai tr{display:grid;grid-template-columns:minmax(0,1fr)}.ktt-may-ai td{width:auto!important;min-width:0;padding:12px 0}.ktt-may-ai small{overflow-wrap:anywhere}.ktt-may-ai tr+tr{margin-top:24px}}`;
+  const form = tao('form'); form.noValidate = true;
+  const the = tao('section', undefined, form, 'the'), dau = tao('header', undefined, the, 'dau');
+  tao('h2', '▤  Máy AI', dau);
+  const nhan = tao('span', 'Chưa kiểm tra', dau, 'nhan'); nhan.setAttribute('role', 'status');
+  const than = tao('div', undefined, the, 'than'), luoi = tao('div', undefined, than, 'luoi');
+  const ip = o(luoi, 'Địa chỉ IP', 'Máy Local AI trong LAN hoặc Tailscale. Dùng IP, không dùng tên miền.', '127.0.0.1');
+  const cong = o(luoi, 'Cổng', 'Cổng dịch vụ trên máy AI, từ 1 đến 65535.', '11434', 'number');
+  cong.el.min = '1'; cong.el.max = '65535'; cong.el.step = '1';
+  const hangNut = tao('div', undefined, than, 'hang-nut');
+  const kiem = nut(hangNut, 'Kiểm tra kết nối', () => thaoTac('kiem_ket_noi'));
+  const tim = nut(hangNut, 'Tự tìm máy AI', () => thaoTac('tim_may_ai'));
+  const moi = nut(hangNut, 'Cập nhật model', () => thaoTac('lay_danh_sach_model'));
+  tao('small', 'Tự tìm trong địa chỉ đã biết và cổng Local thông dụng; tối đa 16 địa chỉ. Máy LAN mới: nhập IP và kiểm tra kết nối.', than);
+  const ketQua = tao('p', '', than); ketQua.setAttribute('role', 'status'); ketQua.setAttribute('aria-live', 'polite');
+  const cacMay = tao('div', undefined, than);
+  tao('h3', 'Quy tắc chọn model', than);
+  tao('p', 'Xét từ trên xuống: model ưu tiên, rồi các model dự phòng theo thứ tự. Mẫu * áp dụng cho mọi mã prompt; không có quy tắc phù hợp thì chọn model khả dụng đầu tiên từ máy AI.', than);
+  const bang = tao('table', undefined, tao('div', undefined, than, 'bang')), head = tao('tr', undefined, tao('thead', undefined, bang));
+  for (const ten of ['Mẫu mã prompt', 'Model ưu tiên', 'Model dự phòng', 'Thứ tự']) tao('th', ten, head).setAttribute('scope', 'col');
+  const body = tao('tbody', undefined, bang);
+  const them = nut(than, 'Thêm quy tắc', () => { quyTac.push({mau_ma_prompt:'', uu_tien:'', du_phong:[]}); veBang(); });
+  const nangCao = tao('details', undefined, than); tao('summary', 'Nâng cao', nangCao);
+  const luoiNC = tao('div', undefined, nangCao, 'luoi');
+  const timeout = o(luoiNC, 'Thời hạn chờ (giây)', 'Xử lý việc: trên 0 đến 600 giây. Kiểm kết nối: tối đa 2 giây mỗi API.', '60', 'number');
+  timeout.el.min = '0.01'; timeout.el.max = '600'; timeout.el.step = 'any';
+  const duongDan = o(luoiNC, 'Đường dẫn API', 'Giữ đường dẫn hiện tại khi sửa IP/cổng. Thường để địa chỉ gốc.', '/v1', 'select');
+  for (const path of ['', '/', '/v1', '/v1/', '/v1/chat/completions']) tao('option', path || 'Địa chỉ gốc', duongDan.el).value = path;
+  const cuoi = tao('div', undefined, than, 'hang-nut'), luu = tao('button', 'Lưu cấu hình', cuoi); luu.type = 'submit';
+  const taiLai = nut(cuoi, 'Tải lại cấu hình', () => docLai());
+  const thongBao = tao('p', '', than); thongBao.setAttribute('role','status'); thongBao.setAttribute('aria-live','polite');
+  const cloud = tao('section', undefined, form, 'the');
+  tao('h2', 'Cổng Cloud AI', tao('header', undefined, cloud, 'dau')); tao('p', 'Chưa áp dụng ở bản 1', tao('div', undefined, cloud, 'than'));
+  let phienBan = null, models = [], quyTac = [], khoa = true, ban = 0, cacO = [];
+  function thongDiep(chu, loi = false) { thongBao.textContent = chu; thongBao.setAttribute('role',loi ? 'alert':'status'); }
+  function trangThai(chu, dat = false) { nhan.textContent = chu; nhan.setAttribute('data-dat',String(dat)); }
+  function khoaNut(co) { for (const n of [kiem,tim,moi,luu,taiLai,them]) n.disabled = co || (n === luu && khoa); }
+  function doiDiaChi() { ban++; models = []; veBang(); trangThai('Chưa kiểm tra'); ketQua.textContent = 'Địa chỉ đang sửa; kiểm tra lại để cập nhật model.'; cacMay.replaceChildren(); }
+  ip.el.addEventListener('input',doiDiaChi); cong.el.addEventListener('input',doiDiaChi);
+  duongDan.el.addEventListener('change',doiDiaChi);
+  function layUrl() {
+    const host = ip.el.value.trim().replace(/^\[|\]$/g,''), port = Number(cong.el.value);
+    let hopLe = host === 'localhost'; const v4 = host.split('.').map(Number);
+    if (/^\d+\.\d+\.\d+\.\d+$/.test(host) && v4.every((x,i) => x >= 0 && x <= 255 && String(x) === host.split('.')[i])) {
+      const [a,b] = v4; hopLe = a === 127 || a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127);
     }
-    model.value = q.uu_tien || "";
-    const duPhong = oNhap(hang, "Model dự phòng (cách nhau bằng dấu phẩy)");
-    duPhong.value = (q.du_phong || []).join(", ");
-    const bo = tao("button", "Bỏ quy tắc", hang);
-    bo.type = "button";
-    const quyTac = {mau, model, duPhong};
-    cacQuyTac.push(quyTac);
-    bo.addEventListener("click", () => {
-      cacQuyTac = cacQuyTac.filter(qt => qt !== quyTac);
-      hang.remove();
+    if (host.includes(':')) { try { const h = new URL(`http://[${host}]:1`).hostname.toLowerCase(); hopLe = h === '[::1]' || h.startsWith('[fd7a:115c:a1e0:'); } catch { hopLe = false; } }
+    const okIp = bao(ip,hopLe ? '' : 'Nhập IP nội bộ, loopback hoặc Tailscale hợp lệ; không nhập URL hay tên miền.');
+    const okCong = bao(cong,cong.el.value.trim() && Number.isInteger(port) && port > 0 && port <= 65535 ? '' : 'Nhập số nguyên từ 1 đến 65535.');
+    return okIp && okCong ? `http://${host.includes(':') ? `[${host}]` : host}:${port}${duongDan.el.value}` : null;
+  }
+  ip.el.addEventListener('change',layUrl); cong.el.addEventListener('change',layUrl);
+  function chon(cha, ten, gt, doi) {
+    const truong = o(cha,ten,'Chọn model từ máy AI; giữ giá trị cũ nếu chưa khả dụng.','model-demo','select');
+    tao('option','Chọn model',truong.el).value = '';
+    const ids = models.filter(m => m.kha_dung).map(m => m.id_model);
+    for (const id of new Set([...ids,...(gt ? [gt] : [])])) tao('option',id + (ids.includes(id) ? '' : ' (chưa khả dụng)'),truong.el).value = id;
+    truong.el.value = gt; truong.el.addEventListener('change',() => { doi(truong.el.value); bao(truong,truong.el.value ? '' : 'Chọn một model.'); }); return truong;
+  }
+  function chuyen(ds,i,delta) { const j = i + delta; if (j >= 0 && j < ds.length) { [ds[i],ds[j]] = [ds[j],ds[i]]; veBang(); } }
+  function veBang() {
+    body.replaceChildren(); cacO = [];
+    quyTac.forEach((q,i) => {
+      const row = tao('tr',undefined,body), mau = o(tao('td',undefined,row),'Mẫu mã prompt','Ví dụ demo.* hoặc *; phân biệt hoa/thường.','demo.*');
+      mau.el.value = q.mau_ma_prompt; mau.el.addEventListener('input',() => { q.mau_ma_prompt = mau.el.value; bao(mau,q.mau_ma_prompt.trim() ? '' : 'Nhập mẫu mã prompt, ví dụ demo.*.'); });
+      const uu = chon(tao('td',undefined,row),'Model ưu tiên',q.uu_tien,v => { q.uu_tien = v; }), du = tao('td',undefined,row), duO = [];
+      q.du_phong.forEach((id,j) => {
+        const nhom = tao('div',undefined,du); duO.push(chon(nhom,`Dự phòng ${j+1}`,id,v => { q.du_phong[j] = v; }));
+        nut(nhom,'Lên',() => chuyen(q.du_phong,j,-1)).disabled = j === 0;
+        nut(nhom,'Xuống',() => chuyen(q.du_phong,j,1)).disabled = j === q.du_phong.length-1;
+        nut(nhom,'Bỏ model',() => { q.du_phong.splice(j,1); veBang(); });
+      });
+      nut(du,'Thêm dự phòng',() => { q.du_phong.push(''); veBang(); });
+      const tt = tao('td',undefined,row);
+      nut(tt,'Lên',() => chuyen(quyTac,i,-1)).disabled = i === 0;
+      nut(tt,'Xuống',() => chuyen(quyTac,i,1)).disabled = i === quyTac.length-1;
+      nut(tt,'Bỏ quy tắc',() => { quyTac.splice(i,1); veBang(); }); cacO.push({mau,uu,duO});
     });
   }
-  them.addEventListener("click", () => themQuyTac());
-  form.addEventListener("submit", async ev => {
-    ev.preventDefault();
-    if (luu.disabled || !form.reportValidity()) return;
-    const giay = Number(timeout.value);
-    if (!Number.isFinite(giay) || giay <= 0 || giay > 600) return;
-    const giaTri = {local_ai: {url: url.value.trim(), timeout_giay: giay},
-      quy_tac_model: cacQuyTac.map(q => ({mau_ma_prompt: q.mau.value.trim(),
-        uu_tien: q.model.value, du_phong: q.duPhong.value.split(",").map(s => s.trim()).filter(Boolean)}))};
-    luu.disabled = true;
-    thongBao.textContent = "Đang lưu…";
+  function dienUrl(url) { const u = new URL(url); ip.el.value = u.hostname.replace(/^\[|\]$/g,''); cong.el.value = u.port || '80'; duongDan.el.value = u.pathname === '/' && !url.endsWith('/') ? '' : u.pathname; }
+  async function thaoTac(ma) {
+    const url = ma === 'tim_may_ai' ? null : layUrl(); if (ma !== 'tim_may_ai' && !url) return;
+    const luc = ban; khoaNut(true); ketQua.textContent = 'Đang kiểm tra…';
     try {
-      const kq = await api.cau_hinh.luu(giaTri, phienBan);
-      phienBan = kq.phien_ban_cau_hinh;
-      thongBao.setAttribute("role", "status");
-      thongBao.textContent = "Đã lưu cấu hình. Trạng thái sẽ cập nhật sau lượt kiểm Local tiếp theo.";
-    } catch (loi) {
-      thongBao.setAttribute("role", "alert");
-      thongBao.textContent = loi.ma === "NGAN_XUNG_DOT" || loi.code === "NGAN_XUNG_DOT" || loi.status === 409
-        ? "Cấu hình đã được người khác thay đổi. Hãy tải lại màn hình trước khi lưu."
-        : "Không lưu được cấu hình. Hãy kiểm tra các ô nhập và thử lại.";
-    } finally {
-      luu.disabled = false;
-    }
-  });
-  try {
-    const kq = await api.cau_hinh.doc();
-    const ch = kq.cau_hinh || {};
-    phienBan = kq.phien_ban_cau_hinh;
-    url.value = ch.local_ai?.url || "";
-    timeout.value = String(ch.local_ai?.timeout_giay ?? 60);
-    let tiep = null;
-    do {
-      const trang = await api.ngan.tim("model_phat_hien", {loc: {url: url.value}, gioi_han: 500, tiep});
-      models.push(...trang.danh_sach.map(b => b.gia_tri));
-      tiep = trang.tiep;
-    } while (tiep);
-    models.sort((a, b) => a.thu_tu - b.thu_tu);
-    trangThai.textContent = models.length
-      ? (models.some(m => m.kha_dung)
-        ? "Local có model khả dụng ở lần kiểm gần nhất."
-        : "Local chưa có model khả dụng ở lần kiểm gần nhất. Hãy kiểm tra máy AI.")
-      : "Chưa có kết quả kiểm Local cho địa chỉ này. Lưu cấu hình để engine kiểm khi nhận việc.";
-    const lanKiem = models.map(m => m.kiem_luc).filter(Boolean).sort().at(-1);
-    if (lanKiem && Number.isFinite(Date.parse(lanKiem))) {
-      trangThai.textContent += " Kiểm lúc " + new Intl.DateTimeFormat("vi-VN", {
-        day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit",
-      }).format(new Date(lanKiem)) + ".";
-    }
-    url.addEventListener("input", () => {
-      trangThai.textContent = "Địa chỉ đang sửa; lưu rồi tải lại màn hình để xem kết quả kiểm của địa chỉ mới.";
-    });
-    for (const m of models) tao("li", `${m.id_model}: ${m.kha_dung ? "Khả dụng ở lần kiểm gần nhất" : "Chưa khả dụng"}`, dsModel);
-    for (const q of ch.quy_tac_model || []) themQuyTac(q);
-    luu.disabled = false;
-  } catch {
-    trangThai.textContent = "Chưa đọc được cấu hình hoặc danh sách model. Hãy tải lại màn hình.";
-    trangThai.setAttribute("role", "alert");
+      const kq = await api.thao_tac(ma,url ? {url,timeout_giay:2} : {}); if (luc !== ban) return;
+      if (ma === 'tim_may_ai') {
+        cacMay.replaceChildren(); ketQua.textContent = kq.danh_sach.length ? `Tìm thấy ${kq.danh_sach.length} máy AI. Chọn máy để kiểm tra model.` : 'Không tìm thấy máy AI trong các địa chỉ đã biết. Nhập IP và kiểm tra kết nối.';
+        for (const may of kq.danh_sach) nut(cacMay,`Chọn ${may.url}`,() => { dienUrl(may.url); doiDiaChi(); });
+      } else {
+        models = kq.models || []; veBang(); trangThai(kq.ket_noi ? '✓ Kết nối được' : 'Không kết nối được',kq.ket_noi);
+        ketQua.textContent = kq.ket_noi ? (models.some(m => m.kha_dung) ? 'Danh sách model đã cập nhật từ máy AI.' : 'Kết nối được nhưng chưa có model khả dụng. Tải model rồi kiểm tra lại.') : 'Không kết nối được. Kiểm tra IP, cổng và dịch vụ Local AI.';
+        if (kq.kiem_luc && Number.isFinite(Date.parse(kq.kiem_luc))) ketQua.textContent += ' Kiểm lúc ' + new Intl.DateTimeFormat('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(kq.kiem_luc)) + '.';
+      }
+    } catch { if (luc === ban) { models = []; veBang(); trangThai('Không kết nối được'); ketQua.textContent = 'Chưa kiểm được máy AI. Kiểm tra dịch vụ và quyền quản trị rồi thử lại.'; } }
+    finally { khoaNut(false); }
   }
+  form.addEventListener('submit',async ev => {
+    ev.preventDefault(); if (luu.disabled || khoa) return;
+    const url = layUrl(), giay = Number(timeout.el.value);
+    let dat = bao(timeout,timeout.el.value.trim() && Number.isFinite(giay) && giay > 0 && giay <= 600 ? '' : 'Nhập thời hạn trên 0 đến 600 giây.');
+    cacO.forEach((r,i) => {
+      dat = bao(r.mau,quyTac[i].mau_ma_prompt.trim() ? '' : `Dòng ${i+1}: nhập mẫu mã prompt.`) && dat;
+      dat = bao(r.uu,quyTac[i].uu_tien ? '' : `Dòng ${i+1}: chọn model ưu tiên.`) && dat;
+      r.duO.forEach((d,j) => { dat = bao(d,quyTac[i].du_phong[j] ? '' : `Dòng ${i+1}: chọn model dự phòng ${j+1} hoặc bỏ ô.`) && dat; });
+    });
+    if (!url || !dat) { thongDiep('Chưa lưu. Sửa các ô có thông báo lỗi.',true); return; }
+    const giaTri = {local_ai:{url,timeout_giay:giay},quy_tac_model:quyTac.map(q => ({...q,mau_ma_prompt:q.mau_ma_prompt.trim(),du_phong:[...q.du_phong]}))};
+    khoaNut(true); thongDiep('Đang lưu…');
+    try { const kq = await api.cau_hinh.luu(giaTri,phienBan); phienBan = kq.phien_ban_cau_hinh; thongDiep('Đã lưu cấu hình.'); }
+    catch (loi) {
+      const cas = loi.ma === 'NGAN_XUNG_DOT' || loi.code === 'NGAN_XUNG_DOT' || loi.status === 409 || loi.ma === 'CAU_HINH_XUNG_DOT';
+      if (cas) khoa = true;
+      thongDiep(cas ? 'Cấu hình đã được người khác sửa, tải lại trước khi lưu' : 'Không lưu được cấu hình. Kiểm tra các ô nhập và thử lại.',true);
+    } finally { khoaNut(false); }
+  });
+  async function docLai() {
+    khoa = true; khoaNut(true); thongDiep('Đang đọc cấu hình…');
+    try {
+      const kq = await api.cau_hinh.doc(), ch = kq.cau_hinh || {};
+      phienBan = kq.phien_ban_cau_hinh; quyTac = structuredClone(ch.quy_tac_model || []);
+      if (ch.local_ai?.url) dienUrl(ch.local_ai.url); else { ip.el.value = ''; cong.el.value = '11434'; duongDan.el.value = ''; }
+      timeout.el.value = String(ch.local_ai?.timeout_giay ?? 60); models = [];
+      if (ch.local_ai?.url) {
+        let tiep = null; do { const trang = await api.ngan.tim('model_phat_hien',{loc:{url:ch.local_ai.url},gioi_han:500,tiep}); models.push(...trang.danh_sach.map(b => b.gia_tri)); tiep = trang.tiep; } while (tiep);
+      }
+      ban++; cacMay.replaceChildren(); veBang(); khoa = false; trangThai('Chưa kiểm tra');
+      ketQua.textContent = models.length ? 'Model từ lần kiểm trước; kiểm tra kết nối để cập nhật trạng thái hiện tại.' : 'Chưa có kết quả kiểm. Nhập IP và kiểm tra kết nối.'; thongDiep('');
+    } catch { thongDiep('Chưa đọc được cấu hình hoặc danh sách model. Tải lại cấu hình để thử lại.',true); }
+    finally { khoaNut(false); }
+  }
+  await docLai();
 }

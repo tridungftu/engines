@@ -1,0 +1,83 @@
+{
+  "trang_thai": "Dự kiến; SDK 2.2.0 chưa nhận giao_dien_tham_so. Đã kiểm bằng Core giả (CoreGia).",
+  "giao_dien_tham_so": [
+    {
+      "nang_luc": "audit.phan_luong@1",
+      "ten": "Cài đặt bước Phân luồng",
+      "tep": "ui/tham_so.js",
+      "css": "ui/tham_so.css",
+      "quyen": "admin_core",
+      "tham_so": [
+        "nguong_json",
+        "danh_muc_loai_json",
+        "bo_phan_loai_json",
+        "chinh_sach_json",
+        "khuon_cot_json"
+      ]
+    },
+    {
+      "nang_luc": "audit.chuan_bi_phan_loai@1",
+      "ten": "Cài đặt bước Phân luồng",
+      "tep": "ui/tham_so.js",
+      "css": "ui/tham_so.css",
+      "quyen": "admin_core",
+      "tham_so": [
+        "nguong_json",
+        "danh_muc_loai_json",
+        "bo_phan_loai_json",
+        "chinh_sach_json",
+        "khuon_cot_json"
+      ]
+    },
+    {
+      "nang_luc": "audit.phan_luong_sau_ai@1",
+      "ten": "Cài đặt bước Phân luồng",
+      "tep": "ui/tham_so.js",
+      "css": "ui/tham_so.css",
+      "quyen": "admin_core",
+      "tham_so": [
+        "nguong_json",
+        "danh_muc_loai_json",
+        "bo_phan_loai_json",
+        "chinh_sach_json",
+        "khuon_cot_json"
+      ]
+    },
+    {
+      "nang_luc": "audit.phan_luong_hoa_don@1",
+      "ten": "Cài đặt bước Phân luồng",
+      "tep": "ui/tham_so.js",
+      "css": "ui/tham_so.css",
+      "quyen": "admin_core",
+      "tham_so": [
+        "nguong_json",
+        "danh_muc_loai_json",
+        "bo_phan_loai_json",
+        "chinh_sach_json"
+      ]
+    },
+    {
+      "nang_luc": "audit.ghi_ket_qua@1",
+      "ten": "Cài đặt bước Phân luồng",
+      "tep": "ui/tham_so.js",
+      "css": "ui/tham_so.css",
+      "quyen": "admin_core",
+      "tham_so": [
+        "nguong_json",
+        "danh_muc_loai_json",
+        "chinh_sach_json"
+      ]
+    }
+  ],
+  "hop_dong_du_kien_D2": {
+    "mount": "mount(goc, {KttCore, nang_luc, tham_so, phien_ban_tham_so, doc_tham_so, luu_tham_so})",
+    "doc_tham_so": "Callback của màn bước Core: () => Promise<{tham_so, phien_ban_tham_so: số nguyên không âm}>.",
+    "luu_tham_so": "Callback của màn bước Core: (tham_so, phien_ban_tham_so) => Promise<{phien_ban_tham_so: số nguyên mới lớn hơn phiên cũ}>. Core kiểm quyền, kiểu, trần và CAS khi lưu quy trình/bước; 409 hoặc ma=NGAN_XUNG_DOT/THAM_SO_XUNG_DOT khi tranh chấp.",
+    "getValue": "Bộ điều khiển mount trả getValue() -> nguyên bộ tham số, giữ các khóa ngoài lát và giữ byte chuỗi chưa sửa; validate() -> danh sách lỗi; refresh(), save(), destroy().",
+    "gioi_han": "Không có API tham số bước trong KttCore.engine ở SDK 2.2.0. Callback là hợp đồng đề nghị cho cửa D2, không phải cổng thật. Thiếu callback, phiên CAS hoặc KttCore.engine thì khóa Lưu; vẫn soạn/kiểm được.",
+    "cau_hinh": "Đây là tham số từng bước quy trình, không phải cấu hình engine; không gọi cau_hinh.luu hoặc ngan.ghi_lo để cất hộ.",
+    "tai_nguyen": "Core nạp CSS ui/tham_so.css và ES module ui/tham_so.js với import tương đối trong gói; chỉ gọi API Core qua KttCore.engine(ma)."
+  },
+  "thao_tac_quan_tri": [],
+  "ghi_chu": "TS-PL không có cấu hình engine, máy/dịch vụ cần kiểm hoặc bí mật; nút kiểm chỉ kiểm cấu trúc tại máy, không gọi mạng."
+}

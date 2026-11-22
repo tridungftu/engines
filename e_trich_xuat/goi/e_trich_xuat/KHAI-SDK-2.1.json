@@ -1,0 +1,51 @@
+{
+  "giao_dien_quan_tri": [
+    {
+      "ma": "cau_hinh",
+      "ten": "Cấu hình trích xuất",
+      "tep": "ui/cau_hinh.js",
+      "quyen": "admin_core"
+    }
+  ],
+  "TS-TX": {
+    "trang_thai": "Dự kiến, đã kiểm bằng Core giả (CoreGia); chưa nạp trong Core thật",
+    "giao_dien_tham_so": [
+      {
+        "ma": "soan_bo_tham_so",
+        "ten": "Bộ tham số trích xuất",
+        "tep": "ui/soan_bo_tham_so.js",
+        "noi_nhung": "Màn quản lý bộ tham số của từng module",
+        "nang_luc": [
+          "trich.chuan_bi@1"
+        ],
+        "tham_so": [
+          "bo_tham_so_json",
+          "bam_bo_tham_so"
+        ],
+        "dau_vao": [
+          "tham_so",
+          "dinh_danh",
+          "phien_ban",
+          "luu"
+        ],
+        "dau_ra": "api.xuat() trả hai chuỗi tham số hoặc null; api.dong() tháo màn",
+        "luu": "Callback module luu(tham_so, phien_ban) phải kiểm CAS/quyền; trả {phien_ban}; 409 khóa lưu đến khi nạp lại"
+      }
+    ],
+    "thao_tac_quan_tri": [
+      {
+        "ma": "soan_bo_tham_so",
+        "ten": "Nhập và kiểm bộ tham số E1",
+        "ham": "e_trich_xuat.soan_bo.ham_thao_tac",
+        "thoi_han_giay": 30,
+        "lenh": [
+          "doc_bo",
+          "nhap_excel",
+          "kiem_bo"
+        ],
+        "ghi_du_lieu": false,
+        "ghi_chu": "Core phải nhận và phân quyền thao tác; SDK 2.2.0 chưa có decorator quản trị. Không đăng ký năng lực mới vào engine.json."
+      }
+    ]
+  }
+}

@@ -86,7 +86,7 @@ export async function mount(goc, {KttCore = globalThis.KttCore, phapNhanId} = {}
       if (!daDong && lan === luot) {
         ds.replaceChildren(); tiep = null; sau.disabled = true;
         if (loiQuyen(e)) {++luotDoc; noiDungDoc.replaceChildren(); thongBaoDoc.textContent = "";}
-        thongBao.textContent = "Chưa đọc được bài đo hoặc chưa có quyền trong pháp nhân này. Anh đọc lại hoặc nhờ quản trị viên kiểm tra.";
+        thongBao.textContent = "Chưa đọc được bài đo hoặc chưa có quyền trong pháp nhân này. Đọc lại hoặc nhờ quản trị viên kiểm tra.";
       }
       return false;
     }
@@ -109,7 +109,7 @@ export async function mount(goc, {KttCore = globalThis.KttCore, phapNhanId} = {}
       if (!daDong && lan === luotDoc) {
         noiDungDoc.replaceChildren();
         if (loiQuyen(e)) {++luot; ds.replaceChildren(); tiep = null; sau.disabled = true;}
-        thongBaoDoc.textContent = "Chưa đọc được chi tiết bài đo hoặc chưa có quyền. Anh thử lại.";
+        thongBaoDoc.textContent = "Chưa đọc được chi tiết bài đo hoặc chưa có quyền. Thử lại.";
       }
       return false;
     }

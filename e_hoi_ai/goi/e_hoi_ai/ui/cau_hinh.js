@@ -67,7 +67,7 @@ export default async function cauHinh(goc, KttCore = globalThis.KttCore) {
   const taiLai = nut(cuoi, 'Tải lại cấu hình', () => docLai());
   const thongBao = tao('p', '', than); thongBao.setAttribute('role','status'); thongBao.setAttribute('aria-live','polite');
   const cloud = tao('section', undefined, form, 'the');
-  tao('h2', 'Cổng Cloud AI', tao('header', undefined, cloud, 'dau')); tao('p', 'Chưa áp dụng ở bản 1', tao('div', undefined, cloud, 'than'));
+  tao('h2', 'Cổng Cloud AI', tao('header', undefined, cloud, 'dau')); tao('p', 'Chưa áp dụng ở bản 1. Tạm khóa; màn Cổng Cloud AI quản lý trạng thái key qua két Core khi được hỗ trợ.', tao('div', undefined, cloud, 'than'));
   let phienBan = null, models = [], quyTac = [], khoa = true, ban = 0, cacO = [];
   function thongDiep(chu, loi = false) { thongBao.textContent = chu; thongBao.setAttribute('role',loi ? 'alert':'status'); }
   function trangThai(chu, dat = false) { nhan.textContent = chu; nhan.setAttribute('data-dat',String(dat)); }

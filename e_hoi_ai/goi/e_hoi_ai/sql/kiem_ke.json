@@ -3,23 +3,23 @@
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 10697,
-      "sha256": "9cb90edb066ddebf47f2332089ba048ccda27c705d4c0524f1fba845e93b8adb"
+      "bytes": 11809,
+      "sha256": "2033e0a785849c73894e6f9e3b20ba5cb56bef4d19f70b359d7774fe287c6e9f"
     },
     {
       "duong_dan": "KHAI-SDK-2.1.json",
-      "bytes": 1521,
-      "sha256": "e80032d2ed06d8156bb5316eb528bbd9a7c22bc15528b4406efe763cd99140fb"
+      "bytes": 3228,
+      "sha256": "35bf222e35e0ecf2b2994614d750da66e8efa6cc17b79e37ea13f7f16ef3098f"
     },
     {
       "duong_dan": "NGUON.md",
-      "bytes": 15891,
-      "sha256": "094ffc2c662e39616a9c36f844dd3f84aaa5700684364abe5e9238637b71017c"
+      "bytes": 16532,
+      "sha256": "590aadd71a470500cf06e204dcc70e2f99310461f37d37cf18c3fc88d269154f"
     },
     {
       "duong_dan": "README.md",
-      "bytes": 28078,
-      "sha256": "3eab8b905bf6b568bbfaf0e136d32cf63fba28c63ca00b7315dd78deab2b60ab"
+      "bytes": 30946,
+      "sha256": "09e716765b8116a1ef08925482e98d9707e5e9b03b4b50cae547338ed63a4f5c"
     },
     {
       "duong_dan": "cau_hinh.schema.json",
@@ -143,8 +143,13 @@
     },
     {
       "duong_dan": "ui/cau_hinh.js",
-      "bytes": 16392,
-      "sha256": "03676cc297f317593d7f581be87af438d85a5eb3cac46814eab6def81457a5e9"
+      "bytes": 16495,
+      "sha256": "cf71c5ae8645149e8a10677350b18f57b994bf3c6625b3188eda7d3c95d6efef"
+    },
+    {
+      "duong_dan": "ui/cloud.js",
+      "bytes": 10437,
+      "sha256": "872534951239e559d075bb29eb704d45a1ae4590d24e62deb54ae62434e06135"
     }
   ]
 }

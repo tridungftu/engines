@@ -1,3 +1,10 @@
+## UI-AI-2 — 22/11/2026 (PR: chờ lead mở; giữ manifest 0.12.0)
+
+- Thêm màn Cổng Cloud AI theo ảnh mẫu, luôn Tạm khóa: nhà cung cấp/model/tỷ lệ kiểm/nút kiểm Cloud bị khóa; không có đường bật/gọi Cloud hoặc thao tác Python mới.
+- Két Core dự kiến: đọc metadata, nhập key kiểu mật khẩu, lưu/xóa với CAS riêng tăng đơn điệu; chỉ hiện bốn ký tự cuối, không hiện lại bản rõ. Xóa ô nhập ngay khi gửi; lỗi ghi/mất phản hồi khóa ghi tới khi tải lại. Thiếu cổng Core thì khóa két.
+- Nhật ký gửi ra ngoài báo rõ chờ cửa Core; không dựng lịch sử rỗng giả. Khai dự kiến D/F tại KHAI-SDK-2.1.json, không đổi engine.json hoặc schema xử lý việc. Schema hiện có đã đủ title/description/examples mọi cấp, có kiểm hồi quy.
+- Test Node không mạng tích hợp pytest; ảnh Chrome DEMO rộng/hẹp/lỗi/CAS. Đã kiểm bằng Core giả (CoreGia), chưa nối Core/Cloud thật; CLI SDK độc lập vẫn có nợ cấu hình DEMO từ AI-11.
+
 ## UI-AI-1 — 21/11/2026 (PR: chờ lead mở; giữ manifest 0.12.0)
 
 - Màn Máy AI theo ảnh mẫu: IP/cổng, trạng thái kiểm, nút kiểm/tìm/cập nhật model; bảng sửa và sắp quy tắc/model dự phòng, Nâng cao, lưu CAS và tải lại khi tranh chấp. Không thêm tùy chọn làm đổi xử lý việc; Cloud giữ trạng thái cũ.

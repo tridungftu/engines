@@ -7,6 +7,20 @@ Gói SDK 2.2.0, phiên bản 0.11.0, dùng lại khung AI-0 và lõi AI-1. Chỉ
 - `ai.hoi_mask_cuc_bo@1`: nhận `yeu_cau_ai`, trả `tra_loi_ai` có thực thể và span trên gốc, chỉ Local.
 - Prompt nghiệp vụ thuộc module/quy trình, không lưu trong cấu hình engine.
 
+## Cổng Cloud AI — UI-AI-2, 22/11/2026
+
+Màn `ui/cloud.js` nạp như ES module `(goc, KttCore)`, chỉ qua `KttCore.engine('e_hoi_ai')`. Khai màn dự kiến tại `KHAI-SDK-2.1.json`; SDK 2.2.0 chưa nhận cửa D/F nên chưa khai vào `engine.json`. Không đổi manifest, schema, xử lý việc hoặc cờ Cloud của bản 1.
+
+Nhà cung cấp, model, tỷ lệ kiểm và nút kiểm kết nối Cloud luôn khóa. Không kiểm Cloud thật khi bấm hoặc khi mở màn. API key có thể chuẩn bị riêng trong két Core nếu cửa F đã được cấp; lưu/xóa key không bật Cloud. Nếu chưa có cửa F hoặc không đủ quyền, ô key và nút ghi/xóa bị khóa, có hướng dẫn tải lại. Không có nút hiện bản rõ; sau lưu chỉ hiện `Đã lưu · ••••` cùng bốn ký tự cuối. Lỗi không hiển thị phản hồi thô.
+
+Hợp đồng két **dự kiến, chỉ kiểm bằng KttCore giả**: `bi_mat.trang_thai(ten)`, `bi_mat.luu(ten, gia_tri, phien_ban)`, `bi_mat.xoa(ten, phien_ban)`, tên `khoa_api_anthropic`. Core trả `{da_luu, bon_ky_tu_cuoi, phien_ban}`; phiên bản số nguyên tăng đơn điệu cả khi xóa, CAS sai trả HTTP 409 / `BI_MAT_XUNG_DOT`. Đầu vào key 8–4096 ký tự không khoảng trắng; UI không kiểm tính hợp lệ với nhà cung cấp. Khi mất phản hồi, tranh chấp hoặc metadata sai, khóa ghi và yêu cầu tải lại để tránh báo thành công giả. Core phải kiểm quyền Admin, phạm vi engine, ghi kiểm toán và không bao giờ trả bản rõ về màn. Không ghi key vào ngăn/cấu hình/tệp/log của engine.
+
+Nhật ký gửi ra ngoài chưa có cửa đọc chung: hiển thị cảnh báo và khóa nút xem, không đọc bảng chưa khai, không báo lịch sử rỗng hoặc số lượt giả. Cần Core cấp metadata có quyền/pháp nhân và phân trang; chi phí nếu có phải kèm mã tiền. Cloud vẫn chờ Mask và phê duyệt bản sau; M9/nhóm 07 chỉ Local.
+
+Schema cấu hình Local hiện có đã có `title`/`description`/`examples` tiếng Việt ở mọi node; UI-AI-2 thêm kiểm tự động bảo toàn yêu cầu này, không thêm trường Cloud vào cấu hình xử lý việc.
+
+Kiểm UI không mạng: `node --test e_hoi_ai/tests/ui/cau_hinh.test.mjs e_hoi_ai/tests/ui/cloud.test.mjs` từ gốc repo (cũng được gọi trong pytest). Dựng ảnh bằng `node e_hoi_ai/tests/ui/chup_anh_cloud_demo.mjs`; `UI_CHROME` có thể chỉ định Chrome trên Linux. HTML và ảnh DEMO rộng/hẹp/lỗi/CAS tại `e_hoi_ai/docs/anh-ui-ai-2/`, ngoài gói chạy. Đã kiểm bằng Core giả (CoreGia); chưa nối Core hoặc Cloud thật. CLI SDK độc lập còn lỗi thiếu cấu hình DEMO như AI-11, không thay bằng kết quả bộ bổ sung.
+
 ## Nhận diện Local AI-9 — 15/11/2026
 
 Profile `chuyen_tiep.mask_2c` đã được lead duyệt ngày 15/11 theo sổ loại chung §6. Kiểm đủ trường, local bắt buộc, phiên bản, tham chiếu kỹ thuật an toàn, dạng SHA-256, hệ offset, chỉ số/số đoạn và khoảng đoạn. Tái tính băm prompt UTF-8, khuôn JSON chuẩn và đoạn gốc; một đoạn duy nhất còn đối chiếu băm gốc. Trần đoạn 8.000 code point, tối đa 128 đoạn, gốc tối đa 500.000, span tối đa 300; vượt từ chối. Engine không mở snapshot hoặc đọc ngăn riêng của Mask. Băm snapshot/profile/bản che và độ phủ toàn gốc nhiều đoạn phải được Core/Mask kiểm lại với bytes có quyền; payload không tự cấp quyền hoặc chứng thực nguồn.

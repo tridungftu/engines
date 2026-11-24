@@ -16,9 +16,9 @@ DU_LIEU_DEMO = {"so_tien": {"so": 1000000, "tien_te": "VND"}, "ngay": "2026-10-3
 
 
 def chuan_bi_local_demo(local):
-    """Ba phản hồi hỏi–đáp DEMO; giữ nguyên các handler thật của engine."""
+    """Năm phản hồi DEMO; giữ nguyên các handler thật của engine."""
     local.tra_loi_tung_luot = deepcopy([
-        TRA_LOI, {"truong": []}, {"du_lieu": DU_LIEU_DEMO, **TRA_LOI},
+        TRA_LOI, {"truong": []}, {"du_lieu": DU_LIEU_DEMO, **TRA_LOI}, "40", "1.000.000 VND",
     ])
 
 

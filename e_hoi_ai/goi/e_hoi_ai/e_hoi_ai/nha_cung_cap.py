@@ -60,10 +60,11 @@ def kiem_bat_cloud():
 
 
 class NhaCungCapLocal:
-    def hoi(self, cau_hinh, model, prompt, *, kiem_huy, khuon=None, ngan_sach_mask=False):
+    def hoi(self, cau_hinh, model, prompt, *, kiem_huy, khuon=None, ngan_sach_mask=False, prompt_module=False):
         # Không bắt/đổi ChuaRo; không có fallback hoặc retry tại provider Local.
+        tuy_chon = {"prompt_module": True} if prompt_module else {}
         return ai_cuc_bo.hoi_local(cau_hinh, model, prompt, kiem_huy=kiem_huy, khuon=khuon,
-                                  ngan_sach_mask=ngan_sach_mask)
+                                  ngan_sach_mask=ngan_sach_mask, **tuy_chon)
 
 
 def _gui_json(host, duong, headers, body, timeout):

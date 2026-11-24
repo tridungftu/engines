@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_hoi_ai",
   "ten": "Hỏi AI",
-  "phien_ban": "0.12.1",
+  "phien_ban": "0.13.0",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -21,7 +21,7 @@
   "nang_luc": [
     {
       "ma": "ai.hoi_tai_lieu@1",
-      "ten": "Hỏi tài liệu",
+      "ten": "Hỏi tài liệu (có khung trích dẫn của engine, giữ để tương thích)",
       "nhan": [
         "van_ban",
         "van_ban_tai_lieu"
@@ -91,7 +91,7 @@
     },
     {
       "ma": "ai.hoi_theo_yeu_cau@1",
-      "ten": "Hỏi theo yêu cầu",
+      "ten": "Hỏi theo yêu cầu (có khung trích dẫn của engine, giữ để tương thích)",
       "nhan": [
         "yeu_cau_ai"
       ],
@@ -116,6 +116,91 @@
       },
       "huy_duoc": true,
       "tham_so": []
+    },
+    {
+      "ma": "ai.hoi_theo_prompt@1",
+      "ten": "Hỏi AI theo prompt của module",
+      "nhan": [
+        "yeu_cau_ai",
+        "van_ban",
+        "van_ban_tai_lieu"
+      ],
+      "tra": "truong",
+      "truong_ra": [
+        {
+          "ma": "tra_loi",
+          "ten": "Nguyên văn câu trả lời",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "du_lieu_json",
+          "ten": "JSON đã kiểm đúng khuôn",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "model",
+          "ten": "Model",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "ly_do_chon_model",
+          "ten": "Lý do chọn model",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "noi_dung_gui_ai",
+          "ten": "Nội dung đã gửi AI (khi yêu cầu)",
+          "kieu": "van_ban"
+        },
+        {
+          "ma": "canh_bao",
+          "ten": "Cảnh báo nguồn prompt",
+          "kieu": "van_ban"
+        }
+      ],
+      "gioi_han": {
+        "ky_tu_toi_da": 500000,
+        "thoi_han_giay": 600
+      },
+      "huy_duoc": true,
+      "tham_so": [
+        {
+          "ma": "ma_prompt",
+          "ten": "Mã prompt của module",
+          "kieu": "van_ban",
+          "bat_buoc": false,
+          "mo_ta": "Tùy chọn; dùng để chọn model theo quy tắc. Phong bì yeu_cau_ai có ưu tiên."
+        },
+        {
+          "ma": "phien_ban_prompt",
+          "ten": "Phiên bản prompt",
+          "kieu": "van_ban",
+          "bat_buoc": false,
+          "mo_ta": "Tùy chọn khi nhận văn bản; phong bì yeu_cau_ai mang phiên bản riêng."
+        },
+        {
+          "ma": "prompt",
+          "ten": "Prompt của module",
+          "kieu": "van_ban",
+          "bat_buoc": false,
+          "mo_ta": "Nhập yêu cầu nguyên văn khi nhận văn bản. Nếu nhận yeu_cau_ai thì dùng prompt trong phong bì. Không có prompt từ nguồn được chọn sẽ báo THIEU_PROMPT."
+        },
+        {
+          "ma": "model_uu_tien",
+          "ten": "Model ưu tiên",
+          "kieu": "van_ban",
+          "bat_buoc": false,
+          "mo_ta": "Tùy chọn; chỉ chọn model Local khả dụng. Phong bì yeu_cau_ai có ưu tiên."
+        },
+        {
+          "ma": "tra_noi_dung_gui",
+          "ten": "Trả nội dung đã gửi AI",
+          "kieu": "co_khong",
+          "bat_buoc": false,
+          "mac_dinh": false,
+          "mo_ta": "Bật để nhận đúng chuỗi đã gửi model trong kết quả. Mặc định để trống; không ghi nội dung vào nhật ký."
+        }
+      ]
     }
   ],
   "loai_du_lieu_rieng": [
@@ -218,6 +303,30 @@
         }
       },
       "tham_so": {}
+    },
+    {
+      "nang_luc": "ai.hoi_theo_prompt@1",
+      "ten": "Hỏi phép cộng DEMO theo nguyên prompt module",
+      "dau_vao": {
+        "loai": "van_ban",
+        "van_ban": ""
+      },
+      "tham_so": {
+        "prompt": "DEMO: 20 cộng 20 bằng bao nhiêu? Trả lời một số."
+      }
+    },
+    {
+      "nang_luc": "ai.hoi_theo_prompt@1",
+      "ten": "Hỏi số tiền hợp đồng DEMO-001 theo prompt module",
+      "dau_vao": {
+        "loai": "van_ban",
+        "van_ban": "DEMO — Hợp đồng DEMO-001 của Công ty DEMO Ánh Dương. Số tiền thanh toán là 1.000.000 VND. Ngày thanh toán là 30/10/2026."
+      },
+      "tham_so": {
+        "ma_prompt": "demo.hoi_tien",
+        "phien_ban_prompt": "1",
+        "prompt": "DEMO: Số tiền thanh toán trên hợp đồng DEMO-001 là bao nhiêu? Trả lời kèm mã tiền tệ."
+      }
     }
   ],
   "bi_mat": [],

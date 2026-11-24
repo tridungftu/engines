@@ -19,7 +19,9 @@ from kho_tri_thuc_sdk.thu import CoreGia
 
 def doc_demo():
     phieu = json.loads((Path(__file__).resolve().parents[1] / "goi" / "e_hoi_ai" / "engine.json").read_text(encoding="utf-8"))
-    return phieu["chay_thu_demo"]
+    # AI-7 đo ba ca trích dẫn lịch sử; AI-13 có cổng DEMO và bộ kiểm riêng.
+    return [vd for vd in phieu["chay_thu_demo"]
+            if vd["nang_luc"] in ("ai.hoi_tai_lieu@1", "ai.hoi_theo_yeu_cau@1")]
 
 
 def kiem_demo(vd, kq):

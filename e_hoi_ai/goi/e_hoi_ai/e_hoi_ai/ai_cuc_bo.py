@@ -263,7 +263,8 @@ def _kiem_model(goc, model, thoi_han, kiem_huy):
     return catalog.loai
 
 
-def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None, khuon=None, ngan_sach_mask=False):
+def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None, khuon=None, ngan_sach_mask=False,
+              prompt_module=False):
     """Một lượt Local; có khuôn thì dùng API cấu trúc đúng loại máy đã xác minh."""
     try:
         parsed = kiem_url(cau_hinh["url"])
@@ -283,11 +284,16 @@ def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None, khuon=None, nga
             {"role": "user", "content": prompt},
         ]}
         url = parsed.geturl()
+        if prompt_module:
+            du_lieu["messages"] = [{"role": "user", "content": prompt}]
+        ollama = loai_api == "ollama" and (khuon is not None or prompt_module)
+        if ollama:
+            url = goc + "/api/chat"
+            du_lieu.pop("temperature")
+            du_lieu["options"] = {"temperature": 0}
         if khuon is not None:
-            if loai_api == "ollama":
-                url = goc + "/api/chat"
-                du_lieu.pop("temperature")
-                du_lieu.update(format=khuon, options={"temperature": 0})
+            if ollama:
+                du_lieu["format"] = khuon
             else:
                 du_lieu["response_format"] = {"type": "json_schema", "json_schema": {
                     "name": "tra_loi_ai", "schema": khuon,
@@ -302,7 +308,7 @@ def hoi_local(cau_hinh, model, prompt, *, kiem_huy=lambda: None, khuon=None, nga
             _kiem_budget_mask(bo_mo, goc, model, thoi_han, than, loai_api, kiem_huy)
         phan_hoi = _gui_post(url, nguon, thoi_han, than, kiem_huy)
         try:
-            return _noi_dung_hoan_tat(phan_hoi, ollama=khuon is not None and loai_api == "ollama", model=model)
+            return _noi_dung_hoan_tat(phan_hoi, ollama=ollama, model=model)
         except (ValueError, KeyError, IndexError, TypeError, AttributeError, RecursionError, OverflowError):
             raise ChuaRo("local-" + uuid.uuid4().hex) from None
     except urllib.error.HTTPError as exc:

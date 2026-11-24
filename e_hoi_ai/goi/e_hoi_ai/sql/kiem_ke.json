@@ -1,10 +1,10 @@
 {
-  "phien_ban": "0.12.1",
+  "phien_ban": "0.13.0",
   "tep": [
     {
       "duong_dan": "CHANGELOG.md",
-      "bytes": 12047,
-      "sha256": "c20a40b465636858542202478e92411ce04c4076e6f30b04036bc6adaa3b7b44"
+      "bytes": 13267,
+      "sha256": "04b055356cb1b650bffd4d628980bc007055a65e867bb0805a8034cc1120da9c"
     },
     {
       "duong_dan": "KHAI-SDK-2.1.json",
@@ -13,13 +13,13 @@
     },
     {
       "duong_dan": "NGUON.md",
-      "bytes": 16532,
-      "sha256": "2afd7234fea669f98f3f27c7659b041569f6fcfea098c2c933a719d874e51db6"
+      "bytes": 17405,
+      "sha256": "670568edbac44412eba2c612787002da051e1e787fe485f1d5f302f4c64e93fe"
     },
     {
       "duong_dan": "README.md",
-      "bytes": 30946,
-      "sha256": "09e716765b8116a1ef08925482e98d9707e5e9b03b4b50cae547338ed63a4f5c"
+      "bytes": 35287,
+      "sha256": "b627edf94f930e112d5eb348eb1f70b62e608d3149d72668fc9669e91f37d877"
     },
     {
       "duong_dan": "cau_hinh.schema.json",
@@ -58,8 +58,8 @@
     },
     {
       "duong_dan": "e_hoi_ai/ai_cuc_bo.py",
-      "bytes": 14316,
-      "sha256": "8051a15ec015acd7bfec9c34bfc35a903746ff990bb15f2f27e172b2ed580ae1"
+      "bytes": 14510,
+      "sha256": "b8c0155ff46b2ec6bfe472483c5015c4a90e8c743499f44bce14857fc007852a"
     },
     {
       "duong_dan": "e_hoi_ai/cau_hinh_may.py",
@@ -68,8 +68,8 @@
     },
     {
       "duong_dan": "e_hoi_ai/chay.py",
-      "bytes": 964,
-      "sha256": "92972cc564d5a33457dea57e40d445c3fe70ce58068380692f89adfbc0d8dda2"
+      "bytes": 1120,
+      "sha256": "db41d3d8878ac7aad21f086c16122f0f55dc26110e7d5500e370aa9a584a48f7"
     },
     {
       "duong_dan": "e_hoi_ai/chon_model.py",
@@ -102,6 +102,11 @@
       "sha256": "10628ba65864e06b03b5250aaba277abc5c3921d9dae4144dc270688d55cc597"
     },
     {
+      "duong_dan": "e_hoi_ai/hoi_prompt.py",
+      "bytes": 5219,
+      "sha256": "144cc748b2e5f988b1f26e837f9d7677b78dca69cc767c484af97c3cfb6e70a4"
+    },
+    {
       "duong_dan": "e_hoi_ai/hoi_yeu_cau.py",
       "bytes": 9996,
       "sha256": "3162ba602025607ec8b6ca7de3321a76af78b43fccaf8af837d9dce524cd565c"
@@ -113,8 +118,8 @@
     },
     {
       "duong_dan": "e_hoi_ai/nha_cung_cap.py",
-      "bytes": 8773,
-      "sha256": "a9b105e6da5680cbdacda179d17357d0b91a8579cdefc7f862db17565803ef14"
+      "bytes": 8874,
+      "sha256": "9ea4b6056617c0cc628530bbdd75b421a4f4685cc5cf89832df504b7e59a6d73"
     },
     {
       "duong_dan": "e_hoi_ai/quan_tri.py",
@@ -128,8 +133,8 @@
     },
     {
       "duong_dan": "engine.json",
-      "bytes": 7063,
-      "sha256": "f808e9ca604935a505838701fe56374623506a993efdcff15fda7d740377358f"
+      "bytes": 10700,
+      "sha256": "793166e39f8ef68111f9ed0a7ea4e3477e0345bc47cc6ea4820fe06a9900ea11"
     },
     {
       "duong_dan": "requirements.lock",

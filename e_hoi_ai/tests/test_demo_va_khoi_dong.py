@@ -17,9 +17,17 @@ from test_hoi_tai_lieu import khong_mang_ngoai_va_khong_cloud, local
 
 
 def kiem_ket_qua_demo(ket_qua):
-    assert len(ket_qua) == 3
+    assert len(ket_qua) == 5
     assert all(kq["trang_thai"] == "XONG" and kq["loi"] is None for kq in ket_qua)
-    tien_ngay, khong_dap_an, co_khuon = [kq["ket_qua"] for kq in ket_qua]
+    tien_ngay, khong_dap_an, co_khuon, cong, tien = [kq["ket_qua"] for kq in ket_qua]
+    assert cong["truong"] == {
+        "tra_loi": "40", "du_lieu_json": "", "model": "model-demo",
+        "ly_do_chon_model": "model_dau_tien_kha_dung", "noi_dung_gui_ai": "", "canh_bao": "",
+    }
+    assert tien["truong"] == {
+        "tra_loi": "1.000.000 VND", "du_lieu_json": "", "model": "model-demo",
+        "ly_do_chon_model": "quy_tac_ma_prompt", "noi_dung_gui_ai": "", "canh_bao": "",
+    }
     assert tien_ngay["truong"] == {
         "tra_loi": "1.000.000 VND\n30/10/2026", "co_can_cu": True,
         "trich_dan": TRICH_TIEN + "\n" + TRICH_NGAY, "model": "model-demo",
@@ -44,11 +52,11 @@ def test_toan_bo_demo_dung_dap_an_va_khuon(local):
     for vd in app.phieu["chay_thu_demo"]:
         assert "DEMO" in vd["ten"]
         dau_vao = vd["dau_vao"]
-        tai_lieu = dau_vao.get("van_ban") or dau_vao["yeu_cau_ai"]["tai_lieu"]
-        assert tai_lieu == TAI_LIEU
+        tai_lieu = dau_vao["van_ban"] if "van_ban" in dau_vao else dau_vao["yeu_cau_ai"]["tai_lieu"]
+        assert tai_lieu == ("" if "phép cộng" in vd["ten"] else TAI_LIEU)
     bo_demo.chuan_bi_local_demo(local)
     kiem_ket_qua_demo(core_demo().chay_thu_demo(app))
-    assert local.so_luot_hoi == 3 and not local.tra_loi_tung_luot
+    assert local.so_luot_hoi == 5 and not local.tra_loi_tung_luot
     assert local.yeu_cau[2]["response_format"]["type"] == "json_schema"
 
 
@@ -120,7 +128,7 @@ assert cloud.so_luot == 0, "Có lượt Cloud ngoài phạm vi."
         assert khoa_demo not in tien_trinh.stdout + tien_trinh.stderr
         loi_goi = list(may.cac_loi_goi)
     kiem_ket_qua_demo([core.xem(ma) for ma in cac_ma])
-    assert local.so_luot_hoi == 3
+    assert local.so_luot_hoi == 5
     assert all(goi["ma_engine"] == app.ma and goi["instance"] == instance and goi["co_bearer"]
                for goi in loi_goi)
     assert loi_goi[0]["duong"] == f"/api/v1/engine/{app.ma}/san-sang"

@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| OCR-10 | Văn bản thuần không dò bảng; bảng kẻ không đều hạ thành đoạn văn | Quyết định Anh 24/11/2026 | Xong 24/11/2026 trong phạm vi CoreGia | PR: **chờ lead mở**, nhánh `codex/e_ocr-ocr-10`; không commit/push |
 | SDK25 | SDK 2.5.0 do Core cấp; lock/wheel, máy sạch và cửa SDK công khai | Phiếu SDK25 22/11/2026 | Xong 22/11/2026 trong phạm vi Windows/CoreGia | PR: **chờ lead mở**, nhánh `codex/e_ocr-sdk25`; không commit/push; bằng chứng bên dưới |
 | UI-OCR | Ba thẻ ABBYY / Tesseract / Hạn mức, hai nút kiểm nguồn và mô tả schema | AGENTS §4.13–14, phiếu UI §4 | Xong 21/11/2026 trong phạm vi CoreGia/KttCore giả | PR: **chờ lead mở**, nhánh `codex/e_ocr-ui-ocr`; không commit/push. Bằng chứng và Cần Core tại mục UI-OCR bên dưới |
 | 0 | Đọc tài liệu cổng và engine; nhận kế hoạch các lát theo `GIAO-CODEX-e_ocr.md` | — | Xong 14/11/2026 | Thực hiện OCR-0 theo phiếu Anh giao; ước tính 2 giờ |
@@ -22,6 +23,61 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 | 4 | Bài máy test còn lại ca 1, 6, 8 | OCR-11 | Chờ Core / thiết kế | Ca 3 đã kiểm bằng Core giả ở OCR-5; ca 1 chờ thẻ trạng thái, ca 6 chờ Đối chiếu, ca 8 chờ bí mật/cầu nối có khóa |
 | 5 | Lát 9: ABBYY thật trên máy hiện tại bằng PDF DEMO (Anh đã cho phép mở kết nối tạm) | OCR-12 | Chờ làm | Không chép `in\ out\ jobs\ state\` |
 | 6 | Ghép Core (K1–K6) → nghiệm thu tổng thể | — | Chờ Core |  |
+
+## OCR-10 — 24/11/2026
+
+- Phiên bản 1.0.12. Đã kiểm bằng Core giả (CoreGia), chỉ DEMO.
+- Trước sửa: ba PDF DEMO sinh thuần Python (ô chồng nhau, thiếu nét làm
+  thiếu ô, khung chữ ký lồng nhau) đều lỗi `BANG_KHONG_DAY_DU` ở cả ba
+  năng lực: 9/9 lượt tái hiện bằng bộ dò pdfplumber thật, không mock bảng.
+- Sau sửa: `giu_bang=False` đi xuyên đường đọc chung của văn bản thuần,
+  kể cả PDF lớp chữ từ ABBYY và trang Tesseract. Không dò bảng, không
+  cảnh báo bảng. Hai năng lực cần bảng bỏ riêng cấu trúc bảng lỗi, giữ
+  chữ thành đoạn có vị trí, cảnh báo theo trang; Word thêm thông báo
+  cuối tệp. Các bảng tốt trên cùng trang vẫn giữ cấu trúc.
+- `BANG_QUA_LON` vẫn chặn bảng >100 hàng/40 cột cho hai năng lực cần bảng;
+  văn bản thuần bỏ dò bảng nên không còn lỗi này. Các trần khác giữ nguyên.
+- Không có test cũ nào khẳng định raise `BANG_KHONG_DAY_DU` trong
+  `e_ocr/tests`. Giữ các test bộ dựng Word từ chối cấu trúc nội bộ sai;
+  chỉ sửa fixture Tesseract cũ nhận/truyền cờ `giu_bang`. Thêm kiểm hồi quy
+  qua đủ ba nguồn, không mất/lặp chữ, không dò bảng và trần bảng thật.
+- Lát sửa 7 tệp mã luồng chạy + `__init__.py` nâng phiên bản, vượt mốc
+  khoảng 5 tệp vì cờ phải đi từ action qua chọn nguồn đến cả hai bộ đọc,
+  và cảnh báo cần xuất được trong Word; cùng một thay đổi hành vi,
+  không tách thành lát trung gian khiến các nguồn xử lý khác nhau.
+- Không sửa `_chung/**` theo phạm vi giao. **Cần lead tích hợp:** sau khi
+  nhận lát, chạy `_chung/cong-cu/sinh_danh_muc_engine.py` và cập nhật danh
+  mục module theo AGENTS §5 vì phiên bản `engine.json` đã đổi. Không cần
+  cửa Core/SDK mới cho OCR-10; các mục Cần Core trước đây giữ nguyên.
+- Kết luận: **Đạt trong phạm vi lát**. Ba ca không đều × ba năng lực × ba
+  nguồn = 27 lượt XONG; hai năng lực cần bảng có cảnh báo, văn bản thuần
+  không dò bảng/không cảnh báo bảng. Bảng hợp lệ từ cả ba PDF có sẵn
+  giữ ô trống/ô gộp và cấu trúc Word. Kiểm bổ sung so đúng thứ tự từ ở
+  đoạn văn và Word, không chỉ đếm đủ chữ.
+- Kết quả kiểm thật (mọi mã thoát 0):
+
+  ```text
+  .venv/Scripts/python -B -m pytest e_ocr/tests -q --basetemp=.pytest-tmp-ocr10-final
+  399 passed in 160.69s (0:02:40); 0 skipped.
+  .venv/Scripts/python -B -m pytest e_ocr/tests/test_ocr_10.py -q --basetemp=.pytest-tmp-ocr10-order
+  50 passed in 18.48s; 0 skipped.
+  .venv/Scripts/python -B e_ocr/tests/kiem_doc_lap.py
+  [ĐẠT] Gói e_ocr độc lập; không import Core/kênh cũ, không có tệp biên dịch sẵn.
+  Node --test: toàn bộ test*.mjs trong e_ocr/tests/ui
+  tests 22; pass 22; fail 0; skipped 0.
+  .venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_ocr/goi/e_ocr
+  6/6 [ĐẠT]; Engine e_ocr 1.0.12: mọi ví dụ chạy thử DEMO đều đạt.
+  SDK_EXIT=0
+  ```
+
+- Sáu DEMO CLI dùng Tesseract thật (vie+eng); ca bảng không đều dùng
+  ABBYY/Tesseract giả và bộ dò bảng pdfplumber thật. Đã kiểm bằng Core
+  giả (CoreGia), chưa kiểm bản sửa trên Core thật hoặc ABBYY thật/Linux.
+- SDK 2.5.0 trong `.venv` khớp SHA256SUMS của wheel repo. Giữ nguyên
+  lock/wheels; `NGUON.md` có 52 băm và kiểm kê 53 tệp khớp bytes/SHA-256,
+  tính sau mọi thay đổi trong gói. `git diff --check` đạt.
+- Thời gian thực tế: 24/11/2026 **14:27–15:27**, khoảng
+  **1.00 giờ** (ước tính trong phiếu: **1,5–2,5 giờ**). Không commit/push.
 
 ## SDK25 — 22/11/2026
 

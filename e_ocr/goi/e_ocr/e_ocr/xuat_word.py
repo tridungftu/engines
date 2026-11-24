@@ -231,6 +231,14 @@ def dung_docx(tai_lieu, *, kiem_huy=_khong_huy):
                     raise LoiNghiepVu("QUA_DO_DAI", "Nội dung vượt giới hạn xuất Word. Hãy chia nhỏ tài liệu.")
             # Đoạn neo sau bảng cũng phân cách hai bảng liền nhau.
             _doan(body)
+            if index == len(pages) - 1:
+                canh_bao_bang = [c for c in tai_lieu.get("canh_bao", [])
+                                if "có bảng kẻ không đều;" in c]
+                for i, canh_bao in enumerate(canh_bao_bang):
+                    p = _doan(body, _chu(canh_bao))
+                    if i == 0:
+                        # Trang riêng để thông báo không đè lên các đoạn neo.
+                        _nut(p.find(W + "pPr"), "pageBreakBefore")
             _phan_trang(body, page, cuoi=index == len(pages) - 1)
     except (KeyError, TypeError, ValueError, OverflowError):
         raise _loi() from None

@@ -10,7 +10,7 @@ from .chon_nguon import doc_theo_nguon
 from .lop_chu import MAX_BYTES, LoiLopChu, dem_trang, doc_lop_chu
 
 
-def trich_van_ban(viec, *, phien_ban_engine, ngan):
+def trich_van_ban(viec, *, phien_ban_engine, ngan, giu_bang=True):
     tep = viec.dau_vao["tep"]
     viec.tien_do(5, "Đang đọc tệp tài liệu.")
     with viec.mo_tep(tep["tep_id"]) as f:
@@ -22,7 +22,7 @@ def trich_van_ban(viec, *, phien_ban_engine, ngan):
     if tep["mime"] == "application/pdf":
         viec.tien_do(25, "Đang đọc lớp chữ có sẵn trong PDF.")
         try:
-            ket_qua = doc_lop_chu(raw, kiem_huy=viec.kiem_huy)
+            ket_qua = doc_lop_chu(raw, kiem_huy=viec.kiem_huy, giu_bang=giu_bang)
         except LoiLopChu as exc:
             if exc.ma != "KHONG_CO_LOP_CHU":
                 raise
@@ -30,7 +30,7 @@ def trich_van_ban(viec, *, phien_ban_engine, ngan):
     ly_do = None
     if ket_qua is None:
         cau_hinh = viec.cau_hinh
-        chon = doc_theo_nguon(raw, tep["mime"], so_trang, viec=viec, cau_hinh=cau_hinh, ngan=ngan)
+        chon = doc_theo_nguon(raw, tep["mime"], so_trang, viec=viec, cau_hinh=cau_hinh, ngan=ngan, giu_bang=giu_bang)
         ket_qua, nguon_doc, ly_do = chon.ket_qua, chon.nguon_doc, chon.ly_do_chuyen_nguon
     viec.tien_do(95, "Đang hoàn tất văn bản và vị trí trang.")
     du_lieu = {

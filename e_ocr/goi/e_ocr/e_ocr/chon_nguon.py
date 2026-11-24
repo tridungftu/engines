@@ -183,7 +183,7 @@ class KetQuaChonNguon:
     ly_do_chuyen_nguon: str | None = None
 
 
-def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh, ngan):
+def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh, ngan, giu_bang=True):
     nguon = viec.tham_so.get("nguon", "tu_dong")
     bam = "sha256:" + sha256(raw).hexdigest()
     # Lựa chọn nguồn mới không được bỏ qua lượt ABBYY còn dở. Khi không
@@ -196,7 +196,7 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh, ngan):
             type(cu) is dict and isinstance(cu.get("trang_thai"), str) and cu["trang_thai"] in DA_CHOT)):
         ghi_nguon("tesseract")
         return KetQuaChonNguon(
-            tesseract.doc_tesseract(raw, mime, cau_hinh.get("tesseract", {}), viec=viec), "tesseract"
+            tesseract.doc_tesseract(raw, mime, cau_hinh.get("tesseract", {}), viec=viec, giu_bang=giu_bang), "tesseract"
         )
     so = SoHanMuc(ngan)
     nhat_ky = NhatKyLuot(so, viec.ngu_canh.get("phap_nhan_id"), bam, so_trang)
@@ -213,7 +213,7 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh, ngan):
         het_cho()
         viec.tien_do(75, "Đã nhận kết quả ABBYY; đang đọc lớp chữ.")
         try:
-            ket_qua = doc_lop_chu(pdf, kiem_huy=viec.kiem_huy)
+            ket_qua = doc_lop_chu(pdf, kiem_huy=viec.kiem_huy, giu_bang=giu_bang)
         except LoiLopChu:
             raise LoiNghiepVu(
                 "ABBYY_THIEU_LOP_CHU", "Kết quả ABBYY chưa có lớp chữ đầy đủ. Hãy kiểm tra cấu hình xuất PDF."
@@ -262,6 +262,6 @@ def doc_theo_nguon(raw, mime, so_trang, *, viec, cau_hinh, ngan):
     viec.tien_do(55, "Đang chuyển sang nguồn Tesseract.")
     ghi_nguon("tesseract")
     return KetQuaChonNguon(
-        tesseract.doc_tesseract(raw, mime, cau_hinh.get("tesseract", {}), viec=viec),
+        tesseract.doc_tesseract(raw, mime, cau_hinh.get("tesseract", {}), viec=viec, giu_bang=giu_bang),
         "tesseract", LY_DO[ly_do],
     )

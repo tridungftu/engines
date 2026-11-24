@@ -2,18 +2,18 @@
 
 *Tệp **sinh tự động** bằng `python _chung/cong-cu/sinh_danh_muc_engine.py` từ `engine.json` của mọi gói; không sửa tay. Muốn đổi ghi chú hay chuỗi mẫu: sửa `GHI_CHU`/`CHUOI` trong script rồi chạy lại. Kiểm tự động trên GitHub báo đỏ khi tệp chưa cập nhật theo `engine.json` hoặc một chuỗi mẫu nối sai.*
 
-*Phiên bản gói lúc sinh: `e_ocr` 1.0.11, `e_hoi_ai` 0.12.1, `e_mask` 1.6.2, `e_trich_xuat` 0.5.2, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.3, `e_phan_luong` 0.1.0, `e_doi_chieu` 0.9.2, `e_tra_cuu` 0.2.1.*
+*Phiên bản gói lúc sinh: `e_ocr` 1.0.11, `e_hoi_ai` 0.13.0, `e_mask` 1.6.2, `e_trich_xuat` 0.5.2, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.3, `e_phan_luong` 0.1.0, `e_doi_chieu` 0.9.2, `e_tra_cuu` 0.2.1.*
 
 ## 1. Kết luận
 
-- **9 engine, 43 năng lực.** Tất cả mới **kiểm bằng Core giả (CoreGia)**, chưa nối Core thật, nên chưa engine nào "SẴN SÀNG". Module lập trình và test bằng dữ liệu DEMO.
+- **9 engine, 44 năng lực.** Tất cả mới **kiểm bằng Core giả (CoreGia)**, chưa nối Core thật, nên chưa engine nào "SẴN SÀNG". Module lập trình và test bằng dữ liệu DEMO.
 - **Module không gọi engine.** Module khai **nút** trong phiếu module. Admin tạo **quy trình** (chuỗi bước engine) gắn vào nút trên Core. Kết quả bước cuối về **ngăn** của module.
 - Tải gói: mục **Releases** của repo `tridungftu/engines`; chọn bản có tệp `<engine>-<phiên bản gói>.zip` khớp cột "Gói" dưới đây. Mỗi bản có `SHA256SUMS.txt`, `DANH-SACH-GOI.json`, `HUONG-DAN-CAI-NGHIEM-THU.md` và wheel SDK.
 
 | Engine | Tên | Gói | Số năng lực | Dùng khi | Lưu ý cho module |
 |---|---|---|---:|---|---|
 | `e_ocr` | Nhận dạng văn bản | 1.0.11 | 3 | PDF scan, ảnh → chữ có vị trí, văn bản thuần, Word giữ bảng | ABBYY trước, Tesseract dự phòng; ABBYY thật chưa chạy thử |
-| `e_hoi_ai` | Hỏi AI | 0.12.1 | 3 | Hỏi AI về tài liệu có trích dẫn; bước AI giữa chuỗi của engine khác | **Chỉ Local AI**; chưa có năng lực Cloud; prompt thuộc module |
+| `e_hoi_ai` | Hỏi AI | 0.13.0 | 4 | Hỏi AI về tài liệu có trích dẫn; bước AI giữa chuỗi của engine khác | **Chỉ Local AI**; chưa có năng lực Cloud; prompt thuộc module |
 | `e_mask` | Che định danh | 1.6.2 | 8 | Che/mở che tên, MST, địa chỉ… trước khi đưa ra ngoài | Kho bí danh tạm giữ trong bộ nhớ (mất khi khởi động lại); mở che cần `ma_yeu_cau` |
 | `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.2 | 4 | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
 | `e_hoa_don` | Đọc XML hóa đơn | 1.0.0 | 3 | Đọc XML, ZIP hóa đơn điện tử; lập bảng kê XLSX | Chưa có PDF, chưa tải cổng thuế |
@@ -81,8 +81,8 @@ Script đã kiểm mọi chuỗi dưới đây nối đúng `nhan`/`tra` trong `
 
 | Mã | Ý nghĩa | Năng lực tạo ra | Năng lực nhận |
 |---|---|---|---|
-| `van_ban_tai_lieu` | Văn bản có vị trí trang, bảng, nguồn đọc | `ocr.doc_tai_lieu@1`, `trich.doc_docx@1`, `doi_chieu.doc_docx@1` | `ai.hoi_tai_lieu@1`, `mask.chuan_bi_ai_cuc_bo@1`, `mask.che_van_ban@1`, `trich.chuan_bi@1` |
-| `yeu_cau_ai` | Yêu cầu hỏi AI (prompt, tài liệu, khuôn trả lời) | `mask.chuan_bi_tep_ai_cuc_bo@1`, `mask.chuan_bi_ai_cuc_bo@1`, `trich.chuan_bi@1`, `audit.chuan_bi_phan_loai@1`, `doi_chieu.chuan_bi_ai@1`, `tra_cuu.chuan_bi_ai@1` | `ai.hoi_theo_yeu_cau@1`, `ai.hoi_mask_cuc_bo@1` |
+| `van_ban_tai_lieu` | Văn bản có vị trí trang, bảng, nguồn đọc | `ocr.doc_tai_lieu@1`, `trich.doc_docx@1`, `doi_chieu.doc_docx@1` | `ai.hoi_tai_lieu@1`, `ai.hoi_theo_prompt@1`, `mask.chuan_bi_ai_cuc_bo@1`, `mask.che_van_ban@1`, `trich.chuan_bi@1` |
+| `yeu_cau_ai` | Yêu cầu hỏi AI (prompt, tài liệu, khuôn trả lời) | `mask.chuan_bi_tep_ai_cuc_bo@1`, `mask.chuan_bi_ai_cuc_bo@1`, `trich.chuan_bi@1`, `audit.chuan_bi_phan_loai@1`, `doi_chieu.chuan_bi_ai@1`, `tra_cuu.chuan_bi_ai@1` | `ai.hoi_theo_yeu_cau@1`, `ai.hoi_mask_cuc_bo@1`, `ai.hoi_theo_prompt@1` |
 | `tra_loi_ai` | Trả lời AI có trích dẫn, đã kiểm | `ai.hoi_theo_yeu_cau@1`, `ai.hoi_mask_cuc_bo@1` | `mask.hau_kiem_tep_van_ban@1`, `mask.hau_kiem_tep_giu_dinh_dang@1`, `mask.hau_kiem_ai_cuc_bo@1`, `mask.mo_che_van_ban@1`, `trich.hau_kiem@1`, `audit.phan_luong_sau_ai@1`, `doi_chieu.phan_loai_diem_lech@1`, `tra_cuu.phan_loai_tai_lieu@1`, `tra_cuu.phan_tich_cau_hoi@1`, `tra_cuu.xep_hang_lai@1`, `tra_cuu.soan_tra_loi@1` |
 | `van_ban_da_che` | Văn bản đã che định danh | `mask.hau_kiem_tep_van_ban@1`, `mask.hau_kiem_ai_cuc_bo@1`, `mask.che_van_ban@1` | — (chưa có) |
 | `bang_trich_xuat` | Bảng tham số đã trích | `trich.hau_kiem@1` | `trich.xuat_ket_qua@1` |
@@ -130,11 +130,11 @@ Loại dữ liệu riêng: `van_ban_tai_lieu`. Số việc đồng thời: 1.
 | `nguon` | Nguồn đọc | chọn | không | `"tu_dong"` | `tu_dong` (Tự động), `chi_abbyy` (Chỉ ABBYY), `chi_tesseract` (Chỉ Tesseract) |
 
 
-### e_hoi_ai — Hỏi AI (gói 0.12.1)
+### e_hoi_ai — Hỏi AI (gói 0.13.0)
 
 Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`. Số việc đồng thời: 1.
 
-#### `ai.hoi_tai_lieu@1` — Hỏi tài liệu
+#### `ai.hoi_tai_lieu@1` — Hỏi tài liệu (có khung trích dẫn của engine, giữ để tương thích)
 
 - **Nhận:** `van_ban`, `van_ban_tai_lieu` → **Trả:** `truong` (ghép được vào cột ngăn)
 - **Giới hạn:** ≤ 500.000 ký tự; thời hạn 600 giây; hủy được: có
@@ -157,7 +157,7 @@ Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`. Số 
 | `model` | Model | văn bản |
 | `ly_do_chon_model` | Lý do chọn model | văn bản |
 
-#### `ai.hoi_theo_yeu_cau@1` — Hỏi theo yêu cầu
+#### `ai.hoi_theo_yeu_cau@1` — Hỏi theo yêu cầu (có khung trích dẫn của engine, giữ để tương thích)
 
 - **Nhận:** `yeu_cau_ai` → **Trả:** `tra_loi_ai` (chỉ dùng ở giữa chuỗi)
 - **Giới hạn:** ≤ 500.000 ký tự; thời hạn 600 giây; hủy được: có
@@ -166,6 +166,31 @@ Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`. Số 
 
 - **Nhận:** `yeu_cau_ai` → **Trả:** `tra_loi_ai` (chỉ dùng ở giữa chuỗi)
 - **Giới hạn:** ≤ 500.000 ký tự; thời hạn 600 giây; hủy được: có
+
+#### `ai.hoi_theo_prompt@1` — Hỏi AI theo prompt của module
+
+- **Nhận:** `yeu_cau_ai`, `van_ban`, `van_ban_tai_lieu` → **Trả:** `truong` (ghép được vào cột ngăn)
+- **Giới hạn:** ≤ 500.000 ký tự; thời hạn 600 giây; hủy được: có
+- **Cài đặt bước:**
+
+| Mã | Tên | Kiểu | Bắt buộc | Mặc định | Lựa chọn / trần |
+|---|---|---|---|---|---|
+| `ma_prompt` | Mã prompt của module | văn bản | không | trống | — |
+| `phien_ban_prompt` | Phiên bản prompt | văn bản | không | trống | — |
+| `prompt` | Prompt của module | văn bản | không | trống | — |
+| `model_uu_tien` | Model ưu tiên | văn bản | không | trống | — |
+| `tra_noi_dung_gui` | Trả nội dung đã gửi AI | có/không | không | `false` | — |
+
+- **Trường trả ra (ghép vào cột ngăn của module):**
+
+| Mã | Tên | Kiểu |
+|---|---|---|
+| `tra_loi` | Nguyên văn câu trả lời | văn bản |
+| `du_lieu_json` | JSON đã kiểm đúng khuôn | văn bản |
+| `model` | Model | văn bản |
+| `ly_do_chon_model` | Lý do chọn model | văn bản |
+| `noi_dung_gui_ai` | Nội dung đã gửi AI (khi yêu cầu) | văn bản |
+| `canh_bao` | Cảnh báo nguồn prompt | văn bản |
 
 ### e_mask — Che định danh (gói 1.6.2)
 

@@ -2,7 +2,7 @@
 
 *Tệp **sinh tự động** bằng `python _chung/cong-cu/sinh_danh_muc_engine.py` từ `engine.json` của mọi gói; không sửa tay. Muốn đổi ghi chú hay chuỗi mẫu: sửa `GHI_CHU`/`CHUOI` trong script rồi chạy lại. Kiểm tự động trên GitHub báo đỏ khi tệp chưa cập nhật theo `engine.json` hoặc một chuỗi mẫu nối sai.*
 
-*Phiên bản gói lúc sinh: `e_ocr` 1.0.11, `e_hoi_ai` 0.13.0, `e_mask` 1.6.2, `e_trich_xuat` 0.5.2, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.3, `e_phan_luong` 0.1.0, `e_doi_chieu` 0.9.2, `e_tra_cuu` 0.2.1.*
+*Phiên bản gói lúc sinh: `e_ocr` 1.0.12, `e_hoi_ai` 0.13.0, `e_mask` 1.6.2, `e_trich_xuat` 0.5.2, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.3, `e_phan_luong` 0.1.0, `e_doi_chieu` 0.9.2, `e_tra_cuu` 0.2.1.*
 
 ## 1. Kết luận
 
@@ -12,7 +12,7 @@
 
 | Engine | Tên | Gói | Số năng lực | Dùng khi | Lưu ý cho module |
 |---|---|---|---:|---|---|
-| `e_ocr` | Nhận dạng văn bản | 1.0.11 | 3 | PDF scan, ảnh → chữ có vị trí, văn bản thuần, Word giữ bảng | ABBYY trước, Tesseract dự phòng; ABBYY thật chưa chạy thử |
+| `e_ocr` | Nhận dạng văn bản | 1.0.12 | 3 | PDF scan, ảnh → chữ có vị trí, văn bản thuần, Word giữ bảng | ABBYY trước, Tesseract dự phòng; ABBYY thật chưa chạy thử |
 | `e_hoi_ai` | Hỏi AI | 0.13.0 | 4 | Hỏi AI về tài liệu có trích dẫn; bước AI giữa chuỗi của engine khác | **Chỉ Local AI**; chưa có năng lực Cloud; prompt thuộc module |
 | `e_mask` | Che định danh | 1.6.2 | 8 | Che/mở che tên, MST, địa chỉ… trước khi đưa ra ngoài | Kho bí danh tạm giữ trong bộ nhớ (mất khi khởi động lại); mở che cần `ma_yeu_cau` |
 | `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.2 | 4 | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
@@ -93,7 +93,7 @@ Module **không đọc** các loại này: chúng chỉ đi giữa các bước.
 
 ## 5. Chi tiết từng năng lực (sinh từ `engine.json`)
 
-### e_ocr — Nhận dạng văn bản (gói 1.0.11)
+### e_ocr — Nhận dạng văn bản (gói 1.0.12)
 
 Loại dữ liệu riêng: `van_ban_tai_lieu`. Số việc đồng thời: 1.
 

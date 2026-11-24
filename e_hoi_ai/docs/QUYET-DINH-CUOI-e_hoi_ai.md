@@ -1,5 +1,17 @@
 # QUYẾT ĐỊNH CUỐI — Engine hỏi AI (`e_hoi_ai`)
 
+## Quyết định 24/11/2026 — engine không có prompt sẵn
+
+Anh Dũng quyết định ngày 24/11/2026:
+
+> Prompt nằm trong module. Engine Hỏi AI lấy prompt và tài liệu từ module, chuyển sang Local AI hoặc Cloud AI (Cloud sau khi Mask) rồi trả kết quả về. Engine Hỏi AI không có prompt sẵn.
+
+Quyết định này thay mục 2 “Ghép phần khung chung” trong danh sách phần lõi tại §1 ngày 06/11/2026 đối với năng lực mới `ai.hoi_theo_prompt@1` (AI-13). Engine chỉ gửi nguyên prompt của module, nối tài liệu bằng `\n\n` nếu có; không thêm system prompt, khung trích dẫn hay câu hướng dẫn riêng. Khuôn trả lời chỉ truyền qua JSON schema của API; không hậu kiểm trích dẫn hoặc số ngoài nguồn.
+
+`ai.hoi_tai_lieu@1`, `ai.hoi_theo_yeu_cau@1` giữ khung trích dẫn của engine để tương thích; `e_tra_cuu` và `e_doi_chieu` đang dùng `ai.hoi_theo_yeu_cau@1` có kiểm trích dẫn. `ai.hoi_mask_cuc_bo@1` giữ nguyên. AI-13 hiện chỉ Local. Cloud qua Mask: lát sau, do quy trình Core nối Mask → Hỏi AI → Mask.
+
+---
+
 Ngày chốt: 06/11/2026 · Căn cứ: phiếu `docs/47-core/g3/PHIEU-ENGINE-e_hoi_ai.md` (mốc git `4f180f92`) và thảo luận với Anh trên claude.ai ngày 06/11/2026.
 Giờ ghi trong tài liệu này là giờ ước của phiếu, **chưa đo**.
 

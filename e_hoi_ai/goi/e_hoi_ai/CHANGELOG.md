@@ -1,3 +1,10 @@
+## 0.13.0 — 24/11/2026 — AI-13 (PR: chờ lead mở)
+
+- Thêm `ai.hoi_theo_prompt@1`: prompt của module nguyên văn, nối tài liệu bằng một dòng trống, một message user, không system prompt hay khung của engine. Phong bì yeu_cau_ai được ưu tiên; cảnh báo riêng khi tham số bước bị bỏ qua.
+- Trả câu trả lời nguyên văn, JSON đã kiểm schema, model/lý do chọn; nội dung gửi chỉ trả khi bật công tắc. Khuôn gửi qua API, không bọc hoặc chép vào prompt; sai khuôn gửi lại cùng yêu cầu tối đa một lần. Giữ ngân sách context AI-9, kiểm hủy và phân loại lỗi Local/ChuaRo; nhật ký không có nội dung.
+- Giữ nguyên ba năng lực cũ; tên hai năng lực hỏi–đáp ghi rõ khung trích dẫn để tương thích. Thêm hai DEMO, cập nhật quyết định, README/NGUON/băm/kiểm kê; không thêm thư viện hay đổi khoảng SDK. Cloud qua Mask: lát sau, do quy trình Core nối Mask → Hỏi AI → Mask.
+- Đã kiểm bằng Core giả (CoreGia) và Local HTTP giả; CLI chuẩn còn nợ cấu hình DEMO từ AI-11. Chưa kiểm Core/model thật; chi tiết kết quả tại VIEC.md.
+
 ## 0.12.1 — 22/11/2026
 
 - UI-AI-1, UI-AI-2: màn Máy AI và màn Cổng Cloud AI (Tạm khóa). Theo `_chung/docs/GIAO-CODEX-UI-CAU-HINH.md`; không đổi xử lý việc. Màn chờ Core mở cửa D/D2/E/F mới hiện trong Core.

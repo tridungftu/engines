@@ -20,8 +20,18 @@ GOI = GOC / "e_hoi_ai" / "goi" / "e_hoi_ai"
 def test_doc_phieu_va_khai_bao_dung_hop_dong():
     engine = Engine.tu_khai_bao(GOI / "engine.json")
     assert engine.ma == "e_hoi_ai"
-    assert engine.cac_nang_luc == ("ai.hoi_tai_lieu@1", "ai.hoi_theo_yeu_cau@1", "ai.hoi_mask_cuc_bo@1")
-    tai_lieu, yeu_cau, mask = engine.phieu["nang_luc"]
+    assert engine.cac_nang_luc == ("ai.hoi_tai_lieu@1", "ai.hoi_theo_yeu_cau@1", "ai.hoi_mask_cuc_bo@1",
+                                  "ai.hoi_theo_prompt@1")
+    tai_lieu, yeu_cau, mask, prompt = engine.phieu["nang_luc"]
+    assert prompt["nhan"] == ["yeu_cau_ai", "van_ban", "van_ban_tai_lieu"]
+    assert prompt["tra"] == "truong"
+    assert {t["ma"]: t["kieu"] for t in prompt["truong_ra"]} == dict.fromkeys(
+        ("tra_loi", "du_lieu_json", "model", "ly_do_chon_model", "noi_dung_gui_ai", "canh_bao"), "van_ban")
+    ts_prompt = {t["ma"]: t for t in prompt["tham_so"]}
+    assert set(ts_prompt) == {"ma_prompt", "phien_ban_prompt", "prompt", "model_uu_tien", "tra_noi_dung_gui"}
+    assert all(not t["bat_buoc"] for t in ts_prompt.values())
+    assert ts_prompt["tra_noi_dung_gui"]["mac_dinh"] is False
+    assert all("có khung trích dẫn của engine, giữ để tương thích" in n["ten"] for n in (tai_lieu, yeu_cau))
     assert mask["nhan"] == ["yeu_cau_ai"] and mask["tra"] == "tra_loi_ai"
     assert tai_lieu["nhan"] == ["van_ban", "van_ban_tai_lieu"]
     assert tai_lieu["tra"] == "truong"
@@ -46,11 +56,11 @@ def test_doc_phieu_va_khai_bao_dung_hop_dong():
                and nl["huy_duoc"] for nl in engine.phieu["nang_luc"])
     assert engine.phieu["tai_nguyen"]["so_viec_dong_thoi"] == 1
     assert engine.phieu["bi_mat"] == []
-    assert len(engine.phieu["chay_thu_demo"]) == 3
+    assert len(engine.phieu["chay_thu_demo"]) == 5
     assert engine.phieu["chay_thu_demo"][0]["nang_luc"] == "ai.hoi_tai_lieu@1"
     # AI-9 có fixture snapshot/CoreGia riêng trong cổng DEMO; giữ tương thích công cụ AI-7.
     assert {vd["nang_luc"] for vd in engine.phieu["chay_thu_demo"]} == {
-        "ai.hoi_tai_lieu@1", "ai.hoi_theo_yeu_cau@1"}
+        "ai.hoi_tai_lieu@1", "ai.hoi_theo_yeu_cau@1", "ai.hoi_theo_prompt@1"}
 
 
 @pytest.mark.parametrize("ma", ["van_ban_tai_lieu", "yeu_cau_ai", "tra_loi_ai"])

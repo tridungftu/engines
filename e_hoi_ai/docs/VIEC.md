@@ -4,6 +4,7 @@ Trạng thái dùng một trong: **Chờ làm / Đang làm / Chờ Anh / Chờ C
 
 | # | Việc | Mã yêu cầu | Trạng thái | Ghi chú |
 |---|---|---|---|---|
+| AI-13 | Hỏi theo nguyên prompt của module, không ghép khung engine | Quyết định Anh Dũng 24/11/2026 | Chờ Core — 24/11/2026 | Mã 0.13.0 đã triển khai; đã kiểm bằng Core giả (CoreGia). Pytest 721 passed, 0 skipped; Local giả 5/5 DEMO + AI-9 1/1; Node 45/45; độc lập và kiểm kê 31/31 đạt. CLI chuẩn 0/5 CHUA_CAU_HINH, nợ AI-11. Chi tiết ở mục AI-13 bên dưới. PR: **chờ lead mở**. |
 | AI-12 | Tương thích khuôn TC bốn tác vụ và DC-6; tách metadata/giá trị trích | Lệnh lead 15/11/2026 17:08; AI-2 | Chờ Core — 15/11/2026 | Phần AI-12 đạt 5/5 fixture; pytest 637 passed, 0 skipped (63 ca AI-12); DEMO 3/3 + AI-9 1/1, độc lập mã 0, kiểm kê 27/27 khớp. CLI chuẩn 0/3 CHUA_CAU_HINH/mã 1, nợ AI-11. Đã kiểm bằng Core giả (CoreGia); đề xuất annotation ở sổ loại chung §8 chờ lead duyệt. PR: **chờ lead mở**. |
 | AI-11 | Chuyển ngăn/cấu hình và gói sang SDK 2.2.0 | CHUYEN-SDK-2.2 §2, §4 | Chờ Core — 15/11/2026 | Phần chuyển đổi xong; đã kiểm bằng Core giả (CoreGia). Pytest 574 passed, 0 skipped; độc lập mã 0; kiểm kê SQL 26/26 khớp. CLI SDK thu 0/3, mã 1: thiếu cửa cấu hình DEMO/Local giả; không thay cổng nghiệm thu. PR: **chờ lead mở**. |
 | AI-10 | Đóng nợ phân loại lỗi Local sau POST từ kiểm độc lập AI-9 | AI-8; AI-9 | Xong — 15/11/2026 | Đã kiểm bằng Core giả (CoreGia) và socket Local giả; pytest 568 passed, 0 skipped; DEMO 3/3 và AI-9 1/1, SDK thu qua cổng Local giả 3/3; kiểm độc lập đạt. CLI SDK thu độc lập 0/3 do thiếu cấu hình ngăn RAM. PR: **chờ lead mở**. |
@@ -82,7 +83,52 @@ Lượt pytest đầu có 661 passed, 2 lỗi băm do tài liệu gói cập nh�
 
 **Thời gian thực tế:** 22/11/2026 07:02–07:20 (Asia/Saigon), khoảng 0,30 giờ; ước tính phiếu UI §4: 3 giờ.
 
+## AI-13 — 24/11/2026 (PR: chờ lead mở)
+
+**Kết luận:** phần mã AI-13 đã triển khai; chưa đạt toàn bộ điều kiện nghiệm thu vì CLI SDK chuẩn vẫn thiếu cấu hình DEMO/Local giả (nợ từ AI-11). Đã kiểm bằng Core giả (CoreGia), Local HTTP giả và KttCore giả; chưa kiểm Core thật/model thật hoặc chạy lại trên Linux.
+
+**Đã làm:** thêm `ai.hoi_theo_prompt@1`, không ghép khung/system prompt và không hậu kiểm trích dẫn/số ngoài nguồn; câu trả lời giữ nguyên văn. Prompt và tài liệu nối đúng `\n\n`, chỉ một message user. Dùng phong bì yeu_cau_ai khi có; cảnh báo riêng khi bỏ qua tham số nguồn của bước. `tra_noi_dung_gui` mặc định tắt. Khuôn truyền nguyên qua API; sai JSON/schema gửi lại đúng nội dung ban đầu tối đa một lần. Giữ chọn model/lý do, trần 500.000 ký tự, ngân sách byte/context AI-9, hủy và trạng thái lỗi/ChuaRo; Cloud giữ tắt.
+
+Quyết định của Anh được ghi nguyên văn đầu `QUYET-DINH-CUOI-e_hoi_ai.md`; tên hiển thị và README phân biệt hai năng lực hỏi–đáp cũ có khung trích dẫn để tương thích. Giữ nguyên handler cũ, contract chung và khoảng SDK; không thêm thư viện. Thêm hai DEMO, cập nhật CHANGELOG/README/NGUON và kiểm kê 31 tệp. Công cụ AI-7 lọc ba DEMO trích dẫn lịch sử để giữ bài đo cũ; cổng DEMO chung và test tiến trình qua MayChuGia chạy cả năm mẫu. Các tham số mới chỉ là văn bản/công tắc theo phiếu, không thêm cấu hình engine hoặc ô JSON cần màn soạn riêng.
+
+**Lệch khỏi phiếu / lựa chọn triển khai:** thêm trường ra `canh_bao` kiểu van_ban để đáp ứng yêu cầu cảnh báo hai nguồn mà không sửa `tra_loi`. `du_lieu_json` là chuỗi JSON chuẩn hóa đã kiểm schema, phù hợp `truong_ra` tĩnh API v1. Có 5 tệp Python runtime/công cụ thay đổi (handler mới, đăng ký, transport, provider và bộ chọn DEMO AI-7), kèm phiếu; không tách vì cùng một đường năng lực mới cần kiểm xuyên suốt. Không dùng quyết định tạm để bật Cloud hoặc giả lập runtime.
+
+**Kết quả kiểm thực tế:** Windows/Python 3.13.14, `.venv` riêng của worktree, SDK 2.2.0 cài offline từ wheel; SHA-256 `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp SHA256SUMS. Phụ thuộc test sao offline từ các bản cùng phiên bản đã cài trên máy, đúng `tests/requirements.lock`; không thêm dependency runtime. Dùng `PYTHONUTF8=1`, `PYTHONDONTWRITEBYTECODE=1` và `-B`.
+
+```text
+.venv/Scripts/python -B -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+=> 0/5 ĐẠT; cả 5 mẫu trả CHUA_CAU_HINH; exit 1.
+
+.venv/Scripts/python -B e_hoi_ai/tests/chay_demo_voi_local_gia.py
+=> 5/5 DEMO ĐẠT, 5 lượt Local HTTP giả; AI-9 1/1 ĐẠT; exit 0.
+
+.venv/Scripts/python -B -m pytest e_hoi_ai/tests -q --basetemp=.pytest-tmp
+=> 721 passed in 579.47s (0:09:39), 0 skipped; exit 0.
+
+.venv/Scripts/python -B e_hoi_ai/tests/kiem_doc_lap.py
+=> [ĐẠT] Gói độc lập: không tham chiếu Core, không có tệp biên dịch hay liên kết; exit 0.
+
+node --test e_hoi_ai/tests/ui/cau_hinh.test.mjs e_hoi_ai/tests/ui/cloud.test.mjs
+=> 45 passed, 0 failed, 0 skipped; exit 0.
+
+Select-String -Path e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/hoi_prompt.py -Pattern 'HUONG_DAN_DINH_DANG|ghep_khung|danh_gia'
+=> 0 kết quả. Máy không có rg/grep nên dùng Select-String của PowerShell.
+
+.venv/Scripts/python -B e_hoi_ai/tests/cap_nhat_bam.py
+=> [ĐẠT] Đã cập nhật băm LF và kiểm kê 31 tệp gói.
+Kiểm lại bytes/SHA-256 và tập tệp kiểm kê => 31/31 khớp.
+git diff --check => exit 0.
+```
+
+58 ca mới AI-13 kiểm ba loại đầu vào và hai API, đúng từng byte Unicode/NFD/Cf/xuống dòng, không có khung engine, trả nội dung bật/tắt, so sánh `40` với năng lực cũ, thiếu prompt trước mọi mạng, hai nguồn, khuôn đúng/sai/hỏi lại nguyên yêu cầu, không hạ số ngoài nguồn, hủy trước metadata/trong POST/trước hỏi lại, Local lỗi/ChuaRo, ngân sách AI-9, trần ký tự và nhật ký an toàn. Bộ tập trung cùng DEMO/khung gói đạt 71 passed trước khi chạy toàn bộ. Lượt đầu phát hiện SDK điền None cho mã/phiên bản tùy chọn; đã sửa và chạy lại đạt, không thêm skip hoặc hạ kiểm cũ.
+
+**Thời gian thực tế AI-13:** 24/11/2026 10:39–11:08 (Asia/Saigon), khoảng 0.48 giờ; ước tính trong phiếu 2–3 giờ.
+
+**Cần lead:** theo lệnh giao, không sửa `_chung/**`; lead thêm chuỗi mẫu cho năng lực mới vào công cụ danh mục và chạy `python _chung/cong-cu/sinh_danh_muc_engine.py`, đưa danh mục sinh vào cùng PR. Không commit/push trong worktree này.
+
 ## Cần Core (chuyển lead Core qua Anh)
+
+- **AI-13 — 24/11/2026:** CLI `python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai` vẫn tạo CoreGia mới không cấu hình Local DEMO; 0/5 mẫu, lỗi `CHUA_CAU_HINH`, exit 1. Cần cửa cấp cấu hình DEMO/Local giả của SDK, cùng nợ AI-11/UI-AI-2; không sửa SDK hoặc gắn nhánh giả vào runtime. Bộ `chay_demo_voi_local_gia.py` đạt 5/5 + AI-9 1/1 là bằng chứng bổ sung, không thay kết quả CLI chuẩn. Cloud qua Mask: lát sau, do quy trình Core nối Mask → Hỏi AI → Mask.
 
 - **UI-AI-2 — 22/11/2026:** cửa D nạp `ui/cloud.js` cho Admin Core; cửa F két theo tên `khoa_api_anthropic`, chỉ trả metadata và bốn ký tự cuối. Hợp đồng đề xuất `.bi_mat.trang_thai/.luu/.xoa`, CAS phiên bản riêng tăng cả khi xóa, lỗi 409 `BI_MAT_XUNG_DOT`, kiểm quyền/phạm vi engine và kiểm toán: xem `KHAI-SDK-2.1.json`. SDK 2.2.0 chưa cấp, không thêm vào engine.json. Thiếu cửa thì màn khóa thao tác, không báo đã lưu giả.
 - **UI-AI-2 — nhật ký:** cần cửa đọc nhật ký gửi ra ngoài chung có quyền/pháp nhân, phân trang; chỉ metadata ngày, provider/model, kết quả/chi phí có đơn vị, không nội dung/key. Hiện khóa nút xem và báo chưa xác minh lịch sử, không tạo bảng riêng hoặc tự ghi sổ engine. Không phát sinh thao tác quản trị Python Cloud, không bật gọi Cloud.

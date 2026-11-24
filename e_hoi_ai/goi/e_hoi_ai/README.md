@@ -1,11 +1,37 @@
-# e_hoi_ai — Hỏi AI (AI-11)
+# e_hoi_ai — Hỏi AI (AI-13)
 
-Gói SDK 2.2.0, phiên bản 0.11.0, dùng lại khung AI-0 và lõi AI-1. Chỉ dùng thư viện chuẩn Python (Python ≥ 3.11) và `kho_tri_thuc_sdk` 2.2.0. Gọi Local theo API OpenAI-compatible hoặc Ollama native khi có khuôn; mọi đường bản 1 chỉ dùng provider Local.
+Gói SDK 2.2.0, phiên bản 0.13.0, dùng lại khung AI-0 và lõi AI-1. Chỉ dùng thư viện chuẩn Python (Python ≥ 3.11) và `kho_tri_thuc_sdk` 2.2.0. Gọi Local theo API OpenAI-compatible hoặc Ollama native; mọi đường bản 1 chỉ dùng provider Local.
 
-- `ai.hoi_tai_lieu@1`: nhận `van_ban` hoặc `van_ban_tai_lieu`, trả bộ trường `tra_loi`, `co_can_cu`, `trich_dan`, `model`, `ly_do_chon_model`.
-- `ai.hoi_theo_yeu_cau@1`: nhận `yeu_cau_ai`, trả `tra_loi_ai`.
+- `ai.hoi_theo_prompt@1`: nhận prompt của module và tài liệu, trả câu trả lời nguyên văn, không thêm chữ vào nội dung gửi model.
+- `ai.hoi_tai_lieu@1`: có khung trích dẫn của engine, giữ để tương thích; nhận `van_ban` hoặc `van_ban_tai_lieu`, trả bộ trường `tra_loi`, `co_can_cu`, `trich_dan`, `model`, `ly_do_chon_model`.
+- `ai.hoi_theo_yeu_cau@1`: có khung trích dẫn của engine, giữ để tương thích; nhận `yeu_cau_ai`, trả `tra_loi_ai`. Tra cứu và Đối chiếu tiếp tục dùng năng lực này.
 - `ai.hoi_mask_cuc_bo@1`: nhận `yeu_cau_ai`, trả `tra_loi_ai` có thực thể và span trên gốc, chỉ Local.
 - Prompt nghiệp vụ thuộc module/quy trình, không lưu trong cấu hình engine.
+
+## Hỏi theo prompt của module — AI-13
+
+Theo quyết định của Anh ngày 24/11/2026, `ai.hoi_theo_prompt@1` chuyển đúng nội dung module cung cấp, không ghép khung và không kiểm trích dẫn/số ngoài nguồn. Đây là năng lực mới; hành vi ba năng lực cũ giữ nguyên.
+
+- Nhận `yeu_cau_ai` phiên bản 1 theo contract chung (không có khuôn thì đặt `khuon_tra_loi=null`), hoặc `van_ban` / `van_ban_tai_lieu` với `prompt` tại Cài đặt bước. Tài liệu có thể rỗng. `ma_prompt`, `phien_ban_prompt`, `prompt`, `model_uu_tien` đều tùy chọn trong phiếu; thiếu prompt từ nguồn được chọn trả `THIEU_PROMPT` trước mọi mạng. Khi nhận văn bản, có thể chỉ khai `prompt`, không cần mã/phiên bản.
+- Có phong bì `yeu_cau_ai` thì lấy toàn bộ prompt/tài liệu/model ưu tiên từ phong bì, bỏ qua nhóm tham số prompt của bước. Nếu nhóm tham số ấy có giá trị, trả cảnh báo riêng ở `canh_bao`, không chèn vào câu trả lời. Phong bì thiếu prompt không được lấy bù từ tham số bước.
+- Nội dung đúng `prompt + "\n\n" + tai_lieu` khi tài liệu khác chuỗi rỗng; không tài liệu thì chỉ `prompt`. Giữ nguyên Unicode, khoảng trắng và xuống dòng của hai phần; một message role `user`, không có system prompt. Không gửi metadata hoặc `chuyen_tiep` tới model.
+- Có khuôn thì gửi nguyên schema module qua Ollama `format` hoặc OpenAI-compatible `response_format`, không bọc khuôn và không viết schema vào prompt. JSON trả về được kiểm bằng bộ kiểm offline hiện có. Sai JSON/schema hỏi lại tối đa một lần với cùng prompt, cùng schema; vẫn sai trả `AI_TRA_SAI_KHUON`. Không sửa prompt khi hỏi lại.
+
+Kết quả `tra: truong` có các trường văn bản:
+
+| Trường | Nội dung |
+|---|---|
+| `tra_loi` | Nguyên văn câu trả lời của model, kể cả khoảng trắng; không hạ về “không thấy căn cứ”. |
+| `du_lieu_json` | Chuỗi JSON chuẩn hóa đã kiểm đúng schema khi có khuôn; rỗng khi không có khuôn. |
+| `model`, `ly_do_chon_model` | Kết quả bộ chọn model hiện hành. Mã prompt bỏ trống không tự nhận mã thay thế. |
+| `noi_dung_gui_ai` | Đúng chuỗi gửi model khi bật `tra_noi_dung_gui`; mặc định rỗng. |
+| `canh_bao` | Cảnh báo cố định khi phong bì và tham số bước cùng khai nguồn; ngược lại rỗng. |
+
+Giữ trần 500.000 ký tự mỗi phần và ngân sách AI-9: body JSON ≤64 KiB; `byte UTF-8 body + 256 + 8192 token đầu ra` phải nằm trong context đang dùng được server công bố. Thiếu context hoặc vượt trần thì từ chối trước POST, không cắt. Chọn model, kiểm hủy, lỗi Local cho thử lại và trạng thái `ChuaRo` dùng transport hiện hành; không tự gửi lại khi chưa rõ nguồn đã xử lý. Nhật ký stderr chỉ có metadata, kể cả khi bật trả nội dung gửi.
+
+Chỉ Local; **Cloud qua Mask: lát sau, do quy trình Core nối Mask → Hỏi AI → Mask**. Không bật Cloud hoặc thêm thư viện. Tham số mới đều là ô văn bản/công tắc theo phiếu, Core dựng Cài đặt bước; không thêm ô JSON hoặc cấu hình engine.
+
+Manifest có 5 DEMO: giữ 3 ca cũ, thêm phép cộng không tài liệu (Local giả trả `40`) và số tiền hợp đồng DEMO-001. `tests/chay_demo_voi_local_gia.py` kiểm 5 DEMO và ca AI-9 bổ sung; test tiến trình qua MayChuGia cũng chạy cả 5. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core/model thật. CLI SDK chuẩn vẫn có nợ cấp cấu hình DEMO đã ghi từ AI-11, không thay bằng bộ Local giả.
 
 ## Cổng Cloud AI — UI-AI-2, 22/11/2026
 
@@ -33,7 +59,7 @@ Budget AI-9: toàn body JSON đầu vào ≤64 KiB; dự trù bảo thủ `byte 
 
 Transport chung kiểm Ollama `done=true,done_reason=stop` hoặc OpenAI-compatible `finish_reason=stop`. Lỗi kết nối chắc chắn trước gửi là `LOCAL_AI_KHONG_SAN_SANG`, có thể thử lại. Từ lúc bắt đầu gửi POST, timeout/mất phản hồi/body thiếu theo Content-Length hoặc HTTP 202 → `ChuaRo` với mã tương quan riêng; không retry/fallback. Phản hồi hoàn chỉnh sai nguồn/JSON/hoàn tất bị từ chối. Giữ IP trực tiếp, bind nguồn Tailscale, cấm DNS/proxy/redirect và metadata remote/cloud. Hủy/mất lease dừng trước nộp. Các quy tắc trích dẫn hỏi–đáp cũ giữ nguyên.
 
-Ba DEMO hỏi–đáp trong manifest giữ tương thích công cụ AI-7. `tests/chay_demo_voi_local_gia.py` chạy thêm một ca AI-9 bằng snapshot bytes thật trong kho RAM CoreGia; `--sdk-thu` kiểm riêng ba mẫu manifest. Đã kiểm bằng Core giả (CoreGia), không chứng nhận ACL/provenance hoặc model thật. Trước dùng thật lead phải xác nhận model chạy tại chỗ và chặn egress Cloud; IP private/nhãn local chưa chứng minh điều này. `BAT_CLOUD=False`, không khai năng lực Cloud.
+Ba DEMO hỏi–đáp cũ trong manifest giữ tương thích công cụ AI-7; công cụ chỉ chọn hai năng lực trích dẫn cũ. Từ AI-13, manifest có thêm hai DEMO prompt module; `tests/chay_demo_voi_local_gia.py` chạy cả năm mẫu và thêm một ca AI-9 bằng snapshot bytes thật trong kho RAM CoreGia. Không còn tùy chọn `--sdk-thu`. Đã kiểm bằng Core giả (CoreGia), không chứng nhận ACL/provenance hoặc model thật. Trước dùng thật lead phải xác nhận model chạy tại chỗ và chặn egress Cloud; IP private/nhãn local chưa chứng minh điều này. `BAT_CLOUD=False`, không khai năng lực Cloud.
 
 ## Hỏi tài liệu
 
@@ -129,14 +155,14 @@ $env:PYTHONDONTWRITEBYTECODE = '1'
 .venv/Scripts/python e_hoi_ai/tests/kiem_doc_lap.py
 ```
 
-Lệnh nghiệm thu chuẩn vẫn là `.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai`. Wheel 2.2.0 hiện tự tạo `CoreGia()` rỗng trong CLI, không có tham số/fixture cấu hình DEMO hay dịch vụ Local giả; ba ví dụ nhận `CHUA_CAU_HINH`. Đây là điểm **Cần Core**, nên AI-11 chưa đạt toàn bộ điều kiện nghiệm thu. Không thay cổng hoặc gắn nhánh giả lập vào runtime.
+Lệnh nghiệm thu chuẩn vẫn là `.venv/Scripts/python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai`. Wheel 2.2.0 hiện tự tạo `CoreGia()` rỗng trong CLI, không có tham số/fixture cấu hình DEMO hay dịch vụ Local giả; cả năm ví dụ hiện nhận `CHUA_CAU_HINH`. Đây là điểm **Cần Core**, nên AI-11 chưa đạt toàn bộ điều kiện nghiệm thu. Không thay cổng hoặc gắn nhánh giả lập vào runtime.
 
-`chay_demo_voi_local_gia.py` chỉ là hồi quy bổ sung: bật Local giả trên loopback, gọi `CoreGia(app).dat_cau_hinh(...)`, chạy nguyên ba ví dụ và một ca AI-9. Không còn tùy chọn `--sdk-thu`. Test khác dùng CoreGia riêng mỗi ca, ngăn thật của SDK, `gay_xung_dot_ngan` và `xem_ngan`; không còn test so băm cổng tạm. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core thật/model thật/Linux.
+`chay_demo_voi_local_gia.py` chỉ là hồi quy bổ sung: bật Local giả trên loopback, gọi `CoreGia(app).dat_cau_hinh(...)`, chạy nguyên năm ví dụ và một ca AI-9. Không còn tùy chọn `--sdk-thu`. Test khác dùng CoreGia riêng mỗi ca, ngăn thật của SDK, `gay_xung_dot_ngan` và `xem_ngan`; không còn test so băm cổng tạm. Đã kiểm bằng Core giả (CoreGia), chưa kiểm Core thật/model thật/Linux.
 
 
 Bộ UI `node --test e_hoi_ai/tests/ui/cau_hinh.test.mjs` được pytest gọi tự động; cần Node có sẵn, không cài thư viện hoặc gọi mạng. Kiểm đọc/phân trang, lưu/CAS/tải lại, lỗi nhập cạnh ô, thứ tự quy tắc/dự phòng, các nút kiểm/tìm thành công/thất bại, phản hồi cũ khi sửa địa chỉ, không lộ chi tiết lỗi, Cloud không có công tắc hoặc ô bí mật. UI-AI-1 không gọi `.bi_mat`; kiểm “chỉ 4 ký tự cuối” thuộc màn API key UI-AI-2. Đây là DOM/KttCore giả. `node e_hoi_ai/tests/ui/dung_anh_demo.mjs` dựng HTML từ chính màn gói, CSP chặn mạng ngoài. `node e_hoi_ai/tests/ui/chup_anh_demo.mjs` dùng Chrome headless/CDP trên loopback, cố định viewport rộng/hẹp, kiểm không tràn ngang rồi chụp ba ảnh ở `e_hoi_ai/docs/anh-ui-ai-1/`; có thể đặt `UI_CHROME` nếu Chrome ở vị trí khác. Đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật. Công cụ AI-7 giữ nguyên `--url`, không đọc tệp cấu hình.
 
-Phiếu có ba ví dụ chỉ dùng hợp đồng GIẢ DEMO của Công ty DEMO Ánh Dương, mã DEMO-001: hỏi 1.000.000 VND và 30/10/2026 có trích dẫn; hỏi người bảo lãnh không có trong tài liệu → `không thấy căn cứ`; `ai.hoi_theo_yeu_cau@1` có khuôn tiền `{"so": 1000000, "tien_te": "VND"}` và ngày `2026-10-30`. Ngày DD/MM/YYYY chỉ nằm trong văn bản nguồn/trích dẫn, dữ liệu có kiểu dùng YYYY-MM-DD.
+Ba ví dụ trích dẫn cũ trong phiếu chỉ dùng hợp đồng GIẢ DEMO của Công ty DEMO Ánh Dương, mã DEMO-001: hỏi 1.000.000 VND và 30/10/2026 có trích dẫn; hỏi người bảo lãnh không có trong tài liệu → `không thấy căn cứ`; `ai.hoi_theo_yeu_cau@1` có khuôn tiền `{"so": 1000000, "tien_te": "VND"}` và ngày `2026-10-30`. Ngày DD/MM/YYYY chỉ nằm trong văn bản nguồn/trích dẫn, dữ liệu có kiểu dùng YYYY-MM-DD.
 
 `tests/test_demo_va_khoi_dong.py` đối chiếu đáp án, khuôn, vị trí trích dẫn và chuyển tiếp; kiểm mã thoát khi DEMO lỗi/rỗng. Test HTTP bật `MayChuGia`, chạy tiến trình Python thật, cấp dòng khởi động JSON qua stdin và gọi `app.chay()` không truyền đường truyền. Kiểm nhận việc, đọc đầu vào qua HTTP, xác thực, nộp kết quả trước kết thúc, khóa chống trùng và 0 lượt Cloud; mọi kết nối chỉ loopback.
 

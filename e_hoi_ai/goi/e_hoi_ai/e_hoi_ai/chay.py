@@ -5,6 +5,7 @@ from .chon_model import bo_phat_hien
 from .hoi import AdapterHoiAI
 from .hoi_yeu_cau import goi_theo_yeu_cau
 from .hoi_mask import goi_mask_cuc_bo
+from .hoi_prompt import goi_theo_prompt
 
 app = Engine.tu_khai_bao("engine.json")
 bo_hoi = AdapterHoiAI()
@@ -29,6 +30,11 @@ def hoi_theo_yeu_cau(viec):
 @app.nang_luc("ai.hoi_mask_cuc_bo@1")
 def hoi_mask_cuc_bo(viec):
     return goi_mask_cuc_bo(viec, bo_hoi.cong_ai, phien_ban=app.phieu["phien_ban"])
+
+
+@app.nang_luc("ai.hoi_theo_prompt@1")
+def hoi_theo_prompt(viec):
+    return goi_theo_prompt(viec, bo_hoi.cong_ai)
 
 
 if __name__ == "__main__":

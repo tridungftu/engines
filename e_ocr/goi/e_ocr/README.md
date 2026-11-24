@@ -1,6 +1,6 @@
 # Engine nhận dạng văn bản — SDK25
 
-Gói độc lập theo SDK 2.5.0, phiên bản engine 1.0.11. Ba năng lực
+Gói độc lập theo SDK 2.5.0, phiên bản engine 1.0.12. Ba năng lực
 `ocr.doc_tai_lieu@1`, `ocr.doc_van_ban@1` và `ocr.xuat_word@1` dùng chung
 lõi đọc lớp chữ PDF hoặc ABBYY Hot Folder cục bộ, dự phòng Tesseract.
 Xuất Word dựng DOCX và gửi qua `viec.tai_tep_ra`. **Đã kiểm bằng Core giả
@@ -83,6 +83,23 @@ action. Lỗi bất ngờ trong action đổi thành câu cố định, tránh t
 SDK lộ nội dung/đường dẫn. Không ghi tên tệp, đường dẫn, nội dung hoặc khóa.
 Thời gian chạy xong action chưa bao gồm nộp kết quả/kết thúc phía SDK.
 
+## OCR-10 — bảng kẻ không đều (24/11/2026)
+
+- **Đọc văn bản thuần** (`ocr.doc_van_ban@1`) không dò bảng ở bất kỳ
+  nguồn nào: lớp chữ, kết quả ABBYY hay Tesseract. Chữ trong vùng có
+  đường kẻ vẫn đi theo thứ tự đọc thường; không có cảnh báo/lỗi bảng.
+- **Đọc tài liệu có vị trí** và **Xuất Word giữ bảng** chỉ giữ cấu trúc
+  các bảng có lưới ô hợp lệ. Bảng thiếu/chồng ô trở thành đoạn văn,
+  giữ chữ và vị trí; các bảng tốt trên cùng trang vẫn giữ ô trống/ô gộp.
+  Cảnh báo theo số trang nằm trong `van_ban_tai_lieu.canh_bao` và thành
+  đoạn thông báo trên trang riêng cuối tệp Word. Không thêm trường vào hợp đồng chung.
+- `BANG_QUA_LON` vẫn từ chối bảng trên 100 hàng/40 cột khi cần giữ bảng.
+  Văn bản thuần không chịu trần bảng vì hoàn toàn không dò bảng; các
+  trần tệp, số trang và độ dài văn bản vẫn áp dụng.
+- Ba mẫu DEMO chồng ô, thiếu nét và khung chữ ký lồng nhau được sinh
+  thuần Python trong thư mục tạm của test. Đã kiểm bằng Core giả (CoreGia),
+  ABBYY giả và executable Tesseract giả; không dùng báo cáo thật của Anh.
+
 ## Đọc lớp chữ và giao thức Hot Folder
 
 - PDF có lớp chữ đọc được ở **mọi trang** được đọc trực tiếp, nguồn
@@ -118,7 +135,7 @@ Thời gian chạy xong action chưa bao gồm nộp kết quả/kết thúc ph�
 - Kết quả có băm SHA-256 **tệp đầu vào**, phiên bản engine và cảnh báo.
   Toàn văn nối trang bằng `\f`; khối/dòng/từ có tọa độ point theo trang.
   Giữ nguyên tiền/ngày trong văn bản, không tự hiệu đính hay suy giá trị.
-  Bảng có đường kẻ PDF giữ ô trống/ô gộp; bảng chỉ có trong ảnh nền chưa
+  Hai năng lực cần bảng giữ ô trống/ô gộp của bảng PDF hợp lệ; bảng chỉ có trong ảnh nền chưa
   được tái tạo và có cảnh báo. Tesseract giữ bảng có đường kẻ vector và
   điền chữ vào đúng ô; chưa suy cấu trúc bảng chỉ có trong ảnh.
 
@@ -168,7 +185,8 @@ bằng `vMerge` và giữ cả ô trống. Có tọa độ từng ô thì giữ 
 nếu nguồn chỉ có khung bảng, chia đều khoảng chưa có mốc. Hai bảng liên
 tiếp có đoạn ngăn để Word không nhập chúng thành một bảng.
 
-Từ chối lưới thiếu/chồng ô, vị trí không hợp lệ hoặc đơn vị khác `pt`,
+Bảng PDF thiếu/chồng ô được hạ cấp trước khi dựng Word. Bộ dựng Word
+vẫn kiểm cấu trúc đầu vào nội bộ, vị trí không hợp lệ hoặc đơn vị khác `pt`,
 bảng trên 100 hàng/40 cột, hơn 60 trang hoặc hơn 500.000 ký tự; không
 cắt ngầm hay tự thêm ô. Hủy/chưa rõ của nguồn đọc được giữ nguyên, không
 tạo kết quả thành công giả. Word có thể dàn lại dòng/chiều cao theo font

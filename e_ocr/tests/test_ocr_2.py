@@ -24,12 +24,12 @@ from test_ocr_1 import ABBYYGia, DOC, VAN_BAN, chay, hot_folder, kiem_loi
 def tess_gia(monkeypatch):
     calls = []
 
-    def doc(raw, mime, cau_hinh, *, viec):
+    def doc(raw, mime, cau_hinh, *, viec, giu_bang=True):
         viec.kiem_huy()
         calls.append((raw, mime, cau_hinh))
         from e_ocr.lop_chu import dem_trang
         n = dem_trang(raw, mime)
-        return doc_lop_chu(pdf_demo(*([DONG_DEMO] * n)))
+        return doc_lop_chu(pdf_demo(*([DONG_DEMO] * n)), giu_bang=giu_bang)
 
     monkeypatch.setattr(tesseract, "doc_tesseract", doc)
     return calls

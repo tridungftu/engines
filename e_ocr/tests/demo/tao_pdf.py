@@ -29,7 +29,7 @@ def _anh_demo():
     return bytes(0 if c == "1" else 255 for y in range(7) for c in "0".join(m[y] for m in mau))
 
 
-def pdf_demo(*pages, rotate=0, text_matrices=None, bang=False, chu_bang=True):
+def pdf_demo(*pages, rotate=0, text_matrices=None, bang=False, chu_bang=True, duong_ke=()):
     """Mỗi phần tử là tuple dòng; tuple rỗng tạo trang chỉ có ảnh DEMO."""
     table_lines = ((60, 632, "BANG DEMO"), (60, 602, "DEMO"), (190, 602, TIEN),
                    (60, 572, "DEMO"), (190, 572, NGAY)) if bang and chu_bang else ()
@@ -74,6 +74,8 @@ def pdf_demo(*pages, rotate=0, text_matrices=None, bang=False, chu_bang=True):
                 content += f"50 {y} m 450 {y} l S\n".encode("ascii")
             for x, y in ((50, 650), (180, 620), (310, 620), (450, 650)):
                 content += f"{x} 560 m {x} {y} l S\n".encode("ascii")
+        for x0, y0, x1, y1 in duong_ke:
+            content += f"{x0} {842-y0} m {x1} {842-y1} l S\n".encode("ascii")
         objects.append(_stream(content))
     kids = " ".join(f"{number} 0 R" for number in page_ids)
     objects[1] = f"<< /Type /Pages /Kids [{kids}] /Count {len(page_ids)} >>".encode("ascii")

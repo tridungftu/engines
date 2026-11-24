@@ -139,7 +139,7 @@ def _huong_chu_hop_le(char, rotation):
         return False
 
 
-def _doc_trang(page, pdfplumber, kiem_huy):
+def _doc_trang(page, pdfplumber, kiem_huy, *, giu_bang=True):
     origin = page.bbox[:2]
     size = float(page.width), float(page.height)
     if any(not _huong_chu_hop_le(char, page.rotation) for char in page.chars):
@@ -149,38 +149,46 @@ def _doc_trang(page, pdfplumber, kiem_huy):
     directions = dict(line_dir=line_dir, char_dir=char_dir,
                       line_dir_rotated=line_dir, char_dir_rotated=char_dir,
                       expand_ligatures=False)
-    doan, texts = [], []
-    # extract_text_lines/words chỉ đọc ký tự, kể cả chữ ẩn Tr=3 của ABBYY.
-    for line in page.extract_text_lines(line_dir_render="ttb", char_dir_render="ltr", **directions):
+    # Đọc chữ trước: trang quét chuyển nguồn, chỉ dò bảng một lần ở Tesseract.
+    lines = page.extract_text_lines(line_dir_render="ttb", char_dir_render="ltr", **directions)
+    texts = [line["text"] for line in lines if line["text"].strip()]
+    if not texts:
+        raise LoiLopChu("KHONG_CO_LOP_CHU", "Tài liệu có trang chưa có lớp chữ; cần nhận dạng tài liệu.")
+    canh_bao = []
+    bang = doc_bang_trang(
+        page, chuyen_hop=lambda box: _hop(box, origin, size),
+        huong=directions, kiem_huy=kiem_huy, canh_bao=canh_bao,
+    ) if giu_bang else []
+    doan = []
+    for line in lines:
         kiem_huy()
         if not line["text"].strip():
             continue
-        box = _bbox(line, origin, size)
-        words = pdfplumber.utils.extract_words(line["chars"], **directions)
+        # Cùng quy tắc tâm ký tự với bộ đọc ô. Không bỏ/lặp cả dòng
+        # khi dòng có chữ trong bảng và chú thích bên ngoài.
+        chars = [ch for ch in line["chars"] if not any(
+            cell["hop"][0] <= (ch["x0"] + ch["x1"]) / 2 - origin[0] < cell["hop"][2]
+            and cell["hop"][1] <= (ch["top"] + ch["bottom"]) / 2 - origin[1] < cell["hop"][3]
+            for b in bang for cell in b["o"])]
+        if not chars:
+            continue
+        text = pdfplumber.utils.extract_text(chars, line_dir_render="ttb", char_dir_render="ltr", **directions)
+        if not text.strip():
+            continue
+        box = _hop((min(c["x0"] for c in chars), min(c["top"] for c in chars),
+                    max(c["x1"] for c in chars), max(c["bottom"] for c in chars)), origin, size)
+        words = pdfplumber.utils.extract_words(chars, **directions)
         tu = [{"van_ban": w["text"], "hop": _bbox(w, origin, size)} for w in words]
-        dong = {"van_ban": line["text"], "hop": box, "tu": tu}
-        doan.append({"loai": "doan", "van_ban": line["text"], "hop": box, "dong": [dong]})
-        texts.append(line["text"])
-    if not texts:
-        raise LoiLopChu("KHONG_CO_LOP_CHU", "Tài liệu có trang chưa có lớp chữ; cần nhận dạng tài liệu.")
-    bang = doc_bang_trang(
-        page, chuyen_hop=lambda box: _hop(box, origin, size),
-        huong=directions, kiem_huy=kiem_huy,
-    )
-    # Toàn văn giữ thứ tự dòng gốc; cấu trúc không lặp đoạn nằm trọn trong bảng.
-    doan = [d for d in doan if not any(
-        b["hop"][0] <= d["hop"][0] <= d["hop"][2] <= b["hop"][2]
-        and b["hop"][1] <= d["hop"][1] <= d["hop"][3] <= b["hop"][3] for b in bang
-    )]
+        dong = {"van_ban": text, "hop": box, "tu": tu}
+        doan.append({"loai": "doan", "van_ban": text, "hop": box, "dong": [dong]})
     khoi = sorted([*doan, *bang], key=lambda k: (k["hop"][1], k["hop"][0]))
-    canh_bao = []
-    if page.images and not bang:
+    if giu_bang and page.images and not bang:
         canh_bao.append("PDF có ảnh nền; chưa xác định cấu trúc bảng từ ảnh, cần đối chiếu bản gốc.")
     return ({"so": page.page_number, "rong": size[0], "cao": size[1],
              "don_vi": "pt", "khoi": khoi}, "\n".join(texts), canh_bao)
 
 
-def doc_lop_chu(raw: bytes, *, kiem_huy=_khong_huy) -> KetQuaLopChu:
+def doc_lop_chu(raw: bytes, *, kiem_huy=_khong_huy, giu_bang=True) -> KetQuaLopChu:
     """Giữ nguyên chữ, tiền/ngày; không chuẩn hóa dấu hay OCR lại ảnh nền."""
     kiem_huy()
     _kiem_pdf(raw)
@@ -193,7 +201,7 @@ def doc_lop_chu(raw: bytes, *, kiem_huy=_khong_huy) -> KetQuaLopChu:
             pages, texts, canh_bao, total = [], [], [], 0
             for page in pdf.pages:
                 kiem_huy()
-                detail, text, warnings_page = _doc_trang(page, pdfplumber, kiem_huy)
+                detail, text, warnings_page = _doc_trang(page, pdfplumber, kiem_huy, giu_bang=giu_bang)
                 total += len(text) + bool(texts)
                 if total > MAX_TEXT:
                     raise LoiNghiepVu("QUA_DO_DAI", "Nội dung vượt giới hạn đọc. Hãy chia nhỏ tài liệu.")

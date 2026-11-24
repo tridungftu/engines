@@ -1,5 +1,11 @@
 # Thay đổi
 
+## 1.0.12 — 24/11/2026
+
+- OCR-10: văn bản thuần không dò bảng, không phát sinh lỗi/cảnh báo bảng ở lớp chữ, ABBYY hoặc Tesseract; dùng cờ nội bộ `giu_bang` trên đường đọc chung.
+- Hai năng lực cần bảng hạ bảng thiếu/chồng ô thành đoạn văn có vị trí, cảnh báo tiếng Việt theo trang trong tài liệu có vị trí và cuối Word; giữ các bảng hợp lệ khác. Không mất/lặp chữ khi một dòng có cả chữ trong bảng và chú thích bên ngoài.
+- Giữ trần `BANG_QUA_LON` cho hai năng lực cần bảng. Không đổi lock/wheels, thư viện, API hoặc schema chung.
+
 ## 1.0.11 — 22/11/2026
 
 - SDK25: chuyển kiểm độc lập, fixture và script máy sạch sang SDK 2.5.0, đọc lock một dòng có hash; kiểm đủ wheel/tên/phiên bản/băm và từ chối SDK/sdist/wheel thừa. Kiểm máy sạch cài thư viện ngoại tuyến vào thư mục riêng theo Core, không sửa cây gói. Không đổi nghiệp vụ hoặc phiên bản thư viện.

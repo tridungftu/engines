@@ -14,8 +14,8 @@ from .van_ban import trich_van_ban
 app = Engine.tu_khai_bao("engine.json")
 
 
-def _doc(viec):
-    du_lieu = trich_van_ban(viec, phien_ban_engine=f"{app.ma} {app.phieu['phien_ban']}", ngan=viec.ngan)
+def _doc(viec, *, giu_bang=True):
+    du_lieu = trich_van_ban(viec, phien_ban_engine=f"{app.ma} {app.phieu['phien_ban']}", ngan=viec.ngan, giu_bang=giu_bang)
     ghi_nguon(du_lieu.get("nguon_doc"))
     return du_lieu
 
@@ -30,7 +30,7 @@ def doc_tai_lieu(viec):
 @app.nang_luc("ocr.doc_van_ban@1")
 @do_luot
 def doc_van_ban(viec):
-    du_lieu = _doc(viec)
+    du_lieu = _doc(viec, giu_bang=False)
     return {"loai": "van_ban", "van_ban": du_lieu["van_ban"]}
 
 

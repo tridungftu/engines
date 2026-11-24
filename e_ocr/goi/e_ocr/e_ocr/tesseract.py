@@ -158,13 +158,14 @@ def _ghep_bang(trang, bang):
     trang["khoi"] = sorted([*ngoai_bang, *bang], key=lambda k: (k["hop"][1], k["hop"][0]))
 
 
-def doc_tesseract(raw, mime, cau_hinh, *, viec):
+def doc_tesseract(raw, mime, cau_hinh, *, viec, giu_bang=True):
     exe, ngon_ngu = _kiem_bo_doc(cau_hinh, viec)
     # Import lười: PDF có lớp chữ và ABBYY không cần bộ render ảnh.
     from PIL import Image
 
     pages, texts = [], []
-    canh_bao = ["Chữ do Tesseract nhận dạng có thể sai; cần đối chiếu tiền, ngày và bảng với bản gốc."]
+    canh_bao = ["Chữ do Tesseract nhận dạng có thể sai; cần đối chiếu tiền, ngày"
+                + (" và bảng" if giu_bang else "") + " với bản gốc."]
     han_viec = time.monotonic() + 840
 
     def nhan_dang(anh, thu_muc, so, size, bang=()):
@@ -184,7 +185,7 @@ def doc_tesseract(raw, mime, cau_hinh, *, viec):
         page, text = _doc_tsv(tsv, so=so, rong=size[0], cao=size[1], pixel=anh.size)
         if bang:
             _ghep_bang(page, bang)
-        else:
+        elif giu_bang:
             canh_bao.append("Chưa xác định cấu trúc bảng từ ảnh; cần đối chiếu bảng với bản gốc.")
         return page, text
 
@@ -209,7 +210,7 @@ def doc_tesseract(raw, mime, cau_hinh, *, viec):
                             viec.kiem_huy()
                             viec.tien_do(60 + int(30 * i / len(pdf.pages)), "Đang đọc trang tài liệu bằng Tesseract.")
                             try:
-                                page, text, warnings_page = _doc_trang(trang_goc, pdfplumber, viec.kiem_huy)
+                                page, text, warnings_page = _doc_trang(trang_goc, pdfplumber, viec.kiem_huy, giu_bang=giu_bang)
                                 canh_bao.extend(warnings_page)
                             except LoiLopChu as loi:
                                 if loi.ma != "KHONG_CO_LOP_CHU":
@@ -226,8 +227,8 @@ def doc_tesseract(raw, mime, cau_hinh, *, viec):
                                             x0, y0 = trang_goc.bbox[:2]
                                             bang = doc_bang_trang(
                                                 trang_goc, chuyen_hop=lambda b: [b[0]-x0, b[1]-y0, b[2]-x0, b[3]-y0],
-                                                huong={}, kiem_huy=viec.kiem_huy,
-                                            )
+                                                huong={}, kiem_huy=viec.kiem_huy, canh_bao=canh_bao,
+                                            ) if giu_bang else []
                                             page, text = nhan_dang(anh, thu_muc, i + 1, size, bang)
                                         finally:
                                             anh.close()

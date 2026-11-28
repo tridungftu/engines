@@ -1,4 +1,8 @@
-# Trích thông tin hợp đồng — SDK25, bản 0.5.2 (Core cấp SDK 2.5.x)
+# Trích thông tin hợp đồng — SDK25, bản 0.5.3 (Core cấp SDK 2.5.x)
+
+LX-TX: lock dùng chung Windows/Linux; ba wheel biên dịch Linux ở
+`../../wheels-linux/`, ngoài gói Windows. Công cụ đóng gói của lead thay
+wheel theo nền; wheel thuần Python dùng chung từ `wheels/`.
 
 SDK25 dùng cửa công khai của SDK do Core cấp, giữ năng lực và nghiệp vụ hiện có. Xem [`../../cong-cu/README.md`](../../cong-cu/README.md) và
 [`../../docs/TX-6-KET-QUA.md`](../../docs/TX-6-KET-QUA.md).

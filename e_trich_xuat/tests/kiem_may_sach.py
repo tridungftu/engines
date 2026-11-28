@@ -14,6 +14,7 @@ GOC = Path(__file__).resolve().parents[2]
 GOI = GOC / "e_trich_xuat/goi/e_trich_xuat"
 THU_MUC_SDK = GOC / "docs/goi-gui-engine/sdk-2.5.0"
 WHEEL_SDK = THU_MUC_SDK / "kho_tri_thuc_sdk-2.5.0-py3-none-any.whl"
+NEN = "windows" if sys.platform == "win32" else "linux"
 
 
 def kiem_bam_sdk():
@@ -31,13 +32,13 @@ def lenh_script(tep, tham_so=(), thu_vien=None):
             str(tep), str(thu_vien or Path(sys.prefix) / "lib-khong-co"), *map(str, tham_so)]
 
 
-def main(bo_demo=None, thu_vien=None):
+def main(bo_demo=None, thu_vien=None, kho_wheel=None):
     assert sys.prefix != sys.base_prefix, "Cần venv mới."
     cfg = Path(sys.prefix, "pyvenv.cfg").read_text(encoding="utf-8")
     assert "include-system-site-packages = false" in cfg.lower()
     assert version("kho_tri_thuc_sdk") == "2.5.0", "Venv kiểm cần wheel SDK 2.5.0 đã cấp."
     kiem_bam_sdk()
-    kiem_goi_phu_thuoc(GOI)
+    kiem_goi_phu_thuoc(GOI, NEN, kho_wheel)
     for ten, ghim in doc_lock(GOI / "requirements.lock").items():
         assert version(ten) == ghim["phien_ban"], "Thư viện chưa khớp lock."
         if thu_vien:
@@ -81,7 +82,7 @@ def main(bo_demo=None, thu_vien=None):
 
 def tao_venv(bo_demo=None, kho_wheel=None):
     kiem_bam_sdk()
-    kiem_goi_phu_thuoc(GOI)
+    cac_wheel = kiem_goi_phu_thuoc(GOI, NEN, kho_wheel)
     khu = Path(tempfile.mkdtemp(prefix="tx25-sach-", dir=GOC / ".venv"))
     thu_muc = khu / "venv"
     thu_vien = khu / "e_trich_xuat.thu-vien"
@@ -90,12 +91,16 @@ def tao_venv(bo_demo=None, kho_wheel=None):
     pip = [str(py), "-I", "-X", "utf8", "-m", "pip", "install", "--isolated",
            "--no-index", "--only-binary", ":all:", "--no-deps", "--no-compile"]
     subprocess.run([*pip, str(WHEEL_SDK)], check=True)
-    subprocess.run([*pip, "--find-links", str(kho_wheel or GOI / "wheels"), "--require-hashes",
+    kho_da_kiem = sorted({tep.parent for tep in cac_wheel.values()})
+    find_links = [muc for kho in kho_da_kiem for muc in ("--find-links", str(kho))]
+    subprocess.run([*pip, *find_links, "--require-hashes",
                     "--target", str(thu_vien), "-r", str(GOI / "requirements.lock")], check=True)
     lenh = lenh_script(Path(__file__).resolve(), ["--thu-vien", str(thu_vien)], thu_vien)
     lenh[0] = str(py)
     if bo_demo:
         lenh += ["--bo-demo", str(Path(bo_demo).resolve())]
+    if kho_wheel:
+        lenh += ["--kho-wheel", str(Path(kho_wheel).resolve())]
     return subprocess.run(lenh).returncode
 
 
@@ -109,7 +114,7 @@ if __name__ == "__main__":
     if args.thu_vien:
         sys.path.append(str(args.thu_vien.resolve()))
     try:
-        code = tao_venv(args.bo_demo, args.kho_wheel) if args.tao_venv else main(args.bo_demo, args.thu_vien)
+        code = tao_venv(args.bo_demo, args.kho_wheel) if args.tao_venv else main(args.bo_demo, args.thu_vien, args.kho_wheel)
     except (AssertionError, ValueError, OSError, subprocess.CalledProcessError):
         print("[LỖI] Kiểm venv mới chưa đạt; xem bước DEMO/nguồn đang thiếu, không chứng nhận máy sạch.", file=sys.stderr)
         code = 1

@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_hoa_don",
   "ten": "Đọc XML hóa đơn",
-  "phien_ban": "1.0.0",
+  "phien_ban": "1.0.1",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",

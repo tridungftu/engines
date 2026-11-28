@@ -1,6 +1,6 @@
 # Đọc XML, kiểm kê ZIP và bảng kê XLSX — HD-7
 
-Gói SDK 2.0.0, phiên bản 1.0.0; `hoa_don.doc_xml@2` nhận một XML, `hoa_don.doc_zip@1` nhận ZIP; cả hai trả `truong` và tham chiếu JSON chi tiết. `hoa_don.bang_ke_xlsx@1` nhận kết quả bước đọc để tạo XLSX. Bộ đọc strict chỉ hỗ trợ profile `DEMO_M2_XML_QD1271_FIELDS_V1`. Đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật/quyền kho tệp hoặc Excel app.
+Gói SDK 2.2.0, phiên bản 1.0.1; `hoa_don.doc_xml@2` nhận một XML, `hoa_don.doc_zip@1` nhận ZIP; cả hai trả `truong` và tham chiếu JSON chi tiết. `hoa_don.bang_ke_xlsx@1` nhận kết quả bước đọc để tạo XLSX. Bộ đọc strict chỉ hỗ trợ profile `DEMO_M2_XML_QD1271_FIELDS_V1`. Đã kiểm bằng Core giả (CoreGia), chưa nghiệm thu Core thật/quyền kho tệp hoặc Excel app.
 
 ## Dữ liệu vào và ra
 
@@ -30,6 +30,8 @@ SDK hiện chưa có cửa context nghiệp vụ được kiểm quyền. Handle
 XML hỏng trả `HD_XML_KHONG_DOC_DUOC`; encoding/DOCTYPE/namespace/path ngoài profile trả `HD_XML_NGOAI_PROFILE`. Bytes thực vượt 16 MiB trả `HD_XML_QUA_LON`; JSON vượt 32 MiB trả `HD_KET_QUA_QUA_LON` trước upload. Trần dòng không thay trần bytes/JSON: nhiều occurrence hoặc nội dung dài vẫn có thể vượt 32 MiB dù ít dòng. Các lỗi dùng `LoiNghiepVu`, câu tiếng Việt cố định không chứa nội dung/đường nguồn. Cảnh báo chỉ gồm mã do lõi sinh và câu cố định; chi tiết kỹ thuật được lưu trong kho tệp Core.
 
 ## Cấu hình máy
+
+Helper cấu hình giữ thứ tự `KTT_ENGINE_CAU_HINH` → `PROGRAMDATA` → `/var/lib/KhoTriThuc/engines/e_hoa_don/cau_hinh.json` khi thiếu `PROGRAMDATA` và không phải Windows; Windows thiếu biến vẫn dùng `C:/ProgramData/KhoTriThuc/engines/e_hoa_don/cau_hinh.json`.
 
 XML không cần cấu hình. Không đọc cấu hình ở import/khởi động/handler XML, không tạo `kho_tam`, thư mục dữ liệu hoặc tệp cấu hình mặc định.
 

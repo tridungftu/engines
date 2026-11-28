@@ -134,14 +134,14 @@ def oracle(tep):
                 ngay_lap="2026-10-30", don_vi_tien="VND", ma_so_thue_ban="0100000001", ma_so_thue_mua="0100000002",
                 tien_truoc_thue=dict(so="1000000", tien_te="VND"), tien_thue=dict(so="100000", tien_te="VND"),
                 tong_thanh_toan=dict(so="1100000", tien_te="VND"), so_dong=1, can_kiem_tra=True,
-                canh_bao="\n".join(CB), chi_tiet_nguon=None, nguon_doc="xml_strict", phien_ban_engine="e_hoa_don 1.0.0",
+                canh_bao="\n".join(CB), chi_tiet_nguon=None, nguon_doc="xml_strict", phien_ban_engine="e_hoa_don 1.0.1",
                 bam_dau_vao=digest, nguon=dict(tep_zip=tep, bam_goi=bam(raw), thu_tu=ordinal, ten=name, bam=digest))
         ds.append(dict(thu_tu=ordinal, ten=name, bam=digest, kich_thuoc=len(content), trang_thai_doc=state,
             trung_ten=trung_ten, trung_noi_dung_voi=trung, ma_loi={"doc_duoc": None, "loi": "HD_ZIP_XML_HONG",
             "khong_ho_tro": "HD_ZIP_KHONG_HO_TRO"}[state], canh_bao=cb, can_kiem_tra=True, truong_hoa_don=f,
             chi_tiet_nguon=None if state == "khong_ho_tro" else detail(ordinal, name, digest[7:], len(content),
             bam(raw)[7:], "0000124" if ordinal == 6 else "0000123", state == "loi")))
-    return dict(phien_ban=1, nguon_doc="zip_xml_strict", phien_ban_engine="e_hoa_don 1.0.0", bam_dau_vao=bam(raw),
+    return dict(phien_ban=1, nguon_doc="zip_xml_strict", phien_ban_engine="e_hoa_don 1.0.1", bam_dau_vao=bam(raw),
         tep_zip=tep, da_doc_het=False, so_tep=5, so_doc_duoc=3, so_loi=1, so_khong_ho_tro=1, so_trung_noi_dung=1,
         can_kiem_tra=True, do_du_ky_tai="UNKNOWN", native_fiscal_status="UNKNOWN", business_promotion="NOT_PERFORMED",
         danh_sach_tep=ds, danh_sach_thu_muc=[dict(thu_tu=2, ten="thu-muc-DEMO/", trung_ten=False, canh_bao=[])],

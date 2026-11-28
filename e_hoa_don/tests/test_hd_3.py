@@ -90,7 +90,7 @@ def test_json_nguon_co_dap_an_literal(ca):
     b = bao_cao(core, kq)
     assert set(b) == {"phien_ban", "nguon_doc", "phien_ban_engine", "bam_dau_vao", "tep_xml", "chi_tiet_nguon", "van_de_phep_chieu"}
     assert b["phien_ban"] == 1 and b["tep_xml"] == tep
-    assert b["nguon_doc"] == "xml_strict" and b["phien_ban_engine"] == "e_hoa_don 1.0.0"
+    assert b["nguon_doc"] == "xml_strict" and b["phien_ban_engine"] == "e_hoa_don 1.0.1"
     assert b["bam_dau_vao"] == "sha256:" + BAM[ca["tep"]]["sha256"]
     assert b["van_de_phep_chieu"] == []
     d = b["chi_tiet_nguon"]

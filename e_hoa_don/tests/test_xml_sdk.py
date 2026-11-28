@@ -47,7 +47,7 @@ def test_demo_du_truong_va_chi_tiet_nguon(xml_demo):
     for ma, so in (("tien_truoc_thue", "1000000"), ("tien_thue", "100000"), ("tong_thanh_toan", "1100000")):
         assert t[ma] == {"so": so, "tien_te": "VND"}
     assert t["so_dong"] == 1 and t["can_kiem_tra"] is True
-    assert t["nguon_doc"] == "xml_strict" and t["phien_ban_engine"] == "e_hoa_don 1.0.0"
+    assert t["nguon_doc"] == "xml_strict" and t["phien_ban_engine"] == "e_hoa_don 1.0.1"
     assert t["tep_xml"] == tep  # tep-1 không phải UUID, không cấp hay upload XML mới.
     assert t["chi_tiet_nguon"]["tep_id"] != tep["tep_id"]
     assert t["chi_tiet_nguon"]["ten"] == "hoa-don-chi-tiet.json"

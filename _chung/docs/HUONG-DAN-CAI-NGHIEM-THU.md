@@ -82,6 +82,54 @@ Giải nén từng ZIP bằng Explorer → **Extract All / Giải nén tất c�
 thư mục engine ngoài mã Core. Chọn thư mục con có `engine.json` khi cài Core;
 giữ nguyên bytes và giữ thư mục này lâu dài vì Core chạy engine từ đây.
 
+### Bản Linux
+
+Cập nhật LX-DG ngày 28/11/2026: thêm `--nen {windows,linux}`, mặc định
+`windows`. ZIP Windows giữ nguyên tên và bytes; `DANH-SACH-GOI.json` của
+cả hai nền có thêm khóa `nen`. Mỗi nền dùng một thư mục `--ra` mới/rỗng
+riêng, không trộn bản Windows và Linux.
+
+```powershell
+python _chung/cong-cu/dong_goi.py --engine e_hoi_ai --ra "<thu-muc-linux-ngoai-repo>" --nhan thu --nen linux --ref HEAD
+python _chung/cong-cu/dong_goi.py --engine e_ocr --ra "<thu-muc-ocr-linux-ngoai-repo>" --nhan thu --nen linux --sdk 2.5.0 --ref HEAD
+```
+
+Đích Linux là Ubuntu 24.04 **x86_64, glibc 2.39, Python 3.13**. Mã gói,
+lock và wheel đều đọc nguyên bytes từ cùng commit git. Đặt wheel Linux ở
+`<engine>/wheels-linux/` ngoài `goi/` rồi đưa vào git trước khi đóng gói.
+Công cụ thay bộ `wheels/` trong ZIP bằng các `.whl` tại đó; wheel thuần
+`py3-none-any` mà lock cần nhưng chưa có ở đó được lấy lại từ `goi/<ma>/wheels/`.
+Wheel Linux được ưu tiên nếu cả hai nơi có cùng thư viện; metadata ngoài
+`.whl` trong `wheels-linux/` không vào gói. Không sửa engine hoặc lock khi đóng.
+
+Một lock dùng chung hai nền: mỗi dòng ghim phiên bản và chứa băm Windows,
+Linux trong các `--hash=sha256:...` (wheel thuần có thể dùng chung một băm).
+Mỗi dòng phải khớp **đúng một wheel**, đúng băm; thiếu, thừa, trùng hoặc sai
+phiên bản đều dừng trước khi ghi đầu ra. Gói khai `phu_thuoc_python` dùng
+`--sdk 2.5.0`; wheel SDK vẫn giao riêng ngoài ZIP, Core cấp SDK lúc chạy.
+
+Linux chỉ nhận `manylinux_2_X_x86_64` với **X ≤ 39**, các tag tương đương
+`manylinux1_x86_64`, `manylinux2010_x86_64`, `manylinux2014_x86_64`, hoặc
+`py3-none-any`; có hỗ trợ `py3-none-manylinux…` và tag manylinux ghép.
+Từ chối musllinux, Windows, macOS và kiến trúc khác. Windows chỉ nhận
+`win_amd64` hoặc `none-any`. Việc kiểm tên tag không thay cho thử cài ngoại
+tuyến trên Python 3.13 sạch; wheel `abi3` cần lead xác nhận trên máy đích.
+
+Gói có migration `tep_kiem_ke` phải có kiểm kê trong git khớp **toàn bộ bản
+Windows** trước. Nếu bộ wheel thay đổi, công cụ sinh lại kiểm kê Linux cùng
+`phien_ban`, liệt kê đủ mọi tệp trong gói Linux trừ chính kiểm kê, đúng
+`bytes` và `sha256`, rồi đưa vào ZIP; không sửa kiểm kê trên đĩa hay trong git.
+Engine không có wheel cho ZIP Linux **trùng từng byte** với ZIP Windows,
+kể cả kiểm kê; chỉ đổi tên ZIP.
+
+Tên ZIP là `<ma>-<ban>-linux_x86_64.zip`. `SHA256SUMS.txt` chỉ kê ZIP Linux
+và wheel SDK của bộ giao; `DANH-SACH-GOI.json` ghi `nen: "linux"` và chỉ kê
+các gói Linux. ZIP vẫn tất định theo cùng commit. Nếu mốc git chưa có wheel
+Linux của OCR thì **chờ lát LX-WH**, không lấy wheel Windows thay thế.
+Lead kiểm SHA, thử cài wheel ngoại tuyến rồi nghiệm thu qua Core Linux.
+Các kiểm DEMO trước khi nối thật **đã kiểm bằng Core giả (CoreGia)**;
+chưa chứng minh cài hoặc vận hành trên Core Linux thật.
+
 ## 3. Kiểm SDK và cài phụ thuộc OCR
 
 Dùng đúng Python Core chọn cho `{python}`. Hỏi AI, Trích xuất và Hóa đơn chỉ

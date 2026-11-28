@@ -290,3 +290,85 @@ phụ thuộc, ghi nhận kiểm tra OCR của lead và đóng lại 4 ZIP từ 
 Thời gian lượt này: **18:14–18:20 ngày 15/11/2026 (UTC+07), khoảng 0,10 giờ**;
 phiếu không nêu ước tính riêng. Không sửa engine/Core/SDK, không commit/push;
 không phát sinh quyết định nghiệp vụ chờ Anh.
+
+## LX-DG — Bản phát hành Linux — 28/11/2026
+
+Trạng thái: **đạt tiêu chí LX-DG; chưa đạt gate chung §5 của e_hoi_ai**
+(CLI thiếu cấu hình và ba lỗi fixture URL nêu dưới).
+Nhánh `codex/_chung-lx-dg`; PR: **chờ lead mở**. Không commit/push.
+Chỉ sửa công cụ, test công cụ, hướng dẫn cài/nghiệm thu và tệp VIEC này;
+không sửa engine, Core hoặc SDK.
+
+### Đã làm
+
+- Thêm `--nen {windows,linux}` (mặc định Windows), đọc wheel Linux từ
+  `<engine>/wheels-linux/` bằng blob git tại cùng commit với gói/lock.
+  Chỉ dùng lại wheel `py3-none-any` của bản Windows khi Linux còn thiếu
+  thư viện đó; Linux được ưu tiên khi có ở cả hai nơi.
+- Kiểm đúng một wheel cho mỗi dòng lock, đúng phiên bản và một trong các
+  băm; từ chối wheel thừa/trùng/thiếu hoặc sai nền. Linux giới hạn manylinux
+  x86_64/glibc ≤2.39 và wheel thuần; Windows chỉ win_amd64/none-any.
+- Kiểm kê trong git phải khớp bản Windows trước. Khi đổi wheel, sinh lại
+  kiểm kê toàn gói Linux trừ chính nó, giữ phiên bản, đối chiếu bytes/SHA.
+  Không đổi wheel thì giữ nguyên byte kiểm kê và ZIP.
+- ZIP Linux có hậu tố `-linux_x86_64`; SHA/danh sách riêng cho một nền,
+  JSON thêm `nen`. ZIP Windows giữ nguyên byte; định dạng ZIP tất định
+  vẫn giữ nguyên. Hướng dẫn ở mục **Bản Linux** của
+  [HUONG-DAN-CAI-NGHIEM-THU.md](HUONG-DAN-CAI-NGHIEM-THU.md).
+
+### Kết quả kiểm thực tế
+
+Windows, Python **3.13.14**, `.venv` với `--system-site-packages` để dùng
+pytest/dependency đã có; không tải mạng. SDK cài ngoại tuyến bằng
+`pip install --no-index --no-deps`, in **2.2.0**, SHA wheel
+`0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984`
+khớp `SHA256SUMS.txt`. Mọi lệnh dùng `PYTHONDONTWRITEBYTECODE=1`,
+`PYTHONUTF8=1`. Các đường engine **đã kiểm bằng Core giả (CoreGia)**;
+chưa thử cài wheel trên Python 3.13 Linux sạch hoặc nghiệm thu Core thật.
+
+```powershell
+.venv\Scripts\python -m pytest _chung/cong-cu/tests -q --basetemp=.pytest-tmp
+# 74 passed, 0 skipped; 210,68 giây; exit 0.
+.venv\Scripts\python -m kho_tri_thuc_sdk.thu e_hoi_ai/goi/e_hoi_ai
+# 0/5 ĐẠT, exit 1: CHUA_CAU_HINH ở cả năm DEMO.
+.venv\Scripts\python -m pytest e_hoi_ai/tests -q --basetemp=.pytest-tmp-e-hoi-ai-lx-dg
+# 718 passed, 3 failed, 0 skipped; 442,99 giây; exit 1.
+.venv\Scripts\python e_hoi_ai/tests/kiem_doc_lap.py
+# ĐẠT, exit 0; không tham chiếu Core/bytecode/liên kết trong gói.
+.venv\Scripts\python _chung/cong-cu/dong_goi.py --engine e_hoi_ai --ra .dong-goi-thu --nhan thu --nen linux
+# ĐẠT, exit 0: e_hoi_ai-0.13.0-linux_x86_64.zip.
+```
+
+Lượt test công cụ đầu: **72 passed, 2 failed**, 260,80 giây. Hai SHA baseline
+DEMO bị PowerShell đổi ký tự tiếng Việt khi truyền script; đã tính lại bằng
+Unicode escape từ **mã đóng gói trước LX-DG trong git**, không lấy kết quả
+của mã mới làm chuẩn. Các ca Linux khác đều đạt trong lượt đầu.
+Lượt cuối chạy lại toàn bộ đúng lệnh trên: **74 passed, 0 skipped**, exit 0;
+gồm thay wheel từ git/ref cũ, fallback/ưu tiên wheel thuần, kiểm kê Linux
+theo Core, ZIP tất định, baseline Windows, thiếu/thừa/trùng/sai băm/phiên
+bản wheel, musllinux/glibc 2.40/nền khác và tên ZIP/metadata/CLI Linux.
+
+Ba ca engine lỗi thuộc `test_transport_ai_9.py::test_url_dns_public_va_proxy_tu_choi_truoc_post`
+với URL DNS, HTTPS và query proxy: `nap_cau_hinh()` bị `CoreGia.dat_cau_hinh()`
+từ chối `NGAN_DU_LIEU_SAI` theo JSON Schema trước bước kiểm transport.
+Không sửa engine/test engine hoặc bỏ ca để ép xanh; gate chung §5 còn chưa đạt.
+
+Bản Linux thật lấy từ commit `eb3ec9ccb5567a0bcd574475167b5d244f3357d5`:
+SHA ZIP `58a0ec2366cd12067e602cd8e481c55bfd5025100c6910e584b5307ec76f68f1`.
+Đã mở ZIP, kiểm CRC, kiểm kê đủ **32 tệp** theo logic `_kiem_kiem_ke_tep`
+chép từ Core, và so byte ZIP với mã Windows trước LX-DG: **trùng hoàn toàn**.
+Kiểm tag toàn bộ **21 wheel Windows** của chín engine tại cùng mốc: đạt.
+`git diff --check`: đạt.
+
+### Cần Core / chờ lead
+
+- Giữ yêu cầu fixture/cấu hình CLI Hỏi AI đã có ở DONG-GOI-1; không phát
+  sinh cổng hoặc thay đổi SDK mới trong LX-DG. Lead engine xem lại ba
+  fixture URL nêu trên; không coi từ chối cấu hình sai là lỗi vận hành mới.
+- `e_ocr/wheels-linux/` chưa có ở mốc git trên: **chờ lát LX-WH**;
+  chưa chạy phát hành OCR Linux và chưa thử cài trên WSL/Core Linux.
+- Không phát sinh quyết định nghiệp vụ chờ Anh. PR chờ lead mở.
+
+Thời gian thực tế: **28/11/2026 16:05–16:33:44 (UTC+07)**, khoảng **0.48 giờ**. Ước tính trong phiếu: **2–3 giờ**.
+Lệch khỏi phiếu / quyết định tạm: không; JSON Windows thêm `nen` đúng yêu
+cầu, byte ZIP Windows giữ nguyên. Venv dùng dependency có sẵn như đã nêu.

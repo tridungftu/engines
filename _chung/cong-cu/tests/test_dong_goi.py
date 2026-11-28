@@ -373,6 +373,19 @@ def test_linux_thay_wheel_tu_git_va_tat_dinh(repo, tmp_path):
     assert all(hashlib.sha256((a / ten).read_bytes()).hexdigest() == bam for ten, bam in sums.items())
 
 
+def test_linux_nhan_wheel_thuan_py2_py3(repo, tmp_path):
+    # openpyxl/defusedxml mang tag py2.py3-none-any: wheel thuần, dùng chung hai nền.
+    them_wheel_linux(repo)
+    p = duong_goi(repo)
+    ten = "demo_cu-2.0.0-py2.py3-none-any.whl"
+    (p / "wheels" / ten).write_bytes(b"DEMO py2py3")
+    lock = (p / "requirements.lock").read_bytes() + f"demo-cu==2.0.0 --hash=sha256:{dg.sha256(b'DEMO py2py3')}\n".encode()
+    (p / "requirements.lock").write_bytes(lock)
+    tao_moc(repo)
+    ds = xuat(repo, tmp_path / "ra", sdk="2.5.0", nen="linux")
+    assert doc_zip(tmp_path / "ra", ds)["wheels/" + ten] == b"DEMO py2py3"
+
+
 def test_linux_uu_tien_wheel_thuan_trong_wheels_linux(repo, tmp_path):
     them_wheel_linux(repo)
     p = duong_goi(repo) / "requirements.lock"

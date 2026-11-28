@@ -162,6 +162,10 @@ def kiem_ke_sql(cac_tep, phieu):
         raise LoiDongGoi("Kiểm kê SQL chưa bao gồm đúng toàn bộ gói.")
 
 
+# Wheel thuần dùng được mọi nền: tag Python có py3 (py3, py2.py3), ABI none, nền any.
+_THUAN = re.compile(r"-(?:[A-Za-z0-9_]+\.)*py3(?:\.[A-Za-z0-9_]+)*-none-any\.whl$")
+
+
 def kiem_nen_wheel(ten, nen):
     # Cùng khuôn tên wheel của Core; hỗ trợ cả build tag và tag nền ghép.
     khop = re.fullmatch(
@@ -175,7 +179,7 @@ def kiem_nen_wheel(ten, nen):
         hop_le = all(tag == "win_amd64" or (tag == "any" and abi == "none")
                      for tag in nen_tag.split("."))
     elif nen_tag == "any":
-        hop_le = python == "py3" and abi == "none"
+        hop_le = "py3" in python.split(".") and abi == "none"
     else:
         def manylinux(tag):
             if tag in {"manylinux1_x86_64", "manylinux2010_x86_64", "manylinux2014_x86_64"}:
@@ -244,7 +248,8 @@ def thay_wheel_linux(repo, commit, ma, cac_tep, phieu):
     chuan = lambda ten: re.sub(r"[-_.]+", "-", ten.split("/")[-1].split("-")[0]).lower()
     co_linux = {chuan(ten) for ten in wheels}
     for ten, raw in cac_tep.items():
-        if ten.startswith("wheels/") and ten.endswith("-py3-none-any.whl") and chuan(ten) not in co_linux:
+        if (ten.startswith("wheels/") and _THUAN.search(ten)
+                and chuan(ten) not in co_linux):
             wheels[ten] = raw
     kq = {ten: raw for ten, raw in cac_tep.items() if not ten.startswith("wheels/")}
     kq.update(wheels)

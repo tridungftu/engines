@@ -4,6 +4,10 @@ Quy ước SHA-256: chuẩn hóa CRLF và CR thành LF trước khi băm; đư�
 
 Gói chạy dùng thư viện chuẩn Python ≥ 3.11 và SDK `kho_tri_thuc_sdk` 2.2.0 từ wheel trong repo. Không thêm thư viện bên ngoài. Ghim đầy đủ và cài máy sạch thuộc AI-5.
 
+## LX-AI — 28/11/2026
+
+- Bổ sung mặc định /var/lib khi thiếu PROGRAMDATA trên hệ không phải Windows; giữ các kiểm an toàn và thứ tự ưu tiên.
+
 ## AI-13 — 24/11/2026
 
 - `e_hoi_ai/hoi_prompt.py`: viết mới theo phiếu AI-13 và quyết định của Anh ngày 24/11. Dùng DTO, bộ đọc yêu cầu chung, bộ chọn model/ngăn, bộ kiểm JSON/schema và cấu hình SDK hiện có; không dùng khung/hậu kiểm trích dẫn cho năng lực mới.
@@ -110,7 +114,7 @@ Các đường dẫn dưới đây tính từ thư mục `e_hoi_ai/` trong repo 
 
 ```text
 876cd3641befa9641ab9bc0deabc39419dfca2a31abc3eda4c2f0a382c667695  cau_hinh.schema.json
-04b055356cb1b650bffd4d628980bc007055a65e867bb0805a8034cc1120da9c  CHANGELOG.md
+238d82d5b75f42593b2a737d824d627ac9dd5aba721d30b6116c99f64ccc3a72  CHANGELOG.md
 e42b1dee5af2da90583ee94eeac4df0404935de27da7b14a88f79f3f3a27e69c  contract/cau_hinh_may.schema.json
 5ff270d3b997c5d5498be0f2b29cd851ad06cf8dbff81dab571b8eaaf97ca76f  contract/tra_loi_ai.schema.json
 81a4e0852004e3fac5ee7e2ed23d07b5d704decaeecc2bce170dafd56042b977  contract/van_ban_tai_lieu.schema.json
@@ -118,7 +122,7 @@ e42b1dee5af2da90583ee94eeac4df0404935de27da7b14a88f79f3f3a27e69c  contract/cau_h
 3464bd7a36b7019edc741ffaa4aea0da193b0ffa0229ac6d03237ee0d6f0024e  demo/mau.txt
 514cf09ba8f776418f50b892a22f72c27d02d87c78acc4a196aa2350ecd3649c  e_hoi_ai/__init__.py
 b8c0155ff46b2ec6bfe472483c5015c4a90e8c743499f44bce14857fc007852a  e_hoi_ai/ai_cuc_bo.py
-111ebeafcf253df6e012078d12fefd27250292d3fe03953933f01bbfd98bfd73  e_hoi_ai/cau_hinh_may.py
+673d736674d16dde87766837660db5a3dd6c4025a424ab94b2b4a96ed60cbbfb  e_hoi_ai/cau_hinh_may.py
 db41d3d8878ac7aad21f086c16122f0f55dc26110e7d5500e370aa9a584a48f7  e_hoi_ai/chay.py
 ace9854285187c6dfd6543cd297f306ef45ddd29b9168dabe917749bdd5a3f66  e_hoi_ai/chon_model.py
 9f55354b7641ce4a6d6c48fb7b8ed2fb6b7409ac0e0797af79b70f33a3ee8074  e_hoi_ai/cloud.py
@@ -132,9 +136,9 @@ ab4dc18a48df5f6f7c8e8f08ae10ea87e5a0a43ced3ca0870909e44eece069df  e_hoi_ai/khuon
 9ea4b6056617c0cc628530bbdd75b421a4f4685cc5cf89832df504b7e59a6d73  e_hoi_ai/nha_cung_cap.py
 5f3e0aad0bc0aa11d550137a1aa8468af40a2f78f0058aac2261575758402a42  e_hoi_ai/quan_tri.py
 ba15948dd9254e5daea0596ad46aeb40d84e054ed1e10accc8b6b0bb4385626b  e_hoi_ai/vai_tro_khuon.py
-793166e39f8ef68111f9ed0a7ea4e3477e0345bc47cc6ea4820fe06a9900ea11  engine.json
+1998e951d9e55d0f184b2dec956c40e2e7558477965273a714e5728494d230fb  engine.json
 35bf222e35e0ecf2b2994614d750da66e8efa6cc17b79e37ea13f7f16ef3098f  KHAI-SDK-2.1.json
-b627edf94f930e112d5eb348eb1f70b62e608d3149d72668fc9669e91f37d877  README.md
+84b81c0bd18b3d6ac269411e8b6e7ac81d14aee59f12c6aa9706ac66cc3c2c9e  README.md
 2042fa331b34afc8df48dcfa2d46909276abd557f828865360618b07b64de5a9  requirements.lock
 2a803c6521dd0a2c50b41e644d7977aaf9318617c8a85afccba214708167cdae  sql/001_tao_model_phat_hien.sql
 cf71c5ae8645149e8a10677350b18f57b994bf3c6625b3188eda7d3c95d6efef  ui/cau_hinh.js

@@ -893,3 +893,15 @@ engine.json giữ SHA-256 cb5073b0e4423cddee82d9c7ef78b1c6fc0a2b518246cae46bb66c
 **Đã kiểm bằng Core giả (CoreGia)** và máy Local HTTP giả; không chứng nhận Core thật/model thật/Linux hoặc tự tìm toàn LAN. Không skip bài kiểm nào, không sửa SDK hoặc tạo nhánh DEMO runtime. Không commit/push; PR **chờ lead mở**.
 
 Thời gian thực tế: **21/11/2026 21:25–21/11/2026 22:13:48 (+07), 0.81 giờ**; ước tính phiếu UI §4: **3 giờ**. Giờ bắt đầu theo lead; giờ kết thúc là lúc hoàn tất ghi báo cáo kiểm cuối.
+
+## LX-AI — 28/11/2026 (PR: chờ lead mở)
+
+Kết luận: Chưa đạt đầy đủ điều kiện §5: CLI SDK chuẩn 0/5 do nợ cấp cấu hình DEMO/Local giả từ AI-11. Phần LX-AI đã kiểm bằng Core giả (CoreGia), Local giả và giả lập nền; chưa kiểm Ubuntu/Core thật.
+
+Đã làm: chọn KTT_ENGINE_CAU_HINH, tiếp theo PROGRAMDATA, tiếp theo /var/lib/KhoTriThuc/engines/e_hoi_ai/cau_hinh.json khi không phải Windows; Windows thiếu PROGRAMDATA vẫn trả None. Giữ kiểm đường dẫn/an toàn, không ghi /var/lib trong test. Rà PROGRAMDATA, os.startfile và đường dẫn liên quan cấu hình máy trong gói: không có chỗ khác cần sửa. Bản 0.13.1, README, CHANGELOG, NGUON, bảng băm, kiểm kê và danh mục engine tự sinh đã cập nhật; không đổi lock/năng lực/prompt.
+
+Kết quả kiểm: pytest 722 passed, 0 skipped, 275.78s, mã 0; kiem_doc_lap đạt, mã 0; chay_demo_voi_local_gia 5/5 DEMO và AI-9 1/1 đạt, mã 0; kho_tri_thuc_sdk.thu 0/5 CHUA_CAU_HINH, mã 1. Lượt pytest đầu dùng system-site-packages có jsonschema: 719 passed, 3 failed do CoreGia áp schema đầy đủ; chuyển venv cô lập và sao offline các phụ thuộc đúng tests/requirements.lock, chạy lại đạt. SDK 2.2.0 từ wheel offline, SHA256 khớp SHA256SUMS.
+
+Lệch khỏi phiếu: chưa kiểm trên Ubuntu thật, lead sẽ kiểm WSL. Cần Core: giữ nợ AI-11 về cửa cấp cấu hình DEMO/Local giả cho CLI; IT/Core chuẩn bị quyền thư mục /var/lib theo phiếu gốc. Không phát sinh câu hỏi cho Anh.
+
+Thời gian thực tế: 16:04–16:36 ngày 28/11/2026, khoảng 0,54 giờ; ước tính 0,5–1 giờ.

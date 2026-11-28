@@ -16,6 +16,47 @@ def test_lock_va_wheels_cua_goi_khop_day_du():
     assert set(kiem_goi_phu_thuoc(GOI)) == set(doc_lock(GOI / "requirements.lock"))
 
 
+def test_lock_chung_du_wheel_va_dung_so_bam_cho_hai_nen():
+    ds = doc_lock(GOI / "requirements.lock")
+    windows = kiem_goi_phu_thuoc(GOI)
+    linux = kiem_goi_phu_thuoc(GOI, "linux")
+    bien_dich = {"cryptography", "cffi", "rpds-py"}
+    assert set(linux) == set(windows) == set(ds)
+    assert {ten for ten, ghim in ds.items() if len(ghim["bam"]) == 2} == bien_dich
+    for ten, ghim in ds.items():
+        assert windows[ten].parent == GOI / "wheels"
+        assert linux[ten].parent == (GOI.parents[1] / "wheels-linux" if ten in bien_dich else GOI / "wheels")
+        assert {hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in (windows[ten], linux[ten])} == ghim["bam"]
+
+
+@pytest.mark.parametrize("tag,hop_le", [
+    ("cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64", True),
+    ("cp311-abi3-manylinux_2_34_x86_64", True),
+    ("cp313-cp313-manylinux_2_40_x86_64", False),
+    ("cp313-cp313-musllinux_1_2_x86_64", False),
+    ("cp313-cp313-manylinux_2_34_aarch64", False),
+    ("cp314-cp314-manylinux_2_34_x86_64", False),
+    ("cp313-cp313-win_amd64", False),
+])
+def test_kho_linux_kiem_nen_va_abi_khi_lock_co_hai_bam(tmp_path, tag, hop_le):
+    goi = tmp_path / "goi/e_demo"
+    (goi / "wheels").mkdir(parents=True)
+    kho = tmp_path / "wheels-linux"
+    kho.mkdir()
+    tep = kho / f"demo-1.0-{tag}.whl"
+    with zipfile.ZipFile(tep, "w") as z:
+        z.writestr("demo-1.0.dist-info/METADATA", "Metadata-Version: 2.1\nName: demo\nVersion: 1.0\n")
+    bam = hashlib.sha256(tep.read_bytes()).hexdigest()
+    (goi / "requirements.lock").write_text(
+        f"demo==1.0 --hash=sha256:{'0' * 64} --hash=sha256:{bam}\n", encoding="ascii")
+    if hop_le:
+        assert kiem_goi_phu_thuoc(goi, "linux") == {"demo": tep}
+    else:
+        with pytest.raises(ValueError):
+            kiem_goi_phu_thuoc(goi, "linux")
+
+
 @pytest.mark.parametrize("dong", [
     b"# Khong ASCII: \xc4\x90", b"\xef\xbb\xbf# BOM", b"# coding: ascii",
     b"demo==1.0 \\", b"demo==1.0 # giua dong", b"demo==1.0",

@@ -1,5 +1,12 @@
 # CHANGELOG tài liệu và công cụ kiểm
 
+## 0.5.3 — 28/11/2026, LX-TX; PR: chờ lead mở
+
+- Lock chung Windows/Linux có hai hash cho ba thư viện biên dịch, một
+  hash cho wheel thuần; ba wheel Linux ngoài gói Windows, đã đối chiếu SHA.
+- Bộ kiểm SDK25/venv mới kiểm wheel theo nền, không quét wheels-linux
+  khi kiểm gói Windows. Kết quả thực và giới hạn Core/SDK tại `VIEC.md`.
+
 ## 0.5.0 — 15/11/2026, TX-7; PR: chờ lead mở
 
 - Chuyển SDK 2.2.0, khai schema cấu hình trong manifest; bỏ bảng cấu hình

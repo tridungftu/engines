@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_trich_xuat",
   "ten": "Trích thông tin hợp đồng",
-  "phien_ban": "0.5.2",
+  "phien_ban": "0.5.3",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",
@@ -320,7 +320,7 @@
           "bam_tep_goc": null,
           "ma_prompt": "crm_demo.trich_hd",
           "phien_ban_prompt": "DEMO-1",
-          "phien_ban_engine": "e_trich_xuat 0.5.2",
+          "phien_ban_engine": "e_trich_xuat 0.5.3",
           "ma_truong_can_trich": [
             "TT-01",
             "TT-02"

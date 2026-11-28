@@ -1,8 +1,16 @@
 ## HD-9 — 15/11/2026
 
+## 1.0.1 — LX-HD, đường cấu hình mặc định trên Linux, 28/11/2026
+
+- Khi thiếu `PROGRAMDATA`, `_tep_mac_dinh()` dùng `/var/lib/KhoTriThuc/engines/e_hoa_don/cau_hinh.json` nếu không phải Windows; Windows vẫn dùng `C:/ProgramData`. Giữ ưu tiên `KTT_ENGINE_CAU_HINH` rồi `PROGRAMDATA`, cùng kiểm đường ngoài gói, trần byte, khóa lặp và schema.
+- Thêm 8 ca giả lập Linux/Windows và ưu tiên biến môi trường; chỉ tính đường hoặc đọc tệp DEMO tạm, không ghi `/var/lib` thật. Nâng các chỗ ghim phiên bản và oracle hiện hành lên 1.0.1, sinh lại danh mục engine; không đổi lock hoặc thêm thư viện.
+- Helper cấu hình vẫn ngoài đường chạy XML/ZIP/XLSX. Đã kiểm bằng Core giả (CoreGia); giả lập đường Linux không thay thế kiểm trên Ubuntu/WSL hoặc nghiệm thu Core thật.
+
 Nâng yêu cầu SDK lên 2.2.0; engine không dùng ngăn hoặc cấu hình nên không cần migration. Hạ trần ZIP và JSON bảng kê đầu vào qua `mo_tep` xuống 20 MiB theo trần SDK; giữ trần XLSX và JSON đầu ra 32 MiB. Đúng 20 MiB được chấp nhận; vượt một byte bị từ chối bởi engine hoặc SDK. Đã kiểm bằng Core giả (CoreGia).
 
 # CHANGELOG — e_hoa_don
+
+- Kết quả Windows/Python 3.13.14/SDK 2.2.0: SDK 4/4 DEMO ĐẠT; pytest 662 passed in 189.49s, 0 skipped; kiểm độc lập ĐẠT, mọi mã thoát 0. Danh mục engine khớp; lock giữ nguyên. PR: chờ lead mở.
 
 ## HD-7 — Bảng kê XLSX exact trong RAM, 15/11/2026
 

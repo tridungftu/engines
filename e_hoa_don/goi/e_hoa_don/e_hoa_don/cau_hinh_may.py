@@ -14,9 +14,8 @@ CAU_HINH_TOI_DA_BYTE = 64 * 1024
 
 def _tep_mac_dinh() -> Path | None:
     goc = os.environ.get("PROGRAMDATA")
-    if goc is None and os.name == "nt":
-        goc = "C:/ProgramData"
-    # Linux không tự suy đường máy Windows; test cấp đường DEMO tạm.
+    if goc is None:
+        goc = "C:/ProgramData" if os.name == "nt" else "/var/lib"
     if not goc:
         return None
     return Path(goc) / "KhoTriThuc" / "engines" / "e_hoa_don" / "cau_hinh.json"

@@ -353,3 +353,38 @@ Kết quả: `.venv\Scripts\python -B -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_ho
 **Cần Core:** Nếu cần bảng kê từ JSON lớn hơn 20 MiB, Core/SDK phải nâng trần kênh tệp hoặc hỗ trợ đọc theo luồng. SDK chưa có fixture tệp lồng trong `truong` cho CLI DEMO XLSX; kiểm XLSX bằng CoreGia qua pytest. Không suy ra giới hạn Core thật từ CoreGia.
 
 Thời gian lượt tiếp: 16:53–16:57 ngày 15/11/2026, khoảng 0,07 giờ; lượt trước 16:45–16:52, tổng khoảng 0,18 giờ so với ước tính 0,5 giờ. Chưa commit/push.
+
+
+## LX-HD — đường cấu hình mặc định trên Linux, 28/11/2026
+
+Trạng thái: **Đạt phạm vi LX-HD — đã kiểm bằng Core giả (CoreGia)**. PR: **chờ lead mở**. Bắt đầu **16:14 ngày 28/11/2026 (UTC+07)**; phiếu **0,5–1 giờ ước tính**.
+
+Sửa helper `_tep_mac_dinh()` theo mẫu e_ocr: ưu tiên `KTT_ENGINE_CAU_HINH` tại `doc_cau_hinh()`, rồi `PROGRAMDATA`, thiếu biến thì Windows dùng `C:/ProgramData`, không phải Windows dùng `/var/lib`. Giữ các kiểm an toàn và helper ngoài đường chạy XML/ZIP/XLSX. Thêm 8 ca giả lập, nâng gói và oracle hiện hành 1.0.0 → 1.0.1; cập nhật README, CHANGELOG, danh mục sinh tự động và bảng SHA NGUON sau cùng. Không đổi lock, không thêm dependency runtime, không commit/push.
+
+Môi trường kiểm: Windows/Python 3.13.14; venv `.venv`, SDK 2.2.0 cài offline, SHA wheel `0294ec69148313784e233913d60d402efdede4c14a44ff2fe424344839534984` khớp SHA256SUMS. Pytest 9.1.1 dùng công cụ kiểm thử sẵn có qua venv `--system-site-packages`, không đóng vào gói. Bộ cấu hình riêng: **23 passed in 0.75s**. Các ca Linux chỉ tính PurePath hoặc đọc DEMO tạm; không đọc/ghi `/var/lib` thật.
+
+Cần Core / Chờ Anh mới phát sinh: **không**. Chưa thực hiện bài Ubuntu/WSL Python 3.13 và đọc cấu hình DEMO thật ở `/var/lib` theo phiếu gốc §6; lead kiểm WSL sau theo phân công LX. Gói không có SQL/ngăn nên không có `sql/kiem_ke.json`; không có công cụ sinh kiểm kê riêng cho e_hoa_don. Giữ cách bàn giao bảng SHA bytes thực/LF trong NGUON, không tự băm NGUON. Đã kiểm bằng Core giả (CoreGia).
+
+Kết quả kiểm cuối (Windows/Python 3.13.14; mọi mã thoát 0):
+
+| Lệnh thực chạy | Kết quả |
+|---|---|
+| `.venv\Scripts\python -X utf8 -B -m kho_tri_thuc_sdk.thu e_hoa_don/goi/e_hoa_don` | **4/4 ĐẠT** |
+| `.venv\Scripts\python -X utf8 -B -m pytest e_hoa_don/tests -q --basetemp=.pytest-tmp` | **662 passed in 189.49s (0:03:09), 0 skipped** |
+| `.venv\Scripts\python -X utf8 -B e_hoa_don/tests/kiem_doc_lap.py` | **ĐẠT**, AST/import/cây gói và tiến trình sạch |
+| `.venv\Scripts\python -X utf8 -B _chung/cong-cu/sinh_danh_muc_engine.py --kiem` | **ĐẠT**, danh mục khớp và chuỗi mẫu nối đúng |
+| `git diff --check` | Không lỗi khoảng trắng |
+
+Bằng chứng tìm mã: `git grep -n -e '/var/lib' -e 'os.name' -e 'goc is None' -e 'KTT_ENGINE_CAU_HINH' -- e_hoa_don/goi/e_hoa_don/e_hoa_don/cau_hinh_may.py` trả:
+
+```text
+17:    if goc is None:
+18:        goc = "C:/ProgramData" if os.name == "nt" else "/var/lib"
+40:        ten = os.environ.get("KTT_ENGINE_CAU_HINH")
+```
+
+Đường Linux chỉ ở nhánh không phải Windows, trong điều kiện thiếu `PROGRAMDATA`; đường chỉ định vẫn được chọn trước helper. Test trả đúng đường đầy đủ, không ghi `/var/lib`. Kiểm nội dung lock với Git (chuẩn hóa CRLF/LF) không đổi, `git diff` lock rỗng; không bytecode trong gói. Bảng SHA toàn gói (trừ chính NGUON) được tính sau cùng bằng hashlib stdlib, theo cách bàn giao NGUON hiện có; không có kiểm kê SQL cần tái sinh.
+
+Lệch khỏi phiếu / quyết định tạm đã dùng: **không**. Chỉ bổ sung danh mục sinh tự động theo AGENTS.md khi nâng manifest. Không sửa Core/SDK, không commit/push. Đã kiểm bằng Core giả (CoreGia); chưa kiểm Ubuntu/WSL, cấu hình ở `/var/lib` thật hoặc Core thật.
+
+Thời gian thực tế: **16:14–16:32:30 ngày 28/11/2026 (UTC+07), 0.308 giờ**, so với **0,5–1 giờ ước tính**. PR: **chờ lead mở**.

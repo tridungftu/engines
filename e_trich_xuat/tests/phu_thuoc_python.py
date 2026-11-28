@@ -41,11 +41,22 @@ def doc_lock(tep):
     return ds
 
 
-def kiem_goi_phu_thuoc(goi):
+def kiem_goi_phu_thuoc(goi, nen="windows", kho_wheel=None):
     goi = Path(goi)
+    if nen not in ("windows", "linux"):
+        raise ValueError("Nền kiểm wheel phải là windows hoặc linux.")
     ds = doc_lock(goi / "requirements.lock")
+    if kho_wheel is not None:
+        cac_tep = list(Path(kho_wheel).iterdir())
+    elif nen == "linux":
+        cac_tep = list((goi.parents[1] / "wheels-linux").iterdir())
+        cac_tep += [p for p in (goi / "wheels").iterdir()
+                    if p.name.endswith("-none-any.whl")]
+    else:
+        # Gói Windows chỉ kiểm wheels/; wheels-linux/ nằm ngoài gói.
+        cac_tep = list((goi / "wheels").iterdir())
     da_gap = {}
-    for tep in sorted((goi / "wheels").iterdir()):
+    for tep in sorted(cac_tep):
         if tep.is_symlink() or not tep.is_file() or tep.suffix != ".whl":
             raise ValueError("Kho wheel chỉ được chứa tệp .whl, không sdist hoặc thư mục con.")
         phan = tep.stem.split("-")
@@ -54,14 +65,20 @@ def kiem_goi_phu_thuoc(goi):
         ten, ban = chuan_ten(phan[0]), phan[1]
         if ten not in ds or ten in da_gap or ban != ds[ten]["phien_ban"]:
             raise ValueError("Wheel thừa, lặp hoặc không khớp tên/phiên bản trong lock.")
-        py, abi, nen = phan[-3:]
-        thuan = "py3" in py.split(".") and abi == "none" and nen == "any"
+        py, abi, nen_wheel = phan[-3:]
+        thuan = "py3" in py.split(".") and abi == "none" and nen_wheel == "any"
         cp = re.fullmatch(r"cp3([0-9]+)", py)
-        windows = nen == "win_amd64" and (
+        dung_python = (
             py == "cp313" and abi == "cp313"
             or cp is not None and int(cp[1]) <= 13 and abi == "abi3")
-        if not (thuan or windows):
-            raise ValueError("Wheel phải dùng được trên CPython 3.13 win_amd64.")
+        windows = nen_wheel == "win_amd64" and dung_python
+        linux = dung_python and all(
+            tag in ("manylinux1_x86_64", "manylinux2010_x86_64", "manylinux2014_x86_64")
+            or (m := re.fullmatch(r"manylinux_2_([0-9]+)_x86_64", tag)) is not None
+            and int(m[1]) <= 39
+            for tag in nen_wheel.split("."))
+        if not (thuan or (windows if nen == "windows" else linux)):
+            raise ValueError(f"Wheel phải dùng được trên CPython 3.13 {nen} x86_64.")
         if hashlib.sha256(tep.read_bytes()).hexdigest() not in ds[ten]["bam"]:
             raise ValueError("Wheel không khớp SHA-256 trong lock.")
         with zipfile.ZipFile(tep) as z:

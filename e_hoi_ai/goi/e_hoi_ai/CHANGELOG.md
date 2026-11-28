@@ -1,3 +1,7 @@
+## 0.13.1 — 28/11/2026
+
+- Bổ sung đường cấu hình máy mặc định trên Linux; giữ thứ tự ưu tiên và hành vi Windows.
+
 ## 0.13.0 — 24/11/2026 — AI-13 (PR: chờ lead mở)
 
 - Thêm `ai.hoi_theo_prompt@1`: prompt của module nguyên văn, nối tài liệu bằng một dòng trống, một message user, không system prompt hay khung của engine. Phong bì yeu_cau_ai được ưu tiên; cảnh báo riêng khi tham số bước bị bỏ qua.

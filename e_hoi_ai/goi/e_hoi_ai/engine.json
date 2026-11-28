@@ -3,7 +3,7 @@
   "loai": "engine",
   "ma": "e_hoi_ai",
   "ten": "Hỏi AI",
-  "phien_ban": "0.13.0",
+  "phien_ban": "0.13.1",
   "tuong_thich": {
     "core": ">=2.0.0 <3.0.0",
     "api": "v1",

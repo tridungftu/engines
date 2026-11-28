@@ -1,5 +1,16 @@
 # Thay đổi
 
+## 0.5.3 — 28/11/2026, LX-TX; PR: chờ lead mở
+
+- Thêm hash manylinux x86_64 vào lock chung cho cryptography 49.0.0,
+  cffi 2.0.0 và rpds-py 2026.6.3; không đổi phiên bản thư viện hoặc mã xử lý.
+  Sáu wheel thuần Python giữ một hash; SDK vẫn do Core cấp.
+- Kèm ba wheel Linux ngoài gói Windows tại `../../wheels-linux/`, kiểm
+  SHA-256 theo bảng lead cấp. Gói Windows vẫn đúng một wheel mỗi dòng lock.
+- Bộ kiểm lock/wheel và venv mới chọn đúng nền; kiểm Linux dùng wheel
+  biên dịch riêng cùng wheel thuần dùng chung. Cập nhật nguồn và bảng băm.
+  Giữ giới hạn C-TX-06 của CLI SDK; đã kiểm bằng Core giả (CoreGia).
+
 ## 0.5.2 — 22/11/2026
 
 - Kèm thư viện để Core tự cài ngoại tuyến (phiếu lead Core 21/11, CĐ-50 mục 6): khai `phu_thuoc_python`, `requirements.lock` mỗi dòng một thư viện có SHA-256, đủ phụ thuộc gián tiếp, không còn dòng SDK; thư mục `wheels/` có đúng một wheel CPython 3.13 win_amd64 hoặc thuần Python cho mỗi dòng. Khoảng SDK nâng lên `>=2.4.0 <3.0.0` vì khóa này có từ SDK 2.4.0. Không đổi xử lý việc.

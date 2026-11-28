@@ -1,5 +1,68 @@
 # VIỆC — danh sách việc duy nhất của project `e_trich_xuat`
 
+## LX-TX — lock chung và wheel Linux (28/11/2026)
+
+**Trạng thái: đạt phạm vi LX-TX; CLI SDK chung còn C-TX-06 đã có. PR: chờ lead mở.**
+Thời gian thực tế: **16:04–16:31:35 ngày 28/11/2026** (UTC+07),
+khoảng **0.46 giờ**; ước tính phiếu **1–1,5 giờ**.
+Bản hiện hành **0.5.3**; chỉ đổi lock, metadata, bộ kiểm và tài liệu,
+không đổi phiên bản thư viện hoặc mã xử lý.
+
+- Lock ASCII, không nối dòng/chú thích giữa dòng/SDK. Ba dòng cryptography,
+  cffi, rpds-py thêm hash wheel manylinux x86_64; sáu dòng thuần giữ một hash.
+- Ba wheel Linux chép nguyên bytes từ bộ lead cấp; SHA-256 nguồn và đích
+  khớp SHA256SUMS. Wheel Linux ở `e_trich_xuat/wheels-linux/`, ngoài gói
+  Windows; mỗi nền có đúng một wheel mỗi dòng lock, wheel thuần dùng chung.
+- Bộ đọc lock SDK25 đã nhận nhiều hash; bổ sung kiểm hai nền, ABI/tag,
+  glibc ≤2.39, metadata và băm. Kiểm Windows chỉ đọc `goi/.../wheels/`.
+  `kiem_may_sach` tự chọn nền và cài ngoại tuyến từ các kho đã kiểm.
+  Không có workflow CI riêng của Trích xuất trong repo; không sửa CI engine khác.
+- Bảng băm NGUON cập nhật sau cùng (văn bản CRLF→LF, wheel nguyên bytes).
+  Không có SQL/kiem_ke hoặc bam-goi.json ở engine này.
+
+### Cần Core — LX-TX
+
+- Giữ C-TX-06 đã có: CLI SDK 2.5.0 chưa nạp tệp phụ DEMO hậu kiểm.
+  Không sửa SDK/Core hay mã xử lý để né giới hạn này.
+- Lead kiểm cài/chạy trên Python 3.13 Linux sạch và đóng gói Linux theo LX-DG.
+  Chỉ sửa trong `e_trich_xuat/`; danh mục engine dùng chung ngoài phạm vi,
+  lead phải chạy `_chung/cong-cu/sinh_danh_muc_engine.py` sau khi ghép
+  các lát vì danh mục có ghi phiên bản gói.
+
+### Kết quả kiểm LX-TX
+
+Môi trường Windows x64, Python 3.13.14, SDK 2.5.0, Node 24.18.0.
+Chỉ dữ liệu DEMO; **đã kiểm bằng Core giả (CoreGia)**, 0 Cloud.
+
+```text
+.venv/Scripts/python -B -X utf8 -m pytest e_trich_xuat/tests -q --basetemp=.pytest-tmp
+→ 526 passed, 0 skipped trong 86,99 giây; exit 0.
+.venv/Scripts/python -B -X utf8 e_trich_xuat/tests/kiem_doc_lap.py
+→ [ĐẠT] Gói độc lập; exit 0.
+node --test e_trich_xuat/tests/ui/cau_hinh.test.mjs e_trich_xuat/tests/ui/soan_bo_ts_tx.test.mjs
+→ 18 passed, 0 skipped; exit 0.
+.venv/Scripts/python -B -X utf8 -m kho_tri_thuc_sdk.thu e_trich_xuat/goi/e_trich_xuat
+→ 4/5 ĐẠT, 1 LỖI hậu kiểm DANG_CHAY; exit 1, C-TX-06 đã có.
+.venv/Scripts/python -B -X utf8 e_trich_xuat/tests/kiem_may_sach.py --tao-venv
+→ SDK 2.5.0 và 9/9 thư viện cài offline vào khu riêng đạt;
+  độc lập, T3/N1 chạy khô đạt; CLI 4/5, exit 1 do C-TX-06.
+```
+
+- Nhóm lock/wheel/NGUON: 28 passed; mỗi dòng có đúng wheel Windows và
+  wheel Linux hoặc wheel thuần. Hash nguyên bytes của ba wheel nguồn/đích
+  khớp bảng lead. Không có wheel Linux lọt vào gói Windows.
+- Khi ghim lại NGUON phát hiện hai băm tham chiếu Hỏi AI đã cũ ngay trong
+  HEAD trước LX-TX: `e_hoi_ai/cong-cu/thu_local_ai_that.py` và
+  `e_hoi_ai/goi/e_hoi_ai/e_hoi_ai/ai_cuc_bo.py`. Đã so bytes chuẩn hóa LF
+  giữa HEAD/worktree và xác nhận trùng; cập nhật băm bảng theo nguồn
+  hiện tại, không sửa mã Hỏi AI hoặc nguồn E6.
+- `git diff --check` đạt. Chỉ sửa trong `e_trich_xuat/`; không đổi mã
+  xử lý, phiên bản thư viện, wheel Windows, Core/SDK; không commit/push.
+- Linux sạch/WSL và Core thật chưa kiểm tại đây; lead thực hiện tiếp.
+  Không có CI riêng hoặc kiểm kê SQL/bảng băm gói khác cần sửa.
+
+---
+
 ## SDK25 — chạy bằng SDK Core cấp và wheel ngoại tuyến (22/11/2026)
 
 **Trạng thái: đã sửa và kiểm xong phần engine; chưa đạt toàn bộ do C-TX-06. PR: chờ lead mở.**

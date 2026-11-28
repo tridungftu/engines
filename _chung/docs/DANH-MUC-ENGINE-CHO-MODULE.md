@@ -2,7 +2,7 @@
 
 *Tệp **sinh tự động** bằng `python _chung/cong-cu/sinh_danh_muc_engine.py` từ `engine.json` của mọi gói; không sửa tay. Muốn đổi ghi chú hay chuỗi mẫu: sửa `GHI_CHU`/`CHUOI` trong script rồi chạy lại. Kiểm tự động trên GitHub báo đỏ khi tệp chưa cập nhật theo `engine.json` hoặc một chuỗi mẫu nối sai.*
 
-*Phiên bản gói lúc sinh: `e_ocr` 1.0.12, `e_hoi_ai` 0.13.0, `e_mask` 1.6.2, `e_trich_xuat` 0.5.2, `e_hoa_don` 1.0.0, `e_kiem_excel` 0.1.3, `e_phan_luong` 0.1.0, `e_doi_chieu` 0.9.2, `e_tra_cuu` 0.2.1.*
+*Phiên bản gói lúc sinh: `e_ocr` 1.0.12, `e_hoi_ai` 0.13.1, `e_mask` 1.6.2, `e_trich_xuat` 0.5.3, `e_hoa_don` 1.0.1, `e_kiem_excel` 0.1.3, `e_phan_luong` 0.1.0, `e_doi_chieu` 0.9.2, `e_tra_cuu` 0.2.1.*
 
 ## 1. Kết luận
 
@@ -13,10 +13,10 @@
 | Engine | Tên | Gói | Số năng lực | Dùng khi | Lưu ý cho module |
 |---|---|---|---:|---|---|
 | `e_ocr` | Nhận dạng văn bản | 1.0.12 | 3 | PDF scan, ảnh → chữ có vị trí, văn bản thuần, Word giữ bảng | ABBYY trước, Tesseract dự phòng; ABBYY thật chưa chạy thử |
-| `e_hoi_ai` | Hỏi AI | 0.13.0 | 4 | Hỏi AI về tài liệu có trích dẫn; bước AI giữa chuỗi của engine khác | **Chỉ Local AI**; chưa có năng lực Cloud; prompt thuộc module |
+| `e_hoi_ai` | Hỏi AI | 0.13.1 | 4 | Hỏi AI về tài liệu có trích dẫn; bước AI giữa chuỗi của engine khác | **Chỉ Local AI**; chưa có năng lực Cloud; prompt thuộc module |
 | `e_mask` | Che định danh | 1.6.2 | 8 | Che/mở che tên, MST, địa chỉ… trước khi đưa ra ngoài | Kho bí danh tạm giữ trong bộ nhớ (mất khi khởi động lại); mở che cần `ma_yeu_cau` |
-| `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.2 | 4 | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
-| `e_hoa_don` | Đọc XML hóa đơn | 1.0.0 | 3 | Đọc XML, ZIP hóa đơn điện tử; lập bảng kê XLSX | Chưa có PDF, chưa tải cổng thuế |
+| `e_trich_xuat` | Trích thông tin hợp đồng | 0.5.3 | 4 | Trích tham số hợp đồng theo bộ tham số của module | Bộ tham số + mã băm truyền qua Cài đặt bước |
+| `e_hoa_don` | Đọc XML hóa đơn | 1.0.1 | 3 | Đọc XML, ZIP hóa đơn điện tử; lập bảng kê XLSX | Chưa có PDF, chưa tải cổng thuế |
 | `e_kiem_excel` | Kiểm và đọc file Excel | 0.1.3 | 2 | Kiểm toàn vẹn file Excel (K1–K8); đọc bảng nhiều tầng tiêu đề | Ô đích, bộ nhóm, khuôn cột do module truyền |
 | `e_phan_luong` | Phân luồng kiểm tra | 0.1.0 | 5 | Phân luồng kiểm tra theo khâu, ngưỡng PM/TE/SAD và chọn mẫu | Nhận JSON, Excel/CSV theo khuôn cột, chuỗi Local AI và XML/ZIP hóa đơn; ghi kết quả kiểm; trả danh sách Đỏ Excel. Màn Admin bảng tỷ lệ chờ Core (CC-5) |
 | `e_doi_chieu` | Đối chiếu bản ký | 0.9.2 | 7 | So bản Word chuẩn với bản đã ký | Bước đầu nhận **tệp JSON cặp** do module lập; chặn hiệu lực là việc của module |
@@ -130,7 +130,7 @@ Loại dữ liệu riêng: `van_ban_tai_lieu`. Số việc đồng thời: 1.
 | `nguon` | Nguồn đọc | chọn | không | `"tu_dong"` | `tu_dong` (Tự động), `chi_abbyy` (Chỉ ABBYY), `chi_tesseract` (Chỉ Tesseract) |
 
 
-### e_hoi_ai — Hỏi AI (gói 0.13.0)
+### e_hoi_ai — Hỏi AI (gói 0.13.1)
 
 Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`. Số việc đồng thời: 1.
 
@@ -280,7 +280,7 @@ Loại dữ liệu riêng: `yeu_cau_ai`, `van_ban_tai_lieu`, `tra_loi_ai`, `van_
 | `trang_thai_ma_yeu_cau` | Trạng thái yêu cầu | văn bản |
 | `tra_loi_ai_da_mo_json` | Trả lời AI đã mở JSON | văn bản |
 
-### e_trich_xuat — Trích thông tin hợp đồng (gói 0.5.2)
+### e_trich_xuat — Trích thông tin hợp đồng (gói 0.5.3)
 
 Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`, `bang_trich_xuat`. Số việc đồng thời: 1.
 
@@ -327,7 +327,7 @@ Loại dữ liệu riêng: `van_ban_tai_lieu`, `yeu_cau_ai`, `tra_loi_ai`, `bang
 | `so_can_soat` | Số cần soát | số |
 | `co_can_cu` | Có căn cứ | có/không |
 
-### e_hoa_don — Đọc XML hóa đơn (gói 1.0.0)
+### e_hoa_don — Đọc XML hóa đơn (gói 1.0.1)
 
 Loại dữ liệu riêng: không. Số việc đồng thời: 1.
 

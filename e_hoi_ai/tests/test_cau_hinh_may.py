@@ -31,11 +31,25 @@ def test_chua_co_tep_khong_lam_engine_chet(tep_cau_hinh):
     assert str(tep_cau_hinh) not in str(loi.value)
 
 
-def test_khong_co_bien_tren_linux_khong_tu_doc_tep_khac(monkeypatch):
+def test_mac_dinh_linux_khi_khong_co_bien(monkeypatch):
+    from pathlib import PurePosixPath
+
+    class DuongDanLinuxGia(PurePosixPath):
+        def resolve(self):
+            return self
+
     monkeypatch.delenv("KTT_ENGINE_CAU_HINH", raising=False)
     monkeypatch.delenv("PROGRAMDATA", raising=False)
+    monkeypatch.setattr(ch.os, "name", "posix")
+    monkeypatch.setattr(ch, "Path", DuongDanLinuxGia)
+    assert str(ch.duong_dan_cau_hinh()) == "/var/lib/KhoTriThuc/engines/e_hoi_ai/cau_hinh.json"
+
+
+def test_windows_khong_co_programdata(monkeypatch):
+    monkeypatch.delenv("KTT_ENGINE_CAU_HINH", raising=False)
+    monkeypatch.delenv("PROGRAMDATA", raising=False)
+    monkeypatch.setattr(ch.os, "name", "nt")
     assert ch.duong_dan_cau_hinh() is None
-    assert ch.doc_cau_hinh() is None
 
 
 def test_mac_dinh_programdata_va_uu_tien_bien_moi_truong(tmp_path, monkeypatch, cau_hinh_demo):

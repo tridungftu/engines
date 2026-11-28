@@ -4,7 +4,8 @@ import hashlib
 import importlib.util
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+import re
 import stat
 import subprocess
 import zipfile
@@ -124,8 +125,9 @@ def test_tu_choi_tep_cam(repo, tmp_path, ten):
     assert not ra.exists()
 
 
+@pytest.mark.parametrize("nen", ["windows", "linux"])
 @pytest.mark.parametrize("kieu", ["sha", "bytes", "thieu", "thua", "lap", "phien_ban"])
-def test_kiem_ke_sai_dung_truoc_khi_ghi(repo, tmp_path, kieu):
+def test_kiem_ke_sai_dung_truoc_khi_ghi(repo, tmp_path, kieu, nen):
     them_sql(repo)
     p = duong_goi(repo) / "sql/kiem_ke.json"
     kk = json.loads(p.read_bytes())
@@ -138,7 +140,7 @@ def test_kiem_ke_sai_dung_truoc_khi_ghi(repo, tmp_path, kieu):
     p.write_text(json.dumps(kk), encoding="utf-8")
     tao_moc(repo)
     with pytest.raises(dg.LoiDongGoi, match="Kiểm kê"):
-        xuat(repo, tmp_path / "ra")
+        xuat(repo, tmp_path / "ra", nen=nen)
     assert not (tmp_path / "ra").exists()
 
 
@@ -282,3 +284,197 @@ def test_thu_vien_sai_dung_truoc_khi_ghi(repo, tmp_path, kieu):
     with pytest.raises(dg.LoiDongGoi):
         xuat(repo, tmp_path / "ra", sdk="2.5.0")
     assert not (tmp_path / "ra").exists()
+
+
+WHEEL_WIN = "demo_native-1.0.0-cp313-cp313-win_amd64.whl"
+WHEEL_LINUX = "demo_native-1.0.0-cp313-cp313-manylinux_2_39_x86_64.whl"
+WHEEL_THUAN = "demo_lib-1.0.0-py3-none-any.whl"
+
+
+def them_wheel_linux(repo, tag="cp313-cp313-manylinux_2_39_x86_64", co_linux=True):
+    them_thu_vien(repo)
+    p = duong_goi(repo)
+    (p / "wheels" / WHEEL_WIN).write_bytes(b"DEMO Windows\r\n")
+    lock = (p / "requirements.lock").read_bytes()
+    lock += (f"demo-native==1.0.0 --hash=sha256:{dg.sha256(b'DEMO Windows' + bytes([13, 10]))}"
+             f" --hash=sha256:{dg.sha256(b'DEMO Linux' + bytes([10]))}\n").encode()
+    (p / "requirements.lock").write_bytes(lock)
+    if co_linux:
+        thu_muc = repo / MA / "wheels-linux"
+        thu_muc.mkdir(exist_ok=True)
+        (thu_muc / f"demo_native-1.0.0-{tag}.whl").write_bytes(b"DEMO Linux\n")
+    return tao_moc(repo)
+
+
+def doc_zip(thu_muc, ds):
+    with zipfile.ZipFile(thu_muc / ds[0]["tep_zip"]) as z:
+        return {ten[len(MA) + 1:]: z.read(ten) for ten in z.namelist()}
+
+
+def kiem_kiem_ke_core(cac_tep, ten_tep, phien_ban):
+    """Chép quy tắc _kiem_kiem_ke_tep của Core; dùng assert, không phụ thuộc mã Core."""
+    kk = json.loads(cac_tep[ten_tep])
+    assert isinstance(kk, dict) and kk["phien_ban"] == phien_ban
+    assert isinstance(kk["tep"], list)
+    da_gap = set()
+    for muc in kk["tep"]:
+        assert isinstance(muc, dict)
+        ten = muc["duong_dan"]
+        assert isinstance(ten, str) and ten and not PurePosixPath(ten).is_absolute()
+        assert "\\" not in ten and ":" not in ten and not {"", ".", ".."} & set(ten.split("/"))
+        for phan in ten.split("/"):
+            assert not phan.endswith((" ", ".")) and not re.search(r'[\x00-\x1f<>"|?*]', phan)
+            assert not re.fullmatch(r"(?i:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?", phan)
+        so, bam = muc.get("bytes"), muc.get("sha256")
+        assert ten != ten_tep and ten not in da_gap and ten in cac_tep
+        assert type(so) is int and so >= 0
+        assert isinstance(bam, str) and re.fullmatch(r"[0-9a-f]{64}", bam)
+        da_gap.add(ten)
+        assert so == len(cac_tep[ten])
+        assert bam == hashlib.sha256(cac_tep[ten]).hexdigest()
+    assert da_gap == set(cac_tep) - {ten_tep}
+
+
+@pytest.mark.parametrize("co_thu_vien, bam_truoc", [
+    (False, "aadd8c2fcb2ba24d55b2a60cb603cc858294a701b4d201a6c22db801b52aef5f"),
+    (True, "7d40ec77642215d306465615bf399816cd6c0557819f05f804a75ebed9aac6ba"),
+])
+def test_windows_giu_nguyen_byte_zip_truoc_lx_dg(repo, tmp_path, co_thu_vien, bam_truoc):
+    # SHA ZIP DEMO đo bằng dong_goi.py trước LX-DG; không lấy kết quả mới làm chuẩn.
+    if co_thu_vien:
+        them_thu_vien(repo)
+    sdk = "2.5.0" if co_thu_vien else dg.SDK
+    for nen, thu_muc in [(None, tmp_path / "mac_dinh"), ("windows", tmp_path / "windows")]:
+        ds = xuat(repo, thu_muc, sdk=sdk, **({"nen": nen} if nen else {}))
+        assert ds[0]["tep_zip"] == f"{MA}-1.0.0.zip"
+        assert hashlib.sha256((thu_muc / ds[0]["tep_zip"]).read_bytes()).hexdigest() == bam_truoc
+
+
+def test_linux_thay_wheel_tu_git_va_tat_dinh(repo, tmp_path):
+    cu = them_wheel_linux(repo)
+    thu_muc = repo / MA / "wheels-linux"
+    (thu_muc / WHEEL_LINUX).write_bytes(b"DEMO dirty wheel\r\n")
+    (thu_muc / "khac-1.0.0-py3-none-any.whl").write_bytes(b"DEMO ngoai moc")
+    tao_moc(repo)
+    a, b = tmp_path / "linux_a", tmp_path / "linux_b"
+    ds = xuat(repo, a, ref=cu, sdk="2.5.0", nen="linux")
+    xuat(repo, b, ref=cu, sdk="2.5.0", nen="linux")
+    assert {p.name: p.read_bytes() for p in a.iterdir()} == {p.name: p.read_bytes() for p in b.iterdir()}
+    assert ds[0]["tep_zip"] == f"{MA}-1.0.0-linux_x86_64.zip"
+    tep = doc_zip(a, ds)
+    assert {ten for ten in tep if ten.startswith("wheels/")} == {"wheels/" + WHEEL_LINUX, "wheels/" + WHEEL_THUAN}
+    assert tep["wheels/" + WHEEL_LINUX] == b"DEMO Linux\n"
+    assert tep["wheels/" + WHEEL_THUAN] == b"DEMO whl"
+    assert tep["requirements.lock"] == lenh_git(repo, "show", f"{cu}:{MA}/goi/{MA}/requirements.lock")
+    bang = json.loads((a / "DANH-SACH-GOI.json").read_bytes())
+    assert bang["nen"] == "linux" and bang["goi"] == ds and bang["commit_git"] == cu
+    sums = dict(dong.split("  ")[::-1] for dong in (a / "SHA256SUMS.txt").read_text().splitlines())
+    assert set(sums) == {W25, ds[0]["tep_zip"]}
+    assert all(hashlib.sha256((a / ten).read_bytes()).hexdigest() == bam for ten, bam in sums.items())
+
+
+def test_linux_uu_tien_wheel_thuan_trong_wheels_linux(repo, tmp_path):
+    them_wheel_linux(repo)
+    p = duong_goi(repo) / "requirements.lock"
+    raw = b"DEMO pure Linux"
+    p.write_bytes(p.read_bytes().replace(b"demo-lib==1.0.0 ",
+                  f"demo-lib==1.0.0 --hash=sha256:{dg.sha256(raw)} ".encode()))
+    (repo / MA / "wheels-linux" / WHEEL_THUAN).write_bytes(raw)
+    tao_moc(repo)
+    ds = xuat(repo, tmp_path / "ra", sdk="2.5.0", nen="linux")
+    assert doc_zip(tmp_path / "ra", ds)["wheels/" + WHEEL_THUAN] == raw
+
+
+def test_linux_sinh_lai_kiem_ke_toan_goi_theo_core(repo, tmp_path):
+    them_wheel_linux(repo)
+    them_sql(repo)
+    kk_goc = lenh_git(repo, "show", f"HEAD:{MA}/goi/{MA}/sql/kiem_ke.json")
+    linux, win = tmp_path / "linux", tmp_path / "windows"
+    ds = xuat(repo, linux, sdk="2.5.0", nen="linux")
+    ds_win = xuat(repo, win, sdk="2.5.0")
+    tep, tep_win = doc_zip(linux, ds), doc_zip(win, ds_win)
+    assert tep_win["sql/kiem_ke.json"] == kk_goc
+    assert tep["sql/kiem_ke.json"] != kk_goc
+    kiem_kiem_ke_core(tep, "sql/kiem_ke.json", "1.0.0")
+    kiem_kiem_ke_core(tep_win, "sql/kiem_ke.json", "1.0.0")
+    assert {t: b for t, b in tep.items() if not t.startswith("wheels/") and t != "sql/kiem_ke.json"} == {
+        t: b for t, b in tep_win.items() if not t.startswith("wheels/") and t != "sql/kiem_ke.json"}
+    # Công cụ không sửa kiểm kê trong worktree.
+    assert (duong_goi(repo) / "sql/kiem_ke.json").read_bytes() == kk_goc
+
+
+@pytest.mark.parametrize("co_sql", [False, True])
+def test_linux_khong_wheel_giu_nguyen_zip_windows(repo, tmp_path, co_sql):
+    if co_sql:
+        them_sql(repo)
+    ds_win = xuat(repo, tmp_path / "win")
+    ds_linux = xuat(repo, tmp_path / "linux", nen="linux")
+    assert (tmp_path / "win" / ds_win[0]["tep_zip"]).read_bytes() == (
+        tmp_path / "linux" / ds_linux[0]["tep_zip"]).read_bytes()
+
+
+def test_linux_thieu_wheel_dung_truoc_khi_ghi(repo, tmp_path):
+    them_wheel_linux(repo, co_linux=False)
+    with pytest.raises(dg.LoiDongGoi, match="Thiếu wheel.*demo-native"):
+        xuat(repo, tmp_path / "ra", sdk="2.5.0", nen="linux")
+    assert not (tmp_path / "ra").exists()
+
+
+@pytest.mark.parametrize("tag", [
+    "cp313-cp313-musllinux_1_2_x86_64", "cp313-cp313-manylinux_2_40_x86_64",
+    "cp313-cp313-win_amd64", "cp313-cp313-macosx_11_0_x86_64",
+    "cp313-cp313-manylinux_2_39_aarch64", "cp313-cp313-linux_x86_64",
+    "cp313-cp313-manylinux_2_39_x86_64.manylinux_2_40_x86_64",
+])
+def test_linux_tu_choi_tag_sai(repo, tmp_path, tag):
+    them_wheel_linux(repo, tag)
+    with pytest.raises(dg.LoiDongGoi, match="không đúng nền linux"):
+        xuat(repo, tmp_path / "ra", sdk="2.5.0", nen="linux")
+    assert not (tmp_path / "ra").exists()
+
+
+@pytest.mark.parametrize("tag", [
+    "cp313-cp313-manylinux2014_x86_64", "cp313-cp313-manylinux1_x86_64",
+    "cp313-cp313-manylinux2010_x86_64", "cp311-abi3-manylinux_2_34_x86_64",
+    "py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64",
+])
+def test_linux_nhan_tag_hop_le(repo, tmp_path, tag):
+    them_wheel_linux(repo, tag)
+    ds = xuat(repo, tmp_path / "ra", sdk="2.5.0", nen="linux")
+    assert f"wheels/demo_native-1.0.0-{tag}.whl" in doc_zip(tmp_path / "ra", ds)
+
+
+@pytest.mark.parametrize("tag", ["cp313-cp313-manylinux_2_39_x86_64", "cp313-cp313-win32", "py3-none-macosx_11_0_x86_64"])
+def test_windows_tu_choi_wheel_sai_nen(repo, tmp_path, tag):
+    them_thu_vien(repo)
+    (duong_goi(repo) / "wheels" / WHEEL_THUAN).rename(
+        duong_goi(repo) / "wheels" / f"demo_lib-1.0.0-{tag}.whl")
+    tao_moc(repo)
+    with pytest.raises(dg.LoiDongGoi, match="không đúng nền windows"):
+        xuat(repo, tmp_path / "ra", sdk="2.5.0")
+    assert not (tmp_path / "ra").exists()
+
+
+@pytest.mark.parametrize("kieu", ["sai_bam", "thua", "trung", "sai_ban"])
+def test_linux_lock_va_wheel_sai_dung_truoc_khi_ghi(repo, tmp_path, kieu):
+    them_wheel_linux(repo)
+    thu_muc = repo / MA / "wheels-linux"
+    if kieu == "sai_bam":
+        (thu_muc / WHEEL_LINUX).write_bytes(b"DEMO bam sai")
+    elif kieu == "thua":
+        (thu_muc / "thua-1.0.0-py3-none-any.whl").write_bytes(b"DEMO Linux\n")
+    elif kieu == "trung":
+        (thu_muc / WHEEL_LINUX.replace("1.0.0-", "1.0.0-1-")).write_bytes(b"DEMO Linux\n")
+    else:
+        (thu_muc / WHEEL_LINUX).rename(thu_muc / WHEEL_LINUX.replace("1.0.0-", "2.0.0-"))
+    tao_moc(repo)
+    with pytest.raises(dg.LoiDongGoi, match="Wheel thừa, trùng, sai phiên bản hoặc sai băm"):
+        xuat(repo, tmp_path / "ra", sdk="2.5.0", nen="linux")
+    assert not (tmp_path / "ra").exists()
+
+
+def test_tham_so_nen_linux_duoc_truyen_vao_dong_goi(repo, tmp_path, monkeypatch, capsys):
+    dong_goi_goc = dg.dong_goi
+    monkeypatch.setattr(dg, "dong_goi", lambda _repo, *args: dong_goi_goc(repo, *args))
+    assert dg.main(["--engine", MA, "--ra", str(tmp_path / "ra"), "--nhan", "DEMO", "--nen", "linux"]) == 0
+    assert f"{MA}-1.0.0-linux_x86_64.zip" in capsys.readouterr().out

@@ -1,4 +1,10 @@
-"""Đóng gói bytes đã ghi trong git; chỉ dùng thư viện chuẩn Python."""
+"""Đóng gói bytes đã ghi trong git; chỉ dùng thư viện chuẩn Python.
+
+Bản Linux lấy wheel từ <engine>/wheels-linux/ ở cùng mốc git, dùng lại
+py3-none-any còn thiếu từ gói Windows. Kiểm kê gốc phải đúng trước khi đổi
+wheel; kiểm kê Linux được sinh lại đủ mọi tệp trừ chính nó khi gói thay đổi.
+Gói không đổi wheel giữ nguyên bytes, kể cả kiểm kê và ZIP.
+"""
 
 import argparse
 import hashlib
@@ -156,7 +162,33 @@ def kiem_ke_sql(cac_tep, phieu):
         raise LoiDongGoi("Kiểm kê SQL chưa bao gồm đúng toàn bộ gói.")
 
 
-def kiem_thu_vien(cac_tep, phieu):
+def kiem_nen_wheel(ten, nen):
+    # Cùng khuôn tên wheel của Core; hỗ trợ cả build tag và tag nền ghép.
+    khop = re.fullmatch(
+        r"wheels/([A-Za-z0-9][A-Za-z0-9._]*)-([0-9][A-Za-z0-9.!+_]*)"
+        r"(?:-[0-9][A-Za-z0-9_]*)?-([A-Za-z0-9_.]+)-([A-Za-z0-9_.]+)"
+        r"-([A-Za-z0-9_.]+)\.whl", ten)
+    if not khop:
+        raise LoiDongGoi("Tên wheel không hợp lệ: " + ten)
+    python, abi, nen_tag = khop[3], khop[4], khop[5]
+    if nen == "windows":
+        hop_le = all(tag == "win_amd64" or (tag == "any" and abi == "none")
+                     for tag in nen_tag.split("."))
+    elif nen_tag == "any":
+        hop_le = python == "py3" and abi == "none"
+    else:
+        def manylinux(tag):
+            if tag in {"manylinux1_x86_64", "manylinux2010_x86_64", "manylinux2014_x86_64"}:
+                return True
+            m = re.fullmatch(r"manylinux_2_([0-9]+)_x86_64", tag)
+            return m is not None and int(m[1]) <= 39
+        hop_le = all(manylinux(tag) for tag in nen_tag.split("."))
+    if not hop_le:
+        raise LoiDongGoi(f"Wheel không đúng nền {nen}: " + ten)
+    return khop[1], khop[2]
+
+
+def kiem_thu_vien(cac_tep, phieu, nen="windows"):
     """Lock một dòng/thư viện, mỗi dòng đúng một wheel khớp băm; không wheel thừa (phiếu Core CĐ-50 mục 6)."""
     wheels = {ten for ten in cac_tep if ten.startswith("wheels/")}
     khai = phieu.get("phu_thuoc_python")
@@ -181,13 +213,52 @@ def kiem_thu_vien(cac_tep, phieu):
         lock[chuan(m[1])] = (m[2], set(re.findall(r"[0-9a-f]{64}", m[3])))
     gap = {}
     for ten in sorted(wheels):
-        phan = ten[len("wheels/"):].split("-")
-        ma = chuan(phan[0])
-        if ma not in lock or ma in gap or phan[1] != lock[ma][0] or sha256(cac_tep[ten]) not in lock[ma][1]:
+        ten_tv, ban = kiem_nen_wheel(ten, nen)
+        ma = chuan(ten_tv)
+        if ma not in lock or ma in gap or ban != lock[ma][0] or sha256(cac_tep[ten]) not in lock[ma][1]:
             raise LoiDongGoi("Wheel thừa, trùng, sai phiên bản hoặc sai băm: " + ten)
         gap[ma] = ten
     if set(gap) != set(lock):
         raise LoiDongGoi("Thiếu wheel cho: " + ", ".join(sorted(set(lock) - set(gap))))
+
+
+def thay_wheel_linux(repo, commit, ma, cac_tep, phieu):
+    """Chỉ đọc blob wheel từ git; không đưa metadata ngoài gói vào ZIP."""
+    goc = f"{ma}/wheels-linux/"
+    ds = git(repo, "ls-tree", "-rz", commit, "--", goc)
+    wheels = {}
+    for muc in ds.split(b"\0"):
+        if not muc:
+            continue
+        thong_tin, duong_dan = muc.split(b"\t", 1)
+        che_do, loai, oid = thong_tin.split()
+        ten_day_du = duong_dan.decode("utf-8")
+        if not ten_day_du.endswith(".whl"):
+            continue
+        if not ten_day_du.startswith(goc) or loai != b"blob" or che_do not in (b"100644", b"100755"):
+            raise LoiDongGoi("Wheel Linux có liên kết hoặc đối tượng git không được phép.")
+        ten = "wheels/" + ten_day_du[len(goc):]
+        kiem_ten(ten, ma)
+        kiem_nen_wheel(ten, "linux")
+        wheels[ten] = git(repo, "cat-file", "blob", oid.decode("ascii"))
+    chuan = lambda ten: re.sub(r"[-_.]+", "-", ten.split("/")[-1].split("-")[0]).lower()
+    co_linux = {chuan(ten) for ten in wheels}
+    for ten, raw in cac_tep.items():
+        if ten.startswith("wheels/") and ten.endswith("-py3-none-any.whl") and chuan(ten) not in co_linux:
+            wheels[ten] = raw
+    kq = {ten: raw for ten, raw in cac_tep.items() if not ten.startswith("wheels/")}
+    kq.update(wheels)
+    kiem_thu_vien(kq, phieu, "linux")
+    if kq != cac_tep:
+        migration = phieu.get("du_lieu", {}).get("goi_migration")
+        if migration:
+            ten_kk = migration["tep_kiem_ke"]
+            kk = doc_json(cac_tep[ten_kk])
+            kk["tep"] = [{"duong_dan": ten, "bytes": len(raw), "sha256": sha256(raw)}
+                         for ten, raw in sorted(kq.items()) if ten != ten_kk]
+            kq[ten_kk] = (json.dumps(kk, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+            kiem_ke_sql(kq, phieu)
+    return kq
 
 
 def tao_zip(ma, cac_tep):
@@ -203,7 +274,7 @@ def tao_zip(ma, cac_tep):
     return bo_nho.getvalue()
 
 
-def dong_goi(repo, engines, ra, nhan, ref="HEAD", sdk=SDK):
+def dong_goi(repo, engines, ra, nhan, ref="HEAD", sdk=SDK, nen="windows"):
     repo, ra = Path(repo).resolve(), Path(ra).resolve()
     if ra.is_relative_to(repo) and ra != repo / ".dong-goi-thu":
         raise LoiDongGoi("Thư mục đầu ra phải ngoài repo; ngoại lệ thử là .dong-goi-thu ở gốc repo.")
@@ -215,6 +286,8 @@ def dong_goi(repo, engines, ra, nhan, ref="HEAD", sdk=SDK):
         raise LoiDongGoi("Cần thư mục đầu ra mới hoặc rỗng để tránh trộn bản phát hành.")
     if sdk not in CAC_SDK:
         raise LoiDongGoi("Bản SDK kèm phát hành không được hỗ trợ.")
+    if nen not in ("windows", "linux"):
+        raise LoiDongGoi("Nền phát hành phải là windows hoặc linux.")
     wheel_ten, thu_muc_sdk = f"kho_tri_thuc_sdk-{sdk}-py3-none-any.whl", f"docs/goi-gui-engine/sdk-{sdk}"
     commit = git(repo, "rev-parse", "--verify", "--end-of-options", f"{ref}^{{commit}}").decode().strip()
     wheel = git(repo, "show", f"{commit}:{thu_muc_sdk}/{wheel_ten}")
@@ -235,7 +308,10 @@ def dong_goi(repo, engines, ra, nhan, ref="HEAD", sdk=SDK):
             raise LoiDongGoi("Gói kèm thư viện cần SDK 2.4.0 trở lên; đóng gói với --sdk 2.5.0.")
         kiem_ke_sql(cac_tep, phieu)
         kiem_thu_vien(cac_tep, phieu)
-        ten_zip = f"{ma}-{phieu['phien_ban']}.zip"
+        if nen == "linux":
+            cac_tep = thay_wheel_linux(repo, commit, ma, cac_tep, phieu)
+        hau_to = "-linux_x86_64" if nen == "linux" else ""
+        ten_zip = f"{ma}-{phieu['phien_ban']}{hau_to}.zip"
         dau_ra[ten_zip] = tao_zip(ma, cac_tep)
         danh_sach.append({
             "ma": ma, "ten": phieu["ten"], "phien_ban": phieu["phien_ban"],
@@ -249,7 +325,7 @@ def dong_goi(repo, engines, ra, nhan, ref="HEAD", sdk=SDK):
     bang_bam = "".join(f"{sha256(noi_dung)}  {ten}\n" for ten, noi_dung in sorted(dau_ra.items()))
     dau_ra["SHA256SUMS.txt"] = bang_bam.encode("utf-8")
     dau_ra["DANH-SACH-GOI.json"] = (json.dumps({
-        "nhan": nhan, "commit_git": commit, "sdk": sdk,
+        "nhan": nhan, "commit_git": commit, "sdk": sdk, "nen": nen,
         "wheel_sdk": {"tep": wheel_ten, "sha256": sha256(wheel)}, "goi": danh_sach,
     }, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
     ra.mkdir(parents=True, exist_ok=True)
@@ -267,10 +343,11 @@ def main(argv=None):
     parser.add_argument("--nhan", required=True, help="Nhãn mốc phát hành, ví dụ thu (không phải git ref).")
     parser.add_argument("--ref", default="HEAD", help="Git commit/tag/nhánh nguồn; mặc định HEAD.")
     parser.add_argument("--sdk", default=SDK, choices=CAC_SDK, help="Bản SDK kèm phát hành; mặc định 2.2.0.")
+    parser.add_argument("--nen", default="windows", choices=("windows", "linux"), help="Nền phát hành; mặc định windows.")
     args = parser.parse_args(argv)
     repo = Path(__file__).resolve().parents[2]
     try:
-        ds = dong_goi(repo, args.engine, args.ra, args.nhan, args.ref, args.sdk)
+        ds = dong_goi(repo, args.engine, args.ra, args.nhan, args.ref, args.sdk, args.nen)
     except (LoiDongGoi, OSError, KeyError, TypeError, UnicodeError) as loi:
         thong_diep = str(loi) if isinstance(loi, LoiDongGoi) else "Không hoàn tất đóng gói; kiểm quyền ghi và cấu trúc gói."
         print(f"[LỖI] {thong_diep}", file=sys.stderr)

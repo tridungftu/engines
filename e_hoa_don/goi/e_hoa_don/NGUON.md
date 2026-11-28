@@ -1,6 +1,6 @@
 # NGUON — gói XML/ZIP/XLSX e_hoa_don
 
-Nguồn nội bộ trong repo; không truy cập nguồn ngoài hoặc tự đặt giấy phép mới. HD-7 tham chiếu tĩnh nguồn Node theo quyền CD-096 A1 chỉ nội bộ, xem mục HD-7; không nạp Node/portal hoặc suy thành quyền phân phối bên ngoài. Runtime chỉ stdlib và SDK 2.0.0; không thêm dependency ngoài SDK. Các bảng HD-0…HD-6 giữ mốc lịch sử.
+Nguồn nội bộ trong repo; không truy cập nguồn ngoài hoặc tự đặt giấy phép mới. HD-7 tham chiếu tĩnh nguồn Node theo quyền CD-096 A1 chỉ nội bộ, xem mục HD-7; không nạp Node/portal hoặc suy thành quyền phân phối bên ngoài. Runtime hiện hành chỉ stdlib và SDK 2.2.0; không thêm dependency ngoài SDK. Các bảng HD-0…HD-6 giữ mốc lịch sử.
 
 | Nguồn tương đối từ gốc repo | Đích tương đối trong gói | Cách chuyển |
 |---|---|---|
@@ -179,3 +179,32 @@ Wheel nội bộ `kho_tri_thuc_sdk-2.2.0-py3-none-any.whl`, SHA-256 `0294ec69148
 | `CHANGELOG.md` | `5e8c5d56a1d9677e817544f7c192f759d87d0b14caa9c9ef05ea4c0a20758ded` |
 | `e_hoa_don/bang_ke.py` | `9893619ff051f77a7235073ce8ffc165958c3b0dfaf3626fa087ba602632d342` |
 | `e_hoa_don/zip.py` | `5b60d342be6f9e109c75df7b266e779a0aa389c0937288f7e7ed77e992685e52` |
+
+
+## 1.0.1 — LX-HD, 28/11/2026
+
+Sửa `_tep_mac_dinh()` theo mẫu `e_ocr/goi/e_ocr/e_ocr/cau_hinh_may.py` và phiếu Linux §4: thiếu PROGRAMDATA thì Windows dùng C:/ProgramData, không phải Windows dùng /var/lib. Không đổi xử lý KTT_ENGINE_CAU_HINH hoặc các kiểm an toàn. Helper vẫn ngoài đường chạy XML/ZIP/XLSX. Nâng engine.json, __init__ và các oracle/test phiên bản hiện hành lên 1.0.1; các bảng 1.0.0 bên trên là lịch sử. Runtime chỉ SDK 2.2.0 đã ghim + stdlib; không đổi requirements.lock, không nguồn ngoài hoặc thư viện mới.
+
+Bảng dưới là kiểm kê toàn gói tại bàn giao LX-HD, tính sau mọi thay đổi gói bằng hashlib stdlib; không tự băm NGUON.md. Engine không có công cụ sinh kiểm kê riêng, không có SQL/ngăn hoặc sql/kiem_ke.json. SHA bytes thực dùng bytes checkout; SHA chuẩn LF chỉ thay CRLF → LF ở tệp văn bản, ZIP giữ bytes gốc. Các bảng lịch sử giữ nguyên. Đã kiểm bằng Core giả (CoreGia): SDK 4/4 ĐẠT, pytest 662 passed/0 skipped, kiểm độc lập ĐẠT; Linux mới giả lập đường, chưa chạy Ubuntu/WSL.
+
+| Tệp trong gói | Byte | SHA-256 bytes thực | SHA-256 chuẩn LF |
+|---|---:|---|---|
+| `CHANGELOG.md` | 22641 | `11303e3b21fdfa49ddbef7f9cb8b90eaacfadcd2b6ab9bcbe7594aed8bee1477` | `237d62c0f6a4e4cdf68a71368b076706ea06bfdda8b8989739e13b0b43ac287c` |
+| `contract/bao_cao_xml.schema.json` | 14127 | `66c615f95550dad54fd84a89aa153b91fa1a39a5ae89091173ed281ebc817d4b` | `480c43d9ad9226922e28da3d94c56056df70d7318146fd812dbd0dede8368d12` |
+| `contract/bao_cao_zip.schema.json` | 25950 | `3585b86eb1f8d9210d54d42042fc73b4cfa36c39ccbf4e8bfaf21a391d78f27b` | `fb320d2310fb3651e8fe8c487c4e83a4f464df53d7736cc3de943bb3f8aa8443` |
+| `contract/cau_hinh_may.schema.json` | 330 | `6556c8f200d7a082af390590b95ba2a1b1ec536cf971e1a654b618f5bf9461af` | `195eb425011f09b51bd0890689156f0fa4b07660ebd6dc01f54769176abea2b4` |
+| `demo/goi-hon-hop-DEMO.zip` | 3028 | `91106609ac23affecdb2be9592f7a708a0b816700c5370eb234bbc913a5cedc8` | `91106609ac23affecdb2be9592f7a708a0b816700c5370eb234bbc913a5cedc8` |
+| `demo/hoa-don-DEMO.xml` | 798 | `06fe9986063ee65483c7d91880b948a1ab65856d05767508face98695c8d07fe` | `06fe9986063ee65483c7d91880b948a1ab65856d05767508face98695c8d07fe` |
+| `demo/hoa-don-le-DEMO.xml` | 847 | `6ef712c06b870cfa7cd478a463ba1349689ca283bcf79f2a1fd8f64bfba6225b` | `6ef712c06b870cfa7cd478a463ba1349689ca283bcf79f2a1fd8f64bfba6225b` |
+| `demo/hoa-don-thieu-DEMO.xml` | 732 | `fb45b967fcc1fe6fb7f0896a3235889a3a9623a997694460443e8ee3bafe516a` | `fb45b967fcc1fe6fb7f0896a3235889a3a9623a997694460443e8ee3bafe516a` |
+| `e_hoa_don/__init__.py` | 114 | `c7a9cbf31d3b4c4dddb139f6397a3bc5e246920c933242ef0b66a1aecf4fdd1f` | `2e7f601d60eea7d20fc7ead51a59d7f8bbc130eb850419ccc4d774b75fe324cf` |
+| `e_hoa_don/bang_ke.py` | 16628 | `22644020e02dc97153ba60bbbf21da4908628ab71d7e1cc6d8ce264894b0d827` | `9893619ff051f77a7235073ce8ffc165958c3b0dfaf3626fa087ba602632d342` |
+| `e_hoa_don/cau_hinh_may.py` | 2803 | `b775322033ac37ce72034000ad6b641c166ab03c66aa46513491f47c9ce7b9b6` | `f069cb040bad8c04ebc7e45d85146d9cd04c149d78c19cef47470729aed78cc3` |
+| `e_hoa_don/chay.py` | 4424 | `f12dc1afbb78b24888590080788fc9ea23d5bf6f3b781d9b1f098650c9896610` | `15b95ec911ea65dd63ce053a1aed6a495fe4b7edd11ded2602d412532abb815e` |
+| `e_hoa_don/doc.py` | 8400 | `4114d0d293438572f5293a69395d6a53a5300aacf4a2c94f3530e999b5fbcd89` | `bee080710b417a81f5b0d88a9d41474dcf2fe44635f55b8dd028b7c58714da93` |
+| `e_hoa_don/hoa_don_xml.py` | 73550 | `fb201bbb723c4c739596dbbbe0270584a8ab2dbc368886428cde7ef0e3fbcab1` | `8b7cb17848a5861b7384aefa31b22d6cc39f28b2e3486a0c4bc938929d397f32` |
+| `e_hoa_don/xlsx_toi_thieu.py` | 5982 | `06e185c00dc5762a4393a7223d47e234d6af39a3424dcf43263ae60933fbc304` | `ad6a6c8e89d73e5e994c4f21066c7ee76640b261eaf253dc82a69cf1337fa46d` |
+| `e_hoa_don/zip.py` | 9114 | `0d9abdf12d0a5767ab2f46b445f4baeda8e7e6e0ca264f971eec11ca6aa99567` | `5b60d342be6f9e109c75df7b266e779a0aa389c0937288f7e7ed77e992685e52` |
+| `engine.json` | 7874 | `3aee2faecbc5d49e5cd3097f8cf8ddcc1faf847de9076f936859267eb0c19d75` | `8396ccc872375f58fb8e224012cee00fea268543f73072e7a509e6340eb39454` |
+| `README.md` | 16270 | `13f3c18994fdd9d15c952d52399c8fd7a0b1de6dcf7f7c5bf8f0b7f60fa098f8` | `2d2d3356760ac3efa6d5c47716d1d4ee0222af8fc6ddba6cfef4db3bac9fd455` |
+| `requirements.lock` | 195 | `ec4b721a01e650ad2fd7392b999078279c50788b71803a8d4ba672af0594b137` | `ab043bbb337b669c302791d26eb214ca9e5812e304c169e356bc3e3d5eb5e13a` |

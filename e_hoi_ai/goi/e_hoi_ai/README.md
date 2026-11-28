@@ -1,6 +1,6 @@
 # e_hoi_ai — Hỏi AI (AI-13)
 
-Gói SDK 2.2.0, phiên bản 0.13.0, dùng lại khung AI-0 và lõi AI-1. Chỉ dùng thư viện chuẩn Python (Python ≥ 3.11) và `kho_tri_thuc_sdk` 2.2.0. Gọi Local theo API OpenAI-compatible hoặc Ollama native; mọi đường bản 1 chỉ dùng provider Local.
+Gói SDK 2.2.0, phiên bản 0.13.1, dùng lại khung AI-0 và lõi AI-1. Chỉ dùng thư viện chuẩn Python (Python ≥ 3.11) và `kho_tri_thuc_sdk` 2.2.0. Gọi Local theo API OpenAI-compatible hoặc Ollama native; mọi đường bản 1 chỉ dùng provider Local.
 
 - `ai.hoi_theo_prompt@1`: nhận prompt của module và tài liệu, trả câu trả lời nguyên văn, không thêm chữ vào nội dung gửi model.
 - `ai.hoi_tai_lieu@1`: có khung trích dẫn của engine, giữ để tương thích; nhận `van_ban` hoặc `van_ban_tai_lieu`, trả bộ trường `tra_loi`, `co_can_cu`, `trich_dan`, `model`, `ly_do_chon_model`.
@@ -186,3 +186,5 @@ Bản gộp `0.4.0`: SDK thu **1/1 ĐẠT** qua `chay_demo_voi_local_gia.py`; py
 `hoi_cloud` chỉ nhận phong bì `van_ban_da_che` phiên bản 1, bắt buộc `con_sot=[]` và `kiem_tien_ngay is True`. Phần văn bản phải chứa yêu cầu cùng dữ liệu đã qua Mask; hàm không có tham số prompt thô. Chỉ trường `van_ban` ra provider ngoài, cùng chỉ dẫn định dạng cố định và tên model. Metadata, mã mở che và `chuyen_tiep` không đi ra Cloud. Mã mở che xuất hiện trong nội dung/model bị từ chối; kết quả chép mã gốc vào `chuyen_tiep.ma_yeu_cau`, ưu tiên mã trên phong bì khi có xung đột. Trần 64 KiB tính sau khi thêm mã; trần văn bản 500.000 ký tự, vượt thì từ chối. Hàm hậu kiểm trích dẫn trên văn bản đã che và trả `tra_loi_ai`; mở che do bước sau qua Core thực hiện.
 
 Test chỉ thay cờ trong bộ nhớ và tiêm Cloud giả; chặn socket/DNS. Không sử dụng khóa thật, không gọi Cloud thật. Đã kiểm bằng Core giả (CoreGia) cho hai năng lực Local; chưa kiểm Core thật hoặc model thật. Bản 2 cần bí mật Core, Mask, chính sách Cloud theo module và ngăn dữ liệu trước khi nối đường vận hành.
+
+Trên Linux, khi không đặt biến cấu hình hoặc PROGRAMDATA, đường dẫn mặc định là `/var/lib/KhoTriThuc/engines/e_hoi_ai/cau_hinh.json`.

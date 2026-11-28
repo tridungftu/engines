@@ -23,12 +23,14 @@ def _loi_cau_hinh():
 
 
 def duong_dan_cau_hinh():
-    """Ưu tiên KTT_ENGINE_CAU_HINH; mặc định nằm dưới PROGRAMDATA."""
+    """Ưu tiên biến chỉ định, rồi PROGRAMDATA hoặc /var/lib trên Linux."""
     gia_tri = os.environ.get("KTT_ENGINE_CAU_HINH")
     if gia_tri is None:
         goc = os.environ.get("PROGRAMDATA")
         if not goc:
-            return None
+            if os.name == "nt":
+                return None
+            goc = "/var/lib"
         duong_dan = Path(goc) / "KhoTriThuc" / "engines" / "e_hoi_ai" / "cau_hinh.json"
     else:
         if not gia_tri.strip():

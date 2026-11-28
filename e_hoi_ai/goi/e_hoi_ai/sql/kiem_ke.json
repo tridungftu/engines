@@ -1,30 +1,15 @@
 {
-  "phien_ban": "0.13.0",
+  "phien_ban": "0.13.1",
   "tep": [
-    {
-      "duong_dan": "CHANGELOG.md",
-      "bytes": 13267,
-      "sha256": "04b055356cb1b650bffd4d628980bc007055a65e867bb0805a8034cc1120da9c"
-    },
-    {
-      "duong_dan": "KHAI-SDK-2.1.json",
-      "bytes": 3228,
-      "sha256": "35bf222e35e0ecf2b2994614d750da66e8efa6cc17b79e37ea13f7f16ef3098f"
-    },
-    {
-      "duong_dan": "NGUON.md",
-      "bytes": 17405,
-      "sha256": "670568edbac44412eba2c612787002da051e1e787fe485f1d5f302f4c64e93fe"
-    },
-    {
-      "duong_dan": "README.md",
-      "bytes": 35287,
-      "sha256": "b627edf94f930e112d5eb348eb1f70b62e608d3149d72668fc9669e91f37d877"
-    },
     {
       "duong_dan": "cau_hinh.schema.json",
       "bytes": 5511,
       "sha256": "876cd3641befa9641ab9bc0deabc39419dfca2a31abc3eda4c2f0a382c667695"
+    },
+    {
+      "duong_dan": "CHANGELOG.md",
+      "bytes": 13409,
+      "sha256": "238d82d5b75f42593b2a737d824d627ac9dd5aba721d30b6116c99f64ccc3a72"
     },
     {
       "duong_dan": "contract/cau_hinh_may.schema.json",
@@ -63,8 +48,8 @@
     },
     {
       "duong_dan": "e_hoi_ai/cau_hinh_may.py",
-      "bytes": 4848,
-      "sha256": "111ebeafcf253df6e012078d12fefd27250292d3fe03953933f01bbfd98bfd73"
+      "bytes": 4920,
+      "sha256": "673d736674d16dde87766837660db5a3dd6c4025a424ab94b2b4a96ed60cbbfb"
     },
     {
       "duong_dan": "e_hoi_ai/chay.py",
@@ -134,7 +119,22 @@
     {
       "duong_dan": "engine.json",
       "bytes": 10700,
-      "sha256": "793166e39f8ef68111f9ed0a7ea4e3477e0345bc47cc6ea4820fe06a9900ea11"
+      "sha256": "1998e951d9e55d0f184b2dec956c40e2e7558477965273a714e5728494d230fb"
+    },
+    {
+      "duong_dan": "KHAI-SDK-2.1.json",
+      "bytes": 3228,
+      "sha256": "35bf222e35e0ecf2b2994614d750da66e8efa6cc17b79e37ea13f7f16ef3098f"
+    },
+    {
+      "duong_dan": "NGUON.md",
+      "bytes": 17577,
+      "sha256": "44e5499a84d2c8afc9620e3fea210160601a7edee143a5f393ea130b783fb2c1"
+    },
+    {
+      "duong_dan": "README.md",
+      "bytes": 35446,
+      "sha256": "84b81c0bd18b3d6ac269411e8b6e7ac81d14aee59f12c6aa9706ac66cc3c2c9e"
     },
     {
       "duong_dan": "requirements.lock",
